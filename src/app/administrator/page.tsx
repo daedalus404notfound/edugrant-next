@@ -44,7 +44,7 @@ export default function LoginForm() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_ADMIN_API}/login`,
+        `http://edugrant-express-server-production.up.railway.app/administrator/login`,
         {
           method: "POST",
           headers: {
