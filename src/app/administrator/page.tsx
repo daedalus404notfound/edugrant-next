@@ -64,8 +64,8 @@ export default function LoginForm() {
       }
 
       console.log("Login successful:", data);
-    } catch (error: any) {
-      console.error("Login error:", error.message);
+    } catch (error) {
+      console.error("Login error");
     }
   }
 
