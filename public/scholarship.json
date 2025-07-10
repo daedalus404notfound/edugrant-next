@@ -1,0 +1,121 @@
+[
+  {
+    "id": 1,
+    "title": "Excellence in STEM Scholarship",
+    "sponsor": "Tech Innovators Foundation",
+    "category": "Merit-Based",
+    "amount": 5000,
+    "deadline": "2025-07-15",
+    "description": "Awarded to students excelling in science, technology, engineering, and mathematics.",
+    "eligibility": [
+      "Must be a high school senior or undergraduate student.",
+      "Minimum GPA of 3.5.",
+      "Enrolled in a STEM-related program."
+    ],
+    "apply_url": "/client/home/scholarships/apply/1",
+    "tags": ["STEM", "Merit-Based", "Undergraduate"],
+    "image_url": "/images/scholarships/stem.jpg"
+  },
+  {
+    "id": 2,
+    "title": "Financial Aid Grant",
+    "sponsor": "National Education Fund",
+    "category": "Need-Based",
+    "amount": 3000,
+    "deadline": "2025-06-30",
+    "description": "Designed to assist students from low-income backgrounds in funding their education.",
+    "eligibility": [
+      "Must provide proof of financial need.",
+      "Minimum GPA of 2.5.",
+      "Open to all majors."
+    ],
+    "apply_url": "/client/home/scholarships/apply/2",
+    "tags": ["Need-Based", "All Majors"],
+    "image_url": "/images/scholarships/aid.jpg"
+  },
+  {
+    "id": 3,
+    "title": "Creative Arts Scholarship",
+    "sponsor": "Arts & Culture Society",
+    "category": "Talent-Based",
+    "amount": 4000,
+    "deadline": "2025-08-10",
+    "description": "Supports students with exceptional skills in visual arts, music, or performing arts.",
+    "eligibility": [
+      "Must submit a portfolio or audition piece.",
+      "Minimum GPA of 3.0.",
+      "Enrolled in an arts-related program."
+    ],
+    "apply_url": "/client/home/scholarships/apply/3",
+    "tags": ["Arts", "Talent-Based", "Undergraduate"],
+    "image_url": "/images/scholarships/arts.jpg"
+  },
+  {
+    "id": 4,
+    "title": "Women in Business Grant",
+    "sponsor": "Global Women’s Leadership Institute",
+    "category": "Diversity & Inclusion",
+    "amount": 6000,
+    "deadline": "2025-09-05",
+    "description": "Empowering female students pursuing careers in business and leadership.",
+    "eligibility": [
+      "Must identify as female.",
+      "Minimum GPA of 3.3.",
+      "Enrolled in a business-related program."
+    ],
+    "apply_url": "/client/home/scholarships/apply/4",
+    "tags": ["Women", "Business", "Leadership"],
+    "image_url": "/images/scholarships/women.jpg"
+  },
+  {
+    "id": 5,
+    "title": "Women in Business Grant",
+    "sponsor": "Global Women’s Leadership Institute",
+    "category": "Diversity & Inclusion",
+    "amount": 6000,
+    "deadline": "2025-09-05",
+    "description": "Empowering female students pursuing careers in business and leadership.",
+    "eligibility": [
+      "Must identify as female.",
+      "Minimum GPA of 3.3.",
+      "Enrolled in a business-related program."
+    ],
+    "apply_url": "/client/home/scholarships/apply/4",
+    "tags": ["Women", "Business", "Leadership"],
+    "image_url": "/images/scholarships/women.jpg"
+  },
+  {
+    "id": 6,
+    "title": "Women in Business Grant",
+    "sponsor": "Global Women’s Leadership Institute",
+    "category": "Diversity & Inclusion",
+    "amount": 6000,
+    "deadline": "2025-09-05",
+    "description": "Empowering female students pursuing careers in business and leadership.",
+    "eligibility": [
+      "Must identify as female.",
+      "Minimum GPA of 3.3.",
+      "Enrolled in a business-related program."
+    ],
+    "apply_url": "/client/home/scholarships/apply/4",
+    "tags": ["Women", "Business", "Leadership"],
+    "image_url": "/images/scholarships/women.jpg"
+  },
+  {
+    "id": 7,
+    "title": "Women in Business Grant",
+    "sponsor": "Global Women’s Leadership Institute",
+    "category": "Diversity & Inclusion",
+    "amount": 6000,
+    "deadline": "2025-09-05",
+    "description": "Empowering female students pursuing careers in business and leadership.",
+    "eligibility": [
+      "Must identify as female.",
+      "Minimum GPA of 3.3.",
+      "Enrolled in a business-related program."
+    ],
+    "apply_url": "/client/home/scholarships/apply/4",
+    "tags": ["Women", "Business", "Leadership"],
+    "image_url": "/images/scholarships/women.jpg"
+  }
+]

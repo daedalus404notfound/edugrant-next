@@ -1,0 +1,65 @@
+{
+  "id": 1,
+  "studentId": "2021000499",
+  "fullName": "Maria Clara Santos",
+  "course": "BS Agriculture",
+  "yearLevel": "3rd Year",
+  "applications": [
+    {
+      "scholarshipId": "scholarship_ched",
+      "scholarshipName": "CHED Tulong Dunong",
+      "priority": 1,
+      "status": "Pending",
+      "submittedDate": "2025-06-01",
+      "adminRemarks": "",
+      "reviewedBy": null,
+      "reviewDate": null,
+      "history": [
+        {
+          "status": "Pending",
+          "date": "2025-06-01",
+          "by": "System"
+        }
+      ],
+      "documents": [
+        {
+          "documentId": "doc1",
+          "name": "Certificate of Registration",
+          "fileUrl": "https://example.com/docs/cor_maria.pdf",
+          "uploadedDate": "2025-06-01"
+        },
+        {
+          "documentId": "doc2",
+          "name": "Barangay Clearance",
+          "fileUrl": "https://example.com/docs/clearance_maria.pdf",
+          "uploadedDate": "2025-06-01"
+        }
+      ]
+    },
+    {
+      "scholarshipId": "scholarship_sm",
+      "scholarshipName": "SM Foundation Scholarship",
+      "priority": 2,
+      "status": "Pending",
+      "submittedDate": "2025-06-01",
+      "adminRemarks": "",
+      "reviewedBy": null,
+      "reviewDate": null,
+      "history": [
+        {
+          "status": "Pending",
+          "date": "2025-06-01",
+          "by": "System"
+        }
+      ],
+      "documents": [
+        {
+          "documentId": "doc3",
+          "name": "Income Certificate",
+          "fileUrl": "https://example.com/docs/income_maria.pdf",
+          "uploadedDate": "2025-06-01"
+        }
+      ]
+    }
+  ]
+}
