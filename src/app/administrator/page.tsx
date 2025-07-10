@@ -39,9 +39,34 @@ export default function LoginForm() {
     },
   });
 
-  function onSubmit(values: FormValues) {
+  async function onSubmit(values: FormValues) {
     console.log("Submitted:", values);
-    // handle login logic here
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_ADMIN_API}/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            adminEmail: values.adminEmail,
+            adminPassword: values.adminPassword,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Login failed");
+      }
+
+      console.log("Login successful:", data);
+    } catch (error: any) {
+      console.error("Login error:", error.message);
+    }
   }
 
   return (
