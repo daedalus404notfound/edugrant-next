@@ -133,7 +133,7 @@ const HeaderComponent = () => {
     </header>
   );
 };
-export const HeroLanding = () => {
+const HeroLanding = () => {
   return (
     <div className="relative h-[75vh] w-[95%] mx-auto justify-center items-start flex-col border rounded-3xl p-10 overflow-hidden bg-[var(--green)] flex shadow-md">
       <img
