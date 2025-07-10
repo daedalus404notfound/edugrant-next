@@ -44,7 +44,7 @@ export default function LoginForm() {
 
     try {
       const response = await fetch(
-        `https://edugrant-express-server-production.up.railway.app/administrator`,
+        `https://edugrant-express-server-production.up.railway.app/administrator/adminLogin`,
         {
           method: "POST",
           headers: {
