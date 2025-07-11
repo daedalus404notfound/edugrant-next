@@ -82,6 +82,7 @@ export default function LoginAdmin() {
           }
         );
 
+
         console.log("token", response.data);
         if (response.status === 200) {
           router.push("/administrator/home");
