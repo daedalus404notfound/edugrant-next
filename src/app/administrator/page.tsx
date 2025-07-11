@@ -46,9 +46,7 @@ type otpFormData = z.infer<typeof optSchema>;
 
 export default function LoginAdmin() {
   const router = useRouter();
-  const [showPassword, setShowPassword] = useState<"password" | "text">(
-    "password"
-  );
+  const [showPassword, setShowPassword] = useState(false);
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
@@ -90,7 +88,7 @@ export default function LoginAdmin() {
           console.log("authenticated");
         }
       } catch (error) {
-        console.log("No valid token found");
+        console.log("No valid token found", error);
       }
     };
     checkToken();
@@ -199,7 +197,9 @@ export default function LoginAdmin() {
               render={({ field }) => {
                 return (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel onClick={() => setShowPassword(!showPassword)}>
+                      Password
+                    </FormLabel>
                     <FormControl>
                       <Input
                         type={showPassword ? "text" : "password"}
