@@ -1,10 +1,15 @@
+// /app/administrator
+
 "use client";
-
-import * as React from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { useEffect, useState } from "react";
+import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { useRouter } from "next/navigation";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
 import {
   Form,
   FormControl,
@@ -13,183 +18,248 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
-import bascLogo from "@/assets/basclogo.png";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Key, Mail } from "lucide-react";
 
-const formSchema = z.object({
-  adminEmail: z.string().email({ message: "Valid email required" }),
-  adminPassword: z.string().min(1, "Password required."),
-  remember: z.boolean().optional(),
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+const loginSchema = z.object({
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email({ message: "Please enter a vali email" }),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .max(20, "Password must be at least 8 characters long"),
 });
 
-type FormValues = z.infer<typeof formSchema>;
+const optSchema = z.object({
+  otp: z
+    .string()
+    .min(1, "One time password is required")
+    .max(6, "OTP must be 6 characters long"),
+});
 
-export default function LoginForm() {
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+type LoginFormData = z.infer<typeof loginSchema>;
+type otpFormData = z.infer<typeof optSchema>;
+
+export default function LoginAdmin() {
+  const router = useRouter();
+  const [showPassword, setShowPassword] = useState<"password" | "text">(
+    "password"
+  );
+  const [credentials, setCredentials] = useState({
+    email: "",
+    password: "",
+  });
+  const LoginForm = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+
     defaultValues: {
-      adminEmail: "",
-      adminPassword: "",
-      remember: false,
+      email: "",
+      password: "",
     },
   });
 
-  async function onSubmit(values: FormValues) {
-    console.log("Submitted:", values);
+  const otpForm = useForm<otpFormData>({
+    resolver: zodResolver(optSchema),
+
+    defaultValues: {
+      otp: "",
+    },
+  });
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const response = await axios.post(
+          `https://edugrant-express-server-production.up.railway.app/administrator/adminTokenAuthentication`,
+          {},
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+
+        console.log("token", response.data);
+        if (response.status === 200) {
+          router.push("/administrator/home");
+          console.log("authenticated");
+        }
+      } catch (error) {
+        console.log("No valid token found");
+      }
+    };
+    checkToken();
+  }, [router]);
+
+  const onLoginSubmit = async (data: LoginFormData) => {
+    console.log(`Login attempt with email: ${data.email}, ${data.password}`);
 
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `https://edugrant-express-server-production.up.railway.app/administrator/adminLogin`,
         {
-          method: "POST",
+          adminEmail: data.email,
+          adminPassword: data.password,
+        },
+        {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            adminEmail: values.adminEmail,
-            adminPassword: values.adminPassword,
-          }),
+          withCredentials: true,
         }
       );
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Login failed");
-      }
-
-      console.log("Login successful:", data);
+      console.log("Login successful:", response.data);
+      setCredentials({
+        email: data.email,
+        password: data.password,
+      });
+      setStep("otp");
     } catch (error) {
-      console.error("Login error:", error);
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Login error:",
+          error.response?.data?.message || error.message
+        );
+      } else {
+        console.error("Login error:", error);
+      }
     }
-  }
+  };
+
+  const onOtpSubmit = async (data: otpFormData) => {
+    console.log(
+      "sent to backend",
+      credentials.email,
+      credentials.password,
+      data.otp
+    );
+    try {
+      const response = await axios.post(
+        `https://edugrant-express-server-production.up.railway.app/administrator/adminCodeAuthentication`,
+        {
+          adminEmail: credentials.email,
+          adminPassword: credentials.password,
+          code: data.otp,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        }
+      );
+
+      console.log("Code verification successful:", response.data);
+      router.push("/administrator/home");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "Verification error:",
+          error.response?.data?.message || error.message
+        );
+      } else {
+        console.error("Verification error:", error);
+      }
+    }
+  };
+
+  const [step, setStep] = useState<"login" | "otp">("login");
 
   return (
-    <div className="flex flex-col justify-center items-center h-screen gap-6 your-class">
-      <div className="flex flex-col gap-6 w-sm">
-        {/* Header */}
-        <div className="flex items-center gap-3">
-          <img className="size-14" src={bascLogo.src} alt="Logo" />
-          <div>
-            <h1 className="text-2xl tracking-[-4px] zxczxc">Edugrant Admin.</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Sign in to access the admin dashboard
-            </p>
-          </div>
-        </div>
-
-        {/* Form */}
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col gap-6"
-          >
-            {/* Email Field */}
+    <div className="h-screen flex justify-center items-center">
+      {step === "login" && (
+        <Form {...LoginForm}>
+          <div className="min-w-md space-y-5">
             <FormField
-              control={form.control}
-              name="adminEmail"
-              render={({ field, fieldState }) => (
-                <FormItem className="grid gap-3">
-                  <FormLabel
-                    htmlFor="email"
-                    className="w-full flex justify-between"
-                  >
-                    Email <FormMessage />
-                  </FormLabel>
-
-                  <FormControl>
-                    <span className="flex gap-2 relative">
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="Enter your email"
-                        className={`pl-10 border ${
-                          fieldState.invalid ? "border-red-500" : "border-input"
-                        } focus:border-blue-500 focus-visible:ring-0`}
-                        {...field}
-                      />
-                      <Button
-                        variant="ghost"
-                        className="absolute left-0"
-                        type="button"
-                      >
-                        <Mail className="h-4 w-4" />
-                      </Button>
-                    </span>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            {/* Password Field */}
-            <FormField
-              control={form.control}
-              name="adminPassword"
-              render={({ field, fieldState }) => (
-                <FormItem className="grid gap-3">
-                  <FormLabel
-                    htmlFor="password"
-                    className="w-full flex justify-between"
-                  >
-                    Password <FormMessage />
-                  </FormLabel>
-                  <FormControl>
-                    <span className="flex gap-2 relative">
-                      <Input
-                        id="password"
-                        type="password"
-                        placeholder="Enter your password"
-                        className={`pl-10 border ${
-                          fieldState.invalid ? "border-red-500" : "border-input"
-                        } focus:border-blue-500 focus-visible:ring-0`}
-                        {...field}
-                      />
-                      <Button
-                        variant="ghost"
-                        className="absolute left-0"
-                        type="button"
-                      >
-                        <Key className="h-4 w-4" />
-                      </Button>
-                    </span>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
-            {/* Remember Me + Forgot Password */}
-            <FormField
-              control={form.control}
-              name="remember"
+              control={LoginForm.control}
+              name="email"
               render={({ field }) => (
-                <FormItem className="flex items-center justify-between">
-                  <Label className="flex items-center gap-2">
-                    <Checkbox
-                      id="remember"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="Enter your email"
+                      {...field}
                     />
-                    <span>Remember me</span>
-                  </Label>
-                  <Label className="text-sm cursor-pointer">
-                    Forgot password?
-                  </Label>
+                  </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
-            />
-
-            {/* Submit Button */}
-            <Button type="submit" className="w-full">
+            ></FormField>
+            <FormField
+              control={LoginForm.control}
+              name="password"
+              render={({ field }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Enter your password"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                );
+              }}
+            ></FormField>
+            <Button onClick={LoginForm.handleSubmit(onLoginSubmit)}>
               Login
             </Button>
-          </form>
+          </div>
         </Form>
-      </div>
+      )}
+
+      {step === "otp" && (
+        <Form {...otpForm}>
+          <div className="space-y-5">
+            <FormField
+              control={otpForm.control}
+              name="otp"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Verification</FormLabel>
+                  <FormControl>
+                    <div className="flex items-center gap-3">
+                      <InputOTP
+                        maxLength={6}
+                        value={field.value}
+                        onChange={field.onChange}
+                      >
+                        <InputOTPGroup>
+                          <InputOTPSlot index={0} />
+                          <InputOTPSlot index={1} />
+                          <InputOTPSlot index={2} />
+                          <InputOTPSlot index={3} />
+                          <InputOTPSlot index={4} />
+                          <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                      </InputOTP>
+
+                      <Button
+                        variant="outline"
+                        onClick={otpForm.handleSubmit(onOtpSubmit)}
+                      >
+                        Verify
+                      </Button>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+        </Form>
+      )}
     </div>
   );
 }
