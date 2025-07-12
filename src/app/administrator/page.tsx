@@ -75,9 +75,6 @@ export default function LoginAdmin() {
           `https://edugrant-express-server-production.up.railway.app/administrator/adminTokenAuthentication`,
           {},
           {
-            headers: {
-              "Content-Type": "application/json",
-            },
             withCredentials: true,
           }
         );

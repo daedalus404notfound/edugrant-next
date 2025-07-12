@@ -1,59 +1,52 @@
-// middleware.js (in your root directory)
+// middleware.js (place in root directory)
 import { NextRequest, NextResponse } from "next/server";
+import axios from "axios";
 
 export async function middleware(request: NextRequest) {
-  // Only run middleware on admin routes, but exclude login page
-  if (
-    request.nextUrl.pathname.startsWith("/administrator") &&
-    !request.nextUrl.pathname.startsWith("/administrator/login")
-  ) {
-    const token = request.cookies.get("token")?.value;
+  const { pathname } = request.nextUrl;
 
-    // If no token, redirect to login
-    if (!token) {
-      return NextResponse.redirect(
-        new URL("/administrator/login", request.url)
-      );
-    }
-
+  // Only run middleware for admin routes
+  if (pathname.startsWith("/administrator") && pathname !== "/administrator") {
     try {
-      // Verify token with your backend
-      const response = await fetch(
+      // Get cookies from the request
+      const cookies = request.headers.get("cookie");
+
+      // Verify admin authentication using axios
+      const response = await axios.post(
         "https://edugrant-express-server-production.up.railway.app/administrator/adminTokenAuthentication",
+        {},
         {
-          method: "POST",
           headers: {
+            Cookie: cookies || "",
             "Content-Type": "application/json",
-            Cookie: request.headers.get("cookie") || `token=${token}`,
           },
+          withCredentials: true,
+          timeout: 5000, // 5 second timeout
         }
       );
 
-      if (!response.ok) {
-        // Token is invalid, redirect to login
-        return NextResponse.redirect(
-          new URL("/administrator/login", request.url)
-        );
+      if (response.status === 200) {
+        // Authentication successful, continue to the requested page
+        return NextResponse.next();
+      } else {
+        // Authentication failed, redirect to login
+        const url = request.nextUrl.clone();
+        url.pathname = "/administrator";
+        return NextResponse.redirect(url);
       }
-
-      // Token is valid, allow access
-      return NextResponse.next();
     } catch (error) {
-      console.error("Authentication error:", error);
+      console.error("Middleware authentication error:", error);
       // On error, redirect to login
-      return NextResponse.redirect(
-        new URL("/administrator/login", request.url)
-      );
+      const url = request.nextUrl.clone();
+      url.pathname = "/administrator";
+      return NextResponse.redirect(url);
     }
   }
 
+  // For all other routes, continue normally
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    "/administrator/:path*",
-    // This will match all /administrator routes
-    // But the middleware logic excludes /administrator/login
-  ],
+  matcher: ["/administrator/:path*"],
 };
