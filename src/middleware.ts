@@ -1,40 +1,17 @@
-import axios from "axios";
+// middleware.js - Simple debug version
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-  console.log("👀 Middleware is running!");
-  if (pathname.startsWith("/administrator/home")) {
-    try {
-      const ValidToken = await axios.post(
-        `${process.env.NEXT_PUBLIC_USER_API}/adminTokenAuthentication`,
-        {},
-        { withCredentials: true }
-      );
-      if (ValidToken.status !== 200) {
-        return NextResponse.redirect(new URL("/administrator", request.url));
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  if (request.nextUrl.pathname.startsWith("/administrator/home")) {
+    console.log("Cookies:", request.headers.get("cookie"));
+
+    // Always let through - just log what we see
+    return NextResponse.next();
   }
-  if (pathname.startsWith("/home")) {
-    try {
-      const ValidToken = await axios.post(
-        `${process.env.NEXT_PUBLIC_USER_API}/tokenValidation`,
-        {},
-        { withCredentials: true }
-      );
-      if (ValidToken.status !== 200) {
-        return NextResponse.redirect(new URL("/", request.url));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/administrator/home/:path*", "/home/:path*"],
+  matcher: ["/administrator/home/:path*"],
 };
