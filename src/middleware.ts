@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest){
         },
         body: JSON.stringify({}),
         });
-        if(ValidToken.status === 200){
+        if(ValidToken.status !== 200){
             return NextResponse.redirect(new URL("/administrator", request.url))
         }
     }
