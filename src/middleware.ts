@@ -15,8 +15,10 @@ export async function middleware(request: NextRequest){
         if(ValidToken.status !== 200){
             return NextResponse.redirect(new URL("/administrator", request.url))
         }
+        else{
+            return NextResponse.next()
+        }
     }
-    return NextResponse.next()
 }
 
 export const config = {
