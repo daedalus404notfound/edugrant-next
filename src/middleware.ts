@@ -15,7 +15,8 @@ export async function middleware(request: NextRequest){
             credentials: "include"
             });
             if(ValidToken.status !== 200){
-                // return NextResponse.redirect(new URL("/administrator", request.url))
+                console.log(ValidToken)
+                return NextResponse.redirect(new URL("/administrator", request.url))
             }
             else{
                 return NextResponse.next()
