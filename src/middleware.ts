@@ -1,21 +1,31 @@
-// middleware.ts
+import axios from "axios";
 import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
-  const token = request.cookies.get("token")?.value;
 
-  console.log("🔐 Checking token for:", request.nextUrl.pathname);
-  console.log("📦 Token:", token ? "[Present]" : "[Missing]");
-
-  if (!token) {
-    console.log("⛔ No token — redirecting to /administrator");
-    return NextResponse.redirect(new URL("/administrator", request.url));
-  }
-
-  console.log("✅ Token found — proceeding");
-  return NextResponse.next();
+export async function middleware(request: NextRequest){
+    const { pathname } = request.nextUrl;
+    console.log("👀 Middleware is running!")
+    if(pathname.startsWith("/administrator/home")){
+        try {
+            const ValidToken = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/adminTokenAuthentication`,{},{withCredentials:true});
+            if(ValidToken.status !== 200){
+                return NextResponse.redirect(new URL("/administrator", request.url))
+            }
+        } catch (error) {
+        }
+    }
+    if(pathname.startsWith("/home")){
+        try {
+            const ValidToken = await axios.post(`${process.env.NEXT_PUBLIC_USER_API}/tokenValidation`,{},{withCredentials:true});
+            if(ValidToken.status !== 200){
+                return NextResponse.redirect(new URL("/", request.url))
+            }
+        } catch (error) {
+        }
+    }
+    return NextResponse.next()
 }
 
 export const config = {
-  matcher: ["/administrator/home"],
-};
+    matcher:["/administrator/home/:path*", "/home/:path*"],
+}

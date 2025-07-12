@@ -1,36 +1,37 @@
+// /app/administrator/home
 "use client";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
 export default function AdminHomePage() {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
+  // const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const verifyAdmin = async () => {
-      try {
-        const response = await axios.post(
-          "https://edugrant-express-server-production.up.railway.app/administrator/adminTokenAuthentication",
-          {},
-          { withCredentials: true }
-        );
+  // useEffect(() => {
+  //   const verifyAdmin = async () => {
+  //     try {
+  //       const response = await axios.post(
+  //         "https://edugrant-express-server-production.up.railway.app/administrator/adminTokenAuthentication",
+  //         {},
+  //         { withCredentials: true }
+  //       );
 
-        if (response.status === 200) {
-          setIsAuthenticated(true);
-        }
-      } catch (error) {
-        console.log("Authentication failed", error);
-        router.push("/administrator");
-        return;
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       if (response.status === 200) {
+  //         setIsAuthenticated(true);
+  //       }
+  //     } catch (error) {
+  //       console.log("Authentication failed", error);
+  //       router.push("/administrator");
+  //       return;
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    verifyAdmin();
-  }, [router]);
+  //   verifyAdmin();
+  // }, [router]);
 
   const handleLogout = async () => {
     try {
@@ -39,7 +40,7 @@ export default function AdminHomePage() {
         {},
         { withCredentials: true }
       );
-      router.push("/administrator");
+      router.push("/administrator");``
     } catch (error) {
       console.error("Logout failed", error);
       // Still redirect even if logout fails
@@ -47,21 +48,21 @@ export default function AdminHomePage() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Checking authentication...</div>
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-screen">
+  //       <div className="text-lg">Checking authentication...</div>
+  //     </div>
+  //   );
+  // }
 
-  if (!isAuthenticated) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Redirecting...</div>
-      </div>
-    );
-  }
+  // if (!isAuthenticated) {
+  //   return (
+  //     <div className="flex items-center justify-center min-h-screen">
+  //       <div className="text-lg">Redirecting...</div>
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
