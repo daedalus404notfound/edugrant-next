@@ -76,24 +76,6 @@ export default function AdminHomePage() {
             Logout
           </button>
         </div>
-
-        {/* Your admin content goes here */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Users</h2>
-            <p className="text-gray-600">Manage user accounts</p>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Settings</h2>
-            <p className="text-gray-600">Configure system settings</p>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-semibold mb-4">Analytics</h2>
-            <p className="text-gray-600">View system analytics</p>
-          </div>
-        </div>
       </div>
     </>
   );
