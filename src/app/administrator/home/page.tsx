@@ -6,7 +6,7 @@ import axios from "axios";
 
 export default function AdminHomePage() {
   const router = useRouter();
-  const [isAuthenticated] = useState(false);
+  const [isAuthenticated] = useState(true);
   const [loading] = useState(false);
 
   const handleLogout = async () => {
