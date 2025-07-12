@@ -9,30 +9,6 @@ export default function AdminHomePage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const verifyAdmin = async () => {
-      try {
-        const response = await axios.post(
-          "https://edugrant-express-server-production.up.railway.app/administrator/adminTokenAuthentication",
-          {},
-          { withCredentials: true }
-        );
-
-        if (response.status === 200) {
-          setIsAuthenticated(true);
-        }
-      } catch (error) {
-        console.log("Authentication failed", error);
-        router.push("/administrator");
-        return;
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    verifyAdmin();
-  }, [router]);
-
   const handleLogout = async () => {
     try {
       await axios.post(
