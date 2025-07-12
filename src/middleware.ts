@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 
 export async function middleware(request: NextRequest){
+    console.log("Middleware Working")
     const { pathname } = request.nextUrl;
     if(pathname.startsWith("/administrator/home")){
         try {
