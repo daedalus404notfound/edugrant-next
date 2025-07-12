@@ -2,13 +2,18 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  // Only run middleware on admin routes
-  if (request.nextUrl.pathname.startsWith("/administrator/home")) {
+  // Only run middleware on admin routes, but exclude login page
+  if (
+    request.nextUrl.pathname.startsWith("/administrator") &&
+    !request.nextUrl.pathname.startsWith("/administrator/login")
+  ) {
     const token = request.cookies.get("token")?.value;
 
     // If no token, redirect to login
     if (!token) {
-      return NextResponse.redirect(new URL("/administrator", request.url));
+      return NextResponse.redirect(
+        new URL("/administrator/login", request.url)
+      );
     }
 
     try {
@@ -18,16 +23,17 @@ export async function middleware(request: NextRequest) {
         {
           method: "POST",
           headers: {
-            Cookie: `token=${token}`,
             "Content-Type": "application/json",
+            Cookie: request.headers.get("cookie") || `token=${token}`,
           },
-          credentials: "include",
         }
       );
 
       if (!response.ok) {
         // Token is invalid, redirect to login
-        return NextResponse.redirect(new URL("/administrator", request.url));
+        return NextResponse.redirect(
+          new URL("/administrator/login", request.url)
+        );
       }
 
       // Token is valid, allow access
@@ -35,7 +41,9 @@ export async function middleware(request: NextRequest) {
     } catch (error) {
       console.error("Authentication error:", error);
       // On error, redirect to login
-      return NextResponse.redirect(new URL("/administrator", request.url));
+      return NextResponse.redirect(
+        new URL("/administrator/login", request.url)
+      );
     }
   }
 
@@ -44,7 +52,8 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/administrator/home/:path*",
-    // Add other admin routes that need protection
+    "/administrator/:path*",
+    // This will match all /administrator routes
+    // But the middleware logic excludes /administrator/login
   ],
 };
