@@ -1,13 +1,13 @@
 // /app/administrator/home
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
 export default function AdminHomePage() {
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [isAuthenticated] = useState(false);
+  const [loading] = useState(true);
 
   const handleLogout = async () => {
     try {
