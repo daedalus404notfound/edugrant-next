@@ -12,6 +12,7 @@ export async function middleware(request: NextRequest){
                 cookie: request.headers.get("cookie") || "", // Forward user's cookies
             },
             body: JSON.stringify({}),
+            credentials: "include"
             });
             if(ValidToken.status !== 200){
                 return NextResponse.redirect(new URL("/administrator", request.url))
