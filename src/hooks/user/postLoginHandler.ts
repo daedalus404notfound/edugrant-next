@@ -9,6 +9,7 @@ import {
 } from "@/hooks/user/zodLogin";
 import { useUserStore } from "@/store/useUserStore";
 import StyledToast from "@/components/ui/toast-styled";
+import useRememberStore from "@/store/rememberMe";
 
 // Type definitions for API responses
 interface ApiErrorResponse {
@@ -114,13 +115,13 @@ export const useSendAuthCode = () => {
 export const useVerifyLogin = () => {
   return useMutation({
     mutationFn: verifyLoginApi,
-    onSuccess: (data) => {
+    onSuccess: () => {
       StyledToast({
         status: "success",
         title: "Welcome Back!",
         description: "Login successful. Redirecting to your dashboard...",
       });
-      console.log("login:", data);
+      // console.log("login:", data);
     },
     onError: (error: ApiError) => {
       console.error("Login verification error:", error);
@@ -178,7 +179,7 @@ export const useLoginHandler = () => {
   const [step, setStep] = useState<"login" | "otp">("login");
 
   const { LoginForm, LoginData, loginOtpForm } = useLoginUser();
-
+  const { remember, setStudentId, clearStudentId } = useRememberStore();
   // TanStack Query mutations
   const sendAuthCode = useSendAuthCode();
   const verifyLogin = useVerifyLogin();
@@ -194,6 +195,12 @@ export const useLoginHandler = () => {
 
     try {
       const result = await sendAuthCode.mutateAsync(data);
+      if (remember) {
+        setStudentId(data.studentId);
+      } else {
+        // If remember me is not checked, clear any saved studentId
+        clearStudentId();
+      }
       if (result) {
         setStep("otp");
       }
@@ -217,10 +224,10 @@ export const useLoginHandler = () => {
         loginData: LoginData,
         otpData,
       });
-
-      if (result?.user) {
-        setUser(result.user);
-        router.push("/user/home");
+      console.log(result);
+      if (result.userData) {
+        setUser(result.userData);
+        router.replace("/user/home");
       }
     } catch (error) {
       // Error toast is already handled in useVerifyLogin onError
