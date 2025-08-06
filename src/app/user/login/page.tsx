@@ -121,138 +121,151 @@ export default function Login() {
                 Welcome back! Please sign in to continue.
               </motion.p>
               <Form {...LoginForm}>
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.5 }}
-                >
-                  <FormField
-                    control={LoginForm.control}
-                    name="studentId"
-                    render={({ field }) => (
-                      <FormItem className="mt-5">
-                        <FormLabel className="flex justify-between items-center">
-                          <span className="flex items-center gap-1.5">
-                            <IdCard className="h-6" /> Student ID
-                          </span>{" "}
-                          <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder=""
-                            {...field}
-                            disabled={authLoading}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.6 }}
-                >
-                  <FormField
-                    control={LoginForm.control}
-                    name="password"
-                    render={({ field }) => (
-                      <FormItem className="mt-4">
-                        <FormLabel className="flex justify-between items-center">
-                          <span className="flex items-center gap-1.5">
-                            <LockOpen className="h-5" /> Password
-                          </span>
-                          <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <div className="relative">
+                <form onSubmit={LoginForm.handleSubmit(handleLogin)}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.5 }}
+                  >
+                    <FormField
+                      control={LoginForm.control}
+                      name="studentId"
+                      render={({ field }) => (
+                        <FormItem className="mt-5">
+                          <FormLabel className="flex justify-between items-center">
+                            <span className="flex items-center gap-1.5">
+                              <IdCard className="h-6" /> Student ID
+                            </span>{" "}
+                            <FormMessage />
+                          </FormLabel>
+                          <FormControl>
                             <Input
-                              type={hidden ? "password" : "text"}
+                              type="text"
                               placeholder=""
                               {...field}
+                              aria-invalid={undefined}
                               disabled={authLoading}
                             />
-                            <Button
-                              className="absolute right-0 top-0"
-                              variant="ghost"
-                              onClick={() => setHidden(!hidden)}
-                            >
-                              {hidden ? <Eye /> : <EyeClosed />}
-                            </Button>
-                          </div>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: 0.6 }}
-                  className="flex justify-between items-center mt-3"
-                >
-                  <span className="flex gap-1.5 items-center ">
-                    <Checkbox
-                      id="remember"
-                      disabled={authLoading}
-                      checked={remember}
-                      onCheckedChange={(checked: boolean) =>
-                        setRemember(checked)
-                      }
+                          </FormControl>
+                        </FormItem>
+                      )}
                     />
-                    <Label htmlFor="remember">Remember me</Label>
-                  </span>
+                  </motion.div>
 
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Label className="hover:underline cursor-pointer">
-                        Forgot password?
-                      </Label>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Reset your password</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Enter your email address below and we'll send you a
-                          link to reset your password.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <Input type="email" placeholder="Enter your email" />
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction>
-                          Send Reset Link <ArrowRight />
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.7 }}
-                  className="mt-7"
-                >
-                  <Button
-                    className="w-full"
-                    onClick={LoginForm.handleSubmit(handleLogin)}
-                    disabled={authLoading}
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.6 }}
                   >
-                    {authLoading && (
-                      <LoaderCircleIcon
-                        className="-ms-1 animate-spin"
-                        size={16}
-                        aria-hidden="true"
+                    <FormField
+                      control={LoginForm.control}
+                      name="password"
+                      render={({ field }) => (
+                        <FormItem className="mt-5">
+                          <FormLabel className="flex justify-between items-center">
+                            <span className="flex items-center gap-1.5">
+                              <LockOpen className="h-5" /> Password
+                            </span>
+                            <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                type={hidden ? "password" : "text"}
+                                placeholder=""
+                                {...field}
+                                disabled={authLoading}
+                              />
+                              <Button
+                                className="absolute right-0 top-0"
+                                variant="ghost"
+                                type="button"
+                                onClick={() => setHidden(!hidden)}
+                              >
+                                {hidden ? <Eye /> : <EyeClosed />}
+                              </Button>
+                            </div>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.6 }}
+                    className="flex justify-between items-center mt-3"
+                  >
+                    <span className="flex gap-1.5 items-center ">
+                      <Checkbox
+                        id="remember"
+                        disabled={authLoading}
+                        checked={remember}
+                        onCheckedChange={(checked: boolean) =>
+                          setRemember(checked)
+                        }
                       />
-                    )}
-                    Continue
-                    <ArrowRight />
-                  </Button>
-                </motion.div>
+                      <Label htmlFor="remember">Remember me</Label>
+                    </span>
+
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Label className="hover:underline cursor-pointer">
+                          Forgot password?
+                        </Label>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Reset your password
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Enter your email address below and we'll send you a
+                            link to reset your password.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <Input type="email" placeholder="Enter your email" />
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction>
+                            Send Reset Link <ArrowRight />
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.7 }}
+                    className="mt-7"
+                  >
+                    <Button
+                      className="w-full"
+                      type="submit"
+                      disabled={authLoading}
+                      variant={authLoading ? "outline" : "default"}
+                    >
+                      {authLoading ? (
+                        <>
+                          Verifying...
+                          <LoaderCircleIcon
+                            className="-ms-1 animate-spin"
+                            size={16}
+                            aria-hidden="true"
+                          />
+                        </>
+                      ) : (
+                        <>
+                          Continue
+                          <ArrowRight />
+                        </>
+                      )}
+                    </Button>
+                  </motion.div>
+                </form>
               </Form>
             </div>
             <motion.p
@@ -277,7 +290,7 @@ export default function Login() {
         )}
         {step === "otp" && (
           <div className="overflow-hidden w-full flex justify-center items-center flex-col p-4">
-            <div className="   max-w-md w-full  space-y-7">
+            <div className="   max-w-md w-full ">
               <motion.div
                 className="flex justify-between items-center"
                 initial={{ opacity: 0, y: 30 }}
@@ -294,72 +307,90 @@ export default function Login() {
               </motion.div>
 
               <Form {...loginOtpForm}>
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
+                <form
+                  onSubmit={loginOtpForm.handleSubmit(handleOtpVerification)}
                 >
-                  <FormField
-                    control={loginOtpForm.control}
-                    name="otp"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex justify-between items-center">
-                          <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <div className="flex items-center justify-center">
-                            <InputOTP
-                              maxLength={6}
-                              value={field.value}
-                              onChange={(value) => {
-                                field.onChange(value);
-                              }}
-                            >
-                              <InputOTPGroup>
-                                <InputOTPSlot index={0} />
-                                <InputOTPSlot index={1} />
-                                <InputOTPSlot index={2} />
-                                <InputOTPSlot index={3} />
-                                <InputOTPSlot index={4} />
-                                <InputOTPSlot index={5} />
-                              </InputOTPGroup>
-                            </InputOTP>
-                          </div>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
-                >
-                  <Button
-                    onClick={loginOtpForm.handleSubmit(handleOtpVerification)}
-                    className="w-full"
-                    disabled={verifyLoading}
-                    variant={verifyLoading ? "outline" : "default"}
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
                   >
-                    Login
-                    <ArrowRight />
-                  </Button>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                  className="relative flex justify-center items-center gap-3"
-                >
-                  <div className=" border-b flex-1"></div>
-                  <Label>
-                    Didn&apos;t get the code?{" "}
-                    <span className="underline">Resend Now</span>
-                  </Label>
-                  <div className=" border-b flex-1"></div>
-                </motion.div>
+                    <FormField
+                      control={loginOtpForm.control}
+                      name="otp"
+                      render={({ field }) => (
+                        <FormItem className="mt-7">
+                          <FormLabel className="flex justify-between items-center">
+                            <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <div className="flex items-center justify-center">
+                              <InputOTP
+                                maxLength={6}
+                                value={field.value}
+                                onChange={(value) => {
+                                  field.onChange(value);
+                                }}
+                              >
+                                <InputOTPGroup>
+                                  <InputOTPSlot index={0} />
+                                  <InputOTPSlot index={1} />
+                                  <InputOTPSlot index={2} />
+                                  <InputOTPSlot index={3} />
+                                  <InputOTPSlot index={4} />
+                                  <InputOTPSlot index={5} />
+                                </InputOTPGroup>
+                              </InputOTP>
+                            </div>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                  >
+                    <Button
+                      type="submit"
+                      className="w-full mt-7"
+                      disabled={verifyLoading}
+                      variant={verifyLoading ? "outline" : "default"}
+                    >
+                      {verifyLoading ? (
+                        <>
+                          Logging In...
+                          <LoaderCircleIcon
+                            className="-ms-1 animate-spin"
+                            size={16}
+                            aria-hidden="true"
+                          />
+                        </>
+                      ) : (
+                        <>
+                          Login
+                          <ArrowRight />
+                        </>
+                      )}
+                      
+                    </Button>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.6 }}
+                    className="relative flex justify-center items-center gap-3 mt-7"
+                  >
+                    <div className=" border-b flex-1"></div>
+                    <Label>
+                      Didn&apos;t get the code?{" "}
+                      <span className="underline">Resend Now</span>
+                    </Label>
+                    <div className=" border-b flex-1"></div>
+                  </motion.div>
+                </form>
               </Form>
             </div>
           </div>
