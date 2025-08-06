@@ -3,11 +3,11 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 
 const loginSchema = z.object({
-  studentId: z.string().min(1, "Student ID is required."),
+  studentId: z.string().min(1, "Required"),
   password: z
     .string()
-    .min(1, "Password is required.")
-    .max(20, "Password must be at least 20 characters long."),
+    .min(1, "Required")
+    .max(20, "Too short"),
 });
 
 const loginOtpSchema = z.object({
@@ -32,5 +32,5 @@ export function useLoginUser() {
     },
   });
 
-  return {LoginForm, LoginData, loginOtpForm, loginSchema, loginOtpSchema };
+  return { LoginForm, LoginData, loginOtpForm, loginSchema, loginOtpSchema };
 }
