@@ -48,7 +48,7 @@ export default function Login() {
     step,
     // setStep,
     LoginForm,
-    LoginData,
+    // LoginData,
     loginOtpForm,
     handleLogin,
     handleOtpVerification,
@@ -221,8 +221,8 @@ export default function Login() {
                             Reset your password
                           </AlertDialogTitle>
                           <AlertDialogDescription>
-                            Enter your email address below and we'll send you a
-                            link to reset your password.
+                            Enter your email address below and we&apos;ll send
+                            you a link to reset your password.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <Input type="email" placeholder="Enter your email" />
@@ -374,7 +374,6 @@ export default function Login() {
                           <ArrowRight />
                         </>
                       )}
-                      
                     </Button>
                   </motion.div>
                   <motion.div
