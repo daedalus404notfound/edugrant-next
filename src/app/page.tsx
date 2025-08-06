@@ -18,6 +18,9 @@ import {
   HelpCircle,
   Zap,
   MapPin,
+  Github,
+  GraduationCap,
+  FacebookIcon,
 } from "lucide-react";
 import bascLogo from "@/assets/basclogo.png";
 import bascImage from "@/assets/BASCjf5989_03 copy.jpg";
@@ -30,6 +33,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Footer } from "@/components/ui/footer";
 const navItems = [
   { label: "Home", icon: Home },
   { label: "Features", icon: Zap },
@@ -199,7 +203,8 @@ export default function LandingPage() {
 
   return (
     <>
-      <div className="relative w-full">
+      <div className="your-class fixed inset-0"></div>
+      <div className="relative w-full z-10">
         <HeaderComponent />
         <AnimatePresence mode="wait">
           <motion.div
@@ -210,7 +215,7 @@ export default function LandingPage() {
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="relative min-h-[75vh]  mx-auto w-[95%]   rounded-3xl overflow-hidden  shadow-2xl shadow-background/50 flex items-center bg-[var(--green)]"
           >
-            <div className="absolute inset-0 h-full w-full flex items-center rounded-3xl">
+            <div className="absolute inset-0 h-full w-full flex items-center rounded-3xl x">
               <img
                 className="absolute opacity-3 h-[120%] [mask-image:linear-gradient(to_right,transparent,black_30%)] pointer-events-none left-10"
                 src={bascLogo.src}
@@ -263,6 +268,36 @@ export default function LandingPage() {
 
         <HowitworksComponent />
         <FaqsComponent />
+        <Footer
+          logo={<GraduationCap className="h-10 w-10" />}
+          brandName="BASC edugrant"
+          socialLinks={[
+            {
+              icon: <FacebookIcon className="h-5 w-5" />,
+              href: "https://twitter.com",
+              label: "Facebook",
+            },
+            {
+              icon: <Github className="h-5 w-5" />,
+              href: "https://github.com",
+              label: "GitHub",
+            },
+          ]}
+          mainLinks={[
+            { href: "/products", label: "Products" },
+            { href: "/about", label: "About" },
+            { href: "/blog", label: "Blog" },
+            { href: "/contact", label: "Contact" },
+          ]}
+          legalLinks={[
+            { href: "/privacy", label: "Privacy" },
+            { href: "/terms", label: "Terms" },
+          ]}
+          copyright={{
+            text: "© 2025 BASC edugrant",
+            license: "All rights reserved",
+          }}
+        />
       </div>
     </>
   );

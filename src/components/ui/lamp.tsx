@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 
 export default function Lamp() {
   return (
-    <div className="w-full lg:h-[90%] h-[98%] transform -translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 overflow-hidden flex justify-center ">
+    <div className="w-full lg:h-[85%] h-[98%] transform -translate-x-1/2 -translate-y-1/2 absolute top-1/2 left-1/2 overflow-hidden flex justify-center ">
       {/* Lamp Effect Background */}
       <div className="absolute top-15 lg:top-0 isolate z-0 hidden dark:flex w-screen flex-1 items-start justify-center transform scale-60 lg:scale-100 ">
         {/* Optional Blur Layer */}

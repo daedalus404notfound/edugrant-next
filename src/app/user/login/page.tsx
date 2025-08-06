@@ -3,6 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   Eye,
   EyeClosed,
   IdCard,
@@ -43,6 +51,7 @@ import Lamp from "@/components/ui/lamp";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 import useRememberStore from "@/store/rememberMe";
+import { Separator } from "@/components/ui/separator";
 export default function Login() {
   const {
     step,
@@ -275,16 +284,70 @@ export default function Login() {
               className="text-xs text-center p-4"
             >
               By clicking continue, you agree to our <br />
-              <span className="underline text-green-700 italic">
-                {" "}
-                Terms of Service{" "}
-              </span>{" "}
+              <Dialog>
+                <DialogTrigger className="underline text-blue-500 cursor-pointer">
+                  Privacy Policy
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle className="text-base">
+                      Privacy Policy
+                    </DialogTitle>
+                    <DialogDescription className="sr-only">
+                      This document describes how we handle your data and
+                      privacy.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <Separator />
+                  <div className="space-y-4 text-sm text-muted-foreground">
+                    <p>
+                      We collect only the information necessary to provide you
+                      with a smooth and personalized experience.
+                    </p>
+                    <p>
+                      Your data is stored securely and is never sold or shared
+                      with third parties without your consent, except as
+                      required by law.
+                    </p>
+                    <p>
+                      You may request deletion or modification of your data at
+                      any time by contacting support.
+                    </p>
+                  </div>
+                </DialogContent>
+              </Dialog>
               &nbsp; and &nbsp;
-              <span className="underline text-green-700 italic">
-                {" "}
-                Privacy Policy
-              </span>
-              .
+              <Dialog>
+                <DialogTrigger className="underline text-blue-500 cursor-pointer">
+                  Terms of Service
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle className="text-base">
+                      Terms of Service
+                    </DialogTitle>
+                    <DialogDescription className="sr-only">
+                      Please read these terms carefully before using our
+                      services.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <Separator />
+                  <div className="space-y-4 text-sm text-muted-foreground">
+                    <p>
+                      By using this platform, you agree to comply with our rules
+                      and regulations.
+                    </p>
+                    <p>
+                      You must not use the service for any illegal activities or
+                      to harm others.
+                    </p>
+                    <p>
+                      We reserve the right to suspend or terminate your access
+                      if you violate any of these terms.
+                    </p>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </motion.p>
           </div>
         )}
