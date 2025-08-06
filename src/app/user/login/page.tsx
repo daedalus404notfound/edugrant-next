@@ -119,7 +119,7 @@ export default function Login() {
         <ModeToggle />
       </motion.div>
       <div className="relative z-10 flex justify-center items-center w-full  h-full">
-        {step === "otp" && (
+        {step === "login" && (
           <div className="overflow-hidden w-full flex justify-center items-center flex-col p-4">
             <div className="  lg:w-md w-full space-y-7">
               <motion.div
@@ -261,7 +261,7 @@ export default function Login() {
             </motion.p>
           </div>
         )}
-        {step === "login" && (
+        {step === "otp" && (
           <div className="overflow-hidden w-full flex justify-center items-center flex-col p-4">
             <div className="  lg:w-md w-full space-y-7">
               <div className=" space-y-1.5">
