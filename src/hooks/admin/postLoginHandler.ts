@@ -1,16 +1,9 @@
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
-import {
-  loginFormData,
-  loginOtpFormData,
-  useLoginUser,
-} from "@/hooks/user/zodLogin";
-import { useUserStore } from "@/store/useUserStore";
+import { LoginFormData, otpFormData, useLoginAdmin } from "./zodLogin";
+import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
-import useRememberStore from "@/store/rememberMe";
-
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 // Type definitions for API responses
 interface ApiErrorResponse {
   message?: string;
@@ -19,14 +12,12 @@ interface ApiErrorResponse {
 }
 
 type ApiError = AxiosError<ApiErrorResponse>;
-
-// API Functions
-const sendAuthCodeApi = async (data: loginFormData) => {
+const sendAuthCodeApi = async (meow: LoginFormData) => {
   const response = await axios.post(
-    `${process.env.NEXT_PUBLIC_USER_URL}/sendAuthCodeLogin`,
+    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/adminLogin`,
     {
-      studentId: data.studentId,
-      userPassword: data.password,
+      adminEmail: meow.email,
+      adminPassword: meow.password,
     },
     {
       withCredentials: true,
@@ -34,18 +25,16 @@ const sendAuthCodeApi = async (data: loginFormData) => {
   );
   return response.data;
 };
-
 interface VerifyLoginData {
-  loginData: loginFormData;
-  otpData: loginOtpFormData;
+  loginData: LoginFormData;
+  otpData: otpFormData;
 }
-
 const verifyLoginApi = async ({ loginData, otpData }: VerifyLoginData) => {
   const response = await axios.post(
-    `${process.env.NEXT_PUBLIC_USER_URL}/loginAccounts`,
+    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/adminCodeAuthentication`,
     {
-      studentId: loginData.studentId,
-      userPassword: loginData.password,
+      adminEmail: loginData.email,
+      adminPassword: loginData.password,
       code: otpData.otp,
     },
     {
@@ -55,7 +44,6 @@ const verifyLoginApi = async ({ loginData, otpData }: VerifyLoginData) => {
   return response.data;
 };
 
-// Individual Mutation Hooks with Toast Integration
 export const useSendAuthCode = () => {
   return useMutation({
     mutationFn: sendAuthCodeApi,
@@ -111,7 +99,6 @@ export const useSendAuthCode = () => {
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 };
-
 export const useVerifyLogin = () => {
   return useMutation({
     mutationFn: verifyLoginApi,
@@ -171,20 +158,16 @@ export const useVerifyLogin = () => {
   });
 };
 
-// Main Login Handler Hook
 export const useLoginHandler = () => {
   const router = useRouter();
-
   const [step, setStep] = useState<"login" | "otp">("login");
-
-  const { LoginForm, LoginData, loginOtpForm } = useLoginUser();
-  const { remember, setStudentId, clearStudentId } = useRememberStore();
+  const { LoginForm, LoginData, otpForm } = useLoginAdmin();
   // TanStack Query mutations
   const sendAuthCode = useSendAuthCode();
   const verifyLogin = useVerifyLogin();
 
   // Handle first login (username + password)
-  const handleLogin = async (data: loginFormData) => {
+  const handleLogin = async (data: LoginFormData) => {
     // Show loading toast while processing
     StyledToast({
       status: "checking",
@@ -194,12 +177,7 @@ export const useLoginHandler = () => {
 
     try {
       const result = await sendAuthCode.mutateAsync(data);
-      if (remember) {
-        setStudentId(data.studentId);
-      } else {
-        // If remember me is not checked, clear any saved studentId
-        clearStudentId();
-      }
+
       if (result) {
         setStep("otp");
       }
@@ -210,7 +188,7 @@ export const useLoginHandler = () => {
   };
 
   // Handle OTP verification
-  const handleOtpVerification = async (otpData: loginOtpFormData) => {
+  const handleOtpVerification = async (otpData: otpFormData) => {
     // Show loading toast while verifying
     StyledToast({
       status: "checking",
@@ -223,8 +201,9 @@ export const useLoginHandler = () => {
         loginData: LoginData,
         otpData,
       });
+      console.log(result);
       if (result) {
-        router.replace("/user/home");
+        router.replace("/administrators/home");
       }
     } catch (error) {
       // Error toast is already handled in useVerifyLogin onError
@@ -279,7 +258,7 @@ export const useLoginHandler = () => {
     // Form utilities
     LoginForm,
     LoginData,
-    loginOtpForm,
+    otpForm,
 
     // Action handlers
     handleLogin,

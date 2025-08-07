@@ -54,12 +54,21 @@ export const CanvasRevealEffect = ({
         />
       </div>
       {showGradient && (
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black" />
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `
+      radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%),
+      linear-gradient(to top, rgba(0, 0, 0, 1), transparent, rgba(0, 0, 0, 1))
+      
+    `,
+          }}
+        />
       )}
     </div>
   );
 };
-
+//  linear-gradient(to left, rgba(0, 0, 0, 1), transparent)
 interface DotMatrixProps {
   colors?: number[][];
   opacities?: number[];
