@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
 import {
@@ -22,7 +22,7 @@ import { Label } from "@/components/ui/label";
 import BlurText from "@/components/ui/blur";
 import { CanvasRevealEffect } from "@/components/ui/matrix";
 import { useLoginHandler } from "@/hooks/admin/postLoginHandler";
-import { LoaderCircleIcon, MailCheck, User } from "lucide-react";
+import { LoaderCircleIcon, MailCheck } from "lucide-react";
 import { ArrowRight } from "iconsax-reactjs";
 
 export default function LoginAdmin() {

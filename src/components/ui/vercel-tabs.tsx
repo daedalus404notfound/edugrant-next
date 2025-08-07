@@ -27,7 +27,7 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
       width: "0px",
     });
     const tabRefs = useRef<(HTMLDivElement | null)[]>([]);
-
+    console.log(activeTab);
     useEffect(() => {
       if (hoveredIndex !== null) {
         const hoveredElement = tabRefs.current[hoveredIndex];
