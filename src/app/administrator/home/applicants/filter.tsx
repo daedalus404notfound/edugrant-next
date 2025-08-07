@@ -28,6 +28,7 @@ type FilterApplication = {
   course: string;
   year: string;
   section: string;
+  disable: boolean;
 };
 export default function ApplicationFilter({
   setScholar,
@@ -38,12 +39,13 @@ export default function ApplicationFilter({
   course,
   year,
   section,
+  disable,
 }: FilterApplication) {
   const { filter } = useGetFilter();
   return (
     <Drawer direction="right" modal={true}>
       <DrawerTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" disabled={disable}>
           <Settings2 />
           Advance Filter
         </Button>
@@ -68,9 +70,9 @@ export default function ApplicationFilter({
                   <SelectValue placeholder="Filter Course" />
                 </SelectTrigger>
                 <SelectContent>
-                  {filter?.Courses.map((meow) => (
-                    <SelectItem key={meow.course} value={meow.course}>
-                      {meow.course}
+                  {filter?.FilterData.distinctCourse.map((meow) => (
+                    <SelectItem key={meow} value={meow}>
+                      {meow}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -80,9 +82,9 @@ export default function ApplicationFilter({
                   <SelectValue placeholder="Filter Year Level" />
                 </SelectTrigger>
                 <SelectContent>
-                  {filter?.Years.map((meow) => (
-                    <SelectItem key={meow.year} value={meow.year.slice(0, 3)}>
-                      {meow.year}
+                  {filter?.FilterData.distinctYear.map((meow) => (
+                    <SelectItem key={meow} value={meow.slice(0, 3)}>
+                      {meow}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -92,9 +94,9 @@ export default function ApplicationFilter({
                   <SelectValue placeholder="Filter Section" />
                 </SelectTrigger>
                 <SelectContent>
-                  {filter?.Sections.map((meow) => (
-                    <SelectItem key={meow.section} value={meow.section}>
-                      {meow.section}
+                  {filter?.FilterData.distinctSection.map((meow) => (
+                    <SelectItem key={meow} value={meow}>
+                      {meow}
                     </SelectItem>
                   ))}
                 </SelectContent>

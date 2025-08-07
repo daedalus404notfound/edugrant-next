@@ -77,13 +77,12 @@ export type AdminUserType = {
 };
 
 export type FilterTypes = {
-  Courses: { course: string }[];
-  Years: { year: string }[];
-  Sections: { section: string }[];
-  Scholarships: ScholarshipFilterTypes[];
+  FilterData: AcademicTypes;
+  Scholarships: ScholarshipTypes[];
 };
 
-type ScholarshipFilterTypes = {
-  scholarshipId: string | number;
-  scholarshipTitle: string;
+export type AcademicTypes = {
+  distinctCourse: string[];
+  distinctYear: string[];
+  distinctSection: string[];
 };

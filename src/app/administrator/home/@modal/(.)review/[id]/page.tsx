@@ -74,7 +74,7 @@ export default function InterceptReviewApplicants() {
         description: "Please wait while we approve the application.",
       });
       const res = await axios.post(
-        "https://edugrant-express-server-production.up.railway.app/administrator/approveApplication",
+        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/approveApplication`,
         { applicationId: id },
         { withCredentials: true }
       );
@@ -112,7 +112,7 @@ export default function InterceptReviewApplicants() {
         description: "Please wait while we update the application status.",
       });
       const res = await axios.post(
-        "https://edugrant-express-server-production.up.railway.app/administrator/declineApplication",
+        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/declineApplication`,
         { applicationId: id },
         { withCredentials: true }
       );
@@ -148,7 +148,7 @@ export default function InterceptReviewApplicants() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="max-w-[900px] w-full mx-auto h-[95vh] outline-0 border-0">
+      <DrawerContent className="max-w-[1200px] w-full mx-auto h-[95vh] outline-0 border-0">
         <DrawerHeader className="sr-only">
           <DrawerTitle className=""></DrawerTitle>
           <DrawerDescription></DrawerDescription>
@@ -253,7 +253,7 @@ export default function InterceptReviewApplicants() {
                 </p>
               </span>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               {data?.userDocuments &&
                 Object.entries(data.userDocuments).map(([key, doc], index) => (
                   <div
@@ -375,6 +375,9 @@ export default function InterceptReviewApplicants() {
                 </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
+            <Button className="flex-1" onClick={() => setOpen(false)}>
+              Close
+            </Button>
           </div>
         </DrawerFooter>
       </DrawerContent>

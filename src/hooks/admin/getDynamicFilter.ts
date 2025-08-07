@@ -15,7 +15,7 @@ export default function useGetFilter() {
           { withCredentials: true }
         );
         if (res.status === 200) {
-          console.log("API response:", res.data);
+          console.log("API filter:", res.data);
           setFilter(res.data);
         }
       } catch (error) {

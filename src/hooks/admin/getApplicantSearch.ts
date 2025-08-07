@@ -3,7 +3,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { ApplicationTypes } from "../types";
 
-export default function useApplicationpSearch({ query }: { query: string }) {
+export default function useApplicationpSearch({
+  query,
+  status,
+}: {
+  query: string;
+  status: string;
+}) {
   const [searchData, setSearchData] = useState<ApplicationTypes[]>([]);
   const [searchLoading, setLoading] = useState(false);
 
@@ -17,15 +23,14 @@ export default function useApplicationpSearch({ query }: { query: string }) {
     setLoading(true);
     const delayDebounce = setTimeout(async () => {
       try {
-        const res = await axios.get(
-          `${
-            process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
-          }/searchApplication?search=${encodeURIComponent(
-            trimmedQuery
-          )}`,
-          { withCredentials: true }
-        );
-
+        const endpoint = `${
+          process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
+        }/searchApplication?status=${status}&search=${encodeURIComponent(
+          trimmedQuery
+        )}`;
+        const res = await axios.get(endpoint, { withCredentials: true });
+        console.log(endpoint);
+        console.log(query);
         if (res.status === 200) {
           console.log(res);
           setSearchData(res.data.data);
@@ -38,7 +43,7 @@ export default function useApplicationpSearch({ query }: { query: string }) {
     }, 500); // Adjust delay time as needed
 
     return () => clearTimeout(delayDebounce);
-  }, [query]);
+  }, [query, status]);
 
   return { searchData, searchLoading };
 }

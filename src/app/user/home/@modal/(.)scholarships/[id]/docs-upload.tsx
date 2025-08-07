@@ -119,7 +119,7 @@ export default function UploadDocs({
       }
 
       const res = await axios.post(
-        "https://edugrant-express-server-production.up.railway.app/user/applyScholarship",
+        `${process.env.NEXT_PUBLIC_USER_URL}/applyScholarship`,
         formData,
         {
           withCredentials: true,

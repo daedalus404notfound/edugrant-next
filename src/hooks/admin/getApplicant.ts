@@ -11,6 +11,7 @@ export default function useAdminReview({
   course,
   year,
   section,
+  status,
 }: {
   currentPage: number;
   rowsPerPage: number;
@@ -19,33 +20,33 @@ export default function useAdminReview({
   course?: string;
   year?: string;
   section?: string;
+  status: string;
 }) {
   const [data, setData] = useState<ApplicationTypes[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
-  console.log(scholar, course, year, section);
+
   useEffect(
     function () {
       async function fetchScholarships() {
         setLoading(true);
         try {
-          const res = await axios.get(
-            `${
-              process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
-            }/getStudentApplication?page=${currentPage}&dataPerPage=${rowsPerPage}${
-              sort ? `&sortBy=${sort}` : ""
-            }${scholar ? `&scholarshipId=${scholar}` : ""}${
-              course ? `&course=${course}` : ""
-            }
+          const endpoint = `${
+            process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
+          }/getApplicationByStatus?status=${status}&page=${currentPage}&dataPerPage=${rowsPerPage}${
+            sort ? `&sortBy=${sort}` : ""
+          }${scholar ? `&scholarshipId=${scholar}` : ""}${
+            course ? `&course=${course}` : ""
+          }
             ${year ? `&year=${year}` : ""} ${
-              section ? `&section=${section}` : ""
-            }`,
-            { withCredentials: true }
-          );
+            section ? `&section=${section}` : ""
+          }`;
+          const res = await axios.get(endpoint, { withCredentials: true });
+          console.log(endpoint);
           if (res.status === 200) {
             console.log("API response:", res.data);
-            setData(res.data.Applications);
-            setTotalPages(res.data.totalPages);
+            setData(res.data.applications);
+            setTotalPages(res.data.totalPage);
           }
         } catch (error) {
           console.error(error);
@@ -56,7 +57,7 @@ export default function useAdminReview({
 
       fetchScholarships();
     },
-    [currentPage, rowsPerPage, sort, scholar, course, year, section]
+    [currentPage, rowsPerPage, sort, scholar, course, year, section, status]
   );
 
   return { data, loading, totalPages };

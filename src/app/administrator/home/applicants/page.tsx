@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
+import { Tabs } from "@/components/ui/vercel-tabs";
 import {
   Pagination,
   PaginationContent,
@@ -22,15 +22,11 @@ import DynamicHeaderAdmin from "../dynamic-header";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  AlignHorizontalDistributeCenter,
   ArrowRightIcon,
-  Check,
-  CheckCheck,
   ChevronFirstIcon,
   ChevronLastIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  ChevronsUpDown,
   FileDown,
   SearchIcon,
 } from "lucide-react";
@@ -43,6 +39,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import useAdminReview from "@/hooks/admin/getApplicant";
 
 const headers = [
   { label: "Student ID" },
@@ -50,55 +47,20 @@ const headers = [
   { label: "Course, Year & Section" },
   { label: "Scholarship" },
   { label: "Status" },
-  { label: "Approved Date" },
+  { label: "Application Date" },
 ];
 
-import { cn } from "@/lib/utils";
-
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import ApplicationFilter from "../review/filter";
+import ApplicationFilter from "./filter";
 import useApplicationpSearch from "@/hooks/admin/getApplicantSearch";
 import Link from "next/link";
-import useStatusReview from "@/lib/get-by-status";
 import { Badge } from "@/components/ui/badge";
-const sortList = [
-  {
-    value: "",
-    label: "No Sort",
-  },
-  {
-    value: "asc",
-    label: "Ascending",
-  },
-  {
-    value: "desc",
-    label: "Descending",
-  },
-  {
-    value: "newest",
-    label: "Newest",
-  },
-  {
-    value: "oldest",
-    label: "Oldest",
-  },
-];
+import SortApplicants from "./sort";
 
 export default function Manage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [status, setStatus] = useState("");
   const [scholar, setScholar] = useState("");
   const [course, setCourse] = useState("");
   const [year, setYear] = useState("");
@@ -106,8 +68,8 @@ export default function Manage() {
   const [sort, setSort] = useState<"" | "asc" | "desc" | "newest" | "oldest">(
     ""
   );
-  const [open, setOpen] = useState(false);
-  const { data, loading, totalPages } = useStatusReview({
+
+  const { data, loading, totalPages } = useAdminReview({
     currentPage,
     rowsPerPage,
     sort,
@@ -115,30 +77,39 @@ export default function Manage() {
     course,
     year,
     section,
-    status: "APPROVE",
+    status,
   });
 
+  const tabs = [
+    { id: "", label: "All Applicants", indicator: "1" },
+    { id: "PENDING", label: "Under Review", indicator: "1" },
+    { id: "APPROVE", label: "Approved", indicator: "1" },
+    { id: "DECLINE", label: "Declined", indicator: "1" },
+  ];
+
   const [query, setQuery] = useState<string>("");
-  console.log(query);
-  const { searchData, searchLoading } = useApplicationpSearch({ query });
+
+  const { searchData, searchLoading } = useApplicationpSearch({
+    query,
+    status,
+  });
 
   return (
     <div className="   min-h-screen px-4">
-      <DynamicHeaderAdmin first="Applicants" second="Approved" />
+      <DynamicHeaderAdmin first="Applicants" second="Manage Applicants" />
 
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
-        <h1 className="text-2xl font-semibold flex items-center gap-2">
-          <CheckCheck />
-          Processed Applicants
+        {/* <h1 className="text-2xl font-semibold flex items-center gap-2">
+          <UsersRound />
+          Pending Review
         </h1>
         <p className="text-sm text-gray-500 mt-1">
-          View and manage applicants whose scholarship applications have been
-          approved. You can review their submitted documents, or take further
-          action if needed.
-        </p>
-        <div className="container mx-auto py-10 space-y-3">
+          Review submitted documents and take action on scholarship
+          applications. You can approve, decline, or manage applicants.
+        </p> */}
+        <div className="container mx-auto space-y-6">
           <div className="flex gap-3 justify-between">
-            <div className="relative w-[40%]">
+            <div className="relative flex-1">
               <Input
                 onChange={(e) => setQuery(e.target.value)}
                 className="peer ps-9 pe-9"
@@ -159,61 +130,7 @@ export default function Manage() {
 
             <div className="flex gap-3 items-center">
               {" "}
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="justify-between"
-                  >
-                    <AlignHorizontalDistributeCenter />
-                    {sort
-                      ? sortList.find((framework) => framework.value === sort)
-                          ?.label
-                      : "Sort by"}
-                    <ChevronsUpDown className="opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[150px] p-0">
-                  <Command>
-                    <CommandList>
-                      <CommandEmpty>No framework found.</CommandEmpty>
-                      <CommandGroup>
-                        {sortList.map((framework) => (
-                          <CommandItem
-                            key={framework.value}
-                            value={framework.value}
-                            onSelect={(currentValue) => {
-                              setSort(
-                                currentValue === sort
-                                  ? ""
-                                  : (currentValue as
-                                      | ""
-                                      | "asc"
-                                      | "desc"
-                                      | "newest"
-                                      | "oldest")
-                              );
-                              setOpen(false);
-                            }}
-                          >
-                            {framework.label}
-                            <Check
-                              className={cn(
-                                "ml-auto",
-                                sort === framework.value
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
+              <SortApplicants query={query} setSort={setSort} sort={sort} />
               <ApplicationFilter
                 setCourse={setCourse}
                 setYear={setYear}
@@ -223,11 +140,23 @@ export default function Manage() {
                 course={course}
                 year={year}
                 section={section}
+                disable={query !== ""}
               />
               <Button variant="outline">
                 <FileDown />
                 Export CSV
               </Button>
+            </div>
+          </div>
+
+          <div className="flex justify-between  mt-8">
+            <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
+            <div className="space-x-1.5 uppercase">
+              {course && <Badge variant="secondary">{course}</Badge>}
+
+              {year && <Badge variant="secondary">{year} Year</Badge>}
+              {section && <Badge variant="secondary">Section {section}</Badge>}
+              {scholar && <Badge variant="secondary">{scholar}</Badge>}
             </div>
           </div>
           <Table>
@@ -237,7 +166,7 @@ export default function Manage() {
                 {headers.map((header) => (
                   <TableHead
                     className={
-                      header.label === "Approved Date" ? "text-center" : ""
+                      header.label === "Application Date" ? "text-center" : ""
                     }
                     key={header.label}
                   >
@@ -285,8 +214,18 @@ export default function Manage() {
                       </TableCell>
                       <TableCell>{row.scholarship.scholarshipTitle}</TableCell>
                       <TableCell>
-                        <Badge className="bg-green-800 text-gray-200">
-                          Approved
+                        <Badge
+                          className={`${
+                            row.status == "APPROVE"
+                              ? "bg-green-800"
+                              : row.status == "PENDING"
+                              ? "bg-yellow-700"
+                              : row.status === "DECLINE"
+                              ? "bg-red-800"
+                              : ""
+                          } text-gray-200`}
+                        >
+                          {row.status}
                         </Badge>
                       </TableCell>
                       <TableCell className="text-center">
@@ -331,8 +270,18 @@ export default function Manage() {
                     </TableCell>
                     <TableCell>{row.scholarship.scholarshipTitle}</TableCell>
                     <TableCell>
-                      <Badge className="bg-green-800 text-gray-200">
-                        Approved
+                      <Badge
+                        className={`${
+                          row.status == "APPROVE"
+                            ? "bg-green-800"
+                            : row.status == "PENDING"
+                            ? "bg-yellow-700"
+                            : row.status === "DECLINE"
+                            ? "bg-red-800"
+                            : ""
+                        } text-gray-200`}
+                      >
+                        {row.status}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-center">
@@ -351,7 +300,7 @@ export default function Manage() {
               )}
             </TableBody>
           </Table>
-          {!query && data.length !== 0 && (
+          {!query && data.length !== 0 && !loading && (
             <div className="flex items-center justify-between gap-8">
               {/* Results per page */}
               <div className="flex items-center gap-3">

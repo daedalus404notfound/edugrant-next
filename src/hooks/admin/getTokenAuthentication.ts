@@ -19,7 +19,7 @@ export default function useAuthenticatedUser() {
 
         if (res.status === 200) {
           setAdmin(res.data.user[0]);
-          console.log("authapi:", res.data.user[0]);
+        
         }
       } catch (error) {
         if (axios.isAxiosError(error) && error.message === "Network Error") {

@@ -3,13 +3,11 @@ import * as React from "react";
 import { usePathname } from "next/navigation";
 import {
   Home,
-  UserRoundX,
   UserRoundMinus,
   Megaphone,
   PenLine,
   GraduationCap,
   Archive,
-  CheckCheck,
   SquareUserRound,
 } from "lucide-react";
 import logo from "@/assets/basclogo.png";
@@ -68,20 +66,12 @@ const sidebarData = {
       title: "Review Applications",
       items: [
         {
-          title: "Pending Review",
-          url: "/administrator/home/review",
+          title: "Manage Applicants",
+          url: "/administrator/home/applicants",
           icon: UserRoundMinus,
         },
-        {
-          title: "Approved Applicants",
-          url: "/administrator/home/approved",
-          icon: CheckCheck,
-        },
-        {
-          title: "Rejected Applicants",
-          url: "/administrator/home/rejected",
-          icon: UserRoundX,
-        },
+       
+       
       ],
     },
     {
