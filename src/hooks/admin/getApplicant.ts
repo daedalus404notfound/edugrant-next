@@ -105,7 +105,7 @@ async function fetchApplications(
   }${scholar ? `&scholarshipId=${scholar}` : ""}${
     course ? `&course=${course}` : ""
   }${year ? `&year=${year}` : ""}${section ? `&section=${section}` : ""}`;
-
+  console.log(endpoint);
   const res = await axios.get(endpoint, { withCredentials: true });
 
   if (res.status !== 200) {
