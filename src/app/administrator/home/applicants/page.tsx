@@ -189,12 +189,12 @@ export default function Manage() {
                         key={row.applicationId}
                         onClick={() =>
                           router.push(
-                            `/administrator/home/review/${row.applicationId}`
+                            `/administrator/home/applicants/${row.applicationId}`
                           )
                         }
                         onMouseEnter={() =>
                           router.prefetch(
-                            `/administrator/home/review/${row.applicationId}`
+                            `/administrator/home/applicants/${row.applicationId}`
                           )
                         }
                         className="cursor-pointer"
@@ -204,7 +204,7 @@ export default function Manage() {
                         </TableCell>
                         <TableCell className="font-medium flex items-center gap-3">
                           {/* <Link
-                          href={`/administrator/home/review/${row.applicationId}`}
+                          href={`/administrator/home/applicants/${row.applicationId}`}
                           scroll={false}
                           prefetch={true}
                           className="underline h-full w-full"
@@ -264,12 +264,12 @@ export default function Manage() {
                       key={row.applicationId}
                       onClick={() =>
                         router.push(
-                          `/administrator/home/review/${row.applicationId}`
+                          `/administrator/home/applicants/${row.applicationId}`
                         )
                       }
                       onMouseEnter={() =>
                         router.prefetch(
-                          `/administrator/home/review/${row.applicationId}`
+                          `/administrator/home/applicants/${row.applicationId}`
                         )
                       }
                       className="cursor-pointer"
