@@ -13,6 +13,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 // import "ldrs/react/Ring.css";
+import morty from "@/assets/image.png";
 import {
   Drawer,
   DrawerContent,
@@ -41,18 +42,16 @@ import {
 import Reviewer from "./reviewer";
 import { format } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
-import axios from "axios";
-import StyledToast from "@/components/ui/toast-styled";
 import { Separator } from "@/components/ui/separator";
+import { useApprovedHandler } from "@/hooks/admin/postApproveHandler";
+import { useRejectHandler } from "@/hooks/admin/postDeclineHandler";
 
 export default function InterceptReviewApplicants() {
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(true);
   const [openApprove, setOpenApprove] = useState(false);
-  const [LoadingApprove, setLoadingApprove] = useState(false);
   const [openReject, setOpenReject] = useState(false);
-  const [loadingReject, setLoadingReject] = useState(false);
   const id = params.id as string;
   const { data } = useApplicationById(id);
   const HandleCloseDrawer = (value: boolean) => {
@@ -63,83 +62,14 @@ export default function InterceptReviewApplicants() {
       }, 200);
     }
   };
-
-  const handleApprove = async () => {
-    try {
-      setOpenApprove(true);
-      setLoadingApprove(true);
-      StyledToast({
-        status: "checking",
-        title: "Processing Approval...",
-        description: "Please wait while we approve the application.",
-      });
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/approveApplication`,
-        { applicationId: id },
-        { withCredentials: true }
-      );
-      if (res.status === 200) {
-        StyledToast({
-          status: "success",
-          title: "Application Approved",
-          description: "The applicant has been notified and granted access.",
-        });
-        setLoadingApprove(false);
-        setOpenApprove(false);
-        router.back();
-      }
-    } catch (error) {
-      StyledToast({
-        status: "error",
-        title: "Network Error",
-        description: "Please check your connection and try again.",
-      });
-      setLoadingApprove(false);
-      setOpenApprove(false);
-      console.error(error);
-    } finally {
-      setLoadingApprove(false);
-    }
-  };
-
-  const handleDecline = async () => {
-    try {
-      setOpenReject(true);
-      setLoadingReject(true);
-      StyledToast({
-        status: "checking",
-        title: "Processing Rejection...",
-        description: "Please wait while we update the application status.",
-      });
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/declineApplication`,
-        { applicationId: id },
-        { withCredentials: true }
-      );
-
-      if (res.status === 200) {
-        setLoadingReject(false);
-        setOpenReject(false);
-        StyledToast({
-          status: "success",
-          title: "Application Rejected",
-          description: "The applicant has been notified of the rejection.",
-        });
-        router.back();
-      }
-    } catch (error) {
-      setLoadingReject(false);
-      setOpenReject(false);
-      StyledToast({
-        status: "error",
-        title: "Network Error",
-        description: "Please check your connection and try again.",
-      });
-      console.error(error);
-    } finally {
-      setLoadingReject(false);
-    }
-  };
+  const { handleApprove, loadingApprove } = useApprovedHandler({
+    id,
+    setOpenApprove,
+  });
+  const { handleDecline, loadingReject } = useRejectHandler({
+    id,
+    setOpenReject,
+  });
 
   return (
     <Drawer
@@ -155,17 +85,22 @@ export default function InterceptReviewApplicants() {
         </DrawerHeader>
 
         <div className="grid grid-cols-3 overflow-auto no-scrollbar h-full">
-          <div className="p-4 h-full">
+          <div className="p-4 pt-0 h-full">
             <div className="space-y-6  bg-background p-4 h-full rounded-md">
               <div className="flex flex-col justify-center items-center">
-                <p className="text-xl font-semibold">
+                <img
+                  className="size-25 border-2 border-card rounded-full object-cover"
+                  src={morty.src}
+                  alt=""
+                />
+                <p className="text-2xl font-semibold mt-3">
                   {[
                     data?.student.firstName,
                     data?.student.middleName,
                     data?.student.lastName,
                   ].join(" ")}
                 </p>
-                <p className="text-xs text-muted-foreground mt-2"></p>
+
                 <span className="flex gap-2 items-center mt-2">
                   <Badge className="bg-green-800 text-gray-200">
                     {data?.student.course}
@@ -295,7 +230,7 @@ export default function InterceptReviewApplicants() {
         </div>
 
         <DrawerFooter className="space-y-2 border-t-2">
-          <Progress value={100} />
+          <Progress value={0} />
 
           <div className="flex gap-3">
             <AlertDialog open={openApprove} onOpenChange={setOpenApprove}>
@@ -316,15 +251,15 @@ export default function InterceptReviewApplicants() {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel disabled={LoadingApprove}>
+                  <AlertDialogCancel disabled={loadingApprove}>
                     Cancel
                   </AlertDialogCancel>
                   <Button
                     className="bg-green-800 hover:bg-green-900 text-gray-100"
                     onClick={handleApprove}
-                    disabled={LoadingApprove}
+                    disabled={loadingApprove}
                   >
-                    {LoadingApprove && (
+                    {loadingApprove && (
                       <LoaderCircleIcon
                         className="-ms-1 animate-spin"
                         size={16}
@@ -384,66 +319,3 @@ export default function InterceptReviewApplicants() {
     </Drawer>
   );
 }
-
-//  <div className="p-4 overflow-auto no-scrollbar space-y-5">
-//    <div className="flex-1 space-y-2">
-//      <div className="flex gap-2 items-center justify-between">
-//        <div className="flex gap-1.5 items-center">
-//          <h1 className="">Submitted Documents</h1>
-//          <span className="flex gap-1 items-center">
-//            {data?.userDocuments && (
-//              <p className="">
-//                {Object.keys(data.userDocuments).length}
-//              </p>
-//            )}
-//            /{" "}
-//            <p className=""> {data?.scholarship.scholarshipDocuments.length}</p>
-//          </span>
-//        </div>
-//        <div>
-//          {data?.applicationDate ? format(data?.applicationDate, "PPP") : ""}
-//        </div>
-//      </div>
-//      <div className="space-y-2 ">
-//        {data?.userDocuments &&
-//          Object.entries(data.userDocuments).map(([key, doc]) => (
-//            <div
-//              key={key}
-//              className=" border-input relative flex w-full items-center gap-3 rounded-md border p-4 shadow-xs outline-none border-l-2 border-l-green-800 bg-card overflow-hidden"
-//            >
-//              <div className="flex grow items-center gap-3">
-//                {doc.fileFormat === "jpg" || doc.fileFormat === "png" ? (
-//                  <Image />
-//                ) : (
-//                  <File />
-//                )}
-
-//                <div className="grid gap-2">
-//                  <Label>
-//                    {doc.document}{" "}
-//                    <Badge className="uppercase bg-red-900 text-gray-200">
-//                      {doc.fileFormat || "DOCX"}
-//                    </Badge>
-//                  </Label>
-//                  <p className="text-muted-foreground text-xs truncate">
-//                    {doc.cloudinaryId}
-//                  </p>
-//                </div>
-//              </div>
-//              <Reviewer
-//                fileFormat={doc.fileFormat}
-//                resourceType={doc.resourceType}
-//                fileUrl={doc.fileUrl}
-//                document={doc.document}
-//                cloudinaryId={doc.cloudinaryId}
-//              />
-//              <Button variant="ghost">
-//                <Download />
-//              </Button>
-//            </div>
-//          ))}
-//      </div>
-//    </div>
-//    <Separator className="mt-3" />
-
-//  </div>;

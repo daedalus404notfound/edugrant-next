@@ -107,7 +107,7 @@ export default function Manage() {
           Review submitted documents and take action on scholarship
           applications. You can approve, decline, or manage applicants.
         </p> */}
-        <div className="container mx-auto space-y-6">
+        <div className="container mx-auto ">
           <div className="flex gap-3 justify-between">
             <div className="relative flex-1">
               <Input
@@ -159,53 +159,127 @@ export default function Manage() {
               {scholar && <Badge variant="secondary">{scholar}</Badge>}
             </div>
           </div>
-          <Table>
-            {/* <TableCaption>A list of active scholarships.</TableCaption> */}
-            <TableHeader>
-              <TableRow>
-                {headers.map((header) => (
-                  <TableHead
-                    className={
-                      header.label === "Application Date" ? "text-center" : ""
-                    }
-                    key={header.label}
-                  >
-                    {header.label}
-                  </TableHead>
-                ))}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
+          <div className="mt-7">
+            <Table>
+              {/* <TableCaption>A list of active scholarships.</TableCaption> */}
+              <TableHeader>
                 <TableRow>
-                  <TableCell colSpan={headers.length} className="text-center">
-                    <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
-                  </TableCell>
+                  {headers.map((header) => (
+                    <TableHead
+                      className={
+                        header.label === "Application Date" ? "text-center" : ""
+                      }
+                      key={header.label}
+                    >
+                      {header.label}
+                    </TableHead>
+                  ))}
                 </TableRow>
-              ) : !query ? (
-                data.length > 0 ? (
-                  data.map((row) => (
+              </TableHeader>
+              <TableBody>
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={headers.length} className="text-center">
+                      <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
+                    </TableCell>
+                  </TableRow>
+                ) : !query ? (
+                  data.length > 0 ? (
+                    data.map((row) => (
+                      <TableRow
+                        key={row.applicationId}
+                        onClick={() =>
+                          router.push(
+                            `/administrator/home/review/${row.applicationId}`
+                          )
+                        }
+                        onMouseEnter={() =>
+                          router.prefetch(
+                            `/administrator/home/review/${row.applicationId}`
+                          )
+                        }
+                        className="cursor-pointer"
+                      >
+                        <TableCell className="">
+                          {row.student.studentId}
+                        </TableCell>
+                        <TableCell className="font-medium flex items-center gap-3">
+                          {/* <Link
+                          href={`/administrator/home/review/${row.applicationId}`}
+                          scroll={false}
+                          prefetch={true}
+                          className="underline h-full w-full"
+                        > */}
+                          {`${row.student.lastName}, ${row.student.firstName} ${row.student.middleName}`}
+                          {/* </Link> */}
+                        </TableCell>
+
+                        <TableCell>
+                          {`${row.student.course}-
+                        ${row.student.year.slice(0, 1)}${row.student.section}`}
+                        </TableCell>
+                        <TableCell>
+                          {row.scholarship.scholarshipTitle}
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            className={`${
+                              row.status == "APPROVE"
+                                ? "bg-green-800"
+                                : row.status == "PENDING"
+                                ? "bg-yellow-700"
+                                : row.status === "DECLINE"
+                                ? "bg-red-800"
+                                : ""
+                            } text-gray-200`}
+                          >
+                            {row.status}
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {row.applicationDate
+                            ? format(row.applicationDate, "PPP")
+                            : "Not specified"}
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={headers.length}
+                        className="text-center"
+                      >
+                        No result found.
+                      </TableCell>
+                    </TableRow>
+                  )
+                ) : searchLoading ? (
+                  <TableRow>
+                    <TableCell colSpan={headers.length} className="text-center">
+                      <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
+                    </TableCell>
+                  </TableRow>
+                ) : searchData.length > 0 ? (
+                  searchData.map((row) => (
                     <TableRow
                       key={row.applicationId}
-                      // onClick={() =>
-                      //   router.push(
-                      //     `/administrator/home/review/${row.applicationId}`
-                      //   )
-                      // }
+                      onClick={() =>
+                        router.push(
+                          `/administrator/home/review/${row.applicationId}`
+                        )
+                      }
+                      onMouseEnter={() =>
+                        router.prefetch(
+                          `/administrator/home/review/${row.applicationId}`
+                        )
+                      }
                       className="cursor-pointer"
                     >
                       <TableCell className="">
                         {row.student.studentId}
                       </TableCell>
                       <TableCell className="font-medium flex items-center gap-3">
-                        <Link
-                          href={`/administrator/home/review/${row.applicationId}`}
-                          scroll={false}
-                          prefetch={true}
-                          className="underline h-full w-full"
-                        >
-                          {`${row.student.lastName}, ${row.student.firstName} ${row.student.middleName}`}
-                        </Link>
+                        {`${row.student.lastName}, ${row.student.firstName} ${row.student.middleName}`}
                       </TableCell>
 
                       <TableCell>
@@ -241,67 +315,12 @@ export default function Manage() {
                       No result found.
                     </TableCell>
                   </TableRow>
-                )
-              ) : searchLoading ? (
-                <TableRow>
-                  <TableCell colSpan={headers.length} className="text-center">
-                    <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
-                  </TableCell>
-                </TableRow>
-              ) : searchData.length > 0 ? (
-                searchData.map((row) => (
-                  <TableRow
-                    key={row.applicationId}
-                    onClick={() =>
-                      router.push(
-                        `/administrator/home/review/${row.applicationId}`
-                      )
-                    }
-                    className="cursor-pointer"
-                  >
-                    <TableCell className="">{row.student.studentId}</TableCell>
-                    <TableCell className="font-medium flex items-center gap-3">
-                      {`${row.student.lastName}, ${row.student.firstName} ${row.student.middleName}`}
-                    </TableCell>
-
-                    <TableCell>
-                      {`${row.student.course}-
-                        ${row.student.year.slice(0, 1)}${row.student.section}`}
-                    </TableCell>
-                    <TableCell>{row.scholarship.scholarshipTitle}</TableCell>
-                    <TableCell>
-                      <Badge
-                        className={`${
-                          row.status == "APPROVE"
-                            ? "bg-green-800"
-                            : row.status == "PENDING"
-                            ? "bg-yellow-700"
-                            : row.status === "DECLINE"
-                            ? "bg-red-800"
-                            : ""
-                        } text-gray-200`}
-                      >
-                        {row.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {row.applicationDate
-                        ? format(row.applicationDate, "PPP")
-                        : "Not specified"}
-                    </TableCell>
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={headers.length} className="text-center">
-                    No result found.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+                )}
+              </TableBody>
+            </Table>
+          </div>
           {!query && data.length !== 0 && !loading && (
-            <div className="flex items-center justify-between gap-8">
+            <div className="flex items-center justify-between gap-8 mt-3">
               {/* Results per page */}
               <div className="flex items-center gap-3">
                 <Label className="max-sm:sr-only">Rows per page</Label>
