@@ -52,7 +52,6 @@ const headers = [
 
 import ApplicationFilter from "./filter";
 import useApplicationpSearch from "@/hooks/admin/getApplicantSearch";
-import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import SortApplicants from "./sort";
 
