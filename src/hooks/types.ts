@@ -53,6 +53,7 @@ export type UserProfileTypes = {
 };
 export type ApplicationTypes = {
   applicationId: string;
+  applicationResponseDate: string;
   scholarship: ScholarshipTypes;
   scholarshipId: string;
   status: string;

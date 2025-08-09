@@ -22,14 +22,7 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
         </div>
       </SidebarInset>
       <Toaster
-        richColors
-        toastOptions={{
-          style: {
-            background: "#000000",
-            color: "#ffffff",
-          },
-          className: "my-toast",
-        }}
+     
       />
     </SidebarProvider>
   );

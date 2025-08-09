@@ -34,6 +34,7 @@ import DynamicHeaderAdmin from "../dynamic-header";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
+  Activity,
   AlignHorizontalDistributeCenter,
   ArrowRightIcon,
   Check,
@@ -43,10 +44,10 @@ import {
   ChevronRightIcon,
   ChevronsUpDown,
   SearchIcon,
-  SlidersVertical,
 } from "lucide-react";
-
+import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { motion } from "motion/react";
 import {
   Select,
   SelectContent,
@@ -58,8 +59,8 @@ import { Label } from "@/components/ui/label";
 const headers = [
   { label: "Sponsor" },
   { label: "Scholarship Title" },
-  { label: "Status" },
   { label: "Deadline" },
+  { label: "Status" },
   { label: "Approved" },
   { label: "Applicants" },
 ];
@@ -95,92 +96,104 @@ export default function Manage() {
   const { searchData, searchLoading } = useScholarshipSearch({ query });
 
   return (
-    <div className="  min-h-screen px-4">
+    <div className="min-h-screen px-4 relative z-10">
       <DynamicHeaderAdmin first="Scholarship" second="Manage" />
 
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
-        <h1 className="text-2xl font-semibold flex items-center gap-2">
-          <SlidersVertical size={20} />
-          Manage Scholarships ({data.length || "-"})
-        </h1>
+        <motion.span
+          className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
+          text-2xl font-semibold flex items-center gap-1.5
+          "
+          initial={{ backgroundPosition: "200% 0" }}
+          animate={{ backgroundPosition: "-200% 0" }}
+          transition={{
+            repeat: Infinity,
+            repeatType: "loop",
+            duration: 7,
+            ease: "linear",
+          }}
+        >
+          <Activity strokeWidth={3} />
+          Active Scholarships
+        </motion.span>
         <p className="text-sm text-gray-500 mt-1">
           Browse the list of active scholarships. Use the available actions to
           modify or remove entries.
         </p>
-        <div className="container mx-auto py-10 space-y-3">
-          <div className="flex gap-3 justify-between items-center">
-            <div className="relative flex-1">
-              <Input
-                onChange={(e) => setQuery(e.target.value)}
-                className="peer ps-9 pe-9"
-                placeholder="Search Student Name or ID..."
-                type="search"
-              />
-              <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-                <SearchIcon size={16} />
-              </div>
-              <button
-                className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label="Submit search"
-                type="submit"
-              >
-                <ArrowRightIcon size={16} aria-hidden="true" />
-              </button>
+        <div className="flex gap-3 justify-between items-center mt-5">
+          <div className="relative flex-1">
+            <Input
+              onChange={(e) => setQuery(e.target.value)}
+              className="peer ps-9 pe-9"
+              placeholder="Search Student Name or ID..."
+              type="search"
+            />
+            <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+              <SearchIcon size={16} />
             </div>
-            <div className="flex gap-2">
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="justify-between"
-                  >
-                    <AlignHorizontalDistributeCenter />
-                    {sort
-                      ? sortList.find((framework) => framework.value === sort)
-                          ?.label
-                      : "Sort by"}
-                    <ChevronsUpDown className="opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[150px] p-0">
-                  <Command>
-                    <CommandList>
-                      <CommandEmpty>No framework found.</CommandEmpty>
-                      <CommandGroup>
-                        {sortList.map((framework) => (
-                          <CommandItem
-                            key={framework.value}
-                            value={framework.value}
-                            onSelect={(currentValue) => {
-                              setSort(
-                                currentValue === sort
-                                  ? ""
-                                  : (currentValue as "" | "asc" | "desc")
-                              );
-                              setOpen(false);
-                            }}
-                          >
-                            {framework.label}
-                            <Check
-                              className={cn(
-                                "ml-auto",
-                                sort === framework.value
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-              <Button variant="outline">Export CSV</Button>
-            </div>
+            <button
+              className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+              aria-label="Submit search"
+              type="submit"
+            >
+              <ArrowRightIcon size={16} aria-hidden="true" />
+            </button>
           </div>
+          <div className="flex gap-2">
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={open}
+                  className="justify-between"
+                >
+                  <AlignHorizontalDistributeCenter />
+                  {sort
+                    ? sortList.find((framework) => framework.value === sort)
+                        ?.label
+                    : "Sort by"}
+                  <ChevronsUpDown className="opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[150px] p-0">
+                <Command>
+                  <CommandList>
+                    <CommandEmpty>No framework found.</CommandEmpty>
+                    <CommandGroup>
+                      {sortList.map((framework) => (
+                        <CommandItem
+                          key={framework.value}
+                          value={framework.value}
+                          onSelect={(currentValue) => {
+                            setSort(
+                              currentValue === sort
+                                ? ""
+                                : (currentValue as "" | "asc" | "desc")
+                            );
+                            setOpen(false);
+                          }}
+                        >
+                          {framework.label}
+                          <Check
+                            className={cn(
+                              "ml-auto",
+                              sort === framework.value
+                                ? "opacity-100"
+                                : "opacity-0"
+                            )}
+                          />
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+            <Button variant="outline">Export CSV</Button>
+          </div>
+        </div>
+        <div className="container mx-auto space-y-3 mt-5">
           <Table>
             {/* <TableCaption>A list of active scholarships.</TableCaption> */}
             <TableHeader>
@@ -224,29 +237,28 @@ export default function Manage() {
                       <TableCell className="">
                         {row.scholarshipProvider}
                       </TableCell>
-                      <TableCell className="font-medium">
+                      <TableCell className="flex gap-2.5 items-center">
                         {/* <Link
                           href={`/administrator/home/manage/${row.scholarshipId}`}
                           prefetch={true}
                         > */}
-
-                        <div className="flex gap-2.5 items-center">
-                          <img
-                            className="size-9 object-cover rounded-full border-2"
-                            src={row.scholarshipLogo}
-                            alt=""
-                          />{" "}
-                          {row.scholarshipTitle}
-                        </div>
+                        <img
+                          className="size-8 object-cover rounded-full border-2"
+                          src={row.scholarshipLogo}
+                          alt=""
+                        />{" "}
+                        {row.scholarshipTitle}
                         {/* </Link> */}
+                      </TableCell>
+
+                      <TableCell className="">
+                        {row.scholarshipDealine &&
+                          format(row.scholarshipDealine, "PPP")}
                       </TableCell>
                       <TableCell className="">
                         <Badge className="bg-green-900 text-gray-300">
                           Active
                         </Badge>
-                      </TableCell>
-                      <TableCell className="">
-                        {new Date(row.scholarshipDealine).toLocaleDateString()}
                       </TableCell>
                       <TableCell className="text-center">
                         {row.totalApproved}
@@ -304,13 +316,15 @@ export default function Manage() {
                       </div>
                       {/* </Link> */}
                     </TableCell>
+
+                    <TableCell className="">
+                      {row.scholarshipDealine &&
+                        format(row.scholarshipDealine, "PPP")}
+                    </TableCell>
                     <TableCell className="">
                       <Badge className="bg-green-900 text-gray-300">
                         Active
                       </Badge>
-                    </TableCell>
-                    <TableCell className="">
-                      {new Date(row.scholarshipDealine).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-center">
                       {row.totalApproved}

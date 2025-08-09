@@ -12,6 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { motion } from "motion/react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -63,10 +64,23 @@ export default function Create() {
       <DynamicHeaderAdmin first="Scholarship" second="Create" />
 
       <div className="mx-auto lg:w-[70%] w-[95%] py-10">
-        <h1 className="text-2xl font-semibold flex items-center gap-2">
-          <PenLine />
-          Create a New Scholarship Opportunity
-        </h1>
+        <motion.span
+          className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
+          text-2xl font-semibold flex items-center gap-1.5
+          "
+          initial={{ backgroundPosition: "200% 0" }}
+          animate={{ backgroundPosition: "-200% 0" }}
+          transition={{
+            repeat: Infinity,
+            repeatType: "loop",
+            duration: 7,
+            ease: "linear",
+          }}
+        >
+          <PenLine strokeWidth={2} />
+          Create Scholarship
+        </motion.span>
+
         <p className="text-sm text-gray-500 mt-1">
           Fill out the form below to add a new scholarship.
         </p>
@@ -214,8 +228,9 @@ export default function Create() {
                   name="detailsImage"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-semibold text-lg">
+                      <FormLabel className="flex justify-between items-center">
                         Details Cover
+                        <FormMessage />
                       </FormLabel>
                       <FormControl>
                         <DragAndDropArea
@@ -224,7 +239,6 @@ export default function Create() {
                           onFilesChange={(files) => field.onChange(files[0])} // Single file
                         />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -237,8 +251,8 @@ export default function Create() {
                   name="sponsorImage"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="font-semibold text-lg">
-                        Sponsor Logo/Image
+                      <FormLabel className="flex justify-between items-center">
+                        Sponsor Logo/Image <FormMessage />
                       </FormLabel>
                       <FormControl>
                         <DragAndDropArea
@@ -247,7 +261,6 @@ export default function Create() {
                           onFilesChange={(files) => field.onChange(files[0])} // Single file
                         />
                       </FormControl>
-                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -359,14 +372,13 @@ export default function Create() {
               Clear Form
             </Button>
             <AlertDialog open={open} onOpenChange={setOpen}>
-             
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={handleTriggerClick}
-                >
-                  Submit Scholarship
-                </Button>         
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={handleTriggerClick}
+              >
+                Submit Scholarship
+              </Button>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Confirm Submission</AlertDialogTitle>

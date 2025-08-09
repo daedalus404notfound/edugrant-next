@@ -29,6 +29,7 @@ import {
   ChevronRightIcon,
   FileDown,
   SearchIcon,
+  UsersRound,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -55,7 +56,7 @@ import ApplicationFilter from "./filter";
 import useApplicationpSearch from "@/hooks/admin/getApplicantSearch";
 import { Badge } from "@/components/ui/badge";
 import SortApplicants from "./sort";
-
+import { motion } from "motion/react";
 export default function Manage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
@@ -99,15 +100,27 @@ export default function Manage() {
       <DynamicHeaderAdmin first="Applicants" second="Manage Applicants" />
 
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
-        {/* <h1 className="text-2xl font-semibold flex items-center gap-2">
+        <motion.span
+          className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
+          text-2xl font-semibold flex items-center gap-1.5
+          "
+          initial={{ backgroundPosition: "200% 0" }}
+          animate={{ backgroundPosition: "-200% 0" }}
+          transition={{
+            repeat: Infinity,
+            repeatType: "loop",
+            duration: 7,
+            ease: "linear",
+          }}
+        >
           <UsersRound />
-          Pending Review
-        </h1>
+          Manage Applicants
+        </motion.span>
         <p className="text-sm text-gray-500 mt-1">
-          Review submitted documents and take action on scholarship
-          applications. You can approve, decline, or manage applicants.
-        </p> */}
-        <div className="container mx-auto ">
+          Browse the list of active scholarships. Use the available actions to
+          modify or remove entries.
+        </p>
+        <div className="container mx-auto mt-5">
           <div className="flex gap-3 justify-between">
             <div className="relative flex-1">
               <Input

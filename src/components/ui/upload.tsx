@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { UploadCloud, X } from "lucide-react";
 import SpotlightBorderWrapper from "@/components/ui/border";
 import { useFileUpload } from "@/hooks/useUpload";
+import { BGPattern } from "./grid";
+import { DocumentUpload, Paperclip2 } from "iconsax-reactjs";
 
 function formatBytes(bytes: number, decimals = 2): string {
   if (!+bytes) return "0 Bytes";
@@ -42,7 +44,7 @@ export function DragAndDropArea({
       <div className="space-y-3">
         <div
           {...getRootProps()}
-          className={`flex flex-col items-center justify-center border border-dashed rounded-lg p-6 text-center transition bg-green-950/20
+          className={`flex flex-col items-center justify-center border border-dashed border-input rounded-lg p-6 text-center transition bg-transparent dark:bg-input/30
             ${
               uploadedFiles.length > 0
                 ? "cursor-not-allowed opacity-70 text-muted-foreground/20 bg-muted/20 hover:bg-muted/20"
@@ -51,12 +53,16 @@ export function DragAndDropArea({
             ${
               isDragActive && uploadedFiles.length === 0
                 ? "border-primary bg-accent/30"
-                : "border-card hover:bg-green-950/30"
+                : "border-card hover:bg-background/20"
             }
           `}
         >
           <input {...getInputProps()} />
-          <UploadCloud className="w-13 h-13 text-muted-foreground mb-2 border p-3 rounded-full" />
+          <div className="z-10 relative size-15 flex justify-center items-center">
+            <BGPattern variant="grid" mask="fade-edges" />
+            <Paperclip2 />
+          </div>
+
           <p className="text-muted-foreground text-sm">
             {isDragActive
               ? `Drop your ${label} file here...`

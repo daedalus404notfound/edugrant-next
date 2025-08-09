@@ -70,6 +70,7 @@ export default function InterceptReviewApplicants() {
   const { handleApprove, loadingApprove } = useApprovedHandler({
     id,
     setOpenApprove,
+    adminId: admin?.adminId.toString(),
   });
   const { handleDecline, loadingReject } = useRejectHandler({
     id,
@@ -105,7 +106,11 @@ export default function InterceptReviewApplicants() {
                   size={16}
                   aria-hidden="true"
                 />
-                Approved on <strong>August 18th, 2025</strong>
+                Approved on{" "}
+                <strong>
+                  {data.applicationResponseDate &&
+                    format(data.applicationResponseDate, "PPP")}
+                </strong>
               </p>
               <p className="text-sm">
                 Reviewed by <strong>Admin Jerome</strong>

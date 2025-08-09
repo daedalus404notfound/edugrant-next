@@ -5,8 +5,13 @@ import { useRouter } from "next/navigation";
 type ApproveTypes = {
   id: string;
   setOpenApprove: (approve: boolean) => void;
+  adminId?: string;
 };
-export function useApprovedHandler({ id, setOpenApprove }: ApproveTypes) {
+export function useApprovedHandler({
+  id,
+  setOpenApprove,
+  adminId,
+}: ApproveTypes) {
   const [loadingApprove, setLoadingApprove] = useState(false);
   const router = useRouter();
   const handleApprove = async () => {
@@ -20,7 +25,7 @@ export function useApprovedHandler({ id, setOpenApprove }: ApproveTypes) {
       });
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/approveApplication`,
-        { applicationId: id },
+        { applicationId: id, adminId: adminId },
         { withCredentials: true }
       );
       if (res.status === 200) {

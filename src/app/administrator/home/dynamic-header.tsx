@@ -21,7 +21,7 @@ import { ModeToggle } from "@/components/ui/dark-mode";
 import { Popover } from "@radix-ui/react-popover";
 import { PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Bell, ChevronsUpDown, ExternalLink, LogOut, User } from "lucide-react";
+import { Bell, ChevronsUpDown, ExternalLink, LogOut, User, UserRound } from "lucide-react";
 import { useAdminStore } from "@/store/adminUserStore";
 import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
 import { useState } from "react";
@@ -71,8 +71,8 @@ export default function DynamicHeaderAdmin({
       <div className="mr-3 flex  items-center gap-3">
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline">
-              <User />
+            <Button variant="ghost">
+              <UserRound />
               {admin?.adminName || "N/A"}
               <ChevronsUpDown />
             </Button>
