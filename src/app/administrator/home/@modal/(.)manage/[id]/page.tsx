@@ -5,7 +5,6 @@ import {
   Edit,
   File,
   LoaderCircleIcon,
-  Maximize,
   Trash2,
   Wallet,
 } from "lucide-react";
@@ -32,11 +31,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import EditScholarship from "./edit-form";
-import { Skeleton } from "@/components/ui/skeleton";
 import axios from "axios";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 import useScholarshipUserByIdAdmin from "@/hooks/admin/getScholarshipData";
 import { format } from "date-fns";
 
@@ -49,7 +46,7 @@ export default function InterceptManageScholarship() {
   const params = useParams();
   const [open, setOpen] = useState(true);
   const id = params.id as string;
-  const { data, loading } = useScholarshipUserByIdAdmin(id);
+  const { data } = useScholarshipUserByIdAdmin(id);
 
   const title = data?.scholarshipTitle || "N/A";
   const deadline = data?.scholarshipDealine;

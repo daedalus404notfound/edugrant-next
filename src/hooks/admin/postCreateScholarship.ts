@@ -1,5 +1,4 @@
 import axios, { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
 import {
   creatScholarshipFormData,
   useCreateScholarshipZod,
@@ -110,7 +109,7 @@ export const useAddScholarship = () => {
 };
 
 export const useCreateScholarship = () => {
-  const router = useRouter();
+  
   const { form, formData, fields, append, remove } = useCreateScholarshipZod();
   const addScholarship = useAddScholarship();
   const [open, setOpen] = useState(false);
