@@ -63,7 +63,7 @@ export default function InterceptManageScholarshipClient() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="lg:w-[900px] w-[98%] mx-auto h-[95vh] outline-0 border-0 ">
+      <DrawerContent className="max-w-[1000px] w-full mx-auto h-[95vh] outline-0 border-0 ">
         <DrawerHeader className={isApply ? "" : "sr-only"}>
           <DrawerTitle className="text-xl flex gap-1.5 items-center">
             <GraduationCap />

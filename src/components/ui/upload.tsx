@@ -2,11 +2,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { UploadCloud, X } from "lucide-react";
 import SpotlightBorderWrapper from "@/components/ui/border";
 import { useFileUpload } from "@/hooks/useUpload";
 import { BGPattern } from "./grid";
-import { DocumentUpload, Paperclip2 } from "iconsax-reactjs";
+import {  Paperclip2 } from "iconsax-reactjs";
+import { X } from "lucide-react";
 
 function formatBytes(bytes: number, decimals = 2): string {
   if (!+bytes) return "0 Bytes";
