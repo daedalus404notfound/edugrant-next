@@ -1,8 +1,5 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { format } from "date-fns";
-import { useForm, useFieldArray } from "react-hook-form";
 import MultipleSelector, { Option } from "@/components/ui/multi-select";
 import {
   Form,
@@ -23,11 +20,8 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { CalendarIcon, LoaderCircleIcon, PenLine, Plus, X } from "lucide-react";
-import { useState } from "react";
-import axios from "axios";
 import DynamicHeaderAdmin from "../dynamic-header";
 import {
   Popover,
@@ -36,8 +30,8 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { DragAndDropArea } from "@/app/user/home/@modal/(.)scholarships/[id]/reusable";
-import StyledToast from "@/components/ui/toast-styled";
+import { DragAndDropArea } from "@/components/ui/upload";
+import { useCreateScholarship } from "@/hooks/admin/postCreateScholarship";
 
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
@@ -50,139 +44,19 @@ const options: Option[] = [
   { label: "PNG Image", value: "image/png" },
 ];
 
-const documentsSchema = z.object({
-  label: z.string().min(3, "Requireds"),
-  formats: z.array(z.string()).min(1, "Required"),
-});
-
-const createScholarshipSchema = z.object({
-  scholarshipTitle: z.string().min(3, "Required"),
-  providerName: z.string().min(3, "Required"),
-  scholarshipDescription: z.string().min(3, "Required"),
-  applicationDeadline: z.date({
-    message: "Required",
-  }),
-  scholarshipAmount: z.string().min(1, "Required"),
-  scholarshipLimit: z.string(),
-  detailsImage: z
-    .any()
-    .refine(
-      (file) =>
-        typeof File !== "undefined" && file instanceof File && file.size > 0,
-      { message: "Image is required" }
-    ),
-  sponsorImage: z
-    .any()
-    .refine(
-      (file) =>
-        typeof File !== "undefined" && file instanceof File && file.size > 0,
-      { message: "Image is required" }
-    ),
-
-  documents: z
-    .array(documentsSchema)
-    .min(1, "At least one document is required"),
-});
-
-type FormData = z.infer<typeof createScholarshipSchema>;
-
 export default function Create() {
-  const today = new Date().toISOString().split("T")[0];
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const form = useForm<FormData>({
-    resolver: zodResolver(createScholarshipSchema),
-    defaultValues: {
-      scholarshipTitle: "",
-      providerName: "",
-      scholarshipDescription: "",
-      applicationDeadline: undefined,
-      scholarshipAmount: "",
-      scholarshipLimit: "",
-      documents: [{ label: "", formats: [] }],
-    },
-  });
-
-  const formData = form.watch();
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "documents",
-  });
-
-  const onSubmit = async (data: FormData) => {
-    try {
-      setLoading(true);
-
-      const formDataToSend = new FormData();
-
-      formDataToSend.append("newScholarTitle", data.scholarshipTitle);
-      formDataToSend.append("newScholarProvider", data.providerName);
-      formDataToSend.append(
-        "newScholarDescription",
-        data.scholarshipDescription
-      );
-      formDataToSend.append("applicationStartDate", today);
-      formDataToSend.append(
-        "newScholarDeadline",
-        formData.applicationDeadline.toISOString()
-      );
-      formDataToSend.append("scholarshipAmount", data.scholarshipAmount);
-      formDataToSend.append("scholarshipLimit", data.scholarshipLimit);
-
-      if (data.detailsImage) {
-        formDataToSend.append("coverImg", data.detailsImage);
-      }
-
-      if (data.sponsorImage) {
-        formDataToSend.append("sponsorLogo", data.sponsorImage);
-      }
-
-      formDataToSend.append("requirements", JSON.stringify(data.documents));
-
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/adminAddScholarships`,
-        formDataToSend,
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      if (res.status === 200) {
-        form.reset({
-          scholarshipTitle: "",
-          providerName: "",
-          scholarshipDescription: "",
-          applicationDeadline: undefined,
-          scholarshipAmount: "",
-          scholarshipLimit: "",
-          detailsImage: undefined,
-          sponsorImage: undefined,
-          documents: [{ label: "", formats: [] }],
-        });
-
-        StyledToast({
-          status: "success",
-          title: "Scholarship Created",
-          description: "The scholarship has been added successfully.",
-        });
-
-        setLoading(false);
-        setOpen(false);
-      }
-    } catch (error) {
-      console.error(error);
-      StyledToast({
-        status: "error",
-        title: "Creation Failed",
-        description: "We couldn’t create the scholarship. Please try again.",
-      });
-
-      setLoading(false);
-    }
-  };
+  const {
+    open,
+    setOpen,
+    handleSubmit,
+    loading,
+    resetCreateState,
+    form,
+    fields,
+    append,
+    handleTriggerClick,
+    remove,
+  } = useCreateScholarship();
 
   return (
     <div className="px-4">
@@ -476,43 +350,55 @@ export default function Create() {
               ))}
             </div>
           </div>
-          <AlertDialog open={open} onOpenChange={setOpen}>
-            <AlertDialogTrigger asChild>
-              <Button variant="outline" className="w-full mt-15">
-                Submit Scholarship
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Are you sure you want to submit this scholarship?
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
+          <div className="flex gap-3 mt-10">
+            <Button
+              className="flex-1"
+              variant="secondary"
+              onClick={resetCreateState}
+            >
+              Clear Form
+            </Button>
+            <AlertDialog open={open} onOpenChange={setOpen}>
+             
                 <Button
-                  onClick={form.handleSubmit(onSubmit)}
-                  disabled={loading}
-                  className="flex-1"
                   variant="outline"
+                  className="flex-1"
+                  onClick={handleTriggerClick}
                 >
-                  {loading && (
-                    <LoaderCircleIcon
-                      className="-ms-1 animate-spin"
-                      size={16}
-                      aria-hidden="true"
-                    />
-                  )}
-                  {loading ? "Submitting..." : "Yes, Submit"}
-                </Button>
+                  Submit Scholarship
+                </Button>         
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to submit this scholarship?
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <Button
+                    onClick={form.handleSubmit(handleSubmit)}
+                    disabled={loading}
+                    className="flex-1"
+                    variant="outline"
+                  >
+                    {loading && (
+                      <LoaderCircleIcon
+                        className="-ms-1 animate-spin"
+                        size={16}
+                        aria-hidden="true"
+                      />
+                    )}
+                    {loading ? "Submitting..." : "Yes, Submit"}
+                  </Button>
 
-                <AlertDialogCancel className="flex items-center gap-1">
-                  <X />
-                  Cancel
-                </AlertDialogCancel>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+                  <AlertDialogCancel className="flex-1">
+                    <X />
+                    Cancel
+                  </AlertDialogCancel>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </Form>
       </div>
     </div>

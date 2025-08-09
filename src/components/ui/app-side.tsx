@@ -3,12 +3,12 @@ import * as React from "react";
 import { usePathname } from "next/navigation";
 import {
   Home,
-  UserRoundMinus,
   Megaphone,
   PenLine,
   GraduationCap,
   Archive,
   SquareUserRound,
+  UsersRound,
 } from "lucide-react";
 import logo from "@/assets/basclogo.png";
 import {
@@ -68,10 +68,8 @@ const sidebarData = {
         {
           title: "Manage Applicants",
           url: "/administrator/home/applicants",
-          icon: UserRoundMinus,
+          icon: UsersRound,
         },
-       
-       
       ],
     },
     {

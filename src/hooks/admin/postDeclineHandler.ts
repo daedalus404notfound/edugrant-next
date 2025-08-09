@@ -4,9 +4,16 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 type RejectTypes = {
   id: string;
+  message: string;
+  adminId?: string;
   setOpenReject: (approve: boolean) => void;
 };
-export function useRejectHandler({ id, setOpenReject }: RejectTypes) {
+export function useRejectHandler({
+  id,
+  message,
+  setOpenReject,
+  adminId,
+}: RejectTypes) {
   const [loadingReject, setLoadingReject] = useState(false);
   const router = useRouter();
   const handleDecline = async () => {
@@ -20,7 +27,7 @@ export function useRejectHandler({ id, setOpenReject }: RejectTypes) {
       });
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/declineApplication`,
-        { applicationId: id },
+        { applicationId: id, rejectMessage: message, adminId: adminId },
         { withCredentials: true }
       );
       if (res.status === 200) {

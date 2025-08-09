@@ -1,13 +1,13 @@
 "use client";
 import {
   Activity,
-
+  CalendarX2,
   Edit,
+  File,
   LoaderCircleIcon,
   Maximize,
-
   Trash2,
-
+  Wallet,
 } from "lucide-react";
 
 import "ldrs/react/Ring.css";
@@ -32,7 +32,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import EditScholarship from "./edit-form";
-import { useScholarshipStore } from "@/store/scholarshipStore";
 import { Skeleton } from "@/components/ui/skeleton";
 import axios from "axios";
 import { toast } from "sonner";
@@ -43,7 +42,6 @@ import { format } from "date-fns";
 
 export default function InterceptManageScholarship() {
   const [editMode, setEditMode] = useState(false);
-  const { triggerRefresh, markScholarshipDeleted } = useScholarshipStore();
 
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
@@ -57,7 +55,7 @@ export default function InterceptManageScholarship() {
   const deadline = data?.scholarshipDealine;
   const provider = data?.scholarshipProvider || "unknown";
   const description = data?.scholarshipDescription;
-   const amount = data?.scholarshipAmount;
+  const amount = data?.scholarshipAmount;
   const scholarshipId = data?.scholarshipId;
   const scholarshipCover = data?.scholarshipCover;
   const scholarshipLogo = data?.scholarshipLogo;
@@ -74,7 +72,7 @@ export default function InterceptManageScholarship() {
 
       const res = await axios.post(
         "https://edugrant-express-server-production.up.railway.app/administrator/deleteScholarship",
-        { scholarshipId }, 
+        { scholarshipId },
         { withCredentials: true }
       );
 
@@ -84,10 +82,6 @@ export default function InterceptManageScholarship() {
           description:
             "The scholarship opportunity has been successfully deleted to the system.",
         });
-        if (scholarshipId) {
-          markScholarshipDeleted(scholarshipId);
-          triggerRefresh();
-        }
         setDeleteLoading(false);
         setOpenAlert(false);
         setOpen(false);
@@ -108,141 +102,117 @@ export default function InterceptManageScholarship() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="w-[900px] mx-auto h-[95vh] outline-0 border-0">
-        <DrawerHeader className={editMode ? "" : "sr-only"}>
+      <DrawerContent className="max-w-[950px] w-full mx-auto h-[95vh] outline-0 border-0">
+        <DrawerHeader className="sr-only">
           <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
-        {editMode ? (
-          <div className=" overflow-auto h-full no-scrollbar">
-            {data && <EditScholarship data={data} setEditMode={setEditMode} />}
-          </div>
-        ) : (
-          <div className=" overflow-auto h-full no-scrollbar">
-            <>
-              <div className="relative h-64 flex justify-center items-center">
-                {loading ? (
-                  <Skeleton className="h-full w-full" />
-                ) : (
-                  <div className="relative h-full w-full flex justify-center items-center overflow-hidden ">
-                    <Link
-                      href={`${scholarshipCover}`}
-                      target="_blank"
-                      scroll={false}
-                      rel="noopener noreferrer"
-                    >
-                      <Button className="absolute z-10 cursor-pointer bottom-5 right-5 bg-green-950 border border-green-950 hover:bg-green-900 text-gray-200 hover:border-green-800">
-                        View
-                        <Maximize />
-                      </Button>
-                    </Link>
+        {!editMode ? (
+          <div className="no-scrollbar overflow-auto h-full p-2 gap-3">
+            {/* <div className="bg-card rounded-lg"></div> */}
+            <div className="w-full">
+              <>
+                <div className=" relative flex flex-col justify-center items-center w-full">
+                  <img
+                    src={scholarshipCover}
+                    alt=""
+                    className=" object-cover brightness-90 mask-gradient h-60 w-full mb-10"
+                  />
+                  <div className="absolute -bottom-8 flex flex-col justify-center items-center gap-2">
                     <img
-                      src={scholarshipCover}
-                      alt="Scholarship Cover"
-                      className="w-full h-full object-cover mask-gradient brightness-75 "
+                      src={scholarshipLogo}
+                      alt=""
+                      className=" rounded-full shadow-sm shadow-black border-emerald-800 size-30 object-cover"
                     />
-                  </div>
-                )}
-
-                <div className="absolute flex items-center justify-center left-5 -bottom-10 gap-3 flex-col">
-                  <div className="lg:size-35 size-30 rounded-full overflow-hidden border-3 border-green-950 bg-background">
-                    {loading ? (
-                      <Skeleton className="h-full w-full" />
-                    ) : (
-                      <img
-                        src={scholarshipLogo}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="lg:px-6 px-2 pt-15 pb-6 space-y-6">
-                {/* Description */}
-
-                <div className="grid lg:grid-cols-3 grid-cols-1 gap-6">
-                  <div className="col-span-2 space-y-4">
-                    <div>
-                      <h1 className="text-xl md:text-2xl  text-gray-200 mb-1 font-bold">
+                    <div className="text-center">
+                      <h1 className="text-2xl uppercase  font-semibold">
                         {title}
                       </h1>
-                      <p className="text-gray-200/90 gap-1">{provider}</p>
-                    </div>
-                    <div>
-                      <h2 className="line-clamp-3">{description}</h2>
+                      <h3 className="text-sm text-muted-foreground">
+                        {provider}
+                      </h3>
                     </div>
                   </div>
-                  <div className="space-y-5">
-                    <div className="">
-                      <h2 className="text-muted-foreground text-sm">Amount</h2>
-
-                      <p className="text-xl font-semibold">₱{amount}</p>
+                </div>
+                <div className="mt-13 p-2 space-y-8">
+                  <div className="grid lg:grid-cols-3 grid-cols-2 gap-2.5">
+                    <div className="border lg:p-4 p-2.5 rounded-md bg-emerald-800/10 border-emerald-500/50 flex justify-between items-end">
+                      <div className="space-y-3">
+                        <h1 className="text-xs text-muted-foreground">
+                          Amount
+                        </h1>
+                        <Wallet />
+                      </div>
+                      <p className="line-clamp-4 text-2xl text-emerald-700 font-semibold">
+                        ₱{amount}
+                      </p>
                     </div>
-                    <div className="">
-                      <h2 className="text-muted-foreground text-sm">
-                        Deadline
-                      </h2>
-
-                      <p className="text-xl font-semibold">
-                        {deadline && format(deadline, "PPP")}
+                    <div className="border lg:p-4 p-2.5 rounded-md bg-emerald-800/10 border-emerald-500/50 flex justify-between items-end">
+                      <div className="space-y-3">
+                        <h1 className="text-xs text-muted-foreground">
+                          Deadline
+                        </h1>
+                        <CalendarX2 />
+                      </div>
+                      <p className="line-clamp-4 text-2xl text-emerald-700 font-semibold">
+                        {deadline && format(deadline, "MM-dd-yyy")}
+                      </p>
+                    </div>{" "}
+                    <div className="border lg:p-4 p-2.5 rounded-md bg-emerald-800/10 border-emerald-500/50  lg:flex hidden justify-between items-end">
+                      <div className="space-y-3">
+                        <h1 className="text-xs text-muted-foreground">
+                          Required Documents
+                        </h1>
+                        <File />
+                      </div>
+                      <p className="line-clamp-4 text-2xl text-emerald-700 font-semibold">
+                        {data?.scholarshipDocuments.length}
                       </p>
                     </div>
                   </div>
-                </div>
 
-                {/* Required Documents */}
-                {data?.scholarshipDocuments &&
-                  data.scholarshipDocuments.length > 0 && (
-                    <div className="space-y-3">
-                      <h2 className="text-muted-foreground text-sm">
-                        {" "}
-                        Required Documents
-                      </h2>
-                      <div className="grid gap-2">
-                        {data?.scholarshipDocuments.map((docs, index) => (
-                          <div
-                            key={docs.label}
-                            className="flex border justify-between  items-center p-4 gap-5 rounded-md bg-background"
-                          >
-                            <h1>
-                              {index + 1}. {docs.label}
-                            </h1>
-
-                            <div className="space-x-2">
-                              <Badge className="bg-green-800 text-gray-200">
-                                PDF
-                              </Badge>
-                              <Badge className="bg-green-800 text-gray-200">
-                                JPG
-                              </Badge>
-                              <Badge className="bg-green-800 text-gray-200">
-                                DOCX
-                              </Badge>
-                            </div>
+                  <p className="line-clamp-4">{description}</p>
+                  <div>
+                    <h1 className="text-sm text-muted-foreground">
+                      Required Documents
+                    </h1>
+                    <div className="space-y-2 mt-2">
+                      {data?.scholarshipDocuments.map((meow) => (
+                        <div
+                          className="p-2.5 border bg-card rounded-sm flex justify-between items-center"
+                          key={meow.label}
+                        >
+                          <div>{meow.label}</div>
+                          <div className="flex gap-2">
+                            <Badge className="bg-blue-800 text-gray-200">
+                              PDF
+                            </Badge>
+                            <Badge className="bg-blue-800 text-gray-200">
+                              DOCX
+                            </Badge>
+                            <Badge className="bg-blue-800 text-gray-200">
+                              JPG
+                            </Badge>
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
                     </div>
-                  )}
-
-                {/* Status */}
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Status:</span>
-                  <Badge className="bg-green-800 text-gray-300">Active</Badge>
+                  </div>
                 </div>
-              </div>
-            </>
+              </>
+            </div>
+          </div>
+        ) : (
+          <div className=" overflow-auto h-full no-scrollbar">
+            {data && <EditScholarship data={data} setEditMode={setEditMode} />}
           </div>
         )}
         {!editMode && (
-          <div className="p-4">
+          <div className="p-4 sticky bottom-0 bg-black border-t">
             <div className="flex gap-3">
               <Button
                 onClick={() => setEditMode(true)}
                 className="flex-1 bg-blue-800 text-white hover:bg-blue-700"
-                disabled={loading}
               >
                 <Edit /> Edit
               </Button>
@@ -251,11 +221,10 @@ export default function InterceptManageScholarship() {
                 className="flex-1"
                 variant="destructive"
                 onClick={() => setOpenAlert(true)}
-                disabled={loading}
               >
                 <Trash2 /> Delete
               </Button>
-              <Button className="flex-1" variant="outline" disabled={loading}>
+              <Button className="flex-1" variant="outline">
                 <Activity /> Generate Report
               </Button>
             </div>

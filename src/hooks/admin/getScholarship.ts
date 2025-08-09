@@ -29,12 +29,10 @@ export default function useScholarshipData({
   currentPage,
   rowsPerPage,
   sort,
-  refreshKey,
 }: {
   currentPage: number;
   rowsPerPage: number;
   sort: string;
-  refreshKey?: number;
 }) {
   const [data, setData] = useState<ScholarshipTypes[]>([]);
   const [loading, setLoading] = useState(true);
@@ -62,7 +60,7 @@ export default function useScholarshipData({
 
       fetchScholarships();
     },
-    [currentPage, rowsPerPage, sort, refreshKey]
+    [currentPage, rowsPerPage, sort]
   );
 
   return { data, loading, totalPages };

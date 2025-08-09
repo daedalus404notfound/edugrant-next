@@ -1,19 +1,10 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
-type SearchTypes = {
-  scholarshipId: string;
-  scholarshipTitle: string;
-  scholarshipProvider: string;
-  status: string;
-  scholarshipLogo: string;
-  scholarshipDealine: string;
-  totalApproved: string;
-};
+import { ScholarshipTypes } from "../types";
 
 export default function useScholarshipSearch({ query }: { query: string }) {
-  const [searchData, setSearchData] = useState<SearchTypes[]>([]);
+  const [searchData, setSearchData] = useState<ScholarshipTypes[]>([]);
   const [searchLoading, setLoading] = useState(false);
 
   useEffect(() => {

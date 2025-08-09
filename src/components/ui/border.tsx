@@ -30,7 +30,7 @@ export default function SpotlightBorderWrapper({
       {/* Spotlight border layer */}
       <div
         style={{
-          border: "1px solid yellow",
+          border: "1px solid rgb(30, 175, 115)",
           opacity: isVisible ? 1 : 0,
           WebkitMaskImage: `radial-gradient(${radius}% ${radius}px at ${position.x}px ${position.y}px, black 45%, transparent)`,
           maskImage: `radial-gradient(${radius}% ${radius}px at ${position.x}px ${position.y}px, black 45%, transparent)`,

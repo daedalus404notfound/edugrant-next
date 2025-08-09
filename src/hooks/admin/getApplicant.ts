@@ -100,11 +100,15 @@ async function fetchApplications(
 
   const endpoint = `${
     process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
-  }/getApplicationByStatus?status=${status}&page=${currentPage}&dataPerPage=${rowsPerPage}${
+  }/getApplicationByStatus?${
+    status ? `status=${status}` : ""
+  }&page=${currentPage}&dataPerPage=${rowsPerPage}${
     sort ? `&sortBy=${sort}` : ""
-  }${scholar ? `&scholarshipId=${scholar}` : ""}${
-    course ? `&course=${course}` : ""
-  }${year ? `&year=${year}` : ""}${section ? `&section=${section}` : ""}`;
+  }${scholar ? `&filterScholarship=${scholar}` : ""}${
+    course ? `&filterCourse=${course}` : ""
+  }${year ? `&filterYear=${year}` : ""}${
+    section ? `&filterSection=${section}` : ""
+  }`;
   console.log(endpoint);
   const res = await axios.get(endpoint, { withCredentials: true });
 

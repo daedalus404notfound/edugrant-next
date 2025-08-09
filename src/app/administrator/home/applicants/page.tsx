@@ -29,6 +29,7 @@ import {
   ChevronRightIcon,
   FileDown,
   SearchIcon,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -150,12 +151,54 @@ export default function Manage() {
 
           <div className="flex justify-between  mt-8">
             <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
-            <div className="space-x-1.5 uppercase">
-              {course && <Badge variant="secondary">{course}</Badge>}
-
-              {year && <Badge variant="secondary">{year} Year</Badge>}
-              {section && <Badge variant="secondary">Section {section}</Badge>}
-              {scholar && <Badge variant="secondary">{scholar}</Badge>}
+            <div className="space-x-1.5 ">
+              <span className="text-sm font-semibold text-blue-500">
+                {course || year || section || scholar
+                  ? `Active filter(${
+                      (course ? 1 : 0) +
+                      (year ? 1 : 0) +
+                      (section ? 1 : 0) +
+                      (scholar ? 1 : 0)
+                    })`
+                  : ""}
+              </span>
+              &nbsp;
+              {course && (
+                <Badge
+                  className="uppercase bg-blue-800 text-gray-200 cursor-pointer"
+                  onClick={() => setCourse("")}
+                >
+                  {course}
+                  <X />
+                </Badge>
+              )}
+              {year && (
+                <Badge
+                  className="uppercase bg-blue-800 text-gray-200 cursor-pointer"
+                  onClick={() => setYear("")}
+                >
+                  {year} Year
+                  <X />
+                </Badge>
+              )}
+              {section && (
+                <Badge
+                  className="uppercase bg-blue-800 text-gray-200 cursor-pointer"
+                  onClick={() => setSection("")}
+                >
+                  Section {section}
+                  <X />
+                </Badge>
+              )}
+              {scholar && (
+                <Badge
+                  className="uppercase bg-blue-800 text-gray-200 cursor-pointer"
+                  onClick={() => setScholar("")}
+                >
+                  {scholar}
+                  <X />
+                </Badge>
+              )}
             </div>
           </div>
           <div className="mt-7">

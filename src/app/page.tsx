@@ -34,6 +34,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Footer } from "@/components/ui/footer";
+import { GlowCard } from "@/components/ui/glow-cards";
 const navItems = [
   { label: "Home", icon: Home },
   { label: "Features", icon: Zap },
@@ -109,22 +110,21 @@ const HowitworksComponent = () => {
       </h1>
       <div className="grid md:grid-cols-2 gap-6">
         {howItWorks.map((step, index) => (
-          <div
-            key={index}
-            className="p-4 border rounded-lg shadow-sm flex flex-col sm:flex-row items-start gap-4 backdrop:backdrop-blur-2xl bg-muted-foreground/5"
-          >
-            <img
-              src={step.image}
-              alt={step.title}
-              className="w-full h-40  object-cover rounded-md"
-            />
-            <div>
-              <h3 className="text-lg font-medium">{step.title}</h3>
-              <p className="text-sm mt-1 text-muted-foreground">
-                {step.description}
-              </p>
+          <GlowCard key={index} borderWidth={1} customSize noPadding borderRadius={10} glowSize={200} glowColor="emerald" borderGlowIntensity={0.5}>
+            <div className="flex flex-col sm:flex-row items-start gap-4 p-4 shadow-black/20 shadow-md">
+              <img
+                src={step.image}
+                alt={step.title}
+                className="w-full h-40  object-cover rounded-md"
+              />
+              <div>
+                <h3 className="text-lg font-medium">{step.title}</h3>
+                <p className="text-sm mt-1 text-muted-foreground">
+                  {step.description}
+                </p>
+              </div>
             </div>
-          </div>
+          </GlowCard>
         ))}
       </div>
     </div>

@@ -39,6 +39,7 @@ export default function DynamicHeaderAdmin({
   third,
 }: HeaderTypes) {
   const { admin } = useAdminStore();
+  console.log(admin?.adminId)
   const { handleLogout } = useAdminLogout();
   const [open, setOpen] = useState(false);
   return (

@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { ScholarshipTypes } from "@/hooks/user/getScholarshipData";
 import { useUserStore } from "@/store/useUserStore";
-import { DragAndDropArea } from "./reusable";
+import { DragAndDropArea } from "@/components/ui/upload";
 import { Send, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
