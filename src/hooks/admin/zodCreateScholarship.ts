@@ -11,6 +11,7 @@ const createScholarshipSchema = z.object({
   scholarshipTitle: z.string().min(3, "Required"),
   providerName: z.string().min(3, "Required"),
   scholarshipDescription: z.string().min(3, "Required"),
+  scholarshipGwa: z.string(),
   applicationDeadline: z.date({
     message: "Required",
   }),
@@ -44,6 +45,7 @@ export function useCreateScholarshipZod() {
     defaultValues: {
       scholarshipTitle: "",
       providerName: "",
+      scholarshipGwa: "",
       scholarshipDescription: "",
       applicationDeadline: undefined,
       scholarshipAmount: "",

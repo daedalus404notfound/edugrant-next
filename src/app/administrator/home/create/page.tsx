@@ -22,7 +22,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { CalendarIcon, LoaderCircleIcon, PenLine, Plus, X } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarIcon,
+  LoaderCircleIcon,
+  PenLine,
+  Plus,
+  RefreshCcw,
+  Trash2,
+  X,
+} from "lucide-react";
 import DynamicHeaderAdmin from "../dynamic-header";
 import {
   Popover,
@@ -123,23 +132,6 @@ export default function Create() {
               <div className="">
                 <FormField
                   control={form.control}
-                  name="scholarshipAmount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex justify-between items-center">
-                        Scholarship Amount <FormMessage />
-                      </FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="">
-                <FormField
-                  control={form.control}
                   name="applicationDeadline"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
@@ -174,6 +166,40 @@ export default function Create() {
                           />
                         </PopoverContent>
                       </Popover>
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="col-span-2">
+                <FormField
+                  control={form.control}
+                  name="scholarshipGwa"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Required GWA (optional) <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Leave blank if no gwa" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="col-span-2">
+                <FormField
+                  control={form.control}
+                  name="scholarshipAmount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Scholarship Amount <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
                     </FormItem>
                   )}
                 />
@@ -307,12 +333,12 @@ export default function Create() {
                   </div>
 
                   {/* Formats */}
-                  <div className="lg:col-span-1 col-span-3">
+                  <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
                     <FormField
                       control={form.control}
                       name={`documents.${index}.formats`}
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="flex-1">
                           <FormLabel className="flex justify-between items-center">
                             Document Formats
                             <FormMessage />
@@ -345,18 +371,13 @@ export default function Create() {
                         </FormItem>
                       )}
                     />
-                  </div>
-
-                  {/* File + Remove */}
-                  <div className="lg:col-span-1 col-span-3 flex items-end gap-2 lg:mt-6 mt-3">
-                    <Input type="file" disabled />
                     <Button
                       type="button"
                       variant="destructive"
                       disabled={fields.length === 1}
                       onClick={() => remove(index)}
                     >
-                      <X />
+                      <Trash2 />
                     </Button>
                   </div>
                 </div>
@@ -369,15 +390,12 @@ export default function Create() {
               variant="secondary"
               onClick={resetCreateState}
             >
+              <RefreshCcw />
               Clear Form
             </Button>
             <AlertDialog open={open} onOpenChange={setOpen}>
-              <Button
-                variant="outline"
-                className="flex-1"
-                onClick={handleTriggerClick}
-              >
-                Submit Scholarship
+              <Button className="flex-1" onClick={handleTriggerClick}>
+                Submit Scholarship <ArrowRight />
               </Button>
               <AlertDialogContent>
                 <AlertDialogHeader>

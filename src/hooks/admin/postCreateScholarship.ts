@@ -19,6 +19,10 @@ const addScholarshipApi = async (data: creatScholarshipFormData) => {
   const formDataToSend = new FormData();
   formDataToSend.append("newScholarTitle", data.scholarshipTitle);
   formDataToSend.append("newScholarProvider", data.providerName);
+  if (data.scholarshipGwa) {
+    formDataToSend.append("gwa", data.scholarshipGwa);
+  }
+  console.log(data.scholarshipGwa);
   formDataToSend.append("newScholarDescription", data.scholarshipDescription);
   formDataToSend.append("applicationStartDate", today);
   formDataToSend.append(
@@ -26,7 +30,9 @@ const addScholarshipApi = async (data: creatScholarshipFormData) => {
     data.applicationDeadline.toISOString()
   );
   formDataToSend.append("scholarshipAmount", data.scholarshipAmount);
-  formDataToSend.append("scholarshipLimit", data.scholarshipLimit);
+  if (data.scholarshipLimit) {
+    formDataToSend.append("scholarshipLimit", data.scholarshipLimit);
+  }
 
   if (data.detailsImage) {
     formDataToSend.append("coverImg", data.detailsImage);
@@ -109,7 +115,6 @@ export const useAddScholarship = () => {
 };
 
 export const useCreateScholarship = () => {
-  
   const { form, formData, fields, append, remove } = useCreateScholarshipZod();
   const addScholarship = useAddScholarship();
   const [open, setOpen] = useState(false);
@@ -136,21 +141,21 @@ export const useCreateScholarship = () => {
     }
   };
 
- const handleTriggerClick = async () => {
-   // Trigger form validation
-   const isValid = await form.trigger(); // This validates all fields
+  const handleTriggerClick = async () => {
+    // Trigger form validation
+    const isValid = await form.trigger(); // This validates all fields
 
-   if (isValid) {
-     setOpen(true); // Only open dialog if validation passes
-   } else {
-     // Optionally show a toast for validation errors
-     StyledToast({
-       status: "error",
-       title: "Validation Error",
-       description: "Please fill in all required fields correctly.",
-     });
-   }
- };
+    if (isValid) {
+      setOpen(true); // Only open dialog if validation passes
+    } else {
+      // Optionally show a toast for validation errors
+      StyledToast({
+        status: "error",
+        title: "Validation Error",
+        description: "Please fill in all required fields correctly.",
+      });
+    }
+  };
 
   const resetCreateState = () => {
     addScholarship.reset();

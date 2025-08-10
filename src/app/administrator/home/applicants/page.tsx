@@ -44,8 +44,8 @@ import { Label } from "@/components/ui/label";
 import useAdminReview from "@/hooks/admin/getApplicant";
 
 const headers = [
-  { label: "Student ID" },
   { label: "Student Name" },
+  { label: "Student ID" },
   { label: "Course, Year & Section" },
   { label: "Scholarship" },
   { label: "Status" },
@@ -235,7 +235,7 @@ export default function Manage() {
                 {loading ? (
                   <TableRow>
                     <TableCell colSpan={headers.length} className="text-center">
-                      <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
+                      <Ring size={30} speed={2} bgOpacity={0} color="yellow" />
                     </TableCell>
                   </TableRow>
                 ) : !query ? (
@@ -255,18 +255,21 @@ export default function Manage() {
                         }
                         className="cursor-pointer"
                       >
+                        <TableCell className="font-medium flex items-center gap-3">
+                          <div className="bg-red-800 size-9 rounded-full flex justify-center items-center text-xl">
+                            {row.student.lastName.slice(0, 1)}
+                          </div>
+                          <div className="space-y-1">
+                            <p>
+                              {`${row.student.lastName}, ${row.student.firstName} ${row.student.middleName}`}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {row.student.studentEmail}
+                            </p>
+                          </div>
+                        </TableCell>
                         <TableCell className="">
                           {row.student.studentId}
-                        </TableCell>
-                        <TableCell className="font-medium flex items-center gap-3">
-                          {/* <Link
-                          href={`/administrator/home/applicants/${row.applicationId}`}
-                          scroll={false}
-                          prefetch={true}
-                          className="underline h-full w-full"
-                        > */}
-                          {`${row.student.lastName}, ${row.student.firstName} ${row.student.middleName}`}
-                          {/* </Link> */}
                         </TableCell>
 
                         <TableCell>
@@ -288,7 +291,13 @@ export default function Manage() {
                                 : ""
                             } text-gray-200`}
                           >
-                            {row.status}
+                            {row.status == "APPROVE"
+                              ? "Approved"
+                              : row.status == "PENDING"
+                              ? "Pending"
+                              : row.status === "DECLINE"
+                              ? "Declined"
+                              : ""}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-center">
@@ -311,7 +320,7 @@ export default function Manage() {
                 ) : searchLoading ? (
                   <TableRow>
                     <TableCell colSpan={headers.length} className="text-center">
-                      <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
+                      <Ring size={30} speed={2} bgOpacity={0} color="yellow" />
                     </TableCell>
                   </TableRow>
                 ) : searchData.length > 0 ? (
@@ -330,11 +339,21 @@ export default function Manage() {
                       }
                       className="cursor-pointer"
                     >
+                      <TableCell className="font-medium flex items-center gap-3">
+                        <div className="bg-red-800 size-9 rounded-full flex justify-center items-center text-xl">
+                          {row.student.lastName.slice(0, 1)}
+                        </div>
+                        <div className="space-y-1">
+                          <p>
+                            {`${row.student.lastName}, ${row.student.firstName} ${row.student.middleName}`}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {row.student.studentEmail}
+                          </p>
+                        </div>
+                      </TableCell>
                       <TableCell className="">
                         {row.student.studentId}
-                      </TableCell>
-                      <TableCell className="font-medium flex items-center gap-3">
-                        {`${row.student.lastName}, ${row.student.firstName} ${row.student.middleName}`}
                       </TableCell>
 
                       <TableCell>

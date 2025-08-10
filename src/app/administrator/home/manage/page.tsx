@@ -57,8 +57,8 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 const headers = [
-  { label: "Sponsor" },
-  { label: "Scholarship Title" },
+  { label: "Scholarship" },
+  { label: "Start Date" },
   { label: "Deadline" },
   { label: "Status" },
   { label: "Approved" },
@@ -125,7 +125,7 @@ export default function Manage() {
             <Input
               onChange={(e) => setQuery(e.target.value)}
               className="peer ps-9 pe-9"
-              placeholder="Search Student Name or ID..."
+              placeholder="Search Scholarship Name..."
               type="search"
             />
             <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
@@ -220,7 +220,7 @@ export default function Manage() {
                     colSpan={headers.length + 2}
                     className="text-center"
                   >
-                    <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
+                    <Ring size={30} speed={2} bgOpacity={0} color="yellow" />
                   </TableCell>
                 </TableRow>
               ) : !query ? (
@@ -234,26 +234,26 @@ export default function Manage() {
                         )
                       }
                     >
-                      <TableCell className="">
-                        {row.scholarshipProvider}
-                      </TableCell>
                       <TableCell className="flex gap-2.5 items-center">
-                        {/* <Link
-                          href={`/administrator/home/manage/${row.scholarshipId}`}
-                          prefetch={true}
-                        > */}
                         <img
-                          className="size-8 object-cover rounded-full border-2"
+                          className="size-9 object-cover rounded-full"
                           src={row.scholarshipLogo}
                           alt=""
-                        />{" "}
-                        {row.scholarshipTitle}
-                        {/* </Link> */}
+                        />
+                        <div className="space-y-1">
+                          <p className="font-semibold">
+                            {row.scholarshipTitle}
+                          </p>
+                          <p className="text-xs"> {row.scholarshipProvider}</p>
+                        </div>
                       </TableCell>
-
                       <TableCell className="">
                         {row.scholarshipDealine &&
-                          format(row.scholarshipDealine, "PPP")}
+                          format(row.scholarshipDealine, "PPPp")}
+                      </TableCell>
+                      <TableCell className="">
+                        {row.scholarshipDealine &&
+                          format(row.scholarshipDealine, "PPPp")}
                       </TableCell>
                       <TableCell className="">
                         <Badge className="bg-green-900 text-gray-300">
@@ -297,24 +297,16 @@ export default function Manage() {
                       )
                     }
                   >
-                    <TableCell className="">
-                      {row.scholarshipProvider}
-                    </TableCell>
-                    <TableCell className="font-medium">
-                      {/* <Link
-                          href={`/administrator/home/manage/${row.scholarshipId}`}
-                          prefetch={true}
-                        > */}
-
-                      <div className="flex gap-2.5 items-center">
-                        <img
-                          className="size-9 object-cover rounded-full border-2"
-                          src={row.scholarshipLogo}
-                          alt=""
-                        />{" "}
-                        {row.scholarshipTitle}
+                    <TableCell className="flex gap-2.5 items-center">
+                      <img
+                        className="size-9 object-cover rounded-full"
+                        src={row.scholarshipLogo}
+                        alt=""
+                      />
+                      <div className="space-y-1">
+                        <p className="font-semibold">{row.scholarshipTitle}</p>
+                        <p className="text-xs"> {row.scholarshipProvider}</p>
                       </div>
-                      {/* </Link> */}
                     </TableCell>
 
                     <TableCell className="">

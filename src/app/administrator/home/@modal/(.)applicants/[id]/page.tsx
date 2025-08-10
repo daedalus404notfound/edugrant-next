@@ -375,7 +375,10 @@ export default function InterceptReviewApplicants() {
                   </AlertDialogFooter>
                 </AlertDialogContent>
               </AlertDialog>
-              <Button className="flex-1" onClick={() => setOpen(false)}>
+              <Button
+                className="flex-1"
+                onClick={() => HandleCloseDrawer(false)}
+              >
                 <ArrowLeft /> Back
               </Button>
             </div>

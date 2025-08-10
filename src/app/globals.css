@@ -61,12 +61,7 @@
 }
 
 .mask-gradient-left {
-   mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 100%,
-    black 100%
-  );
+  mask-image: linear-gradient(to right, transparent 0%, black 100%, black 100%);
   /* -webkit-mask-image: linear-gradient(
     to right,
     transparent 0%,
@@ -74,7 +69,24 @@
     black 100%
   ); */
 }
-
+@keyframes iconBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-0.3em);
+  }
+  40% {
+    transform: translateY(0);
+  }
+  60% {
+    transform: translateY(-0.1em);
+  }
+  80% {
+    transform: translateY(0);
+  }
+}
 
 .mask-gradient-bottom {
   mask-image: linear-gradient(to bottom, black 0%, black 80%, transparent 100%);

@@ -73,7 +73,7 @@ export default function InterceptManageScholarship() {
   const onSubmit = async () => {
     try {
       setDeleteLoading(true);
-
+      console.log(scholarshipId);
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/deleteScholarship`,
         { scholarshipId },
