@@ -83,7 +83,7 @@ export default function ApplicationFilter({
                 </SelectTrigger>
                 <SelectContent>
                   {filter?.FilterData.distinctYear.map((meow) => (
-                    <SelectItem key={meow} value={meow.slice(0, 3)}>
+                    <SelectItem key={meow} value={meow}>
                       {meow}
                     </SelectItem>
                   ))}
