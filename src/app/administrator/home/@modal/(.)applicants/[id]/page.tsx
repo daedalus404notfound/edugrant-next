@@ -29,7 +29,7 @@ import useApplicationById from "@/hooks/admin/getApplicantData";
 import { Button } from "@/components/ui/button";
 import {  motion } from "motion/react";
 import {
-  Activity,
+  
   ArrowLeft,
   Calendar,
   CheckCheck,

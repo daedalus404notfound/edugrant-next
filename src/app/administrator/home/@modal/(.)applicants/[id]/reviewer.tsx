@@ -13,13 +13,12 @@ import {
   ZoomOut,
   RotateCw,
   RefreshCw,
-  FolderOpen,
+  
   Image,
   File,
 } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { Badge } from "@/components/ui/badge";
-import { BGPattern } from "@/components/ui/grid";
 import GlassFolder from "@/components/ui/folder";
 
 // Mock types for demonstration

@@ -79,7 +79,6 @@ const sortList = [
   },
 ];
 import { cn } from "@/lib/utils";
-import { CsvExportButton } from "@/components/ui/export";
 export default function Manage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
@@ -191,13 +190,7 @@ export default function Manage() {
                 </Command>
               </PopoverContent>
             </Popover>
-            <CsvExportButton
-              data={data}
-              filename="users.csv"
-              buttonText="Export CSV"
-              showHeaderSelection={true}
-              onExport={() => console.log("Export completed!")}
-            />
+            <Button variant="outline">Export CSV</Button>
           </div>
         </div>
         <div className="container mx-auto space-y-3 mt-5">
