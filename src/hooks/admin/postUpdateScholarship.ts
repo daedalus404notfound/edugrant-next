@@ -19,6 +19,7 @@ const today = new Date().toISOString().split("T")[0];
 const addScholarshipApi = async (data: creatScholarshipFormData) => {
   const { admin } = useAdminStore.getState();
   const formDataToSend = new FormData();
+
   formDataToSend.append("newScholarTitle", data.scholarshipTitle);
   formDataToSend.append("newScholarProvider", data.providerName);
   if (data.scholarshipGwa) {
@@ -27,7 +28,6 @@ const addScholarshipApi = async (data: creatScholarshipFormData) => {
   if (admin?.adminId) {
     formDataToSend.append("adminId", String(admin.adminId));
   }
-  console.log(data.scholarshipGwa);
   formDataToSend.append("newScholarDescription", data.scholarshipDescription);
   formDataToSend.append("applicationStartDate", today);
   formDataToSend.append(
@@ -38,7 +38,6 @@ const addScholarshipApi = async (data: creatScholarshipFormData) => {
   if (data.scholarshipLimit) {
     formDataToSend.append("scholarshipLimit", data.scholarshipLimit);
   }
-
   if (data.detailsImage) {
     formDataToSend.append("coverImg", data.detailsImage);
   }
@@ -47,7 +46,16 @@ const addScholarshipApi = async (data: creatScholarshipFormData) => {
   }
   formDataToSend.append("requirements", JSON.stringify(data.documents));
 
-  const res = await axios.post(
+  // ✅ Log raw data object
+  console.log("Raw Data Object:", data);
+
+  // ✅ Log FormData contents
+  console.log("FormData Contents:");
+  for (let [key, value] of formDataToSend.entries()) {
+    console.log(`${key}:`, value);
+  }
+
+  const res = await axios.put(
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/updateScholarships`,
     formDataToSend,
     {
@@ -60,6 +68,7 @@ const addScholarshipApi = async (data: creatScholarshipFormData) => {
 
   return res.data;
 };
+
 
 export const useAddScholarship = () => {
   return useMutation({
