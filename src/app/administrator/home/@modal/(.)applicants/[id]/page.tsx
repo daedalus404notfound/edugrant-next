@@ -27,11 +27,14 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import useApplicationById from "@/hooks/admin/getApplicantData";
 import { Button } from "@/components/ui/button";
+import {  motion } from "motion/react";
 import {
+  Activity,
   ArrowLeft,
   Calendar,
   CheckCheck,
   CircleCheckIcon,
+  File,
   GraduationCap,
   IdCard,
   LoaderCircleIcon,
@@ -48,6 +51,7 @@ import { useApprovedHandler } from "@/hooks/admin/postApproveHandler";
 import { useRejectHandler } from "@/hooks/admin/postDeclineHandler";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAdminStore } from "@/store/adminUserStore";
+import { BGPattern } from "@/components/ui/grid";
 
 export default function InterceptReviewApplicants() {
   const router = useRouter();
@@ -99,7 +103,7 @@ export default function InterceptReviewApplicants() {
               <Skeleton className="h-12 w-full" />
             </div>
           ) : data?.status === "APPROVE" ? (
-            <div className="rounded-md border border-green-500/50 px-4 py-3 bg-green-800/50 text-gray-200 flex justify-between items-center">
+            <div className="rounded-md  px-4 py-3 bg-green-950 text-gray-200 flex justify-between items-center">
               <p className="text-sm">
                 <CircleCheckIcon
                   className="me-3 -mt-0.5 inline-flex opacity-60"
@@ -117,7 +121,7 @@ export default function InterceptReviewApplicants() {
               </p>
             </div>
           ) : data?.status === "DECLINE" ? (
-            <div className="rounded-md border border-red-500/50 px-4 py-3 bg-red-800/50 text-gray-200 flex justify-between items-center">
+            <div className="rounded-md   px-4 py-3 bg-red-950 text-gray-200 flex justify-between items-center">
               <p className="text-sm">
                 <CircleCheckIcon
                   className="me-3 -mt-0.5 inline-flex opacity-60"
@@ -149,10 +153,10 @@ export default function InterceptReviewApplicants() {
             </div>
           </div>
         ) : (
-          <div className="grid grid-cols-3 overflow-auto no-scrollbar h-full">
-            <div className="p-4 pt-0 h-full">
-              <div className="space-y-6  bg-background p-4 h-full rounded-md">
-                <div className="flex flex-col justify-center items-center">
+          <div className="grid grid-cols-3 gap-4 overflow-auto no-scrollbar h-full">
+            <div className="p-4 pt-0 h-full border-r-1">
+              <div className=" space-y-6 p-4 h-full rounded-md">
+                <div className=" flex flex-col justify-center items-center ">
                   <div className="size-20 border-2 border-card rounded-full flex justify-center items-center text-4xl font-semibold bg-red-900 uppercase">
                     {data?.student.firstName.slice(0, 1)}
                   </div>
@@ -241,9 +245,26 @@ export default function InterceptReviewApplicants() {
                 </div>
               </div>
             </div>
-            <div className="col-span-2 pt-4 pr-4 space-y-3 ">
+            <div className="relative col-span-2 pt-4 pr-4 space-y-3 ">
+              <BGPattern variant="grid" mask="fade-edges" />
               <div className="flex justify-between items-center">
-                <h1 className="text-lg font-semibold">Submitted Documents</h1>
+                <motion.span
+                  className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
+          text-lg font-semibold flex items-center gap-1.5
+          "
+                  initial={{ backgroundPosition: "200% 0" }}
+                  animate={{ backgroundPosition: "-200% 0" }}
+                  transition={{
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    duration: 7,
+                    ease: "linear",
+                  }}
+                >
+                  <File strokeWidth={3} size={18}/>
+                  Submitted Documents
+                </motion.span>
+
                 <span className="flex gap-1 items-center">
                   {data?.userDocuments && (
                     <p className="">{Object.keys(data.userDocuments).length}</p>

@@ -84,6 +84,8 @@ export default function AdminDashboard() {
               <div className="flex justify-between items-center">
                 <h1>Scholarship Status</h1>
 
+                
+
                 <div className="opacity-40">
                   <CircleQuestionMark size={16} />
                 </div>

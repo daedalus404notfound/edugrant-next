@@ -2,27 +2,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-export type scholarshipDocumentTypes = {
-  label: string;
-  formats: string[];
-};
-
-export type ScholarshipTypes = {
-  scholarshipId: string;
-  scholarshipTitle: string;
-  scholarshipProvider: string;
-  status: string;
-  scholarshipLimit: string;
-  scholarshipDealine: string;
-  totalApplicants: number;
-  totalApproved: number;
-  scholarshipLogo: string;
-  scholarshipCover: string;
-  scholarshipDescription: string;
-  scholarshipAmount: string;
-  scholarshipDocuments: scholarshipDocumentTypes[];
-};
-
+import { ScholarshipTypes } from "../types";
 export default function useScholarshipUserByIdAdmin(id: string) {
   const [data, setData] = useState<ScholarshipTypes | null>(null);
   const [loading, setLoading] = useState(true);

@@ -20,6 +20,7 @@ import {
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { Badge } from "@/components/ui/badge";
 import { BGPattern } from "@/components/ui/grid";
+import GlassFolder from "@/components/ui/folder";
 
 // Mock types for demonstration
 interface UserDocument {
@@ -48,30 +49,15 @@ export default function Reviewer({
       <DialogTrigger asChild>
         <div className="relative aspect-square flex justify-center items-center p-2 cursor-pointer  ">
           <div className="flex justify-center items-center flex-col group">
-            <div className="relative size-30 flex justify-center items-center">
-              <BGPattern variant="grid" mask="fade-edges" />
-              {fileFormat == "jpg" || fileFormat == "png" ? (
-                <Image
-                  size={50}
-                  strokeWidth={1.5}
-                  className="absolute opacity-0 group-hover:opacity-100 transform duration-200 translate-y-5  group-hover:-translate-y-0"
-                />
-              ) : (
-                <File
-                  size={50}
-                  strokeWidth={1.5}
-                  className="absolute opacity-0 group-hover:opacity-100 transform duration-200 translate-y-5  group-hover:-translate-y-0"
-                />
-              )}
-
-              {/* Hide folder when parent is hovered */}
-              <FolderOpen
-                strokeWidth={1.5}
-                size={50}
-                className="absolute opacity-100 group-hover:opacity-0 duration-200 transform group-hover:translate-y-5"
-              />
-            </div>
-
+            <GlassFolder
+              icon={
+                fileFormat === "jpg" || fileFormat === "png" ? (
+                  <Image />
+                ) : (
+                  <File />
+                )
+              }
+            />
             <h1 className=" flex items-center gap-1.5">{document}</h1>
             <Badge className="mt-1 bg-green-800 text-gray-200 uppercase ">
               {fileFormat}

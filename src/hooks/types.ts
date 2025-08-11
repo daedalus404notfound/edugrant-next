@@ -16,9 +16,11 @@ export type ScholarshipTypes = {
   totalApplicants: number;
   totalApproved: number;
   scholarshipLogo: string;
+  gwa: string;
+  scholarshipLimit: string;
   scholarshipCover: string;
   scholarshipDescription: string;
-  scholarshipAmount: number;
+  scholarshipAmount: string;
   scholarshipDocuments: scholarshipDocumentTypes[];
 };
 
@@ -60,6 +62,7 @@ export type ApplicationTypes = {
   student: UserProfileTypes;
   userDocuments: Record<string, UserDocument>;
   userId: string;
+
   applicationDate: string;
 };
 export type UserDocument = {

@@ -1,7 +1,6 @@
 import axios, { AxiosError } from "axios";
 import {
   creatScholarshipFormData,
-  useCreateScholarshipZod,
 } from "./zodCreateScholarship";
 import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
@@ -13,6 +12,8 @@ interface ApiErrorResponse {
   statusCode?: number;
 }
 import { useAdminStore } from "@/store/adminUserStore";
+import { ScholarshipTypes } from "../types";
+import { useUpdateScholarshipZod } from "./zodUpdateScholarship";
 type ApiError = AxiosError<ApiErrorResponse>;
 const today = new Date().toISOString().split("T")[0];
 const addScholarshipApi = async (data: creatScholarshipFormData) => {
@@ -47,7 +48,7 @@ const addScholarshipApi = async (data: creatScholarshipFormData) => {
   formDataToSend.append("requirements", JSON.stringify(data.documents));
 
   const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/adminAddScholarships`,
+    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/updateScholarships`,
     formDataToSend,
     {
       withCredentials: true,
@@ -118,8 +119,8 @@ export const useAddScholarship = () => {
   });
 };
 
-export const useCreateScholarship = () => {
-  const { form, formData, fields, append, remove } = useCreateScholarshipZod();
+export const useUpdateScholarship = (data?: ScholarshipTypes) => {
+  const { form, formData, fields, append, remove } = useUpdateScholarshipZod(data);
   const addScholarship = useAddScholarship();
   const [open, setOpen] = useState(false);
 

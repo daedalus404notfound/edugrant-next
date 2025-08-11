@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import SpotlightBorderWrapper from "@/components/ui/border";
 import { useFileUpload } from "@/hooks/useUpload";
 import { BGPattern } from "./grid";
-import {  Paperclip2 } from "iconsax-reactjs";
+import { Paperclip2 } from "iconsax-reactjs";
 import { X } from "lucide-react";
 
 function formatBytes(bytes: number, decimals = 2): string {
@@ -21,10 +21,12 @@ export function DragAndDropArea({
   label,
   accept,
   onFilesChange,
+  initialImageUrl,
 }: {
   label: string;
   accept: string[];
   onFilesChange: (files: File[]) => void;
+  initialImageUrl?: string;
 }) {
   const {
     uploadedFiles,
@@ -125,6 +127,20 @@ export function DragAndDropArea({
               </div>
             );
           })}
+        {uploadedFiles.length === 0 && initialImageUrl && (
+          <div className="flex items-center gap-3 justify-between border border-border rounded-lg p-2 mb-2">
+            <div className="flex items-center gap-3">
+              <img
+                src={initialImageUrl}
+                alt="Existing"
+                className="w-10 h-10 object-cover rounded"
+              />
+              <span className="text-sm break-all max-w-[200px] truncate">
+                Existing Image
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     </SpotlightBorderWrapper>
   );

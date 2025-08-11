@@ -116,7 +116,7 @@ export default function Manage() {
           <UsersRound />
           Manage Applicants
         </motion.span>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-gray-300 mt-1">
           Browse the list of active scholarships. Use the available actions to
           modify or remove entries.
         </p>

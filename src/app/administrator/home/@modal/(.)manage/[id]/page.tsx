@@ -54,7 +54,7 @@ export default function InterceptManageScholarship() {
   const [open, setOpen] = useState(true);
   const id = params.id as string;
   const { data } = useScholarshipUserByIdAdmin(id);
-
+  console.log(data);
   const title = data?.scholarshipTitle || "N/A";
   const deadline = data?.scholarshipDealine;
   const provider = data?.scholarshipProvider || "unknown";
@@ -66,7 +66,9 @@ export default function InterceptManageScholarship() {
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
-      router.back();
+      setTimeout(() => {
+        router.back();
+      }, 250);
     }
   };
 
@@ -158,11 +160,11 @@ export default function InterceptManageScholarship() {
                     <ExternalLink />
                   </Button>
                 </div>
-                <div className="grid grid-cols-3 gap-5">
+                <div className="grid grid-cols-3 gap-3">
                   {summaryCards.map((meow, index) => (
                     <div
                       key={index}
-                      className="relative  z-10 flex flex-col justify-between  rounded-lg  shadow-sm border border-green-950/80 p-3 bg-background"
+                      className="relative  z-10 flex flex-col justify-between  rounded-lg  shadow-sm border p-3 bg-background"
                     >
                       {/* <BGPattern variant="dots" mask="fade-edges" /> */}
                       <div className="flex justify-between items-start ">
@@ -205,7 +207,7 @@ export default function InterceptManageScholarship() {
                 {deadline && (
                   <AnimatedNumberCountdown endDate={new Date(deadline)} />
                 )}
-                <div className="grid grid-cols-1 gap-3">
+                <div className="grid grid-cols-2 gap-3">
                   <div className="relative border lg:p-4 p-2.5 rounded-md bg-background/50 flex justify-between items-end">
                     <div className="space-y-3">
                       <h1 className="text-xs text-muted-foreground">Amount</h1>
@@ -235,6 +237,17 @@ export default function InterceptManageScholarship() {
                     </div>
                     <p className="line-clamp-4 text-2xl text-green-800 font-semibold">
                       {data?.scholarshipDocuments.length}
+                    </p>
+                  </div>
+                  <div className="border lg:p-4 p-2.5 rounded-md bg-background/50  flex justify-between items-end">
+                    <div className="space-y-3">
+                      <h1 className="text-xs text-muted-foreground">
+                        Required GWA
+                      </h1>
+                      <File />
+                    </div>
+                    <p className="line-clamp-4 text-2xl text-green-800 font-semibold">
+                      {data?.gwa}
                     </p>
                   </div>
                 </div>

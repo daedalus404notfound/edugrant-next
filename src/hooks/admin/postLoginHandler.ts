@@ -203,7 +203,7 @@ export const useLoginHandler = () => {
       });
       console.log(result);
       if (result) {
-        router.replace("/administrators/home");
+        router.replace("/administrator/home");
       }
     } catch (error) {
       // Error toast is already handled in useVerifyLogin onError

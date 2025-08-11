@@ -178,10 +178,10 @@ export default function Create() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex justify-between items-center">
-                        Required GWA (optional) <FormMessage />
+                        Required GWA <FormMessage />
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="Leave blank if no gwa" />
+                        <Input {...field} placeholder="(Optional)" />
                       </FormControl>
                     </FormItem>
                   )}
@@ -212,12 +212,12 @@ export default function Create() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex justify-between items-center">
-                        Scholarship Limit (optional)
+                        Scholarship Limit
                         <FormMessage />
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Leave blank if no limit"
+                          placeholder="(Optional)"
                           type="number"
                           {...field}
                         />

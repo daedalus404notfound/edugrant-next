@@ -134,7 +134,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <p className="truncate  text-xl zxczxc tracking-[-3px]">
                     Edugrant
                   </p>
-                  <p className="font-light mt-1">Admin</p>
+                  <p className="text-xs mt-0.5">Admin</p>
                 </span>
               </div>
             </SidebarMenuButton>

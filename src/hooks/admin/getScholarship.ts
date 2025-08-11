@@ -1,29 +1,9 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-type FormatTypes = {
-  formats: string;
-};
 
-type scholarshipDocumentTypes = {
-  label: string;
-  formats: FormatTypes[];
-};
+import { ScholarshipTypes } from "../types";
 
-export type ScholarshipTypes = {
-  scholarshipId: string;
-  scholarshipTitle: string;
-  scholarshipProvider: string;
-  status: string;
-  scholarshipDealine: string;
-  totalApplicants: number;
-  totalApproved: number;
-  scholarshipLogo: string;
-  scholarshipCover: string;
-  scholarshipDescription: string;
-  scholarshipAmount: number;
-  scholarshipDocuments: scholarshipDocumentTypes[];
-};
 
 export default function useScholarshipData({
   currentPage,

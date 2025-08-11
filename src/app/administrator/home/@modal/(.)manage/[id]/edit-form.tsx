@@ -1,12 +1,6 @@
 "use client";
-import { ChevronDownIcon, Save, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { format } from "date-fns";
+import MultipleSelector, { Option } from "@/components/ui/multi-select";
 import {
   Form,
   FormControl,
@@ -17,154 +11,394 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
-import { EditScholarshipTypes } from "@/hooks/types";
-import { useEditScholarshipForm } from "@/lib/use-edit-scholarship-form";
-import { useScholarshipSubmission } from "@/hooks/admin/putUpdateScholarship";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  ArrowRight,
+  CalendarIcon,
+  LoaderCircleIcon,
+  Plus,
+  Trash2,
+  X,
+} from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import { DragAndDropArea } from "@/components/ui/upload";
+import { ScholarshipTypes } from "@/hooks/types";
+import { useUpdateScholarship } from "@/hooks/admin/postUpdateScholarship";
+const options: Option[] = [
+  { label: "PDF", value: "application/pdf" },
+  {
+    label: "Word Document",
+    value:
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  },
+  { label: "JPEG Image", value: "image/jpeg" },
+  { label: "PNG Image", value: "image/png" },
+];
 export default function EditScholarship({
   data,
   setEditMode,
 }: {
-  data: EditScholarshipTypes;
+  data: ScholarshipTypes;
   setEditMode: (value: boolean) => void;
 }) {
-  const [open, setOpen] = useState(false);
-  const [date, setDate] = useState<Date | undefined>(undefined);
-  const { form } = useEditScholarshipForm(data);
-  const { handleSubmit } = useScholarshipSubmission();
-
+  const {
+    open,
+    setOpen,
+    handleSubmit,
+    loading,
+    form,
+    fields,
+    append,
+    handleTriggerClick,
+    remove,
+  } = useUpdateScholarship(data);
   return (
-    <div className="p-4 ">
+    <div className="p-4 pb-20">
       <Form {...form}>
-        <div className="space-y-6">
-          <FormField
-            control={form.control}
-            name="scholarshipTitle"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex justify-between items-center">
-                  Title <FormMessage />
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
+        <div className="space-y-5 mt-10">
+          <div className="grid grid-cols-3 gap-x-3 gap-y-6">
+            <div className="col-span-2">
+              <FormField
+                control={form.control}
+                name="scholarshipTitle"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex justify-between items-center">
+                      Scholarship Title <FormMessage />
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="">
+              <FormField
+                control={form.control}
+                name="providerName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex justify-between items-center">
+                      Provider Name <FormMessage />
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
 
-          <FormField
-            control={form.control}
-            name="providerName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex justify-between items-center">
-                  Provider Name <FormMessage />
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="scholarshipDescription"
-            render={({ field }) => (
-              <FormItem className="">
-                <FormLabel className="flex justify-between items-center">
-                  Description <FormMessage />
-                </FormLabel>
-                <FormControl>
-                  <Textarea {...field} />
-                </FormControl>
-              </FormItem>
-            )}
-          />
-
-          <div className="flex justify-center items-center gap-3">
-            <FormField
-              control={form.control}
-              name="applicationDeadline"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel className="px-1 flex justify-between items-center">
-                    Deadline <FormMessage />
-                  </FormLabel>
-                  <FormControl>
-                    <Popover open={open} onOpenChange={setOpen}>
+            <div className="">
+              <FormField
+                control={form.control}
+                name="applicationDeadline"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="flex items-center justify-between">
+                      Deadline <FormMessage />
+                    </FormLabel>
+                    <Popover>
                       <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          id="date"
-                          className="w-full justify-between font-normal"
-                        >
-                          {date ? date.toLocaleDateString() : "Select date"}
-                          <ChevronDownIcon />
-                        </Button>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-full  text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "PPP")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent
-                        className="w-auto overflow-hidden p-0"
-                        align="start"
-                      >
+                      <PopoverContent className="w-auto p-0" align="start">
                         <Calendar
                           mode="single"
-                          selected={date}
+                          selected={field.value}
+                          onSelect={field.onChange}
                           captionLayout="dropdown"
-                          onSelect={(date) => {
-                            setDate(date);
-                            if (date) {
-                              field.onChange(date.toISOString());
-                            }
-                            setOpen(false);
-                          }}
                         />
                       </PopoverContent>
                     </Popover>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+                  </FormItem>
+                )}
+              />
+            </div>
 
-            <FormField
-              control={form.control}
-              name="scholarshipLimit"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel className="flex justify-between items-center">
-                    Application Limit <FormMessage />
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} type="number" />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+            <div className="col-span-2">
+              <FormField
+                control={form.control}
+                name="scholarshipGwa"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex justify-between items-center">
+                      Required GWA <FormMessage />
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="(Optional)" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="col-span-2">
+              <FormField
+                control={form.control}
+                name="scholarshipAmount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex justify-between items-center">
+                      Scholarship Amount <FormMessage />
+                    </FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="">
+              <FormField
+                control={form.control}
+                name="scholarshipLimit"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex justify-between items-center">
+                      Scholarship Limit
+                      <FormMessage />
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="(Optional)"
+                        type="number"
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="col-span-3">
+              <FormField
+                control={form.control}
+                name="scholarshipDescription"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex justify-between items-center">
+                      Scholarship Description <FormMessage />
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea {...field} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="space-y-5 mt-10">
+          <div className="w-full flex gap-5">
+            {/* Backdrop Image */}
+            <div className="flex flex-col flex-1 gap-2">
+              <FormField
+                control={form.control}
+                name="detailsImage"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex justify-between items-center">
+                      Details Cover
+                      <FormMessage />
+                    </FormLabel>
+                    <FormControl>
+                      <DragAndDropArea
+                        label="backdrop image"
+                        accept={["image/png", "image/jpeg", "image/jpg"]}
+                        onFilesChange={(files) => field.onChange(files[0])} // Single file
+                        initialImageUrl={data.scholarshipCover}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {/* Sponsor Logo Image */}
+            <div className="flex flex-col flex-1 gap-2">
+              <FormField
+                control={form.control}
+                name="sponsorImage"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex justify-between items-center">
+                      Sponsor Logo/Image <FormMessage />
+                    </FormLabel>
+                    <FormControl>
+                      <DragAndDropArea
+                        label="sponsor logo"
+                        accept={["image/png", "image/jpeg", "image/jpg"]}
+                        onFilesChange={(files) => field.onChange(files[0])} // Single file
+                        initialImageUrl={data.scholarshipLogo}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Dynamic Required Documents */}
+        <div className="space-y-5 mt-10">
+          <div className="w-full flex items-center justify-end ">
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => append({ label: "", formats: [] })}
+              variant="outline"
+            >
+              <Plus className="w-4 h-4 mr-1" />
+              More requirements
+            </Button>
           </div>
 
-          <FormField
-            control={form.control}
-            name="scholarshipAmount"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="flex justify-between items-center">
-                  Amount <FormMessage />
-                </FormLabel>
-                <FormControl>
-                  <Input {...field} type="number" />
-                </FormControl>
-              </FormItem>
-            )}
-          />
+          <div className="space-y-5">
+            {fields.map((field, index) => (
+              <div
+                key={field.id}
+                className="grid grid-cols-3 gap-3 items-center"
+              >
+                {/* Label */}
+                <div className="lg:col-span-1 col-span-3">
+                  <FormField
+                    control={form.control}
+                    name={`documents.${index}.label`}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex justify-between items-center">
+                          Document Label {index + 1} <FormMessage />
+                        </FormLabel>
+                        <FormControl>
+                          <Input placeholder="e.g. COR" {...field} />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                {/* Formats */}
+                <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
+                  <FormField
+                    control={form.control}
+                    name={`documents.${index}.formats`}
+                    render={({ field }) => (
+                      <FormItem className="flex-1">
+                        <FormLabel className="flex justify-between items-center">
+                          Document Formats
+                          <FormMessage />
+                        </FormLabel>
+                        <FormControl>
+                          <MultipleSelector
+                            className="bg-white/5"
+                            commandProps={{
+                              label: "Select document formats",
+                            }}
+                            value={options.filter((option) =>
+                              field.value?.includes(option.value)
+                            )}
+                            defaultOptions={options}
+                            placeholder="Choose formats"
+                            hideClearAllButton
+                            hidePlaceholderWhenSelected
+                            emptyIndicator={
+                              <p className="text-center text-sm">
+                                No results found
+                              </p>
+                            }
+                            onChange={(selected) => {
+                              field.onChange(
+                                selected.map((option) => option.value)
+                              );
+                            }}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    disabled={fields.length === 1}
+                    onClick={() => remove(index)}
+                  >
+                    <Trash2 />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </Form>
-      <div className="flex gap-3 w-full absolute bottom-0 left-0 p-4">
-        <Button
-          onClick={form.handleSubmit(handleSubmit)}
-          className="flex-1 bg-green-800 text-white hover:bg-green-700"
-        >
-          <Save /> Save
-        </Button>
+      <div className="flex gap-3 w-full absolute bg-black bottom-0 left-0 p-4">
+        <AlertDialog open={open} onOpenChange={setOpen}>
+          <Button className="flex-1" onClick={handleTriggerClick}>
+            Update Scholarship <ArrowRight />
+          </Button>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to submit this scholarship?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <Button
+                onClick={form.handleSubmit(handleSubmit)}
+                disabled={loading}
+                className="flex-1"
+                variant="outline"
+              >
+                {loading && (
+                  <LoaderCircleIcon
+                    className="-ms-1 animate-spin"
+                    size={16}
+                    aria-hidden="true"
+                  />
+                )}
+                {loading ? "Submitting..." : "Yes, Submit"}
+              </Button>
+
+              <AlertDialogCancel className="flex-1">
+                <X />
+                Cancel
+              </AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         <Button
           onClick={() => setEditMode(false)}

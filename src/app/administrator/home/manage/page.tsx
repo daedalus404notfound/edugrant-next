@@ -79,6 +79,7 @@ const sortList = [
   },
 ];
 import { cn } from "@/lib/utils";
+import { CsvExportButton } from "@/components/ui/export";
 export default function Manage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
@@ -116,7 +117,7 @@ export default function Manage() {
           <Activity strokeWidth={3} />
           Active Scholarships
         </motion.span>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-gray-300 mt-1">
           Browse the list of active scholarships. Use the available actions to
           modify or remove entries.
         </p>
@@ -190,7 +191,13 @@ export default function Manage() {
                 </Command>
               </PopoverContent>
             </Popover>
-            <Button variant="outline">Export CSV</Button>
+            <CsvExportButton
+              data={data}
+              filename="users.csv"
+              buttonText="Export CSV"
+              showHeaderSelection={true}
+              onExport={() => console.log("Export completed!")}
+            />
           </div>
         </div>
         <div className="container mx-auto space-y-3 mt-5">
