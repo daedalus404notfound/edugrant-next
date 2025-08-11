@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import {  Share2, TextSearch } from "lucide-react";
+import { Share2, TextSearch } from "lucide-react";
 import Link from "next/link";
 
 import useScholarshipUserData from "@/hooks/user/getScholarship";
@@ -29,7 +29,7 @@ export default function ClientScholarship() {
   console.log(data, loading);
 
   return (
-    <div className=" min-h-screen background px-4 ">
+    <div className="z-10 min-h-screen background px-4 ">
       <DynamicHeader first={segmentedPath[2]} second={segmentedPath[3]} />
 
       <div className="mx-auto w-[95%] pt-10">
@@ -54,7 +54,7 @@ export default function ClientScholarship() {
           </Select>
         </div>
 
-        <div className=" py-10 grid lg:grid-cols-3 grid-cols-1 gap-10">
+        <div className=" py-10 grid lg:grid-cols-3 grid-cols-1 gap-8">
           {loading
             ? [...Array(4)].map((_, index) => (
                 <div
@@ -68,30 +68,38 @@ export default function ClientScholarship() {
                   key={scholarship.scholarshipId}
                   prefetch
                   scroll={false}
-                  className="relative flex flex-col aspect-square border   rounded-lg overflow-hidden"
+                  className="relative flex flex-col shadow-md shadow-black/20   rounded-lg overflow-hidden bg-card dark:bg-background/40 border-background border"
                 >
-                  <div className="flex-1 overflow-hidden px-2 pt-2">
+                  <div className="aspect-[16/8.5] w-full overflow-hidden px-2 pt-2">
                     <img
-                      className="h-full w-full object-cover  rounded-md "
-                      src={scholarship.scholarshipLogo}
+                      className="h-full w-full object-cover  rounded-md shadow-md shadow-black/20 border-background border"
+                      src={scholarship.scholarshipCover}
                       alt=""
                     />
+                    {/* <img
+                      src={scholarship.scholarshipLogo}
+                      className="rounded-full size-12 object-cover"
+                      alt=""
+                    /> */}
                   </div>
-                  <div className="p-2 space-y-1.5">
-                    <h1 className="text-lg">{scholarship.scholarshipTitle}</h1>
-                   
-                    <h1 className="line-clamp-2 text-sm">
-                      {scholarship.scholarshipDescription}
+
+                  <div className="p-4">
+                    <h1 className="font-semibold text-lg text-green-800">
+                      {scholarship.scholarshipTitle}
                     </h1>
+                    <h3 className="text-sm">
+                      {scholarship.scholarshipProvider}
+                    </h3>
                   </div>
-                  <div className="flex gap-3  p-1.5 border-t z-10">
-                    <Button variant="ghost" className="flex-1">
+
+                  <div className="flex gap-3 bg-background/80  p-1.5 border-t border-background z-10">
+                    <Button size="lg" variant="ghost" className="flex-1">
                       Details
                     </Button>
-                    <Button variant="ghost" className="flex-1">
+                    <Button size="lg" variant="ghost" className="flex-1">
                       Apply
                     </Button>
-                    <Button variant="ghost" className="flex-1">
+                    <Button size="lg" variant="ghost" className="flex-1">
                       <Share2 />
                     </Button>
                   </div>
