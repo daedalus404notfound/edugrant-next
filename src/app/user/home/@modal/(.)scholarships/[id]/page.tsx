@@ -98,8 +98,8 @@ export default function InterceptManageScholarshipClient() {
               data && <UploadDocs data={data} setIsApply={setIsApply} />
             )
           ) : (
-            <div className="relative h-full w-full p-2 overflow-auto no-scrollbar pt-15">
-              <div className="absolute top-0 left-0 h-60 w-full brightness-10  bg-black mask-gradient flex">
+            <div className="relative h-full w-full p-2 overflow-auto no-scrollbar pt-25">
+              <div className="absolute top-0 left-0 h-60 w-full brightness-80  bg-black mask-gradient flex">
                 <img
                   className="w-full h-full object-cover  "
                   src={scholarshipCover}
@@ -123,16 +123,7 @@ export default function InterceptManageScholarshipClient() {
                     </Button>
                   </div>
 
-                  <div className="space-y-1.5">
-                    <p className="text-sm text-muted-foreground">
-                      About this scholarship
-                    </p>
-                    <p className="line-clamp-4">{description}</p>
-                  </div>
-                  {deadline && (
-                    <AnimatedNumberCountdown endDate={new Date(deadline)} />
-                  )}
-                  <div className="grid grid-cols-1 gap-3">
+                  <div className="grid grid-cols-2 gap-3">
                     <div className="relative border lg:p-4 p-2.5 rounded-md bg-background/50 flex justify-between items-end">
                       <div className="space-y-3">
                         <h1 className="text-xs text-muted-foreground">
@@ -151,7 +142,7 @@ export default function InterceptManageScholarshipClient() {
                         </h1>
                         <CalendarX2 />
                       </div>
-                      <p className="line-clamp-4 text-2xl text-green-800 font-semibold">
+                      <p className="line-clamp-1 text-2xl text-green-800 font-semibold">
                         {deadline && format(deadline, "PPP")}
                       </p>
                     </div>{" "}
@@ -162,12 +153,31 @@ export default function InterceptManageScholarshipClient() {
                         </h1>
                         <File />
                       </div>
+                      <p className="line-clamp-1 text-2xl text-green-800 font-semibold">
+                        {data?.scholarshipDocuments.length}
+                      </p>
+                    </div>
+                    <div className="border lg:p-4 p-2.5 rounded-md bg-background/50  flex justify-between items-end">
+                      <div className="space-y-3">
+                        <h1 className="text-xs text-muted-foreground">
+                          GWA Required
+                        </h1>
+                        <File />
+                      </div>
                       <p className="line-clamp-4 text-2xl text-green-800 font-semibold">
                         {data?.scholarshipDocuments.length}
                       </p>
                     </div>
                   </div>
-
+                  {deadline && (
+                    <AnimatedNumberCountdown endDate={new Date(deadline)} />
+                  )}
+                  <div className="space-y-1.5">
+                    <p className="text-sm text-muted-foreground">
+                      About this scholarship
+                    </p>
+                    <p className="line-clamp-4">{description}</p>
+                  </div>
                   <div className="space-y-2">
                     <h1 className="text-sm text-muted-foreground">
                       Required Documents
@@ -207,7 +217,7 @@ export default function InterceptManageScholarshipClient() {
         </div>
 
         {!isApply && (
-          <div className="p-2">
+          <div className="p-4">
             <div className="flex gap-2">
               <Button
                 className="flex-1 bg-green-950 border border-green-950 hover:bg-green-800 text-gray-200 hover:border-green-800"

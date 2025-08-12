@@ -106,7 +106,9 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
               >
                 <div className="text-sm font-medium leading-5 whitespace-nowrap flex items-center justify-center h-full gap-1.5">
                   {tab.label}
-                  <Badge variant="secondary">{tab.indicator}</Badge>
+                  {tab.indicator && (
+                    <Badge variant="secondary">{tab.indicator}</Badge>
+                  )}
                 </div>
               </div>
             ))}

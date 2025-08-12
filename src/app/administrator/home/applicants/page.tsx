@@ -257,7 +257,7 @@ export default function Manage() {
                       >
                         <TableCell className="font-medium flex items-center gap-3">
                           <div className="bg-red-800 size-9 rounded-full flex justify-center items-center text-xl">
-                            {row.student.lastName.slice(0, 1)}
+                            {row.student.lastName.slice(0, 1).toUpperCase()}
                           </div>
                           <div className="space-y-1">
                             <p>
@@ -281,7 +281,7 @@ export default function Manage() {
                         </TableCell>
                         <TableCell>
                           <Badge
-                            className={`${
+                            className={`uppercase ${
                               row.status == "APPROVE"
                                 ? "bg-green-800"
                                 : row.status == "PENDING"

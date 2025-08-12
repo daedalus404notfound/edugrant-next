@@ -35,7 +35,7 @@ const sidebarData = {
           icon: Home,
         },
         {
-          title: "Browse Scholarships",
+          title: "Scholarships",
           url: "/user/home/scholarships",
           icon: FileSearch,
         },

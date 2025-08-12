@@ -7,6 +7,7 @@ type ApproveTypes = {
   setOpenApprove: (approve: boolean) => void;
   adminId?: string;
 };
+
 export function useApprovedHandler({
   id,
   setOpenApprove,

@@ -1,6 +1,17 @@
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -13,13 +24,11 @@ import {
   ZoomOut,
   RotateCw,
   RefreshCw,
-  
-  Image,
-  File,
 } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import { Badge } from "@/components/ui/badge";
 import GlassFolder from "@/components/ui/folder";
+import { Textarea } from "@/components/ui/textarea";
 
 // Mock types for demonstration
 interface UserDocument {
@@ -28,6 +37,9 @@ interface UserDocument {
   fileUrl: string;
   document: string;
   cloudinaryId: string;
+  comment: string;
+  status: string;
+  onUpdate: (field: "comment" | "status", value: string) => void;
 }
 
 export default function Reviewer({
@@ -35,34 +47,17 @@ export default function Reviewer({
   resourceType = "image",
   fileUrl = "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=600",
   document = "Sample Document",
-  cloudinaryId = "sample-id",
+  comment,
+  status,
+  onUpdate,
 }: UserDocument) {
   const [rotation, setRotation] = useState(0);
   const [open, setOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-
-  console.log(cloudinaryId, fileFormat);
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <div className="relative aspect-square flex justify-center items-center p-2 cursor-pointer  ">
-          <div className="flex justify-center items-center flex-col group">
-            <GlassFolder
-              icon={
-                fileFormat === "jpg" || fileFormat === "png" ? (
-                  <Image />
-                ) : (
-                  <File />
-                )
-              }
-            />
-            <h1 className=" flex items-center gap-1.5">{document}</h1>
-            <Badge className="mt-1 bg-green-800 text-gray-200 uppercase ">
-              {fileFormat}
-            </Badge>
-          </div>
-        </div>
+      <DialogTrigger>
+        <GlassFolder />
       </DialogTrigger>
       <DialogContent className="h-screen !max-w-3/4  p-0 border-0">
         <DialogHeader className="sr-only">
@@ -124,8 +119,69 @@ export default function Reviewer({
                   </div>
 
                   <div className="absolute top-4 right-4 z-10 flex gap-2 bg-card p-2 rounded-lg">
-                    <Button variant="ghost">Approve</Button>
-                    <Button variant="ghost">Reject</Button>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="ghost">Approve</Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="text-green-800">
+                            Approve Document?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action will approve the document.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction asChild>
+                            <Button
+                              variant="ghost"
+                              onClick={() => {
+                                onUpdate("status", "APPROVED");
+                                setOpen(false);
+                              }}
+                            >
+                              Approve
+                            </Button>
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="ghost">Reject</Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle className="text-red-800">
+                            Reject Document?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action will rejected the document.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <Textarea
+                          placeholder="Add a reason for rejection (optional)"
+                          onChange={(e) => onUpdate("comment", e.target.value)}
+                        />
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction asChild>
+                            <Button
+                              variant="ghost"
+                              onClick={() => {
+                                onUpdate("status", "REJECTED");
+                                setOpen(false);
+                              }}
+                            >
+                              Reject
+                            </Button>
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+
                     <Button
                       size="sm"
                       variant="ghost"
