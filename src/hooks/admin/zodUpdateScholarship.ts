@@ -33,7 +33,7 @@ export function useUpdateScholarshipZod(data?: ScholarshipTypes) {
     defaultValues: {
       scholarshipTitle: data?.scholarshipTitle || "",
       providerName: data?.scholarshipProvider || "",
-      scholarshipGwa: data?.gwa.toString() || "",
+      scholarshipGwa: data?.gwa || "",
       scholarshipDescription: data?.scholarshipDescription || "",
       applicationDeadline: data?.scholarshipDealine
         ? new Date(data.scholarshipDealine)
