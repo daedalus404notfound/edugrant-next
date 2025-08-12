@@ -31,7 +31,7 @@ export function useRejectHandler({
         {
           applicationId: id,
           adminId: adminId,
-          documentUpdate: JSON.stringify(documentUpdate),
+          rejectMessage: JSON.stringify(documentUpdate),
         },
         { withCredentials: true }
       );
