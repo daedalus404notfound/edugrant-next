@@ -47,7 +47,7 @@ const addScholarshipApi = async (data: creatScholarshipFormData) => {
   formDataToSend.append("requirements", JSON.stringify(data.documents));
 
   const res = await axios.put(
-    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/updateScholarships`,
+    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/updateScholarship`,
     formDataToSend,
     {
       withCredentials: true,
