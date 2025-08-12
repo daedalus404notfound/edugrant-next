@@ -26,7 +26,6 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
-import { Badge } from "@/components/ui/badge";
 import GlassFolder from "@/components/ui/folder";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -37,8 +36,7 @@ interface UserDocument {
   fileUrl: string;
   document: string;
   cloudinaryId: string;
-  comment: string;
-  status: string;
+ 
   onUpdate: (field: "comment" | "status", value: string) => void;
 }
 
@@ -47,8 +45,7 @@ export default function Reviewer({
   resourceType = "image",
   fileUrl = "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=600",
   document = "Sample Document",
-  comment,
-  status,
+
   onUpdate,
 }: UserDocument) {
   const [rotation, setRotation] = useState(0);

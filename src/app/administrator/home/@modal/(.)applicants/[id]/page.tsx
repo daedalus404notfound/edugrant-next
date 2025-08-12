@@ -501,8 +501,7 @@ export default function InterceptReviewApplicants() {
                             fileUrl={doc.fileUrl}
                             document={doc.document}
                             cloudinaryId={doc.cloudinaryId}
-                            comment={reviewData[key]?.comment || ""}
-                            status={reviewData[key]?.status || ""}
+                         
                             onUpdate={(field, value) =>
                               updateReviewData(key, field, value)
                             }
