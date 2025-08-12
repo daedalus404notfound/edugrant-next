@@ -36,8 +36,8 @@ interface UserDocument {
   fileUrl: string;
   document: string;
   cloudinaryId: string;
-
-  onUpdate: (field: "rejectMessage" | "status", value: string) => void;
+ 
+  onUpdate: (field: "comment" | "status", value: string) => void;
 }
 
 export default function Reviewer({
@@ -160,9 +160,7 @@ export default function Reviewer({
                         </AlertDialogHeader>
                         <Textarea
                           placeholder="Add a reason for rejection (optional)"
-                          onChange={(e) =>
-                            onUpdate("rejectMessage", e.target.value)
-                          }
+                          onChange={(e) => onUpdate("comment", e.target.value)}
                         />
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>

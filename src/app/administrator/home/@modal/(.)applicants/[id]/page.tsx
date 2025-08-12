@@ -29,8 +29,10 @@ import useApplicationById from "@/hooks/admin/getApplicantData";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
 import {
+
   Calendar,
   CheckCheck,
+
   Download,
   File,
   FileText,
@@ -108,14 +110,14 @@ export default function InterceptReviewApplicants() {
   const [openApprove, setOpenApprove] = useState(false);
   const [openReject, setOpenReject] = useState(false);
   const [reviewData, setReviewData] = useState<
-    Record<string, { rejectMessage: string; status: string }>
+    Record<string, { comment: string; status: string }>
   >({});
 
   // Default values shown
 
   const updateReviewData = (
     docKey: string,
-    field: "rejectMessage" | "status",
+    field: "comment" | "status",
     value: string
   ) => {
     setReviewData((prev) => ({
@@ -153,7 +155,7 @@ export default function InterceptReviewApplicants() {
     id,
     setOpenReject,
     adminId: admin?.adminId.toString(),
-    documentUpdate: reviewData,
+    documentUpdate: reviewData
   });
 
   return (
@@ -222,13 +224,13 @@ export default function InterceptReviewApplicants() {
                   </div>
 
                   <div className="flex flex-wrap justify-center gap-2 mt-3">
-                    <Badge className="uppercase bg-transparent text-neutral-50">
+                    <Badge  className="uppercase bg-transparent text-neutral-50">
                       {data?.student.course}
                     </Badge>
-                    <Badge className="uppercase bg-transparent text-neutral-50">
+                    <Badge  className="uppercase bg-transparent text-neutral-50">
                       {data?.student.year}
                     </Badge>
-                    <Badge className="uppercase bg-transparent text-neutral-50">
+                    <Badge  className="uppercase bg-transparent text-neutral-50">
                       Section {data?.student.section}
                     </Badge>
                   </div>
@@ -500,6 +502,7 @@ export default function InterceptReviewApplicants() {
                             fileUrl={doc.fileUrl}
                             document={doc.document}
                             cloudinaryId={doc.cloudinaryId}
+                         
                             onUpdate={(field, value) =>
                               updateReviewData(key, field, value)
                             }
@@ -536,14 +539,10 @@ export default function InterceptReviewApplicants() {
                           </div>
                           <Textarea
                             placeholder="Add review comment.."
-                            value={reviewData[key]?.rejectMessage || ""}
+                            value={reviewData[key]?.comment || ""}
                             disabled={reviewData[key]?.status === "APPROVED"}
                             onChange={(e) =>
-                              updateReviewData(
-                                key,
-                                "rejectMessage",
-                                e.target.value
-                              )
+                              updateReviewData(key, "comment", e.target.value)
                             }
                           />
                         </div>

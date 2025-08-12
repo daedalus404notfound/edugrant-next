@@ -6,7 +6,7 @@ type RejectTypes = {
   id: string;
   adminId?: string;
   setOpenReject: (approve: boolean) => void;
-  documentUpdate: Record<string, { rejectMessage: string; status: string }>;
+  documentUpdate: Record<string, { comment: string; status: string }>;
 };
 export function useRejectHandler({
   id,
@@ -15,7 +15,7 @@ export function useRejectHandler({
   documentUpdate,
 }: RejectTypes) {
   const [loadingReject, setLoadingReject] = useState(false);
-  console.log("documentUpdate", documentUpdate);
+  console.log("documentUpdate", documentUpdate)
   const router = useRouter();
   const handleDecline = async () => {
     try {
