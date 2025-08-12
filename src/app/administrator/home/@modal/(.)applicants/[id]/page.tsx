@@ -29,10 +29,8 @@ import useApplicationById from "@/hooks/admin/getApplicantData";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "motion/react";
 import {
-
   Calendar,
   CheckCheck,
-
   Download,
   File,
   FileText,
@@ -155,6 +153,7 @@ export default function InterceptReviewApplicants() {
     id,
     setOpenReject,
     adminId: admin?.adminId.toString(),
+    documentUpdate: reviewData,
   });
 
   return (
@@ -223,13 +222,13 @@ export default function InterceptReviewApplicants() {
                   </div>
 
                   <div className="flex flex-wrap justify-center gap-2 mt-3">
-                    <Badge  className="uppercase bg-transparent text-neutral-50">
+                    <Badge className="uppercase bg-transparent text-neutral-50">
                       {data?.student.course}
                     </Badge>
-                    <Badge  className="uppercase bg-transparent text-neutral-50">
+                    <Badge className="uppercase bg-transparent text-neutral-50">
                       {data?.student.year}
                     </Badge>
-                    <Badge  className="uppercase bg-transparent text-neutral-50">
+                    <Badge className="uppercase bg-transparent text-neutral-50">
                       Section {data?.student.section}
                     </Badge>
                   </div>
@@ -501,7 +500,6 @@ export default function InterceptReviewApplicants() {
                             fileUrl={doc.fileUrl}
                             document={doc.document}
                             cloudinaryId={doc.cloudinaryId}
-                         
                             onUpdate={(field, value) =>
                               updateReviewData(key, field, value)
                             }

@@ -6,13 +6,16 @@ type RejectTypes = {
   id: string;
   adminId?: string;
   setOpenReject: (approve: boolean) => void;
+  documentUpdate: Record<string, { comment: string; status: string }>;
 };
 export function useRejectHandler({
   id,
   setOpenReject,
   adminId,
+  documentUpdate,
 }: RejectTypes) {
   const [loadingReject, setLoadingReject] = useState(false);
+  console.log("documentUpdate", documentUpdate);
   const router = useRouter();
   const handleDecline = async () => {
     try {
@@ -25,7 +28,11 @@ export function useRejectHandler({
       });
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/declineApplication`,
-        { applicationId: id, adminId: adminId },
+        {
+          applicationId: id,
+          adminId: adminId,
+          documentUpdate: JSON.stringify(documentUpdate),
+        },
         { withCredentials: true }
       );
       if (res.status === 200) {
