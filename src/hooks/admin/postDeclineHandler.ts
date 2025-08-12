@@ -6,7 +6,7 @@ type RejectTypes = {
   id: string;
   adminId?: string;
   setOpenReject: (approve: boolean) => void;
-  documentUpdate: Record<string, { comment: string; status: string }>;
+  documentUpdate: Record<string, { rejectMessage: string; status: string }>;
 };
 export function useRejectHandler({
   id,

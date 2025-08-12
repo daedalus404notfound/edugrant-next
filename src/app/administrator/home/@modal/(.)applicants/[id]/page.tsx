@@ -108,14 +108,14 @@ export default function InterceptReviewApplicants() {
   const [openApprove, setOpenApprove] = useState(false);
   const [openReject, setOpenReject] = useState(false);
   const [reviewData, setReviewData] = useState<
-    Record<string, { comment: string; status: string }>
+    Record<string, { rejectMessage: string; status: string }>
   >({});
 
   // Default values shown
 
   const updateReviewData = (
     docKey: string,
-    field: "comment" | "status",
+    field: "rejectMessage" | "status",
     value: string
   ) => {
     setReviewData((prev) => ({
@@ -536,10 +536,14 @@ export default function InterceptReviewApplicants() {
                           </div>
                           <Textarea
                             placeholder="Add review comment.."
-                            value={reviewData[key]?.comment || ""}
+                            value={reviewData[key]?.rejectMessage || ""}
                             disabled={reviewData[key]?.status === "APPROVED"}
                             onChange={(e) =>
-                              updateReviewData(key, "comment", e.target.value)
+                              updateReviewData(
+                                key,
+                                "rejectMessage",
+                                e.target.value
+                              )
                             }
                           />
                         </div>
