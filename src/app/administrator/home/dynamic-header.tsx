@@ -73,7 +73,7 @@ export default function DynamicHeaderAdmin({
           <PopoverTrigger asChild>
             <Button variant="ghost">
               <UserRound />
-              {admin?.adminName || "N/A"}
+              {admin?.firstName || "N/A"}
               <ChevronsUpDown />
             </Button>
           </PopoverTrigger>
