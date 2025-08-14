@@ -4,7 +4,7 @@ import {
   Calendar,
  
   Check,
-  CheckCheck,
+
   Clock,
  
   Download,
@@ -15,7 +15,7 @@ import {
   StickyNote,
   Trash2,
   Users,
-  UsersRound,
+
 
   X,
 } from "lucide-react";
