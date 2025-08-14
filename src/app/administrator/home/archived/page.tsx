@@ -35,6 +35,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Activity,
+  Archive,
   Check,
   ChevronFirstIcon,
   ChevronLastIcon,
@@ -63,6 +64,10 @@ const headers = [
   { label: "Approved" },
   { label: "Applicants" },
 ];
+const tabs = [
+  { id: "APPROVE", label: "Expired", indicator: "" },
+  { id: "DECLINE", label: "Deleted", indicator: "" },
+];
 
 const sortList = [
   {
@@ -78,25 +83,19 @@ const sortList = [
     label: "Descending",
   },
 ];
-import { cn } from "@/lib/utils";
 import { Tabs } from "@/components/ui/vercel-tabs";
-import { ArrowSwapVertical } from "iconsax-reactjs";
+
 export default function Manage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [sort, setSort] = useState<"asc" | "desc" | "">("");
-  const [open, setOpen] = useState(false);
+ 
+
   const { data, loading, totalPages } = useScholarshipData({
     currentPage,
     rowsPerPage,
-    sort,
-    active: true,
+    active: false,
   });
-
-  const [query, setQuery] = useState<string>("");
-  console.log(query);
-  const { searchData, searchLoading } = useScholarshipSearch({ query });
 
   return (
     <div className="min-h-screen px-4 relative z-10">
@@ -116,82 +115,17 @@ export default function Manage() {
             ease: "linear",
           }}
         >
-          <Activity strokeWidth={3} />
-          Manage Scholarships
+          <Archive strokeWidth={3} />
+          Archived
         </motion.span>
         <p className="text-sm text-gray-300 mt-1">
           Browse the list of active scholarships. Use the available actions to
           modify or remove entries.
         </p>
-        <div className="flex gap-3 justify-between items-center mt-5">
-          <div className="relative w-xl">
-            <Input
-              onChange={(e) => setQuery(e.target.value)}
-              className="peer ps-9 pe-9"
-              placeholder="Search Scholarship Name..."
-              type="search"
-            />
-            <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-              <SearchIcon size={16} />
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  aria-expanded={open}
-                  className="justify-between"
-                >
-                  <ArrowSwapVertical className="opacity-60" />
-                  {sort
-                    ? sortList.find((framework) => framework.value === sort)
-                        ?.label
-                    : "Sort"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-[150px] p-0">
-                <Command>
-                  <CommandList>
-                    <CommandEmpty>No framework found.</CommandEmpty>
-                    <CommandGroup>
-                      {sortList.map((framework) => (
-                        <CommandItem
-                          key={framework.value}
-                          value={framework.value}
-                          onSelect={(currentValue) => {
-                            setSort(
-                              currentValue === sort
-                                ? ""
-                                : (currentValue as "" | "asc" | "desc")
-                            );
-                            setOpen(false);
-                          }}
-                        >
-                          {framework.label}
-                          <Check
-                            className={cn(
-                              "ml-auto",
-                              sort === framework.value
-                                ? "opacity-100"
-                                : "opacity-0"
-                            )}
-                          />
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
 
-            <Button variant="outline">
-              <Download /> Export
-            </Button>
-          </div>
+        <div className="flex justify-between items-center mt-8">
+          <Tabs tabs={tabs} />
         </div>
-
         <div className="container mx-auto space-y-3 mt-5">
           <Table>
             {/* <TableCaption>A list of active scholarships.</TableCaption> */}
@@ -222,78 +156,8 @@ export default function Manage() {
                     <Ring size={30} speed={2} bgOpacity={0} color="yellow" />
                   </TableCell>
                 </TableRow>
-              ) : !query ? (
-                data.length > 0 ? (
-                  data.map((row) => (
-                    <TableRow
-                      key={row.scholarshipId}
-                      onClick={() =>
-                        router.push(
-                          `/administrator/home/manage/${row.scholarshipId}`
-                        )
-                      }
-                    >
-                      <TableCell className="flex gap-2.5 items-center">
-                        <img
-                          className="size-9 object-cover rounded-full"
-                          src={row.scholarshipLogo}
-                          alt=""
-                        />
-                        <div className="space-y-1">
-                          <p className="font-semibold">
-                            {row.scholarshipTitle}
-                          </p>
-                          <p className="text-xs"> {row.scholarshipProvider}</p>
-                        </div>
-                      </TableCell>
-                      <TableCell className="">
-                        {row.scholarshipDealine &&
-                          format(
-                            row.scholarshipDealine,
-                            "MMM d, yyyy 'at' h:mm a"
-                          )}
-                      </TableCell>
-                      <TableCell className="">
-                        {row.scholarshipDealine &&
-                          format(
-                            row.scholarshipDealine,
-                            "MMM d, yyyy 'at' h:mm a"
-                          )}
-                      </TableCell>
-                      <TableCell className="">
-                        <Badge className="bg-green-900 text-gray-300">
-                          Active
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {row.totalApproved}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {row.totalApplicants}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={headers.length + 2}
-                      className="text-center"
-                    >
-                      No result found.
-                    </TableCell>
-                  </TableRow>
-                )
-              ) : searchLoading ? (
-                <TableRow>
-                  <TableCell
-                    colSpan={headers.length + 2}
-                    className="text-center"
-                  >
-                    <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
-                  </TableCell>
-                </TableRow>
-              ) : searchData.length > 0 ? (
-                searchData.map((row) => (
+              ) : data.length > 0 ? (
+                data.map((row) => (
                   <TableRow
                     key={row.scholarshipId}
                     onClick={() =>
@@ -313,7 +177,6 @@ export default function Manage() {
                         <p className="text-xs"> {row.scholarshipProvider}</p>
                       </div>
                     </TableCell>
-
                     <TableCell className="">
                       {row.scholarshipDealine &&
                         format(
@@ -322,8 +185,15 @@ export default function Manage() {
                         )}
                     </TableCell>
                     <TableCell className="">
-                      <Badge className="bg-green-900 text-gray-300">
-                        Active
+                      {row.scholarshipDealine &&
+                        format(
+                          row.scholarshipDealine,
+                          "MMM d, yyyy 'at' h:mm a"
+                        )}
+                    </TableCell>
+                    <TableCell className="">
+                      <Badge className="bg-red-900 text-gray-300">
+                        Expired
                       </Badge>
                     </TableCell>
                     <TableCell className="text-center">
@@ -346,7 +216,7 @@ export default function Manage() {
               )}
             </TableBody>
           </Table>
-          {!query && data.length !== 0 && (
+          {data.length !== 0 && (
             <div className="flex items-center justify-between gap-8">
               {/* Results per page */}
               <div className="flex items-center gap-3">

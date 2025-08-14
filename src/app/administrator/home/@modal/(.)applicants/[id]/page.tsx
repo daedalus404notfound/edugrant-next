@@ -460,7 +460,7 @@ export default function InterceptReviewApplicants() {
               </div>
               {/* Documents Grid */}
               <motion.div
-                className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-8"
+                className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4"
                 variants={containerVariants}
               >
                 {data?.userDocuments &&

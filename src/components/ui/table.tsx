@@ -24,7 +24,7 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
     <thead
       data-slot="table-header"
       className={cn(
-        "[&_tr]:border-b bg-background/60 pointer-events-none",
+        "[&_tr]:border-b bg-background/60",
         className
       )}
       {...props}

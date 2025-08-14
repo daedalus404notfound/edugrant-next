@@ -33,13 +33,13 @@ export function useUpdateScholarshipZod(data?: ScholarshipTypes) {
     defaultValues: {
       scholarshipTitle: data?.scholarshipTitle || "",
       providerName: data?.scholarshipProvider || "",
-      scholarshipGwa: data?.gwa || "",
+      scholarshipGwa: data?.gwa?.toString() || "",
       scholarshipDescription: data?.scholarshipDescription || "",
       applicationDeadline: data?.scholarshipDealine
         ? new Date(data.scholarshipDealine)
         : undefined,
-      scholarshipAmount: data?.scholarshipAmount.toString() || "",
-      scholarshipLimit: data?.scholarshipLimit.toString() || "",
+      scholarshipAmount: data?.scholarshipAmount?.toString() || "",
+      scholarshipLimit: data?.scholarshipLimit?.toString() || "",
       documents: data?.scholarshipDocuments?.length
         ? data.scholarshipDocuments.map((doc) => ({
             label: doc.label || "",

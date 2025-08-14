@@ -13,21 +13,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import {
-  Camera,
-  Check,
-  GraduationCap,
-  Lock,
-  Mail,
-  UserPen,
-  UserRound,
-  X,
-} from "lucide-react";
+import { Camera, Check, Mail, UserPen, UserRound, X } from "lucide-react";
 import DynamicHeader from "../dynamic-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { useProfileZod } from "@/hooks/user/zodGetUser";
+import { useProfileZod } from "@/hooks/admin/zodGetAdmin";
 
 import {
   Form,
@@ -37,17 +28,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useUserStore } from "@/store/useUserStore";
 import { Separator } from "@/components/ui/separator";
+import { useAdminStore } from "@/store/adminUserStore";
 export default function Profile() {
   const [isEdit, setIsEdit] = useState(true);
 
   const path = usePathname();
   const segmentedPath = path.split("/");
-  const { user } = useUserStore();
-  const { form } = useProfileZod(user);
+  const { admin } = useAdminStore();
+  const { form } = useProfileZod(admin);
 
-  console.log("meow", user?.userId);
+  console.log("meow", admin);
 
   return (
     <div className="bg-background min-h-screen px-4">
@@ -72,16 +63,11 @@ export default function Profile() {
               {/* Name and Info */}
               <div>
                 <h1 className="text-2xl font-semibold text-muted-foreground mb-1 capitalize">
-                  {user?.firstName} {user?.middleName} {user?.lastName}
+                  {admin?.firstName} {admin?.middleName} {admin?.lastName}
                 </h1>
-                <p className="text-sm text-gray-500 mb-3">
-                  Student ID: {user?.studentId}
-                </p>
-                <div className="flex gap-2">
-                  <Badge>{user?.course}</Badge>
-                  <Badge>{user?.year}</Badge>
-                  <Badge>Section {user?.section}</Badge>
-                </div>
+                <p className="text-sm text-gray-500 mb-3">Admin ID: 11111</p>
+
+                <Badge>Male</Badge>
               </div>
             </div>
 
@@ -105,7 +91,7 @@ export default function Profile() {
                 <UserRound className="" />
               </Button>
               <h2 className="text-lg font-semibold text-muted-foreground">
-                Personal Information
+                Account Information
               </h2>
             </div>
             <div className="grid grid-cols-2  gap-x-3 gap-y-6">
@@ -147,7 +133,7 @@ export default function Profile() {
                 control={form.control}
                 name="lastName"
                 render={({ field }) => (
-                  <FormItem className="col-span-2">
+                  <FormItem>
                     <FormLabel>Last Name</FormLabel>
                     <FormControl>
                       <Input
@@ -177,13 +163,12 @@ export default function Profile() {
                   </FormItem>
                 )}
               />
-
               <FormField
                 control={form.control}
-                name="dateOfBirth"
+                name="contactNumber"
                 render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Date of Birth</FormLabel>
+                  <FormItem className="col-span-2">
+                    <FormLabel>Contact Number</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -195,18 +180,6 @@ export default function Profile() {
                   </FormItem>
                 )}
               />
-            </div>
-          </div>
-          <div className=" w-full mt-10 space-y-5">
-            <div className="flex items-center gap-3 mb-6">
-              <Button variant="outline">
-                <Mail />
-              </Button>
-              <h2 className="text-lg font-semibold text-muted-foreground">
-                Contact Information
-              </h2>
-            </div>
-            <div className="grid grid-cols-2  gap-x-3 gap-y-6">
               <FormField
                 control={form.control}
                 name="email"
@@ -256,149 +229,9 @@ export default function Profile() {
                   </FormItem>
                 )}
               />{" "}
-              <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Address</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        className="capitalize"
-                        disabled={isEdit}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />{" "}
-              <FormField
-                control={form.control}
-                name="contactNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Contact Number</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        className="capitalize"
-                        disabled={isEdit}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
           </div>
-          <div className=" w-full mt-10 space-y-5">
-            <div className="flex items-center gap-3 mb-6">
-              <Button variant="outline">
-                <GraduationCap />
-              </Button>
-              <h2 className="text-lg font-semibold text-muted-foreground">
-                Academic Information
-              </h2>
-            </div>
-            <div className="grid grid-cols-2  gap-x-3 gap-y-6">
-              <FormField
-                control={form.control}
-                name="studentId"
-                render={({ field }) => (
-                  <FormItem className="col-span-2">
-                    <FormLabel>Student ID</FormLabel>
-                    <FormControl>
-                      <Input {...field} className="capitalize" disabled />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />{" "}
-              <div className="grid grid-cols-3 gap-3 col-span-2">
-                <FormField
-                  control={form.control}
-                  name="course"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Course</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="capitalize"
-                          disabled={isEdit}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />{" "}
-                <FormField
-                  control={form.control}
-                  name="year"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Year Level</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="capitalize"
-                          disabled={isEdit}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />{" "}
-                <FormField
-                  control={form.control}
-                  name="section"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Section</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className="capitalize"
-                          disabled={isEdit}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />{" "}
-              </div>
-            </div>
-          </div>
-          <div className=" w-full mt-10 space-y-5">
-            <div className="flex items-center gap-3 mb-6">
-              <Button variant="outline">
-                <Lock />
-              </Button>
-              <h2 className="text-lg font-semibold text-muted-foreground">
-                Account Security
-              </h2>
-            </div>
-            <div className="grid grid-cols-2  gap-x-3 gap-y-6">
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem className="col-span-2">
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        className="capitalize"
-                        disabled={isEdit}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
+
           {!isEdit && (
             <>
               {" "}

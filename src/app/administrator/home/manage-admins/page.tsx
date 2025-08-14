@@ -43,6 +43,8 @@ import {
   Download,
   Plus,
   SearchIcon,
+  UserRound,
+  UsersRound,
 } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -56,12 +58,11 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 const headers = [
-  { label: "Scholarship " },
-  { label: "Start Date" },
-  { label: "Deadline" },
+  { label: "Name " },
+  { label: "Role" },
   { label: "Status" },
-  { label: "Approved" },
-  { label: "Applicants" },
+  { label: "Date Created" },
+  { label: "Last login" },
 ];
 
 const sortList = [
@@ -78,25 +79,68 @@ const sortList = [
     label: "Descending",
   },
 ];
+
+const mockAdminProfiles = [
+  {
+    id: "1",
+    firstName: "John",
+    middleName: "Anderson",
+    lastName: "Doe",
+    gender: "Male",
+    role: "Super Admin",
+    studentEmail: "john.doe@example.com",
+    contactNumber: "+639171234567",
+    password: "P@ssw0rd123",
+    status: "Active",
+    dateCreated: "2025-05-10T08:30:00.000Z",
+    lastLogin: "2025-08-14T02:45:00.000Z",
+    avatar: "https://i.pravatar.cc/150?img=1",
+  },
+  {
+    id: "2",
+    firstName: "Maria",
+    middleName: "Santos",
+    lastName: "Reyes",
+    gender: "Female",
+    role: "Admin",
+    studentEmail: "maria.reyes@example.com",
+    contactNumber: "+639182345678",
+    password: "SecurePass!45",
+    status: "Offline",
+    dateCreated: "2025-03-22T15:10:00.000Z",
+    lastLogin: "2025-08-12T14:25:00.000Z",
+    avatar: "https://i.pravatar.cc/150?img=2",
+  },
+  {
+    id: "3",
+    firstName: "David",
+    middleName: "Lee",
+    lastName: "Cruz",
+    gender: "Male",
+    role: "Moderator",
+    studentEmail: "david.cruz@example.com",
+    contactNumber: "+639193456789",
+    password: "MyPassword#99",
+    status: "Active",
+    dateCreated: "2025-07-01T09:15:00.000Z",
+    lastLogin: "2025-08-14T08:55:00.000Z",
+    avatar: "https://i.pravatar.cc/150?img=3",
+  },
+];
+
 import { cn } from "@/lib/utils";
-import { Tabs } from "@/components/ui/vercel-tabs";
 import { ArrowSwapVertical } from "iconsax-reactjs";
-export default function Manage() {
+export default function ManageAdmins() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState<"asc" | "desc" | "">("");
   const [open, setOpen] = useState(false);
-  const { data, loading, totalPages } = useScholarshipData({
-    currentPage,
-    rowsPerPage,
-    sort,
-    active: true,
-  });
-
+  const [loading, setLoading] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(true);
   const [query, setQuery] = useState<string>("");
   console.log(query);
-  const { searchData, searchLoading } = useScholarshipSearch({ query });
 
   return (
     <div className="min-h-screen px-4 relative z-10">
@@ -116,8 +160,8 @@ export default function Manage() {
             ease: "linear",
           }}
         >
-          <Activity strokeWidth={3} />
-          Manage Scholarships
+          <UsersRound strokeWidth={3} />
+          Manage Administrators
         </motion.span>
         <p className="text-sm text-gray-300 mt-1">
           Browse the list of active scholarships. Use the available actions to
@@ -198,155 +242,109 @@ export default function Manage() {
             <TableHeader>
               <TableRow>
                 {headers.map((header) => (
-                  <TableHead
-                    className={
-                      header.label === "Approved" ||
-                      header.label === "Applicants"
-                        ? "text-center"
-                        : ""
-                    }
-                    key={header.label}
-                  >
-                    {header.label}
-                  </TableHead>
+                  <TableHead key={header.label}>{header.label}</TableHead>
                 ))}
               </TableRow>
             </TableHeader>
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={headers.length + 2}
-                    className="text-center"
-                  >
+                  <TableCell colSpan={headers.length + 2}>
                     <Ring size={30} speed={2} bgOpacity={0} color="yellow" />
                   </TableCell>
                 </TableRow>
               ) : !query ? (
-                data.length > 0 ? (
-                  data.map((row) => (
+                mockAdminProfiles.length > 0 ? (
+                  mockAdminProfiles.map((row) => (
                     <TableRow
-                      key={row.scholarshipId}
+                      key={row.role}
                       onClick={() =>
                         router.push(
-                          `/administrator/home/manage/${row.scholarshipId}`
+                          `/administrator/home/manage-admins/${row.id}`
                         )
                       }
                     >
                       <TableCell className="flex gap-2.5 items-center">
                         <img
                           className="size-9 object-cover rounded-full"
-                          src={row.scholarshipLogo}
+                          src={row.avatar}
                           alt=""
                         />
                         <div className="space-y-1">
-                          <p className="font-semibold">
-                            {row.scholarshipTitle}
-                          </p>
-                          <p className="text-xs"> {row.scholarshipProvider}</p>
+                          <p className="font-semibold">{row.firstName}</p>
+                          <p className="text-xs"> {row.studentEmail}</p>
                         </div>
                       </TableCell>
-                      <TableCell className="">
-                        {row.scholarshipDealine &&
-                          format(
-                            row.scholarshipDealine,
-                            "MMM d, yyyy 'at' h:mm a"
-                          )}
+                      <TableCell>
+                        {row.dateCreated &&
+                          format(row.dateCreated, "MMM d, yyyy 'at' h:mm a")}
                       </TableCell>
                       <TableCell className="">
-                        {row.scholarshipDealine &&
-                          format(
-                            row.scholarshipDealine,
-                            "MMM d, yyyy 'at' h:mm a"
-                          )}
-                      </TableCell>
-                      <TableCell className="">
-                        <Badge className="bg-green-900 text-gray-300">
-                          Active
+                        <Badge className="bg-red-900 text-gray-300">
+                          {row.role}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-center">
-                        {row.totalApproved}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {row.totalApplicants}
+                      <TableCell className="">{row.status}</TableCell>
+
+                      <TableCell>
+                        {row.lastLogin &&
+                          format(row.lastLogin, "MMM d, yyyy 'at' h:mm a")}
                       </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell
-                      colSpan={headers.length + 2}
-                      className="text-center"
-                    >
+                    <TableCell colSpan={headers.length + 2}>
                       No result found.
                     </TableCell>
                   </TableRow>
                 )
               ) : searchLoading ? (
                 <TableRow>
-                  <TableCell
-                    colSpan={headers.length + 2}
-                    className="text-center"
-                  >
+                  <TableCell colSpan={headers.length + 2}>
                     <Ring size={40} speed={2} bgOpacity={0} color="yellow" />
                   </TableCell>
                 </TableRow>
-              ) : searchData.length > 0 ? (
-                searchData.map((row) => (
+              ) : mockAdminProfiles.length > 0 ? (
+                mockAdminProfiles.map((row) => (
                   <TableRow
-                    key={row.scholarshipId}
+                    key={row.role}
                     onClick={() =>
-                      router.push(
-                        `/administrator/home/manage/${row.scholarshipId}`
-                      )
+                      router.push(`/administrator/home/manage-admins/${row.id}`)
                     }
                   >
                     <TableCell className="flex gap-2.5 items-center">
                       <img
                         className="size-9 object-cover rounded-full"
-                        src={row.scholarshipLogo}
+                        src={row.avatar}
                         alt=""
                       />
                       <div className="space-y-1">
-                        <p className="font-semibold">{row.scholarshipTitle}</p>
-                        <p className="text-xs"> {row.scholarshipProvider}</p>
+                        <p className="font-semibold">{row.firstName}</p>
+                        <p className="text-xs"> {row.studentEmail}</p>
                       </div>
                     </TableCell>
-
                     <TableCell className="">
-                      {row.scholarshipDealine &&
-                        format(
-                          row.scholarshipDealine,
-                          "MMM d, yyyy 'at' h:mm a"
-                        )}
-                    </TableCell>
-                    <TableCell className="">
-                      <Badge className="bg-green-900 text-gray-300">
-                        Active
+                      <Badge className="bg-red-900 text-gray-300">
+                        {row.role}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-center">
-                      {row.totalApproved}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {row.totalApplicants}
-                    </TableCell>
+                    <TableCell className="">{row.status}</TableCell>
+
+                    <TableCell>{row.dateCreated}</TableCell>
+                    <TableCell>{row.lastLogin}</TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell
-                    colSpan={headers.length + 2}
-                    className="text-center"
-                  >
+                  <TableCell colSpan={headers.length + 2}>
                     No result found.
                   </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
-          {!query && data.length !== 0 && (
+          {!query && mockAdminProfiles.length !== 0 && (
             <div className="flex items-center justify-between gap-8">
               {/* Results per page */}
               <div className="flex items-center gap-3">

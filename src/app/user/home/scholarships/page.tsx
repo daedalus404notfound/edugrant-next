@@ -11,7 +11,12 @@ import {
 } from "@/components/ui/select";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { Share2, TextSearch } from "lucide-react";
+import {
+  Share2,
+  SquareArrowOutUpRight,
+  TextSearch,
+  Upload,
+} from "lucide-react";
 import Link from "next/link";
 const tabs = [
   { id: "ACTIVE", label: "Active", indicator: "" },
@@ -20,6 +25,7 @@ const tabs = [
 import useScholarshipUserData from "@/hooks/user/getScholarship";
 import { useState } from "react";
 import { Tabs } from "@/components/ui/vercel-tabs";
+import { Badge } from "@/components/ui/badge";
 export default function ClientScholarship() {
   const [currentPage] = useState(1);
   const [rowsPerPage] = useState(20);
@@ -40,7 +46,6 @@ export default function ClientScholarship() {
       <div className="mx-auto w-[95%] pt-10">
         <div className="flex justify-between items-end">
           <div>
-          
             <motion.span
               className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
                       text-2xl font-semibold flex items-center gap-1.5
@@ -62,7 +67,7 @@ export default function ClientScholarship() {
             </p>
           </div>
         </div>
-        <div className="py-8 space-y-5">
+        <div className="py-8 space-y-8">
           <div className="flex justify-between items-center">
             <Tabs tabs={tabs} />
             <Select onValueChange={(value) => setSort(value as "asc" | "desc")}>
@@ -75,7 +80,7 @@ export default function ClientScholarship() {
               </SelectContent>
             </Select>
           </div>
-          <div className=" grid lg:grid-cols-3 grid-cols-1 gap-8">
+          <div className=" grid lg:grid-cols-3 grid-cols-1 gap-4">
             {loading
               ? [...Array(4)].map((_, index) => (
                   <div
@@ -84,16 +89,19 @@ export default function ClientScholarship() {
                   ></div>
                 ))
               : data.map((scholarship) => (
-                  <Link
-                    href={`/user/home/scholarships/${scholarship.scholarshipId}`}
+                  <div
                     key={scholarship.scholarshipId}
-                    prefetch
-                    scroll={false}
-                    className="relative flex flex-col shadow-md shadow-black/20   rounded-lg overflow-hidden bg-card dark:bg-background/40 border-background border"
+                    className="relative flex flex-col  rounded-lg overflow-hidden p-2 gap-3 bg-black"
                   >
-                    <div className="aspect-[16/8.5] w-full overflow-hidden px-2 pt-2">
+                    <img
+                      className="absolute h-full w-full left-0 top-0 object-cover   opacity-10  mask-gradient blur-xs "
+                      src={scholarship.scholarshipCover}
+                      alt=""
+                    />
+                    <div className="relative aspect-[16/8.5] w-full rounded-t-md overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-r  from-black/40 via-black/20 to-black/50 " />
                       <img
-                        className="h-full w-full object-cover  rounded-sm shadow-md shadow-black/20 border-background border"
+                        className="h-full w-full object-cover    "
                         src={scholarship.scholarshipCover}
                         alt=""
                       />
@@ -104,27 +112,37 @@ export default function ClientScholarship() {
                     /> */}
                     </div>
 
-                    <div className="p-4 flex-1">
-                      <h1 className="font-semibold text-lg text-green-800">
-                        {scholarship.scholarshipTitle}
-                      </h1>
+                    <div className="flex-1 space-y-1 z-10 px-2">
+                      <div className="flex items-center gap-1.5 justify-between">
+                        <h1 className="font-semibold text-lg ">
+                          {scholarship.scholarshipTitle}
+                        </h1>
+                        <Badge className="bg-green-800 text-gray-200">Active</Badge>
+                      </div>
                       <h3 className="text-sm">
                         {scholarship.scholarshipProvider}
                       </h3>
                     </div>
 
-                    <div className="flex gap-3 bg-background/80  p-1.5 border-t border-background z-10">
-                      <Button size="lg" variant="ghost" className="flex-1">
-                        Details
+                    <div className="flex gap-3 bg-background rounded-md  p-1.5  border-background z-10">
+                      <Link
+                        href={`/user/home/scholarships/${scholarship.scholarshipId}`}
+                        prefetch
+                        scroll={false}
+                      >
+                        <Button size="lg" variant="link" className="flex-1">
+                          Details <SquareArrowOutUpRight />
+                        </Button>
+                      </Link>
+
+                      <Button size="lg" variant="link" className="flex-1">
+                        Apply <Upload />
                       </Button>
-                      <Button size="lg" variant="ghost" className="flex-1">
-                        Apply
-                      </Button>
-                      <Button size="lg" variant="ghost" className="flex-1">
+                      <Button size="lg" variant="link" className="flex-1">
                         <Share2 />
                       </Button>
                     </div>
-                  </Link>
+                  </div>
                 ))}
           </div>
         </div>

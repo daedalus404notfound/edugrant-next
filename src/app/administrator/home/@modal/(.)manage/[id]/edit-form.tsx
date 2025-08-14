@@ -70,7 +70,7 @@ export default function EditScholarship({
   return (
     <div className="p-4 pb-20">
       <Form {...form}>
-        <div className="space-y-5 mt-10">
+        <div className="space-y-5">
           <div className="grid grid-cols-3 gap-x-3 gap-y-6">
             <div className="col-span-2">
               <FormField
@@ -157,7 +157,11 @@ export default function EditScholarship({
                       Required GWA <FormMessage />
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="(Optional)" />
+                      <Input
+                        {...field}
+                        type="number"
+                        placeholder="(Optional)"
+                      />
                     </FormControl>
                   </FormItem>
                 )}

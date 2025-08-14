@@ -53,6 +53,19 @@ export type UserProfileTypes = {
   year: string;
   section: string;
 };
+export type AdminProfileTypes = {
+  adminId: string;
+  adminPassword: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  gender: string;
+  role: string;
+  studentEmail: string;
+  contactNumber: string;
+  password: string;
+ 
+};
 export type ApplicationTypes = {
   applicationId: string;
   applicationResponseDate: string;
@@ -73,12 +86,7 @@ export type UserDocument = {
   cloudinaryId: string;
 };
 
-export type AdminUserType = {
-  adminEmail: string;
-  adminId: string;
-  adminName: string;
-  adminPassword: string;
-};
+
 
 export type FilterTypes = {
   FilterData: AcademicTypes;

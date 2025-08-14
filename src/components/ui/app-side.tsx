@@ -9,6 +9,8 @@ import {
   Archive,
   SquareUserRound,
   UsersRound,
+  Plus,
+  ShieldUser,
 } from "lucide-react";
 import logo from "@/assets/basclogo.png";
 import {
@@ -40,23 +42,28 @@ const sidebarData = {
           url: "/administrator/home/admin",
           icon: SquareUserRound,
         },
+        {
+          title: "Manage Admins",
+          url: "/administrator/home/manage-admins",
+          icon: ShieldUser,
+        },
       ],
     },
     {
       title: "Scholarship Management",
       items: [
         {
-          title: "Post Scholarship",
+          title: "Add Scholarships",
           url: "/administrator/home/create",
-          icon: PenLine,
+          icon: Plus,
         },
         {
-          title: "Active Scholarships",
+          title: "Manage Scholarships",
           url: "/administrator/home/manage",
           icon: GraduationCap,
         },
         {
-          title: "Archived Scholarships",
+          title: "Archived Scholarship",
           url: "/administrator/home/archived",
           icon: Archive,
         },
@@ -77,7 +84,7 @@ const sidebarData = {
       items: [
         {
           title: "Annoucements",
-          url: "/administrator/home/announcements",
+          url: "/administrator/home/announcement",
           icon: Megaphone,
         },
       ],

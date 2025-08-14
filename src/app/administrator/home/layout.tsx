@@ -16,7 +16,7 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
       <AppSidebar />
       <SidebarInset>
         <div className="relative">
-          <div className="fixed your-class h-screen w-full pointer-events-none"></div>
+          {/* <div className="fixed your-class h-screen w-full pointer-events-none"></div> */}
           {children}
           {modal}
         </div>

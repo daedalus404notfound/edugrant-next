@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import { AdminUserType } from "@/hooks/types";
+import { AdminProfileTypes } from "@/hooks/types";
 
 type UserStore = {
-  admin: AdminUserType | null;
+  admin: AdminProfileTypes | null;
   loading: boolean;
   error: string | null;
-  setAdmin: (user: AdminUserType) => void;
+  setAdmin: (user: AdminProfileTypes) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
 };

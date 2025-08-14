@@ -82,10 +82,10 @@ export default function Manage() {
   });
 
   const tabs = [
-    { id: "", label: "All Applicants", indicator: "1" },
-    { id: "PENDING", label: "Under Review", indicator: "1" },
-    { id: "APPROVE", label: "Approved", indicator: "1" },
-    { id: "DECLINE", label: "Declined", indicator: "1" },
+    { id: "", label: "All Applicants", indicator: "" },
+    { id: "PENDING", label: "Under Review", indicator: "" },
+    { id: "APPROVE", label: "Approved", indicator: "" },
+    { id: "DECLINE", label: "Declined", indicator: "" },
   ];
 
   const [query, setQuery] = useState<string>("");
