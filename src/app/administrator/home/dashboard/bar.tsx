@@ -29,6 +29,7 @@ export function ChartBarMultiple() {
     currentPage: 1,
     rowsPerPage: 100,
     sort: "",
+    active: true,
   });
   return (
     <div className=" h-full w-full  border p-2  rounded-lg ">
