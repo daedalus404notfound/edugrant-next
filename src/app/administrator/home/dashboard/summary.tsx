@@ -7,6 +7,7 @@ export default function ApplicationSummary() {
     currentPage: 1,
     rowsPerPage: 100,
     sort: "",
+    active: true,
   });
   const filterApproved = data.filter((meow) => meow.totalApproved);
   const filterApplication = data.filter((meow) => meow.totalApplicants);
