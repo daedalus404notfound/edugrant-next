@@ -27,23 +27,23 @@ import {
   PaginationItem,
 } from "@/components/ui/pagination";
 import { Badge } from "@/components/ui/badge";
-import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
+
 import { Input } from "@/components/ui/input";
-import useScholarshipData from "@/hooks/admin/getScholarship";
+
 import DynamicHeaderAdmin from "../dynamic-header";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Activity,
+
   Check,
   ChevronFirstIcon,
   ChevronLastIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   Download,
-  Plus,
+
   SearchIcon,
-  UserRound,
+  
   UsersRound,
 } from "lucide-react";
 import { format } from "date-fns";
@@ -133,12 +133,12 @@ import { ArrowSwapVertical } from "iconsax-reactjs";
 export default function ManageAdmins() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalPages] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState<"asc" | "desc" | "">("");
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [searchLoading, setSearchLoading] = useState(true);
+  const [loading] = useState(false);
+  const [searchLoading] = useState(true);
   const [query, setQuery] = useState<string>("");
   console.log(query);
 

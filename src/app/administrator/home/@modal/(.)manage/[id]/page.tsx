@@ -1,26 +1,22 @@
 "use client";
 import {
-  Activity,
+
   Calendar,
-  CalendarX2,
+ 
   Check,
   CheckCheck,
   Clock,
-  DollarSign,
+ 
   Download,
   Edit,
-  ExternalLink,
-  File,
-  FileText,
-  FolderOpen,
+
   LoaderCircleIcon,
-  PhilippinePeso,
-  PiggyBank,
+
   StickyNote,
   Trash2,
   Users,
   UsersRound,
-  Wallet,
+
   X,
 } from "lucide-react";
 import { motion } from "motion/react";
@@ -51,7 +47,6 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import useScholarshipUserByIdAdmin from "@/hooks/admin/getScholarshipData";
 import { format } from "date-fns";
-import { BGPattern } from "@/components/ui/grid";
 import AnimatedNumberCountdown from "@/components/ui/countdown";
 import { Separator } from "@/components/ui/separator";
 import { BorderBeam } from "@/components/ui/beam";
@@ -67,11 +62,9 @@ export default function InterceptManageScholarship() {
   const id = params.id as string;
   const { data } = useScholarshipUserByIdAdmin(id);
   console.log(data);
-  const title = data?.scholarshipTitle || "N/A";
+
   const deadline = data?.scholarshipDealine;
-  const provider = data?.scholarshipProvider || "unknown";
-  const description = data?.scholarshipDescription;
-  const amount = data?.scholarshipAmount;
+ 
   const scholarshipId = data?.scholarshipId;
   const scholarshipCover = data?.scholarshipCover;
   const scholarshipLogo = data?.scholarshipLogo;
@@ -113,27 +106,7 @@ export default function InterceptManageScholarship() {
       router.back();
     }
   };
-  const summaryCards = [
-    {
-      label: "Applicants",
-      data: 1,
-      badge: 1,
-      icon: <UsersRound />,
-    },
-    {
-      label: "Approved",
-      data: 1,
-      badge: 1,
-      icon: <CheckCheck />,
-    },
-    {
-      label: "Pending",
-      data: 1,
-      badge: 1,
-      icon: <X />,
-      color: "yellow",
-    },
-  ];
+
   return (
     <Drawer
       open={open}

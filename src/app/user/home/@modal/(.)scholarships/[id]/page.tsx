@@ -40,11 +40,9 @@ export default function InterceptManageScholarshipClient() {
   const [open, setOpen] = useState(true);
   const id = params.id as string;
   const { data, loading } = useScholarshipUserById(id);
-  const title = data?.scholarshipTitle || "N/A";
+
   const deadline = data?.scholarshipDealine;
-  const provider = data?.scholarshipProvider || "unknown";
-  const amount = data?.scholarshipAmount || "N/A";
-  const description = data?.scholarshipDescription || "N/A";
+
   const scholarshipCover = data?.scholarshipCover;
   const scholarshipLogo = data?.scholarshipLogo;
   const HandleCloseDrawer = (value: boolean) => {

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, Transition } from "framer-motion";
 
 interface BorderBeamProps {
   /**
@@ -28,7 +28,7 @@ interface BorderBeamProps {
   /**
    * The motion transition of the border beam.
    */
-  transition?: any;
+  transition?: Transition;
   /**
    * The class name of the border beam.
    */
@@ -82,7 +82,6 @@ export const BorderBeam = ({
   style,
   reverse = false,
   initialOffset = 0,
-  borderThickness = 1,
   opacity = 1,
   glowIntensity = 0,
   beamBorderRadius,
@@ -131,7 +130,7 @@ export const BorderBeam = ({
               ? `${beamBorderRadius}px`
               : undefined,
             ...style,
-          } as any
+          } as React.CSSProperties & Record<string, unknown>
         }
         initial={{ offsetDistance: `${initialOffset}%` }}
         animate={{

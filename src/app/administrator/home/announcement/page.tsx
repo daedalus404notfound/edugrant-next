@@ -140,7 +140,7 @@ export default function ScholarshipAnnouncements() {
           </Dialog>
         </div>
         <div className="mt-7">
-          {announcements.map((announcement, index) => (
+          {announcements.map((announcement) => (
             <div
               key={announcement.id}
               className="flex items-start space-x-6 py-8 border-b-2 border-muted"

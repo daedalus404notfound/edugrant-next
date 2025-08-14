@@ -9,41 +9,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
 } from "@/components/ui/pagination";
 import { Badge } from "@/components/ui/badge";
-import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
-import { Input } from "@/components/ui/input";
+
 import useScholarshipData from "@/hooks/admin/getScholarship";
 import DynamicHeaderAdmin from "../dynamic-header";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-  Activity,
+
   Archive,
-  Check,
+
   ChevronFirstIcon,
   ChevronLastIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  Download,
-  Plus,
-  SearchIcon,
+
 } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -69,20 +55,7 @@ const tabs = [
   { id: "DECLINE", label: "Deleted", indicator: "" },
 ];
 
-const sortList = [
-  {
-    value: "",
-    label: "Default",
-  },
-  {
-    value: "asc",
-    label: "Ascending",
-  },
-  {
-    value: "desc",
-    label: "Descending",
-  },
-];
+
 import { Tabs } from "@/components/ui/vercel-tabs";
 
 export default function Manage() {
