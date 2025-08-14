@@ -9,6 +9,7 @@ const documentsSchema = z.object({
 });
 
 const createScholarshipSchema = z.object({
+  scholarshipId: z.string(),
   scholarshipTitle: z.string().min(3, "Required"),
   providerName: z.string().min(3, "Required"),
   scholarshipDescription: z.string().min(3, "Required"),
@@ -31,6 +32,7 @@ export function useUpdateScholarshipZod(data?: ScholarshipTypes) {
   const form = useForm<creatScholarshipFormData>({
     resolver: zodResolver(createScholarshipSchema),
     defaultValues: {
+      scholarshipId: data?.scholarshipId || "",
       scholarshipTitle: data?.scholarshipTitle || "",
       providerName: data?.scholarshipProvider || "",
       scholarshipGwa: data?.gwa?.toString() || "",
