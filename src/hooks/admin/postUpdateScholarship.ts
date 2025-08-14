@@ -17,7 +17,9 @@ const today = new Date().toISOString().split("T")[0];
 const addScholarshipApi = async (data: creatScholarshipFormData) => {
   const { admin } = useAdminStore.getState();
   const formDataToSend = new FormData();
-  formDataToSend.append("scholarshipId", data.scholarshipId);
+  if (data.scholarshipId) {
+    formDataToSend.append("scholarshipId", data.scholarshipId);
+  }
   console.log("wtf", data.scholarshipId);
   formDataToSend.append("newScholarTitle", data.scholarshipTitle);
   formDataToSend.append("newScholarProvider", data.providerName);
@@ -148,6 +150,7 @@ export const useUpdateScholarship = (data?: ScholarshipTypes) => {
 
   const handleTriggerClick = async () => {
     // Trigger form validation
+
     const isValid = await form.trigger(); // This validates all fields
 
     if (isValid) {

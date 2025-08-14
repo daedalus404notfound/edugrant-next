@@ -9,18 +9,18 @@ const documentsSchema = z.object({
 });
 
 const createScholarshipSchema = z.object({
-  scholarshipId: z.string(),
+  scholarshipId: z.string().min(1, "Required"),
   scholarshipTitle: z.string().min(3, "Required"),
   providerName: z.string().min(3, "Required"),
   scholarshipDescription: z.string().min(3, "Required"),
-  scholarshipGwa: z.string(),
+  scholarshipGwa: z.string().optional(),
   applicationDeadline: z.date({
     message: "Required",
   }),
   scholarshipAmount: z.string().min(1, "Required"),
-  scholarshipLimit: z.string(),
-  detailsImage: z.any(),
-  sponsorImage: z.any(),
+  scholarshipLimit: z.string().optional(),
+  detailsImage: z.any().optional(),
+  sponsorImage: z.any().optional(),
   documents: z
     .array(documentsSchema)
     .min(1, "At least one document is required"),
@@ -32,7 +32,7 @@ export function useUpdateScholarshipZod(data?: ScholarshipTypes) {
   const form = useForm<creatScholarshipFormData>({
     resolver: zodResolver(createScholarshipSchema),
     defaultValues: {
-      scholarshipId: data?.scholarshipId || "",
+      scholarshipId: data?.scholarshipId.toString() || "",
       scholarshipTitle: data?.scholarshipTitle || "",
       providerName: data?.scholarshipProvider || "",
       scholarshipGwa: data?.gwa?.toString() || "",
