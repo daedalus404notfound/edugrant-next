@@ -13,8 +13,7 @@ import {
   Card,
   CardAction,
   CardContent,
-  CardDescription,
-  CardFooter,
+
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -36,9 +35,8 @@ const chartConfig = {
 
 export function ChartBarMultiple() {
   const { data } = useScholarshipData({
-    currentPage: 1,
-    rowsPerPage: 100,
-    sort: "",
+    page: 1,
+    pageSize: 100,
     active: true,
   });
   return (

@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import { act, useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 
 import { ScholarshipTypes } from "../types";
 import { MetaTypes } from "../types";

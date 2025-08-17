@@ -3,7 +3,7 @@
 import { Table } from "@tanstack/react-table";
 import {
   ArrowRightIcon,
-  PhilippinePeso,
+  
   Plus,
   SearchIcon,
 

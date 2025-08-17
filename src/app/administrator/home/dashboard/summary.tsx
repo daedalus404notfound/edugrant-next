@@ -1,8 +1,8 @@
-import useScholarshipData from "@/hooks/admin/getScholarship";
+
 import {
-  Activity,
+
   CheckCheck,
-  CloudUpload,
+
   GraduationCap,
   TrendingUp,
 } from "lucide-react";

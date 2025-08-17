@@ -37,7 +37,6 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { DragAndDropArea } from "@/components/ui/upload";
 import { Label } from "@/components/ui/label";
 import { useCreateAnnouncement } from "@/hooks/admin/postCreateAnnouncement";
 export default function CreateAnnouncement() {

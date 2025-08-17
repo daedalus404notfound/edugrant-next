@@ -5,7 +5,6 @@ import {
   Clock,
   Download,
   Edit,
-  LoaderCircleIcon,
   StickyNote,
   Trash2,
   Users,
