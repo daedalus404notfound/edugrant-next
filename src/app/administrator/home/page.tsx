@@ -193,7 +193,7 @@ export default function AdminDashboard() {
             <CardHeader className="">
               <CardTitle>Active Energy</CardTitle>
               <CardDescription>
-                You're burning an average of 754 calories per day. Good job!
+                de pa alam ang elalagay
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-2">
