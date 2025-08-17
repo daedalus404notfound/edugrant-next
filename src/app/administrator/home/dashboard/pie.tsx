@@ -42,9 +42,9 @@ const chartConfig = {
 
 export default function ChartPieDonutText() {
   const { data } = useScholarshipData({
-    currentPage: 1,
-    rowsPerPage: 100,
-    sort: "",
+    page: 1,
+    pageSize: 100,
+
     active: true,
   });
   const filterApproved = data.filter((meow) => meow.totalApproved);
