@@ -1,26 +1,19 @@
 "use client";
 import {
-
   Calendar,
- 
   Check,
-
   Clock,
- 
   Download,
   Edit,
-
   LoaderCircleIcon,
-
   StickyNote,
   Trash2,
   Users,
-
-
   X,
 } from "lucide-react";
 import { motion } from "motion/react";
-import "ldrs/react/Ring.css";
+import { LineSpinner } from "ldrs/react";
+import "ldrs/react/LineSpinner.css";
 import {
   Drawer,
   DrawerContent,
@@ -42,14 +35,13 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import EditScholarship from "./edit-form";
-import axios from "axios";
-import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import useScholarshipUserByIdAdmin from "@/hooks/admin/getScholarshipData";
 import { format } from "date-fns";
 import AnimatedNumberCountdown from "@/components/ui/countdown";
 import { Separator } from "@/components/ui/separator";
 import { BorderBeam } from "@/components/ui/beam";
+import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 
 export default function InterceptManageScholarship() {
   const [editMode, setEditMode] = useState(false);
@@ -64,7 +56,7 @@ export default function InterceptManageScholarship() {
   console.log(data);
 
   const deadline = data?.scholarshipDealine;
- 
+
   const scholarshipId = data?.scholarshipId;
   const scholarshipCover = data?.scholarshipCover;
   const scholarshipLogo = data?.scholarshipLogo;
@@ -77,35 +69,12 @@ export default function InterceptManageScholarship() {
     }
   };
 
-  const onSubmit = async () => {
-    try {
-      setDeleteLoading(true);
-      console.log(scholarshipId);
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/deleteScholarship`,
-        { scholarshipId },
-        { withCredentials: true }
-      );
-
-      if (res.status === 200) {
-        console.log("Scholarship deleted successfully!");
-        toast("Scholarship has been deleted", {
-          description:
-            "The scholarship opportunity has been successfully deleted to the system.",
-        });
-        setDeleteLoading(false);
-        setOpenAlert(false);
-        setOpen(false);
-        router.back();
-      }
-    } catch (error) {
-      console.error(error);
-      setDeleteLoading(false);
-      setOpenAlert(false);
-      setOpen(false);
-      router.back();
-    }
-  };
+  const { onSubmit } = useDeleteScholarship({
+    setDeleteLoading,
+    setOpenAlert,
+    setOpen,
+    scholarshipId,
+  });
 
   return (
     <Drawer
@@ -144,7 +113,7 @@ export default function InterceptManageScholarship() {
                 speedMultiplier={1.5}
                 className="z-10"
               />
-              Download Form <Download/>
+              Download Form <Download />
             </Button>
           </div>
         </div>
@@ -155,7 +124,7 @@ export default function InterceptManageScholarship() {
             <div className="px-4">
               <Separator />
             </div>
-            <div className="absolute top-0 left-0 h-99 w-full brightness-10  bg-black mask-gradient flex">
+            <div className="absolute top-0 left-0 h-80 w-full brightness-10  bg-black mask-gradient flex">
               <img
                 className="w-full h-full object-cover blur-md "
                 src={scholarshipCover}
@@ -170,14 +139,14 @@ export default function InterceptManageScholarship() {
                     <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-black/80 border-b-2 border-black" />
                     {scholarshipCover && (
                       <img
-                        className="w-full h-48 object-cover   rounded-t-md"
+                        className="w-full h-35 object-cover   rounded-t-md"
                         src={scholarshipCover}
                         alt=""
                       />
                     )}
                   </div>
 
-                  <div className="relative z-10 py-8 px-4">
+                  <div className="relative z-10 py-5 px-4">
                     <div className="flex items-start gap-6">
                       <div className="relative">
                         <div className="size-28 rounded-full bg-neutral-800 border border-neutral-700 overflow-hidden">
@@ -345,14 +314,14 @@ export default function InterceptManageScholarship() {
             <div className="flex gap-3">
               <Button
                 onClick={() => setEditMode(true)}
-                className="flex-1 h-10"
+                className="flex-1"
                 variant="outline"
               >
                 <Edit /> Edit
               </Button>
 
               <Button
-                className="flex-1 h-10"
+                className="flex-1"
                 variant="destructive"
                 onClick={() => setOpenAlert(true)}
               >
@@ -363,8 +332,10 @@ export default function InterceptManageScholarship() {
             <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                  <AlertDialogDescription>
+                  <AlertDialogTitle className="text-red-700 dark:text-red-500">
+                    Are you absolutely sure?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription className="text-neutral-600 dark:text-neutral-400">
                     This action cannot be undone. This will permanently delete.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
@@ -372,15 +343,20 @@ export default function InterceptManageScholarship() {
                   <AlertDialogCancel disabled={deleteLoading}>
                     Cancel
                   </AlertDialogCancel>
-                  <Button onClick={onSubmit} disabled={deleteLoading}>
-                    {deleteLoading && (
-                      <LoaderCircleIcon
-                        className="-ms-1 animate-spin"
-                        size={16}
-                        aria-hidden="true"
-                      />
-                    )}{" "}
+                  <Button
+                    onClick={onSubmit}
+                    disabled={deleteLoading}
+                    variant="destructive"
+                  >
                     Continue
+                    {deleteLoading && (
+                      <LineSpinner
+                        size="18"
+                        stroke="1.5"
+                        speed="1"
+                        color="white"
+                      />
+                    )}
                   </Button>
                 </AlertDialogFooter>
               </AlertDialogContent>

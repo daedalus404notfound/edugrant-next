@@ -33,7 +33,6 @@ import {
   Trash2,
   X,
 } from "lucide-react";
-import DynamicHeaderAdmin from "../dynamic-header";
 import {
   Popover,
   PopoverContent,
@@ -72,12 +71,12 @@ export default function Create() {
 
   return (
     <div className="px-4">
-      <DynamicHeaderAdmin first="Scholarship" second="Create" />
+    
 
       <div className="mx-auto max-w-4xl w-full py-10">
         <motion.span
           className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-          text-2xl font-semibold flex items-center gap-1.5
+          text-xl font-semibold flex items-center gap-1.5
           "
           initial={{ backgroundPosition: "200% 0" }}
           animate={{ backgroundPosition: "-200% 0" }}

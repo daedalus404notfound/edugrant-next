@@ -1,38 +1,67 @@
 "use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { act, useEffect, useState } from "react";
 
 import { ScholarshipTypes } from "../types";
-
+import { MetaTypes } from "../types";
+const defaultMeta: MetaTypes = {
+  page: 1,
+  pageSize: 10,
+  totalRows: 0,
+  totalPage: 0,
+  sortBy: "",
+  order: "",
+  filters: "",
+  search: "",
+};
 export default function useScholarshipData({
-  currentPage,
-  rowsPerPage,
-  sort,
+  page,
+  pageSize,
+  sortBy,
+  order,
   active,
+  search,
 }: {
-  currentPage: number;
-  rowsPerPage: number;
-  sort?: string;
+  page: number;
+  pageSize: number;
+  sortBy?: string;
+  order?: string;
   active: boolean;
+  search?: string;
 }) {
   const [data, setData] = useState<ScholarshipTypes[]>([]);
+  const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
   const [loading, setLoading] = useState(true);
-  const [totalPages, setTotalPages] = useState(1);
+  console.log("DATA response:", data);
+  console.log("META response:", meta);
+  console.log(
+    "data sent to backend:",
+    "page:",
+    page,
+    "pageSize:",
+    pageSize,
+    "sortBy:",
+    sortBy,
+    "order:",
+    order
+  );
   useEffect(
     function () {
       async function fetchScholarships() {
         setLoading(true);
         try {
-          const res = await axios.get(
-            `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/${
-              active ? "getScholarships" : "getExpiredScholarships"
-            }?page=${currentPage}&dataPerPage=${rowsPerPage}&sortBy=${sort}`,
-            { withCredentials: true }
-          );
+          const endpoint = `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/${
+            active ? "getScholarships" : "getExpiredScholarships"
+          }?page=${page}&dataPerPage=${pageSize}${
+            sortBy ? `&sortBy=${sortBy}` : ""
+          }${order ? `&order=${order}` : ""}${
+            search ? `&search=${search}` : ""
+          }`;
+          const res = await axios.get(endpoint, { withCredentials: true });
+          console.log(endpoint);
           if (res.status === 200) {
-            console.log("API response:", res.data);
-            setData(res.data.getScholarshipsData);
-            setTotalPages(res.data.totalPages);
+            setData(res.data.data);
+            setMeta(res.data.meta);
           }
         } catch (error) {
           console.error(error);
@@ -43,8 +72,8 @@ export default function useScholarshipData({
 
       fetchScholarships();
     },
-    [currentPage, rowsPerPage, sort]
+    [page, pageSize, sortBy, order, active, search]
   );
 
-  return { data, loading, totalPages };
+  return { data, loading, meta };
 }

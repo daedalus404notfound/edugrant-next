@@ -1,72 +1,101 @@
 import useScholarshipData from "@/hooks/admin/getScholarship";
-import { Activity, CheckCheck, CloudUpload, TrendingUp } from "lucide-react";
+import {
+  Activity,
+  CheckCheck,
+  CloudUpload,
+  GraduationCap,
+  TrendingUp,
+} from "lucide-react";
 import { Ring } from "ldrs/react";
 import "ldrs/react/Ring.css";
-export default function ApplicationSummary() {
-  const { data, loading } = useScholarshipData({
-    currentPage: 1,
-    rowsPerPage: 100,
-    sort: "",
-    active: true,
-  });
-  const filterApproved = data.filter((meow) => meow.totalApproved);
-  const filterApplication = data.filter((meow) => meow.totalApplicants);
+import { JSX, useState } from "react";
 
-  const summaryCards = [
+// Define types
+type ColorKey = "blue" | "green" | "yellow" | "white";
+
+interface SummaryCard {
+  label: string;
+  data: number;
+  icon: JSX.Element;
+  color: ColorKey;
+}
+
+export default function ApplicationSummary() {
+  const [loading] = useState(false);
+
+  // Define color mappings with proper typing
+  const colorStyles: Record<ColorKey, { badge: string; text: string }> = {
+    blue: {
+      badge: "bg-blue-800/10 text-blue-600",
+      text: "text-blue-600",
+    },
+    green: {
+      badge: "bg-green-800/10 text-green-600",
+      text: "text-green-600",
+    },
+    yellow: {
+      badge: "bg-yellow-800/10 text-yellow-600",
+      text: "text-yellow-600",
+    },
+    white: {
+      badge: "bg-gray-800/10 text-gray-600",
+      text: "text-gray-600",
+    },
+  };
+
+  const summaryCards: SummaryCard[] = [
     {
       label: " Total Applicants",
-      data: filterApplication,
+      data: 1,
       icon: <TrendingUp />,
       color: "blue",
     },
     {
       label: " Approved Applicants",
-      data: filterApplication,
+      data: 2,
       icon: <CheckCheck />,
       color: "green",
     },
     {
-      label: "Pending Applicants",
-      data: filterApproved,
-      icon: <CloudUpload />,
-      color: "yellow",
-    },
-    {
       label: "Active Scholarships",
-      data: filterApplication,
-      icon: <Activity />,
-      color: "white",
+      data: 3,
+      icon: <GraduationCap />,
+      color: "yellow",
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 ">
+    <div className="grid grid-cols-3  gap-5 ">
       {summaryCards.map((meow, index) => (
         <div
           key={index}
-          className=" bg-background/40 z-10 flex flex-col justify-between  rounded-lg  shadow-sm border aspect-[16/8] p-3"
+          className=" bg-sidebar z-10 flex flex-col justify-between  rounded-lg  shadow-sm  aspect-[16/4] p-4"
         >
           <div className="flex justify-between items-start ">
-            <span className="border p-2 rounded-md">{meow.icon}</span>
+            <span className={` p-2 rounded-md ${colorStyles[meow.color].text}`}>
+              {meow.icon}
+            </span>
             <p
-              className={`flex text-xs border p-1 rounded-sm bg-${meow.color}-800/10 text-${meow.color}-600`}
+              className={`flex text-xs  p-1 rounded-sm font-mono tracking-tight ${
+                colorStyles[meow.color].badge
+              }`}
             >
               + 100 today
             </p>
           </div>
           <div className="flex justify-between items-end">
             <p className="text-sm text-muted-foreground">{meow.label}</p>
-            <span className={`text-3xl font-semibold text-${meow.color}-600`}>
+            <span className={`text-3xl font-semibold font-mono `}>
               {loading ? (
                 <Ring
                   size={25}
-                  stroke={2}
+                  stroke={4}
                   speed={2}
                   bgOpacity={0}
-                  color="yellow"
+                  color="green"
                 />
               ) : (
-                filterApplication.length
+                meow.data
               )}
             </span>
           </div>

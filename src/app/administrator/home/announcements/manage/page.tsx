@@ -2,7 +2,6 @@
 
 import { Megaphone, Plus } from "lucide-react";
 import { motion } from "motion/react";
-import DynamicHeaderAdmin from "../dynamic-header";
 import { Badge } from "@/components/ui/badge";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import CreateAnnouncement from "../create-announcement/page";
+import CreateAnnouncement from "../create/page";
 import { BorderBeam } from "@/components/ui/beam";
 const tabs = [
   { id: "PENDING", label: "Active", indicator: "" },
@@ -81,7 +80,6 @@ export default function ScholarshipAnnouncements() {
 
   return (
     <div className=" min-h-screen px-4">
-      <DynamicHeaderAdmin first="Updates" second="Manage Announcements" />
 
       <div className="mx-auto max-w-4xl w-full py-10">
         <motion.span

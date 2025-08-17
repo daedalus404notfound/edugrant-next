@@ -18,18 +18,15 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 import useScholarshipData from "@/hooks/admin/getScholarship";
-import DynamicHeaderAdmin from "../dynamic-header";
+import DynamicHeaderAdmin from "../../dynamic-header";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
-
   Archive,
-
   ChevronFirstIcon,
   ChevronLastIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-
 } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -55,14 +52,12 @@ const tabs = [
   { id: "DECLINE", label: "Deleted", indicator: "" },
 ];
 
-
 import { Tabs } from "@/components/ui/vercel-tabs";
 
 export default function Manage() {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
- 
 
   const { data, loading, totalPages } = useScholarshipData({
     currentPage,

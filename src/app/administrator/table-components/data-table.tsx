@@ -1,0 +1,140 @@
+"use client";
+
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  PaginationState,
+  useReactTable,
+  OnChangeFn,
+  SortingState,
+} from "@tanstack/react-table";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { MetaTypes } from "@/hooks/types";
+import { DataTablePagination } from "./data-table-pagination";
+import { Skeleton } from "@/components/ui/skeleton";
+import { DataTableToolbar } from "./data-table-toolbar";
+interface DataTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[];
+  meta: MetaTypes;
+  data: TData[];
+  getRowId?: (row: TData) => string | number;
+  pagination: PaginationState;
+  setPagination: OnChangeFn<PaginationState>;
+  loading: boolean;
+  setSearch: (search: string) => void;
+  sorting: SortingState;
+  setSorting: OnChangeFn<SortingState>;
+}
+
+export function DataTable<TData, TValue>({
+  columns,
+  meta,
+  data,
+  getRowId,
+  pagination,
+  setPagination,
+  loading,
+  setSearch,
+  sorting,
+  setSorting,
+}: DataTableProps<TData, TValue>) {
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    enableRowSelection: true,
+    manualPagination: true,
+    manualSorting: true,
+    pageCount: meta.totalPage,
+    onPaginationChange: setPagination,
+    onSortingChange: setSorting,
+    state: { pagination, sorting },
+  });
+
+  return (
+    <div className="space-y-3">
+      <DataTableToolbar
+        table={table}
+        getRowId={getRowId}
+        setSearch={setSearch}
+      />
+      <div className="overflow-hidden rounded-md border">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {loading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className=" text-center space-y-2"
+                >
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                  <Skeleton className="h-10 w-full" />
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <DataTablePagination
+        table={table}
+        totalPage={meta.totalPage}
+        totalRows={meta.totalRows}
+      />
+    </div>
+  );
+}

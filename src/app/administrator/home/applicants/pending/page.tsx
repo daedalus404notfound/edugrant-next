@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/pagination";
 import { Input } from "@/components/ui/input";
 
-import DynamicHeaderAdmin from "../dynamic-header";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -97,8 +96,6 @@ export default function Manage() {
 
   return (
     <div className="   min-h-screen px-4">
-      <DynamicHeaderAdmin first="Applicants" second="Manage Applicants" />
-
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <motion.span
           className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70

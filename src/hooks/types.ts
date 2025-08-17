@@ -55,16 +55,17 @@ export type UserProfileTypes = {
 };
 export type AdminProfileTypes = {
   adminId: string;
-  adminPassword: string;
+  cloudinaryId: string;
+  dateCreate: string;
+  email: string;
   firstName: string;
-  middleName: string;
+  lastLogin: string;
   lastName: string;
-  gender: string;
+  middleName: string;
+  passwordHash: string;
+  phone: string;
+  profileImage: string;
   role: string;
-  studentEmail: string;
-  contactNumber: string;
-  password: string;
- 
 };
 export type ApplicationTypes = {
   applicationId: string;
@@ -86,8 +87,6 @@ export type UserDocument = {
   cloudinaryId: string;
 };
 
-
-
 export type FilterTypes = {
   FilterData: AcademicTypes;
   Scholarships: ScholarshipTypes[];
@@ -97,4 +96,14 @@ export type AcademicTypes = {
   distinctCourse: string[];
   distinctYear: string[];
   distinctSection: string[];
+};
+export type MetaTypes = {
+  filters: string;
+  order: string;
+  page: number;
+  pageSize: number;
+  sortBy: string;
+  totalPage: number;
+  totalRows: number;
+  search: string;
 };

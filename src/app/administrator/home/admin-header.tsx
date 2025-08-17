@@ -21,7 +21,14 @@ import { ModeToggle } from "@/components/ui/dark-mode";
 import { Popover } from "@radix-ui/react-popover";
 import { PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Bell, ChevronsUpDown, ExternalLink, LogOut, User, UserRound } from "lucide-react";
+import {
+  Bell,
+  ChevronsUpDown,
+  ExternalLink,
+  LogOut,
+  User,
+  UserRound,
+} from "lucide-react";
 import { useAdminStore } from "@/store/adminUserStore";
 import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
 import { useState } from "react";
@@ -39,11 +46,11 @@ export default function DynamicHeaderAdmin({
   third,
 }: HeaderTypes) {
   const { admin } = useAdminStore();
-  console.log(admin?.adminId)
+  // console.log(admin);
   const { handleLogout } = useAdminLogout();
   const [open, setOpen] = useState(false);
   return (
-    <header className="flex w-full items-center justify-between top-2 relative">
+    <header className="flex w-full items-center justify-between bg-background rounded-lg  relative">
       <div className="flex h-16 shrink-0 items-center gap-2 px-4">
         <SidebarTrigger className="-ml-1" />
         <Separator

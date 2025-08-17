@@ -9,7 +9,17 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import useScholarshipData from "@/hooks/admin/getScholarship";
+import { CircleQuestionMark } from "lucide-react";
 
 export const description = "A multiple bar chart";
 
@@ -32,41 +42,50 @@ export function ChartBarMultiple() {
     active: true,
   });
   return (
-    <div className=" h-full w-full  border p-2  rounded-lg ">
-      <ChartContainer config={chartConfig}>
-        <BarChart
-          accessibilityLayer
-          data={
-            data?.map((item) => ({
-              name: item.scholarshipTitle,
-              applicationsReceived: item.totalApplicants,
-              applicationsApproved: item.totalApproved,
-            })) ?? []
-          }
-        >
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="name"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-            tickFormatter={(value) => value.slice(0, 3)}
-          />
+    <Card className="aspect-[14.6/9] border-0">
+      <CardHeader>
+        <CardTitle>Scholarship Status</CardTitle>
 
-          <ChartTooltip content={<ChartTooltipContent />} />
-          <ChartLegend content={<ChartLegendContent />} />
-          <Bar
-            dataKey="applicationsReceived"
-            fill="oklch(0.68 0.14 76)"
-            radius={4}
-          />
-          <Bar
-            dataKey="applicationsApproved"
-            fill="var(--chart-2)"
-            radius={4}
-          />
-        </BarChart>
-      </ChartContainer>
-    </div>
+        <CardAction>
+          <CircleQuestionMark size={15} />
+        </CardAction>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={chartConfig}>
+          <BarChart
+            accessibilityLayer
+            data={
+              data?.map((item) => ({
+                name: item.scholarshipTitle,
+                applicationsReceived: item.totalApplicants,
+                applicationsApproved: item.totalApproved,
+              })) ?? []
+            }
+          >
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="name"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+
+            <ChartTooltip content={<ChartTooltipContent />} />
+            <ChartLegend content={<ChartLegendContent />} />
+            <Bar
+              dataKey="applicationsReceived"
+              fill="oklch(0.68 0.14 76)"
+              radius={4}
+            />
+            <Bar
+              dataKey="applicationsApproved"
+              fill="var(--chart-2)"
+              radius={4}
+            />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
   );
 }

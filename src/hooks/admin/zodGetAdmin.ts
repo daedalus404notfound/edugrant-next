@@ -7,7 +7,6 @@ const adminProfileSchema = z.object({
   firstName: z.string().min(1, "Required"),
   middleName: z.string().min(1, "Required"),
   lastName: z.string().min(1, "Required"),
-  gender: z.string().min(1, "Required"),
   role: z.string().min(1, "Required"),
   email: z.string().min(1, "Required"),
   contactNumber: z.string().min(1, "Required"),
@@ -24,7 +23,6 @@ export function useProfileZod(data: AdminProfileTypes | null) {
       role: "",
       middleName: "",
       lastName: "",
-      gender: "",
       email: "",
       contactNumber: "",
       password: "************",
@@ -38,9 +36,8 @@ export function useProfileZod(data: AdminProfileTypes | null) {
         middleName: data.middleName || "",
         lastName: data.lastName || "",
         role: data.role || "",
-        gender: data.gender || "",
-        email: data.studentEmail || "",
-        contactNumber: data.contactNumber || "",
+        email: data.email || "",
+        contactNumber: data.phone || "",
         password: "************",
       });
     }

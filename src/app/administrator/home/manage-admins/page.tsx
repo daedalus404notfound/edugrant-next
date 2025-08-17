@@ -30,7 +30,6 @@ import { Badge } from "@/components/ui/badge";
 
 import { Input } from "@/components/ui/input";
 
-import DynamicHeaderAdmin from "../dynamic-header";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
@@ -144,7 +143,7 @@ export default function ManageAdmins() {
 
   return (
     <div className="min-h-screen px-4 relative z-10">
-      <DynamicHeaderAdmin first="Scholarship" second="Manage" />
+  
 
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <motion.span

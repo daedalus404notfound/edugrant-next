@@ -5,7 +5,7 @@ import { useState } from "react";
 export default function CalendarDashboard() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   return (
-    <Card className="bg-background/40 h-full w-full">
+    <Card className="bg-sidebar h-full w-full">
       <CardContent>
         <Calendar
           mode="single"
