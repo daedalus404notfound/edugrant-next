@@ -10,7 +10,6 @@ interface ApiErrorResponse {
   error?: string;
   statusCode?: number;
 }
-import { useAdminStore } from "@/store/adminUserStore";
 type ApiError = AxiosError<ApiErrorResponse>;
 
 
@@ -100,7 +99,7 @@ export const useCreateAdminAccount = () => {
 };
 
 export const useCreateAdmin = () => {
-  const { form, schema, formData } = useAdminZod();
+  const { form, formData } = useAdminZod();
   const createAdmin = useCreateAdminAccount();
   const [open, setOpen] = useState(false);
 

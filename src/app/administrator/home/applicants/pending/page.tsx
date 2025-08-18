@@ -13,7 +13,7 @@ import {
 import DataTableToolbar from "./manage-table-components/data-table-toolbar";
 import { ApplicationTypes } from "@/hooks/types";
 import useApplicantsSearch from "@/hooks/admin/getApplicantSearch";
-import usefetchApplications from "@/hooks/admin/getApplicant";
+import useFetchApplications from "@/hooks/admin/getApplicant";
 
 export default function Manage() {
   const [search, setSearch] = useState("");
@@ -23,7 +23,7 @@ export default function Manage() {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { data, meta, loading } = usefetchApplications({
+  const { data, meta, loading } = useFetchApplications({
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
     sortBy: sorting[0]?.id ?? "",
