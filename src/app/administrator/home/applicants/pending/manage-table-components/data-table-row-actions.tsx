@@ -7,7 +7,7 @@ import {
   Loader,
   Maximize,
   MoreHorizontal,
-  PencilLine,
+
   Trash2,
   X,
 } from "lucide-react";
@@ -30,7 +30,6 @@ import { Button } from "@/components/ui/button";
 
 import { ApplicationTypes, ScholarshipTypes } from "@/hooks/types";
 import { useEffect, useState } from "react";
-import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import Link from "next/link";
 import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
 

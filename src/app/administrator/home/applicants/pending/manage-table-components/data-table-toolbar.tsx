@@ -5,7 +5,7 @@ import {
   ArrowRightIcon,
   GraduationCap,
   Loader,
-  Plus,
+
   SearchIcon,
   Trash2,
   X,
@@ -24,7 +24,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "@/app/administrator/table-components/data-table-view-options";
 import { DataTableFacetedFilter } from "@/app/administrator/table-components/data-table-faceted-filter";
-import Link from "next/link";
 import useGetFilter from "@/hooks/admin/getDynamicFilter";
 import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import { useEffect, useState } from "react";

@@ -7,7 +7,6 @@ import {
   Loader,
   Maximize,
   MoreHorizontal,
-  PencilLine,
   Trash2,
   X,
 } from "lucide-react";

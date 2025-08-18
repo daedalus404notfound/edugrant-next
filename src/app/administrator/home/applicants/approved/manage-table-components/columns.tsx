@@ -9,7 +9,7 @@ import { DataTableColumnHeader } from "@/app/administrator/table-components/data
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { CircleCheck, Clock } from "lucide-react";
+import { CircleCheck } from "lucide-react";
 export const columns: ColumnDef<ApplicationTypes>[] = [
   {
     id: "select",
