@@ -17,17 +17,14 @@ import { Calendar } from "@/components/ui/calendar";
 import {
   Bar,
   BarChart,
-
   PolarAngleAxis,
   RadialBar,
   RadialBarChart,
   Rectangle,
   XAxis,
-
 } from "recharts";
 import {
   Card,
- 
   CardContent,
   CardDescription,
   CardFooter,
@@ -60,8 +57,6 @@ export default function AdminDashboard() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   return (
     <div className="pl-1 pr-2 min-h-screen z-10">
-   
-
       <div className=" grid grid-cols-3  gap-5 px-5  py-5 mt-3 ">
         <div className="col-span-2 space-y-5">
           <ApplicationSummary />
@@ -191,16 +186,17 @@ export default function AdminDashboard() {
         <div className="space-y-5">
           <Card className="border-0">
             <CardHeader className="">
-              <CardTitle>Active Energy</CardTitle>
+              <CardTitle>Most Applied Scholarship</CardTitle>
               <CardDescription>
-                de pa alam ang elalagay
+                Tita Lorna Scholarship currently has the highest number of
+                applicants.
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-2">
               <div className="flex items-baseline gap-2 text-3xl font-bold tabular-nums leading-none font-mono tracking-tight">
                 1,254
                 <span className="text-sm font-normal text-muted-foreground">
-                  kcal/day
+                  total
                 </span>
               </div>
               <ChartContainer

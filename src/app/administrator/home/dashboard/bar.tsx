@@ -37,7 +37,6 @@ export function ChartBarMultiple() {
   const { data } = useScholarshipData({
     page: 1,
     pageSize: 100,
-    active: true,
   });
   return (
     <Card className="aspect-[14.6/9] border-0">

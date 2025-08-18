@@ -89,7 +89,12 @@ export type UserDocument = {
 
 export type FilterTypes = {
   FilterData: AcademicTypes;
-  Scholarships: ScholarshipTypes[];
+  Scholarships: ScholarshipFilterTypes;
+};
+
+export type ScholarshipFilterTypes = {
+  scholarshipAmount: number[];
+  scholarshipProvider: string[];
 };
 
 export type AcademicTypes = {
@@ -97,6 +102,7 @@ export type AcademicTypes = {
   distinctYear: string[];
   distinctSection: string[];
 };
+
 export type MetaTypes = {
   filters: string;
   order: string;

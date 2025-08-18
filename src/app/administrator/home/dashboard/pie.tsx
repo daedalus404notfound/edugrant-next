@@ -45,7 +45,6 @@ export default function ChartPieDonutText() {
     page: 1,
     pageSize: 100,
 
-    active: true,
   });
   const filterApproved = data.filter((meow) => meow.totalApproved);
   console.log(filterApproved);

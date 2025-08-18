@@ -1,33 +1,24 @@
 import StyledToast from "@/components/ui/toast-styled";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 type DeleteTypes = {
-  setDeleteLoading?: (deleteLoading: boolean) => void;
-  setOpenAlert?: (openAlert: boolean) => void;
-  setOpen?: (open: boolean) => void;
-  scholarshipId?: string;
-  back?: boolean;
+  scholarshipId?: (string | number)[];
 };
 
-export default function useDeleteScholarship({
-  setDeleteLoading,
-  setOpenAlert,
-  setOpen,
-  scholarshipId,
-  back = false,
-}: DeleteTypes) {
-  const router = useRouter();
-
+export default function useDeleteScholarship({ scholarshipId }: DeleteTypes) {
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
   const onSubmit = async () => {
     try {
-      setDeleteLoading?.(true);
-
-      console.log("Deleting scholarship:", scholarshipId);
-
+      setLoading(true);
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/deleteScholarship`,
-        { scholarshipId },
+        {
+          scholarshipId: JSON.stringify({
+            data: scholarshipId,
+          }),
+        },
         { withCredentials: true }
       );
 
@@ -38,12 +29,9 @@ export default function useDeleteScholarship({
           description:
             "The scholarship has been successfully removed from the system.",
         });
+        setIsSuccess(true);
 
-        setDeleteLoading?.(false);
-        setOpenAlert?.(false);
-        setOpen?.(false);
-
-        if (back) router.back();
+        setLoading(false);
       }
     } catch (error) {
       console.error(error);
@@ -53,14 +41,10 @@ export default function useDeleteScholarship({
         description:
           "The scholarship could not be removed. Please try again later.",
       });
-
-      setDeleteLoading?.(false);
-      setOpenAlert?.(false);
-      setOpen?.(false);
-
-      if (back) router.back();
+      setIsSuccess(false);
+      setLoading(false);
     }
   };
 
-  return { onSubmit };
+  return { onSubmit, isSuccess, loading };
 }

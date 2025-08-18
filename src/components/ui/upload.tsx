@@ -46,7 +46,7 @@ export function DragAndDropArea({
       <div className="space-y-3">
         <div
           {...getRootProps()}
-          className={`flex flex-col items-center justify-center border border-dashed border-input rounded-lg p-6 text-center transition bg-transparent dark:bg-input/30
+          className={`flex flex-col items-center justify-center  border-dashed border-input rounded-lg p-6 text-center transition bg-transparent dark:bg-input/30
             ${
               uploadedFiles.length > 0
                 ? "cursor-not-allowed opacity-70 text-muted-foreground/20 bg-muted/20 hover:bg-muted/20"

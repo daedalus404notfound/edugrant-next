@@ -1,6 +1,6 @@
 "use client";
 import axios from "axios";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ScholarshipTypes } from "../types";
 import { MetaTypes } from "../types";
@@ -19,44 +19,33 @@ export default function useScholarshipData({
   pageSize,
   sortBy,
   order,
-  active,
-  search,
+  status = true,
+  filters,
 }: {
   page: number;
   pageSize: number;
   sortBy?: string;
   order?: string;
-  active: boolean;
-  search?: string;
+  status?: boolean;
+  filters?: string;
 }) {
   const [data, setData] = useState<ScholarshipTypes[]>([]);
   const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
   const [loading, setLoading] = useState(true);
-  console.log("DATA response:", data);
-  console.log("META response:", meta);
-  console.log(
-    "data sent to backend:",
-    "page:",
-    page,
-    "pageSize:",
-    pageSize,
-    "sortBy:",
-    sortBy,
-    "order:",
-    order
-  );
+  console.log(filters);
   useEffect(
     function () {
       async function fetchScholarships() {
         setLoading(true);
         try {
-          const endpoint = `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/${
-            active ? "getScholarships" : "getExpiredScholarships"
-          }?page=${page}&dataPerPage=${pageSize}${
+          const endpoint = `${
+            process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
+          }/getScholarships?page=${page}&dataPerPage=${pageSize}${
             sortBy ? `&sortBy=${sortBy}` : ""
           }${order ? `&order=${order}` : ""}${
-            search ? `&search=${search}` : ""
-          }`;
+            status ? "&status=ACTIVE" : "&status=EXPIRED"
+          }${filters ? `&filters=${encodeURIComponent(filters)}` : ""}`;
+
           const res = await axios.get(endpoint, { withCredentials: true });
           console.log(endpoint);
           if (res.status === 200) {
@@ -72,7 +61,7 @@ export default function useScholarshipData({
 
       fetchScholarships();
     },
-    [page, pageSize, sortBy, order, active, search]
+    [page, pageSize, sortBy, order, filters]
   );
 
   return { data, loading, meta };

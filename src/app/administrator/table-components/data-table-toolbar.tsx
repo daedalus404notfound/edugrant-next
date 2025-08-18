@@ -3,30 +3,31 @@
 import { Table } from "@tanstack/react-table";
 import {
   ArrowRightIcon,
-  
+  Loader,
   Plus,
   SearchIcon,
-
   Trash2,
   X,
 } from "lucide-react";
-
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "./data-table-view-options";
 import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 import Link from "next/link";
-
-// import { DataTableFacetedFilter } from "./data-table-faceted-filter";
-// import useGetFilter from "@/hooks/admin/getDynamicFilter";
-
-export const amount = [
-  {
-    value: "10000",
-    label: "10000",
-   
-  },
-];
+import useGetFilter from "@/hooks/admin/getDynamicFilter";
+import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
+import { useEffect, useState } from "react";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -39,9 +40,37 @@ export function DataTableToolbar<TData>({
   getRowId,
   setSearch,
 }: DataTableToolbarProps<TData>) {
+  const { filter, filterLoading } = useGetFilter();
   const isFiltered = table.getState().columnFilters.length > 0;
+  const amountOptions =
+    filter?.Scholarships.scholarshipAmount?.map((meow) => ({
+      value: String(meow),
+      label: String(meow),
+    })) || [];
+
+  const providerOptions =
+    filter?.Scholarships.scholarshipProvider?.map((meow) => ({
+      value: meow,
+      label: meow,
+    })) || [];
+
   const selectedRows = table.getSelectedRowModel().rows;
-  
+  const scholarshipId = selectedRows.map((row) =>
+    getRowId ? getRowId(row.original) : row.id
+  );
+  console.log(scholarshipId);
+
+  const [openAlert, setOpenAlert] = useState(false);
+  const { onSubmit, isSuccess, loading } = useDeleteScholarship({
+    scholarshipId,
+  });
+  useEffect(() => {
+    if (isSuccess) {
+      table.toggleAllRowsSelected(false);
+      setOpenAlert(false);
+    }
+  }, [isSuccess, table]);
+
   return (
     <div className="flex items-center justify-between gap-1.5">
       <div className="flex flex-1 items-center space-x-2">
@@ -63,18 +92,19 @@ export function DataTableToolbar<TData>({
           </button>
         </div>
 
-        {table.getColumn("scholarshipAmount") && (
+        {table.getColumn("scholarshipTitle") && (
           <DataTableFacetedFilter
-            column={table.getColumn("scholarshipAmount")}
-            title="Provider"
-            options={amount}
+            column={table.getColumn("scholarshipTitle")}
+            title="Title"
+            options={providerOptions}
           />
         )}
+
         {table.getColumn("scholarshipAmount") && (
           <DataTableFacetedFilter
             column={table.getColumn("scholarshipAmount")}
             title="Amount"
-            options={amount}
+            options={amountOptions}
           />
         )}
 
@@ -90,18 +120,46 @@ export function DataTableToolbar<TData>({
         )}
       </div>
       {selectedRows.length > 0 && (
-        <Button
-          size="sm"
-          className="bg-red-700/20 text-red-600 hover:bg-red-700/30"
-          onClick={() => {
-            const ids = selectedRows.map((row) =>
-              getRowId ? getRowId(row.original) : row.id
-            );
-            console.log("Delete:", ids);
-          }}
-        >
-          <Trash2 /> Delete
-        </Button>
+        <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
+          <AlertDialogTrigger asChild>
+            <Button
+              size="sm"
+              className="bg-red-700/20 text-red-600 hover:bg-red-700/30"
+            >
+              <Trash2 />
+            </Button>
+          </AlertDialogTrigger>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-red-00">
+                Delete selected scholarship(s)?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. The scholarship will be
+                permanently removed from the system.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
+              <Button
+                variant="destructive"
+                disabled={loading}
+                onClick={onSubmit}
+              >
+                {loading ? (
+                  <span className="flex items-center gap-2">
+                    <Loader className="animate-spin" />
+                    Deleting...
+                  </span>
+                ) : (
+                  "Delete"
+                )}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       )}
       <DataTableViewOptions table={table} />
       <Link prefetch href={`/administrator/home/scholarships/create`}>

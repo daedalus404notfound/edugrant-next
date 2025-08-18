@@ -6,7 +6,13 @@ import { motion } from "motion/react";
 import { useState } from "react";
 import { DataTable } from "@/app/administrator/table-components/data-table";
 import { columns } from "@/app/administrator/home/scholarships/table-components/columns";
-import { PaginationState, SortingState } from "@tanstack/react-table";
+import {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+} from "@tanstack/react-table";
+import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
+
 export default function Manage() {
   const [search, setSearch] = useState("");
   const [pagination, setPagination] = useState<PaginationState>({
@@ -14,15 +20,24 @@ export default function Manage() {
     pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const { data, meta, loading } = useScholarshipData({
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
     sortBy: sorting[0]?.id ?? "",
     order: sorting[0]?.desc ? "desc" : "asc",
-    active: true,
-    search,
+    filters:
+      columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
   });
-  console.log(search);
+
+  const { searchData, searchLoading, searchMeta } = useScholarshipSearch({
+    page: pagination.pageIndex + 1,
+    pageSize: pagination.pageSize,
+    sortBy: sorting[0]?.id ?? "",
+    order: sorting[0]?.desc ? "desc" : "asc",
+    query: search,
+  });
+  console.log(columnFilters);
   return (
     <div className="min-h-screen px-4 relative z-10">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
@@ -49,16 +64,18 @@ export default function Manage() {
 
         <div className="py-8">
           <DataTable
-            data={data}
+            data={search.trim().length > 0 ? searchData : data}
             columns={columns}
-            meta={meta}
+            meta={search.trim().length > 0 ? searchMeta : meta}
             pagination={pagination}
             setPagination={setPagination}
             getRowId={(row) => row.scholarshipId}
-            loading={loading}
+            loading={search ? searchLoading : loading}
             setSearch={setSearch}
-            sorting={sorting} // ✅ pass sorting
-            setSorting={setSorting} // ✅ pass setter
+            sorting={sorting}
+            setSorting={setSorting}
+            columnFilters={columnFilters}
+            setColumnFilters={setColumnFilters}
           />
         </div>
       </div>

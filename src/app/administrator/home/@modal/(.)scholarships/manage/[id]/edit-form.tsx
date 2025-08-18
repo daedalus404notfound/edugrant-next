@@ -24,6 +24,7 @@ import {
 import {
   ArrowRight,
   CalendarIcon,
+  ClockIcon,
   LoaderCircleIcon,
   Plus,
   Trash2,
@@ -39,6 +40,7 @@ import { cn } from "@/lib/utils";
 import { DragAndDropArea } from "@/components/ui/upload";
 import { ScholarshipTypes } from "@/hooks/types";
 import { useUpdateScholarship } from "@/hooks/admin/postUpdateScholarship";
+import { Label } from "@/components/ui/label";
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
   {
@@ -125,7 +127,7 @@ export default function EditScholarship({
                             )}
                           >
                             {field.value ? (
-                              format(field.value, "PPP")
+                              format(field.value, "MMM d, yyyy 'at' h:mm a")
                             ) : (
                               <span>Pick a date</span>
                             )}
@@ -133,13 +135,61 @@ export default function EditScholarship({
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          captionLayout="dropdown"
-                        />
+                      <PopoverContent
+                        className="w-auto p-0 pointer-events-auto"
+                        align="start"
+                      >
+                        <div className="rounded-md border">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={(date) => {
+                              if (!date) return;
+
+                              const current = field.value ?? new Date();
+                              date.setHours(current.getHours());
+                              date.setMinutes(current.getMinutes());
+                              date.setSeconds(current.getSeconds());
+                              field.onChange(date);
+                            }}
+                            captionLayout="dropdown"
+                          />
+                          <div className="border-t p-3">
+                            <div className="flex items-center gap-3">
+                              <Label className="text-xs">Enter time</Label>
+                              <div className="relative grow">
+                                <Input
+                                  type="time"
+                                  step="1"
+                                  value={
+                                    field.value
+                                      ? `${String(
+                                          field.value.getHours()
+                                        ).padStart(2, "0")}:${String(
+                                          field.value.getMinutes()
+                                        ).padStart(2, "0")}:${String(
+                                          field.value.getSeconds()
+                                        ).padStart(2, "0")}`
+                                      : ""
+                                  }
+                                  onChange={(e) => {
+                                    const [hours, minutes, seconds] =
+                                      e.target.value.split(":").map(Number);
+                                    const updated = field.value ?? new Date();
+                                    updated.setHours(hours);
+                                    updated.setMinutes(minutes);
+                                    updated.setSeconds(seconds || 0);
+                                    field.onChange(updated);
+                                  }}
+                                  className="peer appearance-none ps-9 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                                />
+                                <div className="text-muted-foreground/80  absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                                  <ClockIcon size={16} aria-hidden="true" />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </PopoverContent>
                     </Popover>
                   </FormItem>

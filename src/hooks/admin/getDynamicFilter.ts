@@ -5,10 +5,10 @@ import { FilterTypes } from "../types";
 
 export default function useGetFilter() {
   const [filter, setFilter] = useState<FilterTypes | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [filterLoading, setFilterLoading] = useState(true);
   useEffect(function () {
     async function fetchFilter() {
-      setLoading(true);
+      setFilterLoading(true);
       try {
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/getFilterData`,
@@ -21,12 +21,12 @@ export default function useGetFilter() {
       } catch (error) {
         console.error(error);
       } finally {
-        setLoading(false);
+        setFilterLoading(false);
       }
     }
 
     fetchFilter();
   }, []);
 
-  return { filter, loading };
+  return { filter, filterLoading };
 }
