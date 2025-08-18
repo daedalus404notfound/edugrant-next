@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-import { ScholarshipTypes } from "../types";
+import { AdminProfileTypes } from "../types";
 import { MetaTypes } from "../types";
 const defaultMeta: MetaTypes = {
   page: 1,
@@ -19,26 +19,26 @@ export default function useAdminData({
   pageSize,
   sortBy,
   order,
-  // status = true,
-  filters,
 }: {
   page: number;
   pageSize: number;
   sortBy?: string;
   order?: string;
   status?: boolean;
-  filters?: string;
 }) {
-  const [data, setData] = useState<ScholarshipTypes[]>([]);
+  const [data, setData] = useState<AdminProfileTypes[]>([]);
   const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
   const [loading, setLoading] = useState(true);
-  console.log(filters);
   useEffect(
     function () {
       async function fetchAdmin() {
         setLoading(true);
         try {
-          const endpoint = `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/getAllAdmin?page=${page}&dataPerPage=${pageSize}`;
+          const endpoint = `${
+            process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
+          }/getAllAdmin?page=${page}&dataPerPage=${pageSize}${
+            sortBy ? `&sortBy=${sortBy}` : ""
+          }${order ? `&order=${order}` : ""}`;
 
           const res = await axios.get(endpoint, { withCredentials: true });
           console.log(endpoint);
@@ -55,7 +55,7 @@ export default function useAdminData({
 
       fetchAdmin();
     },
-    [page, pageSize, sortBy, order, filters]
+    [page, pageSize, sortBy, order]
   );
 
   return { data, loading, meta };
