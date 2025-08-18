@@ -9,7 +9,7 @@ import { DataTableColumnHeader } from "@/app/administrator/table-components/data
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { CircleCheck } from "lucide-react";
+import { CircleCheck, Clock } from "lucide-react";
 export const columns: ColumnDef<ApplicationTypes>[] = [
   {
     id: "select",
@@ -42,7 +42,7 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
   {
     accessorKey: "student.firstName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Applicant" />
+      <DataTableColumnHeader column={column} title="Name" />
     ),
     cell: ({ row }) => {
       const student = row.original.student;
@@ -50,13 +50,13 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
         <div className="flex gap-2 items-center">
           <Avatar>
             <AvatarImage src={`/avatars/${student.userId}.jpg`} />
-            <AvatarFallback>
+            <AvatarFallback className="uppercase">
               {student.firstName.charAt(0)}
               {student.lastName.charAt(0)}
             </AvatarFallback>
           </Avatar>
           <div>
-            <div className="font-medium">
+            <div className="font-medium capitalize">
               {student.firstName} {student.middleName} {student.lastName}
             </div>
             <p className="text-xs text-muted-foreground">
@@ -67,120 +67,74 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
       );
     },
   },
-  // {
-  //   accessorKey: "totalApplicants",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Applicants" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     return (
-  //       <span className="max-w-[500px] truncate">
-  //         {row.getValue("totalApplicants")}
-  //       </span>
-  //     );
-  //   },
-  //   enableSorting: true,
-  //   enableHiding: true,
-  // },
-  // {
-  //   accessorKey: "scholarshipAmount",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Amount" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const amount = parseFloat(row.getValue("scholarshipAmount"));
-  //     const formatted = new Intl.NumberFormat("en-PH", {
-  //       style: "currency",
-  //       currency: "PHP",
-  //       minimumFractionDigits: 2,
-  //       maximumFractionDigits: 2,
-  //     }).format(amount);
 
-  //     return (
-  //       <span className="max-w-[500px] truncate font-medium">{formatted}</span>
-  //     );
-  //   },
-  //   enableSorting: true,
-  //   enableHiding: true,
-  // },
-
-  // {
-  //   accessorKey: "status",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Status" />
-  //   ),
-  //   cell: () => {
-  //     return (
-  //       <Badge className="bg-green-500/10 text-green-700">
-  //         <CircleCheck />
-  //         Active
-  //       </Badge>
-  //     );
-  //   },
-  //   enableSorting: false,
-  //   enableHiding: true,
-  // },
-  // {
-  //   accessorKey: "scholarshipDealine",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Deadline" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     return (
-  //       <span className="max-w-[500px] truncate">
-  //         {format(
-  //           new Date(row.getValue("scholarshipDealine")),
-  //           "MMM d, yyyy 'at' hh:mm a"
-  //         )}
-  //       </span>
-  //     );
-  //   },
-  //   enableSorting: true,
-  //   enableHiding: true,
-  // },
-
-  // {
-  //   accessorKey: "totalApproved",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Approved" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     return (
-  //       <span className="max-w-[500px] truncate">
-  //         {row.getValue("totalApproved")}
-  //       </span>
-  //     );
-  //   },
-  //   enableSorting: true,
-  //   enableHiding: true,
-  // },
-
-  // {
-  //   accessorKey: "scholarshipAmount",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Amount" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const status = amount.find(
-  //       (status) => status.value === String(row.getValue("scholarshipAmount"))
-  //     );
-  //     console.log("status", row.getValue("scholarshipAmount"));
-  //     if (!status) {
-  //       return null;
-  //     }
-  //     return (
-  //       <div className="flex w-[100px] items-center">
-  //         {status.icon && (
-  //           <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-  //         )}
-  //         <span>{status.label}</span>
-  //       </div>
-  //     );
-  //   },
-  //   filterFn: (row, id, value) => {
-  //     return value.includes(row.getValue(id));
-  //   },
-  // },
+  {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <Badge className="bg-green-500/10 text-yellow-500">
+          <Clock />
+          {row.getValue("status")}
+        </Badge>
+      );
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "scholarship.scholarshipTitle",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Scholarship" />
+    ),
+    cell: ({ row }) => {
+      const scholar = row.original.scholarship;
+      return (
+        <div className="font-medium truncate  w-50">
+          {scholar.scholarshipTitle}
+        </div>
+      );
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "student.Course",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Course, Year & Section" />
+    ),
+    cell: ({ row }) => {
+      const scholar = row.original.student;
+      return (
+        <span className="max-w-[500px] truncate">
+          {scholar.course}-{scholar.year.slice(0, 1)}
+          {scholar.section}
+        </span>
+      );
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "applicationDate",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Application Date" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <span className="max-w-[500px] truncate">
+          {format(
+            new Date(row.getValue("applicationDate")),
+            "MMM d, yyyy 'at' hh:mm a"
+          )}
+        </span>
+      );
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
   {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,

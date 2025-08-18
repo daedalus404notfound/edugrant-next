@@ -56,7 +56,7 @@ export const columns: ColumnDef<ScholarshipTypes>[] = [
             </AvatarFallback>
           </Avatar>
           <div>
-            <div className="w-fullfont-medium truncate  w-50">
+            <div className="font-medium truncate  w-50">
               {scholarshipTitle}
             </div>
             <p className="text-xs text-muted-foreground">

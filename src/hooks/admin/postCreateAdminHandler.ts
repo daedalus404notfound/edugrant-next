@@ -19,7 +19,7 @@ const createAdminpApi = async (data: createAdminFormData) => {
   formDataToSend.append("firstName", data.firstName);
   formDataToSend.append("middleName", data.middleName);
   formDataToSend.append("lastName", data.lastName);
-  formDataToSend.append("contactNumber", data.contactNumber);
+  formDataToSend.append("phone", data.contactNumber);
   formDataToSend.append("email", data.email);
   formDataToSend.append("passwordHash", data.password);
   formDataToSend.append("role", data.role);

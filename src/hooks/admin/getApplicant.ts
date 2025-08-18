@@ -191,7 +191,7 @@ export default function fetchApplications({
         try {
           const endpoint = `${
             process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
-          }/getApplicationByStatus?page=${page}&dataPerPage=${pageSize}${
+          }/getApplication?page=${page}&dataPerPage=${pageSize}${
             sortBy ? `&sortBy=${sortBy}` : ""
           }${order ? `&order=${order}` : ""}${
             status ? `&status=${status}` : ""

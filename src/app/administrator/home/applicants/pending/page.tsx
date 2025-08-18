@@ -1,6 +1,5 @@
 "use client";
 import "ldrs/react/Ring.css";
-import useScholarshipData from "@/hooks/admin/getScholarship";
 import { Activity } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
@@ -11,9 +10,9 @@ import {
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
-import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
 import DataTableToolbar from "./manage-table-components/data-table-toolbar";
-import { ApplicationTypes, ScholarshipTypes } from "@/hooks/types";
+import { ApplicationTypes } from "@/hooks/types";
+import useApplicantsSearch from "@/hooks/admin/getApplicantSearch";
 import fetchApplications from "@/hooks/admin/getApplicant";
 
 export default function Manage() {
@@ -25,15 +24,16 @@ export default function Manage() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const { data, meta, loading } = fetchApplications({
-    page: 1,
-    pageSize: 10,
-    sortBy: "",
-    order: "",
+    page: pagination.pageIndex + 1,
+    pageSize: pagination.pageSize,
+    sortBy: sorting[0]?.id ?? "",
+    order: sorting[0]?.desc ? "desc" : "asc",
+    filters:
+      columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
     status: "PENDING",
   });
 
-  console.log("applicants", data);
-  const { searchData, searchLoading, searchMeta } = useScholarshipSearch({
+  const { searchData, searchLoading, searchMeta } = useApplicantsSearch({
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
     sortBy: sorting[0]?.id ?? "",
@@ -66,7 +66,7 @@ export default function Manage() {
         </p>
 
         <div className="py-8">
-          {/* <DataTable<ApplicationTypes, unknown>
+          <DataTable<ApplicationTypes, unknown>
             data={search.trim().length > 0 ? searchData : data}
             columns={columns}
             meta={search.trim().length > 0 ? searchMeta : meta}
@@ -81,7 +81,7 @@ export default function Manage() {
             columnFilters={columnFilters}
             setColumnFilters={setColumnFilters}
             toolbar={DataTableToolbar}
-          /> */}
+          />
         </div>
       </div>
     </div>
