@@ -1,6 +1,6 @@
 "use client";
 import "ldrs/react/Ring.css";
-import { CheckCheck, Hourglass } from "lucide-react";
+import { CheckCheck } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { DataTable } from "@/app/administrator/table-components/data-table";
