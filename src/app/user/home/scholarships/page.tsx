@@ -1,6 +1,4 @@
 "use client";
-
-import { usePathname } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -30,9 +28,8 @@ export default function ClientScholarship() {
   const [currentPage] = useState(1);
   const [rowsPerPage] = useState(20);
   const [sort, setSort] = useState<"asc" | "desc" | "">("");
-  const path = usePathname();
 
-  const { data, meta, loading } = useScholarshipData({
+  const { data, loading } = useScholarshipData({
     page: currentPage,
     pageSize: rowsPerPage,
     sortBy: sort,

@@ -1,8 +1,6 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { usePathname } from "next/navigation";
-import DynamicHeader from "../dynamic-header";
 import {
   Card,
   CardContent,
@@ -28,8 +26,8 @@ interface Announcement {
 
 export default function AnnouncementSection() {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const path = usePathname();
-  const segmentedPath = path.split("/");
+  
+ 
   const announcements: Announcement[] = [
     {
       id: "1",

@@ -165,7 +165,7 @@ const defaultMeta: MetaTypes = {
   filters: "",
   search: "",
 };
-export default function fetchApplications({
+export default function usefetchApplications({
   page,
   pageSize,
   sortBy,

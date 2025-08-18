@@ -1,10 +1,8 @@
 "use client";
 import "ldrs/react/Ring.css";
-import useScholarshipData from "@/hooks/admin/getScholarship";
 import { Activity } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
-import { DataTable } from "@/app/administrator/table-components/data-table";
 import {
   ColumnFiltersState,
   PaginationState,
@@ -13,14 +11,13 @@ import {
 import useAdminData from "@/hooks/admin/getAdmins";
 
 export default function Manage() {
-  const [search, setSearch] = useState("");
-  const [pagination, setPagination] = useState<PaginationState>({
+  const [pagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { data, meta, loading } = useAdminData({
+  const [sorting] = useState<SortingState>([]);
+  const [columnFilters] = useState<ColumnFiltersState>([]);
+  const { data } = useAdminData({
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
     sortBy: sorting[0]?.id ?? "",

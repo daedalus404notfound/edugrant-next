@@ -12,8 +12,6 @@ import {
   X,
 } from "lucide-react";
 import { motion } from "motion/react";
-import { LineSpinner } from "ldrs/react";
-import "ldrs/react/LineSpinner.css";
 import {
   Drawer,
   DrawerContent,

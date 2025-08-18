@@ -1,14 +1,7 @@
 "use client";
 
 import { Table } from "@tanstack/react-table";
-import {
-  ArrowRightIcon,
-  Loader,
-  Plus,
-  SearchIcon,
-  Trash2,
-  X,
-} from "lucide-react";
+import { Loader, Plus, Trash2, X } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -20,9 +13,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "../../../../table-components/data-table-view-options";
-import { DataTableFacetedFilter } from "../../../../table-components/data-table-faceted-filter";
+
 import Link from "next/link";
 import useGetFilter from "@/hooks/admin/getDynamicFilter";
 import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
@@ -44,9 +36,9 @@ interface DataTableToolbarProps<TData> {
 export default function DataTableToolbar<TData>({
   table,
   getRowId,
-  search,
-  setSearch,
-}: DataTableToolbarProps<TData>) {
+}: // search,
+// setSearch,
+DataTableToolbarProps<TData>) {
   const { filter } = useGetFilter();
   const isFiltered = table.getState().columnFilters.length > 0;
   // const amountOptions =

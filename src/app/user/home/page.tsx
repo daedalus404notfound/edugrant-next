@@ -1,6 +1,6 @@
 "use client";
 
-import { ChartBarMultiple } from "./dashboard/bar";
+
 
 import ApplicationSummary from "./dashboard/summary";
 import { Button } from "@/components/ui/button";
@@ -14,9 +14,9 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
+
   TableCell,
-  TableFooter,
+
   TableHead,
   TableHeader,
   TableRow,
@@ -26,9 +26,7 @@ import { Calendar } from "@/components/ui/calendar";
 import {
   Bar,
   BarChart,
-  PolarAngleAxis,
-  RadialBar,
-  RadialBarChart,
+ 
   Rectangle,
   XAxis,
 } from "recharts";
@@ -41,9 +39,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ChartContainer } from "@/components/ui/chart";
-
-import { ChartBarInteractive } from "./dashboard/bar-chart";
-import { ArrowRight } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 const announcements = [
   {

@@ -1,7 +1,7 @@
 "use client";
 import "ldrs/react/Ring.css";
 import useScholarshipData from "@/hooks/admin/getScholarship";
-import { Activity, Archive } from "lucide-react";
+import {  Archive } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { DataTable } from "@/app/administrator/table-components/data-table";

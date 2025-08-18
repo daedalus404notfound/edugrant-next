@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { usePathname } from "next/navigation";
 
 import {
   AlertDialog,
@@ -40,9 +39,6 @@ import { useUserStore } from "@/store/useUserStore";
 import { Separator } from "@/components/ui/separator";
 export default function Profile() {
   const [isEdit, setIsEdit] = useState(true);
-
-  const path = usePathname();
-  const segmentedPath = path.split("/");
   const { user } = useUserStore();
   const { form } = useProfileZod(user);
 

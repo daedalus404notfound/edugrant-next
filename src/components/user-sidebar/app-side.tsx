@@ -3,15 +3,13 @@
 import * as React from "react";
 import logo from "@/assets/basclogo.png";
 import {
-  BarChart,
-  Bot,
+
   GraduationCap,
-  Grid,
+
   Grid2X2,
   Home,
   Megaphone,
-  Settings2,
-  UserCog,
+
   UserRound,
 } from "lucide-react";
 import { motion } from "motion/react";

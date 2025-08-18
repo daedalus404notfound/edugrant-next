@@ -1,6 +1,4 @@
 "use client";
-import { format } from "date-fns";
-import MultipleSelector, { Option } from "@/components/ui/multi-select";
 import {
   Form,
   FormControl,
@@ -10,7 +8,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
 import {
@@ -24,13 +21,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import {
   ArrowRight,
-  CalendarIcon,
-  ClockIcon,
   LoaderCircleIcon,
-  PenLine,
-  Plus,
   RefreshCcw,
-  Trash2,
   UserPen,
   X,
 } from "lucide-react";

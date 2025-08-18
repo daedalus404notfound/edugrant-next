@@ -19,7 +19,7 @@ export default function useAdminData({
   pageSize,
   sortBy,
   order,
-  status = true,
+  // status = true,
   filters,
 }: {
   page: number;
