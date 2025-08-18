@@ -191,9 +191,9 @@ export default function InterceptReviewApplicants() {
                   <motion.div
                     whileHover={{ scale: 1.05 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                    className="relative inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-neutral-900 to-neutral-700 dark:from-neutral-100 dark:to-neutral-300 text-white dark:text-neutral-900 text-2xl font-semibold mb-4"
+                    className="relative inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-neutral-900 to-neutral-700 dark:from-neutral-100 dark:to-neutral-300 text-white dark:text-neutral-900 text-2xl font-semibold mb-4 capitalize"
                   >
-                    {data?.student.firstName.slice(0, 1).toUpperCase()}
+                    {data?.student.firstName.slice(0, 1)}
                     <motion.div
                       className="absolute inset-0 rounded-full border-2 border-transparent"
                       whileHover={{
@@ -484,8 +484,8 @@ export default function InterceptReviewApplicants() {
                                 <h4 className="text-sm font-medium ">
                                   {doc.document}
                                 </h4>
-                                <p className="text-xs font-mono">
-                                  {doc.fileFormat.toUpperCase()}
+                                <p className="text-xs font-mono uppercase">
+                                  {doc.fileFormat}
                                 </p>
                               </div>
                             </div>
