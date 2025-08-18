@@ -40,7 +40,7 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "student.firstName",
+    accessorKey: "firstName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),

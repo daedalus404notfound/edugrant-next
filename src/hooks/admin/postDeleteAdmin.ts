@@ -15,9 +15,7 @@ export default function useDeleteAdmin({ adminId }: DeleteTypes) {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/deleteAdmin`,
         {
-          adminId: JSON.stringify({
-            data: adminId,
-          }),
+          adminId: JSON.stringify(adminId),
         },
         { withCredentials: true }
       );
