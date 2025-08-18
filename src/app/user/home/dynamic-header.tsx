@@ -1,7 +1,4 @@
 import { Separator } from "@/components/ui/separator";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import {
   Breadcrumb,
@@ -9,13 +6,33 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 import { ModeToggle } from "@/components/ui/dark-mode";
 import { Popover } from "@radix-ui/react-popover";
 import { PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Bell, ChevronsUpDown, ExternalLink, LogOut, User } from "lucide-react";
-import Link from "next/link";
+import {
+  Bell,
+  ChevronsUpDown,
+  ExternalLink,
+  LogOut,
+  User,
+  UserRound,
+} from "lucide-react";
+import { useAdminStore } from "@/store/adminUserStore";
+import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
+import { useState } from "react";
+import { useUserStore } from "@/store/useUserStore";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -24,26 +41,17 @@ interface HeaderTypes {
   second?: string;
   third?: string;
 }
-export default function DynamicHeader({ first, second, third }: HeaderTypes) {
-  const router = useRouter();
-
-  const HandleLogout = async () => {
-    try {
-      const res = await axios.post(
-        `https://edugrant-express-server-production.up.railway.app/user/logout`,
-        {},
-        { withCredentials: true }
-      );
-      if (res.status === 200) {
-        router.replace("/");
-      }
-    } catch (error) {
-      console.error("Logout failed", error);
-      router.push("/");
-    }
-  };
+export default function DynamicHeaderUser({
+  first,
+  second,
+  third,
+}: HeaderTypes) {
+  const { user } = useUserStore();
+  // console.log(admin);
+  const { handleLogout } = useAdminLogout();
+  const [open, setOpen] = useState(false);
   return (
-    <header className="flex w-full items-center justify-between rounded-md top-2 relative">
+    <header className="flex w-full items-center justify-between bg-background rounded-lg  relative">
       <div className="flex h-16 shrink-0 items-center gap-2 px-4">
         <SidebarTrigger className="-ml-1" />
         <Separator
@@ -71,40 +79,38 @@ export default function DynamicHeader({ first, second, third }: HeaderTypes) {
       <div className="mr-3 flex  items-center gap-3">
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline">
-              <User />
-              Jerome
+            <Button variant="ghost" className="capitalize">
+              <UserRound />
+              {user?.firstName || "N/A"}
               <ChevronsUpDown />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-2 bg-background space-y-2">
-            <Link prefetch={true} href="/user/home/profile">
-              <div className="w-full rounded-md border py-1 px-4 shadow-lg">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium">Profile</p>
-                  </div>
-
-                  <Button size="sm" variant="ghost">
-                    <User />
-                  </Button>
-                </div>
-              </div>
-            </Link>
-            <div
-              className="w-full rounded-md border py-1 px-4 shadow-lg cursor-pointer"
-              onClick={HandleLogout}
-            >
-              <div className="flex items-center justify-between gap-2">
-                <div className="space-y-1">
-                  <p className="text-sm font-medium">Log out</p>
-                </div>
-
-                <Button size="sm" variant="ghost">
-                  <LogOut />
-                </Button>
-              </div>
-            </div>
+          <PopoverContent className="w-[200px] p-1 bg-background flex flex-col gap-2">
+            <div className="p-1.5 text-sm font-semibold">My Account</div>
+            <Separator />
+            <h1 className="flex items-center gap-1.5 text-sm p-1.5 border border-transparent hover:border-primary rounded-sm">
+              <User size={15} /> Profile
+            </h1>
+            <AlertDialog open={open} onOpenChange={setOpen}>
+              <AlertDialogTrigger asChild>
+                <h1 className="flex items-center gap-1.5 text-sm p-1.5 border border-transparent hover:border-primary rounded-sm">
+                  <LogOut size={15} /> Logout
+                </h1>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Log out of your account?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    You will be logged out from this session. You can log in
+                    again anytime.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <Button onClick={handleLogout}>Log Out</Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </PopoverContent>
         </Popover>
         <Popover>

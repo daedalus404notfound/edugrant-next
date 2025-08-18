@@ -5,13 +5,15 @@ import { Activity } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { DataTable } from "@/app/administrator/table-components/data-table";
-import { columns } from "@/app/administrator/home/scholarships/table-components/columns";
+import { columns } from "./manage-table-components/columns";
 import {
   ColumnFiltersState,
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
 import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
+import DataTableToolbar from "./manage-table-components/data-table-toolbar";
+import { ScholarshipTypes } from "@/hooks/types";
 
 export default function Manage() {
   const [search, setSearch] = useState("");
@@ -63,7 +65,7 @@ export default function Manage() {
         </p>
 
         <div className="py-8">
-          <DataTable
+          <DataTable<ScholarshipTypes, unknown>
             data={search.trim().length > 0 ? searchData : data}
             columns={columns}
             meta={search.trim().length > 0 ? searchMeta : meta}
@@ -71,11 +73,13 @@ export default function Manage() {
             setPagination={setPagination}
             getRowId={(row) => row.scholarshipId}
             loading={search ? searchLoading : loading}
+            search={search}
             setSearch={setSearch}
             sorting={sorting}
             setSorting={setSorting}
             columnFilters={columnFilters}
             setColumnFilters={setColumnFilters}
+            toolbar={DataTableToolbar}
           />
         </div>
       </div>

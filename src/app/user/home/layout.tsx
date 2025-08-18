@@ -1,5 +1,5 @@
 "use client";
-import { AppSidebar } from "@/components/ui/client-sidebar";
+import { AppSidebar } from "@/components/user-sidebar/app-side";
 import { ReactNode } from "react";
 import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 interface DashboardLayoutProps {
@@ -8,17 +8,35 @@ interface DashboardLayoutProps {
 }
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "sonner";
+import DynamicHeaderUser from "./dynamic-header";
+import { usePathname } from "next/navigation";
 
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
+  const path = usePathname();
+  const segmentedPath = path.split("/");
   return (
-    <SidebarProvider>
-      <AppSidebar />
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 70)",
+          "--header-height": "calc(var(--spacing) * 10)",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar variant="inset" />
       <SidebarInset>
-        <div className="fixed your-class h-screen w-full pointer-events-none"></div>
-        {children} {modal}
-        <Toaster richColors position="bottom-right" />
+        {/* <div className="fixed your-class h-screen w-full pointer-events-none"></div> */}
+        <div className="relative">
+          <DynamicHeaderUser
+            first={segmentedPath[2]}
+            second={segmentedPath[3]}
+            third={segmentedPath[4]}
+          />
+          {children} {modal}
+        </div>
       </SidebarInset>
+      <Toaster />
     </SidebarProvider>
   );
 }

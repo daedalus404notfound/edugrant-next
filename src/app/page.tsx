@@ -34,7 +34,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Footer } from "@/components/ui/footer";
-import { GlowCard } from "@/components/ui/glow-cards";
+import SpotlightBorderWrapper from "@/components/ui/border";
 const navItems = [
   { label: "Home", icon: Home },
   { label: "Features", icon: Zap },
@@ -104,14 +104,14 @@ const HowitworksComponent = () => {
     <div className="w-3/4 mx-auto mt-15 space-y-5">
       <h1
         id="how-it-works"
-        className="font-semibold text-xl border-l-4 border-green-600 pl-5 flex items-center gap-2"
+        className="font-semibold text-xl border-l-4 border-emerald-800 pl-5 flex items-center gap-2"
       >
         How It Works <MonitorCog />
       </h1>
       <div className="grid md:grid-cols-2 gap-6">
         {howItWorks.map((step, index) => (
-          <GlowCard key={index} borderWidth={1} customSize noPadding borderRadius={10} glowSize={200} glowColor="emerald" borderGlowIntensity={0.5}>
-            <div className="flex flex-col sm:flex-row items-start gap-4 p-4 shadow-black/20 shadow-md">
+          <SpotlightBorderWrapper key={index}>
+            <div className="flex flex-col sm:flex-row items-start gap-4 p-4 shadow-black/10  shadow-md bg-primary/5 rounded-lg ">
               <img
                 src={step.image}
                 alt={step.title}
@@ -124,7 +124,7 @@ const HowitworksComponent = () => {
                 </p>
               </div>
             </div>
-          </GlowCard>
+          </SpotlightBorderWrapper>
         ))}
       </div>
     </div>
@@ -136,7 +136,7 @@ const FaqsComponent = () => {
     <div className="space-y-5 w-3/4 mx-auto mt-15">
       <h1
         id="faqs"
-        className="font-semibold text-xl border-l-4 border-green-600 pl-5 flex items-center gap-2"
+        className="font-semibold text-xl border-l-4 border-emerald-800 pl-5 flex items-center gap-2"
       >
         Frequently Ask Questions <MessageCircleQuestion />
       </h1>
@@ -213,7 +213,7 @@ export default function LandingPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="relative min-h-[75vh]  mx-auto w-[95%]   rounded-3xl overflow-hidden  shadow-2xl shadow-background/50 flex items-center bg-[var(--green)]"
+            className="relative min-h-[75vh]  mx-auto w-[95%]   rounded-3xl overflow-hidden    flex items-center bg-[var(--green)]"
           >
             <div className="absolute inset-0 h-full w-full flex items-center rounded-3xl x">
               <img

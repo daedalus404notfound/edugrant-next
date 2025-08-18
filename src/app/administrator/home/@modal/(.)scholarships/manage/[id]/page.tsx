@@ -5,6 +5,7 @@ import {
   Clock,
   Download,
   Edit,
+  Loader,
   StickyNote,
   Trash2,
   Users,
@@ -20,9 +21,9 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -43,9 +44,9 @@ import { BorderBeam } from "@/components/ui/beam";
 import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 
 export default function InterceptManageScholarship() {
-  const [editMode, setEditMode] = useState(false);
-
-  const [deleteLoading, setDeleteLoading] = useState(false);
+  const searchParams = useSearchParams();
+  const edit = searchParams.get("edit");
+  const [editMode, setEditMode] = useState(edit === "true");
   const [openAlert, setOpenAlert] = useState(false);
   const router = useRouter();
   const params = useParams();
@@ -56,7 +57,8 @@ export default function InterceptManageScholarship() {
 
   const deadline = data?.scholarshipDealine;
 
-  const scholarshipId = data?.scholarshipId;
+  const scholarshipId = data?.scholarshipId ? [data.scholarshipId] : [];
+
   const scholarshipCover = data?.scholarshipCover;
   const scholarshipLogo = data?.scholarshipLogo;
   const HandleCloseDrawer = (value: boolean) => {
@@ -67,13 +69,16 @@ export default function InterceptManageScholarship() {
       }, 250);
     }
   };
-
-  const { onSubmit } = useDeleteScholarship({
-    setDeleteLoading,
-    setOpenAlert,
-    setOpen,
+  const { onSubmit, isSuccess, loading } = useDeleteScholarship({
     scholarshipId,
   });
+
+  useEffect(() => {
+    if (isSuccess) {
+      setOpenAlert(false);
+      router.back();
+    }
+  }, [isSuccess]);
 
   return (
     <Drawer
@@ -339,22 +344,21 @@ export default function InterceptManageScholarship() {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel disabled={deleteLoading}>
+                  <AlertDialogCancel disabled={loading}>
                     Cancel
                   </AlertDialogCancel>
                   <Button
+                    disabled={loading}
                     onClick={onSubmit}
-                    disabled={deleteLoading}
                     variant="destructive"
                   >
-                    Continue
-                    {deleteLoading && (
-                      <LineSpinner
-                        size="18"
-                        stroke="1.5"
-                        speed="1"
-                        color="white"
-                      />
+                    {loading ? (
+                      <span className="flex items-center gap-2">
+                        <Loader className="animate-spin" />
+                        Deleting...
+                      </span>
+                    ) : (
+                      "Delete"
                     )}
                   </Button>
                 </AlertDialogFooter>

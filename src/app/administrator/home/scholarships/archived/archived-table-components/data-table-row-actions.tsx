@@ -12,7 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 import {
   AlertDialog,
-  AlertDialogAction,
+
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -40,7 +40,6 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const router = useRouter();
   const rowData = row.original as ScholarshipTypes;
   const [openAlert, setOpenAlert] = useState(false);
   const { onSubmit, isSuccess, loading } = useDeleteScholarship({
@@ -73,7 +72,7 @@ export function DataTableRowActions<TData>({
         </Link>
 
         <Button className="justify-start" variant="ghost">
-          <PencilLine /> Edit
+          <PencilLine /> Restore
         </Button>
         <Button className="justify-start" variant="ghost">
           <Copy /> Copy row

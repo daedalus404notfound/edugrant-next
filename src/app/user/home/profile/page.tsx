@@ -23,7 +23,6 @@ import {
   UserRound,
   X,
 } from "lucide-react";
-import DynamicHeader from "../dynamic-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -51,7 +50,7 @@ export default function Profile() {
 
   return (
     <div className="bg-background min-h-screen px-4">
-      <DynamicHeader first={segmentedPath[2]} second={segmentedPath[3]} />
+     
 
       <Form {...form}>
         <div className="w-full max-w-4xl mx-auto py-10">

@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -22,8 +21,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DataTableViewOptions } from "./data-table-view-options";
-import { DataTableFacetedFilter } from "./data-table-faceted-filter";
+import { DataTableViewOptions } from "../../../../table-components/data-table-view-options";
+import { DataTableFacetedFilter } from "../../../../table-components/data-table-faceted-filter";
 import Link from "next/link";
 import useGetFilter from "@/hooks/admin/getDynamicFilter";
 import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
@@ -32,27 +31,36 @@ import { useEffect, useState } from "react";
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   getRowId?: (row: TData) => string | number;
+  search: string;
+  setSearch: (search: string) => void;
+}
+interface DataTableToolbarProps<TData> {
+  table: Table<TData>;
+  getRowId?: (row: TData) => string | number;
+  search: string;
   setSearch: (search: string) => void;
 }
 
-export function DataTableToolbar<TData>({
+export default function DataTableToolbar<TData>({
   table,
   getRowId,
+  search,
   setSearch,
 }: DataTableToolbarProps<TData>) {
-  const { filter, filterLoading } = useGetFilter();
+  const { filter } = useGetFilter();
   const isFiltered = table.getState().columnFilters.length > 0;
-  const amountOptions =
-    filter?.Scholarships.scholarshipAmount?.map((meow) => ({
-      value: String(meow),
-      label: String(meow),
-    })) || [];
+  // const amountOptions =
+  //   filter?.Scholarships.scholarshipAmount?.map((meow) => ({
+  //     value: String(meow),
+  //     label: String(meow),
+  //   })) || [];
 
-  const providerOptions =
-    filter?.Scholarships.scholarshipProvider?.map((meow) => ({
-      value: meow,
-      label: meow,
-    })) || [];
+  // const providerOptions =
+  //   filter?.Scholarships.scholarshipProvider?.map((meow) => ({
+  //     value: meow,
+  //     label: meow,
+  //   })) || [];
+  console.log(filter);
 
   const selectedRows = table.getSelectedRowModel().rows;
   const scholarshipId = selectedRows.map((row) =>
@@ -74,7 +82,7 @@ export function DataTableToolbar<TData>({
   return (
     <div className="flex items-center justify-between gap-1.5">
       <div className="flex flex-1 items-center space-x-2">
-        <div className="relative">
+        {/* <div className="relative">
           <Input
             placeholder="Filter scholarship..."
             className="peer ps-9 pe-9 h-8 w-[150px] lg:w-[250px]"
@@ -90,10 +98,11 @@ export function DataTableToolbar<TData>({
           >
             <ArrowRightIcon size={16} aria-hidden="true" />
           </button>
-        </div>
+        </div> */}
 
-        {table.getColumn("scholarshipTitle") && (
+        {/* {table.getColumn("scholarshipTitle") && (
           <DataTableFacetedFilter
+            disabled={!!search}
             column={table.getColumn("scholarshipTitle")}
             title="Title"
             options={providerOptions}
@@ -102,11 +111,12 @@ export function DataTableToolbar<TData>({
 
         {table.getColumn("scholarshipAmount") && (
           <DataTableFacetedFilter
+            disabled={!!search}
             column={table.getColumn("scholarshipAmount")}
             title="Amount"
             options={amountOptions}
           />
-        )}
+        )} */}
 
         {isFiltered && (
           <Button

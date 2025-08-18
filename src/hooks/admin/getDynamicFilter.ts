@@ -10,7 +10,7 @@ export default function useGetFilter() {
     async function fetchFilter() {
       setFilterLoading(true);
       try {
-        const res = await axios.get(
+        const res = await axios.get<FilterTypes>(
           `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/getFilterData`,
           { withCredentials: true }
         );

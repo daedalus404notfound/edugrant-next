@@ -87,20 +87,19 @@ export type UserDocument = {
   cloudinaryId: string;
 };
 
+// Generic type for each filter entry
+type FilterEntry = {
+  label: string;
+  value: string[];
+};
+
+// The full filters type
 export type FilterTypes = {
-  FilterData: AcademicTypes;
-  Scholarships: ScholarshipFilterTypes;
-};
-
-export type ScholarshipFilterTypes = {
-  scholarshipAmount: number[];
-  scholarshipProvider: string[];
-};
-
-export type AcademicTypes = {
-  distinctCourse: string[];
-  distinctYear: string[];
-  distinctSection: string[];
+  distinctCourse: FilterEntry;
+  distinctSection: FilterEntry;
+  distinctYear: FilterEntry;
+  scholarshipAmount: FilterEntry;
+  scholarshipProvider: FilterEntry;
 };
 
 export type MetaTypes = {

@@ -225,7 +225,7 @@ const data = {
       title: "Scholarships",
       url: "/administrator/home/scholarships",
       icon: GraduationCap,
-      isActive: false,
+      isActive: true,
       items: [
         {
           title: "Create Scholarship",
@@ -245,7 +245,6 @@ const data = {
       title: "Applicants",
       url: "/administrator/home/applicants",
       icon: Bot,
-      isActive: true,
       items: [
         {
           title: "Pending Applicants",

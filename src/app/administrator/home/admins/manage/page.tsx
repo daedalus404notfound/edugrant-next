@@ -1,19 +1,16 @@
 "use client";
 import "ldrs/react/Ring.css";
 import useScholarshipData from "@/hooks/admin/getScholarship";
-import { Activity, Archive } from "lucide-react";
+import { Activity } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { DataTable } from "@/app/administrator/table-components/data-table";
-import { columns } from "./archived-table-components/columns";
 import {
   ColumnFiltersState,
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
-import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
-import DataTableToolbar from "./archived-table-components/data-table-toolbar";
-import { ScholarshipTypes } from "@/hooks/types";
+import useAdminData from "@/hooks/admin/getAdmins";
 
 export default function Manage() {
   const [search, setSearch] = useState("");
@@ -23,24 +20,16 @@ export default function Manage() {
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { data, meta, loading } = useScholarshipData({
+  const { data, meta, loading } = useAdminData({
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
     sortBy: sorting[0]?.id ?? "",
     order: sorting[0]?.desc ? "desc" : "asc",
-    status: false,
     filters:
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
   });
 
-  const { searchData, searchLoading, searchMeta } = useScholarshipSearch({
-    page: pagination.pageIndex + 1,
-    pageSize: pagination.pageSize,
-    sortBy: sorting[0]?.id ?? "",
-    order: sorting[0]?.desc ? "desc" : "asc",
-    query: search,
-  });
-  console.log(columnFilters);
+  console.log("admin data", data);
   return (
     <div className="min-h-screen px-4 relative z-10">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
@@ -57,31 +46,15 @@ export default function Manage() {
             ease: "linear",
           }}
         >
-          <Archive strokeWidth={3} />
-          Archived Scholarships
+          <Activity strokeWidth={3} />
+          Manage Scholarships
         </motion.span>
         <p className="text-sm text-gray-300 mt-1">
-          Browse the list of archived scholarships
+          Browse the list of active scholarships. Use the available actions to
+          modify or remove entries.
         </p>
 
-        <div className="py-8">
-          <DataTable<ScholarshipTypes, unknown>
-            data={search.trim().length > 0 ? searchData : data}
-            columns={columns}
-            meta={search.trim().length > 0 ? searchMeta : meta}
-            pagination={pagination}
-            setPagination={setPagination}
-            getRowId={(row) => row.scholarshipId}
-            loading={search ? searchLoading : loading}
-            search={search}
-            setSearch={setSearch}
-            sorting={sorting}
-            setSorting={setSorting}
-            columnFilters={columnFilters}
-            setColumnFilters={setColumnFilters}
-            toolbar={DataTableToolbar}
-          />
-        </div>
+        <div className="py-8"></div>
       </div>
     </div>
   );

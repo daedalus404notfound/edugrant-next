@@ -1,7 +1,6 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import DynamicHeader from "../dynamic-header";
 import {
   Select,
   SelectContent,
@@ -22,27 +21,27 @@ const tabs = [
   { id: "ACTIVE", label: "Active", indicator: "" },
   { id: "EXPIRED", label: "Expired", indicator: "" },
 ];
-import useScholarshipUserData from "@/hooks/user/getScholarship";
 import { useState } from "react";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import { Badge } from "@/components/ui/badge";
+import useScholarshipData from "@/hooks/user/getScholarship";
+import { Skeleton } from "@/components/ui/skeleton";
 export default function ClientScholarship() {
   const [currentPage] = useState(1);
   const [rowsPerPage] = useState(20);
   const [sort, setSort] = useState<"asc" | "desc" | "">("");
   const path = usePathname();
-  const segmentedPath = path.split("/");
-  const { data, loading } = useScholarshipUserData({
-    currentPage,
-    rowsPerPage,
-    sort,
+
+  const { data, meta, loading } = useScholarshipData({
+    page: currentPage,
+    pageSize: rowsPerPage,
+    sortBy: sort,
+    order: "",
   });
   console.log(data, loading);
 
   return (
     <div className="z-10 min-h-screen background px-4 ">
-      <DynamicHeader first={segmentedPath[2]} second={segmentedPath[3]} />
-
       <div className="mx-auto w-[95%] pt-10">
         <div className="flex justify-between items-end">
           <div>
@@ -82,11 +81,19 @@ export default function ClientScholarship() {
           </div>
           <div className=" grid lg:grid-cols-3 grid-cols-1 gap-4">
             {loading
-              ? [...Array(4)].map((_, index) => (
+              ? [...Array(3)].map((_, index) => (
                   <div
                     key={index}
-                    className="p-2 bg-background/40 relative rounded-md border"
-                  ></div>
+                    className="p-2 bg-background/40 relative rounded-md border space-y-3"
+                  >
+                    <Skeleton className="aspect-[16/8.5]" />
+                    <Skeleton className="h-10" />
+                    <div className="flex gap-3 h-11">
+                      <Skeleton className="flex-1" />
+                      <Skeleton className="flex-1" />
+                      <Skeleton className="flex-1" />
+                    </div>
+                  </div>
                 ))
               : data.map((scholarship) => (
                   <div
@@ -114,10 +121,12 @@ export default function ClientScholarship() {
 
                     <div className="flex-1 space-y-1 z-10 px-2">
                       <div className="flex items-center gap-1.5 justify-between">
-                        <h1 className="font-semibold text-lg ">
+                        <h1 className="font-semibold text-lg line-clamp-1 ">
                           {scholarship.scholarshipTitle}
                         </h1>
-                        <Badge className="bg-green-800 text-gray-200">Active</Badge>
+                        <Badge className="bg-green-800 text-gray-200">
+                          Active
+                        </Badge>
                       </div>
                       <h3 className="text-sm">
                         {scholarship.scholarshipProvider}

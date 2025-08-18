@@ -61,7 +61,6 @@ export default function AnnouncementSection() {
 
   return (
     <div className="bg-background min-h-screen">
-      <DynamicHeader first={segmentedPath[2]} second={segmentedPath[3]} />
       <div className="mx-auto lg:w-3/4 w-[95%] py-10">
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <div className="relative flex-1">

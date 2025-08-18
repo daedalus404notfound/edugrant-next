@@ -9,6 +9,7 @@ import {
   OnChangeFn,
   SortingState,
   ColumnFiltersState,
+  Table as TanstackTable,
 } from "@tanstack/react-table";
 
 import {
@@ -22,7 +23,12 @@ import {
 import { MetaTypes } from "@/hooks/types";
 import { DataTablePagination } from "./data-table-pagination";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DataTableToolbar } from "./data-table-toolbar";
+interface ToolbarProps<TData> {
+  table: TanstackTable<TData>;
+  getRowId?: (row: TData) => string | number;
+  search: string;
+  setSearch: (search: string) => void;
+}
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   meta: MetaTypes;
@@ -31,11 +37,13 @@ interface DataTableProps<TData, TValue> {
   pagination: PaginationState;
   setPagination: OnChangeFn<PaginationState>;
   loading: boolean;
+  search: string;
   setSearch: (search: string) => void;
   sorting: SortingState;
   setSorting: OnChangeFn<SortingState>;
   columnFilters: ColumnFiltersState;
   setColumnFilters: OnChangeFn<ColumnFiltersState>;
+  toolbar?: React.ComponentType<ToolbarProps<TData>>;
 }
 
 export function DataTable<TData, TValue>({
@@ -46,11 +54,13 @@ export function DataTable<TData, TValue>({
   pagination,
   setPagination,
   loading,
+  search,
   setSearch,
   sorting,
   setSorting,
   columnFilters,
   setColumnFilters,
+  toolbar: ToolbarComponent,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -69,11 +79,15 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-3">
-      <DataTableToolbar
-        table={table}
-        getRowId={getRowId}
-        setSearch={setSearch}
-      />
+      {ToolbarComponent && (
+        <ToolbarComponent
+          table={table}
+          getRowId={getRowId}
+          search={search}
+          setSearch={setSearch}
+        />
+      )}
+
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>

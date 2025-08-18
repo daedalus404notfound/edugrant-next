@@ -5,8 +5,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { format } from "date-fns";
 import { ScholarshipTypes } from "@/hooks/types";
-import { DataTableColumnHeader } from "../../../table-components/data-table-column-header";
-import { DataTableRowActions } from "../../../table-components/data-table-row-actions";
+import { DataTableColumnHeader } from "@/app/administrator/table-components/data-table-column-header";
+import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { CircleCheck } from "lucide-react";
@@ -48,7 +48,7 @@ export const columns: ColumnDef<ScholarshipTypes>[] = [
       const { scholarshipTitle, scholarshipProvider, scholarshipLogo } =
         row.original;
       return (
-        <div className="flex gap-2">
+        <div className="flex gap-2  ">
           <Avatar>
             <AvatarImage src={scholarshipLogo} />
             <AvatarFallback>
@@ -56,7 +56,7 @@ export const columns: ColumnDef<ScholarshipTypes>[] = [
             </AvatarFallback>
           </Avatar>
           <div>
-            <div className="w-full max-w-sm font-medium">
+            <div className="w-fullfont-medium truncate  w-50">
               {scholarshipTitle}
             </div>
             <p className="text-xs text-muted-foreground">
