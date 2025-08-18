@@ -67,14 +67,14 @@ export default function useApplicantsSearch({
   pageSize,
   sortBy,
   order,
-  status = true,
+  status,
   query,
 }: {
   page: number;
   pageSize: number;
   sortBy?: string;
   order?: string;
-  status?: boolean;
+  status: string;
   query: string;
 }) {
   const [searchData, setSearchData] = useState<ApplicationTypes[]>([]);
@@ -97,7 +97,7 @@ export default function useApplicantsSearch({
           }/searchApplication?page=${page}&dataPerPage=${pageSize}${
             sortBy ? `&sortBy=${sortBy}` : ""
           }${order ? `&order=${order}` : ""}${
-            status ? "&status=ACTIVE" : "&status=EXPIRED"
+            status ? `&status=${status}` : ""
           }&search=${trimmedQuery}`,
 
           { withCredentials: true }

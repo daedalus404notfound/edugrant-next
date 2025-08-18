@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { FilterTypes } from "../types";
 
-export default function useGetFilter() {
+export default function useGetFilter({ status }: { status?: string }) {
   const [filter, setFilter] = useState<FilterTypes | null>(null);
   const [filterLoading, setFilterLoading] = useState(true);
   useEffect(function () {
@@ -11,7 +11,9 @@ export default function useGetFilter() {
       setFilterLoading(true);
       try {
         const res = await axios.get<FilterTypes>(
-          `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/getFilterData`,
+          `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/getFilterData${
+            status ? `?status=${status}` : ""
+          }`,
           { withCredentials: true }
         );
         if (res.status === 200) {

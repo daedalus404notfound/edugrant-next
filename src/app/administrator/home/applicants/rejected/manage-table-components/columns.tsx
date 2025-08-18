@@ -75,7 +75,7 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <Badge className="bg-yellow-500/10 text-yellow-500">
+        <Badge className="bg-red-500/10 text-red-500">
           <Clock />
           {row.getValue("status")}
         </Badge>
@@ -119,15 +119,15 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "applicationDate",
+    accessorKey: "applicationResponseDate",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Application Date" />
+      <DataTableColumnHeader column={column} title="Declined Date" />
     ),
     cell: ({ row }) => {
       return (
         <span className="max-w-[500px] truncate">
           {format(
-            new Date(row.getValue("applicationDate")),
+            new Date(row.getValue("applicationResponseDate")),
             "MMM d, yyyy 'at' hh:mm a"
           )}
         </span>

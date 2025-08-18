@@ -48,7 +48,7 @@ export default function DataTableToolbar<TData>({
   search,
   setSearch,
 }: DataTableToolbarProps<TData>) {
-   const { filter } = useGetFilter({ status: "PENDING" });
+  const { filter } = useGetFilter({ status: "APPROVED" });
   const isFiltered = table.getState().columnFilters.length > 0;
   // const amountOptions =
   //   filter?.Scholarships.scholarshipAmount?.map((meow) => ({

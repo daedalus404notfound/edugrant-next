@@ -30,7 +30,7 @@ export default function Manage() {
     order: sorting[0]?.desc ? "desc" : "asc",
     filters:
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
-    status: "PENDING",
+    status: "DECLINED",
   });
 
   const { searchData, searchLoading, searchMeta } = useApplicantsSearch({
@@ -39,7 +39,7 @@ export default function Manage() {
     sortBy: sorting[0]?.id ?? "",
     order: sorting[0]?.desc ? "desc" : "asc",
     query: search,
-    status: "PENDING",
+    status: "DECLINED",
   });
   console.log(columnFilters);
   return (

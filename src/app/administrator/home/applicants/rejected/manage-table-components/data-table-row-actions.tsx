@@ -7,7 +7,6 @@ import {
   Loader,
   Maximize,
   MoreHorizontal,
-  PencilLine,
   Trash2,
   X,
 } from "lucide-react";
@@ -28,9 +27,8 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
-import { ApplicationTypes, ScholarshipTypes } from "@/hooks/types";
+import { ApplicationTypes } from "@/hooks/types";
 import { useEffect, useState } from "react";
-import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import Link from "next/link";
 import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
 
@@ -43,9 +41,9 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const rowData = row.original as ApplicationTypes;
   const [openAlert, setOpenAlert] = useState(false);
-  const { onSubmit, isSuccess, loading } = useDeleteApplication({
-    applicationId: [rowData.applicationId],
-  });
+   const { onSubmit, isSuccess, loading } = useDeleteApplication({
+     applicationId: [rowData.applicationId],
+   });
 
   useEffect(() => {
     if (isSuccess) {

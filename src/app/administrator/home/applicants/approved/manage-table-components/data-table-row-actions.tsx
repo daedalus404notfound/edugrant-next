@@ -28,9 +28,8 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
-import { ApplicationTypes, ScholarshipTypes } from "@/hooks/types";
+import { ApplicationTypes } from "@/hooks/types";
 import { useEffect, useState } from "react";
-import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import Link from "next/link";
 import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
 

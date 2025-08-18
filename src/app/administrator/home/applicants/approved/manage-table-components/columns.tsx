@@ -9,7 +9,7 @@ import { DataTableColumnHeader } from "@/app/administrator/table-components/data
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Clock } from "lucide-react";
+import { CircleCheck, Clock } from "lucide-react";
 export const columns: ColumnDef<ApplicationTypes>[] = [
   {
     id: "select",
@@ -75,8 +75,8 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <Badge className="bg-yellow-500/10 text-yellow-500">
-          <Clock />
+        <Badge className="bg-green-500/10 text-green-700">
+          <CircleCheck />
           {row.getValue("status")}
         </Badge>
       );
@@ -119,15 +119,15 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "applicationDate",
+    accessorKey: "applicationResponseDate",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Application Date" />
+      <DataTableColumnHeader column={column} title="Approved Date" />
     ),
     cell: ({ row }) => {
       return (
         <span className="max-w-[500px] truncate">
           {format(
-            new Date(row.getValue("applicationDate")),
+            new Date(row.getValue("applicationResponseDate")),
             "MMM d, yyyy 'at' hh:mm a"
           )}
         </span>

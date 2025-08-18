@@ -1,6 +1,6 @@
 "use client";
 import "ldrs/react/Ring.css";
-import { Hourglass } from "lucide-react";
+import { CheckCheck, Hourglass } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { DataTable } from "@/app/administrator/table-components/data-table";
@@ -30,7 +30,7 @@ export default function Manage() {
     order: sorting[0]?.desc ? "desc" : "asc",
     filters:
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
-    status: "PENDING",
+    status: "APPROVED",
   });
 
   const { searchData, searchLoading, searchMeta } = useApplicantsSearch({
@@ -39,7 +39,7 @@ export default function Manage() {
     sortBy: sorting[0]?.id ?? "",
     order: sorting[0]?.desc ? "desc" : "asc",
     query: search,
-    status: "PENDING",
+    status: "APPROVED",
   });
   console.log(columnFilters);
   return (
@@ -58,8 +58,8 @@ export default function Manage() {
             ease: "linear",
           }}
         >
-          <Hourglass strokeWidth={3} size={20} />
-          Pending Applicants
+          <CheckCheck strokeWidth={3} />
+          Approved Applicants
         </motion.span>
         <p className="text-sm text-gray-300 mt-1">
           Applicants currently waiting for review
