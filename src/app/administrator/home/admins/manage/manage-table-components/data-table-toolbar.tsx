@@ -1,14 +1,7 @@
 "use client";
 
 import { Table } from "@tanstack/react-table";
-import {
-  ArrowRightIcon,
-  GraduationCap,
-  Loader,
-  SearchIcon,
-  Trash2,
-  X,
-} from "lucide-react";
+import { ArrowRightIcon, Loader, SearchIcon, Trash2, X } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -22,8 +15,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "@/app/administrator/table-components/data-table-view-options";
-import useGetFilter from "@/hooks/admin/getDynamicFilter";
-import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import { useEffect, useState } from "react";
 import useDeleteAdmin from "@/hooks/admin/postDeleteAdmin";
 
@@ -46,20 +37,8 @@ export default function DataTableToolbar<TData>({
   search,
   setSearch,
 }: DataTableToolbarProps<TData>) {
-  const { filter } = useGetFilter({ status: "PENDING" });
+  console.log(search);
   const isFiltered = table.getState().columnFilters.length > 0;
-  // const amountOptions =
-  //   filter?.Scholarships.scholarshipAmount?.map((meow) => ({
-  //     value: String(meow),
-  //     label: String(meow),
-  //   })) || [];
-
-  // const providerOptions =
-  //   filter?.Scholarships.scholarshipProvider?.map((meow) => ({
-  //     value: meow,
-  //     label: meow,
-  //   })) || [];
-
   const selectedRows = table.getSelectedRowModel().rows;
   const adminId = selectedRows.map((row) =>
     getRowId ? getRowId(row.original) : row.id
@@ -70,7 +49,7 @@ export default function DataTableToolbar<TData>({
   const { onSubmit, isSuccess, loading } = useDeleteAdmin({
     adminId,
   });
-  
+
   useEffect(() => {
     if (isSuccess) {
       table.toggleAllRowsSelected(false);
