@@ -19,7 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowRight, Loader, RefreshCcw, UserPen, X } from "lucide-react";
+import { ArrowRight, Loader, RefreshCcw, UserPen } from "lucide-react";
 
 import { DragAndDropArea } from "@/components/ui/upload";
 

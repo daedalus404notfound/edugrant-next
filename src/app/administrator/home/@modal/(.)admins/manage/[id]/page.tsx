@@ -7,15 +7,15 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import useScholarshipUserByIdAdmin from "@/hooks/admin/getScholarshipData";
 
 export default function InterceptManageScholarship() {
-  const searchParams = useSearchParams();
-  const edit = searchParams.get("edit");
+  // const searchParams = useSearchParams();
+  // const edit = searchParams.get("edit");
 
   const router = useRouter();
   const params = useParams();

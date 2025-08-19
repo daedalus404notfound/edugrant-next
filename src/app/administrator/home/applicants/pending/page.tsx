@@ -1,6 +1,6 @@
 "use client";
 import "ldrs/react/Ring.css";
-import { Hourglass, UserRoundMinus } from "lucide-react";
+import { UserRoundMinus } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { DataTable } from "@/app/administrator/table-components/data-table";
