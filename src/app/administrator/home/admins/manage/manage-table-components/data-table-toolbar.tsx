@@ -62,7 +62,7 @@ export default function DataTableToolbar<TData>({
       <div className="flex flex-1 items-center space-x-2">
         <div className="relative">
           <Input
-            placeholder="Filter scholarship..."
+            placeholder="Search names..."
             className="peer ps-9 pe-9 h-8 w-[150px] lg:w-[250px]"
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -77,13 +77,6 @@ export default function DataTableToolbar<TData>({
             <ArrowRightIcon size={16} aria-hidden="true" />
           </button>
         </div>
-
-        {/* <DataTableFacetedFilter
-          disabled={!!search}
-          column={table.getColumn("course")} // 👈 use the id, not "student.Course"
-          title="Section"
-          options={section ?? []}
-        /> */}
 
         {isFiltered && (
           <Button
@@ -109,12 +102,12 @@ export default function DataTableToolbar<TData>({
 
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle className="text-red-00">
-                Delete selected scholarship(s)?
+              <AlertDialogTitle className="text-red-600">
+                Delete selected administrator(s)?
               </AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. The scholarship will be
-                permanently removed from the system.
+                This action cannot be undone. The administrator account(s) will
+                be permanently removed from the system.
               </AlertDialogDescription>
             </AlertDialogHeader>
 
@@ -139,11 +132,6 @@ export default function DataTableToolbar<TData>({
         </AlertDialog>
       )}
       <DataTableViewOptions table={table} />
-      {/* <Link prefetch href={`/administrator/home/scholarships/create`}>
-        <Button size="sm" variant="secondary" className="relative">
-          <Plus /> Add scholarship
-        </Button>
-      </Link> */}
     </div>
   );
 }

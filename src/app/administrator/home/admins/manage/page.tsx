@@ -28,7 +28,6 @@ export default function Manage() {
     pageSize: pagination.pageSize,
     sortBy: sorting[0]?.id ?? "",
     order: sorting[0]?.desc ? "desc" : "asc",
-
   });
 
   const { searchData, searchLoading, searchMeta } = useAdminsSearch({
@@ -59,7 +58,7 @@ export default function Manage() {
           Manage Administrators
         </motion.span>
         <p className="text-sm text-gray-300 mt-1">
-          Applicants currently waiting for review
+          View, search, and manage administrator accounts.
         </p>
 
         <div className="py-8">

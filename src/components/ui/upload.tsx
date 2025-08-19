@@ -7,6 +7,7 @@ import { useFileUpload } from "@/hooks/useUpload";
 import { BGPattern } from "./grid";
 import { Paperclip2 } from "iconsax-reactjs";
 import { X } from "lucide-react";
+import { useEffect } from "react";
 
 function formatBytes(bytes: number, decimals = 2): string {
   if (!+bytes) return "0 Bytes";
@@ -22,11 +23,15 @@ export function DragAndDropArea({
   accept,
   onFilesChange,
   initialImageUrl,
+  reset,
+  setReset,
 }: {
   label: string;
   accept: string[];
   onFilesChange: (files: File[]) => void;
   initialImageUrl?: string;
+  reset?: boolean;
+  setReset?: (reset: boolean) => void;
 }) {
   const {
     uploadedFiles,
@@ -35,11 +40,20 @@ export function DragAndDropArea({
     isDragActive,
     fileRejections,
     removeFile,
+    clearAllFiles,
     maxSize,
   } = useFileUpload({
     accept,
     onFilesChange,
   });
+
+  useEffect(() => {
+    if (reset && uploadedFiles.length > 0) {
+      clearAllFiles();
+    } else {
+      setReset?.(false); // ✅ safe optional call
+    }
+  }, [reset, uploadedFiles, clearAllFiles, setReset]);
 
   return (
     <SpotlightBorderWrapper>

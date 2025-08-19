@@ -1,6 +1,6 @@
 "use client";
 import "ldrs/react/Ring.css";
-import { Hourglass } from "lucide-react";
+import { Hourglass, UserRoundMinus } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { DataTable } from "@/app/administrator/table-components/data-table";
@@ -58,7 +58,7 @@ export default function Manage() {
             ease: "linear",
           }}
         >
-          <Hourglass strokeWidth={3} size={20} />
+          <UserRoundMinus />
           Pending Applicants
         </motion.span>
         <p className="text-sm text-gray-300 mt-1">

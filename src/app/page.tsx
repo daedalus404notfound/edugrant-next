@@ -163,7 +163,7 @@ export default function LandingPage() {
         <span className="flex items-center gap-5 h-15 py-3">
           <span className="flex items-center gap-2">
             <img className="h-10 w-10" src={bascLogo.src} alt="" />
-            <p className="font-semibold text-xl ">basc edugrant</p>
+            <p className="font-semibold text-xl uppercase">basc edugrant</p>
           </span>
           <Separator orientation="vertical" />
           <ul className="flex gap-2">

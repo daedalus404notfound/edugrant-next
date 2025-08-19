@@ -6,16 +6,10 @@ const adminProfileSchema = z.object({
   middleName: z.string().min(1, "Required"),
   lastName: z.string().min(1, "Required"),
   role: z.string().min(1, "Required"),
-  email: z.string().min(1, "Required"),
+  email: z.email().min(1, "Required"),
   contactNumber: z.string().min(1, "Required"),
   password: z.string().min(1, "Required"),
-  profileImage: z
-    .any()
-    .refine(
-      (file) =>
-        typeof File !== "undefined" && file instanceof File && file.size > 0,
-      { message: "Image is required" }
-    ),
+  profileImage: z.any(),
 });
 
 export type createAdminFormData = z.infer<typeof adminProfileSchema>;
@@ -30,8 +24,10 @@ export function useAdminZod() {
       lastName: "",
       email: "",
       contactNumber: "",
-      password: "************",
+      password: "",
     },
+    mode: "onChange",
+    reValidateMode: "onChange",
   });
   const formData = form.watch();
   return { form, schema: adminProfileSchema, formData };

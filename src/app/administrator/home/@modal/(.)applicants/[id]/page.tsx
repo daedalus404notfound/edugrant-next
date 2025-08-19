@@ -368,7 +368,7 @@ export default function InterceptReviewApplicants() {
                   >
                     <Skeleton className="h-14 w-full rounded-lg" />
                   </motion.div>
-                ) : data?.status === "APPROVE" ? (
+                ) : data?.status === "APPROVED" ? (
                   <motion.div
                     key="approved"
                     variants={fadeInVariants}
@@ -407,7 +407,7 @@ export default function InterceptReviewApplicants() {
                       </div>
                     </div>
                   </motion.div>
-                ) : data?.status === "DECLINE" ? (
+                ) : data?.status === "DECLINED" ? (
                   <motion.div
                     key="declined"
                     variants={fadeInVariants}

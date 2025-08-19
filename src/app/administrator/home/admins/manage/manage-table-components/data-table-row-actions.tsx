@@ -2,14 +2,11 @@
 
 import { Row } from "@tanstack/react-table";
 import {
-  CheckCheck,
-  Copy,
   Loader,
   Maximize,
   MoreHorizontal,
-
+  PencilLine,
   Trash2,
-  X,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -46,7 +43,6 @@ export function DataTableRowActions<TData>({
     adminId: [rowData.adminId],
   });
 
-  
   useEffect(() => {
     if (isSuccess) {
       setOpenAlert(false);
@@ -62,7 +58,7 @@ export function DataTableRowActions<TData>({
       </PopoverTrigger>
       <PopoverContent align="end" className="grid grid-cols-1 w-[180px] !p-2">
         <Link
-          href={`/administrator/home/applicants/pending/${rowData.adminId}`}
+          href={`/administrator/home/admins/manage/${rowData.adminId}`}
           scroll={false}
           prefetch
           className="w-full"
@@ -73,21 +69,16 @@ export function DataTableRowActions<TData>({
         </Link>
 
         <Link
-          href={`/administrator/home/applicants/pending/${rowData.adminId}?edit=true`}
+          href={`/administrator/home/admins/manage/${rowData.adminId}?edit=true`}
           scroll={false}
           prefetch
           className="w-full"
         >
           <Button className="justify-start w-full" variant="ghost">
-            <CheckCheck /> Approve
-          </Button>
-          <Button className="justify-start w-full" variant="ghost">
-            <X /> Reject
+            <PencilLine /> Edit
           </Button>
         </Link>
-        <Button className="justify-start" variant="ghost">
-          <Copy /> Copy row
-        </Button>
+
         <div />
         <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
           <AlertDialogTrigger asChild>
@@ -102,11 +93,11 @@ export function DataTableRowActions<TData>({
 
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle className="text-red-00">
-                Delete selected scholarship?
+              <AlertDialogTitle className="text-red-600">
+                Delete administrator account?
               </AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. The scholarship will be
+                This action cannot be undone. The administrator account will be
                 permanently removed from the system.
               </AlertDialogDescription>
             </AlertDialogHeader>

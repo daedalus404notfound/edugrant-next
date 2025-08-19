@@ -5,7 +5,6 @@ import {
   ArrowRightIcon,
   GraduationCap,
   Loader,
-
   SearchIcon,
   Trash2,
   X,
@@ -47,7 +46,7 @@ export default function DataTableToolbar<TData>({
   search,
   setSearch,
 }: DataTableToolbarProps<TData>) {
-   const { filter } = useGetFilter({ status: "PENDING" });
+  const { filter } = useGetFilter({ status: "PENDING" });
   const isFiltered = table.getState().columnFilters.length > 0;
   // const amountOptions =
   //   filter?.Scholarships.scholarshipAmount?.map((meow) => ({
@@ -71,11 +70,7 @@ export default function DataTableToolbar<TData>({
     value: item,
     icon: GraduationCap,
   }));
-  const section = filter?.distinctSection.value.map((item: string) => ({
-    label: item,
-    value: item,
-    icon: GraduationCap,
-  }));
+
   const selectedRows = table.getSelectedRowModel().rows;
   const scholarshipId = selectedRows.map((row) =>
     getRowId ? getRowId(row.original) : row.id
@@ -123,15 +118,9 @@ export default function DataTableToolbar<TData>({
 
         <DataTableFacetedFilter
           disabled={!!search}
-          column={table.getColumn("course")} // 👈 use the id, not "student.Course"
+          column={table.getColumn("year")} // 👈 use the id, not "student.Course"
           title="Year"
           options={year ?? []}
-        />
-        <DataTableFacetedFilter
-          disabled={!!search}
-          column={table.getColumn("course")} // 👈 use the id, not "student.Course"
-          title="Section"
-          options={section ?? []}
         />
 
         {isFiltered && (

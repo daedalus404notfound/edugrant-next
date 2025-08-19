@@ -60,7 +60,7 @@ export function DataTableRowActions<TData>({
       </PopoverTrigger>
       <PopoverContent align="end" className="grid grid-cols-1 w-[180px] !p-2">
         <Link
-          href={`/administrator/home/applicants/pending/${rowData.applicationId}`}
+          href={`/administrator/home/applicants/${rowData.applicationId}`}
           scroll={false}
           prefetch
           className="w-full"
@@ -71,7 +71,7 @@ export function DataTableRowActions<TData>({
         </Link>
 
         <Link
-          href={`/administrator/home/applicants/pending/${rowData.applicationId}?edit=true`}
+          href={`/administrator/home/applicants/${rowData.applicationId}?edit=true`}
           scroll={false}
           prefetch
           className="w-full"

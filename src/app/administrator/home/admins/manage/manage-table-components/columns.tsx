@@ -7,6 +7,7 @@ import { DataTableColumnHeader } from "@/app/administrator/table-components/data
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
+import { Badge } from "@/components/ui/badge";
 
 export const columns: ColumnDef<AdminProfileTypes>[] = [
   {
@@ -47,7 +48,7 @@ export const columns: ColumnDef<AdminProfileTypes>[] = [
       return (
         <div className="flex gap-2 items-center">
           <Avatar>
-            <AvatarImage src={`/avatars/${profileImage}.jpg`} />
+            <AvatarImage src={profileImage} className="object-cover" />
             <AvatarFallback className="uppercase">
               {row.original.firstName.charAt(0)}
               {row.original.lastName.charAt(0)}
@@ -67,56 +68,6 @@ export const columns: ColumnDef<AdminProfileTypes>[] = [
     },
   },
 
-  // {
-  //   accessorKey: "status",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Status" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     return (
-  //       <Badge className="bg-yellow-500/10 text-yellow-500">
-  //         <Clock />
-  //         {row.getValue("status")}
-  //       </Badge>
-  //     );
-  //   },
-  //   enableSorting: true,
-  //   enableHiding: true,
-  // },
-  // {
-  //   accessorKey: "scholarship.scholarshipTitle",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Scholarship" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const scholar = row.original.scholarship;
-  //     return (
-  //       <div className="font-medium truncate  w-50">
-  //         {scholar.scholarshipTitle}
-  //       </div>
-  //     );
-  //   },
-  //   enableSorting: true,
-  //   enableHiding: true,
-  // },
-  // {
-  //   id: "course", // 👈 use a simple id
-  //   accessorFn: (row) => row.student.course, // safe way to access nested
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Course, Year & Section" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const scholar = row.original.student;
-  //     return (
-  //       <span className="max-w-[500px] truncate">
-  //         {scholar.course}-{scholar.year.slice(0, 1)}
-  //         {scholar.section}
-  //       </span>
-  //     );
-  //   },
-  //   enableSorting: true,
-  //   enableHiding: true,
-  // },
   {
     accessorKey: "dateCreate",
     header: ({ column }) => (
@@ -127,6 +78,48 @@ export const columns: ColumnDef<AdminProfileTypes>[] = [
         <span className="max-w-[500px] truncate">
           {format(
             new Date(row.getValue("dateCreate")),
+            "MMM d, yyyy 'at' hh:mm a"
+          )}
+        </span>
+      );
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "phone",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Contact No." />
+    ),
+    cell: ({ row }) => {
+      return (
+        <span className="max-w-[500px] truncate">{row.getValue("phone")}</span>
+      );
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "role",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Role" />
+    ),
+    cell: ({ row }) => {
+      return <Badge variant="destructive">{row.getValue("role")}</Badge>;
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "lastLogin",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Last Loggin" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <span className="max-w-[500px] truncate">
+          {format(
+            new Date(row.getValue("lastLogin")),
             "MMM d, yyyy 'at' hh:mm a"
           )}
         </span>
