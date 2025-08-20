@@ -46,25 +46,34 @@ export default function DataTableToolbar<TData>({
   search,
   setSearch,
 }: DataTableToolbarProps<TData>) {
-  const { filter } = useGetFilter({ status: "PENDING" });
+  const { filter } = useGetFilter({
+    applicationStatus: "PENDING",
+    scholarshipStatus: "ACTIVE",
+  });
   const isFiltered = table.getState().columnFilters.length > 0;
   console.log(filter);
-  const course = filter?.distinctCourse.value.map((item: string) => ({
-    label: item,
-    value: item,
-    icon: GraduationCap,
-  }));
-  const year = filter?.distinctYear.value.map((item: string) => ({
-    label: item,
-    value: item,
-    icon: GraduationCap,
-  }));
+  const course = filter?.optionsApplication.distinctCourse.value.map(
+    (item: string) => ({
+      label: item,
+      value: item,
+      icon: GraduationCap,
+    })
+  );
+  const year = filter?.optionsApplication.distinctYear.value.map(
+    (item: string) => ({
+      label: item,
+      value: item,
+      icon: GraduationCap,
+    })
+  );
 
-  const scholarships = filter?.scholarshipTitle.value.map((item: string) => ({
-    label: item,
-    value: item,
-    icon: GraduationCap,
-  }));
+  const scholarships = filter?.optionsScholarship.scholarshipTitle.value.map(
+    (item: string) => ({
+      label: item,
+      value: item,
+      icon: GraduationCap,
+    })
+  );
 
   const selectedRows = table.getSelectedRowModel().rows;
   const scholarshipId = selectedRows.map((row) =>
