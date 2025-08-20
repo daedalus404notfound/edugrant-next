@@ -26,7 +26,7 @@ import { useEffect, useState } from "react";
 import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
 import { ToolbarProps } from "@/app/administrator/table-components/data-table";
 export default function DataTableToolbar<
-  TData extends { applicationId: number }
+  TData extends { applicationId: string }
 >({ table, search, setSearch }: ToolbarProps<TData>) {
   const { filter } = useGetFilter({
     applicationStatus: "PENDING",
