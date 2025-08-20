@@ -15,7 +15,7 @@ export default function useDeleteApplication({ applicationId }: DeleteTypes) {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/deleteApplications`,
         {
-          scholarshipId: JSON.stringify({
+          applicationId: JSON.stringify({
             data: applicationId,
           }),
         },
