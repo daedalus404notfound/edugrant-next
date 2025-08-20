@@ -40,7 +40,7 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "student.firstName",
+    accessorKey: "firstName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),
@@ -67,7 +67,49 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
       );
     },
   },
+  {
+    accessorKey: "scholarshipTitle",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Scholarship" />
+    ),
+    cell: ({ row }) => {
+      const scholar = row.original.scholarship;
+      return (
+        <div className="font-medium truncate  w-50">
+          {scholar.scholarshipTitle}
+        </div>
+      );
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
 
+  {
+    id: "course",
+    accessorFn: (row) => row.student.course, // safe way to access nested
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Course" />
+    ),
+    cell: ({ row }) => {
+      const scholar = row.original.student;
+      return <span className="max-w-[500px] truncate">{scholar.course}</span>;
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    id: "year",
+    accessorFn: (row) => row.student.course, // safe way to access nested
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Year Level" />
+    ),
+    cell: ({ row }) => {
+      const scholar = row.original.student;
+      return <span className="max-w-[500px] truncate">{scholar.year}</span>;
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
   {
     accessorKey: "status",
     header: ({ column }) => (
@@ -85,43 +127,9 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "scholarship.scholarshipTitle",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Scholarship" />
-    ),
-    cell: ({ row }) => {
-      const scholar = row.original.scholarship;
-      return (
-        <div className="font-medium truncate  w-50">
-          {scholar.scholarshipTitle}
-        </div>
-      );
-    },
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    id: "course", // 👈 use a simple id
-    accessorFn: (row) => row.student.course, // safe way to access nested
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Course, Year & Section" />
-    ),
-    cell: ({ row }) => {
-      const scholar = row.original.student;
-      return (
-        <span className="max-w-[500px] truncate">
-          {scholar.course}-{scholar.year.slice(0, 1)}
-          {scholar.section}
-        </span>
-      );
-    },
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
     accessorKey: "applicationResponseDate",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Declined Date" />
+      <DataTableColumnHeader column={column} title="Processed Date" />
     ),
     cell: ({ row }) => {
       return (

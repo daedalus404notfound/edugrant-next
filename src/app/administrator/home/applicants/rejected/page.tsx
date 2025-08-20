@@ -1,6 +1,6 @@
 "use client";
 import "ldrs/react/Ring.css";
-import { Hourglass } from "lucide-react";
+import { X } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { DataTable } from "@/app/administrator/table-components/data-table";
@@ -58,11 +58,11 @@ export default function Manage() {
             ease: "linear",
           }}
         >
-          <Hourglass strokeWidth={3} size={20} />
-          Pending Applicants
+          <X strokeWidth={3} />
+          Declined Applicants
         </motion.span>
         <p className="text-sm text-gray-300 mt-1">
-          Applicants currently waiting for review
+          Applicants who have been declined
         </p>
 
         <div className="py-8">

@@ -46,19 +46,8 @@ export default function DataTableToolbar<TData>({
   search,
   setSearch,
 }: DataTableToolbarProps<TData>) {
-  const { filter } = useGetFilter({ status: "APPROVED" });
+  const { filter } = useGetFilter({ status: "PENDING" });
   const isFiltered = table.getState().columnFilters.length > 0;
-  // const amountOptions =
-  //   filter?.Scholarships.scholarshipAmount?.map((meow) => ({
-  //     value: String(meow),
-  //     label: String(meow),
-  //   })) || [];
-
-  // const providerOptions =
-  //   filter?.Scholarships.scholarshipProvider?.map((meow) => ({
-  //     value: meow,
-  //     label: meow,
-  //   })) || [];
   console.log(filter);
   const course = filter?.distinctCourse.value.map((item: string) => ({
     label: item,
@@ -70,11 +59,13 @@ export default function DataTableToolbar<TData>({
     value: item,
     icon: GraduationCap,
   }));
-  const section = filter?.distinctSection.value.map((item: string) => ({
+
+  const scholarships = filter?.scholarshipTitle.value.map((item: string) => ({
     label: item,
     value: item,
     icon: GraduationCap,
   }));
+
   const selectedRows = table.getSelectedRowModel().rows;
   const scholarshipId = selectedRows.map((row) =>
     getRowId ? getRowId(row.original) : row.id
@@ -112,25 +103,24 @@ export default function DataTableToolbar<TData>({
             <ArrowRightIcon size={16} aria-hidden="true" />
           </button>
         </div>
-
         <DataTableFacetedFilter
           disabled={!!search}
-          column={table.getColumn("course")} // 👈 use the id, not "student.Course"
+          column={table.getColumn("scholarshipTitle")}
+          title="Scholarship"
+          options={scholarships ?? []}
+        />
+        <DataTableFacetedFilter
+          disabled={!!search}
+          column={table.getColumn("course")}
           title="Course"
           options={course ?? []}
         />
 
         <DataTableFacetedFilter
           disabled={!!search}
-          column={table.getColumn("course")} // 👈 use the id, not "student.Course"
+          column={table.getColumn("year")}
           title="Year"
           options={year ?? []}
-        />
-        <DataTableFacetedFilter
-          disabled={!!search}
-          column={table.getColumn("course")} // 👈 use the id, not "student.Course"
-          title="Section"
-          options={section ?? []}
         />
 
         {isFiltered && (
@@ -187,11 +177,6 @@ export default function DataTableToolbar<TData>({
         </AlertDialog>
       )}
       <DataTableViewOptions table={table} />
-      {/* <Link prefetch href={`/administrator/home/scholarships/create`}>
-        <Button size="sm" variant="secondary" className="relative">
-          <Plus /> Add scholarship
-        </Button>
-      </Link> */}
     </div>
   );
 }

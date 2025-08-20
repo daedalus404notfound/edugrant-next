@@ -87,19 +87,30 @@ export type UserDocument = {
   cloudinaryId: string;
 };
 
-// Generic type for each filter entry
-type FilterEntry = {
+type OptionItem = {
   label: string;
   value: string[];
 };
 
-// The full filters type
-export type FilterTypes = {
-  distinctCourse: FilterEntry;
-  distinctSection: FilterEntry;
-  distinctYear: FilterEntry;
-  scholarshipAmount: FilterEntry;
-  scholarshipProvider: FilterEntry;
+// Application-specific fields
+type OptionsApplication = {
+  distinctCourse: OptionItem;
+  distinctSection: OptionItem;
+  distinctTitle: OptionItem;
+  distinctYear: OptionItem;
+};
+
+// Scholarship-specific fields
+type OptionsScholarship = {
+  scholarshipAmount: OptionItem;
+  scholarshipProvider: OptionItem;
+  scholarshipTitle: OptionItem;
+};
+
+// Final combined type
+export type FilterOptions = {
+  optionsApplication: OptionsApplication;
+  optionsScholarship: OptionsScholarship;
 };
 
 export type MetaTypes = {

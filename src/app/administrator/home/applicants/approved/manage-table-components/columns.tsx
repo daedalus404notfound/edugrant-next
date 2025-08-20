@@ -9,7 +9,7 @@ import { DataTableColumnHeader } from "@/app/administrator/table-components/data
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { CircleCheck } from "lucide-react";
+import { Clock } from "lucide-react";
 export const columns: ColumnDef<ApplicationTypes>[] = [
   {
     id: "select",
@@ -40,7 +40,7 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "student.firstName",
+    accessorKey: "firstName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),
@@ -67,25 +67,8 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
       );
     },
   },
-
   {
-    accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ row }) => {
-      return (
-        <Badge className="bg-green-500/10 text-green-700">
-          <CircleCheck />
-          {row.getValue("status")}
-        </Badge>
-      );
-    },
-    enableSorting: true,
-    enableHiding: true,
-  },
-  {
-    accessorKey: "scholarship.scholarshipTitle",
+    accessorKey: "scholarshipTitle",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Scholarship" />
     ),
@@ -100,19 +83,44 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
     enableSorting: true,
     enableHiding: true,
   },
+
   {
-    id: "course", // 👈 use a simple id
+    id: "course",
     accessorFn: (row) => row.student.course, // safe way to access nested
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Course, Year & Section" />
+      <DataTableColumnHeader column={column} title="Course" />
     ),
     cell: ({ row }) => {
       const scholar = row.original.student;
+      return <span className="max-w-[500px] truncate">{scholar.course}</span>;
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    id: "year",
+    accessorFn: (row) => row.student.course, // safe way to access nested
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Year Level" />
+    ),
+    cell: ({ row }) => {
+      const scholar = row.original.student;
+      return <span className="max-w-[500px] truncate">{scholar.year}</span>;
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
+    cell: ({ row }) => {
       return (
-        <span className="max-w-[500px] truncate">
-          {scholar.course}-{scholar.year.slice(0, 1)}
-          {scholar.section}
-        </span>
+        <Badge className="bg-green-500/10 text-green-500">
+          <Clock />
+          {row.getValue("status")}
+        </Badge>
       );
     },
     enableSorting: true,
@@ -121,7 +129,7 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
   {
     accessorKey: "applicationResponseDate",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Approved Date" />
+      <DataTableColumnHeader column={column} title="Processed Date" />
     ),
     cell: ({ row }) => {
       return (

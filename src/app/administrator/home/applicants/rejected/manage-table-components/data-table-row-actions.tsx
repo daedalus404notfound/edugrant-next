@@ -41,9 +41,9 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const rowData = row.original as ApplicationTypes;
   const [openAlert, setOpenAlert] = useState(false);
-   const { onSubmit, isSuccess, loading } = useDeleteApplication({
-     applicationId: [rowData.applicationId],
-   });
+  const { onSubmit, isSuccess, loading } = useDeleteApplication({
+    applicationId: [rowData.applicationId],
+  });
 
   useEffect(() => {
     if (isSuccess) {
@@ -69,23 +69,6 @@ export function DataTableRowActions<TData>({
             <Maximize /> View
           </Button>
         </Link>
-
-        <Link
-          href={`/administrator/home/applicants/view/${rowData.applicationId}?edit=true`}
-          scroll={false}
-          prefetch
-          className="w-full"
-        >
-          <Button className="justify-start w-full" variant="ghost">
-            <CheckCheck /> Approve
-          </Button>
-          <Button className="justify-start w-full" variant="ghost">
-            <X /> Reject
-          </Button>
-        </Link>
-        <Button className="justify-start" variant="ghost">
-          <Copy /> Copy row
-        </Button>
         <div />
         <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
           <AlertDialogTrigger asChild>

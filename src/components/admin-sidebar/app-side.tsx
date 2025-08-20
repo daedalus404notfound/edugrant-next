@@ -228,7 +228,7 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Create Scholarship",
+          title: "Add New Scholarship",
           url: "/administrator/home/scholarships/create",
         },
         {
@@ -255,7 +255,7 @@ const data = {
           url: "/administrator/home/applicants/approved",
         },
         {
-          title: "Rejected Applicants",
+          title: "Declined Applicants",
           url: "/administrator/home/applicants/rejected",
         },
       ],
@@ -266,7 +266,7 @@ const data = {
       icon: Megaphone,
       items: [
         {
-          title: "Create Announcement",
+          title: "Add New Announcement",
           url: "/administrator/home/announcements/create",
         },
         {
@@ -280,7 +280,7 @@ const data = {
       url: "/administrator/home/admins",
       icon: UserCog,
       items: [
-        { title: "Add Admin", url: "/administrator/home/admins/create" },
+        { title: "Add New Admin", url: "/administrator/home/admins/create" },
         { title: "View Admins", url: "/administrator/home/admins/manage" },
       ],
     },
