@@ -25,12 +25,9 @@ import useGetFilter from "@/hooks/admin/getDynamicFilter";
 import { useEffect, useState } from "react";
 import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
 import { ToolbarProps } from "@/app/administrator/table-components/data-table";
-export default function DataTableToolbar<TData>({
-  table,
-  getRowId,
-  search,
-  setSearch,
-}: ToolbarProps<TData>) {
+export default function DataTableToolbar<
+  TData extends { applicationId: number }
+>({ table, search, setSearch }: ToolbarProps<TData>) {
   const { filter } = useGetFilter({
     applicationStatus: "PENDING",
     scholarshipStatus: "ACTIVE",
@@ -61,14 +58,11 @@ export default function DataTableToolbar<TData>({
   );
 
   const selectedRows = table.getSelectedRowModel().rows;
-  const applicationId = selectedRows.map((row) =>
-    getRowId ? getRowId(row.original) : row.id
-  );
-  console.log(applicationId);
+  const applicationIds = selectedRows.map((row) => row.original.applicationId);
 
   const [openAlert, setOpenAlert] = useState(false);
   const { onSubmit, isSuccess, loading } = useDeleteApplication({
-    applicationId,
+    applicationId: applicationIds,
   });
   useEffect(() => {
     if (isSuccess) {
