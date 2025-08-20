@@ -17,6 +17,7 @@ import useFetchApplications from "@/hooks/admin/getApplicant";
 
 export default function Manage() {
   const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("APPROVED");
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -30,7 +31,7 @@ export default function Manage() {
     order: sorting[0]?.desc ? "desc" : "asc",
     filters:
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
-    status: "APPROVED",
+    status: status,
   });
 
   const { searchData, searchLoading, searchMeta } = useApplicantsSearch({
@@ -39,7 +40,7 @@ export default function Manage() {
     sortBy: sorting[0]?.id ?? "",
     order: sorting[0]?.desc ? "desc" : "asc",
     query: search,
-    status: "APPROVED",
+    status: status,
   });
   console.log(columnFilters);
   return (
@@ -75,6 +76,8 @@ export default function Manage() {
             getRowId={(row) => row.scholarshipId}
             loading={search ? searchLoading : loading}
             search={search}
+            status={status}
+            setStatus={setStatus}
             setSearch={setSearch}
             sorting={sorting}
             setSorting={setSorting}
