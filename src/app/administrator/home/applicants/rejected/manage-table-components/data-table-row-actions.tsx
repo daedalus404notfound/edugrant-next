@@ -2,13 +2,12 @@
 
 import { Row } from "@tanstack/react-table";
 import {
-  CheckCheck,
-  Copy,
+  
   Loader,
   Maximize,
   MoreHorizontal,
   Trash2,
-  X,
+
 } from "lucide-react";
 import {
   AlertDialog,
