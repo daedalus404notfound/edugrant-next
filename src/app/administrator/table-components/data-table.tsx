@@ -40,8 +40,8 @@ interface DataTableProps<TData, TValue> {
   setPagination: OnChangeFn<PaginationState>;
   loading: boolean;
   search?: string;
-  status: string;
-  setStatus: (status: string) => void;
+  status?: string;
+  setStatus?: (status: string) => void;
   setSearch?: (search: string) => void;
   sorting: SortingState;
   setSorting: OnChangeFn<SortingState>;
