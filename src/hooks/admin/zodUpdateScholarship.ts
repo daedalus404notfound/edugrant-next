@@ -37,8 +37,8 @@ export function useUpdateScholarshipZod(data?: ScholarshipTypes) {
       providerName: data?.scholarshipProvider || "",
       scholarshipGwa: data?.gwa?.toString() || "",
       scholarshipDescription: data?.scholarshipDescription || "",
-      applicationDeadline: data?.scholarshipDealine
-        ? new Date(data.scholarshipDealine)
+      applicationDeadline: data?.scholarshipDeadline
+        ? new Date(data.scholarshipDeadline)
         : undefined,
       scholarshipAmount: data?.scholarshipAmount?.toString() || "",
       scholarshipLimit: data?.scholarshipLimit?.toString() || "",
