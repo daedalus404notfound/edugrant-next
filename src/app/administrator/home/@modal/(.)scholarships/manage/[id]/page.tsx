@@ -53,7 +53,7 @@ export default function InterceptManageScholarship() {
   const { data } = useScholarshipUserByIdAdmin(id);
   console.log(data);
 
-  const deadline = data?.scholarshipDealine;
+  const deadline = data?.scholarshipDeadline;
 
   const scholarshipId = data?.scholarshipId ? [data.scholarshipId] : [];
 
@@ -192,8 +192,8 @@ export default function InterceptManageScholarship() {
                             |
                             <div className="flex items-center gap-1.5">
                               <Calendar size={14} />
-                              {data?.scholarshipDealine &&
-                                format(data?.scholarshipDealine, "PPP")}
+                              {data?.scholarshipDeadline &&
+                                format(data?.scholarshipDeadline, "PPP")}
                             </div>
                             <Badge className="bg-green-800 text-gray-200">
                               Active
