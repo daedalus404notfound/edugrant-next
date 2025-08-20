@@ -1,7 +1,7 @@
 "use client";
 import "ldrs/react/Ring.css";
 import useScholarshipData from "@/hooks/admin/getScholarship";
-import {  Archive } from "lucide-react";
+import { Archive } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { DataTable } from "@/app/administrator/table-components/data-table";
@@ -11,12 +11,11 @@ import {
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
-import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
 import DataTableToolbar from "./archived-table-components/data-table-toolbar";
 import { ScholarshipTypes } from "@/hooks/types";
 
 export default function Manage() {
-  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("ARCHIVED");
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -28,18 +27,11 @@ export default function Manage() {
     pageSize: pagination.pageSize,
     sortBy: sorting[0]?.id ?? "",
     order: sorting[0]?.desc ? "desc" : "asc",
-    status: false,
+    status: status,
     filters:
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
   });
 
-  const { searchData, searchLoading, searchMeta } = useScholarshipSearch({
-    page: pagination.pageIndex + 1,
-    pageSize: pagination.pageSize,
-    sortBy: sorting[0]?.id ?? "",
-    order: sorting[0]?.desc ? "desc" : "asc",
-    query: search,
-  });
   console.log(columnFilters);
   return (
     <div className="min-h-screen px-4 relative z-10">
@@ -66,15 +58,15 @@ export default function Manage() {
 
         <div className="py-8">
           <DataTable<ScholarshipTypes, unknown>
-            data={search.trim().length > 0 ? searchData : data}
+            data={data}
             columns={columns}
-            meta={search.trim().length > 0 ? searchMeta : meta}
+            meta={meta}
             pagination={pagination}
             setPagination={setPagination}
             getRowId={(row) => row.scholarshipId}
-            loading={search ? searchLoading : loading}
-            search={search}
-            setSearch={setSearch}
+            loading={loading}
+            status={status}
+            setStatus={setStatus}
             sorting={sorting}
             setSorting={setSorting}
             columnFilters={columnFilters}

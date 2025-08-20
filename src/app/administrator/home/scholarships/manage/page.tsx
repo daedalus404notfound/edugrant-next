@@ -17,6 +17,7 @@ import { ScholarshipTypes } from "@/hooks/types";
 
 export default function Manage() {
   const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("ACTIVE");
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -30,6 +31,7 @@ export default function Manage() {
     order: sorting[0]?.desc ? "desc" : "asc",
     filters:
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
+    status: status,
   });
 
   const { searchData, searchLoading, searchMeta } = useScholarshipSearch({
@@ -38,6 +40,7 @@ export default function Manage() {
     sortBy: sorting[0]?.id ?? "",
     order: sorting[0]?.desc ? "desc" : "asc",
     query: search,
+    status: status,
   });
   console.log(columnFilters);
   return (
@@ -75,6 +78,8 @@ export default function Manage() {
             loading={search ? searchLoading : loading}
             search={search}
             setSearch={setSearch}
+            status={status}
+            setStatus={setStatus}
             sorting={sorting}
             setSorting={setSorting}
             columnFilters={columnFilters}

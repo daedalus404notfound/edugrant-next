@@ -121,7 +121,7 @@ export const columns: ColumnDef<ScholarshipTypes>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "scholarshipDealine",
+    accessorKey: "scholarshipDeadline",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Deadline" />
     ),
@@ -129,7 +129,7 @@ export const columns: ColumnDef<ScholarshipTypes>[] = [
       return (
         <span className="max-w-[500px] truncate">
           {format(
-            new Date(row.getValue("scholarshipDealine")),
+            new Date(row.getValue("scholarshipDeadline")),
             "MMM d, yyyy 'at' hh:mm a"
           )}
         </span>

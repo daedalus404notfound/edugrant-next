@@ -23,11 +23,13 @@ import {
 import { MetaTypes } from "@/hooks/types";
 import { DataTablePagination } from "./data-table-pagination";
 import { Skeleton } from "@/components/ui/skeleton";
-interface ToolbarProps<TData> {
+export interface ToolbarProps<TData> {
   table: TanstackTable<TData>;
   getRowId?: (row: TData) => string | number;
-  search: string;
-  setSearch: (search: string) => void;
+  search?: string;
+  setSearch?: (search: string) => void;
+  status?: string;
+  setStatus?: (search: string) => void;
 }
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -37,8 +39,10 @@ interface DataTableProps<TData, TValue> {
   pagination: PaginationState;
   setPagination: OnChangeFn<PaginationState>;
   loading: boolean;
-  search: string;
-  setSearch: (search: string) => void;
+  search?: string;
+  status: string;
+  setStatus: (status: string) => void;
+  setSearch?: (search: string) => void;
   sorting: SortingState;
   setSorting: OnChangeFn<SortingState>;
   columnFilters: ColumnFiltersState;
@@ -56,6 +60,8 @@ export function DataTable<TData, TValue>({
   loading,
   search,
   setSearch,
+  status,
+  setStatus,
   sorting,
   setSorting,
   columnFilters,
@@ -84,6 +90,8 @@ export function DataTable<TData, TValue>({
           table={table}
           getRowId={getRowId}
           search={search}
+          status={status}
+          setStatus={setStatus}
           setSearch={setSearch}
         />
       )}

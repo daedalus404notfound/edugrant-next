@@ -19,23 +19,22 @@ import Link from "next/link";
 import useGetFilter from "@/hooks/admin/getDynamicFilter";
 import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import { useEffect, useState } from "react";
+import { Tabs } from "@/components/ui/vercel-tabs";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
   getRowId?: (row: TData) => string | number;
-  search: string;
-  setSearch: (search: string) => void;
-}
-interface DataTableToolbarProps<TData> {
-  table: Table<TData>;
-  getRowId?: (row: TData) => string | number;
-  search: string;
-  setSearch: (search: string) => void;
+  search?: string;
+  setSearch?: (search: string) => void;
+  status?: string;
+  setStatus?: (status: string) => void;
 }
 
 export default function DataTableToolbar<TData>({
   table,
   getRowId,
+  status,
+  setStatus,
 }: // search,
 // setSearch,
 DataTableToolbarProps<TData>) {
@@ -53,12 +52,15 @@ DataTableToolbarProps<TData>) {
   //     label: meow,
   //   })) || [];
   console.log(filter);
-
+  const tabs = [
+    { id: "ARCHIVED", label: "Archived", indicator: "" },
+    { id: "EXPIRED", label: "Expired", indicator: "" },
+  ];
   const selectedRows = table.getSelectedRowModel().rows;
   const scholarshipId = selectedRows.map((row) =>
     getRowId ? getRowId(row.original) : row.id
   );
-  console.log(scholarshipId);
+  console.log("emow",status);
 
   const [openAlert, setOpenAlert] = useState(false);
   const { onSubmit, isSuccess, loading } = useDeleteScholarship({
@@ -74,6 +76,9 @@ DataTableToolbarProps<TData>) {
   return (
     <div className="flex items-center justify-between gap-1.5">
       <div className="flex flex-1 items-center space-x-2">
+        {setStatus && (
+          <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
+        )}
         {/* <div className="relative">
           <Input
             placeholder="Filter scholarship..."

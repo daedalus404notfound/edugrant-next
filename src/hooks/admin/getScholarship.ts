@@ -19,14 +19,14 @@ export default function useScholarshipData({
   pageSize,
   sortBy,
   order,
-  status = true,
+  status,
   filters,
 }: {
   page: number;
   pageSize: number;
   sortBy?: string;
   order?: string;
-  status?: boolean;
+  status?: string;
   filters?: string;
 }) {
   const [data, setData] = useState<ScholarshipTypes[]>([]);
@@ -43,7 +43,7 @@ export default function useScholarshipData({
           }/getScholarships?page=${page}&dataPerPage=${pageSize}${
             sortBy ? `&sortBy=${sortBy}` : ""
           }${order ? `&order=${order}` : ""}${
-            status ? "&status=ACTIVE" : "&status=EXPIRED"
+            status ? `&status=${status}` : ""
           }${filters ? `&filters=${encodeURIComponent(filters)}` : ""}`;
 
           const res = await axios.get(endpoint, { withCredentials: true });
@@ -61,8 +61,8 @@ export default function useScholarshipData({
 
       fetchScholarships();
     },
-    [page, pageSize, sortBy, order, filters]
+    [page, pageSize, sortBy, order, filters, status]
   );
 
-  return { data, loading, meta };
+  return { data, loading, meta};
 }

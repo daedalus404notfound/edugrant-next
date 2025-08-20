@@ -12,7 +12,7 @@ export type ScholarshipTypes = {
   scholarshipTitle: string;
   scholarshipProvider: string;
   status: string;
-  scholarshipDealine: string;
+  scholarshipDeadline: string;
   totalApplicants: number;
   totalApproved: number;
   scholarshipLogo: string;

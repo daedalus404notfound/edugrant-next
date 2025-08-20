@@ -28,26 +28,13 @@ import Link from "next/link";
 import useGetFilter from "@/hooks/admin/getDynamicFilter";
 import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import { useEffect, useState } from "react";
-
-interface DataTableToolbarProps<TData> {
-  table: Table<TData>;
-  getRowId?: (row: TData) => string | number;
-  search: string;
-  setSearch: (search: string) => void;
-}
-interface DataTableToolbarProps<TData> {
-  table: Table<TData>;
-  getRowId?: (row: TData) => string | number;
-  search: string;
-  setSearch: (search: string) => void;
-}
-
+import { ToolbarProps } from "@/app/administrator/table-components/data-table";
 export default function DataTableToolbar<TData>({
   table,
   getRowId,
   search,
   setSearch,
-}: DataTableToolbarProps<TData>) {
+}: ToolbarProps<TData>) {
   const { filter } = useGetFilter({ scholarshipStatus: "ACTIVE" });
   const isFiltered = table.getState().columnFilters.length > 0;
   // const amountOptions =
@@ -93,7 +80,7 @@ export default function DataTableToolbar<TData>({
           <Input
             placeholder="Filter scholarship..."
             className="peer ps-9 pe-9 h-8 w-[150px] lg:w-[250px]"
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => setSearch?.(e.target.value)}
           />
           <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
             <SearchIcon size={16} />

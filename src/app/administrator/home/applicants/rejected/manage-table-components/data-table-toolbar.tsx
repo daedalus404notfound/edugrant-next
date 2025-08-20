@@ -26,6 +26,7 @@ import { DataTableFacetedFilter } from "@/app/administrator/table-components/dat
 import useGetFilter from "@/hooks/admin/getDynamicFilter";
 import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import { useEffect, useState } from "react";
+import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -76,14 +77,14 @@ export default function DataTableToolbar<TData>({
   );
 
   const selectedRows = table.getSelectedRowModel().rows;
-  const scholarshipId = selectedRows.map((row) =>
+  const applicationId = selectedRows.map((row) =>
     getRowId ? getRowId(row.original) : row.id
   );
-  console.log(scholarshipId);
+  console.log(applicationId);
 
   const [openAlert, setOpenAlert] = useState(false);
-  const { onSubmit, isSuccess, loading } = useDeleteScholarship({
-    scholarshipId,
+  const { onSubmit, isSuccess, loading } = useDeleteApplication({
+    applicationId,
   });
   useEffect(() => {
     if (isSuccess) {
