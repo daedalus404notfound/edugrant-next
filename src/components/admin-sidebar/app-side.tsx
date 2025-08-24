@@ -188,6 +188,7 @@ import * as React from "react";
 import logo from "@/assets/basclogo.png";
 import {
   BarChart,
+  Bell,
   Bot,
   GraduationCap,
   Home,
@@ -225,7 +226,7 @@ const data = {
       title: "Scholarships",
       url: "/administrator/home/scholarships",
       icon: GraduationCap,
-      isActive: true,
+      isActive: false,
       items: [
         {
           title: "Add New Scholarship",
@@ -293,18 +294,7 @@ const data = {
         { title: "Statistics", url: "/administrator/home/reports/statistics" },
       ],
     },
-    {
-      title: "Settings",
-      url: "/administrator/home/settings",
-      icon: Settings2,
-      items: [
-        {
-          title: "General Settings",
-          url: "/administrator/home/settings/general",
-        },
-        { title: "User Settings", url: "/administrator/home/settings/users" },
-      ],
-    },
+
   ],
 };
 const sidebarData = [
@@ -314,9 +304,14 @@ const sidebarData = [
     icon: Home,
   },
   {
-    title: "View Profile",
+    title: "Profile",
     url: "/administrator/home/admin",
     icon: UserRound,
+  },
+  {
+    title: "Notification",
+    url: "/administrator/home/notification",
+    icon: Bell,
   },
 ];
 

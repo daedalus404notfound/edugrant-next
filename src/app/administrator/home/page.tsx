@@ -10,6 +10,7 @@ import {
   TimelineContent,
   TimelineDate,
   TimelineItem,
+  TimelineTitle,
 } from "@/components/ui/timeline";
 
 import { useState } from "react";
@@ -37,9 +38,9 @@ import { ChartBarInteractive } from "./dashboard/bar-chart";
 const announcements = [
   {
     id: 1,
-    title: "Scholarship Application Deadline Extended",
+    title: "Application for Sen. Win Gatchalian is now open.",
     description:
-      "The deadline for scholarship applications has been extended to June 30, 2025.",
+      "Kindly prepare for the listed requirements below and fill up the application form. LInk for the submission will be sent on August 22, 2025 and this can be accessed on August 25, 2025 from 12:01 am-11:59 pm.",
     date: "Dec 12, 2024",
     priority: "high",
   },
@@ -65,16 +66,19 @@ export default function AdminDashboard() {
               <CardTitle>Announcements</CardTitle>
             </CardHeader>
             <CardContent>
-              <Timeline className="divide-y rounded-lg border">
+              <Timeline className="">
                 {announcements.map((item) => (
                   <TimelineItem
                     key={item.id}
                     step={item.id}
-                    className="m-0! px-4! py-3!"
+                    className="m-0! border-b-1 border-t-1 py-4!"
                   >
-                    <TimelineContent className="text-foreground">
+                    <TimelineTitle className="">{item.title}</TimelineTitle>
+                    <TimelineDate className="mt-1 text-xs">
+                      {item.date}
+                    </TimelineDate>
+                    <TimelineContent className="text-muted-foreground text-sm mt-2 line-clamp-1">
                       {item.description}
-                      <TimelineDate className="mt-1">{item.date}</TimelineDate>
                     </TimelineContent>
                   </TimelineItem>
                 ))}
@@ -91,7 +95,7 @@ export default function AdminDashboard() {
             <ChartBarMultiple />
             <Card className="border-0">
               <CardContent className="flex gap-4">
-                <div className="grid items-center gap-y-5">
+                <div className="grid items-center">
                   <div className="grid flex-1 auto-rows-min gap-1">
                     <div className="text-sm text-muted-foreground">
                       Approved
@@ -184,7 +188,7 @@ export default function AdminDashboard() {
           </div>
         </div>
         <div className="space-y-5">
-          <Card className="border-0">
+          <Card className="border-0 aspect-[16/6]">
             <CardHeader className="">
               <CardTitle>Most Applied Scholarship</CardTitle>
               <CardDescription>

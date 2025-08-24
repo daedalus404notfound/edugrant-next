@@ -1,6 +1,15 @@
 "use client";
 
-import { Megaphone, Plus, Trash2 } from "lucide-react";
+import {
+  ArrowRight,
+  Bell,
+  Check,
+  CheckCheck,
+  Highlighter,
+  Megaphone,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs } from "@/components/ui/vercel-tabs";
@@ -12,11 +21,7 @@ import { DeleteDialog } from "@/components/ui/delete-dialog";
 import useDeleteAnnouncement from "@/hooks/admin/postDeleteAnnoucement";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
-import AnnouncementDescription from "./description";
-const tabs = [
-  { id: "ACTIVE", label: "Active", indicator: "" },
-  { id: "EXPIRED", label: "Expired", indicator: "" },
-];
+
 export default function ScholarshipAnnouncements() {
   const [page] = useState(1);
   const [pageSize] = useState(50);
@@ -36,7 +41,6 @@ export default function ScholarshipAnnouncements() {
   const { onSubmit, loadingDelete } = useDeleteAnnouncement({
     announcementId: selectedId,
   });
-
   console.log("data", data);
   return (
     <div className=" min-h-screen px-4">
@@ -54,23 +58,19 @@ export default function ScholarshipAnnouncements() {
             ease: "linear",
           }}
         >
-          <Megaphone size={20} />
-          Manage Announcements
+          <Bell size={20} />
+          Notification
         </motion.span>
-        <p className="text-sm text-gray-300 mt-1">
-          Browse the list of active announcement.
-        </p>
+        <p className="text-sm text-gray-300 mt-1">Stay updated</p>
 
-        <div className="mt-8 flex justify-between">
-          <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
-
-          <Button variant="outline">
-            <Plus /> Add announcement
-          </Button>
-        </div>
         <div className="py-7">
+          <div className="flex justify-end items-center">
+            <Button size="sm" variant="outline">
+              Mark all as Read <CheckCheck />
+            </Button>
+          </div>
           {loading ? (
-            <div className="grid grid-cols-1 gap-3">
+            <div className="grid grid-cols-1 gap-3 mt-2">
               <Skeleton className="h-30 w-full" />
               <Skeleton className="h-30 w-full" />
               <Skeleton className="h-30 w-full" />
@@ -103,58 +103,18 @@ export default function ScholarshipAnnouncements() {
                   <div className="flex-1 space-y-3">
                     <div className="flex justify-between items-center">
                       <h1>{announcement.title}</h1>
-                      {/* <p className="flex gap-1 font-medium text-xs text-muted-foreground">
-                        <span>Until</span>
-                        {format(
-                          new Date(announcement.startDate),
-                          "MMM dd yyyy"
-                        )}
-                      </p> */}
+                      <span className="flex justify-center gap-2.5">
+                        <Button size="sm" variant="link">
+                          Mark as read <Check />
+                        </Button>{" "}
+                        <Button size="sm" variant="link">
+                          View <ArrowRight />
+                        </Button>
+                      </span>
                     </div>
-                    <div className="text-sm text-muted-foreground leading-relaxed mt-2 whitespace-pre-line">
-                      <AnnouncementDescription
-                        description={announcement.description}
-                      />
-                    </div>
-                    <Separator />
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-1.5">
-                        <p className="text-sm text-muted-foreground font-medium">
-                          Tags
-                        </p>
-                        {announcement.tags.data.map((meow) => (
-                          <Badge key={meow} variant="secondary">
-                            {meow}
-                          </Badge>
-                        ))}
-                      </div>
-                      <div>
-                        <DeleteDialog
-                          open={openAlert}
-                          onOpenChange={setOpenAlert}
-                          onConfirm={onSubmit}
-                          loading={loadingDelete}
-                          title="Delete announcement?"
-                          description="This will permanently delete announcement and cannot be undone."
-                          confirmText="Delete All"
-                          cancelText="Keep Items"
-                          trigger={
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="justify-start"
-                              onClick={() =>
-                                setSelectedId([
-                                  announcement.announcementId.toString(),
-                                ])
-                              }
-                            >
-                              <Trash2 /> Delete
-                            </Button>
-                          }
-                        />
-                      </div>
-                    </div>
+                    <p className=" text-sm text-muted-foreground leading-relaxed line-clamp-2 mt-2">
+                      {announcement.description}
+                    </p>
                   </div>
                 </div>
               </div>

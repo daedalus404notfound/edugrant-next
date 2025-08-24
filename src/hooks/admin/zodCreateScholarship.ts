@@ -3,14 +3,14 @@ import { useFieldArray, useForm } from "react-hook-form";
 import z from "zod";
 
 const documentsSchema = z.object({
-  label: z.string().min(3, "Requireds"),
+  label: z.string().min(1, "Requireds"),
   formats: z.array(z.string()).min(1, "Required"),
 });
 
 const createScholarshipSchema = z.object({
-  scholarshipTitle: z.string().min(3, "Required"),
-  providerName: z.string().min(3, "Required"),
-  scholarshipDescription: z.string().min(3, "Required"),
+  scholarshipTitle: z.string().min(1, "Required"),
+  providerName: z.string().min(1, "Required"),
+  scholarshipDescription: z.string().min(1, "Required"),
   scholarshipGwa: z.string(),
   applicationDeadline: z.date({
     message: "Required",
@@ -52,6 +52,8 @@ export function useCreateScholarshipZod() {
       scholarshipLimit: "",
       documents: [{ label: "", formats: [] }],
     },
+    mode: "onChange",
+    reValidateMode: "onChange",
   });
 
   const formData = form.watch();

@@ -38,7 +38,7 @@ export default function ClientScholarship() {
   console.log(data, loading);
 
   return (
-    <div className="z-10 min-h-screen background px-4 ">
+    <div className="z-10 min-h-screen bg-background px-4 ">
       <div className="mx-auto w-[95%] pt-10">
         <div className="flex justify-between items-end">
           <div>
@@ -95,10 +95,10 @@ export default function ClientScholarship() {
               : data.map((scholarship) => (
                   <div
                     key={scholarship.scholarshipId}
-                    className="relative flex flex-col  rounded-lg overflow-hidden p-2 gap-3 bg-black"
+                    className="relative flex flex-col  rounded-lg overflow-hidden p-2 gap-3 bg-card dark:bg-black  shadow-md"
                   >
                     <img
-                      className="absolute h-full w-full left-0 top-0 object-cover   opacity-10  mask-gradient blur-xs "
+                      className="absolute h-full w-full left-0 top-0 object-cover   opacity-15  mask-gradient blur-xs "
                       src={scholarship.scholarshipCover}
                       alt=""
                     />
@@ -130,21 +130,22 @@ export default function ClientScholarship() {
                       </h3>
                     </div>
 
-                    <div className="flex gap-3 bg-background rounded-md  p-1.5  border-background z-10">
+                    <div className="flex gap-2 bg-background rounded-md  p-1.5  border-background z-10">
                       <Link
                         href={`/user/home/scholarships/${scholarship.scholarshipId}`}
                         prefetch
+                        className="flex-1"
                         scroll={false}
                       >
-                        <Button size="lg" variant="link" className="flex-1">
-                          Details <SquareArrowOutUpRight />
+                        <Button size="lg" variant="ghost" className="w-full">
+                          View Details 
                         </Button>
                       </Link>
 
-                      <Button size="lg" variant="link" className="flex-1">
-                        Apply <Upload />
+                      <Button size="lg" variant="ghost" className="flex-1">
+                        Apply Now
                       </Button>
-                      <Button size="lg" variant="link" className="flex-1">
+                      <Button size="lg" variant="ghost" className="flex-1">
                         <Share2 />
                       </Button>
                     </div>

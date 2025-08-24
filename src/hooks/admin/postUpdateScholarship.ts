@@ -68,50 +68,18 @@ export const useAddScholarship = () => {
     onSuccess: () => {
       StyledToast({
         status: "success",
-        title: "Scholarship Created",
-        description: "Your scholarship has been successfully posted.",
+        title: "Scholarship Updated",
+        description: "Your scholarship has been successfully updated.",
       });
     },
     onError: (error: ApiError) => {
-      console.error("Add scholarship error:", error);
-
-      if (error.response?.status === 401) {
+      console.error("Update scholarship error:", error);
+      if (error.response?.data.message) {
         StyledToast({
           status: "error",
-          title: "Unauthorized",
+          title: error.response.data.message,
           duration: 10000,
-          description: "You are not authorized to create a scholarship.",
-        });
-      } else if (error.response?.status === 410) {
-        StyledToast({
-          status: "error",
-          title: "Request Expired",
-          duration: 10000,
-          description: "The request to create this scholarship has expired.",
-        });
-      } else if (error.response?.status === 429) {
-        StyledToast({
-          status: "error",
-          title: "Too Many Attempts",
-          duration: 10000,
-          description:
-            "Please wait a moment before trying to post another scholarship.",
-        });
-      } else if (error.code === "NETWORK_ERROR" || !navigator.onLine) {
-        StyledToast({
-          status: "error",
-          title: "Connection Issue",
-          duration: 10000,
-          description:
-            "Network error. Please check your internet connection and try again.",
-        });
-      } else {
-        StyledToast({
-          status: "error",
-          title: "Failed to Create Scholarship",
-          duration: 10000,
-          description:
-            "Something went wrong while posting your scholarship. Please try again.",
+          description: "Cannot process your request.",
         });
       }
     },
@@ -127,12 +95,7 @@ export const useUpdateScholarship = (data?: ScholarshipTypes) => {
   const [open, setOpen] = useState(false);
 
   const handleSubmit = async (data: creatScholarshipFormData) => {
-    // Show loading toast while processing
-    StyledToast({
-      status: "checking",
-      title: "Creating Scholarship...",
-      description: "Please wait while we creating your scholarship.",
-    });
+ 
 
     try {
       const result = await addScholarship.mutateAsync(data);

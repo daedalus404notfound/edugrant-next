@@ -1,10 +1,7 @@
-type FormatTypes = {
-  formats: string;
-};
 
 export type scholarshipDocumentTypes = {
   label: string;
-  formats: FormatTypes[];
+  formats: string[];
 };
 
 export type ScholarshipTypes = {
@@ -75,8 +72,15 @@ export type ApplicationTypes = {
   status: string;
   student: UserProfileTypes;
   userDocuments: Record<string, UserDocument>;
+  rejectMessage: Record<
+    string,
+    {
+      status: string;
+      comment: string;
+    }
+  >;
   userId: string;
-
+  admin: AdminProfileTypes;
   applicationDate: string;
 };
 export type UserDocument = {
@@ -122,4 +126,17 @@ export type MetaTypes = {
   totalPage: number;
   totalRows: number;
   search: string;
+};
+export type AnnouncementTypes = {
+  announcements: AnnouncementDataTypes[];
+  meta: MetaTypes;
+};
+export type AnnouncementDataTypes = {
+  announcementId: number;
+  adminId: number;
+  title: string;
+  description: string;
+  tags: { data: string[] };
+  startDate: string; // ISO date string
+  expiredDate: string; // ISO date string
 };

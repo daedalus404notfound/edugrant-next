@@ -3,20 +3,20 @@ import axios from "axios";
 import { useState } from "react";
 
 type DeleteTypes = {
-  applicationId?: (string | number)[];
+  announcementId?: (string | number)[];
 };
 
-export default function useDeleteApplication({ applicationId }: DeleteTypes) {
+export default function useDeleteAnnouncement({ announcementId }: DeleteTypes) {
   const [isSuccess, setIsSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loadingDelete, setLoading] = useState(false);
   const onSubmit = async () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/deleteApplications`,
+        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/deleteAnnouncement`,
         {
-          applicationId: JSON.stringify({
-            data: applicationId,
+          announcementId: JSON.stringify({
+            data: announcementId,
           }),
         },
         { withCredentials: true }
@@ -25,9 +25,9 @@ export default function useDeleteApplication({ applicationId }: DeleteTypes) {
       if (res.status === 200) {
         StyledToast({
           status: "success",
-          title: "Application Deleted",
+          title: "Announcement Deleted",
           description:
-            "The application has been successfully removed from the system.",
+            "The announcement has been successfully removed from the system.",
         });
         setIsSuccess(true);
 
@@ -39,12 +39,12 @@ export default function useDeleteApplication({ applicationId }: DeleteTypes) {
         status: "error",
         title: "Deletion Failed",
         description:
-          "The application could not be removed. Please try again later.",
+          "The announcement could not be removed. Please try again later.",
       });
       setIsSuccess(false);
       setLoading(false);
     }
   };
 
-  return { onSubmit, isSuccess, loading };
+  return { onSubmit, isSuccess, loadingDelete };
 }

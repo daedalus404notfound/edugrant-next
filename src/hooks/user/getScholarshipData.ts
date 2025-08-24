@@ -1,27 +1,9 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { ScholarshipTypes } from "../types";
 
-export type scholarshipDocumentTypes = {
-  label: string;
-  formats: string[];
-};
 
-export type ScholarshipTypes = {
-  scholarshipId: string;
-  scholarshipTitle: string;
-  scholarshipProvider: string;
-  status: string;
-  scholarshipLimit: string;
-  scholarshipDealine: string;
-  totalApplicants: number;
-  totalApproved: number;
-  scholarshipLogo: string;
-  scholarshipCover: string;
-  scholarshipDescription: string;
-  scholarshipAmount: string;
-  scholarshipDocuments: scholarshipDocumentTypes[];
-};
 
 export default function useScholarshipUserById(id: string) {
   const [data, setData] = useState<ScholarshipTypes | null>(null);

@@ -8,7 +8,7 @@ const createAnnouncementSchema = z.object({
   announcementExpiration: z.date({
     message: "Required",
   }),
-  announcementAttachment: z.any(),
+  announcementTags: z.array(z.string()).min(1, "At least one tag is required"),
 });
 
 export type createAnnouncementFormData = z.infer<
@@ -22,7 +22,7 @@ export function useCreateAnnouncementZod() {
       announcementTitle: "",
       announcementDescription: "",
 
-      announcementAttachment: "",
+      announcementTags: [],
       announcementExpiration: undefined,
     },
   });

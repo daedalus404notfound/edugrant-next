@@ -22,6 +22,7 @@ import { Popover } from "@radix-ui/react-popover";
 import { PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import {
+  ArrowRight,
   Bell,
   ChevronsUpDown,
   ExternalLink,
@@ -32,6 +33,7 @@ import {
 import { useAdminStore } from "@/store/adminUserStore";
 import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
 import { useState } from "react";
+import Link from "next/link";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -123,9 +125,9 @@ export default function DynamicHeaderAdmin({
               </Button>
             </div>
           </PopoverTrigger>
-          <PopoverContent className="w-md p-2 bg-background space-y-2">
-            <div className="bg-background z-50 w-full rounded-md border p-4 shadow-lg">
-              <div className="flex items-center justify-between gap-2">
+          <PopoverContent className="w-md p-1 bg-card flex flex-col justify-center items-center gap-2">
+            <div className="bg-background z-50 w-full rounded-md  p-4 shadow-lg">
+              <div className="flex items-start justify-between gap-2">
                 <div className="flex grow items-center gap-12">
                   <div className="space-y-1">
                     <p className="text-sm font-medium">
@@ -136,13 +138,15 @@ export default function DynamicHeaderAdmin({
                     </p>
                   </div>
                 </div>
-                <Button size="sm" variant="ghost">
-                  View <ExternalLink />
-                </Button>
+                <Link href="/administrator/home/notification" prefetch>
+                  <Button size="sm" variant="ghost">
+                    View <ExternalLink />
+                  </Button>
+                </Link>
               </div>
             </div>
-            <div className="bg-background z-50 w-full rounded-md border p-4 shadow-lg">
-              <div className="flex items-center justify-between gap-2">
+            <div className="bg-background z-50 w-full rounded-md  p-4 shadow-lg">
+              <div className="flex items-start justify-between gap-2">
                 <div className="flex grow items-center gap-12">
                   <div className="space-y-1">
                     <p className="text-sm font-medium">Live in 27 hours</p>
@@ -156,6 +160,11 @@ export default function DynamicHeaderAdmin({
                 </Button>
               </div>
             </div>
+            <Link href="/administrator/home/notification" prefetch>
+              <Button size="sm" variant="link">
+                See more <ArrowRight />
+              </Button>
+            </Link>
           </PopoverContent>
         </Popover>
 

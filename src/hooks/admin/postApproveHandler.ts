@@ -1,29 +1,23 @@
 import StyledToast from "@/components/ui/toast-styled";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 type ApproveTypes = {
   id: string;
-  setOpenApprove: (approve: boolean) => void;
   adminId?: string;
 };
-
-export function useApprovedHandler({
-  id,
-  setOpenApprove,
-  adminId,
-}: ApproveTypes) {
+interface ApiErrorResponse {
+  message?: string;
+  error?: string;
+  statusCode?: number;
+}
+export function useApprovedHandler({ id, adminId }: ApproveTypes) {
   const [loadingApprove, setLoadingApprove] = useState(false);
-  const router = useRouter();
+  const [openApprove, setOpenApprove] = useState(false);
+  const [isSuccessApprove, setIsSuccessApprove] = useState(false);
   const handleApprove = async () => {
     try {
       setOpenApprove(true);
       setLoadingApprove(true);
-      StyledToast({
-        status: "checking",
-        title: "Processing Approval...",
-        description: "Please wait while we approve the application.",
-      });
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/approveApplication`,
         { applicationId: id, adminId: adminId },
@@ -33,25 +27,35 @@ export function useApprovedHandler({
         StyledToast({
           status: "success",
           title: "Application Approved",
-          description: "The applicant has been notified and granted access.",
+          description: "The applicant has been approved and notified.",
         });
         setLoadingApprove(false);
         setOpenApprove(false);
-        router.back();
+        setIsSuccessApprove(true);
       }
-    } catch (error) {
-      StyledToast({
-        status: "error",
-        title: "Network Error",
-        description: "Please check your connection and try again.",
-      });
-      setLoadingApprove(false);
-      setOpenApprove(false);
+    } catch (error: unknown) {
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        StyledToast({
+          status: "error",
+          title: error?.response?.data.message ?? "An error occurred.",
+          description: "Cannot process your request.",
+        });
+        setLoadingApprove(false);
+        setOpenApprove(false);
+        setIsSuccessApprove(false);
+      }
+
       console.error(error);
     } finally {
       setLoadingApprove(false);
     }
   };
 
-  return { handleApprove, loadingApprove };
+  return {
+    handleApprove,
+    loadingApprove,
+    openApprove,
+    setOpenApprove,
+    isSuccessApprove,
+  };
 }

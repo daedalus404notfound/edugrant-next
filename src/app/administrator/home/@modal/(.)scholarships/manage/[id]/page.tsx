@@ -1,17 +1,18 @@
 "use client";
 import {
-  Calendar,
-  Check,
-  Clock,
+ 
   Download,
   Edit,
-  Loader,
-  StickyNote,
+  FileInput,
+
+  Maximize,
+
   Trash2,
-  Users,
+
   X,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Drawer,
   DrawerContent,
@@ -23,23 +24,15 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import EditScholarship from "./edit-form";
-import { Badge } from "@/components/ui/badge";
+
 import useScholarshipUserByIdAdmin from "@/hooks/admin/getScholarshipData";
-import { format } from "date-fns";
 import AnimatedNumberCountdown from "@/components/ui/countdown";
 import { Separator } from "@/components/ui/separator";
-import { BorderBeam } from "@/components/ui/beam";
 import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
+import { DeleteDialog } from "@/components/ui/delete-dialog";
+import ScholarshipCards from "../../cards";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function InterceptManageScholarship() {
   const searchParams = useSearchParams();
@@ -50,7 +43,7 @@ export default function InterceptManageScholarship() {
   const params = useParams();
   const [open, setOpen] = useState(true);
   const id = params.id as string;
-  const { data } = useScholarshipUserByIdAdmin(id);
+  const { data, loading } = useScholarshipUserByIdAdmin(id);
   console.log(data);
 
   const deadline = data?.scholarshipDeadline;
@@ -58,7 +51,6 @@ export default function InterceptManageScholarship() {
   const scholarshipId = data?.scholarshipId ? [data.scholarshipId] : [];
 
   const scholarshipCover = data?.scholarshipCover;
-  const scholarshipLogo = data?.scholarshipLogo;
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
@@ -67,7 +59,7 @@ export default function InterceptManageScholarship() {
       }, 250);
     }
   };
-  const { onSubmit, isSuccess, loading } = useDeleteScholarship({
+  const { onSubmit, isSuccess, deleteLoading } = useDeleteScholarship({
     scholarshipId,
   });
 
@@ -85,36 +77,20 @@ export default function InterceptManageScholarship() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="max-w-[1000px] w-full mx-auto h-[98vh] outline-0 border-0">
+      <DrawerContent className="max-w-[1000px] w-full mx-auto h-[95vh] outline-0 border-0 p-1">
         <DrawerHeader className="sr-only">
           <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
-        <div className="flex items-center justify-between p-4">
+        <div className="flex items-center justify-between pb-2">
           <div className="flex items-center gap-3">
-            <button className="p-1 hover:bg-gray-900 rounded">
-              <X size={16} />
-            </button>
-            <h1 className="text-sm font-medium">Scholarship Details</h1>
+            <Button className="relative" variant="ghost" size="sm">
+              <X />
+              Scholarship Details
+            </Button>
           </div>
           <div className="flex items-center gap-2">
-            <Button className="relative" variant="outline" size="sm">
-              <BorderBeam
-                size={60}
-                duration={4}
-                delay={0}
-                colorFrom="#f97316"
-                colorTo="#ec4899"
-                reverse={false}
-                initialOffset={0}
-                borderThickness={2}
-                opacity={1}
-                glowIntensity={4}
-                beamBorderRadius={60}
-                pauseOnHover={false}
-                speedMultiplier={1.5}
-                className="z-10"
-              />
+            <Button className="relative" variant="link" size="sm">
               Download Form <Download />
             </Button>
           </div>
@@ -122,151 +98,100 @@ export default function InterceptManageScholarship() {
 
         {/* <BGPattern variant="dots" mask="fade-center" /> */}
         {!editMode ? (
-          <div className="relative h-full w-full overflow-auto no-scrollbar">
-            <div className="px-4">
-              <Separator />
+          loading ? (
+            <div className="bg-background h-full w-full p-4 rounded-t-xl space-y-4 overflow-hidden">
+              <Skeleton className="h-45 w-full" />
+              <div className="space-y-4">
+                <Skeleton className="aspect-square rounded-full size-25" />
+                <Skeleton className="h-10 w-64" />
+                <Skeleton className="h-8 w-54" />
+              </div>
+              <div className="grid grid-cols-3 gap-4">
+                <Skeleton className="h-30 w-full" />
+                <Skeleton className="h-30 w-full" />
+                <Skeleton className="h-30 w-full" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Skeleton className="aspect-video w-full" />
+                <Skeleton className="aspect-video w-full" />
+              </div>
             </div>
-            <div className="absolute top-0 left-0 h-80 w-full brightness-10  bg-black mask-gradient flex">
-              <img
-                className="w-full h-full object-cover blur-md "
-                src={scholarshipCover}
-                alt=""
-              />
-            </div>
-
-            <div className="relative gap-5 p-4 z-10">
-              <div className=" space-y-8">
-                <div className=" border-b border-neutral-800 overflow-hidden">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-black/80 border-b-2 border-black" />
-                    {scholarshipCover && (
-                      <img
-                        className="w-full h-35 object-cover   rounded-t-md"
-                        src={scholarshipCover}
-                        alt=""
-                      />
-                    )}
-                  </div>
-
-                  <div className="relative z-10 py-5 px-4">
-                    <div className="flex items-start gap-6">
-                      <div className="relative">
-                        <div className="size-28 rounded-full bg-neutral-800 border border-neutral-700 overflow-hidden">
-                          {scholarshipLogo && (
-                            <img
-                              className="w-full h-full object-cover"
-                              src={scholarshipLogo}
-                              alt=""
-                            />
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="w-full flex justify-between">
-                        <div className="space-y-6">
-                          <div className="space-y-2">
-                            <motion.span
-                              className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-                                       flex items-center gap-1.5 text-3xl font-semibold tracking-tight
-                                      "
-                              initial={{ backgroundPosition: "200% 0" }}
-                              animate={{ backgroundPosition: "-200% 0" }}
-                              transition={{
-                                repeat: Infinity,
-                                repeatType: "loop",
-                                duration: 7,
-                                ease: "linear",
-                              }}
-                            >
-                              {data?.scholarshipTitle}
-                            </motion.span>
-                            <p className="text-muted-foreground text-sm">
-                              by {data?.scholarshipProvider}
-                            </p>
-                          </div>
-
-                          <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                            <div className="flex items-center gap-1.5">
-                              ₱{data?.scholarshipAmount}.00
-                            </div>
-                            |
-                            <div className="flex items-center gap-1.5">
-                              <Calendar size={14} />
-                              {data?.scholarshipDeadline &&
-                                format(data?.scholarshipDeadline, "PPP")}
-                            </div>
-                            <Badge className="bg-green-800 text-gray-200">
-                              Active
-                            </Badge>
-                          </div>
-                        </div>
-                        <Button variant="outline" size="sm">
-                          View image details
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
+          ) : (
+            <div className="relative h-full w-full overflow-auto no-scrollbar bg-background rounded-t-xl">
+              <div className="absolute top-0 left-0 h-80 w-full opacity-30   mask-gradient flex">
+                <img
+                  className="w-full h-full object-cover blur-md "
+                  src={scholarshipCover}
+                  alt=""
+                />
+              </div>
+              <div className="  overflow-hidden">
+                <div className="relative flex justify-center items-center ">
+                  <div className="absolute inset-0border-b-2 border-black" />
+                  {scholarshipCover && (
+                    <img
+                      className="w-full h-45 object-cover   rounded-t-md"
+                      src={scholarshipCover}
+                      alt=""
+                    />
+                  )}
+                  <Button
+                    className="absolute z-5 bottom-3 right-3"
+                    variant="secondary"
+                  >
+                    View <Maximize />
+                  </Button>
                 </div>
-                <div className="space-y-15 px-4">
-                  {/* Hero Section */}
 
-                  {/* Description */}
-                  <div className="space-y-3">
-                    <h2 className="text-xs text-muted-foreground uppercase tracking-wider font-medium">
-                      About scholarship
-                    </h2>
-                    <p className="text-gray-300 leading-relaxed max-w-2xl">
-                      {data?.scholarshipDescription}
+                <div className="relative z-10  p-4">
+                  <Avatar className="size-25">
+                    <AvatarImage
+                      className="object-cover"
+                      src={data?.scholarshipLogo}
+                    />
+                    <AvatarFallback>
+                      {data?.scholarshipProvider.slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="space-y-1 mt-2">
+                    <motion.span
+                      className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
+                                       flex items-center gap-1.5 text-2xl font-bold tracking-tight
+                                      "
+                      initial={{ backgroundPosition: "200% 0" }}
+                      animate={{ backgroundPosition: "-200% 0" }}
+                      transition={{
+                        repeat: Infinity,
+                        repeatType: "loop",
+                        duration: 7,
+                        ease: "linear",
+                      }}
+                    >
+                      {data?.scholarshipTitle}
+                    </motion.span>
+                    <p className="text-muted-foreground text-sm">
+                      by {data?.scholarshipProvider}
                     </p>
                   </div>
-
+                </div>
+                <div className="space-y-15 px-4 mt-5">
                   {/* Stats Grid */}
-                  <div className="grid grid-cols-3 gap-8">
-                    <div className="space-y-2 border p-4 rounded-md">
-                      <div className="text-2xl font-semibold">
-                        {data?.totalApplicants}
-                      </div>
-                      <div className="text-sm text-muted-foreground flex items-center gap-1.5">
-                        <Users size={14} />
-                        Total Applicants
-                      </div>
-                    </div>
-
-                    <div className="space-y-2 border p-4 rounded-md bg-neutral-950">
-                      <div className="text-2xl font-semibold">
-                        {data?.totalApproved}
-                      </div>
-                      <div className="text-sm text-muted-foreground flex items-center gap-1.5">
-                        <Check size={14} />
-                        Approved
-                      </div>
-                    </div>
-
-                    <div className="space-y-2 border p-4 rounded-md bg-neutral-900">
-                      <div className="text-2xl font-semibold">
-                        {data?.totalApplicants}
-                      </div>
-                      <div className="text-sm text-muted-foreground flex items-center gap-1.5">
-                        <Clock size={14} />
-                        Under Review
-                      </div>
-                    </div>
-                  </div>
+                  {data && <ScholarshipCards data={data} />}
 
                   {/* Requirements */}
 
-                  <div className="grid grid-cols-2 gap-8">
+                  <div className="grid grid-cols-2 gap-5">
                     <div className="space-y-3">
-                      <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                        Academic Requirement
-                      </h3>
-                      <div className="text-lg font-semibold">
-                        {data?.gwa} GWA minimum
-                      </div>
+                      <h2 className="text-xs text-muted-foreground uppercase tracking-wider font-medium">
+                        About scholarship
+                      </h2>
+                      <p className="text-muted-foreground leading-relaxed max-w-2xl">
+                        {data?.scholarshipDescription}
+                      </p>
                     </div>
 
-                    <div className="space-y-5">
-                      <div className="flex justify-between items-center">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center px-3">
                         <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                           Required Documents
                         </h3>
@@ -276,20 +201,16 @@ export default function InterceptManageScholarship() {
                       </div>
                       <Separator className="bg-neutral-200 dark:bg-neutral-800" />
 
-                      <div className="space-y-1.5">
+                      <div className="space-y-1.5 grid grid-cols-1">
                         {data?.scholarshipDocuments.map((doc) => (
-                          <div
+                          <Button
+                            className="justify-start"
+                            variant="link"
                             key={doc.label}
-                            className="flex items-center gap-3 rounded-md  py-4  "
                           >
-                            <StickyNote
-                              size={16}
-                              className="text-neutral-400 dark:text-neutral-500 shrink-0"
-                            />
-                            <span className="truncate text-sm text-neutral-700 dark:text-neutral-300">
-                              {doc.label}
-                            </span>
-                          </div>
+                            <FileInput />
+                            {doc.label}
+                          </Button>
                         ))}
                       </div>
                     </div>
@@ -305,65 +226,53 @@ export default function InterceptManageScholarship() {
                 </div>
               </div>
             </div>
-          </div>
+          )
         ) : (
           <div className=" overflow-auto h-full no-scrollbar">
             {data && <EditScholarship data={data} setEditMode={setEditMode} />}
           </div>
         )}
-        {!editMode && (
-          <div className="p-4 sticky bottom-0 bg-black border-t">
-            <div className="flex gap-3">
-              <Button
-                onClick={() => setEditMode(true)}
-                className="flex-1"
-                variant="outline"
-              >
-                <Edit /> Edit
-              </Button>
-
-              <Button
-                className="flex-1"
-                variant="destructive"
-                onClick={() => setOpenAlert(true)}
-              >
-                <Trash2 /> Delete
-              </Button>
+        {!editMode &&
+          (loading ? (
+            <div className="p-4 sticky bottom-0 bg-card border-t">
+              <div className="flex gap-3">
+                <Skeleton className="h-9 flex-1" />
+                <Skeleton className="h-9 flex-1" />
+                <Skeleton className="h-9 flex-1" />
+              </div>
             </div>
+          ) : (
+            <div className="p-4 sticky bottom-0 bg-card border-t">
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => setEditMode(true)}
+                  className="flex-1 bg-blue-950 border border-blue-950 hover:bg-blue-800 text-gray-200 hover:border-blue-800"
+                >
+                  <Edit /> Edit
+                </Button>
 
-            <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="text-red-700 dark:text-red-500">
-                    Are you absolutely sure?
-                  </AlertDialogTitle>
-                  <AlertDialogDescription className="text-neutral-600 dark:text-neutral-400">
-                    This action cannot be undone. This will permanently delete.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel disabled={loading}>
-                    Cancel
-                  </AlertDialogCancel>
-                  <Button
-                    disabled={loading}
-                    onClick={onSubmit}
-                    variant="destructive"
-                  >
-                    {loading ? (
-                      <span className="flex items-center gap-2">
-                        <Loader className="animate-spin" />
-                        Deleting...
-                      </span>
-                    ) : (
-                      "Delete"
-                    )}
-                  </Button>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
-        )}
+                <DeleteDialog
+                  open={openAlert}
+                  onOpenChange={setOpenAlert}
+                  onConfirm={onSubmit}
+                  loading={deleteLoading}
+                  title="Delete application?"
+                  description="This will permanently delete application and cannot be undone."
+                  confirmText="Delete All"
+                  cancelText="Keep"
+                  trigger={
+                    <Button
+                      className="flex-1"
+                      variant="destructive"
+                      onClick={() => setOpenAlert(true)}
+                    >
+                      <Trash2 /> Delete
+                    </Button>
+                  }
+                />
+              </div>
+            </div>
+          ))}
       </DrawerContent>
     </Drawer>
   );

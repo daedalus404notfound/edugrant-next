@@ -1,22 +1,26 @@
-import { CheckCheck, GraduationCap, TrendingUp } from "lucide-react";
+import { Calendar, CheckCheck, GraduationCap, TrendingUp } from "lucide-react";
 import { Ring } from "ldrs/react";
 import "ldrs/react/Ring.css";
 import { JSX, useState } from "react";
+import { ScholarshipTypes } from "@/hooks/types";
+import { Button } from "@/components/ui/button";
 
 // Define types
 type ColorKey = "blue" | "green" | "yellow" | "white";
 
 interface SummaryCard {
   label: string;
-  data: number;
+  data: string;
   icon: JSX.Element;
   color: ColorKey;
 }
 
-export default function ApplicationSummary() {
-  const [loading] = useState(false);
+type Meow = {
+  data: ScholarshipTypes;
+};
 
-  // Define color mappings with proper typing
+export default function ScholarshipCards({ data }: Meow) {
+  const [loading] = useState(false);
   const colorStyles: Record<ColorKey, { badge: string; text: string }> = {
     blue: {
       badge: "bg-blue-800/10 text-blue-600",
@@ -38,46 +42,39 @@ export default function ApplicationSummary() {
 
   const summaryCards: SummaryCard[] = [
     {
-      label: " Total Applicants",
-      data: 1,
+      label: "Scholarship Amount",
+      data: "3000",
       icon: <TrendingUp />,
       color: "blue",
     },
     {
-      label: " Approved Applicants",
-      data: 2,
-      icon: <CheckCheck />,
-      color: "green",
-    },
-    {
-      label: "Active Scholarships",
-      data: 3,
+      label: "Required GWA",
+      data: " 3.00",
       icon: <GraduationCap />,
       color: "yellow",
+    },
+    {
+      label: "Deadline",
+      data: "Jan 18",
+      icon: <Calendar />,
+      color: "green",
     },
   ];
 
   return (
-    <div className="grid grid-cols-3  gap-5 ">
+    <div className="grid grid-cols-3  gap-4 ">
       {summaryCards.map((meow, index) => (
         <div
           key={index}
-          className=" bg-sidebar z-10 flex flex-col justify-between  rounded-lg  shadow-sm  aspect-[16/6.5] p-4"
+          className=" bg-sidebar z-10 flex flex-col justify-between  rounded-lg  shadow-sm   p-4"
         >
           <div className="flex justify-between items-start ">
-            <span className={` p-2 rounded-md ${colorStyles[meow.color].text}`}>
+            <Button className="shadow-black shadow-2xl" variant="outline">
               {meow.icon}
-            </span>
-            <p
-              className={`flex text-xs  p-1 rounded-sm font-mono tracking-tight ${
-                colorStyles[meow.color].badge
-              }`}
-            >
-              + 100 today
-            </p>
+            </Button>
           </div>
           <div className="flex justify-between items-end">
-            <p className="text-sm text-muted-foreground">{meow.label}</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase">{meow.label}</p>
             <span className={`text-3xl font-semibold font-mono `}>
               {loading ? (
                 <Ring

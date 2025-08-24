@@ -13,15 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { motion } from "motion/react";
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+
 import {
   ArrowRight,
   CalendarIcon,
@@ -43,6 +35,7 @@ import { cn } from "@/lib/utils";
 import { DragAndDropArea } from "@/components/ui/upload";
 import { useCreateScholarship } from "@/hooks/admin/postCreateScholarship";
 import { Label } from "@/components/ui/label";
+import { DeleteDialog } from "@/components/ui/delete-dialog";
 
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
@@ -67,12 +60,12 @@ export default function Create() {
     append,
     handleTriggerClick,
     remove,
+    reset,
+    setReset,
   } = useCreateScholarship();
 
   return (
     <div className="px-4">
-    
-
       <div className="mx-auto max-w-4xl w-full py-10">
         <motion.span
           className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
@@ -306,6 +299,8 @@ export default function Create() {
                       </FormLabel>
                       <FormControl>
                         <DragAndDropArea
+                          reset={reset}
+                          setReset={setReset}
                           label="backdrop image"
                           accept={["image/png", "image/jpeg", "image/jpg"]}
                           onFilesChange={(files) => field.onChange(files[0])} // Single file
@@ -328,6 +323,8 @@ export default function Create() {
                       </FormLabel>
                       <FormControl>
                         <DragAndDropArea
+                          reset={reset}
+                          setReset={setReset}
                           label="sponsor logo"
                           accept={["image/png", "image/jpeg", "image/jpg"]}
                           onFilesChange={(files) => field.onChange(files[0])} // Single file
@@ -439,41 +436,23 @@ export default function Create() {
               <RefreshCcw />
               Clear Form
             </Button>
-            <AlertDialog open={open} onOpenChange={setOpen}>
-              <Button className="flex-1" onClick={handleTriggerClick}>
-                Submit Scholarship <ArrowRight />
-              </Button>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Are you sure you want to submit this scholarship?
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <Button
-                    onClick={form.handleSubmit(handleSubmit)}
-                    disabled={loading}
-                    className="flex-1"
-                    variant="outline"
-                  >
-                    {loading && (
-                      <LoaderCircleIcon
-                        className="-ms-1 animate-spin"
-                        size={16}
-                        aria-hidden="true"
-                      />
-                    )}
-                    {loading ? "Submitting..." : "Yes, Submit"}
-                  </Button>
-
-                  <AlertDialogCancel className="flex-1">
-                    <X />
-                    Cancel
-                  </AlertDialogCancel>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <DeleteDialog
+              red={false}
+              open={open}
+              onOpenChange={setOpen}
+              onConfirm={form.handleSubmit(handleSubmit)}
+              loading={loading}
+              title="Confirm Submission"
+              description="  Are you sure you want to submit this scholarship?"
+              confirmText="Submit"
+              confirmTextLoading="Submitting..."
+              cancelText="Cancel"
+              trigger={
+                <Button className="flex-1" onClick={handleTriggerClick}>
+                  Submit Scholarship <ArrowRight />
+                </Button>
+              }
+            />
           </div>
         </Form>
       </div>

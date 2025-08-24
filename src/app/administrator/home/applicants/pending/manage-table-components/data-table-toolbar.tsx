@@ -2,21 +2,11 @@
 import {
   ArrowRightIcon,
   GraduationCap,
-  Loader,
   SearchIcon,
   Trash2,
   X,
 } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "@/app/administrator/table-components/data-table-view-options";
@@ -26,6 +16,7 @@ import { useEffect, useState } from "react";
 import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
 
 import { ToolbarProps } from "@/app/administrator/table-components/data-table";
+import { DeleteDialog } from "@/components/ui/delete-dialog";
 
 export default function DataTableToolbar<
   TData extends { applicationId: string }
@@ -127,46 +118,21 @@ export default function DataTableToolbar<
         )}
       </div>
       {selectedRows.length > 0 && (
-        <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
-          <AlertDialogTrigger asChild>
-            <Button
-              size="sm"
-              className="bg-red-700/20 text-red-600 hover:bg-red-700/30"
-            >
-              <Trash2 />
+        <DeleteDialog
+          open={openAlert}
+          onOpenChange={setOpenAlert}
+          onConfirm={onSubmit}
+          loading={loading}
+          title="Delete application?"
+          description="This will permanently delete all applications and cannot be undone."
+          confirmText="Delete All"
+          cancelText="Keep Items"
+          trigger={
+            <Button size="sm" variant="outline" className="justify-start">
+              <Trash2 /> Delete
             </Button>
-          </AlertDialogTrigger>
-
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-red-00">
-                Delete selected scholarship(s)?
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. The scholarship will be
-                permanently removed from the system.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-
-            <AlertDialogFooter>
-              <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
-              <Button
-                variant="destructive"
-                disabled={loading}
-                onClick={onSubmit}
-              >
-                {loading ? (
-                  <span className="flex items-center gap-2">
-                    <Loader className="animate-spin" />
-                    Deleting...
-                  </span>
-                ) : (
-                  "Delete"
-                )}
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+          }
+        />
       )}
       <DataTableViewOptions table={table} />
     </div>

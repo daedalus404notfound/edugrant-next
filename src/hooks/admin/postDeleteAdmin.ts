@@ -37,7 +37,7 @@ export default function useDeleteAdmin({ adminId }: DeleteTypes) {
         status: "error",
         title: "Deletion Failed",
         description:
-          "The application could not be removed. Please try again later.",
+          "The admin could not be removed. Please try again later.",
       });
       setIsSuccess(false);
       setLoading(false);

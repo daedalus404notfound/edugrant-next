@@ -8,7 +8,7 @@ type DeleteTypes = {
 
 export default function useDeleteScholarship({ scholarshipId }: DeleteTypes) {
   const [isSuccess, setIsSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [deleteLoading, setLoading] = useState(false);
   const onSubmit = async () => {
     try {
       setLoading(true);
@@ -46,5 +46,5 @@ export default function useDeleteScholarship({ scholarshipId }: DeleteTypes) {
     }
   };
 
-  return { onSubmit, isSuccess, loading };
+  return { onSubmit, isSuccess, deleteLoading };
 }

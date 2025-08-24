@@ -3,22 +3,12 @@
 import { Row } from "@tanstack/react-table";
 import {
   Copy,
-  Loader,
   Maximize,
   MoreHorizontal,
   PencilLine,
   Trash2,
 } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+
 import {
   Popover,
   PopoverContent,
@@ -30,6 +20,7 @@ import { ScholarshipTypes } from "@/hooks/types";
 import { useEffect, useState } from "react";
 import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import Link from "next/link";
+import { DeleteDialog } from "@/components/ui/delete-dialog";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -83,47 +74,21 @@ export function DataTableRowActions<TData>({
           <Copy /> Copy row
         </Button>
         <div />
-        <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
-          <AlertDialogTrigger asChild>
-            <Button
-              size="sm"
-              variant="ghost"
-              className=" text-red-600  justify-start"
-            >
+
+        <DeleteDialog
+          open={openAlert}
+          onOpenChange={setOpenAlert}
+          onConfirm={onSubmit}
+          loading={loading}
+          title="Delete Scholarship?"
+          description="Are you sure you want to delete this scholarship?"
+          cancelText="Keep"
+          trigger={
+            <Button size="sm" variant="ghost" className="justify-start">
               <Trash2 /> Delete
             </Button>
-          </AlertDialogTrigger>
-
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-red-00">
-                Delete selected scholarship?
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. The scholarship will be
-                permanently removed from the system.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-
-            <AlertDialogFooter>
-              <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
-              <Button
-                variant="destructive"
-                disabled={loading}
-                onClick={onSubmit}
-              >
-                {loading ? (
-                  <span className="flex items-center gap-2">
-                    <Loader className="animate-spin" />
-                    Deleting...
-                  </span>
-                ) : (
-                  "Delete"
-                )}
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+          }
+        />
       </PopoverContent>
     </Popover>
   );

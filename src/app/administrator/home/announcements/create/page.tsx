@@ -39,6 +39,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { useCreateAnnouncement } from "@/hooks/admin/postCreateAnnouncement";
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 export default function CreateAnnouncement() {
   const {
     open,
@@ -47,13 +49,15 @@ export default function CreateAnnouncement() {
     loading,
     resetCreateState,
     form,
-
     handleTriggerClick,
   } = useCreateAnnouncement();
+  const [inputValue, setInputValue] = useState("");
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setInputValue(e.target.value);
+  };
 
   return (
     <div className="px-4">
-
       <div className="mx-auto max-w-4xl w-full py-10 px-6">
         <motion.span
           className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
@@ -172,6 +176,64 @@ export default function CreateAnnouncement() {
                         </div>
                       </PopoverContent>
                     </Popover>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="announcementTags"
+                render={({ field }) => (
+                  <FormItem className="col-span-3">
+                    <FormLabel className="flex justify-between items-center">
+                      Tags
+                      <span className="flex items-center gap-2">
+                        {(!field.value || field.value.length === 0) && (
+                          <p className="text-sm text-muted-foreground">
+                            No tags added yet. Type in the input below and press
+                            Enter.
+                          </p>
+                        )}
+                        {(field.value || []).map(
+                          (tag: string, index: number) => (
+                            <Badge
+                              key={index}
+                              variant="secondary"
+                              className="cursor-pointer"
+                              onClick={() => {
+                                const newTags = (field.value || []).filter(
+                                  (_: any, i: number) => i !== index
+                                );
+                                field.onChange(newTags);
+                              }}
+                            >
+                              {tag} ×
+                            </Badge>
+                          )
+                        )}
+                        <FormMessage />
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        id="tag-input"
+                        type="text"
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && inputValue.trim()) {
+                            e.preventDefault();
+                            const newTags = [
+                              ...(field.value || []),
+                              inputValue.trim(),
+                            ];
+                            field.onChange(newTags);
+                            setInputValue("");
+                          }
+                        }}
+                        className="w-full"
+                      />
+                    </FormControl>
                   </FormItem>
                 )}
               />

@@ -16,32 +16,20 @@ import { useAdminStore } from "@/store/adminUserStore";
 type ApiError = AxiosError<ApiErrorResponse>;
 const addAnnouncementApi = async (data: createAnnouncementFormData) => {
   const { admin } = useAdminStore.getState();
-  const formDataToSend = new FormData();
-  formDataToSend.append("announcementTitle", data.announcementTitle);
-  formDataToSend.append(
-    "announcementDescription",
-    data.announcementDescription
-  );
-  if (data.announcementAttachment) {
-    formDataToSend.append(
-      "announcementAttachment",
-      data.announcementAttachment
-    );
-  }
-  if (admin?.adminId) {
-    formDataToSend.append("adminId", String(admin.adminId));
-  }
-  formDataToSend.append(
-    "announcementExpiration",
-    data.announcementExpiration.toISOString()
-  );
+  const payload = {
+    announcementTitle: data.announcementTitle,
+    announcementDescription: data.announcementDescription,
+    announcementTags: JSON.stringify({ data: data.announcementTags || [] }),
+    adminId: admin?.adminId,
+    announcementExpiration: data.announcementExpiration.toISOString(),
+  };
   const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/adminAddAnnouncements`,
-    formDataToSend,
+    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/createAnnouncement`,
+    payload,
     {
       withCredentials: true,
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
       },
     }
   );
@@ -52,56 +40,24 @@ const addAnnouncementApi = async (data: createAnnouncementFormData) => {
 export const useAnnouncement = () => {
   return useMutation({
     mutationFn: addAnnouncementApi,
-    onSuccess: () => {
-      StyledToast({
-        status: "success",
-        title: "Announcement Created",
-        description: "Your announcement has been successfully posted.",
-      });
-    },
-    onError: (error: ApiError) => {
-      console.error("Add announcement error:", error);
-
-      if (error.response?.status === 401) {
+   onSuccess: () => {
         StyledToast({
-          status: "error",
-          title: "Unauthorized",
-          duration: 10000,
-          description: "You are not authorized to create a scholarship.",
+          status: "success",
+          title: "Scholarship Created",
+          description: "Your announcement has been successfully posted.",
         });
-      } else if (error.response?.status === 410) {
-        StyledToast({
-          status: "error",
-          title: "Request Expired",
-          duration: 10000,
-          description: "The request to create this announcement has expired.",
-        });
-      } else if (error.response?.status === 429) {
-        StyledToast({
-          status: "error",
-          title: "Too Many Attempts",
-          duration: 10000,
-          description:
-            "Please wait a moment before trying to post another announcement.",
-        });
-      } else if (error.code === "NETWORK_ERROR" || !navigator.onLine) {
-        StyledToast({
-          status: "error",
-          title: "Connection Issue",
-          duration: 10000,
-          description:
-            "Network error. Please check your internet connection and try again.",
-        });
-      } else {
-        StyledToast({
-          status: "error",
-          title: "Failed to Create announcement",
-          duration: 10000,
-          description:
-            "Something went wrong while posting your announcement. Please try again.",
-        });
-      }
-    },
+      },
+      onError: (error: ApiError) => {
+        console.error("Add scholarship error:", error);
+        if (error.response?.data.message) {
+          StyledToast({
+            status: "error",
+            title: error.response.data.message,
+            duration: 10000,
+            description: "Cannot process your request.",
+          });
+        }
+      },
     retry: 1,
     retryDelay: 1000,
   });
@@ -156,7 +112,7 @@ export const useCreateAnnouncement = () => {
     StyledToast({
       status: "success",
       title: "Form Reset",
-      description: "Form has been cleared and ready for new scholarship entry.",
+      description: "Form has been cleared and ready for new announcement entry.",
     });
   };
   return {

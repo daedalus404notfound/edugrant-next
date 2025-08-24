@@ -12,23 +12,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+
 import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import {
-  ArrowRight,
+  ArrowLeftFromLine,
+
   CalendarIcon,
   ClockIcon,
-  LoaderCircleIcon,
+
   Plus,
+  Save,
   Trash2,
-  X,
+
 } from "lucide-react";
 import {
   Popover,
@@ -41,6 +35,8 @@ import { DragAndDropArea } from "@/components/ui/upload";
 import { ScholarshipTypes } from "@/hooks/types";
 import { useUpdateScholarship } from "@/hooks/admin/postUpdateScholarship";
 import { Label } from "@/components/ui/label";
+import { DeleteDialog } from "@/components/ui/delete-dialog";
+import { motion } from "motion/react";
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
   {
@@ -70,398 +66,401 @@ export default function EditScholarship({
     remove,
   } = useUpdateScholarship(data);
   return (
-    <div className="p-4 pb-20">
-      <Form {...form}>
-        <div className="space-y-5">
-          <div className="grid grid-cols-3 gap-x-3 gap-y-6">
-            <div className="col-span-2">
-              <FormField
-                control={form.control}
-                name="scholarshipTitle"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Scholarship Title <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="">
-              <FormField
-                control={form.control}
-                name="providerName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Provider Name <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
+    <div className=" bg-background rounded-t-lg">
+      <div className="p-4  space-y-5">
+        <motion.span
+          className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
+                                       flex items-center gap-1.5 text-2xl font-semibold tracking-tight
+                                      "
+          initial={{ backgroundPosition: "200% 0" }}
+          animate={{ backgroundPosition: "-200% 0" }}
+          transition={{
+            repeat: Infinity,
+            repeatType: "loop",
+            duration: 7,
+            ease: "linear",
+          }}
+        >
+          Update {data?.scholarshipTitle}
+        </motion.span>
+        <Form {...form}>
+          <div className="space-y-5">
+            <div className="grid grid-cols-3 gap-x-3 gap-y-6">
+              <div className="col-span-2">
+                <FormField
+                  control={form.control}
+                  name="scholarshipTitle"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Scholarship Title <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="">
+                <FormField
+                  control={form.control}
+                  name="providerName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Provider Name <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-            <div className="">
-              <FormField
-                control={form.control}
-                name="applicationDeadline"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel className="flex items-center justify-between">
-                      Deadline <FormMessage />
-                    </FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-full  text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, "MMM d, yyyy 'at' h:mm a")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent
-                        className="w-auto p-0 pointer-events-auto"
-                        align="start"
-                      >
-                        <div className="rounded-md border">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={(date) => {
-                              if (!date) return;
+              <div className="">
+                <FormField
+                  control={form.control}
+                  name="applicationDeadline"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel className="flex items-center justify-between">
+                        Deadline <FormMessage />
+                      </FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-full  text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "MMM d, yyyy 'at' h:mm a")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          className="w-auto p-0 pointer-events-auto"
+                          align="start"
+                        >
+                          <div className="rounded-md border">
+                            <Calendar
+                              mode="single"
+                              selected={field.value}
+                              onSelect={(date) => {
+                                if (!date) return;
 
-                              const current = field.value ?? new Date();
-                              date.setHours(current.getHours());
-                              date.setMinutes(current.getMinutes());
-                              date.setSeconds(current.getSeconds());
-                              field.onChange(date);
-                            }}
-                            captionLayout="dropdown"
-                          />
-                          <div className="border-t p-3">
-                            <div className="flex items-center gap-3">
-                              <Label className="text-xs">Enter time</Label>
-                              <div className="relative grow">
-                                <Input
-                                  type="time"
-                                  step="1"
-                                  value={
-                                    field.value
-                                      ? `${String(
-                                          field.value.getHours()
-                                        ).padStart(2, "0")}:${String(
-                                          field.value.getMinutes()
-                                        ).padStart(2, "0")}:${String(
-                                          field.value.getSeconds()
-                                        ).padStart(2, "0")}`
-                                      : ""
-                                  }
-                                  onChange={(e) => {
-                                    const [hours, minutes, seconds] =
-                                      e.target.value.split(":").map(Number);
-                                    const updated = field.value ?? new Date();
-                                    updated.setHours(hours);
-                                    updated.setMinutes(minutes);
-                                    updated.setSeconds(seconds || 0);
-                                    field.onChange(updated);
-                                  }}
-                                  className="peer appearance-none ps-9 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                                />
-                                <div className="text-muted-foreground/80  absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-                                  <ClockIcon size={16} aria-hidden="true" />
+                                const current = field.value ?? new Date();
+                                date.setHours(current.getHours());
+                                date.setMinutes(current.getMinutes());
+                                date.setSeconds(current.getSeconds());
+                                field.onChange(date);
+                              }}
+                              captionLayout="dropdown"
+                            />
+                            <div className="border-t p-3">
+                              <div className="flex items-center gap-3">
+                                <Label className="text-xs">Enter time</Label>
+                                <div className="relative grow">
+                                  <Input
+                                    type="time"
+                                    step="1"
+                                    value={
+                                      field.value
+                                        ? `${String(
+                                            field.value.getHours()
+                                          ).padStart(2, "0")}:${String(
+                                            field.value.getMinutes()
+                                          ).padStart(2, "0")}:${String(
+                                            field.value.getSeconds()
+                                          ).padStart(2, "0")}`
+                                        : ""
+                                    }
+                                    onChange={(e) => {
+                                      const [hours, minutes, seconds] =
+                                        e.target.value.split(":").map(Number);
+                                      const updated = field.value ?? new Date();
+                                      updated.setHours(hours);
+                                      updated.setMinutes(minutes);
+                                      updated.setSeconds(seconds || 0);
+                                      field.onChange(updated);
+                                    }}
+                                    className="peer appearance-none ps-9 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                                  />
+                                  <div className="text-muted-foreground/80  absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                                    <ClockIcon size={16} aria-hidden="true" />
+                                  </div>
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </PopoverContent>
-                    </Popover>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="col-span-2">
-              <FormField
-                control={form.control}
-                name="scholarshipGwa"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Required GWA <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="number"
-                        placeholder="(Optional)"
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="col-span-2">
-              <FormField
-                control={form.control}
-                name="scholarshipAmount"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Scholarship Amount <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="">
-              <FormField
-                control={form.control}
-                name="scholarshipLimit"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Scholarship Limit
-                      <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="(Optional)"
-                        type="number"
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="col-span-3">
-              <FormField
-                control={form.control}
-                name="scholarshipDescription"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Scholarship Description <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="space-y-5 mt-10">
-          <div className="w-full flex gap-5">
-            {/* Backdrop Image */}
-            <div className="flex flex-col flex-1 gap-2">
-              <FormField
-                control={form.control}
-                name="detailsImage"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Details Cover
-                      <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <DragAndDropArea
-                        label="backdrop image"
-                        accept={["image/png", "image/jpeg", "image/jpg"]}
-                        onFilesChange={(files) => field.onChange(files[0])} // Single file
-                        initialImageUrl={data.scholarshipCover}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            {/* Sponsor Logo Image */}
-            <div className="flex flex-col flex-1 gap-2">
-              <FormField
-                control={form.control}
-                name="sponsorImage"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Sponsor Logo/Image <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <DragAndDropArea
-                        label="sponsor logo"
-                        accept={["image/png", "image/jpeg", "image/jpg"]}
-                        onFilesChange={(files) => field.onChange(files[0])} // Single file
-                        initialImageUrl={data.scholarshipLogo}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* Dynamic Required Documents */}
-        <div className="space-y-5 mt-10">
-          <div className="w-full flex items-center justify-end ">
-            <Button
-              type="button"
-              size="sm"
-              onClick={() => append({ label: "", formats: [] })}
-              variant="outline"
-            >
-              <Plus className="w-4 h-4 mr-1" />
-              More requirements
-            </Button>
-          </div>
-
-          <div className="space-y-5">
-            {fields.map((field, index) => (
-              <div
-                key={field.id}
-                className="grid grid-cols-3 gap-3 items-center"
-              >
-                {/* Label */}
-                <div className="lg:col-span-1 col-span-3">
-                  <FormField
-                    control={form.control}
-                    name={`documents.${index}.label`}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex justify-between items-center">
-                          Document Label {index + 1} <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder="e.g. COR" {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                {/* Formats */}
-                <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
-                  <FormField
-                    control={form.control}
-                    name={`documents.${index}.formats`}
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <FormLabel className="flex justify-between items-center">
-                          Document Formats
-                          <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <MultipleSelector
-                            className="bg-white/5"
-                            commandProps={{
-                              label: "Select document formats",
-                            }}
-                            value={options.filter((option) =>
-                              field.value?.includes(option.value)
-                            )}
-                            defaultOptions={options}
-                            placeholder="Choose formats"
-                            hideClearAllButton
-                            hidePlaceholderWhenSelected
-                            emptyIndicator={
-                              <p className="text-center text-sm">
-                                No results found
-                              </p>
-                            }
-                            onChange={(selected) => {
-                              field.onChange(
-                                selected.map((option) => option.value)
-                              );
-                            }}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    disabled={fields.length === 1}
-                    onClick={() => remove(index)}
-                  >
-                    <Trash2 />
-                  </Button>
-                </div>
+                        </PopoverContent>
+                      </Popover>
+                    </FormItem>
+                  )}
+                />
               </div>
-            ))}
+
+              <div className="col-span-2">
+                <FormField
+                  control={form.control}
+                  name="scholarshipGwa"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Required GWA <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          type="number"
+                          placeholder="(Optional)"
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="col-span-2">
+                <FormField
+                  control={form.control}
+                  name="scholarshipAmount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Scholarship Amount <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="">
+                <FormField
+                  control={form.control}
+                  name="scholarshipLimit"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Scholarship Limit
+                        <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="(Optional)"
+                          type="number"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="col-span-3">
+                <FormField
+                  control={form.control}
+                  name="scholarshipDescription"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Scholarship Description <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <Textarea {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
           </div>
-        </div>
-      </Form>
-      <div className="flex gap-3 w-full absolute bg-black bottom-0 left-0 p-4">
-        <AlertDialog open={open} onOpenChange={setOpen}>
-          <Button className="flex-1" onClick={handleTriggerClick}>
-            Update Scholarship <ArrowRight />
-          </Button>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
-              <AlertDialogDescription>
-                Are you sure you want to submit this scholarship?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
+          <div className="space-y-5 mt-10">
+            <div className="w-full flex gap-5">
+              {/* Backdrop Image */}
+              <div className="flex flex-col flex-1 gap-2">
+                <FormField
+                  control={form.control}
+                  name="detailsImage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Details Cover
+                        <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <DragAndDropArea
+                          label="backdrop image"
+                          accept={["image/png", "image/jpeg", "image/jpg"]}
+                          onFilesChange={(files) => field.onChange(files[0])} // Single file
+                          initialImageUrl={data.scholarshipCover}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Sponsor Logo Image */}
+              <div className="flex flex-col flex-1 gap-2">
+                <FormField
+                  control={form.control}
+                  name="sponsorImage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="flex justify-between items-center">
+                        Sponsor Logo/Image <FormMessage />
+                      </FormLabel>
+                      <FormControl>
+                        <DragAndDropArea
+                          label="sponsor logo"
+                          accept={["image/png", "image/jpeg", "image/jpg"]}
+                          onFilesChange={(files) => field.onChange(files[0])} // Single file
+                          initialImageUrl={data.scholarshipLogo}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Dynamic Required Documents */}
+          <div className="space-y-5 mt-10">
+            <div className="w-full flex items-center justify-end ">
               <Button
-                onClick={form.handleSubmit(handleSubmit)}
-                disabled={loading}
-                className="flex-1"
+                type="button"
+                size="sm"
+                onClick={() => append({ label: "", formats: [] })}
                 variant="outline"
               >
-                {loading && (
-                  <LoaderCircleIcon
-                    className="-ms-1 animate-spin"
-                    size={16}
-                    aria-hidden="true"
-                  />
-                )}
-                {loading ? "Submitting..." : "Yes, Submit"}
+                <Plus className="w-4 h-4 mr-1" />
+                More requirements
               </Button>
+            </div>
 
-              <AlertDialogCancel className="flex-1">
-                <X />
-                Cancel
-              </AlertDialogCancel>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+            <div className="space-y-5">
+              {fields.map((field, index) => (
+                <div
+                  key={field.id}
+                  className="grid grid-cols-3 gap-3 items-center"
+                >
+                  {/* Label */}
+                  <div className="lg:col-span-1 col-span-3">
+                    <FormField
+                      control={form.control}
+                      name={`documents.${index}.label`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex justify-between items-center">
+                            Document Label {index + 1} <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. COR" {...field} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-        <Button
-          onClick={() => setEditMode(false)}
-          className="flex-1"
-          variant="outline"
-        >
-          <X />
-          Cancel
-        </Button>
+                  {/* Formats */}
+                  <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
+                    <FormField
+                      control={form.control}
+                      name={`documents.${index}.formats`}
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel className="flex justify-between items-center">
+                            Document Formats
+                            <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <MultipleSelector
+                              className="bg-white/5"
+                              commandProps={{
+                                label: "Select document formats",
+                              }}
+                              value={options.filter((option) =>
+                                field.value?.includes(option.value)
+                              )}
+                              defaultOptions={options}
+                              placeholder="Choose formats"
+                              hideClearAllButton
+                              hidePlaceholderWhenSelected
+                              emptyIndicator={
+                                <p className="text-center text-sm">
+                                  No results found
+                                </p>
+                              }
+                              onChange={(selected) => {
+                                field.onChange(
+                                  selected.map((option) => option.value)
+                                );
+                              }}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      disabled={fields.length === 1}
+                      onClick={() => remove(index)}
+                    >
+                      <Trash2 />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Form>
+      </div>
+      <div className="p-4 sticky bottom-0 bg-card  border-t">
+        <div className="flex gap-3">
+          <DeleteDialog
+            open={open}
+            onOpenChange={setOpen}
+            onConfirm={form.handleSubmit(handleSubmit)}
+            loading={loading}
+            red={false}
+            title="Apply Changes?"
+            description="This will be saved to database."
+            confirmText="Save"
+            cancelText="Cancel"
+            trigger={
+              <Button
+                className="flex-1"
+                variant="secondary"
+                onClick={handleTriggerClick}
+              >
+                Update Scholarship <Save />
+              </Button>
+            }
+          />
+
+          <Button
+            onClick={() => setEditMode(false)}
+            className="flex-1"
+            variant="outline"
+          >
+            Back <ArrowLeftFromLine />
+          </Button>
+        </div>
       </div>
     </div>
   );
