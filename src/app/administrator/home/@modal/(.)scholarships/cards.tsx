@@ -1,4 +1,4 @@
-import { Calendar, CheckCheck, GraduationCap, TrendingUp } from "lucide-react";
+import { Calendar, GraduationCap, TrendingUp } from "lucide-react";
 import { Ring } from "ldrs/react";
 import "ldrs/react/Ring.css";
 import { JSX, useState } from "react";
@@ -21,25 +21,7 @@ type Meow = {
 
 export default function ScholarshipCards({ data }: Meow) {
   const [loading] = useState(false);
-  const colorStyles: Record<ColorKey, { badge: string; text: string }> = {
-    blue: {
-      badge: "bg-blue-800/10 text-blue-600",
-      text: "text-blue-600",
-    },
-    green: {
-      badge: "bg-green-800/10 text-green-600",
-      text: "text-green-600",
-    },
-    yellow: {
-      badge: "bg-yellow-800/10 text-yellow-600",
-      text: "text-yellow-600",
-    },
-    white: {
-      badge: "bg-gray-800/10 text-gray-600",
-      text: "text-gray-600",
-    },
-  };
-
+  console.log(data);
   const summaryCards: SummaryCard[] = [
     {
       label: "Scholarship Amount",
@@ -74,7 +56,9 @@ export default function ScholarshipCards({ data }: Meow) {
             </Button>
           </div>
           <div className="flex justify-between items-end">
-            <p className="text-xs font-medium text-muted-foreground uppercase">{meow.label}</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase">
+              {meow.label}
+            </p>
             <span className={`text-3xl font-semibold font-mono `}>
               {loading ? (
                 <Ring

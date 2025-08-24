@@ -1,5 +1,5 @@
 import StyledToast from "@/components/ui/toast-styled";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { useState } from "react";
 type ApproveTypes = {
   id: string;

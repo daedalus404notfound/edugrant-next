@@ -5,31 +5,27 @@ import {
   Bell,
   Check,
   CheckCheck,
-  Highlighter,
-  Megaphone,
-  Plus,
-  Trash2,
+
 } from "lucide-react";
 import { motion } from "motion/react";
-import { Badge } from "@/components/ui/badge";
-import { Tabs } from "@/components/ui/vercel-tabs";
+
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import useAnnouncementFetch from "@/hooks/admin/getAnnouncement";
 import { format } from "date-fns";
-import { DeleteDialog } from "@/components/ui/delete-dialog";
+
 import useDeleteAnnouncement from "@/hooks/admin/postDeleteAnnoucement";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Separator } from "@/components/ui/separator";
+
 
 export default function ScholarshipAnnouncements() {
   const [page] = useState(1);
   const [pageSize] = useState(50);
   const [sortBy] = useState("");
   const [order] = useState("");
-  const [status, setStatus] = useState("ACTIVE");
-  const [openAlert, setOpenAlert] = useState(false);
-  const [selectedId, setSelectedId] = useState<string[]>([]);
+  const [status] = useState("ACTIVE");
+
+  const [selectedId] = useState<string[]>([]);
   const { data, loading } = useAnnouncementFetch({
     page,
     pageSize,
@@ -38,9 +34,9 @@ export default function ScholarshipAnnouncements() {
     status,
   });
 
-  const { onSubmit, loadingDelete } = useDeleteAnnouncement({
-    announcementId: selectedId,
-  });
+  // const { onSubmit, loadingDelete } = useDeleteAnnouncement({
+  //   announcementId: selectedId,
+  // });
   console.log("data", data);
   return (
     <div className=" min-h-screen px-4">

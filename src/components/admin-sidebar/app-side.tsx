@@ -193,7 +193,6 @@ import {
   GraduationCap,
   Home,
   Megaphone,
-  Settings2,
   UserCog,
   UserRound,
 } from "lucide-react";

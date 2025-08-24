@@ -9,7 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeftFromLine, ArrowUpFromLine, LoaderCircle } from "lucide-react";
+import { ArrowLeftFromLine, ArrowUpFromLine } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -17,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import { ScholarshipTypes, scholarshipDocumentTypes } from "@/hooks/types";
 import { useUserStore } from "@/store/useUserStore";
 import { DragAndDropArea } from "@/components/ui/upload";
-import { Send, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
 import { Progress } from "@/components/ui/progress";
@@ -29,7 +28,6 @@ import {
   StepperDescription,
   StepperIndicator,
   StepperItem,
-  StepperSeparator,
   StepperTitle,
   StepperTrigger,
 } from "@/components/ui/stepper";

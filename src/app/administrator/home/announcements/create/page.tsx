@@ -202,7 +202,7 @@ export default function CreateAnnouncement() {
                               className="cursor-pointer"
                               onClick={() => {
                                 const newTags = (field.value || []).filter(
-                                  (_: any, i: number) => i !== index
+                                  (_: string, i: number) => i !== index
                                 );
                                 field.onChange(newTags);
                               }}

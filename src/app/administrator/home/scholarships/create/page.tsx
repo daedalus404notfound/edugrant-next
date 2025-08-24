@@ -18,12 +18,10 @@ import {
   ArrowRight,
   CalendarIcon,
   ClockIcon,
-  LoaderCircleIcon,
   PenLine,
   Plus,
   RefreshCcw,
   Trash2,
-  X,
 } from "lucide-react";
 import {
   Popover,
