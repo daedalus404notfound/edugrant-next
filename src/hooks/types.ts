@@ -1,4 +1,3 @@
-
 export type scholarshipDocumentTypes = {
   label: string;
   formats: string[];
@@ -89,6 +88,7 @@ export type UserDocument = {
   fileUrl: string;
   document: string;
   cloudinaryId: string;
+  rejectMessage: { status: string; comment: string };
 };
 
 type OptionItem = {

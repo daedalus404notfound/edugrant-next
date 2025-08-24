@@ -131,7 +131,14 @@ export default function InterceptReviewApplicants() {
   };
 
   const totalDocs = data?.scholarship?.scholarshipDocuments?.length || 0;
-  const reviewedDocs = Object.keys(reviewData).length;
+  const reviewedDocs = data?.userDocuments
+    ? Object.entries(data.userDocuments).filter(([key, doc]) => {
+        // Document is considered reviewed if:
+        // 1. It has a status from the API (doc.rejectMessage?.status exists)
+        // 2. OR it has been reviewed locally (reviewData[key]?.status exists)
+        return doc.rejectMessage?.status || reviewData[key]?.status;
+      }).length
+    : 0;
   const progressValue = totalDocs > 0 ? (reviewedDocs / totalDocs) * 100 : 0;
 
   const HandleCloseDrawer = (value: boolean) => {
@@ -463,6 +470,8 @@ export default function InterceptReviewApplicants() {
                         fileUrl={doc.fileUrl}
                         document={doc.document}
                         cloudinaryId={doc.cloudinaryId}
+                        docStatus={doc.rejectMessage?.status}
+                        docComment={doc.rejectMessage?.comment}
                         onUpdate={(field, value) =>
                           updateReviewData(key, field, value)
                         }
@@ -471,36 +480,71 @@ export default function InterceptReviewApplicants() {
                         <Button
                           variant="outline"
                           className={`flex-1 font-medium ${
+                            // Check if doc has approved status OR local review data is approved
+                            doc.rejectMessage?.status === "APPROVED" ||
                             reviewData[key]?.status === "APPROVED"
-                              ? "  text-green-700 !bg-green-700/10"
+                              ? "text-green-700 !bg-green-700/10"
                               : ""
                           }`}
                           onClick={() => {
                             updateReviewData(key, "status", "APPROVED");
                           }}
                           size="sm"
+                          disabled={
+                            // Disable if doc already has any status (approved or rejected)
+                            !!doc.rejectMessage?.status
+                          }
                         >
-                          Accept
+                          {/* Show checkmark if approved, otherwise show Accept */}
+                          {doc.rejectMessage?.status === "APPROVED" ? (
+                            <>
+                              <CheckCheck className="w-4 h-4 mr-1" />
+                              Accepted
+                            </>
+                          ) : (
+                            "Accept"
+                          )}
                         </Button>
                         <Button
                           variant="outline"
                           className={`flex-1 font-medium ${
+                            // Check if doc has rejected status OR local review data is rejected
+                            doc.rejectMessage?.status === "REJECTED" ||
                             reviewData[key]?.status === "REJECTED"
-                              ? "  text-red-700 !bg-red-700/10 "
+                              ? "text-red-700 !bg-red-700/10"
                               : ""
                           }`}
                           size="sm"
                           onClick={() => {
                             updateReviewData(key, "status", "REJECTED");
                           }}
+                          disabled={
+                            // Disable if doc already has any status (approved or rejected)
+                            !!doc.rejectMessage?.status
+                          }
                         >
-                          Reject
+                          {/* Show X mark if rejected, otherwise show Reject */}
+                          {doc.rejectMessage?.status === "REJECTED" ? (
+                            <>
+                              <UserRoundX className="w-4 h-4 mr-1" />
+                              Rejected
+                            </>
+                          ) : (
+                            "Reject"
+                          )}
                         </Button>
                       </div>
                       <Textarea
                         placeholder="Add review comment.."
-                        value={reviewData[key]?.comment || ""}
-                        disabled={reviewData[key]?.status === "APPROVED"}
+                        value={
+                          doc.rejectMessage?.comment
+                            ? doc.rejectMessage?.comment
+                            : reviewData[key]?.comment || ""
+                        }
+                        disabled={
+                          reviewData[key]?.status === "APPROVED" ||
+                          !!doc.rejectMessage?.status
+                        }
                         onChange={(e) =>
                           updateReviewData(key, "comment", e.target.value)
                         }
@@ -532,7 +576,8 @@ export default function InterceptReviewApplicants() {
                       variant="outline"
                       disabled={
                         data?.status === "APPROVED" ||
-                        data?.status === "DECLINED"
+                        data?.status === "DECLINED" ||
+                        totalDocs !== reviewedDocs
                       }
                     >
                       Approve <UserRoundCheck />
@@ -592,7 +637,8 @@ export default function InterceptReviewApplicants() {
                       className="flex-1"
                       disabled={
                         data?.status === "APPROVED" ||
-                        data?.status === "DECLINED"
+                        data?.status === "DECLINED" ||
+                        totalDocs !== reviewedDocs
                       }
                     >
                       Decline <UserRoundX />

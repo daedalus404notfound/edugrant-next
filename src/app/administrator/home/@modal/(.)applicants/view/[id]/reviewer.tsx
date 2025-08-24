@@ -19,12 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  ZoomIn,
-  ZoomOut,
-  RotateCw,
-  RefreshCw,
-} from "lucide-react";
+import { ZoomIn, ZoomOut, RotateCw, RefreshCw } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import GlassFolder from "@/components/ui/folder";
 import { Textarea } from "@/components/ui/textarea";
@@ -36,8 +31,10 @@ interface UserDocument {
   fileUrl: string;
   document: string;
   cloudinaryId: string;
- 
+
   onUpdate: (field: "comment" | "status", value: string) => void;
+  docStatus: string;
+  docComment: string;
 }
 
 export default function Reviewer({
@@ -45,7 +42,7 @@ export default function Reviewer({
   resourceType = "image",
   fileUrl = "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=600",
   document = "Sample Document",
-
+  docStatus,
   onUpdate,
 }: UserDocument) {
   const [rotation, setRotation] = useState(0);
@@ -118,7 +115,15 @@ export default function Reviewer({
                   <div className="absolute top-4 right-4 z-10 flex gap-2 bg-card p-2 rounded-lg">
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button variant="ghost">Approve</Button>
+                        <Button
+                          variant="ghost"
+                          disabled={
+                            // Disable if doc already has any status (approved or rejected)
+                            !!docStatus
+                          }
+                        >
+                          Approve
+                        </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
@@ -147,7 +152,15 @@ export default function Reviewer({
                     </AlertDialog>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button variant="ghost">Reject</Button>
+                        <Button
+                          variant="ghost"
+                          disabled={
+                            // Disable if doc already has any status (approved or rejected)
+                            !!docStatus
+                          }
+                        >
+                          Reject
+                        </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
