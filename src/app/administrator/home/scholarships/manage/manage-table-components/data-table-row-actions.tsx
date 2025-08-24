@@ -31,7 +31,7 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const rowData = row.original as ScholarshipTypes;
   const [openAlert, setOpenAlert] = useState(false);
-  const { onSubmit, isSuccess, loading } = useDeleteScholarship({
+  const { onSubmit, isSuccess, deleteLoading } = useDeleteScholarship({
     scholarshipId: [rowData.scholarshipId],
   });
 
@@ -79,7 +79,7 @@ export function DataTableRowActions<TData>({
           open={openAlert}
           onOpenChange={setOpenAlert}
           onConfirm={onSubmit}
-          loading={loading}
+          loading={deleteLoading}
           title="Delete Scholarship?"
           description="Are you sure you want to delete this scholarship?"
           cancelText="Keep"
