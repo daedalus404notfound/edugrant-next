@@ -41,7 +41,7 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const rowData = row.original as ScholarshipTypes;
   const [openAlert, setOpenAlert] = useState(false);
-  const { onSubmit, isSuccess, loading } = useDeleteScholarship({
+  const { onSubmit, isSuccess, deleteLoading } = useDeleteScholarship({
     scholarshipId: [rowData.scholarshipId],
   });
 
@@ -100,13 +100,13 @@ export function DataTableRowActions<TData>({
             </AlertDialogHeader>
 
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
+              <AlertDialogCancel disabled={deleteLoading}>Cancel</AlertDialogCancel>
               <Button
                 variant="destructive"
-                disabled={loading}
+                disabled={deleteLoading}
                 onClick={onSubmit}
               >
-                {loading ? (
+                {deleteLoading ? (
                   <span className="flex items-center gap-2">
                     <Loader className="animate-spin" />
                     Deleting...
