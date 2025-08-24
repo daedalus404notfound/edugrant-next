@@ -14,7 +14,7 @@ import { useState } from "react";
 import useAnnouncementFetch from "@/hooks/admin/getAnnouncement";
 import { format } from "date-fns";
 
-import useDeleteAnnouncement from "@/hooks/admin/postDeleteAnnoucement";
+
 import { Skeleton } from "@/components/ui/skeleton";
 
 
@@ -25,7 +25,7 @@ export default function ScholarshipAnnouncements() {
   const [order] = useState("");
   const [status] = useState("ACTIVE");
 
-  const [selectedId] = useState<string[]>([]);
+  // const [selectedId] = useState<string[]>([]);
   const { data, loading } = useAnnouncementFetch({
     page,
     pageSize,
