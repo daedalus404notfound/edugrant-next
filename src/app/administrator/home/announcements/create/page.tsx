@@ -57,7 +57,7 @@ export default function CreateAnnouncement() {
   };
 
   return (
-    <div className="px-4">
+    <div className="px-4 ">
       <div className="mx-auto max-w-4xl w-full py-10 px-6">
         <motion.span
           className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
@@ -93,89 +93,6 @@ export default function CreateAnnouncement() {
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="announcementExpiration"
-                render={({ field }) => (
-                  <FormItem className="col-span-3">
-                    <FormLabel className="flex items-center justify-between">
-                      Expiration Date <FormMessage />
-                    </FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-full  text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value
-                              ? format(field.value, "MMM d, yyyy 'at' h:mm a")
-                              : ""}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <div className="rounded-md border">
-                          <Calendar
-                            mode="single"
-                            selected={field.value}
-                            onSelect={(date) => {
-                              if (!date) return;
-
-                              const current = field.value ?? new Date();
-                              date.setHours(current.getHours());
-                              date.setMinutes(current.getMinutes());
-                              date.setSeconds(current.getSeconds());
-                              field.onChange(date);
-                            }}
-                            captionLayout="dropdown"
-                          />
-                          <div className="border-t p-3">
-                            <div className="flex items-center gap-3">
-                              <Label className="text-xs">Enter time</Label>
-                              <div className="relative grow">
-                                <Input
-                                  type="time"
-                                  step="1"
-                                  value={
-                                    field.value
-                                      ? `${String(
-                                          field.value.getHours()
-                                        ).padStart(2, "0")}:${String(
-                                          field.value.getMinutes()
-                                        ).padStart(2, "0")}:${String(
-                                          field.value.getSeconds()
-                                        ).padStart(2, "0")}`
-                                      : ""
-                                  }
-                                  onChange={(e) => {
-                                    const [hours, minutes, seconds] =
-                                      e.target.value.split(":").map(Number);
-                                    const updated = field.value ?? new Date();
-                                    updated.setHours(hours);
-                                    updated.setMinutes(minutes);
-                                    updated.setSeconds(seconds || 0);
-                                    field.onChange(updated);
-                                  }}
-                                  className="peer appearance-none ps-9 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                                />
-                                <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-                                  <ClockIcon size={16} aria-hidden="true" />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </PopoverContent>
-                    </Popover>
                   </FormItem>
                 )}
               />
@@ -244,7 +161,7 @@ export default function CreateAnnouncement() {
                 render={({ field }) => (
                   <FormItem className="col-span-3">
                     <FormLabel className="flex justify-between items-center">
-                      Description <FormMessage />
+                      Body <FormMessage />
                     </FormLabel>
                     <FormControl>
                       <Textarea {...field} />

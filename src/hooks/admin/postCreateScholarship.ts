@@ -18,6 +18,7 @@ const today = new Date().toISOString().split("T")[0];
 const addScholarshipApi = async (data: creatScholarshipFormData) => {
   const { admin } = useAdminStore.getState();
   const formDataToSend = new FormData();
+  formDataToSend.append("scholarshipType", data.scholarshipType);
   formDataToSend.append("newScholarTitle", data.scholarshipTitle);
   formDataToSend.append("newScholarProvider", data.providerName);
   if (data.scholarshipGwa) {
@@ -43,6 +44,9 @@ const addScholarshipApi = async (data: creatScholarshipFormData) => {
   }
   if (data.sponsorImage) {
     formDataToSend.append("sponsorLogo", data.sponsorImage);
+  }
+  if (data.scholarshipForm) {
+    formDataToSend.append("scholarshipForm", data.scholarshipForm);
   }
   formDataToSend.append("requirements", JSON.stringify(data.documents));
 

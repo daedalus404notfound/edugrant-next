@@ -118,16 +118,16 @@ export type FilterOptions = {
 };
 
 export type MetaTypes = {
-  filters: string;
-  order: string;
-  page: number;
-  pageSize: number;
-  sortBy: string;
-  totalPage: number;
-  totalRows: number;
-  search: string;
+  filters: string | undefined;
+  order: string | undefined;
+  page: number | undefined;
+  pageSize: number | undefined;
+  sortBy: string | undefined;
+  totalPage: number | undefined;
+  totalRows: number | undefined;
+  search: string | undefined;
 };
-export type AnnouncementTypes = {
+type AnnouncementTypes = {
   announcements: AnnouncementDataTypes[];
   meta: MetaTypes;
 };

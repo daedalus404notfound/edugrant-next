@@ -16,6 +16,8 @@ import { useEffect, useState } from "react";
 import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
 import { ToolbarProps } from "@/app/administrator/table-components/data-table";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
+import useFetchApplications from "@/hooks/admin/getApplicant";
+import ExportScholarshipDialog from "@/components/ui/export";
 export default function DataTableToolbar<
   TData extends { applicationId: string }
 >({ table, search, setSearch }: ToolbarProps<TData>) {
@@ -61,6 +63,16 @@ export default function DataTableToolbar<
       setOpenAlert(false);
     }
   }, [isSuccess, table]);
+  const { data } = useFetchApplications({ status: "DECLINED" });
+
+  const student = data.map((meow) => ({
+    firstName: meow.student.firstName,
+    middleName: meow.student.middleName,
+    lastName: meow.student.lastName,
+    studentId: meow.student.studentId,
+    courseYearSection: meow.student.course,
+    scholarship: meow.scholarship.scholarshipTitle,
+  }));
 
   return (
     <div className="flex items-center justify-between gap-1.5">
@@ -113,6 +125,7 @@ export default function DataTableToolbar<
           </Button>
         )}
       </div>
+      <ExportScholarshipDialog data={student} />
       {selectedRows.length > 0 && (
         <DeleteDialog
           open={openAlert}

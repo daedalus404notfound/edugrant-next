@@ -156,14 +156,14 @@ import { useEffect, useState } from "react";
 import { ApplicationTypes } from "../types";
 import { MetaTypes } from "../types";
 const defaultMeta: MetaTypes = {
-  page: 1,
-  pageSize: 10,
-  totalRows: 0,
-  totalPage: 0,
-  sortBy: "",
-  order: "",
-  filters: "",
-  search: "",
+  page: undefined,
+  pageSize: undefined,
+  totalRows: undefined,
+  totalPage: undefined,
+  sortBy: undefined,
+  order: undefined,
+  filters: undefined,
+  search: undefined,
 };
 export default function useFetchApplications({
   page,
@@ -173,8 +173,8 @@ export default function useFetchApplications({
   status,
   filters,
 }: {
-  page: number;
-  pageSize: number;
+  page?: number;
+  pageSize?: number;
   sortBy?: string;
   order?: string;
   status: string;

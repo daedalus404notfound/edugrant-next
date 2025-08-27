@@ -16,8 +16,10 @@ import { motion } from "motion/react";
 
 import {
   ArrowRight,
+  Building2,
   CalendarIcon,
   ClockIcon,
+  Landmark,
   PenLine,
   Plus,
   RefreshCcw,
@@ -28,6 +30,16 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { DragAndDropArea } from "@/components/ui/upload";
@@ -87,7 +99,70 @@ export default function Create() {
         </p>
         <Form {...form}>
           <div className="space-y-5 mt-10">
-            <div className="grid grid-cols-3 gap-x-3 gap-y-6">
+            <div className="grid grid-cols-3 gap-x-3 gap-y-8">
+              <FormField
+                control={form.control}
+                name="scholarshipType"
+                render={({ field }) => (
+                  <FormItem className="col-span-3">
+                    <FormLabel>Scholarship Type</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="gap-3 flex"
+                      >
+                        {/* Radio card #1 */}
+                        <div className="border-input has-data-[state=checked]:border-primary/50 relative flex flex-1 items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
+                          <RadioGroupItem
+                            value="government"
+                            className="order-1 after:absolute after:inset-0"
+                          />
+                          <div className="flex grow items-center gap-3">
+                            <Landmark />
+                            <div className="grid grow gap-2">
+                              <Label>
+                                Government
+                                <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
+                                  (Sublabel)
+                                </span>
+                              </Label>
+                              <p className="text-muted-foreground text-xs">
+                                You can use this card with a label and a
+                                description.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Radio card #2 */}
+                        <div className="border-input has-data-[state=checked]:border-primary/50 relative flex flex-1 items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
+                          <RadioGroupItem
+                            value="private"
+                            className="order-1 after:absolute after:inset-0"
+                          />
+                          <div className="flex grow items-start gap-3">
+                            <Building2 />
+                            <div className="grid grow gap-2">
+                              <Label>
+                                Private
+                                <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
+                                  (Sublabel)
+                                </span>
+                              </Label>
+                              <p className="text-muted-foreground text-xs">
+                                You can use this card with a label and a
+                                description.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <div className="col-span-2">
                 <FormField
                   control={form.control}
@@ -333,6 +408,28 @@ export default function Create() {
                 />
               </div>
             </div>
+            <div className="col-span-3">
+              <FormField
+                control={form.control}
+                name="scholarshipForm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex justify-between items-center">
+                      Scholarship Form <FormMessage />
+                    </FormLabel>
+                    <FormControl>
+                      <DragAndDropArea
+                        reset={reset}
+                        setReset={setReset}
+                        label="scholarship form"
+                        accept={["*/*"]}
+                        onFilesChange={(files) => field.onChange(files[0])} // Single file
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
 
           {/* Dynamic Required Documents */}
@@ -341,11 +438,17 @@ export default function Create() {
               <Button
                 type="button"
                 size="sm"
-                onClick={() => append({ label: "", formats: [] })}
+                onClick={() =>
+                  append({
+                    label: "",
+                    formats: [],
+                    requirementType: "required",
+                  })
+                }
                 variant="outline"
               >
                 <Plus className="w-4 h-4 mr-1" />
-                More requirements
+                Add requirements
               </Button>
             </div>
 
@@ -412,6 +515,38 @@ export default function Create() {
                         </FormItem>
                       )}
                     />
+                    <FormField
+                      control={form.control}
+                      name={`documents.${index}.requirementType`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            <FormMessage />
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Requirement type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectItem value="required">
+                                  Required
+                                </SelectItem>
+                                <SelectItem value="optional">
+                                  Optional
+                                </SelectItem>
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+                      )}
+                    />
+
                     <Button
                       type="button"
                       variant="destructive"

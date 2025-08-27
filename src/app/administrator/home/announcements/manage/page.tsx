@@ -11,7 +11,6 @@ import { format } from "date-fns";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import useDeleteAnnouncement from "@/hooks/admin/postDeleteAnnoucement";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Separator } from "@/components/ui/separator";
 import AnnouncementDescription from "./description";
 const tabs = [
   { id: "ACTIVE", label: "Active", indicator: "" },
@@ -40,7 +39,7 @@ export default function ScholarshipAnnouncements() {
   console.log("data", data);
   return (
     <div className=" min-h-screen px-4">
-      <div className="mx-auto max-w-4xl w-full py-10">
+      <div className="mx-auto max-w-5xl w-full py-10">
         <motion.span
           className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
           text-xl font-semibold flex items-center gap-1.5
@@ -68,7 +67,7 @@ export default function ScholarshipAnnouncements() {
             <Plus /> Add announcement
           </Button>
         </div>
-        <div className="py-7">
+        <div className="py-7 space-y-3">
           {loading ? (
             <div className="grid grid-cols-1 gap-3">
               <Skeleton className="h-30 w-full" />
@@ -86,73 +85,67 @@ export default function ScholarshipAnnouncements() {
             data.map((announcement) => (
               <div
                 key={announcement.announcementId}
-                className="py-8 border-b border-emerald-700"
+                className="p-1 bg-card rounded-md"
               >
                 {/* Date Column */}
-                <div className="flex gap-8">
-                  <div className="flex flex-col items-center pt-0.5 font-mono">
-                    <div className="text-sm font-medium text-emerald-600  uppercase tracking-widest">
+                <div className="flex">
+                  <div className="flex flex-col items-center p-8">
+                    <div className=" font-medium text-emerald-600  uppercase tracking-widest">
                       {format(new Date(announcement.startDate), "MMM d")}
                     </div>
-                    <div className="text-xs text-muted-foreground mt-1">
+                    <div className="text-xs text-muted-foreground mt-1 font-mono">
                       {format(new Date(announcement.startDate), "h:mm a")}
                     </div>
                   </div>
 
                   {/* Content Column */}
-                  <div className="flex-1 space-y-3">
-                    <div className="flex justify-between items-center">
-                      <h1>{announcement.title}</h1>
-                      {/* <p className="flex gap-1 font-medium text-xs text-muted-foreground">
-                        <span>Until</span>
-                        {format(
-                          new Date(announcement.startDate),
-                          "MMM dd yyyy"
-                        )}
-                      </p> */}
-                    </div>
-                    <div className="text-sm text-muted-foreground leading-relaxed mt-2 whitespace-pre-line">
-                      <AnnouncementDescription
-                        description={announcement.description}
-                      />
-                    </div>
-                    <Separator />
-                    <div className="flex justify-between items-center">
-                      <div className="flex gap-1.5">
-                        <p className="text-sm text-muted-foreground font-medium">
-                          Tags
-                        </p>
-                        {announcement.tags.data.map((meow) => (
-                          <Badge key={meow} variant="secondary">
-                            {meow}
-                          </Badge>
-                        ))}
+                  <div className="space-y-3 flex-1 ">
+                    <div className="space-y-3  p-4 rounded-md">
+                      <div className="flex justify-between items-center">
+                        <h1>{announcement.title}</h1>
                       </div>
-                      <div>
-                        <DeleteDialog
-                          open={openAlert}
-                          onOpenChange={setOpenAlert}
-                          onConfirm={onSubmit}
-                          loading={loadingDelete}
-                          title="Delete announcement?"
-                          description="This will permanently delete announcement and cannot be undone."
-                          confirmText="Delete All"
-                          cancelText="Keep Items"
-                          trigger={
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="justify-start"
-                              onClick={() =>
-                                setSelectedId([
-                                  announcement.announcementId.toString(),
-                                ])
-                              }
-                            >
-                              <Trash2 /> Delete
-                            </Button>
-                          }
+                      <div className="text-sm text-muted-foreground leading-relaxed mt-2 whitespace-pre-line">
+                        <AnnouncementDescription
+                          description={announcement.description}
                         />
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <div className="flex gap-1.5">
+                          <p className="text-sm text-muted-foreground font-medium">
+                            Tags
+                          </p>
+                          {announcement.tags.data.map((meow) => (
+                            <Badge key={meow} variant="secondary">
+                              {meow}
+                            </Badge>
+                          ))}
+                        </div>
+                        <div>
+                          <DeleteDialog
+                            open={openAlert}
+                            onOpenChange={setOpenAlert}
+                            onConfirm={onSubmit}
+                            loading={loadingDelete}
+                            title="Delete announcement?"
+                            description="This will permanently delete announcement and cannot be undone."
+                            confirmText="Delete All"
+                            cancelText="Keep Items"
+                            trigger={
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="justify-start"
+                                onClick={() =>
+                                  setSelectedId([
+                                    announcement.announcementId.toString(),
+                                  ])
+                                }
+                              >
+                                <Trash2 /> Delete
+                              </Button>
+                            }
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>

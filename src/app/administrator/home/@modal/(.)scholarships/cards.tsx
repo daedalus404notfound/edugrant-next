@@ -59,7 +59,7 @@ export default function ScholarshipCards({ data }: Meow) {
             <p className="text-xs font-medium text-muted-foreground uppercase">
               {meow.label}
             </p>
-            <span className={`text-3xl font-semibold font-mono `}>
+            <span className={`text-2xl font-medium font-mono `}>
               {loading ? (
                 <Ring
                   size={25}

@@ -3,13 +3,10 @@
 import * as React from "react";
 import logo from "@/assets/basclogo.png";
 import {
-
   GraduationCap,
-
   Grid2X2,
   Home,
   Megaphone,
-
   UserRound,
 } from "lucide-react";
 import { motion } from "motion/react";
@@ -110,8 +107,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       asChild
                       className={
                         isActive
-                          ? "!bg-emerald-700/20 !text-emerald-400 "
-                          : "hover:bg-emerald-700/20"
+                          ? "dark:!bg-emerald-700/20 dark:!text-emerald-400 !bg-emerald-800 rounded-[5px] !border-0"
+                          : "dark:hover:!bg-emerald-700/20 rounded-[5px] !border-0 hover:!bg-emerald-700"
                       }
                     >
                       <Link
@@ -143,8 +140,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       asChild
                       className={
                         isActive
-                          ? "!bg-emerald-700/20 !text-emerald-400 "
-                          : "hover:bg-emerald-700/20"
+                          ? "dark:!bg-emerald-700/20 dark:!text-emerald-400 !bg-emerald-800 rounded-[5px] !border-0"
+                          : "dark:hover:!bg-emerald-700/20 rounded-[5px] !border-0 hover:!bg-emerald-700"
                       }
                     >
                       <Link

@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-import { ScholarshipTypes } from "../types";
+import { ApplicationTypes } from "../types";
 import { MetaTypes } from "../types";
 const defaultMeta: MetaTypes = {
   page: undefined,
@@ -14,42 +14,42 @@ const defaultMeta: MetaTypes = {
   filters: undefined,
   search: undefined,
 };
-export default function useScholarshipData({
+export default function useClientApplications({
   page,
   pageSize,
   sortBy,
   order,
   status,
-  filters,
+  userId,
 }: {
   page?: number;
   pageSize?: number;
   sortBy?: string;
   order?: string;
   status?: string;
-  filters?: string;
+  userId?: string;
 }) {
-  const [data, setData] = useState<ScholarshipTypes[]>([]);
+  const [data, setData] = useState<ApplicationTypes[]>([]);
   const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
   const [loading, setLoading] = useState(true);
-  console.log(filters);
+
   useEffect(
     function () {
-      async function fetchScholarships() {
+      async function fetchApplications() {
         setLoading(true);
         try {
           const endpoint = `${
-            process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
-          }/getScholarships?page=${page}&dataPerPage=${pageSize}${
+            process.env.NEXT_PUBLIC_USER_URL
+          }/getApplications?userId=${userId}&page=${page}&dataPerPage=${pageSize}${
             sortBy ? `&sortBy=${sortBy}` : ""
           }${order ? `&order=${order}` : ""}${
             status ? `&status=${status}` : ""
-          }${filters ? `&filters=${encodeURIComponent(filters)}` : ""}`;
-
+          }`;
+          console.log(endpoint);
           const res = await axios.get(endpoint, { withCredentials: true });
           console.log(endpoint);
           if (res.status === 200) {
-            setData(res.data.data);
+            setData(res.data.applications);
             setMeta(res.data.meta);
           }
         } catch (error) {
@@ -59,10 +59,10 @@ export default function useScholarshipData({
         }
       }
 
-      fetchScholarships();
+      fetchApplications();
     },
-    [page, pageSize, sortBy, order, filters, status]
+    [page, pageSize, sortBy, order, status]
   );
 
-  return { data, loading, meta};
+  return { data, loading, meta };
 }

@@ -20,6 +20,9 @@ import useGetFilter from "@/hooks/admin/getDynamicFilter";
 import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import { useEffect, useState } from "react";
 import { Tabs } from "@/components/ui/vercel-tabs";
+import useScholarshipData from "@/hooks/admin/getScholarship";
+import ExportScholarshipDialog from "@/components/ui/export";
+import { format } from "date-fns";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
@@ -60,7 +63,7 @@ DataTableToolbarProps<TData>) {
   const scholarshipId = selectedRows.map((row) =>
     getRowId ? getRowId(row.original) : row.id
   );
-  console.log("emow",status);
+  console.log("emow", status);
 
   const [openAlert, setOpenAlert] = useState(false);
   const { onSubmit, isSuccess, deleteLoading } = useDeleteScholarship({
@@ -72,6 +75,16 @@ DataTableToolbarProps<TData>) {
       setOpenAlert(false);
     }
   }, [isSuccess, table]);
+  const { data } = useScholarshipData({ status: "EXPIRED" });
+  const filteredHeader = data.map((meow) => ({
+    scholarshipTitle: meow.scholarshipTitle,
+    scholarshipProvider: meow.scholarshipProvider,
+    scholarshipGwa: meow.gwa,
+    scholarshipDeadline: format(meow.scholarshipDeadline, "PPP p"),
+    scholarshipLimit: meow.scholarshipLimit,
+    totalApplicants: meow.totalApplicants,
+    totalApproved: meow.totalApproved,
+  }));
 
   return (
     <div className="flex items-center justify-between gap-1.5">
@@ -149,7 +162,9 @@ DataTableToolbarProps<TData>) {
             </AlertDialogHeader>
 
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={deleteLoading}>Cancel</AlertDialogCancel>
+              <AlertDialogCancel disabled={deleteLoading}>
+                Cancel
+              </AlertDialogCancel>
               <Button
                 variant="destructive"
                 disabled={deleteLoading}
@@ -168,6 +183,7 @@ DataTableToolbarProps<TData>) {
           </AlertDialogContent>
         </AlertDialog>
       )}
+      <ExportScholarshipDialog data={filteredHeader} />
       <DataTableViewOptions table={table} />
       <Link prefetch href={`/administrator/home/scholarships/create`}>
         <Button size="sm" variant="secondary" className="relative">

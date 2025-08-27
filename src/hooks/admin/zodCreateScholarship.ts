@@ -5,9 +5,15 @@ import z from "zod";
 const documentsSchema = z.object({
   label: z.string().min(1, "Requireds"),
   formats: z.array(z.string()).min(1, "Required"),
+  requirementType: z.enum(["required", "optional"], {
+    message: "Required",
+  }),
 });
 
 const createScholarshipSchema = z.object({
+  scholarshipType: z.enum(["government", "private"], {
+    message: "Please select scholarship type",
+  }),
   scholarshipTitle: z.string().min(1, "Required"),
   providerName: z.string().min(1, "Required"),
   scholarshipDescription: z.string().min(1, "Required"),
@@ -31,6 +37,13 @@ const createScholarshipSchema = z.object({
         typeof File !== "undefined" && file instanceof File && file.size > 0,
       { message: "Image is required" }
     ),
+  scholarshipForm: z
+    .any()
+    .refine(
+      (file) =>
+        typeof File !== "undefined" && file instanceof File && file.size > 0,
+      { message: "Form is required" }
+    ),
 
   documents: z
     .array(documentsSchema)
@@ -43,6 +56,7 @@ export function useCreateScholarshipZod() {
   const form = useForm<creatScholarshipFormData>({
     resolver: zodResolver(createScholarshipSchema),
     defaultValues: {
+      scholarshipType: "government",
       scholarshipTitle: "",
       providerName: "",
       scholarshipGwa: "",
@@ -50,7 +64,7 @@ export function useCreateScholarshipZod() {
       applicationDeadline: undefined,
       scholarshipAmount: "",
       scholarshipLimit: "",
-      documents: [{ label: "", formats: [] }],
+      documents: [{ label: "", formats: [], requirementType: "required" }],
     },
     mode: "onChange",
     reValidateMode: "onChange",

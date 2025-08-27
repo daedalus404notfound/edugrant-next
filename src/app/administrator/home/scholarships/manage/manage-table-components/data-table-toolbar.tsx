@@ -19,6 +19,9 @@ import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import { useEffect, useState } from "react";
 import { ToolbarProps } from "@/app/administrator/table-components/data-table";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
+import ExportScholarshipDialog from "@/components/ui/export";
+import useScholarshipData from "@/hooks/admin/getScholarship";
+import { format } from "date-fns";
 export default function DataTableToolbar<TData>({
   table,
   getRowId,
@@ -62,6 +65,17 @@ export default function DataTableToolbar<TData>({
       setOpenAlert(false);
     }
   }, [isSuccess, table]);
+
+  const { data } = useScholarshipData({ status: "ACTIVE" });
+  const filteredHeader = data.map((meow) => ({
+    scholarshipTitle: meow.scholarshipTitle,
+    scholarshipProvider: meow.scholarshipProvider,
+    scholarshipGwa: meow.gwa,
+    scholarshipDeadline: format(meow.scholarshipDeadline, "PPP p"),
+    scholarshipLimit: meow.scholarshipLimit,
+    totalApplicants: meow.totalApplicants,
+    totalApproved: meow.totalApproved,
+  }));
 
   return (
     <div className="flex items-center justify-between gap-1.5">
@@ -118,6 +132,7 @@ export default function DataTableToolbar<TData>({
           }
         />
       )}
+      <ExportScholarshipDialog data={filteredHeader} />
       <DataTableViewOptions table={table} />
       <Link prefetch href={`/administrator/home/scholarships/create`}>
         <Button size="sm" variant="secondary" className="relative">

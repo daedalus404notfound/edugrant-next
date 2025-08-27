@@ -14,7 +14,6 @@ import {
 import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
 import DataTableToolbar from "./manage-table-components/data-table-toolbar";
 import { ScholarshipTypes } from "@/hooks/types";
-
 export default function Manage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("ACTIVE");
@@ -43,6 +42,7 @@ export default function Manage() {
     status: status,
   });
   console.log(columnFilters);
+
   return (
     <div className="min-h-screen px-4 relative z-10">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
@@ -67,6 +67,7 @@ export default function Manage() {
           modify or remove entries.
         </p>
 
+      
         <div className="py-8">
           <DataTable<ScholarshipTypes, unknown>
             data={search.trim().length > 0 ? searchData : data}
