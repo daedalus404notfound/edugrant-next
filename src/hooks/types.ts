@@ -7,7 +7,7 @@ export type scholarshipDocumentTypes = {
 export type ScholarshipTypes = {
   scholarshipId: string;
   scholarshipTitle: string;
-  scholarshipType: string;
+  scholarshipType: "government" | "private";
   scholarshipProvider: string;
   status: string;
   scholarshipDeadline: string;
@@ -21,7 +21,6 @@ export type ScholarshipTypes = {
   scholarshipDescription: string;
   scholarshipAmount: string;
   scholarshipDocuments: Record<string, scholarshipDocumentTypes>;
-  scholarshipDocumentsOptional: Record<string, scholarshipDocumentTypes>;
 };
 
 export type EditScholarshipTypes = {
@@ -89,9 +88,10 @@ export type ApplicationTypes = {
 export type UserDocument = {
   fileFormat: string;
   resourceType: string;
+  requirementType: string;
   fileUrl: string;
   document: string;
-  cloudinaryId: string;
+  supabasePath: string;
   rejectMessage: { status: string; comment: string };
 };
 

@@ -31,6 +31,7 @@ import {
   StepperTitle,
   StepperTrigger,
 } from "@/components/ui/stepper";
+import { Separator } from "@/components/ui/separator";
 
 const steps = [
   {
@@ -51,41 +52,33 @@ const steps = [
 ];
 
 const createFormSchema = (
-  requiredDocuments: Record<string, scholarshipDocumentTypes>,
-  optionalDocuments: Record<string, scholarshipDocumentTypes>
+  requiredDocuments: Record<string, scholarshipDocumentTypes>
 ) => {
   const schemaShape: Record<string, z.ZodType> = {};
-
-  // Handle required documents
   Object.entries(requiredDocuments).forEach(([key, doc]) => {
-    schemaShape[doc.label] = z
+    const baseValidation = z
       .array(z.instanceof(File))
-      .min(1, `${doc.label} is required`)
-      .refine(
-        (files) => files.every((file) => doc.formats.includes(file.type)),
-        `Invalid file format for ${doc.label}`
-      )
-      .refine(
-        (files) => files.every((file) => file.size <= 2 * 1024 * 1024),
-        `File size must be less than 2MB for ${doc.label}`
-      );
-  });
-
-  // Handle optional documents
-  Object.entries(optionalDocuments).forEach(([key, doc]) => {
-    schemaShape[doc.label] = z
-      .array(z.instanceof(File))
-      .optional()
       .refine(
         (files) =>
-          !files || files.every((file) => doc.formats.includes(file.type)),
+          files.length === 0 ||
+          files.every((file) => doc.formats.includes(file.type)),
         `Invalid file format for ${doc.label}`
       )
       .refine(
         (files) =>
-          !files || files.every((file) => file.size <= 2 * 1024 * 1024),
+          files.length === 0 ||
+          files.every((file) => file.size <= 2 * 1024 * 1024),
         `File size must be less than 2MB for ${doc.label}`
       );
+    if (doc.requirementType === "required") {
+      schemaShape[doc.label] = baseValidation.min(
+        1,
+        `${doc.label} is required`
+      );
+    } else {
+      // For optional documents, allow empty array
+      schemaShape[doc.label] = baseValidation.default([]);
+    }
   });
 
   return z.object(schemaShape);
@@ -109,13 +102,12 @@ export default function UploadDocs({
 
   // Create form schema based on scholarship documents
   const requiredDocuments = data.scholarshipDocuments || {};
-  const optionalDocuments = data.scholarshipDocumentsOptional || {};
-  const allDocuments = [
-    ...Object.values(requiredDocuments),
-    ...Object.values(optionalDocuments),
-  ];
-  const requiredDocumentsCount = Object.keys(requiredDocuments).length;
-  const formSchema = createFormSchema(requiredDocuments, optionalDocuments);
+  const allDocuments = Object.values(requiredDocuments);
+  const requiredDocumentsCount = Object.values(requiredDocuments).filter(
+    (doc) => doc.requirementType === "required"
+  ).length;
+  const allDocumentsCount = Object.keys(requiredDocuments).length;
+  const formSchema = createFormSchema(requiredDocuments);
   type FormData = z.infer<typeof formSchema>;
 
   // Initialize default values
@@ -133,15 +125,17 @@ export default function UploadDocs({
     form.setValue(label as keyof FormData, files as File[]);
     form.trigger(label as keyof FormData);
 
-    // Count how many required document fields are filled
+    // Count how many REQUIRED document fields are filled (not optional ones)
     const filledRequired = Object.values(requiredDocuments).filter((doc) => {
+      // Only count required documents
+      if (doc.requirementType !== "required") return false;
+
       const fieldFiles = form.getValues(doc.label as keyof FormData) as File[];
       return fieldFiles && fieldFiles.length > 0;
     }).length;
 
     setCompletedCount(filledRequired);
   };
-
   const onSubmit = async (data: FormData) => {
     try {
       setLoading(true);
@@ -203,40 +197,25 @@ export default function UploadDocs({
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="px-6 py-8">
-          <div className="flex items-center gap-3 mb-8">
-            <div>
-              <h1 className="text-xl font-semibold text-balance">
-                Upload Documents
-              </h1>
-              <p className="text-sm text-muted-foreground mt-1">
-                Complete your application for {data.scholarshipTitle}
-              </p>
-            </div>
-          </div>
-
-          <Stepper defaultValue={2} className="items-start gap-4">
-            {steps.map(({ step, title, description }) => (
-              <StepperItem key={step} step={step} className="flex-1">
-                <StepperTrigger className="w-full flex-col items-start gap-2 rounded">
-                  <StepperIndicator asChild className="bg-border h-1 w-full">
-                    <span className="sr-only">{step}</span>
-                  </StepperIndicator>
-                  <div className="space-y-0.5">
-                    <StepperTitle>{title}</StepperTitle>
-                  </div>
-                  <StepperDescription>{description}</StepperDescription>
-                </StepperTrigger>
-              </StepperItem>
-            ))}
-          </Stepper>
-        </div>
-      </div>
-
-      <div className=" px-6 flex-1">
-        <div className="mb-12">
+    <div className="min-h-screen bg-background flex flex-col rounded-t-lg">
+      <div className="flex-1 p-4 space-y-10">
+        <Stepper defaultValue={1} className="items-start gap-4">
+          {steps.map(({ step, title, description }) => (
+            <StepperItem key={step} step={step} className="flex-1">
+              <StepperTrigger className="w-full flex-col items-start gap-2 rounded">
+                <StepperIndicator asChild className="bg-border h-1 w-full">
+                  <span className="sr-only">{step}</span>
+                </StepperIndicator>
+                <div className="space-y-0.5">
+                  <StepperTitle>{title}</StepperTitle>
+                </div>
+                <StepperDescription>{description}</StepperDescription>
+              </StepperTrigger>
+            </StepperItem>
+          ))}
+        </Stepper>
+        <Separator />
+        <div>
           <h2 className="text-lg font-semibold mb-4">Before you start</h2>
           <div className="grid gap-3 text-sm text-muted-foreground">
             <p>• Ensure all documents are clear, readable, and valid</p>
@@ -246,145 +225,80 @@ export default function UploadDocs({
               • Review carefully before submitting — changes aren't permitted
               after submission
             </p>
+            <p>
+              • Optional documents aren't required but may strengthen your
+              application.
+            </p>
           </div>
         </div>
-
-        <Form {...form}>
-          <div className="space-y-12 grid grid-cols-2 gap-3">
-            {Object.keys(requiredDocuments).length > 0 && (
-              <div className="space-y-3">
-                {/* <div className="flex items-center gap-3">
-                  <h2 className="text-lg font-semibold border-l-2 border-red-700  pl-3">
-                    Required Documents
-                  </h2>
-                  <Badge variant="outline" className="text-xs">
-                    {Object.keys(requiredDocuments).length} required
-                  </Badge>
-                </div> */}
-
-                <div className="space-y-8 bg-card p-4 rounded-lg">
-                  {Object.values(requiredDocuments).map((doc, index) => (
-                    <FormField
-                      key={`required-${index}`}
-                      control={form.control}
-                      name={doc.label as keyof FormData}
-                      render={() => (
-                        <FormItem>
-                          <div className="space-y-4">
-                            <FormLabel className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <span className="text-base font-medium">
-                                  {doc.label}
-                                </span>
-                                <Badge variant="secondary" className="text-xs">
-                                  Required
-                                </Badge>
-                              </div>
-                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                {doc.formats.map((format, formatIndex) => (
-                                  <Badge
-                                    key={formatIndex}
-                                    variant="outline"
-                                    className="text-xs"
-                                  >
-                                    {mimeToLabelMap[format] || format}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </FormLabel>
-
-                            <FormControl>
-                              <DragAndDropArea
-                                label={doc.label}
-                                accept={doc.formats}
-                                onFilesChange={(files) =>
-                                  handleFilesChange(doc.label, files)
-                                }
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </div>
-                        </FormItem>
-                      )}
-                    />
-                  ))}
-                </div>
-              </div>
-            )}
-            <div className="space-y-3">
-              {/* <div>
-                <div className="flex items-center gap-3">
-                  <h2 className="text-lg font-semibold border-l-2 border-blue-700  pl-3">
-                    Optional Documents
-                  </h2>
-                  <Badge variant="outline" className="text-xs">
-                    {Object.keys(optionalDocuments).length} optional
-                  </Badge>
-                </div>
-                <p className="text-sm text-muted-foreground pl-3.5 mt-1">
-                  These documents aren't required but may strengthen your
-                  application.
-                </p>
-              </div> */}
-              <div className="space-y-8 bg-card p-4 rounded-lg">
-                {Object.keys(optionalDocuments).length > 0 && (
-                  <div>
-                    <div className="space-y-8">
-                      {Object.values(optionalDocuments).map((doc, index) => (
-                        <FormField
-                          key={`optional-${index}`}
-                          control={form.control}
-                          name={doc.label as keyof FormData}
-                          render={() => (
-                            <FormItem>
-                              <div className="space-y-4">
-                                <FormLabel className="flex items-center justify-between">
-                                  <div className="flex items-center gap-3">
-                                    <span className="text-base font-medium">
-                                      {doc.label}
-                                    </span>
-                                    <Badge
-                                      variant="outline"
-                                      className="text-xs"
-                                    >
-                                      Optional
-                                    </Badge>
-                                  </div>
-                                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                    {doc.formats.map((format, formatIndex) => (
-                                      <Badge
-                                        key={formatIndex}
-                                        variant="outline"
-                                        className="text-xs"
-                                      >
-                                        {mimeToLabelMap[format] || format}
-                                      </Badge>
-                                    ))}
-                                  </div>
-                                </FormLabel>
-
-                                <FormControl>
-                                  <DragAndDropArea
-                                    label={doc.label}
-                                    accept={doc.formats}
-                                    onFilesChange={(files) =>
-                                      handleFilesChange(doc.label, files)
-                                    }
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </div>
-                            </FormItem>
-                          )}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+        <Separator />
+        <div className="space-y-5">
+          <div>
+            <h1 className="text-lg font-semibold text-balance">
+              Upload Documents
+            </h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              Complete your application for {data.scholarshipTitle}
+            </p>
           </div>
-        </Form>
+
+          <Form {...form}>
+            <div className=" grid lg:grid-cols-2 grid-cols-1 gap-3">
+              {Object.values(requiredDocuments).map((doc, index) => (
+                <FormField
+                  key={`required-${index}`}
+                  control={form.control}
+                  name={doc.label as keyof FormData}
+                  render={() => (
+                    <FormItem>
+                      <div className="space-y-4 bg-card p-4 rounded-md">
+                        <div className="space-y-1">
+                          <FormLabel className="flex items-center justify-between">
+                            <span className="text-base font-medium">
+                              {doc.label}
+                            </span>
+                            <Badge
+                              className={`text-xs capitalize ${
+                                doc.requirementType === "required"
+                                  ? "bg-red-800/20 text-red-700"
+                                  : doc.requirementType === "optional"
+                                  ? "bg-blue-800/20 text-blue-700"
+                                  : " "
+                              }`}
+                            >
+                              {doc.requirementType}
+                            </Badge>
+                          </FormLabel>
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            {doc.formats.map((format, formatIndex) => (
+                              <Badge
+                                key={formatIndex}
+                                variant="outline"
+                                className="text-xs"
+                              >
+                                .{mimeToLabelMap[format] || format}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                        <FormControl>
+                          <DragAndDropArea
+                            label={doc.label}
+                            accept={doc.formats}
+                            onFilesChange={(files) =>
+                              handleFilesChange(doc.label, files)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              ))}
+            </div>
+          </Form>
+        </div>
       </div>
       <div className="sticky bottom-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t p-4">
         <div className="flex items-center gap-4 mb-6">
@@ -392,7 +306,7 @@ export default function UploadDocs({
             <div className="flex items-center justify-between text-sm mb-2">
               <span className="text-muted-foreground">Progress</span>
               <span className="font-medium">
-                {completedCount} of {requiredDocumentsCount} required
+                {completedCount} of {requiredDocumentsCount} required documents
               </span>
             </div>
             <Progress

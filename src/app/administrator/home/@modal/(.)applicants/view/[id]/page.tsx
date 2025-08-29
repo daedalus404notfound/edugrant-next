@@ -103,7 +103,13 @@ const fadeInVariants = {
     },
   },
 };
-
+const mimeToLabelMap: Record<string, string> = {
+  "application/pdf": "PDF",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+    "DOCX",
+  "image/jpeg": "JPG",
+  "image/png": "PNG",
+};
 export default function InterceptReviewApplicants() {
   const router = useRouter();
   const params = useParams();
@@ -459,7 +465,7 @@ export default function InterceptReviewApplicants() {
                             {doc.document}
                           </h4>
                           <p className="text-xs font-mono uppercase">
-                            {doc.fileFormat}
+                            {mimeToLabelMap[doc.fileFormat]}
                           </p>
                         </div>
 
@@ -468,12 +474,13 @@ export default function InterceptReviewApplicants() {
                         </Button>
                       </div>
                       <Reviewer
-                        fileFormat={doc.fileFormat}
+                        fileFormat={mimeToLabelMap[doc.fileFormat]}
                         resourceType={doc.resourceType}
                         fileUrl={doc.fileUrl}
                         document={doc.document}
-                        cloudinaryId={doc.cloudinaryId}
+                        supabasePath={doc.supabasePath}
                         docStatus={doc.rejectMessage?.status}
+                        requirementType={doc.requirementType}
                         docComment={doc.rejectMessage?.comment}
                         onUpdate={(field, value) =>
                           updateReviewData(key, field, value)

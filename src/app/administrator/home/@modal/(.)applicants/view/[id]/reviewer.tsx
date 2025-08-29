@@ -24,28 +24,28 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import GlassFolder from "@/components/ui/folder";
 import { Textarea } from "@/components/ui/textarea";
 
-// Mock types for demonstration
 interface UserDocument {
-  fileFormat: string;
-  resourceType: string;
-  fileUrl: string;
   document: string;
-  cloudinaryId: string;
-
+  fileFormat: string;
+  fileUrl: string;
+  requirementType: string;
+  resourceType: string;
+  supabasePath: string;
   onUpdate: (field: "comment" | "status", value: string) => void;
   docStatus: string;
   docComment: string;
 }
 
 export default function Reviewer({
-  fileFormat = "jpg",
-  resourceType = "image",
-  fileUrl = "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=600",
-  document = "Sample Document",
+  fileFormat,
+  resourceType,
+  fileUrl,
+  document,
   docStatus,
   onUpdate,
 }: UserDocument) {
   const [rotation, setRotation] = useState(0);
+  console.log(fileFormat);
   const [open, setOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   return (
@@ -53,13 +53,13 @@ export default function Reviewer({
       <DialogTrigger>
         <GlassFolder />
       </DialogTrigger>
-      <DialogContent className="h-screen !max-w-3/4  p-0 border-0">
+      <DialogContent className="h-screen w-[90%]">
         <DialogHeader className="sr-only">
           <DialogTitle>Document Viewer</DialogTitle>
           <DialogDescription>Full screen document preview</DialogDescription>
         </DialogHeader>
 
-        {fileFormat === "jpg" || fileFormat === "png" ? (
+        {fileFormat === "image/jpeg" || fileFormat === "png" ? (
           <div className="relative h-full w-full bg-black">
             <TransformWrapper
               initialScale={1}

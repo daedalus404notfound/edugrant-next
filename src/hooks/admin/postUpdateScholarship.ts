@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { UpdateScholarshipFormData } from "./zodUpdateScholarship";
+import { updateScholarshipFormData } from "./zodUpdateScholarship";
 import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
@@ -14,7 +14,7 @@ import { ScholarshipTypes } from "../types";
 import { useUpdateScholarshipZod } from "./zodUpdateScholarship";
 type ApiError = AxiosError<ApiErrorResponse>;
 const today = new Date().toISOString().split("T")[0];
-const addScholarshipApi = async (data: UpdateScholarshipFormData) => {
+const addScholarshipApi = async (data: updateScholarshipFormData) => {
   const { admin } = useAdminStore.getState();
   const formDataToSend = new FormData();
   if (data.scholarshipId) {
@@ -94,9 +94,7 @@ export const useUpdateScholarship = (data?: ScholarshipTypes) => {
   const addScholarship = useAddScholarship();
   const [open, setOpen] = useState(false);
 
-  const handleSubmit = async (data: UpdateScholarshipFormData) => {
- 
-
+  const handleSubmit = async (data: updateScholarshipFormData) => {
     try {
       const result = await addScholarship.mutateAsync(data);
 
@@ -113,13 +111,13 @@ export const useUpdateScholarship = (data?: ScholarshipTypes) => {
 
   const handleTriggerClick = async () => {
     // Trigger form validation
-
     const isValid = await form.trigger(); // This validates all fields
 
     if (isValid) {
       setOpen(true); // Only open dialog if validation passes
     } else {
       // Optionally show a toast for validation errors
+      setOpen(false);
       StyledToast({
         status: "error",
         title: "Validation Error",

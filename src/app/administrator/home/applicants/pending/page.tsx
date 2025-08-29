@@ -45,14 +45,13 @@ export default function Manage() {
   });
   console.log(columnFilters);
   return (
-    <div className="min-h-screen px-4 relative z-10">
+    <div className="px-4 relative z-10">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
-       
-          <TitleReusable
-                  title="Pending Applicants"
-                  description="Applicants currently waiting for review."
-                  Icon={UserRoundMinus}
-                />
+        <TitleReusable
+          title="Pending Applicants"
+          description="Applicants currently waiting for review."
+          Icon={UserRoundMinus}
+        />
 
         <div className="py-8">
           <DataTable<ApplicationTypes, unknown>

@@ -15,8 +15,10 @@ import { Button } from "@/components/ui/button";
 
 import {
   ArrowLeftFromLine,
+  Building2,
   CalendarIcon,
   ClockIcon,
+  Landmark,
   Plus,
   Save,
   Trash2,
@@ -34,6 +36,15 @@ import { useUpdateScholarship } from "@/hooks/admin/postUpdateScholarship";
 import { Label } from "@/components/ui/label";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import { motion } from "motion/react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
   {
@@ -80,9 +91,73 @@ export default function EditScholarship({
         >
           Update {data?.scholarshipTitle}
         </motion.span>
+
         <Form {...form}>
-          <div className="space-y-5">
-            <div className="grid grid-cols-3 gap-x-3 gap-y-6">
+          <div className="space-y-5 mt-10">
+            <div className="grid grid-cols-3 gap-x-3 gap-y-8">
+              <FormField
+                control={form.control}
+                name="scholarshipType"
+                render={({ field }) => (
+                  <FormItem className="col-span-3">
+                    <FormLabel>Scholarship Type</FormLabel>
+                    <FormControl>
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="gap-3 flex"
+                      >
+                        {/* Radio card #1 */}
+                        <div className="border-input has-data-[state=checked]:border-primary/50 relative flex flex-1 items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
+                          <RadioGroupItem
+                            value="government"
+                            className="order-1 after:absolute after:inset-0"
+                          />
+                          <div className="flex grow items-center gap-3">
+                            <Landmark />
+                            <div className="grid grow gap-2">
+                              <Label>
+                                Government
+                                <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
+                                  (Sublabel)
+                                </span>
+                              </Label>
+                              <p className="text-muted-foreground text-xs">
+                                You can use this card with a label and a
+                                description.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Radio card #2 */}
+                        <div className="border-input has-data-[state=checked]:border-primary/50 relative flex flex-1 items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
+                          <RadioGroupItem
+                            value="private"
+                            className="order-1 after:absolute after:inset-0"
+                          />
+                          <div className="flex grow items-start gap-3">
+                            <Building2 />
+                            <div className="grid grow gap-2">
+                              <Label>
+                                Private
+                                <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
+                                  (Sublabel)
+                                </span>
+                              </Label>
+                              <p className="text-muted-foreground text-xs">
+                                You can use this card with a label and a
+                                description.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <div className="col-span-2">
                 <FormField
                   control={form.control}
@@ -144,10 +219,7 @@ export default function EditScholarship({
                             </Button>
                           </FormControl>
                         </PopoverTrigger>
-                        <PopoverContent
-                          className="w-auto p-0 pointer-events-auto"
-                          align="start"
-                        >
+                        <PopoverContent className="w-auto p-0" align="start">
                           <div className="rounded-md border">
                             <Calendar
                               mode="single"
@@ -192,7 +264,7 @@ export default function EditScholarship({
                                     }}
                                     className="peer appearance-none ps-9 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
                                   />
-                                  <div className="text-muted-foreground/80  absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                                  <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
                                     <ClockIcon size={16} aria-hidden="true" />
                                   </div>
                                 </div>
@@ -216,11 +288,7 @@ export default function EditScholarship({
                         Required GWA <FormMessage />
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          type="number"
-                          placeholder="(Optional)"
-                        />
+                        <Input {...field} placeholder="(Optional)" />
                       </FormControl>
                     </FormItem>
                   )}
@@ -333,6 +401,27 @@ export default function EditScholarship({
                 />
               </div>
             </div>
+            <div className="col-span-3">
+              <FormField
+                control={form.control}
+                name="scholarshipForm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex justify-between items-center">
+                      Scholarship Form <FormMessage />
+                    </FormLabel>
+                    <FormControl>
+                      <DragAndDropArea
+                        label="scholarship form"
+                        accept={["*/*"]}
+                        onFilesChange={(files) => field.onChange(files[0])} // Single file
+                        initialImageUrl={data.scholarshipForm}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
 
           {/* Dynamic Required Documents */}
@@ -351,7 +440,7 @@ export default function EditScholarship({
                 variant="outline"
               >
                 <Plus className="w-4 h-4 mr-1" />
-                More requirements
+                Add requirements
               </Button>
             </div>
 
@@ -418,6 +507,38 @@ export default function EditScholarship({
                         </FormItem>
                       )}
                     />
+                    <FormField
+                      control={form.control}
+                      name={`documents.${index}.requirementType`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            <FormMessage />
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Requirement type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectItem value="required">
+                                  Required
+                                </SelectItem>
+                                <SelectItem value="optional">
+                                  Optional
+                                </SelectItem>
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+                      )}
+                    />
+
                     <Button
                       type="button"
                       variant="destructive"

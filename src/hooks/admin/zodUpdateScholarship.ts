@@ -2,17 +2,45 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import z from "zod";
 import { ScholarshipTypes } from "../types";
-import { createScholarshipSchema } from "./zodCreateScholarship";
-export const updateScholarshipSchema = createScholarshipSchema.extend({
-  scholarshipId: z.string().min(1, "Required"),
+
+export const documentsSchema = z.object({
+  label: z.string().min(1, "Requireds"),
+  formats: z.array(z.string()).min(1, "Required"),
+  requirementType: z.enum(["required", "optional"], {
+    message: "Required",
+  }),
 });
 
-export type UpdateScholarshipFormData = z.infer<typeof updateScholarshipSchema>;
+export const updateScholarshipSchema = z.object({
+  scholarshipType: z.enum(["government", "private"], {
+    message: "Please select scholarship type",
+  }),
+  scholarshipId: z.string().min(1, "Required"),
+  scholarshipTitle: z.string().min(1, "Required"),
+  providerName: z.string().min(1, "Required"),
+  scholarshipDescription: z.string().min(1, "Required"),
+  scholarshipGwa: z.string(),
+  applicationDeadline: z.date({
+    message: "Required",
+  }),
+  scholarshipAmount: z.string().min(1, "Required"),
+  scholarshipLimit: z.string(),
+  detailsImage: z.any().optional(),
+  sponsorImage: z.any().optional(),
+  scholarshipForm: z.any().optional(),
+
+  documents: z
+    .array(documentsSchema)
+    .min(1, "At least one document is required"),
+});
+export type updateScholarshipFormData = z.infer<typeof updateScholarshipSchema>;
 
 export function useUpdateScholarshipZod(data?: ScholarshipTypes) {
-  const form = useForm<UpdateScholarshipFormData>({
+  const form = useForm<updateScholarshipFormData>({
     resolver: zodResolver(updateScholarshipSchema),
     defaultValues: {
+      scholarshipType:
+        data?.scholarshipType === "private" ? "private" : "government",
       scholarshipId: data?.scholarshipId.toString() || "",
       scholarshipTitle: data?.scholarshipTitle || "",
       providerName: data?.scholarshipProvider || "",
@@ -27,8 +55,13 @@ export function useUpdateScholarshipZod(data?: ScholarshipTypes) {
         ? Object.values(data.scholarshipDocuments).map((doc) => ({
             label: doc.label || "",
             formats: doc.formats?.map(String) || [],
+            requirementType:
+              doc.requirementType === "optional" ||
+              doc.requirementType === "required"
+                ? doc.requirementType
+                : "required",
           }))
-        : [{ label: "", formats: [] }],
+        : [{ label: "", formats: [], requirementType: "required" }],
     },
   });
 
