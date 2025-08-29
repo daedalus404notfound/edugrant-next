@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import z from "zod";
 
-const documentsSchema = z.object({
+export const documentsSchema = z.object({
   label: z.string().min(1, "Requireds"),
   formats: z.array(z.string()).min(1, "Required"),
   requirementType: z.enum(["required", "optional"], {
@@ -10,7 +10,7 @@ const documentsSchema = z.object({
   }),
 });
 
-const createScholarshipSchema = z.object({
+export const createScholarshipSchema = z.object({
   scholarshipType: z.enum(["government", "private"], {
     message: "Please select scholarship type",
   }),
