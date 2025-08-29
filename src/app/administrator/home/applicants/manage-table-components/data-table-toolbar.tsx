@@ -14,10 +14,12 @@ import { DataTableFacetedFilter } from "@/app/administrator/table-components/dat
 import useGetFilter from "@/hooks/admin/getDynamicFilter";
 import { useEffect, useState } from "react";
 import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
+
 import { ToolbarProps } from "@/app/administrator/table-components/data-table";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
-import useFetchApplications from "@/hooks/admin/getApplicant";
 import ExportScholarshipDialog from "@/components/ui/export";
+import useFetchApplications from "@/hooks/admin/getApplicant";
+
 export default function DataTableToolbar<
   TData extends { applicationId: string }
 >({ table, search, setSearch }: ToolbarProps<TData>) {
@@ -25,33 +27,37 @@ export default function DataTableToolbar<
     applicationStatus: "PENDING",
     scholarshipStatus: "ACTIVE",
   });
+
+  console.log(filter);
   const isFiltered = table.getState().columnFilters.length > 0;
   console.log(filter);
-  const course = filter?.optionsApplication.distinctCourse.value.map(
-    (item: string) => ({
-      label: item,
-      value: item,
+  const course = filter?.getFilterData.course.map(
+    (meow) => ({
+      label: meow,
+      value: meow,
       icon: GraduationCap,
     })
   );
-  const year = filter?.optionsApplication.distinctYear.value.map(
-    (item: string) => ({
-      label: item,
-      value: item,
+  const year = filter?.getFilterData.year.map(
+    (meow) => ({
+      label: meow,
+      value: meow,
       icon: GraduationCap,
     })
   );
 
-  const scholarships = filter?.optionsScholarship.scholarshipTitle.value.map(
-    (item: string) => ({
-      label: item,
-      value: item,
+  const scholarships = filter?.getScholarshipsFilters.scholarshipTitle.map(
+    (meow) => ({
+      label: meow,
+      value: meow,
       icon: GraduationCap,
     })
   );
 
   const selectedRows = table.getSelectedRowModel().rows;
   const applicationIds = selectedRows.map((row) => row.original.applicationId);
+
+  console.log("applicationId", applicationIds);
 
   const [openAlert, setOpenAlert] = useState(false);
   const { onSubmit, isSuccess, loading } = useDeleteApplication({
@@ -63,7 +69,7 @@ export default function DataTableToolbar<
       setOpenAlert(false);
     }
   }, [isSuccess, table]);
-  const { data } = useFetchApplications({ status: "DECLINED" });
+  const { data } = useFetchApplications({ status: "PENDING" });
 
   const student = data.map((meow) => ({
     firstName: meow.student.firstName,
@@ -133,7 +139,7 @@ export default function DataTableToolbar<
           onConfirm={onSubmit}
           loading={loading}
           title="Delete application?"
-          description="This will permanently delete all selected application and cannot be undone."
+          description="This will permanently delete all applications and cannot be undone."
           confirmText="Delete All"
           cancelText="Keep Items"
           trigger={

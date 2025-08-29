@@ -30,25 +30,12 @@ export default function DataTableToolbar<TData>({
 }: ToolbarProps<TData>) {
   const { filter } = useGetFilter({ scholarshipStatus: "ACTIVE" });
   const isFiltered = table.getState().columnFilters.length > 0;
-  // const amountOptions =
-  //   filter?.Scholarships.scholarshipAmount?.map((meow) => ({
-  //     value: String(meow),
-  //     label: String(meow),
-  //   })) || [];
-
-  // const providerOptions =
-  //   filter?.Scholarships.scholarshipProvider?.map((meow) => ({
-  //     value: meow,
-  //     label: meow,
-  //   })) || [];
+  const providerOption =
+    filter?.getScholarshipsFilters.scholarshipProvider?.map((meow) => ({
+      value: String(meow),
+      label: String(meow),
+    })) || [];
   console.log(filter);
-  const amount = filter?.optionsScholarship.scholarshipAmount.value.map(
-    (item: string) => ({
-      label: item,
-      value: item,
-      icon: PhilippinePeso,
-    })
-  );
   const selectedRows = table.getSelectedRowModel().rows;
   const scholarshipId = selectedRows.map((row) =>
     getRowId ? getRowId(row.original) : row.id
@@ -101,8 +88,8 @@ export default function DataTableToolbar<TData>({
         <DataTableFacetedFilter
           disabled={!!search}
           column={table.getColumn("scholarshipAmount")}
-          title="Amount"
-          options={amount ?? []}
+          title="Provider"
+          options={providerOption ?? []}
         />
 
         {isFiltered && (

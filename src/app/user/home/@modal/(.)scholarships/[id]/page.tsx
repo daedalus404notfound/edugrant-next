@@ -2,13 +2,10 @@
 import {
   ArrowLeftFromLine,
   ArrowUpFromLine,
-
   Download,
   FileInput,
   GraduationCap,
   Maximize,
-
-
 } from "lucide-react";
 import { Ring } from "ldrs/react";
 import "ldrs/react/Ring.css";
@@ -75,15 +72,11 @@ export default function InterceptManageScholarshipClient() {
             <Button className="relative" variant="ghost" size="sm">
               <GraduationCap />
               {!isApply
-                ? `${data?.scholarshipTitle} Details`
+                ? `${data?.scholarshipTitle || "Scholarship"} Details`
                 : `Application for ${data?.scholarshipTitle}`}
             </Button>
           </div>
-          <div className="flex items-center gap-2">
-            <Button className="relative" variant="link" size="sm">
-              Download Form <Download />
-            </Button>
-          </div>
+          <div className="flex items-center gap-2"></div>
         </div>
         <div className=" overflow-auto h-full no-scrollbar">
           {isApply ? (
@@ -199,28 +192,65 @@ export default function InterceptManageScholarshipClient() {
                       </p>
                     </div>
 
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center px-3">
-                        <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                          Required Documents
-                        </h3>
-                        <p className="font-medium text-lg">
-                          {data?.scholarshipDocuments.length}
-                        </p>
-                      </div>
-                      <Separator className="bg-neutral-200 dark:bg-neutral-800" />
+                    <div className="space-y-6">
+                      {" "}
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center px-3">
+                          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                            Required Documents
+                          </h3>
+                          <p className="font-medium text-lg">
+                            {
+                              Object.keys(data?.scholarshipDocuments || {})
+                                .length
+                            }
+                          </p>
+                        </div>
 
-                      <div className="space-y-1.5 grid grid-cols-1">
-                        {data?.scholarshipDocuments.map((doc) => (
-                          <Button
-                            className="justify-start"
-                            variant="link"
-                            key={doc.label}
-                          >
-                            <FileInput />
-                            {doc.label}
-                          </Button>
-                        ))}
+                        <div className="space-y-1.5 grid grid-cols-1">
+                          {Object.values(data?.scholarshipDocuments || {}).map(
+                            (doc) => (
+                              <Button
+                                className="justify-start"
+                                variant="ghost"
+                                key={doc.label}
+                              >
+                                <FileInput />
+                                {doc.label}
+                              </Button>
+                            )
+                          )}
+                        </div>
+                      </div>
+                      <Separator />
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center px-3">
+                          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                            Optional Documents
+                          </h3>
+                          <p className="font-medium text-lg">
+                            {
+                              Object.keys(
+                                data?.scholarshipDocumentsOptional || {}
+                              ).length
+                            }
+                          </p>
+                        </div>
+
+                        <div className="space-y-1.5 grid grid-cols-1">
+                          {Object.values(
+                            data?.scholarshipDocumentsOptional || {}
+                          ).map((doc) => (
+                            <Button
+                              className="justify-start"
+                              variant="ghost"
+                              key={doc.label}
+                            >
+                              <FileInput />
+                              {doc.label}
+                            </Button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -258,6 +288,21 @@ export default function InterceptManageScholarshipClient() {
                   <ArrowUpFromLine />
                   Apply Scholarship
                 </Button>
+                <a
+                  download
+                  href={data?.scholarshipForm}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1"
+                >
+                  <Button
+                    className="w-full bg-green-950 border border-green-950 hover:bg-green-800 text-gray-200 hover:border-green-800"
+                    disabled={loading}
+                  >
+                    <Download className="mr-2" />
+                    Download Form
+                  </Button>
+                </a>
 
                 <Button
                   className="flex-1"

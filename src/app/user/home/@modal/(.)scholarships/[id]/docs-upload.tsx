@@ -9,12 +9,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeftFromLine, ArrowUpFromLine } from "lucide-react";
+import { ArrowLeft, Upload, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { ScholarshipTypes, scholarshipDocumentTypes } from "@/hooks/types";
+import type { ScholarshipTypes, scholarshipDocumentTypes } from "@/hooks/types";
 import { useUserStore } from "@/store/useUserStore";
 import { DragAndDropArea } from "@/components/ui/upload";
 import { Badge } from "@/components/ui/badge";
@@ -31,7 +31,7 @@ import {
   StepperTitle,
   StepperTrigger,
 } from "@/components/ui/stepper";
-import { Separator } from "@/components/ui/separator";
+
 const steps = [
   {
     step: 1,
@@ -50,10 +50,14 @@ const steps = [
   },
 ];
 
-// Create Zod schema dynamically based on scholarship documents
-const createFormSchema = (documents: scholarshipDocumentTypes[]) => {
+const createFormSchema = (
+  requiredDocuments: Record<string, scholarshipDocumentTypes>,
+  optionalDocuments: Record<string, scholarshipDocumentTypes>
+) => {
   const schemaShape: Record<string, z.ZodType> = {};
-  documents.forEach((doc) => {
+
+  // Handle required documents
+  Object.entries(requiredDocuments).forEach(([key, doc]) => {
     schemaShape[doc.label] = z
       .array(z.instanceof(File))
       .min(1, `${doc.label} is required`)
@@ -63,6 +67,23 @@ const createFormSchema = (documents: scholarshipDocumentTypes[]) => {
       )
       .refine(
         (files) => files.every((file) => file.size <= 2 * 1024 * 1024),
+        `File size must be less than 2MB for ${doc.label}`
+      );
+  });
+
+  // Handle optional documents
+  Object.entries(optionalDocuments).forEach(([key, doc]) => {
+    schemaShape[doc.label] = z
+      .array(z.instanceof(File))
+      .optional()
+      .refine(
+        (files) =>
+          !files || files.every((file) => doc.formats.includes(file.type)),
+        `Invalid file format for ${doc.label}`
+      )
+      .refine(
+        (files) =>
+          !files || files.every((file) => file.size <= 2 * 1024 * 1024),
         `File size must be less than 2MB for ${doc.label}`
       );
   });
@@ -85,13 +106,21 @@ export default function UploadDocs({
   const [loading, setLoading] = useState(false);
   const [disable, setDisable] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
+
   // Create form schema based on scholarship documents
-  const formSchema = createFormSchema(data.scholarshipDocuments);
+  const requiredDocuments = data.scholarshipDocuments || {};
+  const optionalDocuments = data.scholarshipDocumentsOptional || {};
+  const allDocuments = [
+    ...Object.values(requiredDocuments),
+    ...Object.values(optionalDocuments),
+  ];
+  const requiredDocumentsCount = Object.keys(requiredDocuments).length;
+  const formSchema = createFormSchema(requiredDocuments, optionalDocuments);
   type FormData = z.infer<typeof formSchema>;
 
   // Initialize default values
   const defaultValues: Record<string, File[]> = {};
-  data.scholarshipDocuments.forEach((doc) => {
+  allDocuments.forEach((doc) => {
     defaultValues[doc.label] = [];
   });
 
@@ -104,13 +133,13 @@ export default function UploadDocs({
     form.setValue(label as keyof FormData, files as File[]);
     form.trigger(label as keyof FormData);
 
-    // Count how many document fields are filled
-    const filled = data.scholarshipDocuments.filter((doc) => {
+    // Count how many required document fields are filled
+    const filledRequired = Object.values(requiredDocuments).filter((doc) => {
       const fieldFiles = form.getValues(doc.label as keyof FormData) as File[];
       return fieldFiles && fieldFiles.length > 0;
     }).length;
 
-    setCompletedCount(filled);
+    setCompletedCount(filledRequired);
   };
 
   const onSubmit = async (data: FormData) => {
@@ -120,14 +149,16 @@ export default function UploadDocs({
       const formData = new FormData();
       formData.append("userId", String(userId));
       formData.append("scholarshipId", String(scholarId));
+
       Object.entries(data).forEach(([label, files]) => {
-        (files as File[]).forEach((file: File) => {
-          formData.append(label, file);
-        });
+        // Check if files exists and has length > 0
+        if (files && Array.isArray(files) && files.length > 0) {
+          files.forEach((file: File) => {
+            formData.append(label, file);
+          });
+        }
       });
-      for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
+
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_USER_URL}/applyScholarship`,
         formData,
@@ -172,11 +203,20 @@ export default function UploadDocs({
   };
 
   return (
-    <div className="relative h-full w-full bg-background rounded-t-xl overflow-auto no-scrollbar">
-      <div className="p-8 space-y-8">
-        <div>
-          {" "}
-          <h1 className="text-lg font-semibold mb-2">How it works</h1>
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="px-6 py-8">
+          <div className="flex items-center gap-3 mb-8">
+            <div>
+              <h1 className="text-xl font-semibold text-balance">
+                Upload Documents
+              </h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                Complete your application for {data.scholarshipTitle}
+              </p>
+            </div>
+          </div>
+
           <Stepper defaultValue={2} className="items-start gap-4">
             {steps.map(({ step, title, description }) => (
               <StepperItem key={step} step={step} className="flex-1">
@@ -193,153 +233,209 @@ export default function UploadDocs({
             ))}
           </Stepper>
         </div>
-        <div>
-          <h1 className="text-lg font-semibold mb-2">Instructions</h1>
-          <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
-            <li>
-              Ensure all documents are{" "}
-              <span className="font-medium">clear, readable, and valid</span>.
-            </li>
-            <li>
-              Only upload documents in the{" "}
-              <span className="font-medium">accepted formats</span> shown (PDF,
-              DOCX, JPG, PNG).
-            </li>
-            <li>
-              Each file must not exceed <span className="font-medium">2MB</span>{" "}
-              in size.
-            </li>
-            <li>
-              Upload the required document under its correct category (e.g.,
-              COR, COG, Certificate).
-            </li>
-            <li>
-              Incomplete uploads will prevent submission. All required fields
-              must be filled.
-            </li>
-            <li>
-              Double-check your uploads before submitting — once submitted,
-              changes cannot be made.
-            </li>
-            <li>
-              Click <span className="font-medium">Submit</span> when all
-              documents are uploaded. You will receive a confirmation.
-            </li>
-            <li>
-              If you encounter issues, contact the scholarship office before the
-              deadline.
-            </li>
-          </ul>
-        </div>
-      </div>{" "}
-      <Separator />
-      <Form {...form}>
-        <div className="p-4 space-y-8">
-          {/* <h1></h1> */}
-          <div>
-            <p className="text-sm text-muted-foreground px-4">
-              Please upload the required documents to complete your application
-              for {data.scholarshipTitle}.
-            </p>
-            {data.scholarshipDocuments.map((doc, index) => (
-              <FormField
-                key={index}
-                control={form.control}
-                name={doc.label as keyof FormData}
-                render={() => (
-                  <FormItem>
-                    <div className=" px-4 py-12  space-y-3 border-b-1">
-                      <FormLabel className=" flex justify-between items-center">
-                        <h1 className="font-medium text-lg text-green-800">
-                          {" "}
-                          {index + 1}. {doc.label}
-                        </h1>
-                        <div className="flex gap-2 items-center">
-                          <h1 className="text-muted-foreground">
-                            Accepted formats:
-                          </h1>
-                          {doc.formats.map((format, formatIndex) => (
-                            <Badge key={formatIndex} variant="outline">
-                              .{mimeToLabelMap[format] || format}
-                            </Badge>
-                          ))}
-                        </div>
-                      </FormLabel>
+      </div>
 
-                      <FormControl>
-                        <DragAndDropArea
-                          label={doc.label}
-                          accept={doc.formats}
-                          onFilesChange={(files) =>
-                            handleFilesChange(doc.label, files)
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                      {/* <div>
-                        <h1 className="text-sm font-medium">Document Source</h1>
-                        <p className="text-sm text-muted-foreground">
-                          This section provides guidance on where you can obtain
-                          this document. Please ensure that the file you upload
-                          is valid and up to date.
-                        </p>
-                      </div> */}
-                    </div>
-                  </FormItem>
-                )}
-              />
-            ))}
+      <div className=" px-6 flex-1">
+        <div className="mb-12">
+          <h2 className="text-lg font-semibold mb-4">Before you start</h2>
+          <div className="grid gap-3 text-sm text-muted-foreground">
+            <p>• Ensure all documents are clear, readable, and valid</p>
+            <p>• Only upload files in accepted formats (PDF, DOCX, JPG, PNG)</p>
+            <p>• Each file must not exceed 2MB in size</p>
+            <p>
+              • Review carefully before submitting — changes aren't permitted
+              after submission
+            </p>
           </div>
         </div>
 
-        <div className="p-4 sticky bottom-0 bg-card border-t space-y-4">
-          <div className="flex gap-3 items-center">
-            <div className="text-sm text-muted-foreground">Upload Progress</div>
-            <Progress
-              className="flex-1"
-              value={(completedCount / data.scholarshipDocuments.length) * 100}
-            />
-            <div className="text-sm text-muted-foreground">
-              {completedCount}/{data.scholarshipDocuments.length}
+        <Form {...form}>
+          <div className="space-y-12 grid grid-cols-2 gap-3">
+            {Object.keys(requiredDocuments).length > 0 && (
+              <div className="space-y-3">
+                {/* <div className="flex items-center gap-3">
+                  <h2 className="text-lg font-semibold border-l-2 border-red-700  pl-3">
+                    Required Documents
+                  </h2>
+                  <Badge variant="outline" className="text-xs">
+                    {Object.keys(requiredDocuments).length} required
+                  </Badge>
+                </div> */}
+
+                <div className="space-y-8 bg-card p-4 rounded-lg">
+                  {Object.values(requiredDocuments).map((doc, index) => (
+                    <FormField
+                      key={`required-${index}`}
+                      control={form.control}
+                      name={doc.label as keyof FormData}
+                      render={() => (
+                        <FormItem>
+                          <div className="space-y-4">
+                            <FormLabel className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <span className="text-base font-medium">
+                                  {doc.label}
+                                </span>
+                                <Badge variant="secondary" className="text-xs">
+                                  Required
+                                </Badge>
+                              </div>
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                {doc.formats.map((format, formatIndex) => (
+                                  <Badge
+                                    key={formatIndex}
+                                    variant="outline"
+                                    className="text-xs"
+                                  >
+                                    {mimeToLabelMap[format] || format}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </FormLabel>
+
+                            <FormControl>
+                              <DragAndDropArea
+                                label={doc.label}
+                                accept={doc.formats}
+                                onFilesChange={(files) =>
+                                  handleFilesChange(doc.label, files)
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+            <div className="space-y-3">
+              {/* <div>
+                <div className="flex items-center gap-3">
+                  <h2 className="text-lg font-semibold border-l-2 border-blue-700  pl-3">
+                    Optional Documents
+                  </h2>
+                  <Badge variant="outline" className="text-xs">
+                    {Object.keys(optionalDocuments).length} optional
+                  </Badge>
+                </div>
+                <p className="text-sm text-muted-foreground pl-3.5 mt-1">
+                  These documents aren't required but may strengthen your
+                  application.
+                </p>
+              </div> */}
+              <div className="space-y-8 bg-card p-4 rounded-lg">
+                {Object.keys(optionalDocuments).length > 0 && (
+                  <div>
+                    <div className="space-y-8">
+                      {Object.values(optionalDocuments).map((doc, index) => (
+                        <FormField
+                          key={`optional-${index}`}
+                          control={form.control}
+                          name={doc.label as keyof FormData}
+                          render={() => (
+                            <FormItem>
+                              <div className="space-y-4">
+                                <FormLabel className="flex items-center justify-between">
+                                  <div className="flex items-center gap-3">
+                                    <span className="text-base font-medium">
+                                      {doc.label}
+                                    </span>
+                                    <Badge
+                                      variant="outline"
+                                      className="text-xs"
+                                    >
+                                      Optional
+                                    </Badge>
+                                  </div>
+                                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                    {doc.formats.map((format, formatIndex) => (
+                                      <Badge
+                                        key={formatIndex}
+                                        variant="outline"
+                                        className="text-xs"
+                                      >
+                                        {mimeToLabelMap[format] || format}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                </FormLabel>
+
+                                <FormControl>
+                                  <DragAndDropArea
+                                    label={doc.label}
+                                    accept={doc.formats}
+                                    onFilesChange={(files) =>
+                                      handleFilesChange(doc.label, files)
+                                    }
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </div>
+                            </FormItem>
+                          )}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-          <div className="flex gap-3">
-            <DeleteDialog
-              open={openAlert}
-              onOpenChange={setOpenAlert}
-              loading={loading}
-              red={false}
-              title="Submit Application?"
-              description="Please review your uploaded documents before submitting. Once submitted, you will not be able to make changes."
-              confirmText="Submit"
-              confirmTextLoading="Submitting..."
-              onConfirm={form.handleSubmit(onSubmit)}
-              cancelText="Back"
-              trigger={
-                <Button
-                  className="flex-1 bg-blue-950 border border-blue-950 hover:bg-blue-800 text-gray-200 hover:border-blue-800"
-                  disabled={
-                    completedCount < data.scholarshipDocuments.length || disable
-                  }
-                >
-                  <ArrowUpFromLine />
-                  Submit
-                </Button>
-              }
+        </Form>
+      </div>
+      <div className="sticky bottom-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t p-4">
+        <div className="flex items-center gap-4 mb-6">
+          <div className="flex-1">
+            <div className="flex items-center justify-between text-sm mb-2">
+              <span className="text-muted-foreground">Progress</span>
+              <span className="font-medium">
+                {completedCount} of {requiredDocumentsCount} required
+              </span>
+            </div>
+            <Progress
+              value={(completedCount / requiredDocumentsCount) * 100}
+              className="h-2"
             />
-
-            <Button
-              type="button"
-              className="flex-1"
-              variant="outline"
-              onClick={() => setIsApply(false)}
-            >
-              <ArrowLeftFromLine />
-              Back
-            </Button>
           </div>
         </div>
-      </Form>
+
+        <div className="flex gap-3">
+          <DeleteDialog
+            open={openAlert}
+            onOpenChange={setOpenAlert}
+            loading={loading}
+            red={false}
+            title="Submit Application?"
+            description="Please review your uploaded documents before submitting. Once submitted, you will not be able to make changes."
+            confirmText="Submit Application"
+            confirmTextLoading="Submitting..."
+            onConfirm={form.handleSubmit(onSubmit)}
+            cancelText="Cancel"
+            trigger={
+              <Button
+                disabled={completedCount < requiredDocumentsCount || disable}
+                className="flex-1"
+              >
+                <Upload className="h-4 w-4 mr-2" />
+                Submit Application
+              </Button>
+            }
+          />
+
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setIsApply(false)}
+            className="flex-1"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

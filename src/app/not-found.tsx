@@ -1,358 +1,67 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 
-// Combined component for 404 page
-export default function NotFoundPage() {
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+interface NotFoundProps {
+  title?: string;
+  description?: string;
+}
+
+function Illustration(props: React.ComponentPropsWithoutRef<"svg">) {
   return (
-    <div className="w-full h-screen bg-black overflow-x-hidden flex justify-center items-center relative">
-      <MessageDisplay />
-      <CharactersAnimation />
-      <CircleAnimation />
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 362 145" {...props}>
+      <path
+        fill="currentColor"
+        d="M62.6 142c-2.133 0-3.2-1.067-3.2-3.2V118h-56c-2 0-3-1-3-3V92.8c0-1.333.4-2.733 1.2-4.2L58.2 4c.8-1.333 2.067-2 3.8-2h28c2 0 3 1 3 3v85.4h11.2c.933 0 1.733.333 2.4 1 .667.533 1 1.267 1 2.2v21.2c0 .933-.333 1.733-1 2.4-.667.533-1.467.8-2.4.8H93v20.8c0 2.133-1.067 3.2-3.2 3.2H62.6zM33 90.4h26.4V51.2L33 90.4zM181.67 144.6c-7.333 0-14.333-1.333-21-4-6.666-2.667-12.866-6.733-18.6-12.2-5.733-5.467-10.266-13-13.6-22.6-3.333-9.6-5-20.667-5-33.2 0-12.533 1.667-23.6 5-33.2 3.334-9.6 7.867-17.133 13.6-22.6 5.734-5.467 11.934-9.533 18.6-12.2 6.667-2.8 13.667-4.2 21-4.2 7.467 0 14.534 1.4 21.2 4.2 6.667 2.667 12.8 6.733 18.4 12.2 5.734 5.467 10.267 13 13.6 22.6 3.334 9.6 5 20.667 5 33.2 0 12.533-1.666 23.6-5 33.2-3.333 9.6-7.866 17.133-13.6 22.6-5.6 5.467-11.733 9.533-18.4 12.2-6.666 2.667-13.733 4-21.2 4zm0-31c9.067 0 15.6-3.733 19.6-11.2 4.134-7.6 6.2-17.533 6.2-29.8s-2.066-22.2-6.2-29.8c-4.133-7.6-10.666-11.4-19.6-11.4-8.933 0-15.466 3.8-19.6 11.4-4 7.6-6 17.533-6 29.8s2 22.2 6 29.8c4.134 7.467 10.667 11.2 19.6 11.2zM316.116 142c-2.134 0-3.2-1.067-3.2-3.2V118h-56c-2 0-3-1-3-3V92.8c0-1.333.4-2.733 1.2-4.2l56.6-84.6c.8-1.333 2.066-2 3.8-2h28c2 0 3 1 3 3v85.4h11.2c.933 0 1.733.333 2.4 1 .666.533 1 1.267 1 2.2v21.2c0 .933-.334 1.733-1 2.4-.667.533-1.467.8-2.4.8h-11.2v20.8c0 2.133-1.067 3.2-3.2 3.2h-27.2zm-29.6-51.6h26.4V51.2l-26.4 39.2z"
+      />
+    </svg>
+  );
+}
+
+function NotFound({
+  title = "Page not found",
+  description = "Lost, this page is. In another system, it may be.",
+}: NotFoundProps) {
+  return (
+    <div className="relative text-center ">
+      <h1 className="mt-4 text-balance text-5xl font-semibold tracking-tight text-primary sm:text-7xl">
+        {title}
+      </h1>
+      <p className="mt-6 text-pretty text-lg font-medium text-muted-foreground sm:text-xl/8">
+        {description}
+      </p>
+
+      {/* <div className="mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-center gap-y-3 gap-x-6">
+        <Button variant="secondary" asChild className="group">
+          <a href="#">
+            <ArrowLeft
+              className="me-2 ms-0 opacity-60 transition-transform group-hover:-translate-x-0.5"
+              size={16}
+              strokeWidth={2}
+              aria-hidden="true"
+            />
+            Go back
+          </a>
+        </Button>
+        <Button className="-order-1 sm:order-none" asChild>
+          <a href="#">Take me home</a>
+        </Button>
+      </div> */}
     </div>
   );
 }
 
-// 1. Message Display Component
-function MessageDisplay() {
-  const router = useRouter();
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, 1200);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleGoBack = () => {
-    router.back();
-  };
-
-  const handleGoHome = () => {
-    router.push("/");
-  };
-
+export default function Demo() {
   return (
-    <div className="absolute flex flex-col justify-center items-center w-[90%] h-[90%] z-[100]">
-      <div
-        className={`flex flex-col items-center transition-opacity duration-500 ${
-          isVisible ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        <div className="text-[35px] font-semibold text-black m-[1%]">
-          Page Not Found
-        </div>
-        <div className="text-[80px] font-bold text-black m-[1%]">404</div>
-        <div className="text-[15px] w-1/2 min-w-[40%] text-center text-black m-[1%]">
-          The page you are looking for might have been removed, had its name
-          changed, or is temporarily unavailable.
-        </div>
-        <div className="flex gap-6 mt-8">
-          <button
-            onClick={handleGoBack}
-            className="text-black border-2 border-black hover:bg-black hover:text-white transition-all duration-300 ease-in-out px-6 py-2 h-auto text-base font-medium flex items-center gap-2 hover:scale-105"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="transition-transform group-hover:translate-x-1"
-            >
-              <path d="m12 19-7-7 7-7" />
-              <path d="M19 12H5" />
-            </svg>
-            Go Back
-          </button>
-          <button
-            onClick={handleGoHome}
-            className="bg-black text-white hover:bg-gray-900 transition-all duration-300 ease-in-out px-6 py-2 h-auto text-base font-medium flex items-center gap-2 hover:scale-105"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="transition-transform group-hover:translate-x-1"
-            >
-              <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg>
-            Go Home
-          </button>
-        </div>
+    <div className="relative flex flex-col w-full justify-center items-center min-h-dvh bg-background ">
+      <div className="relative max-w-5xl mx-auto w-full">
+        <Illustration className="absolute inset-0 w-full h-[50vh] opacity-[0.04] dark:opacity-[0.03] text-foreground" />
+        <NotFound
+          title="Page not found"
+          description="Lost, this page is. In another system, it may be."
+        />
       </div>
     </div>
   );
-}
-
-// 2. Characters Animation Component
-type StickFigure = {
-  top?: string;
-  bottom?: string;
-  src: string;
-  transform?: string;
-  speedX: number;
-  speedRotation?: number;
-};
-
-function CharactersAnimation() {
-  const charactersRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Define stick figures with their properties
-    const stickFigures: StickFigure[] = [
-      {
-        top: "0%",
-        src: "https://raw.githubusercontent.com/RicardoYare/imagenes/9ef29f5bbe075b1d1230a996d87bca313b9b6a63/sticks/stick0.svg",
-        transform: "rotateZ(-90deg)",
-        speedX: 1500,
-      },
-      {
-        top: "10%",
-        src: "https://raw.githubusercontent.com/RicardoYare/imagenes/9ef29f5bbe075b1d1230a996d87bca313b9b6a63/sticks/stick1.svg",
-        speedX: 3000,
-        speedRotation: 2000,
-      },
-      {
-        top: "20%",
-        src: "https://raw.githubusercontent.com/RicardoYare/imagenes/9ef29f5bbe075b1d1230a996d87bca313b9b6a63/sticks/stick2.svg",
-        speedX: 5000,
-        speedRotation: 1000,
-      },
-      {
-        top: "25%",
-        src: "https://raw.githubusercontent.com/RicardoYare/imagenes/9ef29f5bbe075b1d1230a996d87bca313b9b6a63/sticks/stick0.svg",
-        speedX: 2500,
-        speedRotation: 1500,
-      },
-      {
-        top: "35%",
-        src: "https://raw.githubusercontent.com/RicardoYare/imagenes/9ef29f5bbe075b1d1230a996d87bca313b9b6a63/sticks/stick0.svg",
-        speedX: 2000,
-        speedRotation: 300,
-      },
-     
-    ];
-
-    // Clear existing content
-    if (charactersRef.current) {
-      charactersRef.current.innerHTML = "";
-    }
-
-    // Create and animate each stick figure
-    stickFigures.forEach((figure, index) => {
-      const stick = document.createElement("img");
-      stick.classList.add("characters");
-      stick.style.position = "absolute";
-      stick.style.width = "18%";
-      stick.style.height = "18%";
-
-      // Set position
-      if (figure.top) stick.style.top = figure.top;
-      if (figure.bottom) stick.style.bottom = figure.bottom;
-
-      // Set image source
-      stick.src = figure.src;
-
-      // Set initial transform if specified
-      if (figure.transform) stick.style.transform = figure.transform;
-
-      // Append to the container
-      charactersRef.current?.appendChild(stick);
-
-      // Skip animation for the last figure (index 5)
-      if (index === 5) return;
-
-      // Horizontal movement animation
-      stick.animate([{ left: "100%" }, { left: "-20%" }], {
-        duration: figure.speedX,
-        easing: "linear",
-        fill: "forwards",
-      });
-
-      // Skip rotation for the first figure (index 0)
-      if (index === 0) return;
-
-      // Rotation animation
-      if (figure.speedRotation) {
-        stick.animate(
-          [{ transform: "rotate(0deg)" }, { transform: "rotate(-360deg)" }],
-          {
-            duration: figure.speedRotation,
-            iterations: Infinity,
-            easing: "linear",
-          }
-        );
-      }
-    });
-
-    // Cleanup function
-    return () => {
-      if (charactersRef.current) {
-        charactersRef.current.innerHTML = "";
-      }
-    };
-  }, []);
-
-  // Handle window resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (charactersRef.current) {
-        charactersRef.current.innerHTML = "";
-
-        // Re-create animations after resize
-        charactersRef.current.dispatchEvent(new Event("contentchanged"));
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  return <div ref={charactersRef} className="absolute w-[99%] h-[95%]" />;
-}
-
-// 3. Circle Animation Component
-interface Circulo {
-  x: number;
-  y: number;
-  size: number;
-}
-
-function CircleAnimation() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const requestIdRef = useRef<number | undefined>(undefined);
-  const timerRef = useRef(0);
-  const circulosRef = useRef<Circulo[]>([]);
-
-  // Initialize circles array
-  const initArr = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    circulosRef.current = [];
-
-    for (let index = 0; index < 300; index++) {
-      const randomX =
-        Math.floor(
-          Math.random() * (canvas.width * 3 - canvas.width * 1.2 + 1)
-        ) +
-        canvas.width * 1.2;
-
-      const randomY =
-        Math.floor(
-          Math.random() * (canvas.height - (canvas.height * -0.2 + 1))
-        ) +
-        canvas.height * -0.2;
-
-      const size = canvas.width / 1000;
-
-      circulosRef.current.push({ x: randomX, y: randomY, size });
-    }
-  };
-
-  // Drawing function
-  const draw = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const context = canvas.getContext("2d");
-    if (!context) return;
-
-    timerRef.current++;
-    context.setTransform(1, 0, 0, 1, 0, 0);
-
-    const distanceX = canvas.width / 80;
-    const growthRate = canvas.width / 1000;
-
-    context.fillStyle = "white";
-    context.clearRect(0, 0, canvas.width, canvas.height);
-
-    circulosRef.current.forEach((circulo) => {
-      context.beginPath();
-
-      if (timerRef.current < 65) {
-        circulo.x = circulo.x - distanceX;
-        circulo.size = circulo.size + growthRate;
-      }
-
-      if (timerRef.current > 65 && timerRef.current < 500) {
-        circulo.x = circulo.x - distanceX * 0.02;
-        circulo.size = circulo.size + growthRate * 0.2;
-      }
-
-      context.arc(circulo.x, circulo.y, circulo.size, 0, 360);
-      context.fill();
-    });
-
-    if (timerRef.current > 500) {
-      if (requestIdRef.current) {
-        cancelAnimationFrame(requestIdRef.current);
-      }
-      return;
-    }
-
-    requestIdRef.current = requestAnimationFrame(draw);
-  };
-
-  // Initialize canvas and start animation
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    // Set canvas dimensions
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    // Initialize and start animation
-    timerRef.current = 0;
-    initArr();
-    draw();
-
-    // Handle window resize
-    const handleResize = () => {
-      if (!canvas) return;
-
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-
-      timerRef.current = 0;
-      if (requestIdRef.current) {
-        cancelAnimationFrame(requestIdRef.current);
-      }
-
-      const context = canvas.getContext("2d");
-      if (context) {
-        context.reset();
-      }
-
-      initArr();
-      draw();
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    // Clean up
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      if (requestIdRef.current) {
-        cancelAnimationFrame(requestIdRef.current);
-      }
-    };
-  }, []);
-
-  return <canvas ref={canvasRef} className="w-full h-full" />;
 }

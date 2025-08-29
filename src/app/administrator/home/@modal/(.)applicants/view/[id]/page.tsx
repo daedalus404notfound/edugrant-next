@@ -53,10 +53,10 @@ import Reviewer from "./reviewer";
 import { format } from "date-fns";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { useApprovedHandler } from "@/hooks/admin/postApproveHandler";
 import { useRecjectHandler } from "@/hooks/admin/postDeclineHandler";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAdminStore } from "@/store/adminUserStore";
+import { useRevieweddHandler } from "@/hooks/admin/postReviewedHandler";
 
 const containerVariants = {
   hidden: {
@@ -130,7 +130,10 @@ export default function InterceptReviewApplicants() {
     }));
   };
 
-  const totalDocs = data?.scholarship?.scholarshipDocuments?.length || 0;
+  const totalDocs = data?.scholarship?.scholarshipDocuments
+    ? Object.keys(data.scholarship.scholarshipDocuments).length
+    : 0;
+  console.log("tota;'", data?.scholarship.scholarshipDocuments);
   const reviewedDocs = data?.userDocuments
     ? Object.entries(data.userDocuments).filter(([key, doc]) => {
         // Document is considered reviewed if:
@@ -151,12 +154,12 @@ export default function InterceptReviewApplicants() {
   };
 
   const {
-    handleApprove,
-    loadingApprove,
-    setOpenApprove,
-    openApprove,
-    isSuccessApprove,
-  } = useApprovedHandler({
+    handleReviewed,
+    loadingReviewed,
+    setOpenReviewed,
+    openReviewed,
+    isSuccessReviewed,
+  } = useRevieweddHandler({
     id,
     adminId: admin?.adminId.toString(),
   });
@@ -174,10 +177,10 @@ export default function InterceptReviewApplicants() {
   });
 
   useEffect(() => {
-    if (isSuccessApprove || isSuccessReject) {
+    if (isSuccessReviewed || isSuccessReject) {
       HandleCloseDrawer(false);
     }
-  }, [isSuccessApprove, isSuccessReject]);
+  }, [isSuccessReviewed, isSuccessReject]);
 
   const applicationDetails = [
     {
@@ -568,7 +571,7 @@ export default function InterceptReviewApplicants() {
           ) : (
             <>
               {" "}
-              <Dialog open={openApprove} onOpenChange={setOpenApprove}>
+              <Dialog open={openReviewed} onOpenChange={setOpenReviewed}>
                 <DialogTrigger asChild>
                   {data?.userDocuments && (
                     <Button
@@ -606,18 +609,18 @@ export default function InterceptReviewApplicants() {
                   <DialogFooter>
                     <Button
                       variant="outline"
-                      onClick={() => setOpenApprove(false)}
-                      disabled={loadingApprove}
+                      onClick={() => setOpenReviewed(false)}
+                      disabled={loadingReviewed}
                     >
                       Cancel
                     </Button>
                     <Button
                       className="!bg-green-700 !hover:bg-green-600"
                       variant="outline"
-                      onClick={handleApprove}
-                      disabled={loadingApprove}
+                      onClick={handleReviewed}
+                      disabled={loadingReviewed}
                     >
-                      {loadingApprove ? (
+                      {loadingReviewed ? (
                         <>
                           Approving ...
                           <Loader className="animate-spin" />

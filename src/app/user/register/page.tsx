@@ -42,6 +42,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 
 import { useRegisterHandler } from "@/hooks/user/postRegisterHandler";
+import { Checkbox } from "@/components/ui/checkbox";
 const steps = [
   {
     step: 1,
@@ -53,7 +54,7 @@ const steps = [
   },
   {
     step: 3,
-    title: "Review",
+    title: "Background",
   },
   {
     step: 4,
@@ -475,83 +476,117 @@ export default function Register() {
             </Form>
           )}
           {stepper === 3 && (
-            <div className="space-y-6">
-              <div>
-                <h1 className="text-xl font-semibold">Review & Submit</h1>
-                <p className="text-sm mt-1 text-muted-foreground">
-                  Please review your information before submitting
-                </p>
-              </div>
-
+            <Form {...accountForm}>
               <div className="space-y-6">
-                <div className="space-y-3">
-                  <h3 className="text-xl font-semibold">
-                    Personal Information
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <strong>Name:</strong> {personalData.firstName}{" "}
-                      {personalData.middleName} {personalData.lastName}
+                <div>
+                  <h1 className="text-xl font-semibold">Family Composition</h1>
+                  <p className="text-muted-foreground text-sm mt-1">
+                    Fill out all required fields to start scholarship
+                  </p>
+                </div>
+
+                <div className="">
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <h1>Father</h1>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <Checkbox />
+                          <span className="text-xs">Separated</span>
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <strong>Contact:</strong> {personalData.contactNumber}
-                    </div>
-                    <div>
-                      <strong>Gender:</strong> {personalData.gender}
-                    </div>
-                    <div>
-                      <strong>Date of Birth:</strong> {personalData.dateOfBirth}
-                    </div>
-                    <div className="col-span-2">
-                      <strong>Address:</strong> {personalData.address}
+                    <div className="grid grid-cols-2 gap-3">
+                      <FormField
+                        control={accountForm.control}
+                        name="studentId"
+                        render={({ field }) => (
+                          <FormItem className="">
+                            <FormLabel className="flex items-center justify-between">
+                              Student ID <FormMessage />
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Enter your student ID"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={accountForm.control}
+                        name="studentId"
+                        render={({ field }) => (
+                          <FormItem className="">
+                            <FormLabel className="flex items-center justify-between">
+                              Contact Number <FormMessage />
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Enter your student ID"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={accountForm.control}
+                        name="studentId"
+                        render={({ field }) => (
+                          <FormItem className=" col-span-2">
+                            <FormLabel className="flex items-center justify-between">
+                              Address <FormMessage />
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Enter your student ID"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={accountForm.control}
+                        name="studentId"
+                        render={({ field }) => (
+                          <FormItem className=" col-span-2">
+                            <FormLabel className="flex items-center justify-between">
+                              Occupation <FormMessage />
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Enter your student ID"
+                                {...field}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
                     </div>
                   </div>
                 </div>
 
-                <div className="space-y-3">
-                  <h3 className="text-2xl font-semibold">
-                    Account Information
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <strong>Student ID:</strong> {accountData.studentId}
-                    </div>
-                    <div>
-                      <strong>Email:</strong> {accountData.email}
-                    </div>
-                    <div>
-                      <strong>Course:</strong> {accountData.course}
-                    </div>
-                    <div>
-                      <strong>Year Level:</strong> {accountData.yearLevel}
-                    </div>
-                    <div>
-                      <strong>Section:</strong> {accountData.section}
-                    </div>
-                  </div>
+                <div className="flex gap-3 mt-13 items-center">
+                  <Button
+                    type="button"
+                    onClick={handlePrevStepper}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    onClick={accountForm.handleSubmit(handleAccountSubmit)}
+                    className="flex-1"
+                  >
+                    Next
+                  </Button>
                 </div>
               </div>
-
-              <div className="flex gap-3 mt-13">
-                <Button
-                  onClick={handlePrevStepper}
-                  variant="outline"
-                  className="flex-1"
-                  disabled={sendAuthCode.isLoading}
-                >
-                  Previous
-                </Button>
-                <Button
-                  onClick={() => {
-                    HandleRegister({ personalData, accountData });
-                  }}
-                  className="flex-1"
-                  disabled={sendAuthCode.isLoading}
-                >
-                  Submit Application
-                </Button>
-              </div>
-            </div>
+            </Form>
           )}
           {stepper === 4 && (
             <Form {...otpForm}>

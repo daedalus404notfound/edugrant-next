@@ -77,7 +77,7 @@ export default function DynamicHeaderUser({
       </div>
       <div className="mr-3 flex  items-center gap-3">
         <Popover>
-          <PopoverTrigger asChild>
+          <PopoverTrigger asChild className="hidden lg:flex">
             <Button variant="ghost" className="capitalize">
               <UserRound />
               {user?.firstName || "N/A"}

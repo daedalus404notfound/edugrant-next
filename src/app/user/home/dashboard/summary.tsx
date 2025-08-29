@@ -1,11 +1,4 @@
-
-import {
-
-  CheckCheck,
-
-  GraduationCap,
-  TrendingUp,
-} from "lucide-react";
+import { CheckCheck, GraduationCap, TrendingUp } from "lucide-react";
 import { Ring } from "ldrs/react";
 import "ldrs/react/Ring.css";
 import { JSX, useState } from "react";
@@ -62,14 +55,20 @@ export default function ApplicationSummary() {
       icon: <GraduationCap />,
       color: "yellow",
     },
+    {
+      label: "Active Scholarships",
+      data: 3,
+      icon: <GraduationCap />,
+      color: "yellow",
+    },
   ];
 
   return (
-    <div className="grid grid-cols-3  gap-5 ">
+    <div className="grid grid-cols-2  gap-5 ">
       {summaryCards.map((meow, index) => (
         <div
           key={index}
-          className=" bg-sidebar z-10 flex flex-col justify-between  rounded-lg  shadow-sm  aspect-[16/4] p-4"
+          className=" bg-sidebar z-10 flex flex-col justify-between  rounded-lg   shadow-md  aspect-[16/4] p-4 gap-3 "
         >
           <div className="flex justify-between items-start ">
             <span className={` p-2 rounded-md ${colorStyles[meow.color].text}`}>

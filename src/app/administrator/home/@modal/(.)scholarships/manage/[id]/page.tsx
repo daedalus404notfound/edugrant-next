@@ -1,16 +1,5 @@
 "use client";
-import {
- 
-  Download,
-  Edit,
-  FileInput,
-
-  Maximize,
-
-  Trash2,
-
-  X,
-} from "lucide-react";
+import { Download, Edit, FileInput, Maximize, Trash2, X } from "lucide-react";
 import { motion } from "motion/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -156,8 +145,8 @@ export default function InterceptManageScholarship() {
                   <div className="space-y-1 mt-2">
                     <motion.span
                       className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-                                       flex items-center gap-1.5 text-2xl font-bold tracking-tight
-                                      "
+                                                           flex items-center gap-1.5 text-2xl font-bold tracking-tight
+                                                          "
                       initial={{ backgroundPosition: "200% 0" }}
                       animate={{ backgroundPosition: "-200% 0" }}
                       transition={{
@@ -190,28 +179,65 @@ export default function InterceptManageScholarship() {
                       </p>
                     </div>
 
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center px-3">
-                        <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                          Required Documents
-                        </h3>
-                        <p className="font-medium text-lg">
-                          {data?.scholarshipDocuments.length}
-                        </p>
-                      </div>
-                      <Separator className="bg-neutral-200 dark:bg-neutral-800" />
+                    <div className="space-y-6">
+                      {" "}
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center px-3">
+                          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                            Required Documents
+                          </h3>
+                          <p className="font-medium text-lg">
+                            {
+                              Object.keys(data?.scholarshipDocuments || {})
+                                .length
+                            }
+                          </p>
+                        </div>
 
-                      <div className="space-y-1.5 grid grid-cols-1">
-                        {data?.scholarshipDocuments.map((doc) => (
-                          <Button
-                            className="justify-start"
-                            variant="link"
-                            key={doc.label}
-                          >
-                            <FileInput />
-                            {doc.label}
-                          </Button>
-                        ))}
+                        <div className="space-y-1.5 grid grid-cols-1">
+                          {Object.values(data?.scholarshipDocuments || {}).map(
+                            (doc) => (
+                              <Button
+                                className="justify-start"
+                                variant="ghost"
+                                key={doc.label}
+                              >
+                                <FileInput />
+                                {doc.label}
+                              </Button>
+                            )
+                          )}
+                        </div>
+                      </div>
+                      <Separator />
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center px-3">
+                          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                            Optional Documents
+                          </h3>
+                          <p className="font-medium text-lg">
+                            {
+                              Object.keys(
+                                data?.scholarshipDocumentsOptional || {}
+                              ).length
+                            }
+                          </p>
+                        </div>
+
+                        <div className="space-y-1.5 grid grid-cols-1">
+                          {Object.values(
+                            data?.scholarshipDocumentsOptional || {}
+                          ).map((doc) => (
+                            <Button
+                              className="justify-start"
+                              variant="ghost"
+                              key={doc.label}
+                            >
+                              <FileInput />
+                              {doc.label}
+                            </Button>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   </div>

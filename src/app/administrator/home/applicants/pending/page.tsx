@@ -4,13 +4,13 @@ import { UserRoundMinus } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { DataTable } from "@/app/administrator/table-components/data-table";
-import { columns } from "./manage-table-components/columns";
+import { columns } from "../manage-table-components/columns";
 import {
   ColumnFiltersState,
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
-import DataTableToolbar from "./manage-table-components/data-table-toolbar";
+import DataTableToolbar from "../manage-table-components/data-table-toolbar";
 import { ApplicationTypes } from "@/hooks/types";
 import useApplicantsSearch from "@/hooks/admin/getApplicantSearch";
 import useFetchApplications from "@/hooks/admin/getApplicant";

@@ -1,6 +1,6 @@
 "use client";
 import "ldrs/react/Ring.css";
-import { CheckCheck } from "lucide-react";
+import { UserRoundMinus } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { DataTable } from "@/app/administrator/table-components/data-table";
@@ -17,7 +17,7 @@ import useFetchApplications from "@/hooks/admin/getApplicant";
 
 export default function Manage() {
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("APPROVED");
+  const [status, setStatus] = useState("REVIEWED");
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -59,8 +59,8 @@ export default function Manage() {
             ease: "linear",
           }}
         >
-          <CheckCheck strokeWidth={3} />
-          Approved Applicants
+          <UserRoundMinus />
+          Reviewed Applicants
         </motion.span>
         <p className="text-sm text-gray-300 mt-1">
           Applicants currently waiting for review
@@ -76,9 +76,9 @@ export default function Manage() {
             getRowId={(row) => row.scholarshipId}
             loading={search ? searchLoading : loading}
             search={search}
+            setSearch={setSearch}
             status={status}
             setStatus={setStatus}
-            setSearch={setSearch}
             sorting={sorting}
             setSorting={setSorting}
             columnFilters={columnFilters}

@@ -1,11 +1,13 @@
 export type scholarshipDocumentTypes = {
   label: string;
   formats: string[];
+  requirementType: string;
 };
 
 export type ScholarshipTypes = {
   scholarshipId: string;
   scholarshipTitle: string;
+  scholarshipType: string;
   scholarshipProvider: string;
   status: string;
   scholarshipDeadline: string;
@@ -15,9 +17,11 @@ export type ScholarshipTypes = {
   gwa: string;
   scholarshipLimit: string;
   scholarshipCover: string;
+  scholarshipForm: string;
   scholarshipDescription: string;
   scholarshipAmount: string;
-  scholarshipDocuments: scholarshipDocumentTypes[];
+  scholarshipDocuments: Record<string, scholarshipDocumentTypes>;
+  scholarshipDocumentsOptional: Record<string, scholarshipDocumentTypes>;
 };
 
 export type EditScholarshipTypes = {
@@ -91,30 +95,25 @@ export type UserDocument = {
   rejectMessage: { status: string; comment: string };
 };
 
-type OptionItem = {
-  label: string;
-  value: string[];
-};
-
 // Application-specific fields
 type OptionsApplication = {
-  distinctCourse: OptionItem;
-  distinctSection: OptionItem;
-  distinctTitle: OptionItem;
-  distinctYear: OptionItem;
+  course: string[];
+  section: string[];
+  title: string[];
+  year: string[];
 };
 
 // Scholarship-specific fields
 type OptionsScholarship = {
-  scholarshipAmount: OptionItem;
-  scholarshipProvider: OptionItem;
-  scholarshipTitle: OptionItem;
+  scholarshipAmount: string[];
+  scholarshipProvider: string[];
+  scholarshipTitle: string[];
 };
 
 // Final combined type
 export type FilterOptions = {
-  optionsApplication: OptionsApplication;
-  optionsScholarship: OptionsScholarship;
+  getFilterData: OptionsApplication;
+  getScholarshipsFilters: OptionsScholarship;
 };
 
 export type MetaTypes = {

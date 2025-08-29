@@ -195,6 +195,7 @@ import {
   Megaphone,
   UserCog,
   UserRound,
+  UserRoundCog,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { NavMain } from "./nav-main";
@@ -247,6 +248,11 @@ const data = {
       icon: Bot,
       items: [
         {
+          title: "Reviewed Applicants",
+          url: "/administrator/home/applicants/reviewed",
+          sa: true,
+        },
+        {
           title: "Pending Applicants",
           url: "/administrator/home/applicants/pending",
         },
@@ -278,7 +284,8 @@ const data = {
     {
       title: "Admin Management",
       url: "/administrator/home/admins",
-      icon: UserCog,
+      icon: UserRoundCog,
+      sa: true,
       items: [
         { title: "Add New Admin", url: "/administrator/home/admins/create" },
         { title: "View Admins", url: "/administrator/home/admins/manage" },
@@ -293,7 +300,6 @@ const data = {
         { title: "Statistics", url: "/administrator/home/reports/statistics" },
       ],
     },
-
   ],
 };
 const sidebarData = [
