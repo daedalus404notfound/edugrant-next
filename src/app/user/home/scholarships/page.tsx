@@ -139,7 +139,7 @@ export default function ClientScholarship() {
   return (
     <TourProvider steps={scholarshipTourSteps}>
       <div className="z-10 min-h-screen bg-background lg:px-4   ">
-        <div className="mx-auto w-[95%] pt-10">
+        <div className="mx-auto w-[95%] lg:pt-10  pt-6">
           <div className="flex justify-between items-end">
             <TitleReusable
               title="Available Scholarships"
