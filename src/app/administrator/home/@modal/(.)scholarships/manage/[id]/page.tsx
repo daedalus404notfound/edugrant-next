@@ -209,36 +209,6 @@ export default function InterceptManageScholarship() {
                           )}
                         </div>
                       </div>
-                      <Separator />
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center px-3">
-                          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                            Optional Documents
-                          </h3>
-                          <p className="font-medium text-lg">
-                            {
-                              Object.keys(
-                                data?.scholarshipDocumentsOptional || {}
-                              ).length
-                            }
-                          </p>
-                        </div>
-
-                        <div className="space-y-1.5 grid grid-cols-1">
-                          {Object.values(
-                            data?.scholarshipDocumentsOptional || {}
-                          ).map((doc) => (
-                            <Button
-                              className="justify-start"
-                              variant="ghost"
-                              key={doc.label}
-                            >
-                              <FileInput />
-                              {doc.label}
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
                     </div>
                   </div>
                   <div className="p-4 bg-card rounded-md">
