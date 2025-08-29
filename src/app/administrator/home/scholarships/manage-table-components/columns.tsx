@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-
 import { Checkbox } from "@/components/ui/checkbox";
 import { format } from "date-fns";
 import { ScholarshipTypes } from "@/hooks/types";

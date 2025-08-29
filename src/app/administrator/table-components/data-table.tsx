@@ -161,8 +161,8 @@ export function DataTable<TData, TValue>({
       </div>
       <DataTablePagination
         table={table}
-        totalPage={meta.totalPage}
-        totalRows={meta.totalRows}
+        totalPage={meta.totalPage || 0}
+        totalRows={meta.totalRows || 0}
       />
     </div>
   );

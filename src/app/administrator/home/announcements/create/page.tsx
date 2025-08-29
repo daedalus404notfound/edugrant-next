@@ -1,5 +1,4 @@
 "use client";
-import { format } from "date-fns";
 import {
   Form,
   FormControl,
@@ -11,7 +10,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { motion } from "motion/react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -23,24 +21,16 @@ import {
 } from "@/components/ui/alert-dialog";
 import {
   ArrowRight,
-  CalendarIcon,
-  ClockIcon,
   LoaderCircleIcon,
   PenLine,
   RefreshCcw,
   X,
 } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
-import { Label } from "@/components/ui/label";
+
 import { useCreateAnnouncement } from "@/hooks/admin/postCreateAnnouncement";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import TitleReusable from "@/components/ui/title";
 export default function CreateAnnouncement() {
   const {
     open,
@@ -59,22 +49,11 @@ export default function CreateAnnouncement() {
   return (
     <div className="px-4 ">
       <div className="mx-auto max-w-4xl w-full py-10 px-6">
-        <motion.span
-          className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-          text-xl font-semibold flex items-center gap-1.5
-          "
-          initial={{ backgroundPosition: "200% 0" }}
-          animate={{ backgroundPosition: "-200% 0" }}
-          transition={{
-            repeat: Infinity,
-            repeatType: "loop",
-            duration: 7,
-            ease: "linear",
-          }}
-        >
-          <PenLine strokeWidth={2} />
-          Create Announcement
-        </motion.span>
+        <TitleReusable
+          title="Create Announcement"
+          description=""
+          Icon={PenLine}
+        />
 
         <p className="text-sm text-gray-500 mt-1">
           Fill out the form below to add a new announcement.

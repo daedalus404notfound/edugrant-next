@@ -24,6 +24,7 @@ import { ArrowRight, Loader, RefreshCcw, UserPen } from "lucide-react";
 import { DragAndDropArea } from "@/components/ui/upload";
 
 import { useCreateAdmin } from "@/hooks/admin/postCreateAdminHandler";
+import TitleReusable from "@/components/ui/title";
 
 export default function CreateAdmin() {
   const {
@@ -41,37 +42,11 @@ export default function CreateAdmin() {
   return (
     <div className="px-4">
       <div className="mx-auto max-w-3xl w-full py-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <motion.span
-            className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-          text-xl font-semibold flex items-center gap-1.5
-          "
-            initial={{ backgroundPosition: "200% 0" }}
-            animate={{ backgroundPosition: "-200% 0" }}
-            transition={{
-              repeat: Infinity,
-              repeatType: "loop",
-              duration: 7,
-              ease: "linear",
-            }}
-          >
-            <UserPen strokeWidth={2} />
-            Add New Admininstrator
-          </motion.span>
-        </motion.div>
-
-        <motion.p
-          className="text-sm text-gray-500 mt-1"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          Fill out the form below to add a new administrator.
-        </motion.p>
+        <TitleReusable
+          title="Add New Admininstrator"
+          description="Fill out the form below to add a new administrator."
+          Icon={UserPen}
+        />
         <form
           onSubmit={(e) => {
             e.preventDefault();

@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { motion } from "motion/react";
 
 import {
   ArrowRight,
@@ -35,7 +34,6 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -46,6 +44,7 @@ import { DragAndDropArea } from "@/components/ui/upload";
 import { useCreateScholarship } from "@/hooks/admin/postCreateScholarship";
 import { Label } from "@/components/ui/label";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
+import TitleReusable from "@/components/ui/title";
 
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
@@ -77,26 +76,11 @@ export default function Create() {
   return (
     <div className="px-4">
       <div className="mx-auto max-w-4xl w-full py-10">
-        <motion.span
-          className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-          text-xl font-semibold flex items-center gap-1.5
-          "
-          initial={{ backgroundPosition: "200% 0" }}
-          animate={{ backgroundPosition: "-200% 0" }}
-          transition={{
-            repeat: Infinity,
-            repeatType: "loop",
-            duration: 7,
-            ease: "linear",
-          }}
-        >
-          <PenLine strokeWidth={2} />
-          Create Scholarship
-        </motion.span>
-
-        <p className="text-sm text-gray-500 mt-1">
-          Fill out the form below to add a new scholarship.
-        </p>
+        <TitleReusable
+          title=" Create Scholarship"
+          description="Fill out the form below to add a new scholarship."
+          Icon={PenLine}
+        />
         <Form {...form}>
           <div className="space-y-5 mt-10">
             <div className="grid grid-cols-3 gap-x-3 gap-y-8">

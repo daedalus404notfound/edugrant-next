@@ -1,7 +1,6 @@
 "use client";
 
 import { Megaphone, Plus, Trash2 } from "lucide-react";
-import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,7 @@ import { DeleteDialog } from "@/components/ui/delete-dialog";
 import useDeleteAnnouncement from "@/hooks/admin/postDeleteAnnoucement";
 import { Skeleton } from "@/components/ui/skeleton";
 import AnnouncementDescription from "./description";
+import TitleReusable from "@/components/ui/title";
 const tabs = [
   { id: "ACTIVE", label: "Active", indicator: "" },
   { id: "EXPIRED", label: "Expired", indicator: "" },
@@ -40,26 +40,11 @@ export default function ScholarshipAnnouncements() {
   return (
     <div className=" min-h-screen px-4">
       <div className="mx-auto max-w-5xl w-full py-10">
-        <motion.span
-          className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-          text-xl font-semibold flex items-center gap-1.5
-          "
-          initial={{ backgroundPosition: "200% 0" }}
-          animate={{ backgroundPosition: "-200% 0" }}
-          transition={{
-            repeat: Infinity,
-            repeatType: "loop",
-            duration: 7,
-            ease: "linear",
-          }}
-        >
-          <Megaphone size={20} />
-          Manage Announcements
-        </motion.span>
-        <p className="text-sm text-gray-300 mt-1">
-          Browse the list of active announcement.
-        </p>
-
+        <TitleReusable
+          title="Manage Announcements"
+          description="Browse the list of active announcement."
+          Icon={Megaphone}
+        />
         <div className="mt-8 flex justify-between">
           <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
 

@@ -14,6 +14,7 @@ import DataTableToolbar from "../manage-table-components/data-table-toolbar";
 import { ApplicationTypes } from "@/hooks/types";
 import useApplicantsSearch from "@/hooks/admin/getApplicantSearch";
 import useFetchApplications from "@/hooks/admin/getApplicant";
+import TitleReusable from "@/components/ui/title";
 
 export default function Manage() {
   const [search, setSearch] = useState("");
@@ -46,25 +47,11 @@ export default function Manage() {
   return (
     <div className="min-h-screen px-4 relative z-10">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
-        <motion.span
-          className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-          text-xl font-semibold flex items-center gap-1.5
-          "
-          initial={{ backgroundPosition: "200% 0" }}
-          animate={{ backgroundPosition: "-200% 0" }}
-          transition={{
-            repeat: Infinity,
-            repeatType: "loop",
-            duration: 7,
-            ease: "linear",
-          }}
-        >
-          <X strokeWidth={3} />
-          Declined Applicants
-        </motion.span>
-        <p className="text-sm text-gray-300 mt-1">
-          Applicants who have been declined
-        </p>
+        <TitleReusable
+          title="Declined Applicants"
+          description="Applicants who have been declined."
+          Icon={X}
+        />
 
         <div className="py-8">
           <DataTable<ApplicationTypes, unknown>

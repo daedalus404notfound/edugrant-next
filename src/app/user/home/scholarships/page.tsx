@@ -63,6 +63,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import useGetFilter from "@/hooks/admin/getDynamicFilter";
 import { DataTableFacetedFilterClient } from "./faceted";
+import TitleReusable from "@/components/ui/title";
 export default function ClientScholarship() {
   const [currentPage] = useState(1);
   const [rowsPerPage] = useState(20);
@@ -74,13 +75,11 @@ export default function ClientScholarship() {
   const [status, setStatus] = useState("ACTIVE");
   const { filter } = useGetFilter({ scholarshipStatus: status });
   const provider =
-    filter?.optionsScholarship?.scholarshipProvider?.value?.map(
-      (item: string) => ({
-        label: item,
-        value: item,
-        icon: PhilippinePeso,
-      })
-    ) ?? [];
+    filter?.getScholarshipsFilters?.scholarshipProvider?.map((meow) => ({
+      label: meow,
+      value: meow,
+      icon: PhilippinePeso,
+    })) ?? [];
 
   const formatFilters = () => {
     const filterArray: Filter[] = [];
@@ -142,27 +141,12 @@ export default function ClientScholarship() {
       <div className="z-10 min-h-screen bg-background lg:px-4   ">
         <div className="mx-auto w-[95%] pt-10">
           <div className="flex justify-between items-end">
-            <div>
-              <motion.span
-                className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-                      text-xl lg:text-2xl font-semibold flex items-center gap-1.5
-                      "
-                initial={{ backgroundPosition: "200% 0" }}
-                animate={{ backgroundPosition: "-200% 0" }}
-                transition={{
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  duration: 7,
-                  ease: "linear",
-                }}
-              >
-                <TextSearch /> Available Scholarships
-              </motion.span>
-              <p className="lg:text-sm text-xs mt-1 text-muted-foreground">
-                Discover scholarship opportunities. Browse, filter, and apply
-                for financial aid that supports your education.
-              </p>
-            </div>
+            <TitleReusable
+              title="Available Scholarships"
+              description=" Discover scholarship opportunities. Browse, filter, and apply
+                for financial aid that supports your education."
+              Icon={TextSearch}
+            />
           </div>
           <div className="py-8 space-y-8">
             <div className="flex flex-col lg:flex-row justify-between  w-full gap-3">
@@ -299,7 +283,7 @@ export default function ClientScholarship() {
                         alt=""
                       />
                       <div className="relative aspect-[16/8.5] w-full rounded-t-md overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r  from-black/40 via-black/20 to-black/50 " />
+                        {/* <div className="absolute inset-0 bg-gradient-to-r  from-black/40 via-black/20 to-black/50 " /> */}
                         <img
                           className="h-full w-full object-cover    "
                           src={scholarship.scholarshipCover}

@@ -2,7 +2,6 @@
 
 import {
   ArrowRightIcon,
-  PhilippinePeso,
   Plus,
   SearchIcon,
   Trash2,
@@ -26,9 +25,10 @@ export default function DataTableToolbar<TData>({
   table,
   getRowId,
   search,
+  status,
   setSearch,
 }: ToolbarProps<TData>) {
-  const { filter } = useGetFilter({ scholarshipStatus: "ACTIVE" });
+  const { filter } = useGetFilter({ scholarshipStatus: status });
   const isFiltered = table.getState().columnFilters.length > 0;
   const providerOption =
     filter?.getScholarshipsFilters.scholarshipProvider?.map((meow) => ({
@@ -53,7 +53,7 @@ export default function DataTableToolbar<TData>({
     }
   }, [isSuccess, table]);
 
-  const { data } = useScholarshipData({ status: "ACTIVE" });
+  const { data } = useScholarshipData({ status: status });
   const filteredHeader = data.map((meow) => ({
     scholarshipTitle: meow.scholarshipTitle,
     scholarshipProvider: meow.scholarshipProvider,
