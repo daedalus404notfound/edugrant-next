@@ -159,7 +159,7 @@ export default function ClientScholarship() {
                 />
               </TourStep>
               <TourStep stepId="filters">
-                <div className="flex items-center gap-3">
+                <div className="grid lg:grid-cols-4 grid-cols-2 gap-2">
                   <DataTableFacetedFilterClient
                     title="Provider"
                     options={provider}
