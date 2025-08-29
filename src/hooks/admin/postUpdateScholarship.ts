@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { creatScholarshipFormData } from "./zodUpdateScholarship";
+import { UpdateScholarshipFormData } from "./zodUpdateScholarship";
 import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
@@ -14,7 +14,7 @@ import { ScholarshipTypes } from "../types";
 import { useUpdateScholarshipZod } from "./zodUpdateScholarship";
 type ApiError = AxiosError<ApiErrorResponse>;
 const today = new Date().toISOString().split("T")[0];
-const addScholarshipApi = async (data: creatScholarshipFormData) => {
+const addScholarshipApi = async (data: UpdateScholarshipFormData) => {
   const { admin } = useAdminStore.getState();
   const formDataToSend = new FormData();
   if (data.scholarshipId) {
@@ -94,7 +94,7 @@ export const useUpdateScholarship = (data?: ScholarshipTypes) => {
   const addScholarship = useAddScholarship();
   const [open, setOpen] = useState(false);
 
-  const handleSubmit = async (data: creatScholarshipFormData) => {
+  const handleSubmit = async (data: UpdateScholarshipFormData) => {
  
 
     try {
