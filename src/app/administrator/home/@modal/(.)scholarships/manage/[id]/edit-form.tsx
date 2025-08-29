@@ -15,14 +15,11 @@ import { Button } from "@/components/ui/button";
 
 import {
   ArrowLeftFromLine,
-
   CalendarIcon,
   ClockIcon,
-
   Plus,
   Save,
   Trash2,
-
 } from "lucide-react";
 import {
   Popover,
@@ -344,7 +341,13 @@ export default function EditScholarship({
               <Button
                 type="button"
                 size="sm"
-                onClick={() => append({ label: "", formats: [] })}
+                onClick={() =>
+                  append({
+                    label: "",
+                    formats: [],
+                    requirementType: "required",
+                  })
+                }
                 variant="outline"
               >
                 <Plus className="w-4 h-4 mr-1" />
