@@ -126,7 +126,7 @@ export type MetaTypes = {
   totalRows: number | undefined;
   search: string | undefined;
 };
-type AnnouncementTypes = {
+export type AnnouncementTypes = {
   announcements: AnnouncementDataTypes[];
   meta: MetaTypes;
 };
