@@ -8,7 +8,7 @@ import { Badge } from "./badge";
 interface Tab {
   id: string;
   label: string;
-  indicator: string;
+  indicator: number | null;
 }
 
 interface TabsProps extends React.HTMLAttributes<HTMLDivElement> {

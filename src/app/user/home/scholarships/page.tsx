@@ -45,8 +45,8 @@ const frameworks = [
 ];
 import Link from "next/link";
 const tabs = [
-  { id: "ACTIVE", label: "Active", indicator: "" },
-  { id: "EXPIRED", label: "Expired", indicator: "" },
+  { id: "ACTIVE", label: "Active", indicator: null },
+  { id: "EXPIRED", label: "Expired", indicator: null },
 ];
 const scholarshipTypes = [
   { label: "Government", value: "government", icon: Building2 },
@@ -65,6 +65,8 @@ import { Input } from "@/components/ui/input";
 import useGetFilter from "@/hooks/admin/getDynamicFilter";
 import { DataTableFacetedFilterClient } from "./faceted";
 import TitleReusable from "@/components/ui/title";
+import { format } from "date-fns";
+import NoDataFound from "@/components/ui/nodata";
 export default function ClientScholarship() {
   const [currentPage] = useState(1);
   const [rowsPerPage] = useState(20);
@@ -151,7 +153,7 @@ export default function ClientScholarship() {
           <div className="flex justify-between items-end">
             <TitleReusable
               title="Available Scholarships"
-              description=" Discover scholarship opportunities. Browse, filter, and apply."
+              description=""
               Icon={TextSearch}
             />
           </div>
@@ -281,80 +283,69 @@ export default function ClientScholarship() {
                     </div>
                   ))
                 ) : data.length === 0 ? (
-                  <div className="col-span-3 flex justify-center items-center mt-20">
-                    {/* Content */}
-                    <div className="relative z-10 flex flex-col items-center space-y-3">
-                      {/* Icon container with border and backdrop blur */}
-                      <div className="size-18 border border-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                        <Ghost className="w-8 h-8 text-white/70" />
-                      </div>
-
-                      <div className="space-y-1 text-center">
-                        {/* Title */}
-                        <h3 className="text-lg font-bold">
-                          No sholarship found.
-                        </h3>
-
-                        {/* Description */}
-                        <p className=" text-center max-w-sm leading-relaxed text-sm text-muted-foreground">
-                          The void stares back. Your search query returned zero
-                          results.
-                        </p>
-                      </div>
-                      {/* Action button */}
-                    </div>
-                  </div>
+                  <NoDataFound />
                 ) : (
                   data.map((scholarship) => (
-                    <div
+                    <Link
+                      href={`/user/home/scholarships/${scholarship.scholarshipId}`}
+                      prefetch
                       key={scholarship.scholarshipId}
-                      className="relative flex flex-col border  rounded-lg overflow-hidden lg:p-2 p-1 gap-3  bg-background  shadow-md"
+                      className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
                     >
-                      <img
-                        className="absolute h-full w-full left-0 top-0 object-cover   opacity-15  mask-gradient blur-xs "
-                        src={scholarship.scholarshipCover}
-                        alt=""
-                      />
-                      <div className="relative aspect-[16/8.5] w-full rounded-t-md overflow-hidden">
-                        {/* <div className="absolute inset-0 bg-gradient-to-r  from-black/40 via-black/20 to-black/50 " /> */}
+                      <div className="relative rounded-lg bg-background ">
                         <img
-                          className="h-full w-full object-cover    "
+                          className="absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs "
                           src={scholarship.scholarshipCover}
                           alt=""
                         />
-                      </div>
+                        <div className="relative z-10">
+                          <div className=" aspect-[16/8.5] w-full rounded-md overflow-hidden">
+                            <img
+                              className="h-full w-full object-cover    "
+                              src={scholarship.scholarshipCover}
+                              alt=""
+                            />
+                          </div>
+                          <div className=" lg:p-4 p-2 space-y-5">
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1 lg:space-y-1">
+                                <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight">
+                                  {scholarship.scholarshipTitle}
+                                </h3>
+                                <p className="text-sm text-muted-foreground">
+                                  {scholarship.scholarshipProvider}
+                                </p>
+                              </div>
+                              <Badge
+                                className={`  ${
+                                  scholarship.status === "ACTIVE"
+                                    ? "bg-green-800/15 text-green-700  "
+                                    : scholarship.status === "EXPIRED"
+                                    ? "bg-red-900/15 text-red-700 "
+                                    : ""
+                                } border-0`}
+                                variant="outline"
+                              >
+                                {scholarship.status}
+                              </Badge>
+                            </div>
 
-                      <div className="flex-1 lg:space-y-1 z-10 lg:px-2 px-1">
-                        <div className="flex items-center gap-1.5 justify-between">
-                          <h1 className="font-semibold text-lg line-clamp-1 ">
-                            {scholarship.scholarshipTitle}
-                          </h1>
-                          <Badge className="bg-green-800 text-gray-200">
-                            Active
-                          </Badge>
+                            <div className="flex items-center justify-between text-sm text-muted-foreground ">
+                              <Badge variant="outline" className="">
+                                GOVERNMENT
+                              </Badge>
+                              <span>
+                                Deadline:{" "}
+                                {format(
+                                  scholarship.scholarshipDeadline,
+                                  "MM/dd/yy"
+                                )}
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                        <h3 className="text-sm">
-                          {scholarship.scholarshipProvider}
-                        </h3>
                       </div>
-
-                      <div className="flex gap-2 bg-background rounded-md  p-1.5  border-background z-10">
-                        <Link
-                          href={`/user/home/scholarships/${scholarship.scholarshipId}`}
-                          prefetch
-                          className="flex-1"
-                          scroll={false}
-                        >
-                          <Button size="sm" variant="ghost" className="w-full">
-                            View Details
-                          </Button>
-                        </Link>
-
-                        <Button size="sm" variant="ghost" className="flex-1">
-                          Apply Now
-                        </Button>
-                      </div>
-                    </div>
+                    </Link>
                   ))
                 )}
               </div>
