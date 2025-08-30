@@ -10,6 +10,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "sonner";
 import DynamicHeaderUser from "./dynamic-header";
 import { usePathname } from "next/navigation";
+import MobDock from "./dock";
 
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
@@ -34,6 +35,7 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
             third={segmentedPath[4]}
           />
           {children} {modal}
+          <MobDock />
         </div>
       </SidebarInset>
       <Toaster />

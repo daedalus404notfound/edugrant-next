@@ -13,7 +13,6 @@ import {
   Card,
   CardAction,
   CardContent,
-
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -39,50 +38,41 @@ export function ChartBarMultiple() {
     pageSize: 100,
   });
   return (
-    <Card className="aspect-[14.6/9] border-0">
-      <CardHeader>
-        <CardTitle>Scholarship Status</CardTitle>
+    <div className="bg-card p-4 rounded-lg border">
+      <ChartContainer config={chartConfig}>
+        <BarChart
+          accessibilityLayer
+          data={
+            data?.map((item) => ({
+              name: item.scholarshipTitle,
+              applicationsReceived: item.totalApplicants,
+              applicationsApproved: item.totalApproved,
+            })) ?? []
+          }
+        >
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="name"
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            tickFormatter={(value) => value.slice(0, 3)}
+          />
 
-        <CardAction>
-          <CircleQuestionMark size={15} />
-        </CardAction>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <BarChart
-            accessibilityLayer
-            data={
-              data?.map((item) => ({
-                name: item.scholarshipTitle,
-                applicationsReceived: item.totalApplicants,
-                applicationsApproved: item.totalApproved,
-              })) ?? []
-            }
-          >
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="name"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-
-            <ChartTooltip content={<ChartTooltipContent />} />
-            <ChartLegend content={<ChartLegendContent />} />
-            <Bar
-              dataKey="applicationsReceived"
-              fill="oklch(0.68 0.14 76)"
-              radius={4}
-            />
-            <Bar
-              dataKey="applicationsApproved"
-              fill="var(--chart-2)"
-              radius={4}
-            />
-          </BarChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
+          <ChartTooltip content={<ChartTooltipContent />} />
+          <ChartLegend content={<ChartLegendContent />} />
+          <Bar
+            dataKey="applicationsReceived"
+            fill="oklch(0.68 0.14 76)"
+            radius={4}
+          />
+          <Bar
+            dataKey="applicationsApproved"
+            fill="var(--chart-2)"
+            radius={4}
+          />
+        </BarChart>
+      </ChartContainer>
+    </div>
   );
 }

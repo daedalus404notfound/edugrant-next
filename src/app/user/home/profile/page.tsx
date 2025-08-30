@@ -12,6 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Camera,
@@ -79,9 +80,9 @@ export default function Profile() {
               </div>
             </div>
           </div>
-
-          <Tabs tabs={tabs} onTabChange={(tabsId) => setTab(tabsId)} />
-
+          <div className="py-5 overflow-y-hidden ">
+            <Tabs tabs={tabs} onTabChange={(tabsId) => setTab(tabsId)} />
+          </div>
           {tab === "personal" && (
             <div className=" w-full space-y-10">
               <FormField

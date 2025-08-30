@@ -22,6 +22,7 @@ import { Popover } from "@radix-ui/react-popover";
 import { PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import {
+  ArrowRight,
   Bell,
   ChevronsUpDown,
   ExternalLink,
@@ -51,11 +52,11 @@ export default function DynamicHeaderUser({
   const [open, setOpen] = useState(false);
   return (
     <header className="flex w-full items-center justify-between bg-background rounded-lg  relative">
-      <div className="flex h-16 shrink-0 items-center gap-2 px-4">
-        <SidebarTrigger className="-ml-1" />
+      <div className="flex h-16 shrink-0 items-center gap-2 lg:px-5 px-3">
+        <SidebarTrigger className="-ml-1 lg:flex hidden" />
         <Separator
           orientation="vertical"
-          className="mr-2 data-[orientation=vertical]:h-4"
+          className="mr-2 data-[orientation=vertical]:h-4 lg:flex hidden"
         />
         <Breadcrumb>
           <BreadcrumbList>
@@ -118,14 +119,14 @@ export default function DynamicHeaderUser({
               <span className="absolute -top-1 -right-1 bg-red-500 size-4 flex justify-center items-center text-[.7rem] rounded-full">
                 2
               </span>
-              <Button variant="outline">
+              <Button variant="secondary">
                 <Bell />
               </Button>
             </div>
           </PopoverTrigger>
-          <PopoverContent className="w-md p-2 bg-background space-y-2">
-            <div className="bg-background z-50 w-full rounded-md border p-4 shadow-lg">
-              <div className="flex items-center justify-between gap-2">
+          <PopoverContent className=" w-[350px] lg:w-md  bg-card p-0">
+            <div className="border divide-y rounded-md bg-background">
+              <div className="p-4 w-full">
                 <div className="flex grow items-center gap-12">
                   <div className="space-y-1">
                     <p className="text-sm font-medium">
@@ -136,13 +137,8 @@ export default function DynamicHeaderUser({
                     </p>
                   </div>
                 </div>
-                <Button size="sm" variant="ghost">
-                  View <ExternalLink />
-                </Button>
               </div>
-            </div>
-            <div className="bg-background z-50 w-full rounded-md border p-4 shadow-lg">
-              <div className="flex items-center justify-between gap-2">
+              <div className="p-4 w-full">
                 <div className="flex grow items-center gap-12">
                   <div className="space-y-1">
                     <p className="text-sm font-medium">Live in 27 hours</p>
@@ -151,8 +147,10 @@ export default function DynamicHeaderUser({
                     </p>
                   </div>
                 </div>
-                <Button size="sm" variant="ghost">
-                  View <ExternalLink />
+              </div>
+              <div className="flex justify-center items-center">
+                <Button variant="ghost">
+                  View all <ArrowRight />
                 </Button>
               </div>
             </div>

@@ -6,6 +6,7 @@ import {
   FileInput,
   GraduationCap,
   Maximize,
+  Share2,
 } from "lucide-react";
 import { Ring } from "ldrs/react";
 import "ldrs/react/Ring.css";
@@ -33,6 +34,8 @@ import AnimatedNumberCountdown from "@/components/ui/countdown";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ScholarshipCards from "@/app/administrator/home/@modal/(.)scholarships/cards";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
 export default function InterceptManageScholarshipClient() {
   const searchParams = useSearchParams();
   const apply = searchParams.get("apply");
@@ -62,12 +65,12 @@ export default function InterceptManageScholarshipClient() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="max-w-[1000px] w-full mx-auto h-[95vh] outline-0 border-0 p-1">
+      <DrawerContent className="max-w-[1000px] w-[98%] mx-auto h-[95dvh] outline-0 border-0 lg:p-1">
         <DrawerHeader className="sr-only">
           <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
-        <div className="flex items-center justify-between pb-2">
+        <div className="flex items-center justify-between lg:pb-2">
           <div className="flex items-center gap-3">
             <Button className="relative" variant="ghost" size="sm">
               <GraduationCap />
@@ -101,7 +104,7 @@ export default function InterceptManageScholarshipClient() {
               data && <UploadDocs data={data} setIsApply={setIsApply} />
             )
           ) : loading ? (
-            <div className="bg-background h-full w-full p-4 rounded-t-xl space-y-4 overflow-hidden">
+            <div className="bg-background h-full w-full p-4 rounded-t-md space-y-4 overflow-hidden">
               <Skeleton className="h-45 w-full" />
               <div className="space-y-4">
                 <Skeleton className="aspect-square rounded-full size-25" />
@@ -119,8 +122,8 @@ export default function InterceptManageScholarshipClient() {
               </div>
             </div>
           ) : (
-            <div className="relative h-full w-full overflow-auto no-scrollbar bg-background rounded-t-xl">
-              <div className="absolute top-0 left-0 h-80 w-full opacity-30   mask-gradient flex">
+            <div className="relative h-full w-full overflow-auto no-scrollbar bg-background rounded-t-md">
+              <div className="absolute top-0 left-0 lg:h-80 h-60 w-full opacity-30   mask-gradient flex">
                 <img
                   className="w-full h-full object-cover blur-md "
                   src={scholarshipCover}
@@ -132,21 +135,22 @@ export default function InterceptManageScholarshipClient() {
                   <div className="absolute inset-0border-b-2 border-black" />
                   {scholarshipCover && (
                     <img
-                      className="w-full h-45 object-cover   rounded-t-md"
+                      className="w-full lg:h-45 h-30 object-cover   rounded-t-md"
                       src={scholarshipCover}
                       alt=""
                     />
                   )}
                   <Button
-                    className="absolute z-5 bottom-3 right-3"
-                    variant="secondary"
+                    variant="outline"
+                    className="absolute z-5 lg:bottom-3 lg:right-3  !bg-black/60 !text-gray-200"
+                    size="sm"
                   >
                     View <Maximize />
                   </Button>
                 </div>
 
-                <div className="relative z-10  p-4">
-                  <Avatar className="size-25">
+                <div className="relative z-10 lg:p-4 p-2 ">
+                  <Avatar className="lg:size-25 size-23">
                     <AvatarImage
                       className="object-cover"
                       src={data?.scholarshipLogo}
@@ -155,10 +159,10 @@ export default function InterceptManageScholarshipClient() {
                       {data?.scholarshipProvider.slice(0, 2)}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="space-y-1 mt-2">
+                  <div className="lg:space-y-1 mt-2">
                     <motion.span
                       className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-                                                 flex items-center gap-1.5 text-2xl font-bold tracking-tight
+                                                 flex items-center gap-1.5 lg:text-2xl text-lg font-bold tracking-tight
                                                 "
                       initial={{ backgroundPosition: "200% 0" }}
                       animate={{ backgroundPosition: "-200% 0" }}
@@ -176,26 +180,43 @@ export default function InterceptManageScholarshipClient() {
                     </p>
                   </div>
                 </div>
-                <div className="space-y-15 px-4 mt-5">
+
+                <div className="lg:space-y-15 space-y-10 lg:px-4 px-2 mt-5">
+                  <div className="flex flex-col gap-5 max-w-2xl w-full">
+                    <div className="w-full flex gap-2">
+                      <Button
+                        className="flex-1"
+                        variant="outline"
+                        onClick={() => setIsApply(true)}
+                        disabled={loading}
+                      >
+                        Apply Now
+                      </Button>
+                      <Button variant="secondary">
+                        <Share2 />
+                      </Button>
+                    </div>
+                    <div className="lg:space-y-3 space-y-1">
+                      {" "}
+                      <h2 className="text-xs text-muted-foreground uppercase tracking-wider font-medium">
+                        About scholarship
+                      </h2>
+                      <p className=" leading-relaxed w-full lg:text-base text-sm">
+                        {data?.scholarshipDescription}
+                      </p>
+                    </div>
+                  </div>
                   {/* Stats Grid */}
                   {data && <ScholarshipCards data={data} />}
 
                   {/* Requirements */}
 
-                  <div className="grid grid-cols-2 gap-5">
-                    <div className="space-y-3">
-                      <h2 className="text-xs text-muted-foreground uppercase tracking-wider font-medium">
-                        About scholarship
-                      </h2>
-                      <p className="text-muted-foreground leading-relaxed max-w-2xl">
-                        {data?.scholarshipDescription}
-                      </p>
-                    </div>
-
+                  <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
+                    <div></div>
                     <div className="space-y-6">
                       {" "}
                       <div className="space-y-3">
-                        <div className="flex justify-between items-center px-3">
+                        <div className="flex justify-between items-center">
                           <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                             Required Documents
                           </h3>
@@ -207,17 +228,24 @@ export default function InterceptManageScholarshipClient() {
                           </p>
                         </div>
 
-                        <div className="space-y-1.5 grid grid-cols-1">
+                        <div className=" grid grid-cols-1 gap-5">
                           {Object.values(data?.scholarshipDocuments || {}).map(
-                            (doc) => (
-                              <Button
-                                className="justify-start"
-                                variant="ghost"
-                                key={doc.label}
-                              >
-                                <FileInput />
+                            (doc, index) => (
+                              <Label key={doc.label}>
+                                <span> {index + 1}. </span>
                                 {doc.label}
-                              </Button>
+                                <Badge
+                                  className={`${
+                                    doc.requirementType === "required"
+                                      ? "bg-red-700/20 text-red-700"
+                                      : doc.requirementType === "optional"
+                                      ? "bg-blue-700/20 text-blue-700"
+                                      : ""
+                                  } capitalize `}
+                                >
+                                  {doc.requirementType}
+                                </Badge>
+                              </Label>
                             )
                           )}
                         </div>
@@ -228,64 +256,17 @@ export default function InterceptManageScholarshipClient() {
                     <h1 className="text-center text-sm font-medium">
                       Hurry before it ends
                     </h1>
-                    {deadline && (
-                      <AnimatedNumberCountdown endDate={new Date(deadline)} />
-                    )}
+                    <div className="transform scale-75 lg:scale-100">
+                      {deadline && (
+                        <AnimatedNumberCountdown endDate={new Date(deadline)} />
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           )}
         </div>
-
-        {!isApply &&
-          (loading ? (
-            <div className="p-4 sticky bottom-0 bg-card border-t">
-              <div className="flex gap-3">
-                <Skeleton className="h-9 flex-1" />
-                <Skeleton className="h-9 flex-1" />
-                <Skeleton className="h-9 flex-1" />
-              </div>
-            </div>
-          ) : (
-            <div className="p-4 sticky bottom-0 bg-card border-t">
-              <div className="flex gap-3">
-                <Button
-                  className="flex-1 bg-blue-950 border border-blue-950 hover:bg-blue-800 text-gray-200 hover:border-blue-800"
-                  onClick={() => setIsApply(true)}
-                  disabled={loading}
-                >
-                  <ArrowUpFromLine />
-                  Apply Scholarship
-                </Button>
-                <a
-                  download
-                  href={data?.scholarshipForm}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1"
-                >
-                  <Button
-                    className="w-full bg-green-950 border border-green-950 hover:bg-green-800 text-gray-200 hover:border-green-800"
-                    disabled={loading}
-                  >
-                    <Download className="mr-2" />
-                    Download Form
-                  </Button>
-                </a>
-
-                <Button
-                  className="flex-1"
-                  variant="outline"
-                  onClick={() => HandleCloseDrawer(false)}
-                  disabled={loading}
-                >
-                  <ArrowLeftFromLine />
-                  Back
-                </Button>
-              </div>
-            </div>
-          ))}
       </DrawerContent>
     </Drawer>
   );

@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import {
   Building,
   Building2,
+  Ellipsis,
   Ghost,
   PhilippinePeso,
   TextSearch,
@@ -68,6 +69,7 @@ export default function ClientScholarship() {
   const [currentPage] = useState(1);
   const [rowsPerPage] = useState(20);
   const [open, setOpen] = useState(false);
+  const [hide, setHide] = useState(false);
   const [value, setValue] = useState("");
   const [search, setSearch] = useState("");
   const [selectedProviders, setSelectedProviders] = useState<string[]>([]);
@@ -124,6 +126,12 @@ export default function ClientScholarship() {
         "Apply filters to narrow down scholarships based on your preferences.",
     },
     {
+      id: "sort",
+      title: "Sort Options",
+      description:
+        "Apply sort to narrow down scholarships based on your preferences.",
+    },
+    {
       id: "tabs",
       title: "Active vs Expired",
       description:
@@ -138,40 +146,60 @@ export default function ClientScholarship() {
   ];
   return (
     <TourProvider steps={scholarshipTourSteps}>
-      <div className="z-10 min-h-screen bg-background lg:px-4   ">
-        <div className="mx-auto w-[95%] lg:pt-10  pt-6">
+      <div className="z-10  bg-background lg:px-4   ">
+        <div className="mx-auto w-[95%] lg:pt-10  pt-3">
           <div className="flex justify-between items-end">
             <TitleReusable
               title="Available Scholarships"
-              description=" Discover scholarship opportunities. Browse, filter, and apply
-                for financial aid that supports your education."
+              description=" Discover scholarship opportunities. Browse, filter, and apply."
               Icon={TextSearch}
             />
           </div>
           <div className="py-8 space-y-8">
             <div className="flex flex-col lg:flex-row justify-between  w-full gap-3">
-              <TourStep stepId="search">
-                <Input
-                  className="w-full lg:w-md"
-                  type="search"
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search Scholarship Title..."
-                />
-              </TourStep>
-              <TourStep stepId="filters">
-                <div className="grid lg:grid-cols-4 grid-cols-2 gap-2">
-                  <DataTableFacetedFilterClient
-                    title="Provider"
-                    options={provider}
-                    selectedValues={selectedProviders}
-                    onChange={setSelectedProviders}
-                  />
-                  <DataTableFacetedFilterClient
-                    title="Type"
-                    options={scholarshipTypes}
-                    selectedValues={selectedTypes}
-                    onChange={setSelectedTypes}
-                  />
+              <div className="flex items-center  gap-3 flex-col lg:flex-row">
+                <div className=" flex gap-2 w-full">
+                  <TourStep stepId="search" className="w-full">
+                    <Input
+                      className="w-full lg:w-md bg-background"
+                      type="search"
+                      onChange={(e) => setSearch(e.target.value)}
+                      placeholder="Search Scholarship Title..."
+                    />
+                  </TourStep>
+                  <Button
+                    className="lg:hidden"
+                    onClick={() => setHide(!hide)}
+                    variant="secondary"
+                  >
+                    <Ellipsis />
+                  </Button>
+                </div>
+                <TourStep
+                  stepId="filters"
+                  className={`w-full ${hide ? "flex" : "hidden"} lg:flex`}
+                >
+                  <div className="flex gap-2 w-full">
+                    <DataTableFacetedFilterClient
+                      title="Provider"
+                      options={provider}
+                      selectedValues={selectedProviders}
+                      onChange={setSelectedProviders}
+                    />
+                    <DataTableFacetedFilterClient
+                      title="Type"
+                      options={scholarshipTypes}
+                      selectedValues={selectedTypes}
+                      onChange={setSelectedTypes}
+                    />
+                  </div>
+                </TourStep>
+              </div>
+              <div
+                className={` ${hide ? "flex" : "hidden"} lg:flex`}
+                // className="flex items-center  gap-2 "
+              >
+                <TourStep stepId="sort" className=" flex-1 flex gap-2">
                   <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild className="flex-1">
                       <Button
@@ -179,6 +207,7 @@ export default function ClientScholarship() {
                         role="combobox"
                         aria-expanded={open}
                         className="w-full"
+                        size="sm"
                       >
                         <ChevronsUpDown />
                         {value
@@ -220,13 +249,17 @@ export default function ClientScholarship() {
                       </Command>
                     </PopoverContent>
                   </Popover>
-                  <TourTrigger />
-                </div>
-              </TourStep>
+                  <TourTrigger className="flex-1" />
+                </TourStep>
+              </div>
             </div>
             <div className="flex">
               <TourStep stepId="tabs">
-                <Tabs tabs={tabs} onTabChange={(tabsId) => setStatus(tabsId)} />
+                <Tabs
+                  tabs={tabs}
+                  onTabChange={(tabsId) => setStatus(tabsId)}
+                  className="bg-background rounded-md"
+                />
               </TourStep>
             </div>
 
@@ -275,7 +308,7 @@ export default function ClientScholarship() {
                   data.map((scholarship) => (
                     <div
                       key={scholarship.scholarshipId}
-                      className="relative flex flex-col  rounded-lg overflow-hidden p-2 gap-3 bg-card dark:bg-black  shadow-md"
+                      className="relative flex flex-col border  rounded-lg overflow-hidden lg:p-2 p-1 gap-3  bg-background  shadow-md"
                     >
                       <img
                         className="absolute h-full w-full left-0 top-0 object-cover   opacity-15  mask-gradient blur-xs "
@@ -291,7 +324,7 @@ export default function ClientScholarship() {
                         />
                       </div>
 
-                      <div className="flex-1 space-y-1 z-10 px-2">
+                      <div className="flex-1 lg:space-y-1 z-10 lg:px-2 px-1">
                         <div className="flex items-center gap-1.5 justify-between">
                           <h1 className="font-semibold text-lg line-clamp-1 ">
                             {scholarship.scholarshipTitle}
@@ -312,12 +345,12 @@ export default function ClientScholarship() {
                           className="flex-1"
                           scroll={false}
                         >
-                          <Button size="lg" variant="ghost" className="w-full">
+                          <Button size="sm" variant="ghost" className="w-full">
                             View Details
                           </Button>
                         </Link>
 
-                        <Button size="lg" variant="ghost" className="flex-1">
+                        <Button size="sm" variant="ghost" className="flex-1">
                           Apply Now
                         </Button>
                       </div>

@@ -56,25 +56,18 @@ export default function ApplicationSummary() {
       icon: <GraduationCap />,
       color: "yellow",
     },
-    {
-      label: "Active Scholarships",
-      data: 3,
-      icon: <GraduationCap />,
-      color: "yellow",
-    },
   ];
 
   return (
-    <div className="grid lg:grid-cols-2 grid-cols-1  lg:gap-5 gap-2">
+    <div className="grid lg:grid-cols-3 grid-cols-1  lg:gap-3 gap-2">
       {summaryCards.map((meow, index) => (
         <div
           key={index}
-          className=" bg-sidebar z-10 flex flex-col justify-between  rounded-lg  shadow-sm  aspect-[16/4] lg:p-4 p-4 lg:gap-3  "
+          className=" bg-card z-10 flex flex-col justify-between  rounded-lg    aspect-[16/4] lg:p-4 p-4 lg:gap-3 border border-input"
         >
           <div className="flex justify-between items-start ">
             <Button
-              variant="outline"
-              size="sm"
+              variant="secondary"
               className={` ${colorStyles[meow.color].text}`}
             >
               {meow.icon}

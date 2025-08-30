@@ -2,6 +2,7 @@ import { CheckCheck, GraduationCap, TrendingUp } from "lucide-react";
 import { Ring } from "ldrs/react";
 import "ldrs/react/Ring.css";
 import { JSX, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 // Define types
 type ColorKey = "blue" | "green" | "yellow" | "white";
@@ -55,19 +56,29 @@ export default function ApplicationSummary() {
       icon: <GraduationCap />,
       color: "yellow",
     },
+    {
+      label: "Active Scholarships",
+      data: 4,
+      icon: <GraduationCap />,
+      color: "yellow",
+    },
   ];
 
   return (
-    <div className="grid grid-cols-3  gap-5 ">
+    <div className="grid lg:grid-cols-2 grid-cols-1  lg:gap-3 gap-2">
       {summaryCards.map((meow, index) => (
         <div
           key={index}
-          className=" bg-sidebar z-10 flex flex-col justify-between  rounded-lg  shadow-sm  aspect-[16/6.5] p-4"
+          className=" bg-card z-10 flex flex-col justify-between  rounded-lg    aspect-[16/4] lg:p-4 p-4 lg:gap-3 border border-input"
         >
           <div className="flex justify-between items-start ">
-            <span className={` p-2 rounded-md ${colorStyles[meow.color].text}`}>
+            <Button
+              variant="secondary"
+              className={` ${colorStyles[meow.color].text}`}
+            >
               {meow.icon}
-            </span>
+            </Button>
+
             <p
               className={`flex text-xs  p-1 rounded-sm font-mono tracking-tight ${
                 colorStyles[meow.color].badge
@@ -77,7 +88,9 @@ export default function ApplicationSummary() {
             </p>
           </div>
           <div className="flex justify-between items-end">
-            <p className="text-sm text-muted-foreground">{meow.label}</p>
+            <p className="lg:text-sm text-xs text-muted-foreground">
+              {meow.label}
+            </p>
             <span className={`text-3xl font-semibold font-mono `}>
               {loading ? (
                 <Ring

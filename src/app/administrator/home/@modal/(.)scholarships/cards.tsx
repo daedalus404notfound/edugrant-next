@@ -44,16 +44,14 @@ export default function ScholarshipCards({ data }: Meow) {
   ];
 
   return (
-    <div className="grid grid-cols-3  gap-4 ">
+    <div className="grid lg:grid-cols-3 grid-cols-1  gap-4 ">
       {summaryCards.map((meow, index) => (
         <div
           key={index}
-          className=" bg-sidebar z-10 flex flex-col justify-between  rounded-lg  shadow-sm   p-4"
+          className=" bg-card z-10 flex flex-col justify-between  rounded-lg  shadow-sm   p-4 border"
         >
           <div className="flex justify-between items-start ">
-            <Button className="shadow-black shadow-2xl" variant="outline">
-              {meow.icon}
-            </Button>
+            <Button variant="secondary">{meow.icon}</Button>
           </div>
           <div className="flex justify-between items-end">
             <p className="text-xs font-medium text-muted-foreground uppercase">
