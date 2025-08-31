@@ -22,7 +22,7 @@ import useFetchApplications from "@/hooks/admin/getApplicant";
 
 export default function DataTableToolbar<
   TData extends { applicationId: string }
->({ table, search, setSearch }: ToolbarProps<TData>) {
+>({ table, search, setSearch, status }: ToolbarProps<TData>) {
   const { filter } = useGetFilter({
     applicationStatus: "PENDING",
     scholarshipStatus: "ACTIVE",
@@ -31,20 +31,16 @@ export default function DataTableToolbar<
   console.log(filter);
   const isFiltered = table.getState().columnFilters.length > 0;
   console.log(filter);
-  const course = filter?.getFilterData.course.map(
-    (meow) => ({
-      label: meow,
-      value: meow,
-      icon: GraduationCap,
-    })
-  );
-  const year = filter?.getFilterData.year.map(
-    (meow) => ({
-      label: meow,
-      value: meow,
-      icon: GraduationCap,
-    })
-  );
+  const course = filter?.getFilterData.course.map((meow) => ({
+    label: meow,
+    value: meow,
+    icon: GraduationCap,
+  }));
+  const year = filter?.getFilterData.year.map((meow) => ({
+    label: meow,
+    value: meow,
+    icon: GraduationCap,
+  }));
 
   const scholarships = filter?.getScholarshipsFilters.scholarshipTitle.map(
     (meow) => ({
@@ -69,8 +65,8 @@ export default function DataTableToolbar<
       setOpenAlert(false);
     }
   }, [isSuccess, table]);
-  const { data } = useFetchApplications({ status: "PENDING" });
-
+  const { data } = useFetchApplications({ status: "REVEWED" });
+  console.log("aaaa", data);
   const student = data.map((meow) => ({
     firstName: meow.student.firstName,
     middleName: meow.student.middleName,

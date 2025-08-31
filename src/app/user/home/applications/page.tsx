@@ -106,7 +106,7 @@ export default function ClientScholarship() {
           ) : (
             data.map((meow) => (
               <Link
-                href={`user/home/applications/${meow.applicationId}`}
+                href={`/user/home/applications/${meow.applicationId}`}
                 key={meow.applicationId}
                 className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
               >
@@ -137,15 +137,15 @@ export default function ClientScholarship() {
                         <Badge
                           className={`  ${
                             meow.status === "PENDING"
-                              ? "bg-yellow-800/15 text-yellow-700  "
+                              ? "bg-yellow-500  "
                               : meow.status === "APPROVED"
-                              ? "bg-green-900/15 text-green-700 "
+                              ? "bg-green-900 "
                               : meow.status === "PENDING"
-                              ? "bg-red-900/15 text-red-700"
+                              ? "bg-red-900"
                               : meow.status === "REVIEWED"
-                              ? "bg-blue-900/15 text-blue-700"
+                              ? "bg-blue-900 "
                               : ""
-                          } border-0`}
+                          } border-0 text-gray-200`}
                           variant="outline"
                         >
                           {meow.status}

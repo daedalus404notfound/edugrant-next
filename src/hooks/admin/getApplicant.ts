@@ -191,10 +191,10 @@ export default function useFetchApplications({
         try {
           const endpoint = `${
             process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
-          }/getApplication?page=${page}&dataPerPage=${pageSize}${
-            sortBy ? `&sortBy=${sortBy}` : ""
-          }${order ? `&order=${order}` : ""}${
-            status ? `&status=${status}` : ""
+          }/getApplication?status=${status}${page ? `&page=${page}` : ""}${
+            pageSize ? `&dataPerPage=${pageSize}` : ""
+          }${sortBy ? `&sortBy=${sortBy}` : ""}${
+            order ? `&order=${order}` : ""
           }${filters ? `&filters=${encodeURIComponent(filters)}` : ""}`;
 
           const res = await axios.get(endpoint, { withCredentials: true });

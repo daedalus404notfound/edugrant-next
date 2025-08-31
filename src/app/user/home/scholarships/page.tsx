@@ -294,20 +294,33 @@ export default function ClientScholarship() {
                     >
                       <div className="relative rounded-lg bg-background ">
                         <img
-                          className="absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs "
+                          className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
+                            status === "EXPIRED" ? "grayscale-80" : ""
+                          }`}
                           src={scholarship.scholarshipCover}
                           alt=""
                         />
                         <div className="relative z-10">
-                          <div className=" aspect-[16/8.5] w-full rounded-md overflow-hidden">
+                          <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
+                            <Badge
+                              className={`absolute top-2 z-10 right-2  text-gray-200 ${
+                                status === "ACTIVE"
+                                  ? "bg-green-800"
+                                  : "bg-red-800"
+                              }`}
+                            >
+                              {status}
+                            </Badge>
                             <img
-                              className="h-full w-full object-cover    "
+                              className={`h-full w-full object-cover ${
+                                status === "EXPIRED" ? "grayscale-80" : ""
+                              }`}
                               src={scholarship.scholarshipCover}
                               alt=""
                             />
                           </div>
                           <div className=" lg:p-4 p-2 space-y-5">
-                            <div className="flex items-start justify-between">
+                            <div className="flex items-start justify-start">
                               <div className="flex-1 lg:space-y-1">
                                 <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight">
                                   {scholarship.scholarshipTitle}
@@ -316,18 +329,6 @@ export default function ClientScholarship() {
                                   {scholarship.scholarshipProvider}
                                 </p>
                               </div>
-                              <Badge
-                                className={`  ${
-                                  scholarship.status === "ACTIVE"
-                                    ? "bg-green-800/15 text-green-700  "
-                                    : scholarship.status === "EXPIRED"
-                                    ? "bg-red-900/15 text-red-700 "
-                                    : ""
-                                } border-0`}
-                                variant="outline"
-                              >
-                                {scholarship.status}
-                              </Badge>
                             </div>
 
                             <div className="flex items-center justify-between text-sm text-muted-foreground ">

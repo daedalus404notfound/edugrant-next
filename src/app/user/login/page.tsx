@@ -14,7 +14,7 @@ import {
   Eye,
   EyeClosed,
   IdCard,
-  LoaderCircleIcon,
+  Loader,
   LockOpen,
   MailCheck,
 } from "lucide-react";
@@ -70,7 +70,7 @@ export default function Login() {
   const { remember, setRemember } = useRememberStore();
   const [hidden, setHidden] = useState(true);
   return (
-    <main className="relative h-[100dvh] w-full bg-black dark:bg-gradient-to-b from-black to-emerald-500/10 overflow-hidden">
+    <main className="relative h-[100dvh] w-full bg-background dark:bg-gradient-to-b from-black to-emerald-500/10 overflow-hidden">
       <Lamp />
       <Link href={"/"} prefetch={true} className="absolute top-3 left-3 z-20">
         <motion.div
@@ -191,7 +191,7 @@ export default function Login() {
                                 type="button"
                                 onClick={() => setHidden(!hidden)}
                               >
-                                {hidden ? <Eye /> : <EyeClosed />}
+                                {hidden ? <EyeClosed /> : <Eye />}
                               </Button>
                             </div>
                           </FormControl>
@@ -260,7 +260,7 @@ export default function Login() {
                       {authLoading ? (
                         <>
                           Verifying...
-                          <LoaderCircleIcon
+                          <Loader
                             className="-ms-1 animate-spin"
                             size={16}
                             aria-hidden="true"
@@ -425,7 +425,7 @@ export default function Login() {
                       {verifyLoading ? (
                         <>
                           Logging In...
-                          <LoaderCircleIcon
+                          <Loader
                             className="-ms-1 animate-spin"
                             size={16}
                             aria-hidden="true"

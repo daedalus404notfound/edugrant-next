@@ -1,11 +1,13 @@
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Fade as Hamburger } from "hamburger-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -27,12 +29,15 @@ import {
   ChevronsUpDown,
   ExternalLink,
   LogOut,
+  Menu,
+  Moon,
   User,
   UserRound,
 } from "lucide-react";
 import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
 import { useState } from "react";
 import { useUserStore } from "@/store/useUserStore";
+import { ModeToggle2 } from "@/components/ui/dark-mode2";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -76,89 +81,35 @@ export default function DynamicHeaderUser({
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className="mr-3 flex  items-center gap-3">
-        <Popover>
-          <PopoverTrigger asChild className="hidden lg:flex">
-            <Button variant="ghost" className="capitalize">
-              <UserRound />
-              {user?.firstName || "N/A"}
-              <ChevronsUpDown />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-1 bg-background flex flex-col gap-2">
-            <div className="p-1.5 text-sm font-semibold">My Account</div>
-            <Separator />
-            <h1 className="flex items-center gap-1.5 text-sm p-1.5 border border-transparent hover:border-primary rounded-sm">
-              <User size={15} /> Profile
-            </h1>
-            <AlertDialog open={open} onOpenChange={setOpen}>
-              <AlertDialogTrigger asChild>
-                <h1 className="flex items-center gap-1.5 text-sm p-1.5 border border-transparent hover:border-primary rounded-sm">
-                  <LogOut size={15} /> Logout
-                </h1>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Log out of your account?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    You will be logged out from this session. You can log in
-                    again anytime.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <Button onClick={handleLogout}>Log Out</Button>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </PopoverContent>
-        </Popover>
-        <Popover>
-          <PopoverTrigger asChild>
-            <div className="relative">
-              <span className="absolute -top-1 -right-1 bg-red-500 size-4 flex justify-center items-center text-[.7rem] rounded-full">
-                2
-              </span>
-              <Button variant="secondary">
-                <Bell />
-              </Button>
-            </div>
-          </PopoverTrigger>
-          <PopoverContent className=" w-[350px] lg:w-md  bg-card p-0">
-            <div className="border divide-y rounded-md bg-background">
-              <div className="p-4 w-full">
-                <div className="flex grow items-center gap-12">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium">
-                      Your application to Win Gatchalian has been approved
-                    </p>
-                    <p className="text-muted-foreground text-xs">
-                      November 20 at 8:00 PM.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="p-4 w-full">
-                <div className="flex grow items-center gap-12">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium">Live in 27 hours</p>
-                    <p className="text-muted-foreground text-xs">
-                      November 20 at 8:00 PM.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-center items-center">
-                <Button variant="ghost">
-                  View all <ArrowRight />
-                </Button>
-              </div>
-            </div>
-          </PopoverContent>
-        </Popover>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button className="p-0" variant="ghost">
+            <Hamburger toggled={open} toggle={setOpen} size={28} rounded />
+          </Button>
+        </PopoverTrigger>
 
-        <ModeToggle />
-      </div>
+        <PopoverContent align="center" className="space-y-1.5 p-2 w-[200px]">
+          <Button variant="ghost" className="justify-start w-full">
+            <UserRound /> Profile
+          </Button>
+          <Button variant="ghost" className="justify-start w-full">
+            <Bell /> Notification
+          </Button>
+          <Button variant="ghost" className="justify-start w-full">
+            <LogOut /> Log out
+          </Button>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="ghost" className="justify-start w-full">
+                <Moon /> Dark mode
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <ModeToggle2 />
+            </PopoverContent>
+          </Popover>
+        </PopoverContent>
+      </Popover>
     </header>
   );
 }

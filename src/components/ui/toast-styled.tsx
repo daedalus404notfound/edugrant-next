@@ -21,7 +21,7 @@ export default function StyledToast({
   if (status === "success") {
     toast.custom(
       () => (
-        <div className="flex items-center gap-4 p-4 border border-green-800 bg-green-900 text-white rounded-md shadow-md w-sm">
+        <div className="flex items-center gap-4 p-4 border border-green-800 bg-green-900 text-white rounded-md shadow-md lg:w-sm w-full ">
           <CircleCheck className="text-green-300 size-6" />
           <div className="flex flex-col gap-1">
             <span className="font-semibold text-sm">{title}</span>
@@ -38,7 +38,7 @@ export default function StyledToast({
   if (status === "error") {
     toast.custom(
       () => (
-        <div className="flex items-center gap-4 p-4 border border-red-800 bg-red-900 text-white rounded-md shadow-md w-sm">
+        <div className="flex items-center gap-4 p-4 border border-red-800 bg-red-900 text-white rounded-md shadow-md lg:w-sm w-full ">
           <XCircle className="text-red-300 size-6" />
           <div className="flex flex-col gap-1">
             <span className="font-semibold text-sm">{title}</span>
@@ -55,7 +55,7 @@ export default function StyledToast({
   if (status === "checking") {
     toast.custom(
       () => (
-        <div className="flex items-center gap-4 p-4 border border-green-950/80 bg-black text-foreground rounded-md shadow-md w-sm">
+        <div className="flex items-center gap-4 p-4 border  bg-card text-foreground rounded-md shadow-md lg:w-sm w-full ">
           <LoaderCircle className="animate-spin text-green-600 size-8" />
           <div className="flex flex-col gap-1">
             <span className="font-semibold text-sm">{title}</span>

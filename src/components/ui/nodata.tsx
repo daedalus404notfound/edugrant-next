@@ -17,10 +17,8 @@ export default function NoDataFound() {
           ease: "easeInOut",
         }}
       />
-      <h1 className="font-semibold text-lg">Boo! Nothing Here...</h1>
-      <p className="text-sm text-muted-foreground">
-        Seems this page is haunted by emptiness.
-      </p>
+      <h1 className="font-semibold text-lg">Nothing Here...</h1>
+      <p className="text-sm text-muted-foreground">No data found.</p>
     </div>
   );
 }

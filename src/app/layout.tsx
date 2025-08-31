@@ -40,7 +40,7 @@ export default function RootLayout({
           >
             {/* <div className="fixed your-class h-screen w-full pointer-events-none"></div> */}
             {children}
-            <Toaster richColors position="bottom-right" />
+            <Toaster  />
           </ThemeProvider>
         </QueryProvider>
       </body>

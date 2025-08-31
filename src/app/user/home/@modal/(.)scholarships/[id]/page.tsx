@@ -6,11 +6,26 @@ import {
   FileInput,
   GraduationCap,
   Maximize,
+  Play,
   Share2,
 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Ring } from "ldrs/react";
 import "ldrs/react/Ring.css";
 import { motion } from "motion/react";
+export function formatPHP(amount: number) {
+  return new Intl.NumberFormat("en-PH", {
+    style: "currency",
+    currency: "PHP",
+  }).format(amount || 0);
+}
 
 import {
   Drawer,
@@ -36,6 +51,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ScholarshipCards from "@/app/administrator/home/@modal/(.)scholarships/cards";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
+import { format } from "date-fns";
 export default function InterceptManageScholarshipClient() {
   const searchParams = useSearchParams();
   const apply = searchParams.get("apply");
@@ -65,12 +82,12 @@ export default function InterceptManageScholarshipClient() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="max-w-[1000px] w-[98%] mx-auto h-[95dvh] outline-0 border-0 lg:p-1">
+      <DrawerContent className="lg:w-[56%] w-[98%] mx-auto lg:h-[95dvh] h-[90dvh] outline-0 border-0 lg:p-1">
         <DrawerHeader className="sr-only">
           <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
-        <div className="flex items-center justify-between lg:pb-2">
+        {/* <div className="flex items-center justify-between lg:pb-2">
           <div className="flex items-center gap-3">
             <Button className="relative" variant="ghost" size="sm">
               <GraduationCap />
@@ -80,7 +97,7 @@ export default function InterceptManageScholarshipClient() {
             </Button>
           </div>
           <div className="flex items-center gap-2"></div>
-        </div>
+        </div> */}
         <div className=" overflow-auto h-full no-scrollbar">
           {isApply ? (
             loading ? (
@@ -124,33 +141,45 @@ export default function InterceptManageScholarshipClient() {
           ) : (
             <div className="relative h-full w-full overflow-auto no-scrollbar bg-background rounded-t-md">
               <div className="absolute top-0 left-0 lg:h-80 h-60 w-full opacity-30   mask-gradient flex">
-                <img
+                {/* <img
                   className="w-full h-full object-cover blur-md "
                   src={scholarshipCover}
                   alt=""
-                />
+                /> */}
               </div>
               <div className="  overflow-hidden">
                 <div className="relative flex justify-center items-center ">
-                  <div className="absolute inset-0border-b-2 border-black" />
+                  <div className="absolute inset-0border-b-2 border-black bg-card" />
                   {scholarshipCover && (
                     <img
-                      className="w-full lg:h-45 h-30 object-cover   rounded-t-md"
+                      className="w-full lg:h-70 h-45 object-cover   rounded-t-md mask-gradient"
                       src={scholarshipCover}
                       alt=""
                     />
                   )}
-                  <Button
-                    variant="outline"
-                    className="absolute z-5 lg:bottom-3 lg:right-3  !bg-black/60 !text-gray-200"
-                    size="sm"
-                  >
-                    View <Maximize />
-                  </Button>
+
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="absolute z-5  !bg-black/60 !text-gray-200"
+                        size="sm"
+                      >
+                        View <Maximize />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="lg:w-3/4 w-full p-4">
+                      <img src={data?.scholarshipCover} alt="" />
+                      <Button variant="secondary">
+                        <Download />
+                        Download
+                      </Button>
+                    </DialogContent>
+                  </Dialog>
                 </div>
 
-                <div className="relative z-10 lg:p-4 p-2 ">
-                  <Avatar className="lg:size-25 size-23">
+                <div className="relative z-10 lg:p-8 p-2 flex  items-center ">
+                  <Avatar className="lg:size-25 size-20">
                     <AvatarImage
                       className="object-cover"
                       src={data?.scholarshipLogo}
@@ -159,10 +188,10 @@ export default function InterceptManageScholarshipClient() {
                       {data?.scholarshipProvider.slice(0, 2)}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="lg:space-y-1 mt-2">
+                  <div className="lg:space-y-1 mt-2 p-4">
                     <motion.span
                       className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-                                                 flex items-center gap-1.5 lg:text-2xl text-lg font-bold tracking-tight
+                                                 flex items-center gap-1.5 lg:text-3xl text-xl font-semibold tracking-tight
                                                 "
                       initial={{ backgroundPosition: "200% 0" }}
                       animate={{ backgroundPosition: "-200% 0" }}
@@ -181,35 +210,76 @@ export default function InterceptManageScholarshipClient() {
                   </div>
                 </div>
 
-                <div className="lg:space-y-15 space-y-10 lg:px-4 px-2 mt-5">
-                  <div className="flex flex-col gap-5 max-w-2xl w-full">
-                    <div className="w-full flex gap-2">
-                      <Button
-                        className="flex-1"
-                        variant="outline"
-                        onClick={() => setIsApply(true)}
-                        disabled={loading}
-                      >
-                        Apply Now
-                      </Button>
-                      <Button variant="secondary">
-                        <Share2 />
-                      </Button>
-                    </div>
-                    <div className="lg:space-y-3 space-y-1">
-                      {" "}
-                      <h2 className="text-xs text-muted-foreground uppercase tracking-wider font-medium">
-                        About scholarship
-                      </h2>
-                      <p className=" leading-relaxed w-full lg:text-base text-sm">
-                        {data?.scholarshipDescription}
-                      </p>
-                    </div>
-                  </div>
-                  {/* Stats Grid */}
-                  {data && <ScholarshipCards data={data} />}
+                <div className="lg:space-y-15 space-y-10 lg:px-8 px-2 mt-5">
+                  <div className="w-full flex flex-col lg:flex-row lg:gap-10 gap-5">
+                    <span className="lg:w-[65%] w-full lg:space-y-6 space-y-5">
+                      <div className="flex gap-2 items-center justify-center">
+                        <Button variant="outline" className="flex-1">
+                          <Play />
+                          Apply Now
+                        </Button>
 
-                  {/* Requirements */}
+                        <Button
+                          variant="outline"
+                          onClick={() => {
+                            if (navigator.share) {
+                              navigator
+                                .share({
+                                  title:
+                                    data?.scholarshipTitle ||
+                                    "Scholarship Opportunity",
+                                  text: `Check out this scholarship opportunity and apply now!`,
+                                  url: window.location.href,
+                                })
+                                .then(() => console.log("Shared successfully"))
+                                .catch((error) =>
+                                  console.error("Sharing failed", error)
+                                );
+                            } else {
+                              toast("Sharing not supported", {
+                                description:
+                                  "You can copy the link manually or try Chrome on Android or Safari on iOS.",
+                              });
+                            }
+                          }}
+                        >
+                          <Share2 />
+                        </Button>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-green-800 text-gray-200">
+                          Active
+                        </Badge>
+                        <Badge variant="secondary" className="capitalize">
+                          {data?.scholarshipProvider}
+                        </Badge>
+
+                        <Badge variant="secondary" className="capitalize">
+                          {data?.scholarshipType}
+                        </Badge>
+                      </div>
+                      <p className="">{data?.scholarshipDescription}</p>
+                    </span>
+                    <span className="lg:w-[35%] w-full flex flex-col gap-5">
+                      <span className="flex gap-2">
+                        <span className="text-muted-foreground">Deadline:</span>
+
+                        {data?.scholarshipDeadline &&
+                          format(data?.scholarshipDeadline, "PPP")}
+                      </span>
+                      <span>
+                        <span className="text-muted-foreground">Sponsor: </span>
+                        <span>{data?.scholarshipProvider}</span>
+                      </span>
+
+                      <span>
+                        <span className="text-muted-foreground">Amount: </span>
+                        {(data?.scholarshipAmount &&
+                          formatPHP(Number(data?.scholarshipAmount))) ||
+                          "N/A"}
+                      </span>
+                    </span>
+                  </div>
 
                   <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
                     <div></div>
