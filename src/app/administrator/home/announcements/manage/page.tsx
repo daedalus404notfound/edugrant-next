@@ -13,8 +13,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import AnnouncementDescription from "./description";
 import TitleReusable from "@/components/ui/title";
 const tabs = [
-  { id: "ACTIVE", label: "Active", indicator: "" },
-  { id: "EXPIRED", label: "Expired", indicator: "" },
+  { id: "ACTIVE", label: "Active", indicator: null },
+  { id: "EXPIRED", label: "Expired", indicator: null },
 ];
 export default function ScholarshipAnnouncements() {
   const [page] = useState(1);
