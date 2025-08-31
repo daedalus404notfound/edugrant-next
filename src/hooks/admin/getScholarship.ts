@@ -40,10 +40,10 @@ export default function useScholarshipData({
         try {
           const endpoint = `${
             process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
-          }/getScholarships?status=${status}${page ? `&page=${page}` : ""}${
-            pageSize ? `&dataPerPage=${pageSize}` : ""
-          }${pageSize ? `&dataPerPage=${pageSize}` : ""}${
-            order ? `&order=${order}` : ""
+          }/getScholarships?page=${page}&dataPerPage=${pageSize}${
+            sortBy ? `&sortBy=${sortBy}` : ""
+          }${order ? `&order=${order}` : ""}${
+            status ? `&status=${status}` : ""
           }${filters ? `&filters=${encodeURIComponent(filters)}` : ""}`;
 
           const res = await axios.get(endpoint, { withCredentials: true });
@@ -64,5 +64,5 @@ export default function useScholarshipData({
     [page, pageSize, sortBy, order, filters, status]
   );
 
-  return { data, loading, meta };
+  return { data, loading, meta};
 }
