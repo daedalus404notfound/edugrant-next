@@ -1,13 +1,17 @@
 "use client";
 import {
+  Activity,
   ArrowLeftFromLine,
   ArrowUpFromLine,
+  Building,
   Download,
   FileInput,
   GraduationCap,
+  LogIn,
   Maximize,
   Play,
   Share2,
+  UserRound,
 } from "lucide-react";
 import {
   Dialog,
@@ -53,6 +57,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import Link from "next/link";
 export default function InterceptManageScholarshipClient() {
   const searchParams = useSearchParams();
   const apply = searchParams.get("apply");
@@ -82,7 +87,7 @@ export default function InterceptManageScholarshipClient() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="lg:w-[56%] w-[98%] mx-auto lg:h-[95dvh] h-[90dvh] outline-0 border-0 lg:p-1">
+      <DrawerContent className="lg:w-[56%] w-[98%] mx-auto lg:h-[95dvh] h-[90dvh] outline-0 border-0 lg:p-1 bg-background">
         <DrawerHeader className="sr-only">
           <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
@@ -121,21 +126,29 @@ export default function InterceptManageScholarshipClient() {
               data && <UploadDocs data={data} setIsApply={setIsApply} />
             )
           ) : loading ? (
-            <div className="bg-background h-full w-full p-4 rounded-t-md space-y-4 overflow-hidden">
-              <Skeleton className="h-45 w-full" />
-              <div className="space-y-4">
-                <Skeleton className="aspect-square rounded-full size-25" />
-                <Skeleton className="h-10 w-64" />
-                <Skeleton className="h-8 w-54" />
+            <div className="h-full w-full">
+              <div className="relative aspect-[16/8] flex justify-center items-center overlay">
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-transparent border-blue-800"></div>
               </div>
-              <div className="grid grid-cols-3 gap-4">
-                <Skeleton className="h-30 w-full" />
-                <Skeleton className="h-30 w-full" />
-                <Skeleton className="h-30 w-full" />
+              <div className="h-full w-full lg:px-10 px-3 py-5 flex flex-col lg:flex-row gap-10">
+                <span className="lg:w-[65%] space-y-1">
+                  <div className="flex gap-2">
+                    <Skeleton className="h-9 flex-1" />
+                    <Skeleton className="h-9 w-9" />
+                    <Skeleton className="h-9 w-9" />
+                  </div>
+                  <Skeleton className="h-8 w-full mt-5" />
+                  <Skeleton className="h-20 w-full mt-5" />
+                </span>
+                <span className="lg:w-[35%]  space-y-2">
+                  <Skeleton className="h-8 w-full" />
+                  <Skeleton className="h-11 w-full" />
+                  <Skeleton className="h-8 w-full mt-5" />
+                  <Skeleton className="h-11 w-full" />
+                </span>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <Skeleton className="aspect-video w-full" />
-                <Skeleton className="aspect-video w-full" />
+              <div className="lg:px-10 px-3  mb-5">
+                <Skeleton className="h-20 w-full" />
               </div>
             </div>
           ) : (
@@ -150,9 +163,20 @@ export default function InterceptManageScholarshipClient() {
               <div className="  overflow-hidden">
                 <div className="relative flex justify-center items-center ">
                   <div className="absolute inset-0border-b-2 border-black bg-card" />
+                  <div className="absolute left-2 -bottom-3 z-10 lg:px-8  px-2 flex  items-center ">
+                    <Avatar className="lg:size-25 size-20">
+                      <AvatarImage
+                        className="object-cover"
+                        src={data?.scholarshipLogo}
+                      />
+                      <AvatarFallback>
+                        {data?.scholarshipProvider.slice(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
                   {scholarshipCover && (
                     <img
-                      className="w-full lg:h-70 h-45 object-cover   rounded-t-md mask-gradient"
+                      className="w-full lg:aspect-[16/7] aspect-[16/9]  object-cover   rounded-t-md mask-gradient"
                       src={scholarshipCover}
                       alt=""
                     />
@@ -169,53 +193,59 @@ export default function InterceptManageScholarshipClient() {
                       </Button>
                     </DialogTrigger>
                     <DialogContent className="lg:w-3/4 w-full p-4">
-                      <img src={data?.scholarshipCover} alt="" />
-                      <Button variant="secondary">
-                        <Download />
-                        Download
-                      </Button>
+                      <img
+                        className="h-full w-full"
+                        src={data?.scholarshipCover}
+                        alt=""
+                      />
+                      <Link
+                        className="w-full"
+                        href={
+                          (data?.scholarshipCover && data?.scholarshipCover) ||
+                          ""
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button variant="secondary" className="w-full">
+                          <Download />
+                          Download
+                        </Button>
+                      </Link>
                     </DialogContent>
                   </Dialog>
                 </div>
 
-                <div className="relative z-10 lg:p-8 p-2 flex  items-center ">
-                  <Avatar className="lg:size-25 size-20">
-                    <AvatarImage
-                      className="object-cover"
-                      src={data?.scholarshipLogo}
-                    />
-                    <AvatarFallback>
-                      {data?.scholarshipProvider.slice(0, 2)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="lg:space-y-1 mt-2 p-4">
-                    <motion.span
-                      className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-                                                 flex items-center gap-1.5 lg:text-3xl text-xl font-semibold tracking-tight
-                                                "
-                      initial={{ backgroundPosition: "200% 0" }}
-                      animate={{ backgroundPosition: "-200% 0" }}
-                      transition={{
-                        repeat: Infinity,
-                        repeatType: "loop",
-                        duration: 7,
-                        ease: "linear",
-                      }}
-                    >
-                      {data?.scholarshipTitle}
-                    </motion.span>
-                    <p className="text-muted-foreground text-sm">
-                      by {data?.scholarshipProvider}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="lg:space-y-15 space-y-10 lg:px-8 px-2 mt-5">
+                <div className="lg:space-y-15 space-y-10 lg:px-8 px-2 mt-5 pb-10">
                   <div className="w-full flex flex-col lg:flex-row lg:gap-10 gap-5">
                     <span className="lg:w-[65%] w-full lg:space-y-6 space-y-5">
+                      <div className="lg:space-y-1">
+                        <motion.span
+                          className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
+                                                 flex items-center gap-1.5 lg:text-3xl text-xl font-semibold tracking-tight
+                                                "
+                          initial={{ backgroundPosition: "200% 0" }}
+                          animate={{ backgroundPosition: "-200% 0" }}
+                          transition={{
+                            repeat: Infinity,
+                            repeatType: "loop",
+                            duration: 7,
+                            ease: "linear",
+                          }}
+                        >
+                          {data?.scholarshipTitle}
+                        </motion.span>
+                        <p className="text-muted-foreground text-sm">
+                          by {data?.scholarshipProvider}
+                        </p>
+                      </div>
                       <div className="flex gap-2 items-center justify-center">
-                        <Button variant="outline" className="flex-1">
-                          <Play />
+                        <Button
+                          variant="outline"
+                          className="flex-1"
+                          onClick={() => setIsApply(true)}
+                        >
+                          <LogIn />
                           Apply Now
                         </Button>
 
@@ -248,19 +278,20 @@ export default function InterceptManageScholarshipClient() {
                       </div>
                       <div className="flex items-center gap-2">
                         <Badge className="bg-green-800 text-gray-200">
-                          Active
+                          <Activity /> Active
                         </Badge>
                         <Badge variant="secondary" className="capitalize">
-                          {data?.scholarshipProvider}
+                          <UserRound /> {data?.scholarshipProvider}
                         </Badge>
 
                         <Badge variant="secondary" className="capitalize">
+                          <Building />
                           {data?.scholarshipType}
                         </Badge>
                       </div>
                       <p className="">{data?.scholarshipDescription}</p>
                     </span>
-                    <span className="lg:w-[35%] w-full flex flex-col gap-5">
+                    <span className="lg:w-[35%] w-full flex flex-col gap-5 lg:pt-20">
                       <span className="flex gap-2">
                         <span className="text-muted-foreground">Deadline:</span>
 
@@ -278,47 +309,47 @@ export default function InterceptManageScholarshipClient() {
                           formatPHP(Number(data?.scholarshipAmount))) ||
                           "N/A"}
                       </span>
+                      <span>
+                        <span className="text-muted-foreground">
+                          Slot / Limit:{" "}
+                        </span>
+                        {data?.scholarshipAmount || "N/A"}
+                      </span>
                     </span>
                   </div>
 
-                  <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
-                    <div></div>
-                    <div className="space-y-6">
-                      {" "}
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center">
-                          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                            Required Documents
-                          </h3>
-                          <p className="font-medium text-lg">
-                            {
-                              Object.keys(data?.scholarshipDocuments || {})
-                                .length
-                            }
-                          </p>
-                        </div>
+                  <div className="space-y-6">
+                    {" "}
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                          Required Documents
+                        </h3>
+                        <p className="font-medium text-lg">
+                          {Object.keys(data?.scholarshipDocuments || {}).length}
+                        </p>
+                      </div>
 
-                        <div className=" grid grid-cols-1 gap-5">
-                          {Object.values(data?.scholarshipDocuments || {}).map(
-                            (doc, index) => (
-                              <Label key={doc.label}>
-                                <span> {index + 1}. </span>
-                                {doc.label}
-                                <Badge
-                                  className={`${
-                                    doc.requirementType === "required"
-                                      ? "bg-red-700/20 text-red-700"
-                                      : doc.requirementType === "optional"
-                                      ? "bg-blue-700/20 text-blue-700"
-                                      : ""
-                                  } capitalize `}
-                                >
-                                  {doc.requirementType}
-                                </Badge>
-                              </Label>
-                            )
-                          )}
-                        </div>
+                      <div className=" grid grid-cols-1 gap-5">
+                        {Object.values(data?.scholarshipDocuments || {}).map(
+                          (doc, index) => (
+                            <Label key={doc.label}>
+                              <span> {index + 1}. </span>
+                              {doc.label}
+                              <Badge
+                                className={`${
+                                  doc.requirementType === "required"
+                                    ? "bg-red-700/20 text-red-700"
+                                    : doc.requirementType === "optional"
+                                    ? "bg-blue-700/20 text-blue-700"
+                                    : ""
+                                } capitalize `}
+                              >
+                                {doc.requirementType}
+                              </Badge>
+                            </Label>
+                          )
+                        )}
                       </div>
                     </div>
                   </div>
@@ -326,7 +357,7 @@ export default function InterceptManageScholarshipClient() {
                     <h1 className="text-center text-sm font-medium">
                       Hurry before it ends
                     </h1>
-                    <div className="transform scale-75 lg:scale-100">
+                    <div className="transform scale-85 lg:scale-100">
                       {deadline && (
                         <AnimatedNumberCountdown endDate={new Date(deadline)} />
                       )}

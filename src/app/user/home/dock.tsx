@@ -27,7 +27,7 @@ export default function MobDock() {
   ];
 
   return (
-    <div className="fixed bottom-0 w-full left-0 z-10 bg-card dark:bg-zinc-950/90 backdrop-blur-sm flex justify-center p-2 gap-2 border-t lg:hidden">
+    <div className="sticky bottom-0 w-full left-0 z-10 bg-card dark:bg-zinc-950/90 backdrop-blur-sm flex justify-center p-2 gap-2 border-t lg:hidden">
       {navItems.map(({ href, label, icon: Icon, exact }) => {
         const isActive = exact
           ? pathname === href
