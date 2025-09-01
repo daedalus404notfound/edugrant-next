@@ -90,7 +90,7 @@ export default function useScholarshipData({
         try {
           const endpoint = `${
             process.env.NEXT_PUBLIC_USER_URL
-          }/getScholarship?page=${page}&dataPerPage=${pageSize}${
+          }/getAllScholarship?page=${page}&dataPerPage=${pageSize}${
             sortBy ? `&sortBy=${sortBy}` : ""
           }${order ? `&order=${order}` : ""}${
             status ? `&status=${status}` : ""
