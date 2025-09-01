@@ -197,18 +197,18 @@ export default function InterceptManageApplicationClient() {
                         <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
                           <PhilippinePeso />
                           <div>
-                            <p className="text-muted-foreground">
+                            <p className="text-muted-foreground text-sm">
                               Scholarship Amount
                             </p>
-                            <h1 className="text-lg font-medium">
-                              {data[0]?.scholarship.scholarshipAmount}
+                            <h1 className="text-lg font-medium font-mono">
+                              {data[0]?.scholarship.scholarshipAmount}.00
                             </h1>
                           </div>
                         </div>
                         <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
                           <Building />
                           <div>
-                            <p className="text-muted-foreground">
+                            <p className="text-muted-foreground"text-sm>
                               Scholarship Type
                             </p>
                             <h1 className="text-lg font-medium capitalize">
@@ -220,7 +220,7 @@ export default function InterceptManageApplicationClient() {
                         <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
                           <Calendar />
                           <div>
-                            <p className="text-muted-foreground">
+                            <p className="text-muted-foreground"text-sm>
                               Scholarship Deadline
                             </p>
                             <h1 className="text-lg font-medium">
@@ -239,7 +239,7 @@ export default function InterceptManageApplicationClient() {
                       <div className=" p-4 space-y-2  rounded-md bg-card">
                         <div className="flex gap-3 items-center">
                           <StickyNote />
-                          <p className="text-muted-foreground ">
+                          <p className="text-muted-foreground text-sm">
                             Scholarship Details
                           </p>
                         </div>
@@ -413,7 +413,7 @@ export default function InterceptManageApplicationClient() {
 
                               {doc.rejectMessage?.status === "REJECTED" && (
                                 <div className="rounded-md border px-4 py-3">
-                                  <p className="text-sm">
+                                  <p className="text-sm line-clamp-1">
                                     <TriangleAlert
                                       className="me-3 -mt-0.5 inline-flex text-amber-500"
                                       size={16}
