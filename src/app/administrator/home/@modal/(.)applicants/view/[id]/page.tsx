@@ -169,6 +169,7 @@ export default function InterceptReviewApplicants() {
   } = useRevieweddHandler({
     id,
     adminId: admin?.adminId.toString(),
+    documentUpdate: reviewData,
   });
 
   const {

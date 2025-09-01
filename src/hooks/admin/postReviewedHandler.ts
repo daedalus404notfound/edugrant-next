@@ -4,13 +4,18 @@ import { useState } from "react";
 type ReviewedTypes = {
   id: string;
   adminId?: string;
+  documentUpdate: Record<string, { comment: string; status: string }>;
 };
 interface ApiErrorResponse {
   message?: string;
   error?: string;
   statusCode?: number;
 }
-export function useRevieweddHandler({ id, adminId }: ReviewedTypes) {
+export function useRevieweddHandler({
+  id,
+  adminId,
+  documentUpdate,
+}: ReviewedTypes) {
   const [loadingReviewed, setLoadingReviewed] = useState(false);
   const [openReviewed, setOpenReviewed] = useState(false);
   const [isSuccessReviewed, setIsSuccessReviewed] = useState(false);
@@ -20,7 +25,11 @@ export function useRevieweddHandler({ id, adminId }: ReviewedTypes) {
       setLoadingReviewed(true);
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/reviewedApplication`,
-        { applicationId: id, adminId: adminId },
+        {
+          applicationId: id,
+          adminId: adminId,
+          rejectMessage: JSON.stringify(documentUpdate),
+        },
         { withCredentials: true }
       );
       if (res.status === 200) {
