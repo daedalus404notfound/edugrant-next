@@ -7,6 +7,7 @@ import Link from "next/link";
 import phone from "@/assets/Screenshot-2025-08-31-08-56-35-73-40deb401b9ffe8e1df2f1cc5ba480b12-portrait.png";
 import apply from "@/assets/apply.svg";
 import { ModeToggle } from "@/components/ui/dark-mode";
+
 import track from "@/assets/track.svg";
 import {
   ArrowRight,

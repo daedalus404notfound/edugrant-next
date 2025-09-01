@@ -21,6 +21,7 @@ export default function useClientApplications({
   order,
   status,
   userId,
+  applicationId,
 }: {
   page?: number;
   pageSize?: number;
@@ -28,6 +29,7 @@ export default function useClientApplications({
   order?: string;
   status?: string;
   userId?: string;
+  applicationId?: string;
 }) {
   const [data, setData] = useState<ApplicationTypes[]>([]);
   const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
@@ -38,16 +40,24 @@ export default function useClientApplications({
       async function fetchApplications() {
         setLoading(true);
         try {
+          const params = new URLSearchParams();
+
+          if (status) params.append("status", status);
+          if (applicationId)
+            params.append("applicationId", applicationId.toString());
+          if (userId) params.append("studentAccountId", userId.toString());
+          if (page) params.append("page", page.toString());
+          if (pageSize) params.append("dataPerPage", pageSize.toString());
+          if (sortBy) params.append("sortBy", sortBy);
+          if (order) params.append("order", order);
+
           const endpoint = `${
             process.env.NEXT_PUBLIC_USER_URL
-          }/getApplications?userId=${userId}&page=${page}&dataPerPage=${pageSize}${
-            sortBy ? `&sortBy=${sortBy}` : ""
-          }${order ? `&order=${order}` : ""}${
-            status ? `&status=${status}` : ""
-          }`;
-          console.log(endpoint);
+          }/getApplications?${params.toString()}`;
+          console.log("Fetching:", endpoint);
+
           const res = await axios.get(endpoint, { withCredentials: true });
-          console.log(endpoint);
+
           if (res.status === 200) {
             setData(res.data.applications);
             setMeta(res.data.meta);

@@ -29,14 +29,14 @@ export default function ClientScholarship() {
   const user = useUserStore((state) => state.user);
   const userId = user?.userId;
   const { data, loading } = useClientApplications({
-    userId,
+    userId: "2",
     page: currentPage,
     pageSize: rowsPerPage,
     status,
   });
 
   const { data: data2 } = useClientApplications({
-    userId,
+    userId: "2",
     page: currentPage,
     pageSize: rowsPerPage,
     status: "",
@@ -137,10 +137,10 @@ export default function ClientScholarship() {
                         <Badge
                           className={`  ${
                             meow.status === "PENDING"
-                              ? "bg-yellow-500  "
+                              ? "bg-yellow-700  "
                               : meow.status === "APPROVED"
                               ? "bg-green-900 "
-                              : meow.status === "PENDING"
+                              : meow.status === "DECLINED"
                               ? "bg-red-900"
                               : meow.status === "REVIEWED"
                               ? "bg-blue-900 "

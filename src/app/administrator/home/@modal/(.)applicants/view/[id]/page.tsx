@@ -57,6 +57,7 @@ import { useRecjectHandler } from "@/hooks/admin/postDeclineHandler";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAdminStore } from "@/store/adminUserStore";
 import { useRevieweddHandler } from "@/hooks/admin/postReviewedHandler";
+import { useApprovedHandler } from "@/hooks/admin/postApproveHandler";
 
 const containerVariants = {
   hidden: {
@@ -166,6 +167,17 @@ export default function InterceptReviewApplicants() {
     openReviewed,
     isSuccessReviewed,
   } = useRevieweddHandler({
+    id,
+    adminId: admin?.adminId.toString(),
+  });
+
+  const {
+    handleApprove,
+    loadingApprove,
+    setOpenApprove,
+    openApprove,
+    isSuccessApprove,
+  } = useApprovedHandler({
     id,
     adminId: admin?.adminId.toString(),
   });
@@ -353,13 +365,13 @@ export default function InterceptReviewApplicants() {
             <AnimatePresence mode="wait">
               {loading ? (
                 <Skeleton className="h-14 w-full rounded-lg" />
-              ) : data?.status === "APPROVED" ? (
+              ) : data?.status === "REVIEWED" ? (
                 <motion.div
                   key="approved"
                   variants={fadeInVariants}
                   initial="hidden"
                   animate="visible"
-                  className="rounded-xl   text-green-600 py-2 "
+                  className="rounded-xl   text-blue-600 py-2 "
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">
@@ -367,7 +379,7 @@ export default function InterceptReviewApplicants() {
                         <CheckCheck />
                       </Button>
                       <div className="space-y-1">
-                        <p className=" font-medium ">Application Approved</p>
+                        <p className=" font-medium ">Application Accepted</p>
                         <p className="text-xs text-muted-foreground">
                           {data.applicationResponseDate &&
                             format(
@@ -382,7 +394,7 @@ export default function InterceptReviewApplicants() {
                         <p className="text-xs text-muted-foreground">
                           Reviewed by
                         </p>
-                        <p className="text-sm font-medium text-blue-800">
+                        <p className="text-sm font-medium">
                           Admin {data.admin.firstName}
                         </p>
                       </div>
@@ -577,68 +589,129 @@ export default function InterceptReviewApplicants() {
             </>
           ) : (
             <>
-              {" "}
-              <Dialog open={openReviewed} onOpenChange={setOpenReviewed}>
-                <DialogTrigger asChild>
-                  {data?.userDocuments && (
-                    <Button
-                      className="flex-1 !bg-green-800"
-                      variant="outline"
-                      disabled={
-                        data?.status === "APPROVED" ||
-                        data?.status === "DECLINED" ||
-                        totalDocs !== reviewedDocs
-                      }
-                    >
-                      Approve <UserRoundCheck />
-                    </Button>
-                  )}
-                </DialogTrigger>
-                <DialogContent
-                  className="max-w-lg p-6"
-                  onInteractOutside={(e) => {
-                    e.preventDefault();
-                  }}
-                  onEscapeKeyDown={(e) => {
-                    e.preventDefault();
-                  }}
-                  showCloseButton={false}
-                >
-                  <DialogHeader>
-                    <DialogTitle className="text-green-600 ">
-                      Approve Application?
-                    </DialogTitle>
-                    <DialogDescription className="text-neutral-600 dark:text-neutral-400">
-                      This will approve the applicant and notify them of the
-                      decision. This action cannot be undone.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter>
-                    <Button
-                      variant="outline"
-                      onClick={() => setOpenReviewed(false)}
-                      disabled={loadingReviewed}
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      className="!bg-green-700 !hover:bg-green-600"
-                      variant="outline"
-                      onClick={handleReviewed}
-                      disabled={loadingReviewed}
-                    >
-                      {loadingReviewed ? (
-                        <>
-                          Approving ...
-                          <Loader className="animate-spin" />
-                        </>
-                      ) : (
-                        "Confirm Approve"
-                      )}
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+              {data?.status === "REVIEWED" && (
+                <Dialog open={openApprove} onOpenChange={setOpenApprove}>
+                  <DialogTrigger asChild>
+                    {data?.userDocuments && (
+                      <Button
+                        className="flex-1 !bg-green-800"
+                        variant="outline"
+                        disabled={totalDocs !== reviewedDocs}
+                      >
+                        Approve(Super Admin) <UserRoundCheck />
+                      </Button>
+                    )}
+                  </DialogTrigger>
+                  <DialogContent
+                    className="max-w-lg p-6"
+                    onInteractOutside={(e) => {
+                      e.preventDefault();
+                    }}
+                    onEscapeKeyDown={(e) => {
+                      e.preventDefault();
+                    }}
+                    showCloseButton={false}
+                  >
+                    <DialogHeader>
+                      <DialogTitle className="text-green-600 ">
+                        Accept Application?
+                      </DialogTitle>
+                      <DialogDescription className="text-neutral-600 dark:text-neutral-400">
+                        This will accept the applicant and notify them of the
+                        decision. This action cannot be undone.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => setOpenApprove(false)}
+                        disabled={loadingApprove}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        className="!bg-green-700 !hover:bg-blue-600"
+                        variant="outline"
+                        onClick={handleApprove}
+                        disabled={loadingApprove}
+                      >
+                        {loadingApprove ? (
+                          <>
+                            Approving ...
+                            <Loader className="animate-spin" />
+                          </>
+                        ) : (
+                          "Confirm Approve"
+                        )}
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              )}
+              {data?.status !== "REVIEWED" && (
+                <Dialog open={openReviewed} onOpenChange={setOpenReviewed}>
+                  <DialogTrigger asChild>
+                    {data?.userDocuments && (
+                      <Button
+                        className="flex-1 !bg-blue-800"
+                        variant="outline"
+                        disabled={
+                          data?.status === "APPROVED" ||
+                          data?.status === "REVIEWED" ||
+                          data?.status === "DECLINED" ||
+                          totalDocs !== reviewedDocs
+                        }
+                      >
+                        Accept <UserRoundCheck />
+                      </Button>
+                    )}
+                  </DialogTrigger>
+                  <DialogContent
+                    className="max-w-lg p-6"
+                    onInteractOutside={(e) => {
+                      e.preventDefault();
+                    }}
+                    onEscapeKeyDown={(e) => {
+                      e.preventDefault();
+                    }}
+                    showCloseButton={false}
+                  >
+                    <DialogHeader>
+                      <DialogTitle className="text-blue-600 ">
+                        Accept Application?
+                      </DialogTitle>
+                      <DialogDescription className="text-neutral-600 dark:text-neutral-400">
+                        This will accept the applicant and notify them of the
+                        decision. This action cannot be undone.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <Button
+                        variant="outline"
+                        onClick={() => setOpenReviewed(false)}
+                        disabled={loadingReviewed}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        className="!bg-blue-700 !hover:bg-blue-600"
+                        variant="outline"
+                        onClick={handleReviewed}
+                        disabled={loadingReviewed}
+                      >
+                        {loadingReviewed ? (
+                          <>
+                            Approving ...
+                            <Loader className="animate-spin" />
+                          </>
+                        ) : (
+                          "Confirm Approve"
+                        )}
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
+              )}
               <Dialog open={openReject} onOpenChange={setOpenReject}>
                 <DialogTrigger asChild>
                   {data?.userDocuments && (

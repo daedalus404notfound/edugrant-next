@@ -150,7 +150,7 @@ export function DragAndDropArea({
                 className="w-10 h-10 object-cover rounded"
               />
               <span className="text-sm break-all max-w-[200px] truncate">
-                Existing Image
+                Existing Document
               </span>
             </div>
           </div>

@@ -176,7 +176,7 @@ export default function InterceptManageScholarshipClient() {
                   </div>
                   {scholarshipCover && (
                     <img
-                      className="w-full lg:aspect-[16/7] aspect-[16/9]  object-cover   rounded-t-md mask-gradient"
+                      className="w-full lg:aspect-[16/5] aspect-[16/9]  object-cover   rounded-t-md mask-gradient"
                       src={scholarshipCover}
                       alt=""
                     />

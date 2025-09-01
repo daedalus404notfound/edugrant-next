@@ -117,7 +117,19 @@ export const columns: ColumnDef<ApplicationTypes>[] = [
     ),
     cell: ({ row }) => {
       return (
-        <Badge className="bg-yellow-500/10 text-yellow-500">
+        <Badge
+          className={
+            row.getValue("status") === "PENDING"
+              ? "bg-yellow-500/10 text-yellow-500"
+              : row.getValue("status") === "DECLINED"
+              ? "bg-red-500/10 text-red-500"
+              : row.getValue("status") === "REVIEWED"
+              ? "bg-blue-500/10 text-blue-500"
+              : row.getValue("status") === "APPROVED"
+              ? "bg-green-500/10 text-green-500"
+              : ""
+          }
+        >
           <Clock />
           {row.getValue("status")}
         </Badge>

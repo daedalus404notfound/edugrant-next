@@ -51,7 +51,7 @@ const steps = [
   },
 ];
 
-const createFormSchema = (
+export const createFormSchema = (
   requiredDocuments: Record<string, scholarshipDocumentTypes>
 ) => {
   const schemaShape: Record<string, z.ZodType> = {};
