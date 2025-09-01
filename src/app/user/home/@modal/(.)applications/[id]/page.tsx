@@ -47,7 +47,9 @@ import {
   Building,
   Calendar,
   Check,
+  CircleAlert,
   CircleCheck,
+  CircleCheckIcon,
   Download,
   Edit,
   Eye,
@@ -61,6 +63,7 @@ import {
   PhilippinePeso,
   StickyNote,
   TableOfContents,
+  TriangleAlert,
   UserRound,
   X,
 } from "lucide-react";
@@ -152,83 +155,99 @@ export default function InterceptManageApplicationClient() {
           <EditApplication data={data[0]} setEdit={setEdit} />
         ) : (
           <div className="flex-1 flex flex-col bg-background rounded-t-lg overflow-auto no-scrollbar">
-            {/* <div className="relative flex justify-center items-center ">
-              <div className="absolute inset-0border-b-2 border-black bg-card" />
-              <div className="absolute left-2 -bottom-3 z-10 lg:px-8  px-2 flex  items-center ">
-                <Avatar className="lg:size-25 size-20">
-                  <AvatarImage
-                    className="object-cover"
-                    src={data[0]?.scholarship.scholarshipLogo}
+            <div className="lg:p-4 p-2 lg:space-y-8 space-y-5">
+              <div className="rounded-md border border-red-500/50 px-4 py-3 text-red-600">
+                <p className="text-sm">
+                  <CircleAlert
+                    className="me-3 -mt-0.5 inline-flex opacity-60"
+                    size={16}
+                    aria-hidden="true"
                   />
-                  <AvatarFallback>
-                    {data[0]?.scholarship.scholarshipProvider.slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-              {data[0]?.scholarship.scholarshipCover && (
-                <img
-                  className="w-full lg:aspect-[16/3.5] aspect-[16/7]  object-cover   rounded-t-md mask-gradient"
-                  src={data[0]?.scholarship.scholarshipCover}
-                  alt=""
-                />
-              )}
-
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className="absolute z-5  !bg-black/60 !text-gray-200"
-                    size="sm"
-                  >
-                    View <Maximize />
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="lg:w-3/4 w-full p-4">
-                  <img
-                    className="h-full w-full"
-                    src={data[0]?.scholarship.scholarshipCover}
-                    alt=""
-                  />
-                  <Link
-                    className="w-full"
-                    href={
-                      (data[0]?.scholarship.scholarshipCover &&
-                        data[0]?.scholarship.scholarshipCover) ||
-                      ""
-                    }
-                    target="_blank"
-                  >
-                    <Button variant="secondary" className="w-full">
-                      <Download />
-                      Download
-                    </Button>
-                  </Link>
-                </DialogContent>
-              </Dialog>
-            </div> */}
-            <div className="lg:p-8 p-2 lg:space-y-8 space-y-5">
-              <div className="">
-                <motion.span
-                  className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-                                                             flex items-center gap-1.5 lg:text-3xl text-xl font-semibold tracking-tight
-                                                            "
-                  initial={{ backgroundPosition: "200% 0" }}
-                  animate={{ backgroundPosition: "-200% 0" }}
-                  transition={{
-                    repeat: Infinity,
-                    repeatType: "loop",
-                    duration: 7,
-                    ease: "linear",
-                  }}
-                >
-                  {data[0]?.scholarship.scholarshipTitle}
-                </motion.span>
-                <p className="text-muted-foreground text-sm">
-                  by {data[0]?.scholarship.scholarshipProvider}
+                  Some documents were rejected. Please review the feedback below
+                  and resubmit the required documents to continue your
+                  application.
                 </p>
               </div>
+              {/* <div className="rounded-md border border-emerald-500/50 px-4 py-3 text-emerald-600">
+                <p className="text-sm">
+                  <CircleCheckIcon
+                    className="me-3 -mt-0.5 inline-flex opacity-60"
+                    size={16}
+                    aria-hidden="true"
+                  />
+                  Completed successfully!
+                </p>
+              </div> */}
+
+              {/* <TitleReusable
+                title={data[0]?.scholarship.scholarshipTitle}
+                description={data[0]?.scholarship.scholarshipProvider}
+                Icon={GraduationCap}
+              /> */}
               <div className=" space-y-10">
-                <div className="">
+                <Accordion type="single" collapsible defaultValue="item-1">
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger className="text-base">
+                      {data[0]?.scholarship.scholarshipTitle} Details
+                    </AccordionTrigger>
+                    <AccordionContent className="grid lg:grid-cols-2 grid-cols-1 gap-3">
+                      <div className="space-y-3">
+                        <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                          <PhilippinePeso />
+                          <div>
+                            <p className="text-muted-foreground">
+                              Scholarship Amount
+                            </p>
+                            <h1 className="text-lg font-medium">
+                              {data[0]?.scholarship.scholarshipAmount}
+                            </h1>
+                          </div>
+                        </div>
+                        <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                          <Building />
+                          <div>
+                            <p className="text-muted-foreground">
+                              Scholarship Type
+                            </p>
+                            <h1 className="text-lg font-medium capitalize">
+                              {data[0]?.scholarship.scholarshipType}
+                            </h1>
+                          </div>
+                        </div>
+
+                        <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                          <Calendar />
+                          <div>
+                            <p className="text-muted-foreground">
+                              Scholarship Deadline
+                            </p>
+                            <h1 className="text-lg font-medium">
+                              {data[0]?.scholarship?.scholarshipDeadline
+                                ? format(
+                                    new Date(
+                                      data[0].scholarship.scholarshipDeadline
+                                    ),
+                                    "PPP"
+                                  )
+                                : "No deadline"}
+                            </h1>
+                          </div>
+                        </div>
+                      </div>
+                      <div className=" p-4 space-y-2  rounded-md bg-card">
+                        <div className="flex gap-3 items-center">
+                          <StickyNote />
+                          <p className="text-muted-foreground ">
+                            Scholarship Details
+                          </p>
+                        </div>
+
+                        <h1>{data[0]?.scholarship.scholarshipDescription}</h1>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+                {/* <div className="">
                   <Stepper
                     defaultValue={2}
                     className="flex-col md:flex-row hidden lg:flex"
@@ -280,22 +299,24 @@ export default function InterceptManageApplicationClient() {
                       </StepperItem>
                     ))}
                   </Stepper>
-                </div>
+                </div> */}
                 <div>
                   <div className="flex justify-between items-center py-4">
-                    <h1>Submitted Documents</h1>
+                    <h1 className="text-sm">Submitted Documents</h1>
                     <div className="lg:flex items-center gap-5 hidden">
                       <p>
                         <span className="text-sm text-muted-foreground">
                           Required
                         </span>{" "}
                         &nbsp;
-                        {data[0]?.scholarship.scholarshipDocuments &&
-                          Object.entries(
-                            data[0]?.scholarship.scholarshipDocuments
-                          ).filter(
-                            ([_, doc]) => doc?.requirementType === "required"
-                          ).length}
+                        <span className="text-lg font-medium font-mono">
+                          {data[0]?.scholarship.scholarshipDocuments &&
+                            Object.entries(
+                              data[0]?.scholarship.scholarshipDocuments
+                            ).filter(
+                              ([_, doc]) => doc?.requirementType === "required"
+                            ).length}
+                        </span>
                       </p>
                       <span className="text-primary/50">|</span>
                       <p>
@@ -303,12 +324,15 @@ export default function InterceptManageApplicationClient() {
                           Optional
                         </span>{" "}
                         &nbsp;
-                        {data[0]?.scholarship.scholarshipDocuments &&
-                          Object.entries(
-                            data[0]?.scholarship.scholarshipDocuments
-                          ).filter(
-                            ([key, doc]) => doc?.requirementType === "optional"
-                          ).length}
+                        <span className="text-lg font-medium font-mono">
+                          {data[0]?.scholarship.scholarshipDocuments &&
+                            Object.entries(
+                              data[0]?.scholarship.scholarshipDocuments
+                            ).filter(
+                              ([key, doc]) =>
+                                doc?.requirementType === "optional"
+                            ).length}
+                        </span>
                       </p>
                     </div>
                     <div className="lg:hidden">
@@ -324,220 +348,157 @@ export default function InterceptManageApplicationClient() {
                     </div>
                   </div>
 
-                  <div className="grid  lg:grid-cols-2 grid-cols-1  gap-8">
+                  <div className="grid  lg:grid-cols-1 grid-cols-1 divide-y">
                     {data?.[0]?.userDocuments &&
                       Object.entries(data[0].userDocuments).map(
                         ([key, doc]) => (
-                          <div key={key} className="space-y-3 py-4">
-                            <div className="flex gap-5">
-                              <ApplicationViewer
-                                fileFormat={mimeToLabelMap[doc.fileFormat]}
-                                resourceType={doc.resourceType}
-                                fileUrl={doc.fileUrl}
-                                document={doc.document}
-                                supabasePath={doc.supabasePath}
-                                requirementType={doc.requirementType}
-                              />
-                              <div className="flex-1 flex justify-between items-start ">
-                                <div className=" flex-col flex flex-1">
-                                  <p className=" lg:text-base text-sm">{key}</p>
-                                  {doc.rejectMessage?.status &&
-                                  doc.rejectMessage?.status === "APPROVED" ? (
-                                    <Badge className="bg-green-800 text-gray-200">
-                                      Approved
-                                    </Badge>
-                                  ) : doc.rejectMessage?.status ===
-                                    "REJECTED" ? (
-                                    <Badge className="bg-red-800 text-gray-200">
-                                      Rejected
-                                    </Badge>
-                                  ) : (
-                                    ""
-                                  )}
-                                </div>
-
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="sm">
-                                      <MoreVertical />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                    <DropdownMenuLabel className="line-clamp-1">
-                                      {doc.document}
-                                    </DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem>
-                                      <Eye />
-                                      View
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                      onClick={() => setOpenDialog(true)}
-                                      disabled={
-                                        doc.rejectMessage?.status ===
-                                          "APPROVED" ||
-                                        doc.rejectMessage?.status === "REJECTED"
-                                      }
-                                    >
-                                      <Edit />
-                                      Change
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                      <TableOfContents />
-                                      Details
-                                    </DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
+                          <div key={key} className="flex  gap-5 lg:py-8 py-4 ">
+                            <ApplicationViewer
+                              fileFormat={mimeToLabelMap[doc.fileFormat]}
+                              resourceType={doc.resourceType}
+                              fileUrl={doc.fileUrl}
+                              document={doc.document}
+                              supabasePath={doc.supabasePath}
+                              requirementType={doc.requirementType}
+                            />
+                            <div className="flex-1 relative">
+                              <DropdownMenu>
+                                <DropdownMenuTrigger
+                                  asChild
+                                  className="absolute top-0 right-0"
+                                >
+                                  <Button variant="ghost" size="sm">
+                                    <MoreVertical />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuLabel className="line-clamp-1">
+                                    {doc.document}
+                                  </DropdownMenuLabel>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem>
+                                    <Eye />
+                                    View
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem
+                                    onClick={() => setOpenDialog(true)}
+                                    disabled={
+                                      doc.rejectMessage?.status ===
+                                        "APPROVED" ||
+                                      doc.rejectMessage?.status === "REJECTED"
+                                    }
+                                  >
+                                    <Edit />
+                                    Change
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem>
+                                    <TableOfContents />
+                                    Details
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                              <div className="flex gap-3 capitalize">
+                                <p className="font-medium ">{key}</p>
+                                <Badge variant="outline">
+                                  {doc.requirementType}
+                                </Badge>
                               </div>
-                            </div>
-                            {doc.rejectMessage?.comment && (
-                              <Textarea
-                                className="pointer-events-none"
-                                defaultValue={doc.rejectMessage?.comment}
-                              />
-                            )}
-                          </div>
-                          // <div
-                          //   key={key}
-                          //   className=" flex justify-center items-center pt-6 gap-5 p-4 rounded-lg "
-                          // >
-                          //   <div className="flex flex-col gap-3">
-                          //     <ApplicationViewer
-                          //       fileFormat={mimeToLabelMap[doc.fileFormat]}
-                          //       resourceType={doc.resourceType}
-                          //       fileUrl={doc.fileUrl}
-                          //       document={doc.document}
-                          //       supabasePath={doc.supabasePath}
-                          //       requirementType={doc.requirementType}
-                          //     />
-                          //     <Button variant="outline">Change</Button>
-                          //   </div>
+                              <p className="uppercase text-sm text-muted-foreground mt-1">
+                                {doc.fileFormat}
+                              </p>
 
-                          //   <div className="flex flex-1 gap-2 flex-col  w-full lg:w-[unset]">
-                          //     <p
-                          //       className={`font-semibold text-sm ${
-                          //         doc.rejectMessage.status === "REJECTED"
-                          //           ? "text-red-500"
-                          //           : doc.rejectMessage.status === "APPROVED"
-                          //           ? "text-green-500"
-                          //           : ""
-                          //       }`}
-                          //     >
-                          //       {key}
-                          //     </p>
-                          //     <Badge variant="secondary" className="uppercase">
-                          //       {doc.fileFormat}
-                          //     </Badge>
-                          //   </div>
-                          // </div>
+                              {doc.rejectMessage?.comment && (
+                                <div className="rounded-md border px-4 py-3">
+                                  <p className="text-sm">
+                                    <TriangleAlert
+                                      className="me-3 -mt-0.5 inline-flex text-amber-500"
+                                      size={16}
+                                      aria-hidden="true"
+                                    />
+                                    {doc.rejectMessage?.comment}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                          // <div className="flex-1 flex justify-between items-start ">
+                          //         <div className="  flex justify-between  w-full">
+                          //           {doc.rejectMessage?.status &&
+                          //           doc.rejectMessage?.status === "APPROVED" ? (
+                          //             <Badge className="bg-green-700/10 text-green-600 uppercase">
+                          //               Approved
+                          //             </Badge>
+                          //           ) : doc.rejectMessage?.status === "REJECTED" ? (
+                          //             <Badge className="bg-red-700/10 text-red-600 uppercase">
+                          //               Rejected
+                          //             </Badge>
+                          //           ) : (
+                          //             ""
+                          //           )}
+                          //           <DropdownMenu>
+                          //             <DropdownMenuTrigger asChild>
+                          //               <Button variant="ghost" size="sm">
+                          //                 <MoreVertical />
+                          //               </Button>
+                          //             </DropdownMenuTrigger>
+                          //             <DropdownMenuContent align="end">
+                          //               <DropdownMenuLabel className="line-clamp-1">
+                          //                 {doc.document}
+                          //               </DropdownMenuLabel>
+                          //               <DropdownMenuSeparator />
+                          //               <DropdownMenuItem>
+                          //                 <Eye />
+                          //                 View
+                          //               </DropdownMenuItem>
+                          //               <DropdownMenuItem
+                          //                 onClick={() => setOpenDialog(true)}
+                          //                 disabled={
+                          //                   doc.rejectMessage?.status ===
+                          //                     "APPROVED" ||
+                          //                   doc.rejectMessage?.status === "REJECTED"
+                          //                 }
+                          //               >
+                          //                 <Edit />
+                          //                 Change
+                          //               </DropdownMenuItem>
+                          //               <DropdownMenuItem>
+                          //                 <TableOfContents />
+                          //                 Details
+                          //               </DropdownMenuItem>
+                          //             </DropdownMenuContent>
+                          //           </DropdownMenu>
+                          //         </div>
+                          //       </div>
+                          //       <div className=" flex justify-center items-center relative">
+                          //         <ApplicationViewer
+                          //           fileFormat={mimeToLabelMap[doc.fileFormat]}
+                          //           resourceType={doc.resourceType}
+                          //           fileUrl={doc.fileUrl}
+                          //           document={doc.document}
+                          //           supabasePath={doc.supabasePath}
+                          //           requirementType={doc.requirementType}
+                          //         />
+                          //       </div>
+
+                          //       <p className=" lg:text-base text-sm text-center">
+                          //         {key}
+                          //       </p>
+
+                          //       {doc.rejectMessage?.comment && (
+                          //         <div className="rounded-md border px-4 py-3">
+                          //           <p className="text-sm">
+                          //             <TriangleAlert
+                          //               className="me-3 -mt-0.5 inline-flex text-amber-500"
+                          //               size={16}
+                          //               aria-hidden="true"
+                          //             />
+                          //             {doc.rejectMessage?.comment}
+                          //           </p>
+                          //         </div>
+                          //       )}
                         )
                       )}
                   </div>
-                </div>
-                <div>
-                  <Accordion type="single" collapsible defaultValue="item-1">
-                    <AccordionItem value="item-1">
-                      <AccordionTrigger className="text-base">
-                        {data[0]?.scholarship.scholarshipTitle} Details
-                      </AccordionTrigger>
-                      <AccordionContent className="grid grid-cols-2 gap-3">
-                        <div className=" p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                          <GraduationCap />
-                          <div>
-                            <p className="text-muted-foreground">
-                              Scholarship Title
-                            </p>
-                            <h1 className="font-medium">
-                              {data[0]?.scholarship.scholarshipTitle}
-                            </h1>
-                          </div>
-                        </div>
-                        <div className=" p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                          <UserRound />
-                          <div>
-                            <p className="text-muted-foreground">
-                              Scholarship Sponsor
-                            </p>
-                            <h1 className="">
-                              {data[0]?.scholarship.scholarshipProvider}
-                            </h1>
-                          </div>
-                        </div>
-                        <div className=" p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                          <PhilippinePeso />
-                          <div>
-                            <p className="text-muted-foreground">
-                              Scholarship Amount
-                            </p>
-                            <h1 className="">
-                              {data[0]?.scholarship.scholarshipAmount}
-                            </h1>
-                          </div>
-                        </div>
-                        <div className=" p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                          <Building />
-                          <div>
-                            <p className="text-muted-foreground">
-                              Scholarship Type
-                            </p>
-                            <h1 className=" capitalize">
-                              {data[0]?.scholarship.scholarshipType}
-                            </h1>
-                          </div>
-                        </div>
-                        <div className=" p-4 space-y-2 col-span-2 rounded-md ">
-                          <div className="flex gap-3 items-center">
-                            <StickyNote />
-                            <p className="text-muted-foreground ">
-                              Scholarship Details
-                            </p>
-                          </div>
-
-                          <h1>{data[0]?.scholarship.scholarshipDescription}</h1>
-                        </div>
-                        <div className=" p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                          <Calendar />
-                          <div>
-                            <p className="text-muted-foreground">
-                              Scholarship Deadline
-                            </p>
-                            <h1 className="">
-                              {data[0]?.scholarship?.scholarshipDeadline
-                                ? format(
-                                    new Date(
-                                      data[0].scholarship.scholarshipDeadline
-                                    ),
-                                    "PPP"
-                                  )
-                                : "No deadline"}
-                            </h1>
-                          </div>
-                        </div>
-                        <div className=" p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                          <UserRound />
-                          <div>
-                            {" "}
-                            <p className="text-muted-foreground">
-                              Scholarship Title
-                            </p>
-                            <h1 className="">
-                              {data[0]?.scholarship.scholarshipTitle}
-                            </h1>
-                          </div>
-                        </div>
-                      </AccordionContent>
-                    </AccordionItem>
-                  </Accordion>
-                  {/* <Accordion type="single" collapsible>
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger className="text-base">
-                      Applicant Details
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      Yes. It adheres to the WAI-ARIA design pattern.
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion> */}
                 </div>
               </div>
             </div>
