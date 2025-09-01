@@ -156,18 +156,20 @@ export default function InterceptManageApplicationClient() {
         ) : (
           <div className="flex-1 flex flex-col bg-background rounded-t-lg overflow-auto no-scrollbar">
             <div className="lg:p-4 p-2 lg:space-y-8 space-y-5">
-              <div className="rounded-md border border-red-500/50 px-4 py-3 text-red-600">
-                <p className="text-sm">
-                  <CircleAlert
-                    className="me-3 -mt-0.5 inline-flex opacity-60"
-                    size={16}
-                    aria-hidden="true"
-                  />
-                  Some documents were rejected. Please review the feedback below
-                  and resubmit the required documents to continue your
-                  application.
-                </p>
-              </div>
+              {data[0]?.status === "DECLINED" && (
+                <div className="rounded-md border border-red-500/50 px-4 py-3 text-red-600">
+                  <p className="text-sm">
+                    <CircleAlert
+                      className="me-3 -mt-0.5 inline-flex opacity-60"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                    Some documents were rejected. Please review the feedback
+                    below and resubmit the required documents to continue your
+                    application.
+                  </p>
+                </div>
+              )}
               {/* <div className="rounded-md border border-emerald-500/50 px-4 py-3 text-emerald-600">
                 <p className="text-sm">
                   <CircleCheckIcon
@@ -361,7 +363,7 @@ export default function InterceptManageApplicationClient() {
                               supabasePath={doc.supabasePath}
                               requirementType={doc.requirementType}
                             />
-                            <div className="flex-1 relative">
+                            <div className="flex-1 flex flex-col justify-end gap-5 relative">
                               <DropdownMenu>
                                 <DropdownMenuTrigger
                                   asChild
@@ -397,17 +399,19 @@ export default function InterceptManageApplicationClient() {
                                   </DropdownMenuItem>
                                 </DropdownMenuContent>
                               </DropdownMenu>
-                              <div className="flex gap-3 capitalize">
-                                <p className="font-medium ">{key}</p>
-                                <Badge variant="outline">
-                                  {doc.requirementType}
-                                </Badge>
+                              <div>
+                                <div className="flex gap-3 capitalize">
+                                  <p className="font-medium ">{key}</p>
+                                  <Badge variant="outline">
+                                    {doc.requirementType}
+                                  </Badge>
+                                </div>
+                                <p className="uppercase text-sm text-muted-foreground mt-1">
+                                  {doc.fileFormat}
+                                </p>
                               </div>
-                              <p className="uppercase text-sm text-muted-foreground mt-1">
-                                {doc.fileFormat}
-                              </p>
 
-                              {doc.rejectMessage?.comment && (
+                              {doc.rejectMessage?.status === "REJECTED" && (
                                 <div className="rounded-md border px-4 py-3">
                                   <p className="text-sm">
                                     <TriangleAlert
@@ -415,7 +419,21 @@ export default function InterceptManageApplicationClient() {
                                       size={16}
                                       aria-hidden="true"
                                     />
-                                    {doc.rejectMessage?.comment}
+                                    {doc.rejectMessage?.comment ||
+                                      "Document has been rejected"}
+                                  </p>
+                                </div>
+                              )}
+
+                              {doc.rejectMessage?.status === "APPROVED" && (
+                                <div className="border-eborder rounded-md border px-4 py-3">
+                                  <p className="text-sm">
+                                    <CircleCheckIcon
+                                      className="me-3 -mt-0.5 inline-flex text-emerald-500"
+                                      size={16}
+                                      aria-hidden="true"
+                                    />
+                                    Document has been approved
                                   </p>
                                 </div>
                               )}
