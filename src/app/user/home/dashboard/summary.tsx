@@ -39,20 +39,20 @@ export default function ApplicationSummary() {
 
   const summaryCards: SummaryCard[] = [
     {
-      label: " Total Applicants",
+      label: " Total Applications",
       data: 1,
       icon: <TrendingUp />,
       color: "blue",
     },
     {
-      label: " Approved Applicants",
+      label: " Active Applications",
       data: 2,
       icon: <CheckCheck />,
       color: "green",
     },
     {
-      label: "Active Scholarships",
-      data: 3,
+      label: "Total Approved",
+      data: 0,
       icon: <GraduationCap />,
       color: "yellow",
     },

@@ -4,13 +4,17 @@ import {
   ArrowLeftFromLine,
   ArrowUpFromLine,
   Building,
+  Calendar,
   Download,
   FileInput,
+  Flame,
   GraduationCap,
   LogIn,
   Maximize,
+  PhilippinePeso,
   Play,
   Share2,
+  StickyNote,
   UserRound,
 } from "lucide-react";
 import {
@@ -87,22 +91,16 @@ export default function InterceptManageScholarshipClient() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="lg:w-[56%] w-[98%] mx-auto lg:h-[95dvh] h-[90dvh] outline-0 border-0 lg:p-1 bg-background">
+      <DrawerContent
+        className={`lg:w-[56%] w-[98%] mx-auto outline-0 border-0 lg:p-1 bg-background ${
+          loading ? " lg:h-[75dvh] h-[68dvh]" : " lg:h-[95dvh] h-[90dvh]"
+        }`}
+      >
         <DrawerHeader className="sr-only">
           <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
-        {/* <div className="flex items-center justify-between lg:pb-2">
-          <div className="flex items-center gap-3">
-            <Button className="relative" variant="ghost" size="sm">
-              <GraduationCap />
-              {!isApply
-                ? `${data?.scholarshipTitle || "Scholarship"} Details`
-                : `Application for ${data?.scholarshipTitle}`}
-            </Button>
-          </div>
-          <div className="flex items-center gap-2"></div>
-        </div> */}
+   
         <div className=" overflow-auto h-full no-scrollbar">
           {isApply ? (
             loading ? (
@@ -127,28 +125,24 @@ export default function InterceptManageScholarshipClient() {
             )
           ) : loading ? (
             <div className="h-full w-full">
-              <div className="relative aspect-[16/8] flex justify-center items-center overlay">
-                <div className="h-10 w-10 animate-spin rounded-full border-4 border-t-transparent border-blue-800"></div>
-              </div>
-              <div className="h-full w-full lg:px-10 px-3 py-5 flex flex-col lg:flex-row gap-10">
-                <span className="lg:w-[65%] space-y-1">
-                  <div className="flex gap-2">
-                    <Skeleton className="h-9 flex-1" />
-                    <Skeleton className="h-9 w-9" />
-                    <Skeleton className="h-9 w-9" />
+              <Skeleton className="flex-1 lg:aspect-[16/5] aspect-[16/9] w-full" />
+              <div className="lg:space-y-15 space-y-10 lg:px-6 px-2 mt-5">
+                <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
+                  <div className="space-y-3">
+                    <Skeleton className="h-11 w-full" />
+                    <Skeleton className="h-20 w-full" />
+                    <Skeleton className="h-20 w-full" />
+                    <Skeleton className="h-20 w-full" />
                   </div>
-                  <Skeleton className="h-8 w-full mt-5" />
-                  <Skeleton className="h-20 w-full mt-5" />
-                </span>
-                <span className="lg:w-[35%]  space-y-2">
-                  <Skeleton className="h-8 w-full" />
-                  <Skeleton className="h-11 w-full" />
-                  <Skeleton className="h-8 w-full mt-5" />
-                  <Skeleton className="h-11 w-full" />
-                </span>
-              </div>
-              <div className="lg:px-10 px-3  mb-5">
-                <Skeleton className="h-20 w-full" />
+                  <div className="flex flex-col gap-3">
+                    <Skeleton className="flex-1 w-full" />
+                    <Skeleton className="h-20 w-full" />
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <Skeleton className="h-20 w-full" />
+                  <Skeleton className="h-20 w-full" />
+                </div>
               </div>
             </div>
           ) : (
@@ -216,41 +210,64 @@ export default function InterceptManageScholarshipClient() {
                   </Dialog>
                 </div>
 
-                <div className="lg:space-y-15 space-y-10 lg:px-8 px-2 mt-5 pb-10">
-                  <div className="w-full flex flex-col lg:flex-row lg:gap-10 gap-5">
-                    <span className="lg:w-[65%] w-full lg:space-y-6 space-y-5">
-                      <div className="lg:space-y-1">
-                        <motion.span
-                          className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
+                <div className="lg:space-y-15 space-y-10 lg:px-6 px-2 mt-5">
+                  <div className="lg:space-y-1">
+                    <motion.span
+                      className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
                                                  flex items-center gap-1.5 lg:text-3xl text-xl font-semibold tracking-tight
                                                 "
-                          initial={{ backgroundPosition: "200% 0" }}
-                          animate={{ backgroundPosition: "-200% 0" }}
-                          transition={{
-                            repeat: Infinity,
-                            repeatType: "loop",
-                            duration: 7,
-                            ease: "linear",
-                          }}
-                        >
-                          {data?.scholarshipTitle}
-                        </motion.span>
-                        <p className="text-muted-foreground text-sm">
-                          by {data?.scholarshipProvider}
-                        </p>
-                      </div>
+                      initial={{ backgroundPosition: "200% 0" }}
+                      animate={{ backgroundPosition: "-200% 0" }}
+                      transition={{
+                        repeat: Infinity,
+                        repeatType: "loop",
+                        duration: 7,
+                        ease: "linear",
+                      }}
+                    >
+                      {data?.scholarshipTitle}
+                      {data?.scholarshipDeadline &&
+                      new Date(data.scholarshipDeadline).getTime() <
+                        Date.now() ? (
+                        <Badge className="bg-red-800 text-gray-200 tracking-wide">
+                          EXPIRED
+                        </Badge>
+                      ) : (
+                        <Badge className="bg-green-800 text-gray-200 tracking-wide">
+                          ACTIVE
+                        </Badge>
+                      )}
+                    </motion.span>
+                    <p className="text-muted-foreground text-sm">
+                      by {data?.scholarshipProvider}
+                    </p>
+                  </div>
+                  <div className="grid lg:grid-cols-2 grid-cols-1 gap-3">
+                    <div className="space-y-3">
                       <div className="flex gap-2 items-center justify-center">
                         <Button
                           variant="outline"
                           className="flex-1"
                           onClick={() => setIsApply(true)}
+                          disabled={
+                            data?.scholarshipDeadline
+                              ? new Date(data.scholarshipDeadline).getTime() <
+                                Date.now()
+                              : false
+                          }
                         >
-                          <LogIn />
+                          <Flame />
                           Apply Now
                         </Button>
 
                         <Button
                           variant="outline"
+                          disabled={
+                            data?.scholarshipDeadline
+                              ? new Date(data.scholarshipDeadline).getTime() <
+                                Date.now()
+                              : false
+                          }
                           onClick={() => {
                             if (navigator.share) {
                               navigator
@@ -276,46 +293,71 @@ export default function InterceptManageScholarshipClient() {
                           <Share2 />
                         </Button>
                       </div>
-                      <div className="flex items-center gap-2">
-                        <Badge className="bg-green-800 text-gray-200">
-                          <Activity /> Active
-                        </Badge>
-                        <Badge variant="secondary" className="capitalize">
-                          <UserRound /> {data?.scholarshipProvider}
-                        </Badge>
-
-                        <Badge variant="secondary" className="capitalize">
-                          <Building />
-                          {data?.scholarshipType}
-                        </Badge>
+                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                        <PhilippinePeso />
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                            Scholarship Amount
+                          </p>
+                          <h1 className="text-lg font-medium font-mono">
+                            {data?.scholarshipAmount}.00
+                          </h1>
+                        </div>
                       </div>
-                      <p className="">{data?.scholarshipDescription}</p>
-                    </span>
-                    <span className="lg:w-[35%] w-full flex flex-col gap-5 lg:pt-20">
-                      <span className="flex gap-2">
-                        <span className="text-muted-foreground">Deadline:</span>
+                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                        <Building />
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                            Scholarship Type
+                          </p>
+                          <h1 className="text-lg font-medium capitalize">
+                            {data?.scholarshipType}
+                          </h1>
+                        </div>
+                      </div>
 
-                        {data?.scholarshipDeadline &&
-                          format(data?.scholarshipDeadline, "PPP")}
-                      </span>
-                      <span>
-                        <span className="text-muted-foreground">Sponsor: </span>
-                        <span>{data?.scholarshipProvider}</span>
-                      </span>
+                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                        <Calendar />
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                            Scholarship Deadline
+                          </p>
+                          <h1 className="text-lg font-medium">
+                            {data?.scholarshipDeadline
+                              ? format(
+                                  new Date(data?.scholarshipDeadline),
+                                  "PPP"
+                                )
+                              : "No deadline"}
+                          </h1>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex-1 p-4 space-y-2  rounded-md bg-card">
+                        <div className="flex gap-3 items-center">
+                          <StickyNote />
+                          <p className="text-muted-foreground text-sm">
+                            Scholarship Details
+                          </p>
+                        </div>
 
-                      <span>
-                        <span className="text-muted-foreground">Amount: </span>
-                        {(data?.scholarshipAmount &&
-                          formatPHP(Number(data?.scholarshipAmount))) ||
-                          "N/A"}
-                      </span>
-                      <span>
-                        <span className="text-muted-foreground">
-                          Slot / Limit:{" "}
-                        </span>
-                        {data?.scholarshipAmount || "N/A"}
-                      </span>
-                    </span>
+                        <h1 className="text-sm leading-relaxed">
+                          {data?.scholarshipDescription}
+                        </h1>
+                      </div>
+                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                        <UserRound />
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                            Scholarship Slot
+                          </p>
+                          <h1 className="text-lg font-medium">
+                            {data?.scholarshipLimit} students
+                          </h1>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="space-y-6">
@@ -330,10 +372,13 @@ export default function InterceptManageScholarshipClient() {
                         </p>
                       </div>
 
-                      <div className=" grid grid-cols-1 gap-5">
+                      <div className=" divide-y">
                         {Object.values(data?.scholarshipDocuments || {}).map(
                           (doc, index) => (
-                            <Label key={doc.label}>
+                            <div
+                              className="flex justify-between items-center py-5"
+                              key={doc.label}
+                            >
                               <span> {index + 1}. </span>
                               {doc.label}
                               <Badge
@@ -347,7 +392,7 @@ export default function InterceptManageScholarshipClient() {
                               >
                                 {doc.requirementType}
                               </Badge>
-                            </Label>
+                            </div>
                           )
                         )}
                       </div>

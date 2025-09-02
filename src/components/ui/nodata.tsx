@@ -17,7 +17,7 @@ export default function NoDataFound() {
           ease: "easeInOut",
         }}
       />
-      <h1 className="font-semibold text-lg">Nothing Here...</h1>
+      <h1 className="font-semibold">Nothing Here...</h1>
       <p className="text-sm text-muted-foreground">No data found.</p>
     </div>
   );

@@ -21,7 +21,6 @@ const addAnnouncementApi = async (data: createAnnouncementFormData) => {
     announcementDescription: data.announcementDescription,
     announcementTags: JSON.stringify({ data: data.announcementTags || [] }),
     adminId: admin?.adminId,
-    announcementExpiration: data.announcementExpiration.toISOString(),
   };
   const res = await axios.post(
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/createAnnouncement`,

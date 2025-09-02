@@ -3,10 +3,12 @@
 import { motion } from "motion/react";
 
 import {
+  ArrowRightIcon,
   Building,
   Building2,
   Ellipsis,
   Ghost,
+  Lock,
   PhilippinePeso,
   TextSearch,
 } from "lucide-react";
@@ -148,7 +150,8 @@ export default function ClientScholarship() {
   ];
   return (
     <TourProvider steps={scholarshipTourSteps}>
-      <div className="z-10  bg-background lg:px-4   ">
+      <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+        <div className="absolute inset-0 z-20 bg-black/80 pointer-events-none"></div>
         <div className="mx-auto w-[95%] lg:pt-10  pt-3">
           <div className="flex justify-between items-end">
             <TitleReusable
@@ -158,6 +161,36 @@ export default function ClientScholarship() {
             />
           </div>
           <div className="py-8 space-y-8">
+            <div className="relative z-20 dark bg-muted rounded-md text-foreground px-4 py-3">
+              <div className="flex flex-col justify-between gap-2 md:flex-row">
+                <div className="flex grow gap-3">
+                  <Lock
+                    className="mt-0.5 shrink-0 opacity-60"
+                    size={16}
+                    aria-hidden="true"
+                  />
+                  <div className="flex grow flex-col justify-between gap-2 md:flex-row md:items-center">
+                    <p className="text-sm">
+                      Please complete your profile details to unlock the
+                      scholarship and apply.
+                    </p>
+                    <Link
+                      href="/user/home/profile"
+                      prefetch={true}
+                      scroll={false}
+                      className="group text-sm font-medium whitespace-nowrap underline"
+                    >
+                      View Profile
+                      <ArrowRightIcon
+                        className="ms-2 -mt-0.5 inline-flex opacity-60 transition-transform group-hover:translate-x-0.5"
+                        size={16}
+                        aria-hidden="true"
+                      />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div className="flex flex-col lg:flex-row justify-between  w-full gap-3">
               <div className="flex items-center  gap-3 flex-col lg:flex-row">
                 <div className=" flex gap-2 w-full">
@@ -289,6 +322,7 @@ export default function ClientScholarship() {
                     <Link
                       href={`/user/home/scholarships/${scholarship.scholarshipId}`}
                       prefetch
+                      scroll={false}
                       key={scholarship.scholarshipId}
                       className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
                     >

@@ -5,9 +5,6 @@ import z from "zod";
 const createAnnouncementSchema = z.object({
   announcementTitle: z.string().min(3, "Required"),
   announcementDescription: z.string().min(3, "Required"),
-  announcementExpiration: z.date({
-    message: "Required",
-  }),
   announcementTags: z.array(z.string()).min(1, "At least one tag is required"),
 });
 
@@ -23,7 +20,6 @@ export function useCreateAnnouncementZod() {
       announcementDescription: "",
 
       announcementTags: [],
-      announcementExpiration: undefined,
     },
   });
 

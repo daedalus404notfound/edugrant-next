@@ -8,7 +8,7 @@ export default function TitleReusable({
 }: {
   title: string;
   description: string;
-  Icon: LucideIcon;
+  Icon?: LucideIcon;
 }) {
   return (
     <div>
@@ -25,13 +25,11 @@ export default function TitleReusable({
           ease: "linear",
         }}
       >
-        <Icon strokeWidth={2} />
-       {title}
+        {Icon && <Icon strokeWidth={2} />}
+        {title}
       </motion.span>
 
-      <p className="text-sm text-gray-500 mt-1">
-       {description}
-      </p>
+      <p className="text-sm text-gray-500 mt-1">{description}</p>
     </div>
   );
 }

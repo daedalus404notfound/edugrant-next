@@ -64,7 +64,7 @@ export default function ClientScholarship() {
   ];
 
   return (
-    <div className="  bg-background lg:px-4  pb-20 ">
+    <div className="  bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:pt-10  pt-3">
         <div className="flex justify-between items-end">
           <TitleReusable
@@ -74,14 +74,14 @@ export default function ClientScholarship() {
           />
         </div>
 
-        <div className="flex gap-2 mt-5">
+        {/* <div className="flex gap-2 mt-5">
           <div className="flex-1">
             <Input placeholder="Search..." />
           </div>
           <Button variant="secondary">
             <MoreHorizontal />
           </Button>
-        </div>
+        </div> */}
         <div className="overflow-y-hidden overflow-x-auto py-8 no-scrollbar">
           <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
         </div>
@@ -108,6 +108,8 @@ export default function ClientScholarship() {
               <Link
                 href={`/user/home/applications/${meow.applicationId}`}
                 key={meow.applicationId}
+                prefetch
+                scroll={false}
                 className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
               >
                 <div className="relative rounded-lg bg-background ">

@@ -1,10 +1,19 @@
 "use client";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   GalleryVerticalEnd,
   GraduationCap,
+  History,
   Home,
   Megaphone,
+  MoreHorizontal,
   UserRound,
 } from "lucide-react";
 import Link from "next/link";
@@ -22,12 +31,11 @@ export default function MobDock() {
       label: "Track",
       icon: GalleryVerticalEnd,
     },
-    { href: "/user/home/announcements", label: "Announce", icon: Megaphone },
     { href: "/user/home/profile", label: "Profile", icon: UserRound },
   ];
 
   return (
-    <div className="sticky bottom-0 w-full left-0 z-10 bg-card dark:bg-zinc-950/90 backdrop-blur-sm flex justify-center p-2 gap-2 border-t lg:hidden">
+    <div className="sticky bottom-0 w-full left-0 z-30 bg-card dark:bg-zinc-950/90 backdrop-blur-sm flex justify-center p-2 gap-2 border-t lg:hidden">
       {navItems.map(({ href, label, icon: Icon, exact }) => {
         const isActive = exact
           ? pathname === href
@@ -53,6 +61,21 @@ export default function MobDock() {
           </Link>
         );
       })}
+
+      <DropdownMenu>
+        <DropdownMenuTrigger>
+          <div className="flex justify-center gap-1 flex-col items-center px-2 py-0.5 w-15 transition-colors">
+            <MoreHorizontal size={23} />
+            <p className="text-xs">More</p>
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="mr-2">
+          <DropdownMenuItem><Megaphone/>Announcements</DropdownMenuItem>
+
+          <DropdownMenuSeparator />
+          <DropdownMenuItem><History/>Application History</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 }

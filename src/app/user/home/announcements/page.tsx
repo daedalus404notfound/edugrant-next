@@ -1,128 +1,140 @@
 "use client";
-import React, { useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  ArrowRight,
+  CalendarIcon,
+  Megaphone,
+  MoreHorizontal,
+} from "lucide-react";
+
+import { useState } from "react";
+import { Tabs } from "@/components/ui/vercel-tabs";
+
+import { Badge } from "@/components/ui/badge";
+import {
+  Timeline,
+  TimelineContent,
+  TimelineDate,
+  TimelineItem,
+  TimelineTitle,
+} from "@/components/ui/timeline";
+const announcements = [
+  {
+    id: 1,
+    title: "Scholarship Application Deadline Extended",
+    description:
+      "The deadline for scholarship applications has been extended to June 30, 2025.",
+    date: "Dec 12, 2024",
+    priority: "high",
+  },
+  {
+    id: 2,
+    title: "Scholarship Application Deadline Extended",
+    description:
+      "The deadline for scholarship applications has been extended to June 30, 2025.",
+    date: "Dec 12, 2024",
+    priority: "high",
+  },
+];
+
+import { Separator } from "@/components/ui/separator";
+import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
-import { Search, Filter } from "lucide-react";
+import TitleReusable from "@/components/ui/title";
+import { Skeleton } from "@/components/ui/skeleton";
+import NoDataFound from "@/components/ui/nodata";
+import Link from "next/link";
+import useAnnouncementFetch from "@/hooks/admin/getAnnouncement";
+import AnnouncementDescription from "@/app/administrator/home/announcements/manage/description";
 
-interface Announcement {
-  id: string;
-  title: string;
-  content: string;
-  category: "academic" | "administrative" | "event" | "urgent";
-  priority: "low" | "medium" | "high" | "urgent";
-  date: string;
-  author: string;
-  department: string;
-  isRead: boolean;
-  isPinned: boolean;
-}
+export default function ClientScholarship() {
+  const [currentPage] = useState(1);
+  const [rowsPerPage] = useState(20);
+  const [page] = useState(1);
+  const [pageSize] = useState(50);
+  const [sortBy] = useState("");
+  const [order] = useState("");
+  const [status, setStatus] = useState("ACTIVE");
+  const [openAlert, setOpenAlert] = useState(false);
+  const [selectedId, setSelectedId] = useState<string[]>([]);
+  const { data, loading } = useAnnouncementFetch({
+    page,
+    pageSize,
+    sortBy,
+    order,
+    status,
+  });
 
-export default function AnnouncementSection() {
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  
- 
-  const announcements: Announcement[] = [
-    {
-      id: "1",
-      title: "Midterm Examination Schedule Released",
-      content:
-        "The midterm examination schedule for all departments has been posted. Students are advised to check their respective department notice boards and online portals for detailed information.",
-      category: "academic",
-      priority: "high",
-      date: "2024-07-20",
-      author: "Academic Office",
-      department: "Registrar",
-      isRead: false,
-      isPinned: true,
-    },
-    {
-      id: "2",
-      title: "Library Extended Hours During Finals",
-      content:
-        "The university library will extend its operating hours during the final examination period. New hours: Monday-Sunday, 6:00 AM to 12:00 AM.",
-      category: "administrative",
-      priority: "medium",
-      date: "2024-07-19",
-      author: "Library Services",
-      department: "Library",
-      isRead: true,
-      isPinned: false,
-    },
+  const tabs = [
+    { id: "", label: "All Application", indicator: null },
+    { id: "PENDING", label: "Pending", indicator: null },
+    { id: "REVIEWED", label: "Reviewed", indicator: null },
+    { id: "APPROVED", label: "Approved", indicator: null },
+    { id: "DECLINED", label: "Rejected", indicator: null },
+    { id: "BLOCKED", label: "Blocked", indicator: null },
   ];
 
   return (
-    <div className="bg-background min-h-screen">
-      <div className="mx-auto lg:w-3/4 w-[95%] py-10">
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              placeholder="Search announcements..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
+    <div className="  bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+      <div className="mx-auto w-[95%] lg:pt-10  pt-3">
+        <div className="flex justify-between items-end">
+          <TitleReusable
+            title="Announcements"
+            description=""
+            Icon={Megaphone}
+          />
+        </div>
+
+        <div className="flex gap-2 mt-5">
+          <div className="flex-1">
+            <Input placeholder="Search announcement..." />
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm">
-              <Filter className="h-4 w-4 mr-2" />
-              Filter
-            </Button>
-          </div>
+          <Button variant="secondary">
+            <MoreHorizontal />
+          </Button>
+        </div>
+        <div className="overflow-y-hidden overflow-x-auto py-8 no-scrollbar">
+          <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-gray-300 mb-4">
-            All Announcements
-          </h2>
-          <div className="grid gap-4">
-            {announcements.map((announcement) => (
-              <Card
-                key={announcement.id}
-                className={`${
-                  !announcement.isRead ? "bg-card border" : "bg-background"
-                } hover:shadow-md transition-shadow`}
-              >
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-3">
-                      <div>
-                        <CardTitle className="text-lg mb-1">
-                          {announcement.title}
-                        </CardTitle>
-                        <CardDescription className="flex items-center gap-4">
-                          <span>{announcement.author}</span>
-                          <span>•</span>
-                          <span>{announcement.department}</span>
-                          <span>•</span>
-                          <span>{announcement.date}</span>
-                        </CardDescription>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {!announcement.isRead && (
-                        <div className="w-2 h-2 bg-gray-8000 rounded-full"></div>
-                      )}
-
-                      <div className="flex gap-2">
-                        <Button variant="outline" size="sm">Mark as Read</Button>
-                        <Button size="sm">Read More</Button>
-                      </div>
-                    </div>
+          <Timeline className="space-y-5">
+            {loading ? (
+              <></>
+            ) : (
+              data.map((item) => (
+                <TimelineItem
+                  key={item.announcementId}
+                  step={item.announcementId}
+                  className="!m-0  bg-card  p-4! rounded-md border !mb-3"
+                >
+                  <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
+                    <TimelineTitle className="font-medium text-base">
+                      {item.title ?? "Win scholarship is now open."}
+                    </TimelineTitle>
+                    <TimelineDate className="lg:text-sm text-xs text-muted-foreground flex items-center gap-1.5">
+                      <CalendarIcon size={13} />{" "}
+                      {format(item.startDate, "PPP p")}
+                    </TimelineDate>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <p>{announcement.content}</p>
-                </CardContent>
-              </Card>
-            ))}
+
+                  <TimelineContent className="text-foreground mt-1 whitespace-pre-line">
+                    <AnnouncementDescription description={item.description} />
+                  </TimelineContent>
+
+                  <div className="mt-5 flex gap-3 items-center">
+                    <p className="text-xs">Tags:</p>{" "}
+                    <Badge variant="secondary">Win Gatchalian</Badge>
+                  </div>
+                </TimelineItem>
+              ))
+            )}
+          </Timeline>
+          <div className="flex justify-center items-center">
+            <Button variant="link" size="lg" className="!p-0">
+              Load More <ArrowRight />
+            </Button>
           </div>
         </div>
       </div>

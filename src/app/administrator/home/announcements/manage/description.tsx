@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
-export default function AnnouncementDescription({ description }: { description: string }) {
+export default function AnnouncementDescription({
+  description,
+}: {
+  description: string;
+}) {
   const [expanded, setExpanded] = useState(false);
 
   // adjust limit depending on how short/long you want before showing the button
@@ -21,10 +25,10 @@ export default function AnnouncementDescription({ description }: { description: 
         <Button
           variant="link"
           size="sm"
-          className="px-0 h-auto text-emerald-600"
+          className="px-0 h-auto text-emerald-600 mt-3"
           onClick={() => setExpanded(!expanded)}
         >
-          {expanded ? "See less" : "See more"}
+          {expanded ? "Collapse" : "Expand"}
         </Button>
       )}
     </div>
