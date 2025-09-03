@@ -115,7 +115,7 @@ const HowitworksComponent = () => {
         {howItWorks.map((step, index) => (
           <SpotlightBorderWrapper key={index}>
             <div className="flex  border flex-col sm:flex-row items-start gap-4 lg:p-4  p-3 shadow-black/10   dark:bg-primary/5 bg-card lg:rounded-lg rounded-md ">
-              <div className="w-full lg:h-40 h-35  overflow-hidden rounded-md bg-background">
+              <div className="w-full lg:h-40 h-35  overflow-hidden rounded-md bg-background dark:bg-transparent">
                 <img
                   src={step.image}
                   alt={step.title}
