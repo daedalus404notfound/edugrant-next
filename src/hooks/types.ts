@@ -79,7 +79,7 @@ export type UserProfileTypes = {
   guardianHighestEducation: string;
   guardianStatus: string;
 };
-type AdminProfileTypes = {
+export type AdminProfileTypes = {
   adminId: string;
   cloudinaryId: string;
   dateCreate: string;
