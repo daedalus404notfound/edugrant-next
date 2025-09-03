@@ -146,7 +146,7 @@ export default function InterceptManageScholarshipClient() {
               </div>
             </div>
           ) : (
-            <div className="relative h-full w-full overflow-auto no-scrollbar bg-background rounded-t-md">
+            <div className="relative h-full w-full overflow-auto  bg-background rounded-t-md">
               <div className="absolute top-0 left-0 lg:h-80 h-60 w-full opacity-30   mask-gradient flex">
                 {/* <img
                   className="w-full h-full object-cover blur-md "
@@ -157,8 +157,8 @@ export default function InterceptManageScholarshipClient() {
               <div className="  overflow-hidden">
                 <div className="relative flex justify-center items-center ">
                   <div className="absolute inset-0border-b-2 border-black bg-card" />
-                  <div className="absolute left-2 -bottom-3 z-10 lg:px-8  px-2 flex  items-center ">
-                    <Avatar className="lg:size-25 size-20">
+                  <div className="absolute left-2 -bottom-15 z-10 lg:px-8  px-2 flex  items-center ">
+                    <Avatar className="lg:size-25 size-20 border-background border-2 shadow-md">
                       <AvatarImage
                         className="object-cover"
                         src={data?.scholarshipLogo}
@@ -170,7 +170,7 @@ export default function InterceptManageScholarshipClient() {
                   </div>
                   {scholarshipCover && (
                     <img
-                      className="w-full lg:aspect-[16/5] aspect-[16/9]  object-cover   rounded-t-md mask-gradient"
+                      className="w-full lg:aspect-[16/4] aspect-[16/9]  object-cover   rounded-lg shadow-md"
                       src={scholarshipCover}
                       alt=""
                     />
@@ -210,11 +210,11 @@ export default function InterceptManageScholarshipClient() {
                   </Dialog>
                 </div>
 
-                <div className="lg:space-y-15 space-y-10 lg:px-6 px-2 mt-5">
+                <div className="lg:space-y-15 space-y-10 lg:px-6 px-2 mt-17">
                   <div className="lg:space-y-1">
                     <motion.span
                       className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-                                                 flex items-center gap-1.5 lg:text-3xl text-xl font-semibold tracking-tight
+                                                 flex items-center gap-1.5 lg:text-2xl text-xl font-semibold tracking-tight
                                                 "
                       initial={{ backgroundPosition: "200% 0" }}
                       animate={{ backgroundPosition: "-200% 0" }}

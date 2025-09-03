@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   AlertDialog,
@@ -12,24 +12,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { motion } from "motion/react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Camera,
-  Check,
-  Edit,
-  GraduationCap,
-  Lock,
-  Mail,
-  UserPen,
-  UserRound,
-  X,
-} from "lucide-react";
+import { Edit, Lock, Mail, Save, Trash2, UserRound, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { useProfileZod } from "@/hooks/user/zodGetUser";
 
 import {
   Form,
@@ -43,10 +31,18 @@ import { useUserStore } from "@/store/useUserStore";
 import { Separator } from "@/components/ui/separator";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import { Label } from "@/components/ui/label";
+import { useProfileForm } from "@/hooks/user/zodUserProfile";
+import { Controller } from "react-hook-form";
+import { useUpdateProfile } from "@/hooks/user/postProfileUpdate";
 export default function Profile() {
-  const [isEdit, setIsEdit] = useState(true);
   const { user } = useUserStore();
-  const { form } = useProfileZod(user);
+  const { form, siblings, hasChanges, handleSubmit, loading } =
+    useUpdateProfile(user ?? undefined);
+  // useEffect(() => {
+  //   if (user) {
+  //     form.reset(user);
+  //   }
+  // }, [user, form]);
   const [tab, setTab] = useState("personal");
   console.log("meow", user?.userId);
   const tabs = [
@@ -56,7 +52,7 @@ export default function Profile() {
     { id: "security", label: "Account Security", indicator: null },
   ];
   return (
-    <div className="  bg-background lg:px-4  pb-20 ">
+    <div className="relative  bg-background lg:px-4  pb-20 ">
       <Form {...form}>
         <div className="mx-auto w-[95%] lg:w-4xl lg:pt-10  pt-3">
           <div className="flex justify-between flex-col  lg:flex-row gap-5">
@@ -83,23 +79,22 @@ export default function Profile() {
                 <p className="text-sm text-muted-foreground mt-1">
                   {user?.studentId}
                 </p>
-                <div className="flex gap-2 mt-2 items-center justify-center">
+                <div className="flex gap-2 mt-2 items-center justify-center uppercase">
                   <Badge variant="outline">{user?.course}</Badge>
                   <Badge variant="outline">{user?.year}</Badge>
                   <Badge variant="outline">Section {user?.section}</Badge>
                 </div>
               </div>
             </div>
-            <div className="flex justify-center">
-              {isEdit ? (
-                <Button variant="secondary" onClick={() => setIsEdit(false)}>
-                  <Edit />
-                  Edit Profile
-                </Button>
-              ) : (
-                <Button variant="secondary" onClick={() => setIsEdit(true)}>
-                  <Edit />
-                  Save Changes
+            <div className="flex justify-center items-center">
+              {hasChanges && (
+                <Button
+                  variant="outline"
+                  onClick={form.handleSubmit(handleSubmit)}
+                  disabled={loading}
+                >
+                  <Save />
+                  {loading ? "Saving..." : "Save Changes"}
                 </Button>
               )}
             </div>
@@ -119,10 +114,7 @@ export default function Profile() {
                       <div className="relative w-full">
                         <Input
                           {...field}
-                          className={`capitalize w-full bg-card ${
-                            isEdit ? "" : ""
-                          }`}
-                          disabled={isEdit}
+                          className="bg-card w-full capitalize"
                         />
                         <Button
                           variant="ghost"
@@ -147,10 +139,7 @@ export default function Profile() {
                       <div className="relative w-full">
                         <Input
                           {...field}
-                          className={`capitalize w-full bg-card ${
-                            isEdit ? "" : ""
-                          }`}
-                          disabled={isEdit}
+                          className="bg-card w-full capitalize"
                         />
                         <Button
                           variant="ghost"
@@ -174,10 +163,7 @@ export default function Profile() {
                       <div className="relative w-full">
                         <Input
                           {...field}
-                          className={`capitalize w-full bg-card ${
-                            isEdit ? "" : ""
-                          }`}
-                          disabled={isEdit}
+                          className="bg-card w-full capitalize"
                         />
                         <Button
                           variant="ghost"
@@ -201,10 +187,7 @@ export default function Profile() {
                       <div className="relative w-full">
                         <Input
                           {...field}
-                          className={`capitalize w-full bg-card ${
-                            isEdit ? "" : ""
-                          }`}
-                          disabled={isEdit}
+                          className="bg-card w-full capitalize"
                         />
                         <Button
                           variant="ghost"
@@ -228,10 +211,7 @@ export default function Profile() {
                       <div className="relative w-full">
                         <Input
                           {...field}
-                          className={`capitalize w-full bg-card ${
-                            isEdit ? "" : ""
-                          }`}
-                          disabled={isEdit}
+                          className="bg-card w-full capitalize"
                         />
                         <Button
                           variant="ghost"
@@ -255,10 +235,7 @@ export default function Profile() {
                       <div className="relative w-full">
                         <Input
                           {...field}
-                          className={`capitalize w-full bg-card ${
-                            isEdit ? "" : ""
-                          }`}
-                          disabled={isEdit}
+                          className="bg-card w-full capitalize"
                         />
                         <Button
                           variant="ghost"
@@ -282,10 +259,7 @@ export default function Profile() {
                       <div className="relative w-full">
                         <Input
                           {...field}
-                          className={`capitalize w-full bg-card ${
-                            isEdit ? "" : ""
-                          }`}
-                          disabled={isEdit}
+                          className="bg-card w-full capitalize"
                         />
                         <Button
                           variant="ghost"
@@ -303,9 +277,9 @@ export default function Profile() {
           )}
           {tab === "account" && (
             <div className=" w-full space-y-10">
-              <FormField
+              {/* <FormField
                 control={form.control}
-                name="email"
+                name="studentEmail"
                 render={({ field }) => (
                   <FormItem className="col-span-2 ">
                     <FormLabel>Email</FormLabel>
@@ -351,7 +325,7 @@ export default function Profile() {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
               <FormField
                 control={form.control}
                 name="studentId"
@@ -362,9 +336,7 @@ export default function Profile() {
                       <div className="w-full">
                         <Input
                           {...field}
-                          className={`capitalize w-full bg-card ${
-                            isEdit ? "" : ""
-                          }`}
+                          className="bg-card w-full capitalize"
                           disabled
                         />
                       </div>
@@ -383,10 +355,7 @@ export default function Profile() {
                       <div className="relative w-full">
                         <Input
                           {...field}
-                          className={`capitalize w-full bg-card ${
-                            isEdit ? "" : ""
-                          }`}
-                          disabled={isEdit}
+                          className="bg-card w-full capitalize"
                         />
                         <Button
                           variant="ghost"
@@ -410,10 +379,7 @@ export default function Profile() {
                       <div className="relative w-full">
                         <Input
                           {...field}
-                          className={`capitalize w-full bg-card ${
-                            isEdit ? "" : ""
-                          }`}
-                          disabled={isEdit}
+                          className="bg-card w-full capitalize"
                         />
                         <Button
                           variant="ghost"
@@ -437,10 +403,7 @@ export default function Profile() {
                       <div className="relative w-full">
                         <Input
                           {...field}
-                          className={`capitalize w-full bg-card ${
-                            isEdit ? "" : ""
-                          }`}
-                          disabled={isEdit}
+                          className="bg-card w-full capitalize"
                         />
                         <Button
                           variant="ghost"
@@ -458,14 +421,13 @@ export default function Profile() {
           )}
 
           {tab === "family" && (
-            <div className=" w-full space-y-10">
-              <div className="  grid lg:grid-cols-2 grid-cols-1 gap-x-3 gap-y-6">
+            <div className=" w-full divide-y">
+              <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-3 gap-y-6 pb-10">
                 <div className="lg:col-span-2 col-span-1 space-y-4">
-                  <div className="lg:flex-row flex-col gap-5 items-start flex justify-between">
+                  <div className="lg:flex-row flex-col gap-5 items-center flex justify-between">
                     <motion.span
-                      className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-yellow-600/70
-              text-xl font-semibold flex items-center gap-1.5
-              "
+                      className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
+        text-lg font-semibold flex items-center gap-1.5"
                       initial={{ backgroundPosition: "200% 0" }}
                       animate={{ backgroundPosition: "-200% 0" }}
                       transition={{
@@ -477,150 +439,149 @@ export default function Profile() {
                     >
                       Father
                     </motion.span>
-                    <RadioGroup
-                      defaultValue=""
-                      className="flex  w-full lg:w-[unset] justify-between"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="option-one" id="option-one" />
-                        <Label htmlFor="option-one">Separated</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="option-two" id="option-two" />
-                        <Label htmlFor="option-two">Living</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="option-three"
-                          id="option-three"
-                        />
-                        <Label htmlFor="option-three">Deceased</Label>
-                      </div>
-                    </RadioGroup>
+                    <Controller
+                      control={form.control}
+                      name="familyBackground.fatherStatus" // matches Zod schema
+                      // default status
+                      render={({ field }) => (
+                        <RadioGroup
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          className="flex lg:p-0 p-2 w-full lg:w-[unset] justify-between"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem
+                              value="Separated"
+                              id="fatherStatus-separated"
+                            />
+                            <Label htmlFor="fatherStatus-separated">
+                              Separated
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem
+                              value="Living"
+                              id="fatherStatus-living"
+                            />
+                            <Label htmlFor="fatherStatus-living">Living</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem
+                              value="Deceased"
+                              id="fatherStatus-deceased"
+                            />
+                            <Label htmlFor="fatherStatus-deceased">
+                              Deceased
+                            </Label>
+                          </div>
+                        </RadioGroup>
+                      )}
+                    />
                   </div>
-                  <Separator />
                 </div>
+
+                {/* Father Full Name */}
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.fatherFullName"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Full Name</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* Father Address */}
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.fatherAddress"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Address</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* Father Contact Number */}
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.fatherContactNumber"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Contact Number</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* Father Occupation */}
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.fatherOccupation"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Occupation</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* Father Highest Education */}
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.fatherHighestEducation"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Highest Education Attainment</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* Father Total Parents Taxable Income */}
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.fatherTotalParentsTaxableIncome"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Total Parents Taxable Income</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -628,13 +589,12 @@ export default function Profile() {
                 />
               </div>
 
-              <div className="  grid lg:grid-cols-2 grid-cols-1 gap-x-3 gap-y-6">
+              <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-3 gap-y-6 py-10">
                 <div className="lg:col-span-2 col-span-1 space-y-4">
-                  <div className="lg:flex-row flex-col gap-5 items-start flex justify-between ">
+                  <div className="lg:flex-row flex-col gap-5 flex justify-between items-center">
                     <motion.span
-                      className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-yellow-600/70
-              text-xl font-semibold flex items-center gap-1.5
-              "
+                      className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text text-emerald-600/70
+          text-lg font-semibold flex items-center gap-1.5"
                       initial={{ backgroundPosition: "200% 0" }}
                       animate={{ backgroundPosition: "-200% 0" }}
                       transition={{
@@ -646,163 +606,155 @@ export default function Profile() {
                     >
                       Mother
                     </motion.span>
-                    <RadioGroup
-                      defaultValue=""
-                      className="flex w-full lg:w-[unset] justify-between"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="option-one" id="option-one" />
-                        <Label htmlFor="option-one">Separated</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="option-two" id="option-two" />
-                        <Label htmlFor="option-two">Living</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="option-three"
-                          id="option-three"
-                        />
-                        <Label htmlFor="option-three">Deceased</Label>
-                      </div>
-                    </RadioGroup>
+                    <Controller
+                      control={form.control}
+                      name="familyBackground.motherStatus"
+                      render={({ field }) => (
+                        <RadioGroup
+                          value={field.value}
+                          onValueChange={field.onChange}
+                          className="flex lg:p-0 p-2 w-full lg:w-[unset] justify-between"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem
+                              value="Separated"
+                              id="motherStatus-separated"
+                            />
+                            <Label htmlFor="motherStatus-separated">
+                              Separated
+                            </Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem
+                              value="Living"
+                              id="motherStatus-living"
+                            />
+                            <Label htmlFor="motherStatus-living">Living</Label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <RadioGroupItem
+                              value="Deceased"
+                              id="motherStatus-deceased"
+                            />
+                            <Label htmlFor="motherStatus-deceased">
+                              Deceased
+                            </Label>
+                          </div>
+                        </RadioGroup>
+                      )}
+                    />
                   </div>
-                  <Separator />
                 </div>
+
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.motherFullName"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Full Name</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.motherAddress"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Address</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.motherContactNumber"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Contact Number</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.motherOccupation"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Occupation</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.motherHighestEducation"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Highest Education Attainment</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.motherTotalParentsTaxableIncome"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Total Parents Taxable Income</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
-              <div className="  grid lg:grid-cols-2 grid-cols-1 gap-x-3 gap-y-6">
+
+              <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-3 gap-y-6 py-10">
                 <div className="lg:col-span-2 col-span-1 space-y-4">
                   <div className="lg:flex-row flex-col gap-5 items-start flex justify-between">
                     <motion.span
-                      className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-yellow-600/70
-              text-xl font-semibold flex items-center gap-1.5
-              "
+                      className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text text-emerald-600/70
+          text-lg font-semibold flex items-center gap-1.5"
                       initial={{ backgroundPosition: "200% 0" }}
                       animate={{ backgroundPosition: "-200% 0" }}
                       transition={{
@@ -815,134 +767,227 @@ export default function Profile() {
                       Legal Guardian
                     </motion.span>
                   </div>
-                  <Separator />
                 </div>
+
+                {/* Guardian Full Name */}
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.guardianFullName"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Full Name</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* Guardian Address */}
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.guardianAddress"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Address</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* Guardian Contact Number */}
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.guardianContactNumber"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Contact Number</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* Guardian Occupation */}
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.guardianOccupation"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Occupation</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* Guardian Highest Education */}
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.guardianHighestEducation"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <FormLabel>Highest Education Attainment</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* Guardian Status */}
                 <FormField
                   control={form.control}
-                  name="course"
+                  name="familyBackground.guardianStatus"
                   render={({ field }) => (
-                    <FormItem className="">
-                      <FormLabel>Highest Education Attainment</FormLabel>
-                      <FormControl className="">
-                        <div className="w-full">
-                          <Input
-                            {...field}
-                            className={`capitalize w-full bg-card ${
-                              isEdit ? "" : ""
-                            }`}
-                            disabled={isEdit}
-                          />
-                        </div>
+                    <FormItem>
+                      <FormLabel>Status</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card capitalize"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+              </div>
+              <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-3 gap-y-6 py-10">
+                <div className="lg:col-span-2 col-span-1 space-y-4">
+                  <div className="lg:flex-row flex-col gap-5 items-start flex justify-between">
+                    <motion.span
+                      className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text text-emerald-600/70 text-lg font-semibold flex items-center gap-1.5"
+                      initial={{ backgroundPosition: "200% 0" }}
+                      animate={{ backgroundPosition: "-200% 0" }}
+                      transition={{
+                        repeat: Infinity,
+                        repeatType: "loop",
+                        duration: 7,
+                        ease: "linear",
+                      }}
+                    >
+                      Siblings
+                    </motion.span>
+                    <Button
+                      size="sm"
+                      onClick={() =>
+                        siblings.append({
+                          fullName: "",
+                          age: 0,
+                          occupation: "",
+                        })
+                      }
+                    >
+                      + Add fields
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-3 col-span-3">
+                  {siblings.fields.map(
+                    (
+                      item: {
+                        id: string;
+                        fullName: string;
+                        age: number;
+                        occupation: string;
+                      },
+                      index
+                    ) => (
+                      <div key={item.id} className="space-y-3 w-full">
+                        <div className="flex gap-3 items-end ">
+                          <FormField
+                            control={form.control}
+                            name={`familyBackground.siblings.${index}.fullName`}
+                            render={({ field }) => (
+                              <FormItem className="flex-1">
+                                <FormLabel>Full Name</FormLabel>
+                                <FormControl className="">
+                                  <div className="flex-1">
+                                    <Input
+                                      {...field}
+                                      className="w-full bg-card capitalize"
+                                    />
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name={`familyBackground.siblings.${index}.age`}
+                            render={({ field }) => (
+                              <FormItem className="flex-1">
+                                <FormLabel>Age</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    type="number"
+                                    {...field}
+                                    className="w-full bg-card"
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={form.control}
+                            name={`familyBackground.siblings.${index}.occupation`}
+                            render={({ field }) => (
+                              <FormItem className="flex-1">
+                                <FormLabel>Occupation</FormLabel>
+                                <FormControl>
+                                  <div className="w-full">
+                                    <Input
+                                      {...field}
+                                      className="w-full bg-card capitalize"
+                                    />
+                                  </div>
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={() => siblings.remove(index)}
+                          >
+                            <Trash2 />
+                          </Button>
+                        </div>
+                      </div>
+                    )
+                  )}
+                </div>
               </div>
             </div>
           )}
@@ -956,25 +1001,21 @@ export default function Profile() {
                   Account Security
                 </h2>
               </div>
-              <div className="grid grid-cols-2  gap-x-3 gap-y-6">
+              {/* <div className="grid grid-cols-2  gap-x-3 gap-y-6">
                 <FormField
                   control={form.control}
-                  name="password"
+                  name="userPassword"
                   render={({ field }) => (
                     <FormItem className="">
                       <FormLabel>Password</FormLabel>
                       <FormControl className="">
-                        <Input
-                          {...field}
-                          className="capitalize"
-                          disabled={isEdit}
-                        />
+                        <Input {...field} className="capitalize" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-              </div>
+              </div> */}
             </div>
           )}
         </div>

@@ -182,83 +182,59 @@ export default function EditApplication({
   };
 
   return (
-    <div className="flex-1 flex flex-col bg-background rounded-t-lg overflow-auto p-4 gap-8">
-      <TitleReusable
-        title="Update rejected documents"
-        description={`You need to resubmit ${
-          Object.keys(rejectedDocuments).length
-        } rejected document(s).`}
-        Icon={PenLine}
-      />
-
-      <Form {...form}>
+    <div className="flex-1 flex flex-col   overflow-auto">
+      <div className="flex-1 bg-background rounded-t-lg lg:p-4 p-2">
+        <TitleReusable
+          title="Update rejected documents"
+          description={`You need to resubmit ${
+            Object.keys(rejectedDocuments).length
+          } rejected document(s).`}
+        />
         <div className="flex-1 grid lg:grid-cols-2 grid-cols-1 gap-5">
-          {Object.values(rejectedDocuments).map((doc, index) => {
-            const userDoc = data.userDocuments[doc.label];
-            const rejectMessage = userDoc?.rejectMessage?.comment;
+          <Form {...form}>
+            {Object.values(rejectedDocuments).map((doc, index) => {
+              const userDoc = data.userDocuments[doc.label];
+              const rejectMessage = userDoc?.rejectMessage?.comment;
 
-            return (
-              <FormField
-                key={doc.label}
-                control={form.control}
-                name={doc.label as keyof FormData}
-                render={() => (
-                  <FormItem>
-                    <div className="space-y-4 rounded-md p-4 bg-card ">
-                      <div className="space-y-1">
-                        <FormLabel className="flex items-center justify-between">
-                          <div className="flex gap-2 items-center">
-                            <span className="text-base font-medium">
-                              {doc.label}
-                            </span>
-                            <Badge className="text-xs bg-red-800/20 text-red-700">
-                              REJECTED
-                            </Badge>
-                            <Badge
-                              className={`text-xs capitalize ${
-                                doc.requirementType === "required"
-                                  ? "bg-red-800/20 text-red-700"
-                                  : "bg-blue-800/20 text-blue-700"
-                              }`}
-                            >
-                              {doc.requirementType}
-                            </Badge>
-                          </div>
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                            {doc.formats.map((format) => (
-                              <span key={format}>
-                                {mimeToLabelMap[format] || format}
+              return (
+                <FormField
+                  key={doc.label}
+                  control={form.control}
+                  name={doc.label as keyof FormData}
+                  render={() => (
+                    <FormItem>
+                      <div className="space-y-3">
+                        <div className="space-y-1">
+                          <FormLabel className="flex items-center justify-between">
+                            <div className="flex gap-2 items-center">
+                              <span className="text-base font-medium">
+                                {doc.label}
                               </span>
-                            ))}
-                          </div>
-                        </FormLabel>
-                        {rejectMessage && (
-                          <div className="text-sm text-red-600  p-2 rounded">
-                            <strong>Rejection reason:</strong> {rejectMessage}
-                          </div>
-                        )}
+                            </div>
+                          </FormLabel>
+                        </div>
+                        <FormControl>
+                          <DragAndDropArea
+                            label={doc.label}
+                            accept={doc.formats}
+                            initialImageUrl={userDoc?.fileUrl}
+                            onFilesChange={(files) =>
+                              handleFilesChange(doc.label, files)
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
                       </div>
-                      <FormControl>
-                        <DragAndDropArea
-                          label={doc.label}
-                          accept={doc.formats}
-                          initialImageUrl={userDoc?.fileUrl}
-                          onFilesChange={(files) =>
-                            handleFilesChange(doc.label, files)
-                          }
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </div>
-                  </FormItem>
-                )}
-              />
-            );
-          })}
+                    </FormItem>
+                  )}
+                />
+              );
+            })}
+          </Form>
         </div>
-      </Form>
+      </div>
 
-      <div className="pt-4 border-t bg-background/40 flex gap-3">
+      <div className="lg:p-4 p-2 sticky bottom-0 border-t bg-background/40 flex gap-3">
         <DeleteDialog
           open={openAlert}
           onOpenChange={setOpenAlert}

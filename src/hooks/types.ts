@@ -35,24 +35,51 @@ export type EditScholarshipTypes = {
 export type UserProfileTypes = {
   userId: string;
   userPassword: string;
-  //Personal
+
+  // Personal
   firstName: string;
   middleName: string;
   lastName: string;
   gender: string;
   dateOfBirth: string;
-  //Contact
+
+  // Contact
   studentEmail: string;
   contactNumber: string;
   address: string;
-  //Academic
+
+  // Academic
   studentId: string;
   password: string;
   course: string;
   year: string;
   section: string;
+  fatherFullName: string;
+  fatherAddress: string;
+  fatherContactNumber: string;
+  fatherOccupation: string;
+  fatherHighestEducation: string;
+  fatherStatus: string;
+  fatherTotalParentsTaxableIncome: string;
+
+  // Family - Mother
+  motherFullName: string;
+  motherAddress: string;
+  motherContactNumber: string;
+  motherOccupation: string;
+  motherHighestEducation: string;
+  motherStatus: string;
+  motherTotalParentsTaxableIncome: string;
+
+  // Family - Guardian
+  guardianFullName: string;
+  guardianAddress: string;
+  guardianContactNumber: string;
+  guardianOccupation: string;
+  guardianHighestEducation: string;
+  guardianStatus: string;
 };
-export type AdminProfileTypes = {
+type AdminProfileTypes = {
   adminId: string;
   cloudinaryId: string;
   dateCreate: string;

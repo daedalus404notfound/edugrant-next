@@ -45,6 +45,7 @@ import {
 import TitleReusable from "@/components/ui/title";
 import {
   ArrowRight,
+  ArrowRightIcon,
   Building,
   Calendar,
   Check,
@@ -52,6 +53,7 @@ import {
   CircleAlert,
   CircleCheck,
   CircleCheckIcon,
+  CircleX,
   Clock,
   Download,
   Edit,
@@ -166,99 +168,170 @@ export default function InterceptManageApplicationClient() {
       }}
     >
       <DrawerContent className="lg:w-[56%] w-[98%] mx-auto lg:h-[95dvh] h-[90dvh] outline-0 border-0 lg:p-1">
-        <DrawerHeader className="sr-only">
-          <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
-          <DrawerDescription>This action cannot be undone.</DrawerDescription>
+        <DrawerHeader className="p-0">
+          <div className="sr-only">
+            <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
+            <DrawerDescription>This action cannot be undone.</DrawerDescription>
+          </div>
+          {data[0]?.status === "DECLINED" && (
+            <div className="relative z-20 dark bg-red-800 text-foreground px-4 py-3">
+              <div className="flex flex-col justify-between gap-2 md:flex-row">
+                <div className="flex grow gap-3">
+                  <CircleX
+                    className="mt-0.5 shrink-0 opacity-60"
+                    size={16}
+                    aria-hidden="true"
+                  />
+                  <div className="flex grow flex-col justify-between gap-2 md:flex-row md:items-center">
+                    <p className="text-sm">
+                      Your{" "}
+                      <strong>{data[0].scholarship.scholarshipTitle}</strong>{" "}
+                      application has been
+                      <strong> Rejected</strong>.
+                    </p>
+                    <div className="group text-sm font-medium whitespace-nowrap underline" onClick={()=> setEdit(true)}>
+                      Re-Apply
+                      <ArrowRightIcon
+                        className="ms-2 -mt-0.5 inline-flex opacity-60 transition-transform group-hover:translate-x-0.5"
+                        size={16}
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {data[0]?.status === "BLOCKED" && (
+            <div className=" px-4 py-3 text-white bg-amber-700 dark:bg-amber-800">
+              <p className="lg:text-sm text-xs">
+                <TriangleAlert
+                  className="lg:me-3 me-1 -mt-0.5 inline-flex opacity-60"
+                  size={16}
+                  aria-hidden="true"
+                />
+                Your {data[0].scholarship.scholarshipTitle} application was
+                blocked because you already have an approved
+                <strong> government </strong>
+                scholarship.
+              </p>
+            </div>
+          )}
+          {data[0]?.status === "APPROVED" && (
+            <div className=" flex gap-2 items-center px-4 py-3 bg-green-700">
+              <CheckCircle
+                className="lg:me-3 me-1 -mt-0.5 inline-flex opacity-60"
+                size={16}
+                aria-hidden="true"
+              />
+              <p className="lg:text-sm text-xs">
+                Your <strong>{data[0].scholarship.scholarshipTitle}</strong>{" "}
+                application has been
+                <strong> approved</strong>.
+              </p>
+            </div>
+          )}
+          {data[0]?.status === "REVIEWED" && (
+            <div className="px-4 py-3 bg-blue-800">
+              <p className="lg:text-sm text-xs">
+                <CheckCircle
+                  className="lg:me-3 me-1 -mt-0.5 inline-flex opacity-60"
+                  size={16}
+                  aria-hidden="true"
+                />
+                Your <strong>{data[0].scholarship.scholarshipTitle}</strong>{" "}
+                documents have been <strong>reviewed</strong> and are awaiting
+                final checking.
+              </p>
+            </div>
+          )}
         </DrawerHeader>
         {edit ? (
           <EditApplication data={data[0]} setEdit={setEdit} />
+        ) : loading ? (
+          <>loading</>
         ) : (
-          <div className="flex-1 flex flex-col bg-background rounded-t-lg overflow-auto no-scrollbar ">
-            <div className="flex-1 lg:p-4 p-2 lg:space-y-8 space-y-5">
-              {data[0]?.status === "DECLINED" && (
-                <div className="rounded-md  px-4 py-3 bg-red-800">
-                  <p className="lg:text-sm text-xs">
-                    <CircleAlert
-                      className="lg:me-3 me-1 -mt-0.5 inline-flex opacity-60"
-                      size={16}
-                      aria-hidden="true"
+          <div className="flex-1 flex flex-col bg-background overflow-auto ">
+            <div className="flex-1 space-y-1 ">
+              <div className="relative flex justify-center items-center ">
+                <div className="absolute inset-0border-b-2 border-black bg-card" />
+                <div className="absolute left-2 -bottom-15 z-10 lg:px-8  px-2 flex  items-center ">
+                  <Avatar className="lg:size-25 size-20 border-background border-2 shadow-md">
+                    <AvatarImage
+                      className="object-cover"
+                      src={data[0]?.scholarship.scholarshipLogo}
                     />
-                    Some documents were rejected. Please review the feedback
-                    below and resubmit the required documents to continue your
-                    application.
-                  </p>
+                    <AvatarFallback>
+                      {data[0]?.scholarship.scholarshipProvider.slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
                 </div>
-              )}
-              {data[0]?.status === "BLOCKED" && (
-                <div className="rounded-md  px-4 py-3  bg-amber-900">
-                  <p className="lg:text-sm text-xs">
-                    <TriangleAlert
-                      className="lg:me-3 me-1 -mt-0.5 inline-flex opacity-60"
-                      size={16}
-                      aria-hidden="true"
+                {data[0].scholarship.scholarshipCover && (
+                  <img
+                    className="w-full lg:aspect-[16/4] aspect-[16/9]  object-cover   rounded-lg shadow-md"
+                    src={data[0].scholarship.scholarshipCover}
+                    alt=""
+                  />
+                )}
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="absolute z-5  !bg-black/60 !text-gray-200"
+                      size="sm"
+                    >
+                      View <Maximize />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="lg:w-3/4 w-full p-4">
+                    <img
+                      className="h-full w-full"
+                      src={data[0]?.scholarship.scholarshipCover}
+                      alt=""
                     />
-                    Your {data[0].scholarship.scholarshipTitle} application was
-                    blocked because you already have an approved
-                    <strong> government </strong>
-                    scholarship.
-                  </p>
-                </div>
-              )}
-              {data[0]?.status === "APPROVED" && (
-                <div className="rounded-md  flex gap-2 items-center px-4 py-3 bg-green-900 text-white">
-                  <CheckCircle
-                    className="lg:me-3 me-1 -mt-0.5 inline-flex opacity-60"
-                    size={16}
-                    aria-hidden="true"
-                  />
-                  <p className="lg:text-sm text-xs">
-                    Your <strong>{data[0].scholarship.scholarshipTitle}</strong>{" "}
-                    application has been
-                    <strong> approved</strong>.
-                  </p>
-                </div>
-              )}
-              {data[0]?.status === "REVIEWED" && (
-                <div className="rounded-md px-4 py-3 bg-blue-800">
-                  <p className="lg:text-sm text-xs">
-                    <CheckCircle
-                      className="lg:me-3 me-1 -mt-0.5 inline-flex opacity-60"
-                      size={16}
-                      aria-hidden="true"
-                    />
-                    Your <strong>{data[0].scholarship.scholarshipTitle}</strong>{" "}
-                    documents have been <strong>reviewed</strong> and are
-                    awaiting final checking.
-                  </p>
-                </div>
-              )}
-              {/* <div className="rounded-md border border-emerald-500/50 px-4 py-3 text-emerald-600">
-                <p className="text-sm">
-                  <CircleCheckIcon
-                    className="me-3 -mt-0.5 inline-flex opacity-60"
-                    size={16}
-                    aria-hidden="true"
-                  />
-                  Completed successfully!
-                </p>
-              </div> */}
-              <div className="">
-                <Avatar className="lg:size-25 size-20">
-                  <AvatarImage
-                    className="object-cover"
-                    src={data[0]?.scholarship.scholarshipLogo}
-                  />
-                  <AvatarFallback>
-                    {data[0]?.scholarship.scholarshipProvider.slice(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
-                <TitleReusable
-                  title={data[0]?.scholarship.scholarshipTitle}
-                  description={data[0]?.scholarship.scholarshipProvider}
-                />
+                    <Link
+                      className="w-full"
+                      href={
+                        (data[0]?.scholarship.scholarshipCover &&
+                          data[0]?.scholarship.scholarshipCover) ||
+                        ""
+                      }
+                      target="_blank"
+                    >
+                      <Button variant="secondary" className="w-full">
+                        <Download />
+                        Download
+                      </Button>
+                    </Link>
+                  </DialogContent>
+                </Dialog>
               </div>
 
-              <div>
+              <div className="lg:p-4 p-2 mt-15">
+                <div className="lg:space-y-1">
+                  <motion.span
+                    className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
+                                                 flex items-center gap-1.5 lg:text-2xl text-xl font-semibold tracking-tight
+                                                "
+                    initial={{ backgroundPosition: "200% 0" }}
+                    animate={{ backgroundPosition: "-200% 0" }}
+                    transition={{
+                      repeat: Infinity,
+                      repeatType: "loop",
+                      duration: 7,
+                      ease: "linear",
+                    }}
+                  >
+                    {data[0]?.scholarship.scholarshipTitle}
+                    <Badge className="tracking-wide capitalize">
+                      {data[0]?.status.toLowerCase()}
+                    </Badge>
+                  </motion.span>
+                  <p className="text-muted-foreground text-sm">
+                    by {data[0]?.scholarship.scholarshipProvider}
+                  </p>
+                </div>
                 <Accordion type="single" collapsible>
                   <AccordionItem value="item-1">
                     <AccordionTrigger className="text-base">
@@ -360,7 +433,10 @@ export default function InterceptManageApplicationClient() {
                         {data?.[0]?.userDocuments &&
                           Object.entries(data[0].userDocuments).map(
                             ([key, doc]) => (
-                              <div key={key} className="lg:py-10 py-8 space-y-2">
+                              <div
+                                key={key}
+                                className="lg:py-10 py-8 space-y-2"
+                              >
                                 <div className="flex lg:gap-5 gap-3">
                                   <ApplicationViewer
                                     fileFormat={mimeToLabelMap[doc.fileFormat]}
@@ -373,7 +449,7 @@ export default function InterceptManageApplicationClient() {
                                   <div className="flex-1 flex flex-col lg:justify-end justify-between gap-5 relative">
                                     <DropdownMenu>
                                       <DropdownMenuTrigger className="absolute top-0 right-0">
-                                        <MoreVertical  size={20}/>
+                                        <MoreVertical size={20} />
                                       </DropdownMenuTrigger>
                                       <DropdownMenuContent align="end">
                                         <DropdownMenuLabel className="line-clamp-1">
@@ -588,8 +664,8 @@ export default function InterceptManageApplicationClient() {
               </div>
             </div>
 
-            {data[0]?.status === "DECLINED" && (
-              <div className="bg-background/70 backdrop-blur-sm space-y-3  sticky bottom-0 p-4 border-t z-50 ">
+            {/* {data[0]?.status === "DECLINED" && (
+              <div className="bg-background/70 backdrop-blur-sm space-y-3  sticky bottom-0 lg:p-4 p-2 border-t z-50 ">
                 <div className="flex gap-3">
                   {" "}
                   <Button
@@ -602,7 +678,7 @@ export default function InterceptManageApplicationClient() {
                   </Button>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
         )}
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>

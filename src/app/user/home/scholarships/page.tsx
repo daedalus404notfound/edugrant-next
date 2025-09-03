@@ -49,6 +49,7 @@ import Link from "next/link";
 const tabs = [
   { id: "ACTIVE", label: "Active", indicator: null },
   { id: "EXPIRED", label: "Expired", indicator: null },
+  { id: "BLOCKED", label: "Blocked", indicator: null },
 ];
 const scholarshipTypes = [
   { label: "Government", value: "government", icon: Building2 },
@@ -69,6 +70,7 @@ import { DataTableFacetedFilterClient } from "./faceted";
 import TitleReusable from "@/components/ui/title";
 import { format } from "date-fns";
 import NoDataFound from "@/components/ui/nodata";
+import { useUserStore } from "@/store/useUserStore";
 export default function ClientScholarship() {
   const [currentPage] = useState(1);
   const [rowsPerPage] = useState(20);
@@ -86,7 +88,7 @@ export default function ClientScholarship() {
       value: meow,
       icon: PhilippinePeso,
     })) ?? [];
-
+  const { user } = useUserStore();
   const formatFilters = () => {
     const filterArray: Filter[] = [];
 
@@ -151,7 +153,11 @@ export default function ClientScholarship() {
   return (
     <TourProvider steps={scholarshipTourSteps}>
       <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-        <div className="absolute inset-0 z-20 bg-black/80 pointer-events-none"></div>
+        {user?.familyBackground.fatherFullName === "" ? (
+          <div className="absolute inset-0 z-20 bg-black/80 "></div>
+        ) : (
+          ""
+        )}
         <div className="mx-auto w-[95%] lg:pt-10  pt-3">
           <div className="flex justify-between items-end">
             <TitleReusable
@@ -161,36 +167,41 @@ export default function ClientScholarship() {
             />
           </div>
           <div className="py-8 space-y-8">
-            <div className="relative z-20 dark bg-muted rounded-md text-foreground px-4 py-3">
-              <div className="flex flex-col justify-between gap-2 md:flex-row">
-                <div className="flex grow gap-3">
-                  <Lock
-                    className="mt-0.5 shrink-0 opacity-60"
-                    size={16}
-                    aria-hidden="true"
-                  />
-                  <div className="flex grow flex-col justify-between gap-2 md:flex-row md:items-center">
-                    <p className="text-sm">
-                      Please complete your profile details to unlock the
-                      scholarship and apply.
-                    </p>
-                    <Link
-                      href="/user/home/profile"
-                      prefetch={true}
-                      scroll={false}
-                      className="group text-sm font-medium whitespace-nowrap underline"
-                    >
-                      View Profile
-                      <ArrowRightIcon
-                        className="ms-2 -mt-0.5 inline-flex opacity-60 transition-transform group-hover:translate-x-0.5"
-                        size={16}
-                        aria-hidden="true"
-                      />
-                    </Link>
+            {user?.familyBackground.fatherFullName === "" ? (
+              <div className=" z-20 dark bg-muted rounded-md text-foreground px-4 py-3 sticky top-20">
+                <div className="flex flex-col justify-between gap-2 md:flex-row">
+                  <div className="flex grow gap-3">
+                    <Lock
+                      className="mt-0.5 shrink-0 opacity-60"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                    <div className="flex grow flex-col justify-between gap-2 md:flex-row md:items-center">
+                      <p className="text-sm">
+                        Please complete your profile details to unlock the
+                        scholarship and apply.
+                      </p>
+                      <Link
+                        href="/user/home/profile"
+                        prefetch={true}
+                        scroll={false}
+                        className="group text-sm font-medium whitespace-nowrap underline"
+                      >
+                        View Profile
+                        <ArrowRightIcon
+                          className="ms-2 -mt-0.5 inline-flex opacity-60 transition-transform group-hover:translate-x-0.5"
+                          size={16}
+                          aria-hidden="true"
+                        />
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              ""
+            )}
+
             <div className="flex flex-col lg:flex-row justify-between  w-full gap-3">
               <div className="flex items-center  gap-3 flex-col lg:flex-row">
                 <div className=" flex gap-2 w-full">
