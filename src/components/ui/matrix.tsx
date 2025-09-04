@@ -54,16 +54,7 @@ export const CanvasRevealEffect = ({
         />
       </div>
       {showGradient && (
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `
-      radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%),
-      linear-gradient(to top, rgba(0, 0, 0, 1), transparent, rgba(0, 0, 0, 1))
-      
-    `,
-          }}
-        />
+        <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,1),transparent,rgba(0,0,0,1)),linear-gradient(to_left,transparent,rgba(0,0,0,1))]" />
       )}
     </div>
   );

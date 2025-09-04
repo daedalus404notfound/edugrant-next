@@ -12,7 +12,7 @@ import DynamicHeaderAdmin from "./admin-header";
 import { usePathname } from "next/navigation";
 
 export default function Home({ children, modal }: DashboardLayoutProps) {
-  useAuthenticatedUser();
+ useAuthenticatedUser();
   const path = usePathname();
   const segmentedPath = path.split("/");
 

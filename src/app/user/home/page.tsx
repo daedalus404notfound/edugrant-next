@@ -2,10 +2,10 @@
 
 import ApplicationSummary from "./dashboard/summary";
 import { Button } from "@/components/ui/button";
-import { TourProvider } from "@/components/tour/tour-provider";
-import { TourStep } from "@/components/tour/tour-step";
-import { TourTrigger } from "@/components/tour/tour-trigger";
-import type { TourStep as TourStepType } from "@/lib/use-tour";
+// import { TourProvider } from "@/components/tour/tour-provider";
+// import { TourStep } from "@/components/tour/tour-step";
+// import { TourTrigger } from "@/components/tour/tour-trigger";
+// import type { TourStep as TourStepType } from "@/lib/use-tour";
 import {
   Timeline,
   TimelineContent,

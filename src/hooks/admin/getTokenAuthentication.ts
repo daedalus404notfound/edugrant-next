@@ -1,10 +1,13 @@
 "use client";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAdminStore } from "@/store/adminUserStore";
+import { useRouter } from "next/navigation";
 
 export default function useAuthenticatedUser() {
   const { setAdmin, setLoading, setError } = useAdminStore();
+  const router = useRouter();
+  const [success, setSucces] = useState(false);
 
   useEffect(() => {
     async function fetchUserData() {
@@ -19,14 +22,13 @@ export default function useAuthenticatedUser() {
 
         if (res.status === 200) {
           setAdmin(res.data.user[0]);
-        
+          // router.push("/administrator/home");
+          setSucces(true);
         }
       } catch (error) {
-        if (axios.isAxiosError(error) && error.message === "Network Error") {
-          setError("No network connection");
-        } else {
-          setError("Failed to fetch user data");
-        }
+        console.error(error);
+        setSucces(false);
+        // router.push("/administrator");
       } finally {
         setLoading(false);
       }
@@ -35,5 +37,5 @@ export default function useAuthenticatedUser() {
     fetchUserData();
   }, [setAdmin, setLoading, setError]);
 
-  return null;
+  return { success };
 }

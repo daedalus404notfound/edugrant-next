@@ -102,7 +102,7 @@ export default function ChartAreaInteractive() {
   const [selectedScholarship, setSelectedScholarship] = React.useState(
     "Academic Excellence Scholarship"
   );
-  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+ 
 
   const scholarshipNames = Object.keys(scholarshipData);
   const chartData = scholarshipData[selectedScholarship];
@@ -152,7 +152,7 @@ export default function ChartAreaInteractive() {
         >
           <AreaChart
             data={chartData}
-            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+            margin={{bottom: 5 }}
           >
             <defs>
               <linearGradient id="fillApplications" x1="0" y1="0" x2="0" y2="1">

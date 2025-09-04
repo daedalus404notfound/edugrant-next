@@ -377,8 +377,8 @@ export default function ClientScholarship() {
                             </div>
 
                             <div className="flex items-center justify-between text-sm text-muted-foreground ">
-                              <Badge variant="outline" className="">
-                                GOVERNMENT
+                              <Badge variant="outline" className="uppercase">
+                                {scholarship.scholarshipType}
                               </Badge>
                               <span>
                                 Deadline:{" "}

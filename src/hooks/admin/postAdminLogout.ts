@@ -18,7 +18,7 @@ export function useAdminLogout() {
       });
 
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_ADMIN_API}/adminLogout`,
+        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/adminLogout`,
         {},
         { withCredentials: true }
       );
