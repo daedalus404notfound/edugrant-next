@@ -56,42 +56,13 @@ export const useSendAuthCode = () => {
       });
     },
     onError: (error: ApiError) => {
-      console.error("Auth code error:", error);
-
-      if (error.response?.status === 401) {
+      console.error("Add scholarship error:", error);
+      if (error.response?.data.message) {
         StyledToast({
           status: "error",
-          title: "Invalid Credentials",
+          title: error.response.data.message,
           duration: 10000,
-          description: "Please double-check your Student ID and password.",
-        });
-      } else if (error.response?.status === 429) {
-        StyledToast({
-          status: "error",
-          title: "Too Many Attempts",
-          duration: 10000,
-          description: "Please wait a moment before requesting another code.",
-        });
-      } else if (error.response?.status === 404) {
-        StyledToast({
-          status: "error",
-          title: "Account Not Found",
-          duration: 10000,
-          description: "No account exists with that Student ID.",
-        });
-      } else if (error.code === "NETWORK_ERROR" || !navigator.onLine) {
-        StyledToast({
-          status: "error",
-          title: "Connection Problem",
-          duration: 10000,
-          description: "Please check your internet connection and try again.",
-        });
-      } else {
-        StyledToast({
-          status: "error",
-          title: "Unable to Send Code",
-          duration: 10000,
-          description: "Something went wrong. Please try again in a moment.",
+          description: "Cannot process your request.",
         });
       }
     },
@@ -111,45 +82,13 @@ export const useVerifyLogin = () => {
       // console.log("login:", data);
     },
     onError: (error: ApiError) => {
-      console.error("Login verification error:", error);
-
-      if (error.response?.status === 401) {
+      console.error("Add scholarship error:", error);
+      if (error.response?.data.message) {
         StyledToast({
           status: "error",
-          title: "Invalid Verification Code",
+          title: error.response.data.message,
           duration: 10000,
-          description: "Please check the 6-digit code sent to your email.",
-        });
-      } else if (error.response?.status === 410) {
-        StyledToast({
-          status: "error",
-          title: "Code Expired",
-          duration: 10000,
-          description:
-            "Your verification code has expired. Please request a new one.",
-        });
-      } else if (error.response?.status === 429) {
-        StyledToast({
-          status: "error",
-          title: "Too Many Attempts",
-          duration: 10000,
-          description:
-            "Too many failed attempts. Please wait before trying again.",
-        });
-      } else if (error.code === "NETWORK_ERROR" || !navigator.onLine) {
-        StyledToast({
-          status: "error",
-          title: "Connection Issue",
-          duration: 10000,
-          description:
-            "Network error. Please check your connection and try again.",
-        });
-      } else {
-        StyledToast({
-          status: "error",
-          title: "Verification Failed",
-          duration: 10000,
-          description: "Unable to verify your code. Please try again.",
+          description: "Cannot process your request.",
         });
       }
     },
@@ -169,11 +108,6 @@ export const useLoginHandler = () => {
   // Handle first login (username + password)
   const handleLogin = async (data: LoginFormData) => {
     // Show loading toast while processing
-    StyledToast({
-      status: "checking",
-      title: "Sending Code...",
-      description: "Please wait while we send your verification code.",
-    });
 
     try {
       const result = await sendAuthCode.mutateAsync(data);
@@ -190,11 +124,6 @@ export const useLoginHandler = () => {
   // Handle OTP verification
   const handleOtpVerification = async (otpData: otpFormData) => {
     // Show loading toast while verifying
-    StyledToast({
-      status: "checking",
-      title: "Verifying Code...",
-      description: "Please wait while we verify your login.",
-    });
 
     try {
       const result = await verifyLogin.mutateAsync({

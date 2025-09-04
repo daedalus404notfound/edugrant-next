@@ -239,8 +239,15 @@ text-5xl  zxczxc tracking-[-8px] bg-amber-400
                       transition={{ duration: 0.6, delay: 0.5 }}
                       className="flex flex-col  gap-2"
                     >
-                      <Button type="submit" className="w-full">
-                        Login
+                      <Button type="submit" className="w-full" disabled={authLoading}>
+                        {authLoading ? (
+                          <>
+                            Logging in...
+                            <Loader className="animate-spin" />
+                          </>
+                        ) : (
+                          "Login"
+                        )}
                       </Button>
                     </motion.div>
                     <motion.div
