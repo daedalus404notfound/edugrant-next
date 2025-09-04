@@ -22,13 +22,13 @@ export default function useAuthenticatedUser() {
 
         if (res.status === 200) {
           setAdmin(res.data.user[0]);
-          // router.push("/administrator/home");
+          router.push("/administrator/home");
           setSucces(true);
         }
       } catch (error) {
         console.error(error);
         setSucces(false);
-        // router.push("/administrator");
+        router.push("/administrator");
       } finally {
         setLoading(false);
       }
