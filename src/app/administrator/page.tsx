@@ -133,8 +133,8 @@ text-5xl  zxczxc tracking-[-8px] bg-amber-400
       </div>
       {state === "login" && (
         <div className="flex flex-col gap-4 p-6 md:p-10 bg-card">
-          <div className="flex flex-1 items-center justify-center">
-            {step === "login" && (
+          {step === "login" && (
+            <div className="flex flex-1 items-center justify-center">
               <div className="w-full max-w-md">
                 <form
                   onSubmit={LoginForm.handleSubmit(handleLogin)}
@@ -273,110 +273,114 @@ text-5xl  zxczxc tracking-[-8px] bg-amber-400
                   </div>
                 </form>
               </div>
-            )}
-            {step === "otp" && (
-              <Form {...otpForm}>
-                <motion.div
-                  className="flex justify-between items-center"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 0.3 }}
-                >
-                  <div>
-                    <h1 className="text-xl font-semibold">
-                      Email Verification
-                    </h1>
-                    <p className="text-sm text-muted-foreground">
-                      Enter 6-digit verification code sent to your email.
-                    </p>
-                  </div>
-                  <MailCheck size={40} strokeWidth={1.5} />
-                </motion.div>
-
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className=" mt-5"
-                >
-                  <FormField
-                    control={otpForm.control}
-                    name="otp"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel></FormLabel>
-                        <FormControl>
-                          <div className="flex items-center">
-                            <InputOTP
-                              maxLength={6}
-                              value={field.value}
-                              onChange={(value) => {
-                                field.onChange(value);
-                              }}
-                              disabled={verifyLoading}
-                            >
-                              <InputOTPGroup>
-                                <InputOTPSlot index={0} />
-                                <InputOTPSlot index={1} />
-                                <InputOTPSlot index={2} />
-                                <InputOTPSlot index={3} />
-                                <InputOTPSlot index={4} />
-                                <InputOTPSlot index={5} />
-                              </InputOTPGroup>
-                            </InputOTP>
-                          </div>
-                        </FormControl>
-                        <FormMessage className="text-center" />
-                      </FormItem>
-                    )}
-                  />
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
-                  className=" mt-5"
-                >
-                  <Button
-                    className="w-full"
-                    onClick={otpForm.handleSubmit(handleOtpVerification)}
-                    disabled={verifyLoading}
-                    variant={verifyLoading ? "outline" : "default"}
+            </div>
+          )}
+          {step === "otp" && (
+            <div className="flex flex-1 items-center justify-center">
+              <div className="w-md">
+                <Form {...otpForm}>
+                  <motion.div
+                    className="flex justify-between items-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
                   >
-                    {verifyLoading ? (
-                      <>
-                        Logging In...
-                        <LoaderCircleIcon
-                          className="-ms-1 animate-spin"
-                          size={16}
-                          aria-hidden="true"
-                        />
-                      </>
-                    ) : (
-                      <>
-                        Login
-                        <ArrowRight />
-                      </>
-                    )}
-                  </Button>
-                </motion.div>
+                    <div>
+                      <h1 className="text-xl font-semibold">
+                        Email Verification
+                      </h1>
+                      <p className="text-sm text-muted-foreground">
+                        Enter 6-digit verification code sent to your email.
+                      </p>
+                    </div>
+                    <MailCheck size={40} strokeWidth={1.5} />
+                  </motion.div>
 
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                  className="relative flex justify-center items-center gap-3 mt-5"
-                >
-                  <div className=" border-b flex-1"></div>
-                  <Label>
-                    Didn&apos;t get the code?{" "}
-                    <span className="underline">Resend Now</span>
-                  </Label>
-                  <div className=" border-b flex-1"></div>
-                </motion.div>
-              </Form>
-            )}
-          </div>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                    className=" mt-5"
+                  >
+                    <FormField
+                      control={otpForm.control}
+                      name="otp"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel></FormLabel>
+                          <FormControl>
+                            <div className="flex items-center">
+                              <InputOTP
+                                maxLength={6}
+                                value={field.value}
+                                onChange={(value) => {
+                                  field.onChange(value);
+                                }}
+                                disabled={verifyLoading}
+                              >
+                                <InputOTPGroup>
+                                  <InputOTPSlot index={0} />
+                                  <InputOTPSlot index={1} />
+                                  <InputOTPSlot index={2} />
+                                  <InputOTPSlot index={3} />
+                                  <InputOTPSlot index={4} />
+                                  <InputOTPSlot index={5} />
+                                </InputOTPGroup>
+                              </InputOTP>
+                            </div>
+                          </FormControl>
+                          <FormMessage className="text-center" />
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                    className=" mt-5"
+                  >
+                    <Button
+                      className="w-full"
+                      onClick={otpForm.handleSubmit(handleOtpVerification)}
+                      disabled={verifyLoading}
+                      variant={verifyLoading ? "outline" : "default"}
+                    >
+                      {verifyLoading ? (
+                        <>
+                          Logging In...
+                          <LoaderCircleIcon
+                            className="-ms-1 animate-spin"
+                            size={16}
+                            aria-hidden="true"
+                          />
+                        </>
+                      ) : (
+                        <>
+                          Login
+                          <ArrowRight />
+                        </>
+                      )}
+                    </Button>
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.6 }}
+                    className="relative flex justify-center items-center gap-3 mt-5"
+                  >
+                    <div className=" border-b flex-1"></div>
+                    <Label>
+                      Didn&apos;t get the code?{" "}
+                      <span className="underline">Resend Now</span>
+                    </Label>
+                    <div className=" border-b flex-1"></div>
+                  </motion.div>
+                </Form>
+              </div>
+            </div>
+          )}
         </div>
       )}
       {state === "register" && (
