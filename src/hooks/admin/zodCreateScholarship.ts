@@ -22,6 +22,7 @@ export const createScholarshipSchema = z.object({
     message: "Required",
   }),
   scholarshipAmount: z.string().min(1, "Required"),
+  forInterview: z.boolean(),
   scholarshipLimit: z.string(),
   detailsImage: z
     .any()
@@ -61,6 +62,7 @@ export function useCreateScholarshipZod() {
       providerName: "",
       scholarshipGwa: "",
       scholarshipDescription: "",
+      forInterview: false,
       applicationDeadline: undefined,
       scholarshipAmount: "",
       scholarshipLimit: "",

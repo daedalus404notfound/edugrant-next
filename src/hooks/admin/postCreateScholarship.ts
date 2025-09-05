@@ -39,6 +39,10 @@ const addScholarshipApi = async (data: creatScholarshipFormData) => {
     formDataToSend.append("scholarshipLimit", data.scholarshipLimit);
   }
 
+  if (data.forInterview !== undefined) {
+    formDataToSend.append("isForInterview", data.forInterview.toString());
+  }
+
   if (data.detailsImage) {
     formDataToSend.append("coverImg", data.detailsImage);
   }

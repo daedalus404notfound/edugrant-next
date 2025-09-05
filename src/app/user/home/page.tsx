@@ -41,6 +41,7 @@ import useScholarshipData from "@/hooks/admin/getScholarship";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
+import { Progress } from "@/components/ui/progress";
 const announcements = [
   {
     id: 1,
@@ -273,7 +274,17 @@ export default function AdminDashboard() {
             </div>
           </div>
           <div className=" space-y-7">
-            <div className="grid lg:grid-cols-1 grid-cols-1 gap-5 ">
+            <div className="grid lg:grid-cols-1 grid-cols-1 gap-7 ">
+              <div className="p-4 border rounded-lg space-y-3 bg-card ">
+                <p>Complete your profile progress to unlock scholarships</p>
+                <div className="w-full flex items-center gap-5">
+                  <Progress className="flex-1" />
+                  <p>
+                    <span className="text-xl font-semibold">100</span> %
+                  </p>
+                </div>
+                <Button>Update Profile</Button>
+              </div>
               <Calendar
                 mode="single"
                 selected={date}

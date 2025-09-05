@@ -1,10 +1,20 @@
-import { JSX, useState } from "react";
+import { JSX } from "react";
 import { Ring } from "ldrs/react";
 import "ldrs/react/Ring.css";
 import { Button } from "@/components/ui/button";
 
-// Define types
-type ColorKey = "blue" | "green" | "yellow" | "white";
+// Extend color keys
+type ColorKey =
+  | "blue"
+  | "green"
+  | "yellow"
+  | "white"
+  | "red"
+  | "purple"
+  | "pink"
+  | "orange"
+  | "teal"
+  | "indigo";
 
 export interface SummaryCardProps {
   label: string;
@@ -32,6 +42,30 @@ const colorStyles: Record<ColorKey, { badge: string; text: string }> = {
   white: {
     badge: "bg-gray-800/10 text-gray-600",
     text: "text-gray-600",
+  },
+  red: {
+    badge: "bg-red-800/10 text-red-600",
+    text: "text-red-600",
+  },
+  purple: {
+    badge: "bg-purple-800/10 text-purple-600",
+    text: "text-purple-600",
+  },
+  pink: {
+    badge: "bg-pink-800/10 text-pink-600",
+    text: "text-pink-600",
+  },
+  orange: {
+    badge: "bg-orange-800/10 text-orange-600",
+    text: "text-orange-600",
+  },
+  teal: {
+    badge: "bg-teal-800/10 text-teal-600",
+    text: "text-teal-600",
+  },
+  indigo: {
+    badge: "bg-indigo-800/10 text-indigo-600",
+    text: "text-indigo-600",
   },
 };
 
