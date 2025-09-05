@@ -59,7 +59,6 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import basc from "@/assets/BASCjf5989_03 copy.jpg";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
@@ -78,17 +77,13 @@ export default function RegisterStudent() {
   };
   const {
     step,
-    // setStep,
     LoginForm,
-    // LoginData,
     loginOtpForm,
     handleLogin,
     handleOtpVerification,
     authLoading,
-    // authError,
+
     verifyLoading,
-    // verifyError,
-    // verifySuccess,
   } = useLoginHandler();
   const { remember, setRemember } = useRememberStore();
   const [hidden, setHidden] = useState(true);
