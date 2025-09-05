@@ -187,6 +187,7 @@
 import * as React from "react";
 import logo from "@/assets/basclogo.png";
 import {
+  Activity,
   BarChart,
   Bell,
   Bot,
@@ -196,6 +197,7 @@ import {
   UserCog,
   UserRound,
   UserRoundCog,
+  UsersRound,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { NavMain } from "./nav-main";
@@ -281,25 +283,6 @@ const data = {
         },
       ],
     },
-    {
-      title: "Admin Management",
-      url: "/administrator/home/admins",
-      icon: UserRoundCog,
-      sa: true,
-      items: [
-        { title: "Add New Admin", url: "/administrator/home/admins/create" },
-        { title: "View Admins", url: "/administrator/home/admins/manage" },
-      ],
-    },
-    {
-      title: "Reports",
-      url: "/administrator/home/reports",
-      icon: BarChart,
-      items: [
-        { title: "Overview", url: "/administrator/home/reports/overview" },
-        { title: "Statistics", url: "/administrator/home/reports/statistics" },
-      ],
-    },
   ],
 };
 const sidebarData = [
@@ -309,14 +292,20 @@ const sidebarData = [
     icon: Home,
   },
   {
-    title: "Profile",
-    url: "/administrator/home/admin",
+    title: "View Profile",
+    url: "/administrator/home/profile",
     icon: UserRound,
   },
+
   {
-    title: "Notification",
-    url: "/administrator/home/notification",
-    icon: Bell,
+    title: "View Staffs",
+    url: "/administrator/home/admins/manage",
+    icon: UsersRound,
+  },
+  {
+    title: "Reports & Statistics",
+    url: "/administrator/home/reports",
+    icon: Activity,
   },
 ];
 

@@ -1,6 +1,5 @@
 "use client";
 
-import ApplicationSummary from "./dashboard/summary";
 import { Button } from "@/components/ui/button";
 import { TourProvider } from "@/components/tour/tour-provider";
 import { TourStep } from "@/components/tour/tour-step";
@@ -28,11 +27,13 @@ import {
   Calendar1,
   Calendar1Icon,
   CalendarIcon,
+  CheckCheck,
   GalleryVerticalEnd,
   Ghost,
   GraduationCap,
   Megaphone,
   Plus,
+  TrendingUp,
   UserRoundCog,
 } from "lucide-react";
 import { format } from "date-fns";
@@ -44,6 +45,37 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { ChartBarMultiple } from "./dashboard/bar";
 import ChartAreaInteractive from "./dashboard/area-chart";
+import { SummaryCard, SummaryCardProps } from "./dashboard/summary";
+const summaryCards: SummaryCardProps[] = [
+  {
+    label: "Total Applicants",
+    data: 1,
+    icon: <TrendingUp />,
+    color: "blue",
+    todayIncrement: 100,
+  },
+  {
+    label: "Approved Applicants",
+    data: 2,
+    icon: <CheckCheck />,
+    color: "green",
+    todayIncrement: 50,
+  },
+  {
+    label: "Active Scholarships",
+    data: 3,
+    icon: <GraduationCap />,
+    color: "yellow",
+    todayIncrement: 25,
+  },
+  {
+    label: "Pending Applications",
+    data: 4,
+    icon: <GraduationCap />,
+    color: "white",
+    todayIncrement: 10,
+  },
+];
 const announcements = [
   {
     id: 1,
@@ -116,7 +148,11 @@ export default function AdminDashboard() {
         </div>
         <div className=" grid lg:grid-cols-2 grid-cols-1 gap-5 ">
           <div className="  space-y-5 ">
-            <ApplicationSummary />
+            <div className="grid lg:grid-cols-2 grid-cols-1 lg:gap-3 gap-2">
+              {summaryCards.map((card, index) => (
+                <SummaryCard key={index} {...card} />
+              ))}
+            </div>
 
             <ChartAreaInteractive />
 

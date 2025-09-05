@@ -36,6 +36,7 @@ const sendAuthApi = async ({ personalData, accountData }: sendAuthData) => {
       studentId: accountData.studentId,
       studentEmail: accountData.email,
       studentPassword: accountData.password,
+      institute: accountData.institute,
       course: accountData.course,
       year: accountData.yearLevel,
       section: accountData.section,
@@ -93,42 +94,13 @@ export const useSendAuthCode = () => {
       });
     },
     onError: (error: ApiError) => {
-      console.error("Auth code error:", error);
-
-      if (error.response?.status === 401) {
+      console.error("Profile update error:", error);
+      if (error.response?.data.message) {
         StyledToast({
           status: "error",
-          title: "Invalid Credentials",
+          title: error.response.data.message,
           duration: 10000,
-          description: "Please double-check your Student ID and password.",
-        });
-      } else if (error.response?.status === 429) {
-        StyledToast({
-          status: "error",
-          title: "Too Many Attempts",
-          duration: 10000,
-          description: "Please wait a moment before requesting another code.",
-        });
-      } else if (error.response?.status === 404) {
-        StyledToast({
-          status: "error",
-          title: "Account Not Found",
-          duration: 10000,
-          description: "No account exists with that Student ID.",
-        });
-      } else if (error.code === "NETWORK_ERROR" || !navigator.onLine) {
-        StyledToast({
-          status: "error",
-          title: "Connection Problem",
-          duration: 10000,
-          description: "Please check your internet connection and try again.",
-        });
-      } else {
-        StyledToast({
-          status: "error",
-          title: "Unable to Send Code",
-          duration: 10000,
-          description: "Something went wrong. Please try again in a moment.",
+          description: "Cannot process your profile update request.",
         });
       }
     },
@@ -149,42 +121,13 @@ export const useVerifyRegister = () => {
       });
     },
     onError: (error: ApiError) => {
-      console.error("Auth code error:", error);
-
-      if (error.response?.status === 401) {
+      console.error("Profile update error:", error);
+      if (error.response?.data.message) {
         StyledToast({
           status: "error",
-          title: "Invalid Credentials",
+          title: error.response.data.message,
           duration: 10000,
-          description: "Please double-check your Student ID and password.",
-        });
-      } else if (error.response?.status === 429) {
-        StyledToast({
-          status: "error",
-          title: "Too Many Attempts",
-          duration: 10000,
-          description: "Please wait a moment before requesting another code.",
-        });
-      } else if (error.response?.status === 404) {
-        StyledToast({
-          status: "error",
-          title: "Account Not Found",
-          duration: 10000,
-          description: "No account exists with that Student ID.",
-        });
-      } else if (error.code === "NETWORK_ERROR" || !navigator.onLine) {
-        StyledToast({
-          status: "error",
-          title: "Connection Problem",
-          duration: 10000,
-          description: "Please check your internet connection and try again.",
-        });
-      } else {
-        StyledToast({
-          status: "error",
-          title: "Unable to Send Code",
-          duration: 10000,
-          description: "Something went wrong. Please try again in a moment.",
+          description: "Cannot process your profile update request.",
         });
       }
     },
@@ -195,7 +138,7 @@ export const useVerifyRegister = () => {
 
 export const useRegisterHandler = () => {
   const router = useRouter();
-  const [stepper, setStepper] = useState(3);
+  const [stepper, setStepper] = useState(1);
   const { personalForm, accountForm, otpForm, personalData, accountData } =
     useRegisterUser();
 
@@ -206,19 +149,13 @@ export const useRegisterHandler = () => {
     personalData,
     accountData,
   }: sendAuthData) => {
-    StyledToast({
-      status: "checking",
-      title: "Sending Code...",
-      description: "Please wait while we send your verification code.",
-    });
-
     try {
       const result = await sendAuthCode.mutateAsync({
         personalData,
         accountData,
       });
       if (result) {
-        setStepper(4);
+        setStepper(3);
       }
     } catch (error) {
       // Error toast is already handled in useSendAuthCode onError
@@ -226,11 +163,7 @@ export const useRegisterHandler = () => {
     }
   };
   const HandleOtpVerification = async (otpData: otpFormData) => {
-    StyledToast({
-      status: "checking",
-      title: "Verifying Code...",
-      description: "Please wait while we verify your registration.",
-    });
+  
     try {
       const result = await verifyRegister.mutateAsync({
         personalData,
@@ -299,7 +232,6 @@ export const useRegisterHandler = () => {
     otpForm,
     personalData,
     accountData,
-    
 
     // Mutation states for loading/error handling
     sendAuthCode: {

@@ -94,45 +94,13 @@ export const useVerifyLogin = () => {
       // console.log("login:", data);
     },
     onError: (error: ApiError) => {
-      console.error("Login verification error:", error);
-
-      if (error.response?.status === 401) {
+      console.error("Profile update error:", error);
+      if (error.response?.data.message) {
         StyledToast({
           status: "error",
-          title: "Invalid Verification Code",
+          title: error.response.data.message,
           duration: 10000,
-          description: "Please check the 6-digit code sent to your email.",
-        });
-      } else if (error.response?.status === 410) {
-        StyledToast({
-          status: "error",
-          title: "Code Expired",
-          duration: 10000,
-          description:
-            "Your verification code has expired. Please request a new one.",
-        });
-      } else if (error.response?.status === 429) {
-        StyledToast({
-          status: "error",
-          title: "Too Many Attempts",
-          duration: 10000,
-          description:
-            "Too many failed attempts. Please wait before trying again.",
-        });
-      } else if (error.code === "NETWORK_ERROR" || !navigator.onLine) {
-        StyledToast({
-          status: "error",
-          title: "Connection Issue",
-          duration: 10000,
-          description:
-            "Network error. Please check your connection and try again.",
-        });
-      } else {
-        StyledToast({
-          status: "error",
-          title: "Verification Failed",
-          duration: 10000,
-          description: "Unable to verify your code. Please try again.",
+          description: "Cannot process your profile update request.",
         });
       }
     },

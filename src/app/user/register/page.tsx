@@ -1,7 +1,16 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronDownIcon } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckIcon,
+  ChevronDownIcon,
+  EyeIcon,
+  EyeOffIcon,
+  LoaderCircleIcon,
+  XIcon,
+} from "lucide-react";
 import Link from "next/link";
 import {
   Popover,
@@ -52,10 +61,7 @@ const steps = [
     step: 2,
     title: "Account",
   },
-  {
-    step: 3,
-    title: "Background",
-  },
+
   {
     step: 4,
     title: "Verification",
@@ -82,7 +88,7 @@ export default function Register() {
 
     // Loading states
     sendAuthCode,
-    // verifyRegister,
+    verifyRegister,
 
     // Utility functions
     // resetAuthState,
@@ -98,9 +104,6 @@ export default function Register() {
   const handlePersonalSubmit = () => {
     setStepper(2);
   };
-  const handleAccountSubmit = () => {
-    setStepper(3);
-  };
 
   return (
     <div className="relative flex justify-center items-center gap-5  w-full min-h-screen your-class">
@@ -109,31 +112,34 @@ export default function Register() {
           <ArrowLeft />
         </Button>
       </Link>
+
       <div className="flex-1 flex justify-center items-center ">
-        <div className="w-2xl space-y-5">
-          <Stepper
-            defaultValue={1}
-            value={stepper}
-            className="items-start gap-3 "
-          >
-            {steps.map(({ step, title }) => (
-              <StepperItem key={step} step={step} className="flex-1">
-                <StepperTrigger className="w-full flex-col items-start gap-2 rounded">
-                  <StepperIndicator asChild className="bg-border h-1 w-full">
-                    <span className="sr-only">{step}</span>
-                  </StepperIndicator>
-                  <div className="space-y-0.5">
-                    <StepperTitle>{title}</StepperTitle>
-                  </div>
-                </StepperTrigger>
-              </StepperItem>
-            ))}
-          </Stepper>
+        <div className="max-w-2xl w-full space-y-10">
+          <div className="space-y-3">
+            <Stepper
+              defaultValue={1}
+              value={stepper}
+              className="items-start gap-3 "
+            >
+              {steps.map(({ step, title }) => (
+                <StepperItem key={step} step={step} className="flex-1">
+                  <StepperTrigger className="w-full flex-col items-start gap-2 rounded">
+                    <StepperIndicator asChild className="bg-border h-1 w-full">
+                      <span className="sr-only">{step}</span>
+                    </StepperIndicator>
+                    <div className="space-y-0.5">
+                      <StepperTitle>{title}</StepperTitle>
+                    </div>
+                  </StepperTrigger>
+                </StepperItem>
+              ))}
+            </Stepper>
+          </div>
           {stepper === 1 && (
             <Form {...personalForm}>
               <div className="space-y-6">
                 <div>
-                  <h1 className="text-xl font-semibold">
+                  <h1 className="text-lg font-semibold">
                     Personal Information
                   </h1>
                   <p className="text-gray-600 text-sm mt-1">
@@ -154,6 +160,7 @@ export default function Register() {
                           <Input
                             placeholder="Enter your first name"
                             {...field}
+                            disabled={sendAuthCode.isLoading}
                           />
                         </FormControl>
                       </FormItem>
@@ -172,6 +179,7 @@ export default function Register() {
                           <Input
                             placeholder="Enter your middle name"
                             {...field}
+                            disabled={sendAuthCode.isLoading}
                           />
                         </FormControl>
                       </FormItem>
@@ -190,6 +198,7 @@ export default function Register() {
                           <Input
                             placeholder="Enter your last name"
                             {...field}
+                            disabled={sendAuthCode.isLoading}
                           />
                         </FormControl>
                       </FormItem>
@@ -208,6 +217,7 @@ export default function Register() {
                           <Input
                             placeholder="Enter your contact number"
                             {...field}
+                            disabled={sendAuthCode.isLoading}
                           />
                         </FormControl>
                       </FormItem>
@@ -301,6 +311,7 @@ export default function Register() {
                           <Input
                             placeholder="Enter your complete address"
                             {...field}
+                            disabled={sendAuthCode.isLoading}
                           />
                         </FormControl>
                       </FormItem>
@@ -312,16 +323,21 @@ export default function Register() {
                   onClick={personalForm.handleSubmit(handlePersonalSubmit)}
                   className="w-full mt-4"
                 >
-                  Next
+                  Next <ArrowRight />
                 </Button>
               </div>
             </Form>
           )}
           {stepper === 2 && (
-            <Form {...accountForm}>
-              <div className="space-y-6">
+            <form
+              onSubmit={accountForm.handleSubmit((accountFormData) =>
+                HandleRegister({ personalData, accountData: accountFormData })
+              )}
+              className="space-y-6"
+            >
+              <Form {...accountForm}>
                 <div>
-                  <h1 className="text-xl font-semibold">Account Information</h1>
+                  <h1 className="text-lg font-semibold">Account Information</h1>
                   <p className="text-gray-600 text-sm mt-1">
                     Fill out all required fields to start scholarship
                   </p>
@@ -340,6 +356,7 @@ export default function Register() {
                           <Input
                             placeholder="Enter your student ID"
                             {...field}
+                            disabled={sendAuthCode.isLoading}
                           />
                         </FormControl>
                       </FormItem>
@@ -359,6 +376,7 @@ export default function Register() {
                             type="email"
                             placeholder="Enter your email"
                             {...field}
+                            disabled={sendAuthCode.isLoading}
                           />
                         </FormControl>
                       </FormItem>
@@ -367,18 +385,43 @@ export default function Register() {
 
                   <FormField
                     control={accountForm.control}
-                    name="password"
+                    name="institute"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center justify-between">
-                          Password <FormMessage />
+                          Institute <FormMessage />
                         </FormLabel>
                         <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="Enter your password"
-                            {...field}
-                          />
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <SelectTrigger
+                              className="w-full"
+                              disabled={sendAuthCode.isLoading}
+                            >
+                              <SelectValue placeholder="Select Institute" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="IAS">
+                                IAS - Institute of Arts and Sciences
+                              </SelectItem>
+                              <SelectItem value="IED">
+                                IED - Institute of Education
+                              </SelectItem>
+                              <SelectItem value="IEAT">
+                                IEAT - Institute of Engineering and Applied
+                                Technology
+                              </SelectItem>
+                              <SelectItem value="IM">
+                                IM - Institute of Management
+                              </SelectItem>
+                              <SelectItem value="CAVM">
+                                CAVM - College of Agriculture and Veterinary
+                                Medicine
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
                         </FormControl>
                       </FormItem>
                     )}
@@ -393,7 +436,11 @@ export default function Register() {
                           Course <FormMessage />
                         </FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter your course" {...field} />
+                          <Input
+                            placeholder="Enter your course"
+                            {...field}
+                            disabled={sendAuthCode.isLoading}
+                          />
                         </FormControl>
                       </FormItem>
                     )}
@@ -410,6 +457,7 @@ export default function Register() {
                           </FormLabel>
                           <FormControl>
                             <Select
+                              disabled={sendAuthCode.isLoading}
                               onValueChange={field.onChange}
                               value={field.value}
                             >
@@ -448,12 +496,142 @@ export default function Register() {
                             <Input
                               placeholder="Enter your section"
                               {...field}
+                              disabled={sendAuthCode.isLoading}
                             />
                           </FormControl>
                         </FormItem>
                       )}
                     />
                   </div>
+                  <FormField
+                    control={accountForm.control}
+                    name="password"
+                    render={({ field }) => {
+                      const [isVisible, setIsVisible] = useState(false);
+                      const toggleVisibility = () =>
+                        setIsVisible((prev) => !prev);
+
+                      const checkStrength = (pass: string) => {
+                        const requirements = [
+                          { regex: /.{8,}/, text: "At least 8 characters" },
+                          { regex: /[0-9]/, text: "At least 1 number" },
+                          {
+                            regex: /[a-z]/,
+                            text: "At least 1 lowercase letter",
+                          },
+                          {
+                            regex: /[A-Z]/,
+                            text: "At least 1 uppercase letter",
+                          },
+                        ];
+                        return requirements.map((req) => ({
+                          met: req.regex.test(pass),
+                          text: req.text,
+                        }));
+                      };
+
+                      const strength = checkStrength(field.value || "");
+                      const strengthScore = strength.filter(
+                        (req) => req.met
+                      ).length;
+
+                      const getStrengthColor = (score: number) => {
+                        if (score === 0) return "bg-border";
+                        if (score <= 1) return "bg-red-500";
+                        if (score <= 2) return "bg-orange-500";
+                        if (score === 3) return "bg-amber-500";
+                        return "bg-emerald-500";
+                      };
+
+                      const getStrengthText = (score: number) => {
+                        if (score === 0) return "Enter a password";
+                        if (score <= 2) return "Weak password";
+                        if (score === 3) return "Medium password";
+                        return "Strong password";
+                      };
+
+                      return (
+                        <FormItem className="col-span-2">
+                          <FormLabel className="flex items-center justify-between">
+                            Password <FormMessage />
+                          </FormLabel>
+
+                          {/* Password Input + Toggle */}
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                type={isVisible ? "text" : "password"}
+                                placeholder="Enter your password"
+                                {...field}
+                                disabled={sendAuthCode.isLoading}
+                                className="pe-9"
+                              />
+                              <button
+                                type="button"
+                                onClick={toggleVisibility}
+                                className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground/80 hover:text-foreground focus:outline-none"
+                              >
+                                {isVisible ? (
+                                  <EyeOffIcon size={16} />
+                                ) : (
+                                  <EyeIcon size={16} />
+                                )}
+                              </button>
+                            </div>
+                          </FormControl>
+
+                          {/* Strength Bar */}
+                          <div
+                            className="bg-border mt-3 mb-2 h-1 w-full overflow-hidden rounded-full"
+                            role="progressbar"
+                            aria-valuenow={strengthScore}
+                            aria-valuemin={0}
+                            aria-valuemax={4}
+                          >
+                            <div
+                              className={`h-full ${getStrengthColor(
+                                strengthScore
+                              )} transition-all duration-500`}
+                              style={{ width: `${(strengthScore / 4) * 100}%` }}
+                            />
+                          </div>
+
+                          {/* Strength Text */}
+                          <p className="text-sm font-medium mb-2">
+                            {getStrengthText(strengthScore)}. Must contain:
+                          </p>
+
+                          {/* Requirements */}
+                          <ul className="space-y-1.5">
+                            {strength.map((req, idx) => (
+                              <li key={idx} className="flex items-center gap-2">
+                                {req.met ? (
+                                  <CheckIcon
+                                    size={16}
+                                    className="text-emerald-500"
+                                  />
+                                ) : (
+                                  <XIcon
+                                    size={16}
+                                    className="text-muted-foreground/80"
+                                  />
+                                )}
+                                <span
+                                  className={`text-xs ${
+                                    req.met
+                                      ? "text-emerald-600"
+                                      : "text-muted-foreground"
+                                  }`}
+                                >
+                                  {req.text}
+                                </span>
+                              </li>
+                            ))}
+                          </ul>
+                        </FormItem>
+                      );
+                    }}
+                  />
                 </div>
 
                 <div className="flex gap-3 mt-13 items-center">
@@ -462,138 +640,45 @@ export default function Register() {
                     onClick={handlePrevStepper}
                     variant="outline"
                     className="flex-1"
+                    disabled={sendAuthCode.isLoading}
                   >
                     Previous
                   </Button>
                   <Button
-                    onClick={accountForm.handleSubmit(handleAccountSubmit)}
+                    disabled={sendAuthCode.isLoading}
                     className="flex-1"
+                    type="submit"
                   >
-                    Next
+                    {sendAuthCode.isLoading ? (
+                      <>
+                        Registering...
+                        <LoaderCircleIcon
+                          className="-ms-1 animate-spin"
+                          size={16}
+                          aria-hidden="true"
+                        />
+                      </>
+                    ) : (
+                      <>
+                        Register
+                        <ArrowRight />
+                      </>
+                    )}
                   </Button>
                 </div>
-              </div>
-            </Form>
+              </Form>
+            </form>
           )}
+
           {stepper === 3 && (
-            <Form {...accountForm}>
-              <div className="space-y-6">
-                <div>
-                  <h1 className="text-xl font-semibold">Family Composition</h1>
-                  <p className="text-muted-foreground text-sm mt-1">
-                    Fill out all required fields to start scholarship
-                  </p>
-                </div>
-
-                <div className="">
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <h1>Father</h1>
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <Checkbox />
-                          <span className="text-xs">Separated</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <FormField
-                        control={accountForm.control}
-                        name="studentId"
-                        render={({ field }) => (
-                          <FormItem className="">
-                            <FormLabel className="flex items-center justify-between">
-                              Student ID <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Enter your student ID"
-                                {...field}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={accountForm.control}
-                        name="studentId"
-                        render={({ field }) => (
-                          <FormItem className="">
-                            <FormLabel className="flex items-center justify-between">
-                              Contact Number <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Enter your student ID"
-                                {...field}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={accountForm.control}
-                        name="studentId"
-                        render={({ field }) => (
-                          <FormItem className=" col-span-2">
-                            <FormLabel className="flex items-center justify-between">
-                              Address <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Enter your student ID"
-                                {...field}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={accountForm.control}
-                        name="studentId"
-                        render={({ field }) => (
-                          <FormItem className=" col-span-2">
-                            <FormLabel className="flex items-center justify-between">
-                              Occupation <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Enter your student ID"
-                                {...field}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-3 mt-13 items-center">
-                  <Button
-                    type="button"
-                    onClick={handlePrevStepper}
-                    variant="outline"
-                    className="flex-1"
-                  >
-                    Previous
-                  </Button>
-                  <Button
-                    onClick={accountForm.handleSubmit(handleAccountSubmit)}
-                    className="flex-1"
-                  >
-                    Next
-                  </Button>
-                </div>
-              </div>
-            </Form>
-          )}
-          {stepper === 4 && (
-            <Form {...otpForm}>
-              <div className="space-y-6 flex justify-center items-center flex-col">
-                <div className="max-w-md space-y-5">
+            <form
+              onSubmit={otpForm.handleSubmit(HandleOtpVerification)}
+              className="space-y-6 flex justify-center items-center flex-col"
+            >
+              <Form {...otpForm}>
+                <div className="w-full  space-y-5">
                   <div className="">
-                    <h1 className="text-2xl font-semibold">Code Verifcation</h1>
+                    <h1 className="text-lg font-semibold">Code Verifcation</h1>
                     <p className="text-sm mt-1 text-muted-foreground">
                       Enter the code we sent to your gmail.
                     </p>
@@ -612,6 +697,7 @@ export default function Register() {
                           <InputOTP
                             maxLength={6}
                             value={field.value}
+                            disabled={verifyRegister.isLoading}
                             onChange={(value) => {
                               field.onChange(value);
                             }}
@@ -635,15 +721,30 @@ export default function Register() {
                       Resend (0s)
                     </Button>
                     <Button
-                      onClick={otpForm.handleSubmit(HandleOtpVerification)}
+                      type="submit"
                       className="flex-1"
+                      disabled={verifyRegister.isLoading}
                     >
-                      Verify
+                      {verifyRegister.isLoading ? (
+                        <>
+                          Verifying code...
+                          <LoaderCircleIcon
+                            className="-ms-1 animate-spin"
+                            size={16}
+                            aria-hidden="true"
+                          />
+                        </>
+                      ) : (
+                        <>
+                          Verify
+                          <ArrowRight />
+                        </>
+                      )}
                     </Button>
                   </div>
                 </div>
-              </div>
-            </Form>
+              </Form>
+            </form>
           )}
         </div>
       </div>

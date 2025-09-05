@@ -26,14 +26,14 @@ export function NavMain({
 }: {
   items: {
     title: string;
-    sa?: boolean;
+ 
     url: string;
     icon?: LucideIcon;
     isActive?: boolean;
     items?: {
       title: string;
       url: string;
-      sa?: boolean;
+   
     }[];
   }[];
 }) {
@@ -54,7 +54,7 @@ export function NavMain({
                 <SidebarMenuButton tooltip={item.title}>
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
-                  {item.sa && <Badge variant="outline">SA</Badge>}
+
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
@@ -75,7 +75,6 @@ export function NavMain({
                         >
                           <Link scroll={false} prefetch href={subItem.url}>
                             <span>{subItem.title}</span>
-                            {subItem.sa && <Badge variant="outline">SA</Badge>}
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>

@@ -14,9 +14,10 @@ const personalDetailsSchema = z.object({
 const accountDetailsSchema = z.object({
   studentId: z.string().min(1, "Required"),
   email: z.string().min(1, "Required"),
-  password: z.string().min(1, "Required"),
+  password: z.string().min(8, "At least 8 characters"),
   course: z.string().min(1, "Required"),
   yearLevel: z.string().min(1, "Required"),
+  institute: z.string().min(1, "Required"),
   section: z.string().min(1, "Required"),
 });
 const otpSchema = z.object({
@@ -48,6 +49,7 @@ export function useRegisterUser() {
       password: "",
       course: "",
       yearLevel: "",
+      institute: "",
       section: "",
     },
   });
