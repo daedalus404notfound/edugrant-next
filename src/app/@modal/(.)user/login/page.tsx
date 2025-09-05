@@ -71,7 +71,7 @@ export default function RegisterStudent() {
     setOpen(value);
     if (!value) {
       setTimeout(() => {
-        router.back();
+        router.push("/");
       }, 250);
     }
   };
