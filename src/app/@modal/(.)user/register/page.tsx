@@ -150,7 +150,7 @@ export default function RegisterStudent() {
           </DrawerDescription>
         </DrawerHeader>
 
-        <div className="flex-1 flex justify-center items-center bg-background/50 rounded-lg p-8">
+        <div className="flex-1 flex justify-center items-center bg-background/50 rounded-lg p-8 overflow-auto">
           <div className="w-full space-y-10">
             <div className="space-y-3">
               <Stepper
