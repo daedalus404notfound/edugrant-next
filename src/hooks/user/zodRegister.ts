@@ -8,6 +8,8 @@ const personalDetailsSchema = z.object({
   lastName: z.string().min(1, "Required"),
   contactNumber: z.string().min(1, "Required"),
   gender: z.string().min(1, "Required"),
+  indigenous: z.boolean().optional(),
+  pwa: z.boolean().optional(),
   dateOfBirth: z.string().min(1, "Required"),
   address: z.string().min(1, "Required"),
 });

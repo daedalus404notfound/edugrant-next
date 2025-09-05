@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  Accessibility,
   ArrowLeft,
   ArrowRight,
   CheckIcon,
@@ -9,6 +10,8 @@ import {
   EyeIcon,
   EyeOffIcon,
   LoaderCircleIcon,
+  MessagesSquare,
+  UserRound,
   XIcon,
 } from "lucide-react";
 import Link from "next/link";
@@ -80,6 +83,7 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { fa } from "zod/v4/locales";
+import { format } from "date-fns";
 
 export default function RegisterStudent() {
   const router = useRouter();
@@ -325,7 +329,7 @@ export default function RegisterStudent() {
                                   captionLayout="dropdown"
                                   onSelect={(date) => {
                                     field.onChange(
-                                      date?.toISOString().split("T")[0] || ""
+                                      date ? format(date, "yyyy-MM-dd") : ""
                                     );
                                     setOpenCalendar(false);
                                   }}
@@ -353,6 +357,75 @@ export default function RegisterStudent() {
                               disabled={sendAuthCode.isLoading}
                             />
                           </FormControl>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={personalForm.control}
+                      name="indigenous"
+                      render={({ field }) => (
+                        <FormItem className="border-input has-data-[state=checked]:border-primary/50 relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value || false}
+                              onCheckedChange={(checked) =>
+                                field.onChange(checked === true)
+                              }
+                              className="order-1 after:absolute after:inset-0"
+                              aria-describedby="for-interview-description"
+                            />
+                          </FormControl>
+
+                          <div className="flex grow items-center gap-3">
+                            {/* SVG Icon */}
+                            <UserRound />
+
+                            {/* Label + Description */}
+
+                            <FormLabel>
+                              Indigenous
+                              <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
+                                (Optional)
+                              </span>
+                            </FormLabel>
+                          </div>
+
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={personalForm.control}
+                      name="pwa"
+                      render={({ field }) => (
+                        <FormItem className="border-input has-data-[state=checked]:border-primary/50 relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value || false}
+                              onCheckedChange={(checked) =>
+                                field.onChange(checked === true)
+                              }
+                              className="order-1 after:absolute after:inset-0"
+                              aria-describedby="for-interview-description"
+                            />
+                          </FormControl>
+
+                          <div className="flex grow items-center gap-3">
+                            {/* SVG Icon */}
+                            <Accessibility />
+
+                            {/* Label + Description */}
+
+                            <FormLabel>
+                              Person with disability
+                              <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
+                                (Optional)
+                              </span>
+                            </FormLabel>
+                          </div>
+
+                          <FormMessage />
                         </FormItem>
                       )}
                     />

@@ -29,6 +29,8 @@ const sendAuthApi = async ({ personalData, accountData }: sendAuthData) => {
       studentFirstName: personalData.firstName,
       studentMiddleName: personalData.middleName,
       studentLastName: personalData.lastName,
+      indigenous: personalData.indigenous,
+      pwa: personalData.pwa,
       studentContact: personalData.contactNumber,
       studentGender: personalData.gender,
       studentDateofBirth: personalData.dateOfBirth,
@@ -63,6 +65,9 @@ const verifyRegisterApi = async ({
       verificationCode: data.otp,
       studentFirstName: personalData.firstName,
       studentMiddleName: personalData.middleName,
+      indigenous: personalData.indigenous,
+      pwa: personalData.pwa,
+      institute: accountData.institute,
       studentLastName: personalData.lastName,
       studentContact: personalData.contactNumber,
       studentGender: personalData.gender,
@@ -163,7 +168,6 @@ export const useRegisterHandler = () => {
     }
   };
   const HandleOtpVerification = async (otpData: otpFormData) => {
-  
     try {
       const result = await verifyRegister.mutateAsync({
         personalData,
