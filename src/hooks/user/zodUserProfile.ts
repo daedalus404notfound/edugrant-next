@@ -24,26 +24,29 @@ export const profileSchema = z.object({
 
   // Family
   familyBackground: z.object({
-    fatherFullName: z.string(),
-    fatherAddress: z.string(),
-    fatherContactNumber: z.string(),
-    fatherOccupation: z.string(),
-    fatherHighestEducation: z.string(),
-    fatherStatus: z.string(),
-    fatherTotalParentsTaxableIncome: z.string(),
-    motherFullName: z.string(),
-    motherAddress: z.string(),
-    motherContactNumber: z.string(),
-    motherOccupation: z.string(),
-    motherHighestEducation: z.string(),
-    motherStatus: z.string(),
-    motherTotalParentsTaxableIncome: z.string(),
-    guardianFullName: z.string(),
-    guardianAddress: z.string(),
-    guardianContactNumber: z.string(),
-    guardianOccupation: z.string(),
-    guardianHighestEducation: z.string(),
-    guardianStatus: z.string(),
+    fatherFullName: z.string().optional(),
+    fatherAddress: z.string().optional(),
+    fatherContactNumber: z.string().optional(),
+    fatherOccupation: z.string().optional(),
+    fatherHighestEducation: z.string().optional(),
+    fatherStatus: z.string().optional(),
+    fatherTotalParentsTaxableIncome: z.string().optional(),
+
+    motherFullName: z.string().optional(),
+    motherAddress: z.string().optional(),
+    motherContactNumber: z.string().optional(),
+    motherOccupation: z.string().optional(),
+    motherHighestEducation: z.string().optional(),
+    motherStatus: z.string().optional(),
+    motherTotalParentsTaxableIncome: z.string().optional(),
+
+    guardianFullName: z.string().optional(),
+    guardianAddress: z.string().optional(),
+    guardianContactNumber: z.string().optional(),
+    guardianOccupation: z.string().optional(),
+    guardianHighestEducation: z.string().optional(),
+    guardianStatus: z.string().optional(),
+
     siblings: z
       .array(
         z.object({
@@ -106,8 +109,7 @@ export function useProfileForm(initialData?: ProfileFormData) {
     defaultValues: getDefaultValues(),
   });
 
-  const {  watch, reset } = form;
- 
+  const { watch, reset } = form;
 
   const siblings = useFieldArray({
     control: form.control,
@@ -145,14 +147,12 @@ export function useProfileForm(initialData?: ProfileFormData) {
     }
   }, [watchedData, originalData]);
 
-
-
   return {
     form,
     formData: watchedData,
     hasChanges,
     siblings,
- 
+
     resetChanges: () => {
       if (originalData) {
         reset(originalData);

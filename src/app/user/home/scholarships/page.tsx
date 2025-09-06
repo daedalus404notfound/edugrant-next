@@ -167,7 +167,7 @@ export default function ClientScholarship() {
             />
           </div>
           <div className="py-8 space-y-8">
-            {user?.familyBackground.fatherFullName === "" ? (
+            {user?.familyBackground === null ? (
               <div className=" z-20 dark bg-muted rounded-md text-foreground px-4 py-3 sticky top-20">
                 <div className="flex flex-col justify-between gap-2 md:flex-row">
                   <div className="flex grow gap-3">

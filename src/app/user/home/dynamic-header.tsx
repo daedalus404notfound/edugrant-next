@@ -24,6 +24,32 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Timeline,
+  TimelineContent,
+  TimelineDate,
+  TimelineItem,
+  TimelineTitle,
+} from "@/components/ui/timeline";
+const announcements = [
+  {
+    id: 1,
+    title: "Scholarship Application Deadline Extended",
+    description:
+      "The deadline for scholarship applications has been extended to June 30, 2025.",
+    date: "Dec 12, 2024",
+    priority: "high",
+  },
+  {
+    id: 2,
+    title: "Scholarship Application Deadline Extended",
+    description:
+      "The deadline for scholarship applications has been extended to June 30, 2025.",
+    date: "Dec 12, 2024",
+    priority: "high",
+  },
+];
+
 import { ModeToggle } from "@/components/ui/dark-mode";
 import { Popover } from "@radix-ui/react-popover";
 import { PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -31,6 +57,7 @@ import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
   Bell,
+  CalendarIcon,
   ChevronsUpDown,
   ExternalLink,
   LogOut,
@@ -53,6 +80,10 @@ import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
 import { useState } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { ModeToggle2 } from "@/components/ui/dark-mode2";
+import AnnouncementDescription from "@/app/administrator/home/announcements/manage/description";
+import { format } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+import TitleReusable from "@/components/ui/title";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -73,6 +104,7 @@ export default function DynamicHeaderUser({
   const [openNotif, setOpenNotif] = useState(false);
   const [openOut, setOpenOut] = useState(false);
   const [openDark, setOpenDark] = useState(false);
+  const [loading, setLoading] = useState(false);
   return (
     <header className="flex w-full z-30 items-center justify-between bg-card dark:bg-zinc-950/90 backdrop-blur-sm  sticky top-0">
       <div className="flex h-16 shrink-0 items-center gap-2 lg:px-5 px-3">
@@ -143,17 +175,56 @@ export default function DynamicHeaderUser({
         </DropdownMenuContent>
       </DropdownMenu>
       <Drawer direction="right" open={openNotif} onOpenChange={setOpenNotif}>
-        <DrawerContent>
-          <DrawerHeader>
+        <DrawerContent className="bg-transparent !border-0 p-4">
+          <DrawerHeader className="sr-only">
             <DrawerTitle>Are you absolutely sure?</DrawerTitle>
             <DrawerDescription>This action cannot be undone.</DrawerDescription>
           </DrawerHeader>
-          <DrawerFooter>
-            <Button>Submit</Button>
-            <DrawerClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DrawerClose>
-          </DrawerFooter>
+          <div className="flex flex-col bg-background flex-1 rounded-lg p-4 gap-y-10">
+            <div className="flex justify-between items-center">
+              <TitleReusable title="Notification" description="" />
+              <Button size="sm">Mark all as read</Button>
+            </div>
+            <div className="flex-1">
+              <Timeline className="space-y-5">
+                {loading ? (
+                  <></>
+                ) : (
+                  announcements.map((item) => (
+                    <TimelineItem
+                      key={item.id}
+                      step={item.id}
+                      className="!m-0  bg-card  p-4! rounded-md border !mb-2 "
+                    >
+                      <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
+                        <TimelineTitle className="font-medium text-base">
+                          {item.title ?? "Win scholarship is now open."}
+                        </TimelineTitle>
+                      </div>
+                      <TimelineDate className="lg:text-sm text-xs text-muted-foreground flex items-center gap-1.5">
+                        <CalendarIcon size={13} /> {format(item.date, "PPP p")}
+                      </TimelineDate>
+                      <TimelineContent className="text-foreground mt-1 whitespace-pre-line">
+                        <AnnouncementDescription
+                          description={item.description}
+                        />
+                      </TimelineContent>
+                    </TimelineItem>
+                  ))
+                )}
+              </Timeline>
+              <div className=" justify-center items-center hidden">
+                <Button variant="link" size="lg" className="!p-0">
+                  Load More <ArrowRight />
+                </Button>
+              </div>
+            </div>
+            <DrawerFooter>
+              <DrawerClose asChild className="!bg-transparent">
+                <Button variant="outline">Close</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </div>
         </DrawerContent>
       </Drawer>
       <Dialog open={openOut} onOpenChange={setOpenOut}>
