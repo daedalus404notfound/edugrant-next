@@ -356,11 +356,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                     <SidebarMenuButton
                       isActive={isActive}
                       asChild
-                      className={
-                        isActive
-                          ? "!bg-emerald-700/20 !text-emerald-400 "
-                          : "hover:bg-emerald-700/20"
-                      }
+                    
                     >
                       <Link
                         prefetch

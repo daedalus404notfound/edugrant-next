@@ -67,11 +67,7 @@ export function NavMain({
                         <SidebarMenuSubButton
                           asChild
                           isActive={isActive}
-                          className={
-                            isActive
-                              ? "!bg-emerald-700/20 !text-emerald-400"
-                              : "hover:bg-emerald-700/20"
-                          }
+                     
                         >
                           <Link scroll={false} prefetch href={subItem.url}>
                             <span>{subItem.title}</span>

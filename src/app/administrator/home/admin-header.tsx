@@ -1,5 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Fade as Hamburger } from "hamburger-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,15 +8,47 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Timeline,
+  TimelineContent,
+  TimelineDate,
+  TimelineItem,
+  TimelineTitle,
+} from "@/components/ui/timeline";
+const announcements = [
+  {
+    id: 1,
+    title: "Scholarship Application Deadline Extended",
+    description:
+      "The deadline for scholarship applications has been extended to June 30, 2025.",
+    date: "Dec 12, 2024",
+    priority: "high",
+  },
+  {
+    id: 2,
+    title: "Scholarship Application Deadline Extended",
+    description:
+      "The deadline for scholarship applications has been extended to June 30, 2025.",
+    date: "Dec 12, 2024",
+    priority: "high",
+  },
+];
 
 import { ModeToggle } from "@/components/ui/dark-mode";
 import { Popover } from "@radix-ui/react-popover";
@@ -24,16 +57,33 @@ import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
   Bell,
+  CalendarIcon,
   ChevronsUpDown,
   ExternalLink,
   LogOut,
+  Menu,
+  Moon,
   User,
   UserRound,
 } from "lucide-react";
-import { useAdminStore } from "@/store/adminUserStore";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
 import { useState } from "react";
-import Link from "next/link";
+import { useUserStore } from "@/store/useUserStore";
+import { ModeToggle2 } from "@/components/ui/dark-mode2";
+import AnnouncementDescription from "@/app/administrator/home/announcements/manage/description";
+import { format } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+import TitleReusable from "@/components/ui/title";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -42,22 +92,26 @@ interface HeaderTypes {
   second?: string;
   third?: string;
 }
-export default function DynamicHeaderAdmin({
+export default function DynamicHeaderUser({
   first,
   second,
   third,
 }: HeaderTypes) {
-  const { admin } = useAdminStore();
+  const { user } = useUserStore();
   // console.log(admin);
   const { handleLogout } = useAdminLogout();
   const [open, setOpen] = useState(false);
+  const [openNotif, setOpenNotif] = useState(false);
+  const [openOut, setOpenOut] = useState(false);
+  const [openDark, setOpenDark] = useState(false);
+  const [loading, setLoading] = useState(false);
   return (
-    <header className="flex w-full items-center justify-between bg-background rounded-lg  relative">
-      <div className="flex h-16 shrink-0 items-center gap-2 px-4">
-        <SidebarTrigger className="-ml-1" />
+    <header className="flex w-full z-30 items-center justify-between bg-card dark:bg-zinc-950/90 backdrop-blur-sm  sticky top-0">
+      <div className="flex h-16 shrink-0 items-center gap-2 lg:px-5 px-3">
+        <SidebarTrigger className="-ml-1 lg:flex hidden" />
         <Separator
           orientation="vertical"
-          className="mr-2 data-[orientation=vertical]:h-4"
+          className="mr-2 data-[orientation=vertical]:h-4 lg:flex hidden"
         />
         <Breadcrumb>
           <BreadcrumbList>
@@ -77,99 +131,134 @@ export default function DynamicHeaderAdmin({
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className="mr-3 flex  items-center gap-3">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="ghost">
-              <UserRound />
-              {admin?.firstName || "N/A"}
-              <ChevronsUpDown />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-1 bg-background flex flex-col gap-2">
-            <div className="p-1.5 text-sm font-semibold">My Account</div>
-            <Separator />
-            <h1 className="flex items-center gap-1.5 text-sm p-1.5 border border-transparent hover:border-primary rounded-sm">
-              <User size={15} /> Profile
-            </h1>
-            <AlertDialog open={open} onOpenChange={setOpen}>
-              <AlertDialogTrigger asChild>
-                <h1 className="flex items-center gap-1.5 text-sm p-1.5 border border-transparent hover:border-primary rounded-sm">
-                  <LogOut size={15} /> Logout
-                </h1>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Log out of your account?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    You will be logged out from this session. You can log in
-                    again anytime.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <Button onClick={handleLogout}>Log Out</Button>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </PopoverContent>
-        </Popover>
-        <Popover>
-          <PopoverTrigger asChild>
-            <div className="relative">
-              <span className="absolute -top-1 -right-1 bg-red-500 size-4 flex justify-center items-center text-[.7rem] rounded-full">
-                2
-              </span>
-              <Button variant="outline">
-                <Bell />
-              </Button>
+      <DropdownMenu open={open} onOpenChange={setOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button className="p-0" variant="ghost">
+            <Hamburger toggled={open} toggle={setOpen} size={28} rounded />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="lg:mr-5 mr-3 w-[200px]">
+          <DropdownMenuItem>
+            <UserRound />
+            My Account
+          </DropdownMenuItem>{" "}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
+              setOpenNotif(true);
+              setOpen(false);
+            }}
+          >
+            <Bell />
+            Notification
+          </DropdownMenuItem>{" "}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
+              setOpenOut(true);
+              setOpen(false);
+            }}
+          >
+            <LogOut />
+            Log out
+          </DropdownMenuItem>{" "}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => {
+              setOpenDark(true);
+              setOpen(false);
+            }}
+          >
+            <Moon />
+            Dark mode
+          </DropdownMenuItem>{" "}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <Drawer direction="right" open={openNotif} onOpenChange={setOpenNotif}>
+        <DrawerContent className="bg-transparent !border-0 p-4">
+          <DrawerHeader className="sr-only">
+            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+            <DrawerDescription>This action cannot be undone.</DrawerDescription>
+          </DrawerHeader>
+          <div className="flex flex-col bg-background flex-1 rounded-lg p-4 gap-y-10">
+            <div className="flex justify-between items-center">
+              <TitleReusable title="Notification" description="" />
+              <Button size="sm">Mark all as read</Button>
             </div>
-          </PopoverTrigger>
-          <PopoverContent className="w-md p-1 bg-card flex flex-col justify-center items-center gap-2">
-            <div className="bg-background z-50 w-full rounded-md  p-4 shadow-lg">
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex grow items-center gap-12">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium">
-                      Your application to Win Gatchalian has been approved
-                    </p>
-                    <p className="text-muted-foreground text-xs">
-                      November 20 at 8:00 PM.
-                    </p>
-                  </div>
-                </div>
-                <Link href="/administrator/home/notification" prefetch>
-                  <Button size="sm" variant="ghost">
-                    View <ExternalLink />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-            <div className="bg-background z-50 w-full rounded-md  p-4 shadow-lg">
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex grow items-center gap-12">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium">Live in 27 hours</p>
-                    <p className="text-muted-foreground text-xs">
-                      November 20 at 8:00 PM.
-                    </p>
-                  </div>
-                </div>
-                <Button size="sm" variant="ghost">
-                  View <ExternalLink />
+            <div className="flex-1">
+              <Timeline className="space-y-5">
+                {loading ? (
+                  <></>
+                ) : (
+                  announcements.map((item) => (
+                    <TimelineItem
+                      key={item.id}
+                      step={item.id}
+                      className="!m-0  bg-card  p-4! rounded-md border !mb-2 "
+                    >
+                      <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
+                        <TimelineTitle className="font-medium text-base">
+                          {item.title ?? "Win scholarship is now open."}
+                        </TimelineTitle>
+                      </div>
+                      <TimelineDate className="lg:text-sm text-xs text-muted-foreground flex items-center gap-1.5">
+                        <CalendarIcon size={13} /> {format(item.date, "PPP p")}
+                      </TimelineDate>
+                      <TimelineContent className="text-foreground mt-1 whitespace-pre-line">
+                        <AnnouncementDescription
+                          description={item.description}
+                        />
+                      </TimelineContent>
+                    </TimelineItem>
+                  ))
+                )}
+              </Timeline>
+              <div className=" justify-center items-center hidden">
+                <Button variant="link" size="lg" className="!p-0">
+                  Load More <ArrowRight />
                 </Button>
               </div>
             </div>
-            <Link href="/administrator/home/notification" prefetch>
-              <Button size="sm" variant="link">
-                See more <ArrowRight />
-              </Button>
-            </Link>
-          </PopoverContent>
-        </Popover>
-
-        <ModeToggle />
-      </div>
+            <DrawerFooter>
+              <DrawerClose asChild className="!bg-transparent">
+                <Button variant="outline">Close</Button>
+              </DrawerClose>
+            </DrawerFooter>
+          </div>
+        </DrawerContent>
+      </Drawer>
+      <Dialog open={openOut} onOpenChange={setOpenOut}>
+        <DialogContent showCloseButton={false} className="max-w-lg p-4">
+          <DialogHeader>
+            <DialogTitle>Logout?</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to log out of your account? You can log back
+              in anytime.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end gap-2">
+            <Button
+              className="flex-1 lg:flex-none"
+              onClick={() => setOpenOut(false)}
+              variant="outline"
+            >
+              Cancel
+            </Button>
+            <Button variant="secondary" className="flex-1 lg:flex-none">
+              Logout
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={openDark} onOpenChange={setOpenDark}>
+        <DialogContent showCloseButton={false} className="max-w-lg p-4">
+          <DialogHeader>
+            <DialogTitle>Theme</DialogTitle>
+            <DialogDescription></DialogDescription>
+          </DialogHeader>
+          <ModeToggle2 />
+        </DialogContent>
+      </Dialog>
     </header>
   );
 }
