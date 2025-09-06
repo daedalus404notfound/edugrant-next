@@ -521,7 +521,7 @@ export default function RegisterStudent() {
                               </SelectTrigger>
                               <SelectContent>
                                 <SelectItem value="ICS">
-                                  IAS - Institute Computer Studies
+                                  ICS - Institute Computer Studies
                                 </SelectItem>
                                 <SelectItem value="IAS">
                                   IAS - Institute of Arts and Sciences
