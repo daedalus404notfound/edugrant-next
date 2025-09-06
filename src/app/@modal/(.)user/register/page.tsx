@@ -520,6 +520,9 @@ export default function RegisterStudent() {
                                 <SelectValue placeholder="Select Institute" />
                               </SelectTrigger>
                               <SelectContent>
+                                <SelectItem value="ICS">
+                                  IAS - Institute Computer Studies
+                                </SelectItem>
                                 <SelectItem value="IAS">
                                   IAS - Institute of Arts and Sciences
                                 </SelectItem>
