@@ -102,7 +102,7 @@ const updateUserApi = async (data: ProfileFormData) => {
       year: data.year,
       familyBackground: hasFamilyBackground
         ? JSON.stringify(familyBackground)
-        : undefined,
+        : JSON.stringify({}),
     },
     { withCredentials: true }
   );

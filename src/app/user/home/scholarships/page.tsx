@@ -117,7 +117,9 @@ export default function ClientScholarship() {
     status: status,
     filters: formatFilters(),
   });
-  console.log(data, loading);
+
+  const familyLength = Object.keys(user?.familyBackground || {}).length;
+  console.log("dsds", familyLength);
   const scholarshipTourSteps: TourStepType[] = [
     {
       id: "search",
@@ -153,7 +155,7 @@ export default function ClientScholarship() {
   return (
     <TourProvider steps={scholarshipTourSteps}>
       <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-        {user?.familyBackground.fatherFullName === "" ? (
+        {familyLength === 0 ? (
           <div className="absolute inset-0 z-20 bg-black/80 "></div>
         ) : (
           ""
@@ -167,7 +169,7 @@ export default function ClientScholarship() {
             />
           </div>
           <div className="py-8 space-y-8">
-            {user?.familyBackground === null ? (
+            {familyLength === 0 ? (
               <div className=" z-20 dark bg-muted rounded-md text-foreground px-4 py-3 sticky top-20">
                 <div className="flex flex-col justify-between gap-2 md:flex-row">
                   <div className="flex grow gap-3">
