@@ -3,6 +3,7 @@
 import { Row } from "@tanstack/react-table";
 import {
   Loader,
+  Logs,
   Maximize,
   MoreHorizontal,
   PencilLine,
@@ -56,71 +57,17 @@ export function DataTableRowActions<TData>({
           <MoreHorizontal />
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="grid grid-cols-1 w-[180px] !p-2">
+      <PopoverContent align="end" className="grid grid-cols-1 w-[180px] !p-0">
         <Link
           href={`/administrator/home/admins/manage/${rowData.adminId}`}
           scroll={false}
           prefetch
           className="w-full"
         >
-          <Button variant="ghost" className="justify-start w-full">
-            <Maximize /> View
+          <Button variant="outline" className="justify-start w-full">
+            <Logs /> View Logs
           </Button>
         </Link>
-
-        <Link
-          href={`/administrator/home/admins/manage/${rowData.adminId}?edit=true`}
-          scroll={false}
-          prefetch
-          className="w-full"
-        >
-          <Button className="justify-start w-full" variant="ghost">
-            <PencilLine /> Edit
-          </Button>
-        </Link>
-
-        <div />
-        <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
-          <AlertDialogTrigger asChild>
-            <Button
-              size="sm"
-              variant="ghost"
-              className=" text-red-600  justify-start"
-            >
-              <Trash2 /> Delete
-            </Button>
-          </AlertDialogTrigger>
-
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="text-red-600">
-                Delete administrator account?
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. The administrator account will be
-                permanently removed from the system.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-
-            <AlertDialogFooter>
-              <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
-              <Button
-                variant="destructive"
-                disabled={loading}
-                onClick={onSubmit}
-              >
-                {loading ? (
-                  <span className="flex items-center gap-2">
-                    <Loader className="animate-spin" />
-                    Deleting...
-                  </span>
-                ) : (
-                  "Delete"
-                )}
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
       </PopoverContent>
     </Popover>
   );
