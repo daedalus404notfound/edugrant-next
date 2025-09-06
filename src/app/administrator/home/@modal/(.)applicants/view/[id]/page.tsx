@@ -199,6 +199,9 @@ export default function InterceptReviewApplicants() {
   } = useApprovedHandler({
     id,
     adminId: admin?.adminId.toString(),
+    scholarshipId: data?.scholarship.scholarshipId
+      ? data?.scholarship.scholarshipId
+      : "",
   });
 
   const {
@@ -211,6 +214,9 @@ export default function InterceptReviewApplicants() {
     id,
     adminId: admin?.adminId.toString(),
     documentUpdate: reviewData,
+    scholarshipId: data?.scholarship.scholarshipId
+      ? data?.scholarship.scholarshipId
+      : "",
   });
 
   useEffect(() => {

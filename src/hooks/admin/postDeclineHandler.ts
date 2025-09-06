@@ -68,6 +68,7 @@ import { useState } from "react";
 type RecjectTypes = {
   id: string;
   adminId?: string;
+  scholarshipId: string;
   documentUpdate: Record<string, { comment: string; status: string }>;
 };
 interface ApiErrorResponse {
@@ -75,7 +76,12 @@ interface ApiErrorResponse {
   error?: string;
   statusCode?: number;
 }
-export function useRecjectHandler({ id, adminId, documentUpdate }: RecjectTypes) {
+export function useRecjectHandler({
+  id,
+  adminId,
+  scholarshipId,
+  documentUpdate,
+}: RecjectTypes) {
   const [loadingReject, setLoadingReject] = useState(false);
   const [openReject, setOpenReject] = useState(false);
   const [isSuccessReject, setIsSuccessReject] = useState(false);
@@ -88,6 +94,7 @@ export function useRecjectHandler({ id, adminId, documentUpdate }: RecjectTypes)
         {
           applicationId: id,
           adminId: adminId,
+          scholarshipId: scholarshipId,
           rejectMessage: JSON.stringify(documentUpdate),
         },
         { withCredentials: true }

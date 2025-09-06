@@ -4,13 +4,18 @@ import { useState } from "react";
 type ApproveTypes = {
   id: string;
   adminId?: string;
+  scholarshipId: string;
 };
 interface ApiErrorResponse {
   message?: string;
   error?: string;
   statusCode?: number;
 }
-export function useApprovedHandler({ id, adminId }: ApproveTypes) {
+export function useApprovedHandler({
+  id,
+  adminId,
+  scholarshipId,
+}: ApproveTypes) {
   const [loadingApprove, setLoadingApprove] = useState(false);
   const [openApprove, setOpenApprove] = useState(false);
   const [isSuccessApprove, setIsSuccessApprove] = useState(false);
@@ -20,7 +25,7 @@ export function useApprovedHandler({ id, adminId }: ApproveTypes) {
       setLoadingApprove(true);
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/approveApplication`,
-        { applicationId: id, adminId: adminId },
+        { applicationId: id, adminId: adminId, scholarshipId: scholarshipId },
         { withCredentials: true }
       );
       if (res.status === 200) {

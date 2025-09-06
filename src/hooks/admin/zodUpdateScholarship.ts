@@ -23,6 +23,7 @@ export const updateScholarshipSchema = z.object({
   applicationDeadline: z.date({
     message: "Required",
   }),
+  forInterview: z.boolean(),
   scholarshipAmount: z.string().min(1, "Required"),
   scholarshipLimit: z.string(),
   detailsImage: z.any().optional(),
@@ -49,6 +50,7 @@ export function useUpdateScholarshipZod(data?: ScholarshipTypes) {
       applicationDeadline: data?.scholarshipDeadline
         ? new Date(data.scholarshipDeadline)
         : undefined,
+      forInterview: data?.interview,
       scholarshipAmount: data?.scholarshipAmount?.toString() || "",
       scholarshipLimit: data?.scholarshipLimit?.toString() || "",
       documents: data?.scholarshipDocuments

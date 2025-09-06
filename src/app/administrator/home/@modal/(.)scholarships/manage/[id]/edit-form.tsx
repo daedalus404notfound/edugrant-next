@@ -19,6 +19,7 @@ import {
   CalendarIcon,
   ClockIcon,
   Landmark,
+  MessagesSquare,
   Plus,
   Save,
   Trash2,
@@ -45,6 +46,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
   {
@@ -367,10 +369,10 @@ export default function EditScholarship({
                       </FormLabel>
                       <FormControl>
                         <DragAndDropArea
+                         
                           label="backdrop image"
                           accept={["image/png", "image/jpeg", "image/jpg"]}
                           onFilesChange={(files) => field.onChange(files[0])} // Single file
-                          initialImageUrl={data.scholarshipCover}
                         />
                       </FormControl>
                     </FormItem>
@@ -390,10 +392,10 @@ export default function EditScholarship({
                       </FormLabel>
                       <FormControl>
                         <DragAndDropArea
+                         
                           label="sponsor logo"
                           accept={["image/png", "image/jpeg", "image/jpg"]}
                           onFilesChange={(files) => field.onChange(files[0])} // Single file
-                          initialImageUrl={data.scholarshipLogo}
                         />
                       </FormControl>
                     </FormItem>
@@ -412,16 +414,58 @@ export default function EditScholarship({
                     </FormLabel>
                     <FormControl>
                       <DragAndDropArea
+                       
                         label="scholarship form"
                         accept={["*/*"]}
                         onFilesChange={(files) => field.onChange(files[0])} // Single file
-                        initialImageUrl={data.scholarshipForm}
                       />
                     </FormControl>
                   </FormItem>
                 )}
               />
             </div>
+            <FormField
+              control={form.control}
+              name="forInterview"
+              render={({ field }) => (
+                <FormItem className="border-input has-data-[state=checked]:border-primary/50 relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value || false}
+                      onCheckedChange={(checked) =>
+                        field.onChange(checked === true)
+                      }
+                      className="order-1 after:absolute after:inset-0"
+                      aria-describedby="for-interview-description"
+                    />
+                  </FormControl>
+
+                  <div className="flex grow items-center gap-3">
+                    {/* SVG Icon */}
+                    <MessagesSquare />
+
+                    {/* Label + Description */}
+                    <div className="grid gap-2">
+                      <FormLabel>
+                        For Interview{" "}
+                        <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
+                          (Optional)
+                        </span>
+                      </FormLabel>
+                      <p
+                        id="for-interview-description"
+                        className="text-muted-foreground text-xs"
+                      >
+                        Check this if the approved application is selected for
+                        an interview.
+                      </p>
+                    </div>
+                  </div>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
 
           {/* Dynamic Required Documents */}
@@ -552,6 +596,7 @@ export default function EditScholarship({
               ))}
             </div>
           </div>
+          
         </Form>
       </div>
       <div className="p-4 sticky bottom-0 bg-card  border-t">
