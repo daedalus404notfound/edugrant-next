@@ -115,14 +115,14 @@ export default function ClientScholarship() {
                 <div className="relative rounded-lg bg-background ">
                   <img
                     className="absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs "
-                    src={meow.scholarship.scholarshipCover}
+                    src={meow.scholarship.scholarshipLogo}
                     alt=""
                   />
                   <div className="relative z-10">
                     <div className=" aspect-[16/8.5] w-full rounded-md overflow-hidden">
                       <img
                         className="h-full w-full object-cover    "
-                        src={meow.scholarship.scholarshipCover}
+                        src={meow.scholarship.scholarshipLogo}
                         alt=""
                       />
                     </div>

@@ -107,7 +107,6 @@ export default function InterceptManageApplicationClient() {
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(true);
-  const [edit, setEdit] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const id = params.id as string;
   const isMobile = useIsMobile();
@@ -189,14 +188,6 @@ export default function InterceptManageApplicationClient() {
                       application has been
                       <strong> Rejected</strong>.
                     </p>
-                    <div className="group text-sm font-medium whitespace-nowrap underline" onClick={()=> setEdit(true)}>
-                      Re-Apply
-                      <ArrowRightIcon
-                        className="ms-2 -mt-0.5 inline-flex opacity-60 transition-transform group-hover:translate-x-0.5"
-                        size={16}
-                        aria-hidden="true"
-                      />
-                    </div>
                   </div>
                 </div>
               </div>
@@ -246,9 +237,7 @@ export default function InterceptManageApplicationClient() {
             </div>
           )}
         </DrawerHeader>
-        {edit ? (
-          <EditApplication data={data[0]} setEdit={setEdit} />
-        ) : loading ? (
+        {loading ? (
           <>loading</>
         ) : (
           <div className="flex-1 flex flex-col bg-background overflow-auto ">
@@ -324,59 +313,12 @@ export default function InterceptManageApplicationClient() {
                     }}
                   >
                     {data[0]?.scholarship.scholarshipTitle}
-                    <Badge className="tracking-wide capitalize">
-                      {data[0]?.status.toLowerCase()}
-                    </Badge>
+                    
                   </motion.span>
                   <p className="text-muted-foreground text-sm">
                     by {data[0]?.scholarship.scholarshipProvider}
                   </p>
                 </div>
-                <Accordion type="single" collapsible>
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger className="text-base">
-                      Application Timeline
-                    </AccordionTrigger>
-                    <AccordionContent className="py-5">
-                      <Timeline
-                        value={
-                          data[0]?.status === "PENDING"
-                            ? 2
-                            : data[0]?.status === "REVIEWED"
-                            ? 3
-                            : ["APPROVED", "DECLINED", "BLOCKED"].includes(
-                                data[0]?.status
-                              )
-                            ? 4
-                            : 1
-                        }
-                      >
-                        {items.map((item) => (
-                          <TimelineItem
-                            key={item.id}
-                            step={item.id}
-                            className="group-data-[orientation=vertical]/timeline:sm:ms-28 "
-                          >
-                            <TimelineHeader>
-                              <TimelineSeparator />
-                              <TimelineDate className="group-data-[orientation=vertical]/timeline:sm:absolute group-data-[orientation=vertical]/timeline:sm:-left-32 group-data-[orientation=vertical]/timeline:sm:w-20 group-data-[orientation=vertical]/timeline:sm:text-right">
-                                {item.date && format(item.date, "PP")}
-                              </TimelineDate>
-                              <TimelineTitle className="sm:-mt-0.5">
-                                {item.title}
-                              </TimelineTitle>
-                              <TimelineIndicator />
-                            </TimelineHeader>
-                            <TimelineContent className="text-foreground mt-2 rounded-lg px-4 py-3 bg-card">
-                              {item.description}
-                            </TimelineContent>
-                          </TimelineItem>
-                        ))}
-                      </Timeline>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-
                 <Accordion type="single" collapsible defaultValue="item-1">
                   <AccordionItem value="item-1">
                     <AccordionTrigger className="text-base">
@@ -595,6 +537,50 @@ export default function InterceptManageApplicationClient() {
                             )
                           )}
                       </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+                <Accordion type="single" collapsible>
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger className="text-base">
+                      Application Timeline
+                    </AccordionTrigger>
+                    <AccordionContent className="py-5">
+                      <Timeline
+                        value={
+                          data[0]?.status === "PENDING"
+                            ? 2
+                            : data[0]?.status === "REVIEWED"
+                            ? 3
+                            : ["APPROVED", "DECLINED", "BLOCKED"].includes(
+                                data[0]?.status
+                              )
+                            ? 4
+                            : 1
+                        }
+                      >
+                        {items.map((item) => (
+                          <TimelineItem
+                            key={item.id}
+                            step={item.id}
+                            className="group-data-[orientation=vertical]/timeline:sm:ms-28 "
+                          >
+                            <TimelineHeader>
+                              <TimelineSeparator />
+                              <TimelineDate className="group-data-[orientation=vertical]/timeline:sm:absolute group-data-[orientation=vertical]/timeline:sm:-left-32 group-data-[orientation=vertical]/timeline:sm:w-20 group-data-[orientation=vertical]/timeline:sm:text-right">
+                                {item.date && format(item.date, "PP")}
+                              </TimelineDate>
+                              <TimelineTitle className="sm:-mt-0.5">
+                                {item.title}
+                              </TimelineTitle>
+                              <TimelineIndicator />
+                            </TimelineHeader>
+                            <TimelineContent className="text-foreground mt-2 rounded-lg px-4 py-3 bg-card">
+                              {item.description}
+                            </TimelineContent>
+                          </TimelineItem>
+                        ))}
+                      </Timeline>
                     </AccordionContent>
                   </AccordionItem>
                 </Accordion>
