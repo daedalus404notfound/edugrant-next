@@ -61,32 +61,28 @@ const verifyRegisterApi = async ({
   personalData,
   accountData,
 }: VerifyRegisterData) => {
-  const payload = {
-    verificationCode: data.otp,
-    studentFirstName: personalData.firstName,
-    studentMiddleName: personalData.middleName,
-    indigenous: personalData.indigenous
-      ? personalData.indigenous.toString()
-      : "false",
-    pwd: personalData.pwd ? personalData.pwd.toString() : "false",
-    institute: accountData.institute,
-    studentLastName: personalData.lastName,
-    studentContact: personalData.contactNumber,
-    studentGender: personalData.gender,
-    studentDateofBirth: personalData.dateOfBirth,
-    studentAddress: personalData.address,
-    studentId: accountData.studentId,
-    studentEmail: accountData.email,
-    studentPassword: accountData.password,
-    course: accountData.course,
-    year: accountData.yearLevel,
-    section: accountData.section,
-  };
-  console.log(payload);
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_USER_URL}/registerAccount`,
     {
-      payload,
+      verificationCode: data.otp,
+      studentFirstName: personalData.firstName,
+      studentMiddleName: personalData.middleName,
+      indigenous: personalData.indigenous
+        ? personalData.indigenous.toString()
+        : "false",
+      pwd: personalData.pwd ? personalData.pwd.toString() : "false",
+      institute: accountData.institute,
+      studentLastName: personalData.lastName,
+      studentContact: personalData.contactNumber,
+      studentGender: personalData.gender,
+      studentDateofBirth: personalData.dateOfBirth,
+      studentAddress: personalData.address,
+      studentId: accountData.studentId,
+      studentEmail: accountData.email,
+      studentPassword: accountData.password,
+      course: accountData.course,
+      year: accountData.yearLevel,
+      section: accountData.section,
     },
     {
       withCredentials: true,
