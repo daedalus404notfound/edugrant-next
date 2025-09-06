@@ -66,7 +66,18 @@ import { useState } from "react";
 
 export default function RegisterStudent() {
   const router = useRouter();
-  const [open, setOpen] = useState(true);
+
+  const {
+    open,
+    setOpen,
+    step,
+    LoginForm,
+    loginOtpForm,
+    handleLogin,
+    handleOtpVerification,
+    authLoading,
+    verifyLoading,
+  } = useLoginHandler();
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
@@ -75,16 +86,6 @@ export default function RegisterStudent() {
       }, 250);
     }
   };
-  const {
-    step,
-    LoginForm,
-    loginOtpForm,
-    handleLogin,
-    handleOtpVerification,
-    authLoading,
-
-    verifyLoading,
-  } = useLoginHandler();
   const { remember, setRemember } = useRememberStore();
   const [hidden, setHidden] = useState(true);
   return (

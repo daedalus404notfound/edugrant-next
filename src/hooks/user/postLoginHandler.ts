@@ -114,7 +114,7 @@ export const useLoginHandler = () => {
   const router = useRouter();
 
   const [step, setStep] = useState<"login" | "otp">("login");
-
+  const [open, setOpen] = useState(true);
   const { LoginForm, LoginData, loginOtpForm } = useLoginUser();
   const { remember, setStudentId, clearStudentId } = useRememberStore();
   // TanStack Query mutations
@@ -148,6 +148,7 @@ export const useLoginHandler = () => {
         otpData,
       });
       if (result) {
+        setOpen(false);
         router.replace("/user/home");
       }
     } catch (error) {
@@ -197,6 +198,9 @@ export const useLoginHandler = () => {
 
   return {
     // Step management
+
+    open,
+    setOpen,
     step,
     setStep,
 
