@@ -127,7 +127,7 @@ export default function DataTableToolbar<
           </Button>
         )}
       </div>
-      <ExportScholarshipDialog data={student} />
+
       {selectedRows.length > 0 && (
         <DeleteDialog
           open={openAlert}
@@ -139,12 +139,13 @@ export default function DataTableToolbar<
           confirmText="Delete All"
           cancelText="Keep Items"
           trigger={
-            <Button size="sm" variant="outline" className="justify-start">
+            <Button size="sm" variant="destructive" className="justify-start">
               <Trash2 /> Delete
             </Button>
           }
         />
       )}
+      <ExportScholarshipDialog data={student} />
       <DataTableViewOptions table={table} />
     </div>
   );

@@ -1,7 +1,13 @@
 "use client";
 
 import { Row } from "@tanstack/react-table";
-import {  Maximize, MoreHorizontal, Trash2 } from "lucide-react";
+import {
+  Copy,
+  Maximize,
+  MoreHorizontal,
+  SquareArrowOutUpRight,
+  Trash2,
+} from "lucide-react";
 
 import {
   Popover,
@@ -15,6 +21,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
+import { Separator } from "@/components/ui/separator";
+import StyledToast from "@/components/ui/toast-styled";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -35,6 +43,11 @@ export function DataTableRowActions<TData>({
     }
   }, [isSuccess]);
 
+  // ✅ Copy full row data to clipboard
+  const handleCopyRow = () => {
+    navigator.clipboard.writeText(JSON.stringify(rowData, null, 2));
+  };
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -42,18 +55,33 @@ export function DataTableRowActions<TData>({
           <MoreHorizontal />
         </Button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="grid grid-cols-1 w-[180px] !p-2">
+      <PopoverContent
+        align="end"
+        className="grid grid-cols-1 w-[180px] !p-0 border"
+      >
         <Link
           href={`/administrator/home/applicants/view/${rowData.applicationId}`}
           scroll={false}
           prefetch
           className="w-full"
         >
-          <Button variant="ghost" className="justify-start w-full">
-            <Maximize /> View
+          <Button variant="ghost" size="lg" className="justify-start w-full">
+            <SquareArrowOutUpRight />
+            Review
           </Button>
         </Link>
-        <div />
+        <Separator />
+        <Button
+          variant="ghost"
+          size="lg"
+          className="justify-start w-full"
+          onClick={handleCopyRow}
+        >
+          <Copy />
+          Copy Row
+        </Button>
+        <Separator />
+
         <DeleteDialog
           open={openAlert}
           onOpenChange={setOpenAlert}
@@ -64,7 +92,11 @@ export function DataTableRowActions<TData>({
           confirmText="Delete All"
           cancelText="Keep Items"
           trigger={
-            <Button size="sm" variant="outline" className="justify-start">
+            <Button
+              size="lg"
+              variant="ghost"
+              className="justify-start text-red-600 hover:text-red-500"
+            >
               <Trash2 /> Delete
             </Button>
           }

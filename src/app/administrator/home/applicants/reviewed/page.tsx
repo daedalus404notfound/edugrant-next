@@ -18,7 +18,7 @@ import TitleReusable from "@/components/ui/title";
 
 export default function Manage() {
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("REVIEWED");
+  const [status, setStatus] = useState("INTERVIEW");
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,

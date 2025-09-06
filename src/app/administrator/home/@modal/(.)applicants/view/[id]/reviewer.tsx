@@ -59,7 +59,7 @@ export default function Reviewer({
           <DialogDescription>Full screen document preview</DialogDescription>
         </DialogHeader>
 
-        {fileFormat === "image/jpeg" || fileFormat === "png" ? (
+        {fileFormat === "JPG" || fileFormat === "PNG" ? (
           <div className="relative h-full w-full bg-black">
             <TransformWrapper
               initialScale={1}

@@ -18,6 +18,7 @@ export type ScholarshipTypes = {
   scholarshipLimit: string;
   scholarshipCover: string;
   scholarshipForm: string;
+  interview: boolean;
   scholarshipDescription: string;
   scholarshipAmount: string;
   scholarshipDocuments: Record<string, scholarshipDocumentTypes>;

@@ -1,9 +1,10 @@
 import StyledToast from "@/components/ui/toast-styled";
 import axios from "axios";
 import { useState } from "react";
-type ReviewedTypes = {
+type InterviewTypes = {
   id: string;
   adminId?: string;
+  scholarshipId: string;
   documentUpdate: Record<string, { comment: string; status: string }>;
 };
 interface ApiErrorResponse {
@@ -11,23 +12,25 @@ interface ApiErrorResponse {
   error?: string;
   statusCode?: number;
 }
-export function useRevieweddHandler({
+export function useInterviewdHandler({
   id,
   adminId,
+  scholarshipId,
   documentUpdate,
-}: ReviewedTypes) {
-  const [loadingReviewed, setLoadingReviewed] = useState(false);
-  const [openReviewed, setOpenReviewed] = useState(false);
-  const [isSuccessReviewed, setIsSuccessReviewed] = useState(false);
-  const handleReviewed = async () => {
+}: InterviewTypes) {
+  const [loadingInterview, setLoadingInterview] = useState(false);
+  const [openInterview, setOpenInterview] = useState(false);
+  const [isSuccessInterview, setIsSuccessInterview] = useState(false);
+  const handleInterview = async () => {
     try {
-      setOpenReviewed(true);
-      setLoadingReviewed(true);
+      setOpenInterview(true);
+      setLoadingInterview(true);
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/reviewedApplication`,
+        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/forInterview`,
         {
           applicationId: id,
           adminId: adminId,
+          scholarshipId: scholarshipId,
           rejectMessage: JSON.stringify(documentUpdate),
         },
         { withCredentials: true }
@@ -35,12 +38,12 @@ export function useRevieweddHandler({
       if (res.status === 200) {
         StyledToast({
           status: "success",
-          title: "Application Reviewed",
-          description: "The applicant has been reviewed.",
+          title: "Application Interview",
+          description: "The applicant has been Interview.",
         });
-        setLoadingReviewed(false);
-        setOpenReviewed(false);
-        setIsSuccessReviewed(true);
+        setLoadingInterview(false);
+        setOpenInterview(false);
+        setIsSuccessInterview(true);
       }
     } catch (error: unknown) {
       if (axios.isAxiosError<ApiErrorResponse>(error)) {
@@ -49,22 +52,22 @@ export function useRevieweddHandler({
           title: error?.response?.data.message ?? "An error occurred.",
           description: "Cannot process your request.",
         });
-        setLoadingReviewed(false);
-        setOpenReviewed(false);
-        setIsSuccessReviewed(false);
+        setLoadingInterview(false);
+        setOpenInterview(false);
+        setIsSuccessInterview(false);
       }
 
       console.error(error);
     } finally {
-      setLoadingReviewed(false);
+      setLoadingInterview(false);
     }
   };
 
   return {
-    handleReviewed,
-    loadingReviewed,
-    openReviewed,
-    setOpenReviewed,
-    isSuccessReviewed,
+    handleInterview,
+    loadingInterview,
+    openInterview,
+    setOpenInterview,
+    isSuccessInterview,
   };
 }
