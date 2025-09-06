@@ -397,7 +397,7 @@ export default function RegisterStudent() {
                     />
                     <FormField
                       control={personalForm.control}
-                      name="pwa"
+                      name="pwd"
                       render={({ field }) => (
                         <FormItem className="border-input has-data-[state=checked]:border-primary/50 relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
                           <FormControl>

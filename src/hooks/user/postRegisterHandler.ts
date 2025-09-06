@@ -29,8 +29,10 @@ const sendAuthApi = async ({ personalData, accountData }: sendAuthData) => {
       studentFirstName: personalData.firstName,
       studentMiddleName: personalData.middleName,
       studentLastName: personalData.lastName,
-      indigenous: personalData.indigenous ? "true" : "false",
-      pwa: personalData.pwa ? "true" : "false",
+      indigenous: personalData.indigenous
+        ? personalData.indigenous.toString()
+        : "false",
+      pwd: personalData.pwd ? personalData.pwd.toString() : "false",
       studentContact: personalData.contactNumber,
       studentGender: personalData.gender,
       studentDateofBirth: personalData.dateOfBirth,
@@ -63,8 +65,10 @@ const verifyRegisterApi = async ({
     verificationCode: data.otp,
     studentFirstName: personalData.firstName,
     studentMiddleName: personalData.middleName,
-    indigenous: personalData.indigenous ? "true" : "false",
-    pwa: personalData.pwa ? "true" : "false",
+    indigenous: personalData.indigenous
+      ? personalData.indigenous.toString()
+      : "false",
+    pwd: personalData.pwd ? personalData.pwd.toString() : "false",
     institute: accountData.institute,
     studentLastName: personalData.lastName,
     studentContact: personalData.contactNumber,

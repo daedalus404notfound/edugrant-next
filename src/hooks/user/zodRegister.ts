@@ -9,7 +9,7 @@ const personalDetailsSchema = z.object({
   contactNumber: z.string().min(1, "Required"),
   gender: z.string().min(1, "Required"),
   indigenous: z.boolean().optional(),
-  pwa: z.boolean().optional(),
+  pwd: z.boolean().optional(),
   dateOfBirth: z.string().min(1, "Required"),
   address: z.string().min(1, "Required"),
 });
@@ -41,6 +41,8 @@ export function useRegisterUser() {
       gender: "",
       dateOfBirth: "",
       address: "",
+      pwd: false,
+      indigenous: false,
     },
   });
   const accountForm = useForm<accountFormData>({
