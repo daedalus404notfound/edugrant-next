@@ -250,24 +250,25 @@ const data = {
       icon: Bot,
       items: [
         {
-          title: "Reviewed Applicants",
+          title: "Pending Applications",
+          url: "/administrator/home/applicants/pending",
+        },
+        {
+          title: "Approved Applications",
+          url: "/administrator/home/applicants/approved",
+        },
+        {
+          title: "Applicants for Interview",
           url: "/administrator/home/applicants/reviewed",
           sa: true,
         },
         {
-          title: "Pending Applicants",
-          url: "/administrator/home/applicants/pending",
-        },
-        {
-          title: "Approved Applicants",
-          url: "/administrator/home/applicants/approved",
-        },
-        {
-          title: "Declined Applicants",
+          title: "Declined Applications",
           url: "/administrator/home/applicants/rejected",
         },
       ],
     },
+
     {
       title: "Announcements",
       url: "/administrator/home/announcements",
@@ -353,11 +354,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 const isActive = pathname === meow.url;
                 return (
                   <SidebarMenuItem key={meow.title}>
-                    <SidebarMenuButton
-                      isActive={isActive}
-                      asChild
-                    
-                    >
+                    <SidebarMenuButton isActive={isActive} asChild>
                       <Link
                         prefetch
                         scroll={false}

@@ -76,7 +76,9 @@ export default function Create() {
   } = useCreateScholarship();
 
   return (
-    <div className="px-4">
+    <div
+      className="relative lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] "
+    >
       <div className="mx-auto max-w-4xl w-full py-10">
         <TitleReusable
           title=" Create Scholarship"

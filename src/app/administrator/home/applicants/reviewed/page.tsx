@@ -1,6 +1,6 @@
 "use client";
 import "ldrs/react/Ring.css";
-import { UserRoundMinus } from "lucide-react";
+import { ClipboardList, UserRoundMinus } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { DataTable } from "@/app/administrator/table-components/data-table";
@@ -45,13 +45,14 @@ export default function Manage() {
   });
   console.log(columnFilters);
   return (
-    <div className=" px-4 relative z-10">
+    <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <TitleReusable
-          title="Reviewed Applicants"
-          description="Applicants currently waiting for review."
-          Icon={UserRoundMinus}
+          title="Applicants for Interview"
+          description="Applicants currently scheduled for an interview."
+          Icon={ClipboardList}
         />
+
         <div className="py-8">
           <DataTable<ApplicationTypes, unknown>
             data={search.trim().length > 0 ? searchData : data}

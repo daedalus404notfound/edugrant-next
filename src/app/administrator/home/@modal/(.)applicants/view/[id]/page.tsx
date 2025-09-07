@@ -28,7 +28,6 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import useApplicationById from "@/hooks/admin/getApplicantData";
 import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence } from "motion/react";
 import {
   Accordion,
   AccordionContent,
@@ -61,6 +60,13 @@ import {
   Locate,
   VenusAndMars,
   Building2,
+  Clock,
+  FileText,
+  Users,
+  Info,
+  AlertTriangle,
+  Eye,
+  Maximize,
 } from "lucide-react";
 
 import Reviewer from "./reviewer";
@@ -73,52 +79,10 @@ import { useAdminStore } from "@/store/adminUserStore";
 import { useInterviewdHandler } from "@/hooks/admin/postReviewedHandler";
 import { useApprovedHandler } from "@/hooks/admin/postApproveHandler";
 import TitleReusable from "@/components/ui/title";
+import { Tabs } from "@/components/ui/vercel-tabs";
+import Link from "next/link";
+import { BGPattern } from "@/components/ui/grid";
 
-const containerVariants = {
-  hidden: {
-    opacity: 0,
-    y: 20,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: [0.23, 1, 0.32, 1] as const,
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: {
-    opacity: 0,
-    y: 10,
-  },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.4,
-      ease: [0.23, 1, 0.32, 1] as const,
-    },
-  },
-};
-
-const fadeInVariants = {
-  hidden: {
-    opacity: 0,
-    scale: 0.95,
-  },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      duration: 0.3,
-      ease: [0.23, 1, 0.32, 1] as const,
-    },
-  },
-};
 const mimeToLabelMap: Record<string, string> = {
   "application/pdf": "PDF",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
@@ -126,11 +90,19 @@ const mimeToLabelMap: Record<string, string> = {
   "image/jpeg": "JPG",
   "image/png": "PNG",
 };
+
+const statusColors = {
+  APPROVED: "bg-green-800/20 text-green-500",
+  REJECTED: "bg-red-800/20 text-red-500",
+  PENDING: "bg-yellow-800/20 text-yellow-500 ",
+};
+
 export default function InterceptReviewApplicants() {
   const router = useRouter();
   const params = useParams();
   const { admin } = useAdminStore();
   const [open, setOpen] = useState(true);
+  const [activeSection, setActiveSection] = useState("documents");
   const id = params.id as string;
   const { data, loading } = useApplicationById(id);
 
@@ -158,9 +130,6 @@ export default function InterceptReviewApplicants() {
   console.log("tota;'", data?.scholarship.scholarshipDocuments);
   const reviewedDocs = data?.userDocuments
     ? Object.entries(data.userDocuments).filter(([key, doc]) => {
-        // Document is considered reviewed if:
-        // 1. It has a status from the API (doc.rejectMessage?.status exists)
-        // 2. OR it has been reviewed locally (reviewData[key]?.status exists)
         return doc.rejectMessage?.status || reviewData[key]?.status;
       }).length
     : 0;
@@ -229,64 +198,75 @@ export default function InterceptReviewApplicants() {
     {
       label: "Father Full Name",
       icon: UserRound,
-      value: "Juan Dela Cruz",
+      value: data?.student.fatherFullName,
+    },
+    {
+      label: "Status",
+      icon: UserRound,
+      value: data?.student.fatherStatus,
     },
     {
       label: "Address",
       icon: Locate,
-      value: "San Ildefonso, Bulacan",
+      value: data?.student.fatherAddress,
     },
     {
       label: "Contact No.",
       icon: Phone,
-      value: "09703488043",
+      value: data?.student.fatherContactNumber,
     },
     {
       label: "Occupation",
       icon: Briefcase,
-      value: "Senator",
+      value: data?.student.fatherOccupation,
     },
     {
       label: "Highest Education Attainment",
       icon: GraduationCap,
-      value: "Senator",
+      value: data?.student.fatherHighestEducation,
     },
     {
       label: "Total Parents Taxable Income",
       icon: PhilippinePeso,
-      value: "2000.00",
+      value: data?.student.fatherTotalParentsTaxableIncome,
     },
   ];
+
   const motherDetails = [
     {
       label: "Mother Full Name",
       icon: UserRound,
-      value: "Juana Dela Cruz",
+      value: data?.student.motherFullName,
+    },
+    {
+      label: "Status",
+      icon: Locate,
+      value: data?.student.motherStatus,
     },
     {
       label: "Address",
-      icon: Locate,
-      value: "San Miguel, Bulacan",
+      icon: UserRound,
+      value: data?.student.motherAddress,
     },
     {
       label: "Contact No.",
       icon: Phone,
-      value: "09703488043",
+      value: data?.student.motherContactNumber,
     },
     {
       label: "Occupation",
       icon: Briefcase,
-      value: "Senator",
+      value: data?.student.motherOccupation,
     },
     {
       label: "Highest Education Attainment",
       icon: GraduationCap,
-      value: "Senator",
+      value: data?.student.motherHighestEducation,
     },
     {
       label: "Total Parents Taxable Income",
       icon: PhilippinePeso,
-      value: "2000.00",
+      value: data?.student.motherTotalParentsTaxableIncome,
     },
   ];
 
@@ -294,33 +274,27 @@ export default function InterceptReviewApplicants() {
     {
       label: "Guardian Full Name",
       icon: UserRound,
-      value: "Juan Dela Cruz",
+      value: data?.student.guardianFullName,
     },
     {
       label: "Contact No.",
       icon: Phone,
-      value: "09703488043",
+      value: data?.student.guardianContactNumber,
     },
     {
       label: "Address",
       icon: Locate,
-      value: "San Ildefonso, Bulacan",
+      value: data?.student.guardianAddress,
     },
-
     {
       label: "Occupation",
       icon: Briefcase,
-      value: "Senator",
+      value: data?.student.guardianOccupation,
     },
     {
       label: "Highest Education Attainment",
       icon: GraduationCap,
-      value: "Senator",
-    },
-    {
-      label: "Total Parents Taxable Income",
-      icon: PhilippinePeso,
-      value: "2000.00",
+      value: data?.student.guardianHighestEducation,
     },
   ];
 
@@ -328,36 +302,44 @@ export default function InterceptReviewApplicants() {
     {
       label: "Contact No.",
       icon: Phone,
-      value: "09703488043",
+      value: data?.student.contactNumber,
     },
     {
       label: "Gender",
       icon: VenusAndMars,
-      value: "Male",
+      value: data?.student.gender,
     },
-
     {
       label: "Address",
       icon: Locate,
-      value: "San Ildefonso, Bulacan",
+      value: data?.student.address,
     },
-
     {
       label: "Email",
-      icon: Briefcase,
-      value: "jerometecson@gmail.com",
+      icon: Mail,
+      value: data?.student.studentEmail,
     },
     {
       label: "Institute",
       icon: Building2,
-      value: "IEAT ",
+      value: data?.student.institute,
     },
     {
       label: "Course, Year & Section",
       icon: GraduationCap,
-      value: "BSIT - 4C",
+      value: `${data?.student.course} - ${data?.student.year.slice(0, 1)}${
+        data?.student.section
+      }`,
     },
   ];
+
+  const navigationTabs = [
+    { id: "documents", label: "Documents", indicator: null },
+    { id: "student", label: "Student Info", indicator: null },
+    { id: "family", label: "Family Background", indicator: null },
+    { id: "scholarship", label: "Scholarship Details", indicator: null },
+  ];
+
   return (
     <Drawer
       open={open}
@@ -365,98 +347,93 @@ export default function InterceptReviewApplicants() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="max-w-[1200px] w-full mx-auto h-[95vh] outline-0 border-0 p-1">
+      <DrawerContent className="max-w-[1200px] w-full mx-auto h-[95vh] outline-0 border-0 p-0.5">
         <DrawerHeader className="sr-only">
           <DrawerTitle></DrawerTitle>
           <DrawerDescription></DrawerDescription>
         </DrawerHeader>
-        <div className="bg-background rounded-lg flex-1 overflow-auto">
-          <div className=" p-4">
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-card p-4 rounded-md">
-                <h1 className="text-lg font-medium">Tecson, Jerome L.</h1>
-                <p className="mt-1 text-sm">2022000493</p>
-              </div>
-              <div className="bg-card p-4 rounded-md">
-                <h1 className="text-lg font-medium">Kuya Win Scholarship</h1>
-                <p className="mt-1 text-sm">Win Gatchalian</p>
+        <div className="bg-background rounded-lg flex-1 overflow-auto flex flex-col divide-y">
+          {/* Enhanced Header */}
+          <div className="  bg-gradient-to-r from-background to-card">
+            <div className="relative p-4 h-35">
+              <BGPattern
+                variant="grid"
+                className="top-0  z-1 opacity-30 hidden dark:block mask-gradient"
+                size={40}
+              />
+              <div className="relative flex items-start justify-between z-20">
+                <div className="flex items-center justify-center gap-5">
+                  <Avatar className="size-18 border-2 border-border ">
+                    <AvatarFallback className="text-2xl font-semibold">
+                      JT
+                    </AvatarFallback>
+                  </Avatar>
+
+                  <div className="">
+                    <div className="flex items-center gap-3">
+                      <h1 className="text-xl font-medium text-foreground">
+                        {data?.student.lastName}, {data?.student.firstName}{" "}
+                        {data?.student.middleName}
+                      </h1>
+                      <Badge
+                        className={` ${
+                          data?.status === "PENDING"
+                            ? statusColors.PENDING
+                            : data?.status === "APPROVED"
+                            ? statusColors.APPROVED
+                            : statusColors.REJECTED
+                        }`}
+                      >
+                        {data?.status || "PENDING"}
+                      </Badge>
+                    </div>
+                    <p className="text-muted-foreground font-mono text-sm">
+                      ID: {data?.student.studentId}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <h2 className="text-xl font-semibold text-foreground">
+                    {data?.scholarship.scholarshipTitle}
+                  </h2>
+                  <p className="text-muted-foreground">
+                    {data?.scholarship.scholarshipProvider}
+                  </p>
+                </div>
               </div>
             </div>
-            <div className="space-y-3">
-              <Accordion type="single" collapsible>
-                <AccordionItem value="item-1">
-                  <AccordionTrigger className="text-base">
-                    Student Information
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="grid grid-cols-2 gap-3">
-                      {studentInformation.map((meow) => (
-                        <motion.div
-                          key={meow.label}
-                          variants={itemVariants}
-                          className={`flex items-start gap-3 py-4 bg-card p-4 rounded-md  ${
-                            meow.label === "Address"
-                              ? "col-span-2"
-                              : meow.label === "Email"
-                              ? "col-span-2"
-                              : ""
-                          }`}
-                        >
-                          <meow.icon className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                              {meow.label}
-                            </p>
-                            <p className=" font-medium text-sm">{meow.value}</p>
-                          </div>
-                        </motion.div>
-                      ))}
+          </div>
+
+          <div className="p-4 b bg-card/30">
+            <Tabs
+              tabs={navigationTabs}
+              onTabChange={(tabId) => setActiveSection(tabId)}
+            />
+          </div>
+
+          {/* Content Area */}
+          <div className="flex-1">
+            <div className="p-6">
+              {/* Documents Section */}
+              {activeSection === "documents" && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2 mb-4">
+                    <FileText className="w-5 h-5" />
+                    <h2 className="text-xl font-semibold">
+                      Submitted Documents
+                    </h2>
+                  </div>
+                  {loading ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      <Skeleton className="h-80 w-full" />
+                      <Skeleton className="h-80 w-full" />
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-
-              <Accordion type="single" collapsible defaultValue="item-1">
-                <AccordionItem value="item-1">
-                  <AccordionTrigger className="text-base">
-                    Submitted Documents
-                  </AccordionTrigger>
-                  <AccordionContent className="grid grid-cols-2 gap-5">
-                    {loading ? (
-                      <>
-                        <Skeleton className="aspect-square w-full" />
-
-                        <Skeleton className="aspect-square w-full" />
-                      </>
-                    ) : (
-                      data?.userDocuments &&
-                      Object.entries(data.userDocuments).map(
-                        ([key, doc], index) => (
-                          <motion.div
-                            key={key}
-                            variants={itemVariants}
-                            custom={index}
-                            transition={{
-                              type: "spring",
-                              stiffness: 300,
-                              damping: 20,
-                            }}
-                          >
-                            <div className="flex flex-col gap-3 rounded-lg p-4 space-y-8 bg-card">
-                              <div className="flex items-start justify-between mb-3">
-                                <div>
-                                  <h4 className="text-base font-medium ">
-                                    {doc.document}
-                                  </h4>
-                                  <p className="text-sm text-muted-foreground leading-relaxed uppercase">
-                                    {mimeToLabelMap[doc.fileFormat]}
-                                  </p>
-                                </div>
-
-                                <Button size="sm">
-                                  <Download />
-                                </Button>
-                              </div>
+                  ) : (
+                    <div className="grid grid-cols-1 divide-y">
+                      {data?.userDocuments &&
+                        Object.entries(data.userDocuments).map(
+                          ([key, doc], index) => (
+                            <div key={index} className="flex gap-5 py-8">
                               <Reviewer
                                 fileFormat={mimeToLabelMap[doc.fileFormat]}
                                 resourceType={doc.resourceType}
@@ -470,379 +447,429 @@ export default function InterceptReviewApplicants() {
                                   updateReviewData(key, field, value)
                                 }
                               />
-                              <div className="space-y-3">
-                                <div className="flex gap-2">
-                                  <Button
-                                    variant="secondary"
-                                    className={`flex-1 font-medium ${
-                                      // Check if doc has approved status OR local review data is approved
-                                      doc.rejectMessage?.status ===
-                                        "APPROVED" ||
-                                      reviewData[key]?.status === "APPROVED"
-                                        ? " !bg-green-700"
-                                        : ""
-                                    }`}
-                                    onClick={() => {
-                                      updateReviewData(
-                                        key,
-                                        "status",
-                                        "APPROVED"
-                                      );
-                                    }}
-                                    disabled={
-                                      // Disable if doc already has any status (approved or rejected)
-                                      !!doc.rejectMessage?.status
-                                    }
-                                  >
-                                    {/* Show checkmark if approved, otherwise show Accept */}
-                                    {doc.rejectMessage?.status ===
-                                    "APPROVED" ? (
-                                      <>
-                                        <CheckCheck className="w-4 h-4 mr-1" />
-                                        Accepted
-                                      </>
-                                    ) : (
-                                      "Accept"
-                                    )}
-                                  </Button>
-                                  <Button
-                                    variant="secondary"
-                                    className={`flex-1 font-medium ${
-                                      // Check if doc has rejected status OR local review data is rejected
-                                      doc.rejectMessage?.status ===
-                                        "REJECTED" ||
-                                      reviewData[key]?.status === "REJECTED"
-                                        ? "!bg-red-700"
-                                        : ""
-                                    }`}
-                                    size="sm"
-                                    onClick={() => {
-                                      updateReviewData(
-                                        key,
-                                        "status",
-                                        "REJECTED"
-                                      );
-                                    }}
-                                    disabled={
-                                      // Disable if doc already has any status (approved or rejected)
-                                      !!doc.rejectMessage?.status
-                                    }
-                                  >
-                                    {/* Show X mark if rejected, otherwise show Reject */}
-                                    {doc.rejectMessage?.status ===
-                                    "REJECTED" ? (
-                                      <>
-                                        <UserRoundX className="w-4 h-4 mr-1" />
-                                        Rejected
-                                      </>
-                                    ) : (
-                                      "Reject"
-                                    )}
+
+                              <div className="flex-1 flex flex-col justify-between">
+                                <div className="flex items-start justify-between">
+                                  <div className="flex-1">
+                                    <h4 className="text-lg font-semibold mb-1">
+                                      {doc.document}
+                                    </h4>
+                                    <div className="flex items-center gap-2">
+                                      <Badge
+                                        variant="secondary"
+                                        className="text-xs"
+                                      >
+                                        {mimeToLabelMap[doc.fileFormat]}
+                                      </Badge>
+                                      {doc.rejectMessage?.status && (
+                                        <Badge
+                                          className={`text-xs ${
+                                            doc.rejectMessage.status ===
+                                            "APPROVED"
+                                              ? statusColors.APPROVED
+                                              : statusColors.REJECTED
+                                          }`}
+                                        >
+                                          {doc.rejectMessage.status}
+                                        </Badge>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <Button size="sm" variant="outline">
+                                    <Download className="w-4 h-4" />
                                   </Button>
                                 </div>
-                                <Textarea
-                                  placeholder="Add review comment.."
-                                  value={
-                                    doc.rejectMessage?.comment
-                                      ? doc.rejectMessage?.comment
-                                      : reviewData[key]?.comment || ""
-                                  }
-                                  disabled={!!doc.rejectMessage?.status}
-                                  onChange={(e) =>
-                                    updateReviewData(
-                                      key,
-                                      "comment",
-                                      e.target.value
-                                    )
-                                  }
-                                />
+                                <div className="flex gap-3">
+                                  <div className="flex-1">
+                                    {" "}
+                                    <Textarea
+                                      placeholder="Add review comment..."
+                                      value={
+                                        doc.rejectMessage?.comment ||
+                                        reviewData[key]?.comment ||
+                                        ""
+                                      }
+                                      disabled={!!doc.rejectMessage?.status}
+                                      onChange={(e) =>
+                                        updateReviewData(
+                                          key,
+                                          "comment",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="min-h-9"
+                                    />
+                                  </div>
+                                  <div className="flex gap-2">
+                                    <Button
+                                      variant={
+                                        doc.rejectMessage?.status ===
+                                          "APPROVED" ||
+                                        reviewData[key]?.status === "APPROVED"
+                                          ? "default"
+                                          : "outline"
+                                      }
+                                      className={`font-medium transition-all ${
+                                        doc.rejectMessage?.status ===
+                                          "APPROVED" ||
+                                        reviewData[key]?.status === "APPROVED"
+                                          ? "!bg-green-700 hover:!bg-green-800"
+                                          : "hover:bg-green-50 hover:border-green-200 hover:text-green-700"
+                                      }`}
+                                      onClick={() => {
+                                        updateReviewData(
+                                          key,
+                                          "status",
+                                          "APPROVED"
+                                        );
+                                      }}
+                                      disabled={!!doc.rejectMessage?.status}
+                                    >
+                                      {doc.rejectMessage?.status ===
+                                      "APPROVED" ? (
+                                        <>
+                                          <CheckCheck className="w-4 h-4 mr-2" />
+                                          Accepted
+                                        </>
+                                      ) : (
+                                        <>
+                                          <UserCheck2 className="w-4 h-4 mr-2" />
+                                          Accept
+                                        </>
+                                      )}
+                                    </Button>
+                                    <Button
+                                      variant={
+                                        doc.rejectMessage?.status ===
+                                          "REJECTED" ||
+                                        reviewData[key]?.status === "REJECTED"
+                                          ? "destructive"
+                                          : "outline"
+                                      }
+                                      className={`font-medium transition-all ${
+                                        doc.rejectMessage?.status !==
+                                          "REJECTED" &&
+                                        reviewData[key]?.status !== "REJECTED"
+                                          ? "hover:bg-red-50 hover:border-red-200 hover:text-red-700"
+                                          : ""
+                                      }`}
+                                      onClick={() => {
+                                        updateReviewData(
+                                          key,
+                                          "status",
+                                          "REJECTED"
+                                        );
+                                      }}
+                                      disabled={!!doc.rejectMessage?.status}
+                                    >
+                                      {doc.rejectMessage?.status ===
+                                      "REJECTED" ? (
+                                        <>
+                                          <UserRoundX className="w-4 h-4 mr-2" />
+                                          Rejected
+                                        </>
+                                      ) : (
+                                        <>
+                                          <UserX2 className="w-4 h-4 mr-2" />
+                                          Reject
+                                        </>
+                                      )}
+                                    </Button>
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </motion.div>
-                        )
-                      )
-                    )}
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-              <Accordion type="single" collapsible>
-                <AccordionItem value="item-1">
-                  <AccordionTrigger className="text-base">
-                    Family Background
-                  </AccordionTrigger>
-                  <AccordionContent className="grid grid-cols-2 gap-5">
-                    <div className="space-y-2 p-4">
-                      <TitleReusable title="Father" description="" />
-                      <div>
-                        {fatherDetails.map((meow) => (
-                          <motion.div
-                            key={meow.label}
-                            variants={itemVariants}
-                            className="flex items-start gap-3 py-4  hover:bg-background transition-colors duration-100"
-                          >
-                            <meow.icon className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-                            <div className="min-w-0 flex-1">
-                              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                                {meow.label}
-                              </p>
-                              <p className=" font-medium text-sm">
-                                {meow.value}
-                              </p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
+                          )
+                        )}
                     </div>
-                    <div className="space-y-2 p-4">
-                      <TitleReusable title="Guardian" description="" />
-                      <div className="grid grid-cols-2">
-                        {guardianDetails.map((meow) => (
-                          <motion.div
-                            key={meow.label}
-                            variants={itemVariants}
-                            className={`flex items-start gap-3  py-5    hover:bg-background transition-colors duration-100 ${
-                              meow.label === "Address" ? "col-span-2" : ""
-                            }`}
-                          >
-                            <meow.icon className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-                            <div className="min-w-0 flex-1">
-                              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                                {meow.label}
-                              </p>
-                              <p className=" font-medium text-sm">
-                                {meow.value}
-                              </p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="space-y-2 p-4">
-                      <TitleReusable title="Mother" description="" />
-                      <div>
-                        {motherDetails.map((meow) => (
-                          <motion.div
-                            key={meow.label}
-                            variants={itemVariants}
-                            className="flex items-start gap-3 py-4  hover:bg-background transition-colors duration-100"
-                          >
-                            <meow.icon className="w-4 h-4 text-muted-foreground mt-0.5 flex-shrink-0" />
-                            <div className="min-w-0 flex-1">
-                              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                                {meow.label}
-                              </p>
-                              <p className=" font-medium text-sm">
-                                {meow.value}
-                              </p>
-                            </div>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="flex flex-col">
-                      <TitleReusable title="Siblings" description="" />
-                      <div className="flex-1"></div>
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-              <Accordion type="single" collapsible>
-                <AccordionItem value="item-1">
-                  <AccordionTrigger className="text-base">
-                    Scholarship Details
-                  </AccordionTrigger>
-                  <AccordionContent className="grid lg:grid-cols-2 grid-cols-1 gap-3">
-                    <div className="space-y-3">
-                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                        <PhilippinePeso />
-                        <div>
-                          <p className="text-muted-foreground text-sm">
-                            Scholarship Amount
-                          </p>
-                          <h1 className="text-lg font-medium font-mono">
-                            {data?.scholarship.scholarshipAmount}.00
-                          </h1>
+                  )}
+                </div>
+              )}
+
+              {/* Student Information Section */}
+              {activeSection === "student" && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2 mb-6">
+                    <UserRound className="w-5 h-5" />
+                    <h2 className="text-xl font-semibold">
+                      Student Information
+                    </h2>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {studentInformation.map((info, index) => (
+                      <div
+                        key={index}
+                        className={`bg-card border rounded-lg p-4 hover:shadow-sm transition-all duration-200 ${
+                          info.label === "Address" || info.label === "Email"
+                            ? "md:col-span-2"
+                            : ""
+                        }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <info.icon className="w-5 h-5 text-muted-foreground mt-1 flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
+                              {info.label}
+                            </p>
+                            <p className="font-medium text-foreground">
+                              {info.value}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                        <Building />
-                        <div>
-                          <p className="text-muted-foreground text-sm">
-                            Scholarship Type
-                          </p>
-                          <h1 className="text-lg font-medium capitalize">
-                            {data?.scholarship.scholarshipType}
-                          </h1>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Family Background Section */}
+              {activeSection === "family" && (
+                <div className="space-y-8">
+                  <div className="flex items-center gap-2 mb-6">
+                    <Users className="w-5 h-5" />
+                    <h2 className="text-xl font-semibold">Family Background</h2>
+                  </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    {/* Father Details */}
+                    <div className="space-y-4">
+                      <TitleReusable title="Father" description="" />
+                      <div className="bg-card border rounded-lg p-6">
+                        <div className="space-y-4">
+                          {fatherDetails.map((detail, index) => (
+                            <div
+                              key={index}
+                              className="flex items-start gap-3 py-2 border-b border-border/50 last:border-0"
+                            >
+                              <detail.icon className="w-4 h-4 text-muted-foreground mt-1 flex-shrink-0" />
+                              <div className="min-w-0 flex-1">
+                                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                  {detail.label}
+                                </p>
+                                <p className="font-medium text-sm mt-1">
+                                  {detail.value}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Mother Details */}
+                    <div className="space-y-4">
+                      <TitleReusable title="Mother" description="" />
+                      <div className="bg-card border rounded-lg p-6">
+                        <div className="space-y-4">
+                          {motherDetails.map((detail, index) => (
+                            <div
+                              key={index}
+                              className="flex items-start gap-3 py-2 border-b border-border/50 last:border-0"
+                            >
+                              <detail.icon className="w-4 h-4 text-muted-foreground mt-1 flex-shrink-0" />
+                              <div className="min-w-0 flex-1">
+                                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                  {detail.label}
+                                </p>
+                                <p className="font-medium text-sm mt-1">
+                                  {detail.value}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Guardian Details */}
+                    <div className="space-y-4 lg:col-span-2">
+                      <TitleReusable title="Guardian" description="" />
+                      <div className="bg-card border rounded-lg p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          {guardianDetails.map((detail, index) => (
+                            <div
+                              key={index}
+                              className={`flex items-start gap-3 ${
+                                detail.label === "Address"
+                                  ? "md:col-span-2 lg:col-span-3"
+                                  : ""
+                              }`}
+                            >
+                              <detail.icon className="w-4 h-4 text-muted-foreground mt-1 flex-shrink-0" />
+                              <div className="min-w-0 flex-1">
+                                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                  {detail.label}
+                                </p>
+                                <p className="font-medium text-sm mt-1">
+                                  {detail.value}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Scholarship Details Section */}
+              {activeSection === "scholarship" && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2 mb-6">
+                    <Building className="w-5 h-5" />
+                    <h2 className="text-xl font-semibold">
+                      Scholarship Details
+                    </h2>
+                  </div>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="bg-card border rounded-lg p-6 hover:shadow-sm transition-all duration-200">
+                        <div className="flex items-center gap-4">
+                          <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-lg">
+                            <PhilippinePeso className="w-6 h-6 text-green-600 dark:text-green-400" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">
+                              Scholarship Amount
+                            </p>
+                            <h3 className="text-2xl font-bold text-foreground font-mono">
+                              ₱{data?.scholarship.scholarshipAmount}.00
+                            </h3>
+                          </div>
                         </div>
                       </div>
 
-                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                        <Calendar />
-                        <div>
-                          <p className="text-muted-foreground text-sm">
-                            Scholarship Deadline
-                          </p>
-                          <h1 className="text-lg font-medium">
-                            {data?.scholarship?.scholarshipDeadline
-                              ? format(
-                                  new Date(
-                                    data.scholarship.scholarshipDeadline
-                                  ),
-                                  "PPP"
-                                )
-                              : "No deadline"}
-                          </h1>
+                      <div className="bg-card border rounded-lg p-6 hover:shadow-sm transition-all duration-200">
+                        <div className="flex items-center gap-4">
+                          <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
+                            <Building className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">
+                              Scholarship Type
+                            </p>
+                            <h3 className="text-xl font-semibold capitalize">
+                              {data?.scholarship.scholarshipType}
+                            </h3>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-card border rounded-lg p-6 hover:shadow-sm transition-all duration-200">
+                        <div className="flex items-center gap-4">
+                          <div className="p-3 bg-orange-100 dark:bg-orange-900/20 rounded-lg">
+                            <Calendar className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+                          </div>
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground">
+                              Application Deadline
+                            </p>
+                            <h3 className="text-lg font-semibold">
+                              {data?.scholarship?.scholarshipDeadline
+                                ? format(
+                                    new Date(
+                                      data.scholarship.scholarshipDeadline
+                                    ),
+                                    "PPP"
+                                  )
+                                : "No deadline"}
+                            </h3>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div className=" p-4 space-y-2  rounded-md bg-card">
-                      <div className="flex gap-3 items-center">
-                        <StickyNote />
-                        <p className="text-muted-foreground text-sm">
-                          Scholarship Details
+
+                    <div className="bg-card border rounded-lg p-6 hover:shadow-sm transition-all duration-200">
+                      <div className="flex items-start gap-3 mb-4">
+                        <div className="p-2 bg-purple-100 dark:bg-purple-900/20 rounded-lg">
+                          <StickyNote className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground">
+                            Scholarship Description
+                          </p>
+                        </div>
+                      </div>
+                      <div className="pl-12">
+                        <p className="text-sm leading-relaxed text-foreground">
+                          {data?.scholarship.scholarshipDescription ||
+                            "No description available"}
                         </p>
                       </div>
-
-                      <h1>{data?.scholarship.scholarshipDescription}</h1>
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-              <Accordion type="single" collapsible>
-                <AccordionItem value="item-1">
-                  <AccordionTrigger className="text-base">
-                    Other Application
-                  </AccordionTrigger>
-                  <AccordionContent>1</AccordionContent>
-                </AccordionItem>
-              </Accordion>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
-        <DrawerFooter className=" grid grid-cols-3 gap-3 bg-background">
+
+        {/* Enhanced Footer */}
+        <DrawerFooter className="bg-gradient-to-r from-card/50 to-card border-t p-6">
           {loading ? (
-            <>
-              {" "}
-              <Skeleton className="h-9 flex-1 rounded-lg" />
-              <Skeleton className="h-9 flex-1 rounded-lg" />
-              <Skeleton className="h-9 flex-1 rounded-lg" />
-            </>
+            <div className="grid grid-cols-3 gap-3">
+              <Skeleton className="h-11 flex-1 rounded-lg" />
+              <Skeleton className="h-11 flex-1 rounded-lg" />
+              <Skeleton className="h-11 flex-1 rounded-lg" />
+            </div>
           ) : (
-            <>
+            <div className="grid grid-cols-3 gap-4">
+              {/* Approve Button */}
               {data?.status === "PENDING" &&
                 data.scholarship.interview === false && (
                   <Dialog open={openApprove} onOpenChange={setOpenApprove}>
                     <DialogTrigger asChild>
-                      {data?.userDocuments && (
-                        <Button
-                          className="flex-1 !bg-green-800"
-                          variant="outline"
-                          disabled={totalDocs !== reviewedDocs}
-                        >
-                          <UserRoundCheck /> Approve
-                        </Button>
-                      )}
+                      <Button
+                        className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
+                        disabled={totalDocs !== reviewedDocs}
+                      >
+                        <UserRoundCheck className="w-4 h-4 mr-2" />
+                        Approve Application
+                      </Button>
                     </DialogTrigger>
                     <DialogContent
-                      className="max-w-lg p-6"
-                      onInteractOutside={(e) => {
-                        e.preventDefault();
-                      }}
-                      onEscapeKeyDown={(e) => {
-                        e.preventDefault();
-                      }}
+                      className="max-w-lg p-6 rounded-xl"
+                      onInteractOutside={(e) => e.preventDefault()}
+                      onEscapeKeyDown={(e) => e.preventDefault()}
                       showCloseButton={false}
                     >
-                      <DialogHeader>
-                        <DialogTitle className="text-green-600 ">
-                          Accept Application?
+                      <DialogHeader className="text-center pb-4">
+                        <div className="mx-auto w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mb-4">
+                          <UserRoundCheck className="w-6 h-6 text-green-600 dark:text-green-400" />
+                        </div>
+                        <DialogTitle className="text-xl font-semibold text-green-700 dark:text-green-300">
+                          Approve Application
                         </DialogTitle>
-                        <DialogDescription className="text-neutral-600 dark:text-neutral-400">
-                          This will accept the applicant and notify them of the
-                          decision. This action cannot be undone.
+                        <DialogDescription className="text-muted-foreground leading-relaxed">
+                          This will approve the scholarship application and
+                          notify the student of the positive decision. This
+                          action cannot be undone.
                         </DialogDescription>
                       </DialogHeader>
-                      <DialogFooter>
+                      <DialogFooter className="gap-3 pt-4">
                         <Button
                           variant="outline"
                           onClick={() => setOpenApprove(false)}
                           disabled={loadingApprove}
+                          className="flex-1"
                         >
                           Cancel
                         </Button>
                         <Button
-                          className="!bg-green-700 !hover:bg-blue-600"
-                          variant="outline"
                           onClick={handleApprove}
                           disabled={loadingApprove}
+                          className="flex-1 bg-green-700 hover:bg-green-800 text-white"
                         >
                           {loadingApprove ? (
                             <>
-                              Approving ...
-                              <Loader className="animate-spin" />
+                              <Loader className="w-4 h-4 mr-2 animate-spin" />
+                              Approving...
                             </>
                           ) : (
-                            "Confirm Approve"
-                          )}
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                )}
-              {data?.status === "PENDING" &&
-                data.scholarship.interview === true && (
-                  <Dialog open={openInterview} onOpenChange={setOpenInterview}>
-                    <DialogTrigger asChild>
-                      {data?.userDocuments && (
-                        <Button
-                          className="flex-1 !bg-green-800"
-                          variant="outline"
-                          disabled={totalDocs !== reviewedDocs}
-                        >
-                          <UserRoundCheck /> Approve (For Interview)
-                        </Button>
-                      )}
-                    </DialogTrigger>
-                    <DialogContent
-                      className="max-w-lg p-6"
-                      onInteractOutside={(e) => {
-                        e.preventDefault();
-                      }}
-                      onEscapeKeyDown={(e) => {
-                        e.preventDefault();
-                      }}
-                      showCloseButton={false}
-                    >
-                      <DialogHeader>
-                        <DialogTitle className="text-green-600 ">
-                          Accept Application?
-                        </DialogTitle>
-                        <DialogDescription className="text-neutral-600 dark:text-neutral-400">
-                          This will accept the applicant and notify them of the
-                          decision. This action cannot be undone.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <DialogFooter>
-                        <Button
-                          variant="outline"
-                          onClick={() => setOpenInterview(false)}
-                          disabled={loadingInterview}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          className="!bg-green-700 !hover:bg-blue-600"
-                          variant="outline"
-                          onClick={handleInterview}
-                          disabled={loadingInterview}
-                        >
-                          {loadingInterview ? (
                             <>
-                              Approving ...
-                              <Loader className="animate-spin" />
+                              <CheckCheck className="w-4 h-4 mr-2" />
+                              Confirm Approval
                             </>
-                          ) : (
-                            "Confirm Approve"
                           )}
                         </Button>
                       </DialogFooter>
@@ -850,76 +877,144 @@ export default function InterceptReviewApplicants() {
                   </Dialog>
                 )}
 
+              {/* Approve for Interview Button */}
+              {data?.status === "PENDING" &&
+                data.scholarship.interview === true && (
+                  <Dialog open={openInterview} onOpenChange={setOpenInterview}>
+                    <DialogTrigger asChild>
+                      <Button
+                        className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
+                        disabled={totalDocs !== reviewedDocs}
+                      >
+                        <UserRoundCheck className="w-4 h-4 mr-2" />
+                        Approve for Interview
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent
+                      className="max-w-lg p-6 rounded-xl"
+                      onInteractOutside={(e) => e.preventDefault()}
+                      onEscapeKeyDown={(e) => e.preventDefault()}
+                      showCloseButton={false}
+                    >
+                      <DialogHeader className="text-center pb-4">
+                        <div className="mx-auto w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mb-4">
+                          <Clock className="w-6 h-6 text-green-600 dark:text-green-400" />
+                        </div>
+                        <DialogTitle className="text-xl font-semibold text-green-700 dark:text-green-300">
+                          Approve for Interview
+                        </DialogTitle>
+                        <DialogDescription className="text-muted-foreground leading-relaxed">
+                          This will approve the application for the interview
+                          stage and notify the student. This action cannot be
+                          undone.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter className="gap-3 pt-4">
+                        <Button
+                          variant="outline"
+                          onClick={() => setOpenInterview(false)}
+                          disabled={loadingInterview}
+                          className="flex-1"
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          onClick={handleInterview}
+                          disabled={loadingInterview}
+                          className="flex-1 bg-green-700 hover:bg-green-800 text-white"
+                        >
+                          {loadingInterview ? (
+                            <>
+                              <Loader className="w-4 h-4 mr-2 animate-spin" />
+                              Processing...
+                            </>
+                          ) : (
+                            <>
+                              <CheckCheck className="w-4 h-4 mr-2" />
+                              Confirm Approval
+                            </>
+                          )}
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                )}
+
+              {/* Decline Button */}
               <Dialog open={openReject} onOpenChange={setOpenReject}>
                 <DialogTrigger asChild>
-                  {data?.userDocuments && (
-                    <Button
-                      variant="destructive"
-                      className="flex-1"
-                      disabled={
-                        data?.status === "APPROVED" ||
-                        data?.status === "DECLINED" ||
-                        totalDocs !== reviewedDocs
-                      }
-                    >
-                      Decline <UserRoundX />
-                    </Button>
-                  )}
+                  <Button
+                    variant="destructive"
+                    className="flex-1 font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
+                    disabled={
+                      data?.status === "APPROVED" ||
+                      data?.status === "DECLINED" ||
+                      totalDocs !== reviewedDocs
+                    }
+                  >
+                    <UserRoundX className="w-4 h-4 mr-2" />
+                    Decline Application
+                  </Button>
                 </DialogTrigger>
                 <DialogContent
-                  className="max-w-lg p-6"
-                  onInteractOutside={(e) => {
-                    e.preventDefault();
-                  }}
-                  onEscapeKeyDown={(e) => {
-                    e.preventDefault();
-                  }}
+                  className="max-w-lg p-6 rounded-xl"
+                  onInteractOutside={(e) => e.preventDefault()}
+                  onEscapeKeyDown={(e) => e.preventDefault()}
                   showCloseButton={false}
                 >
-                  <DialogHeader>
-                    <DialogTitle className="text-red-600">
-                      Decline Application?
+                  <DialogHeader className="text-center pb-4">
+                    <div className="mx-auto w-12 h-12 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
+                      <UserRoundX className="w-6 h-6 text-red-600 dark:text-red-400" />
+                    </div>
+                    <DialogTitle className="text-xl font-semibold text-red-700 dark:text-red-300">
+                      Decline Application
                     </DialogTitle>
-                    <DialogDescription className="text-neutral-600 dark:text-neutral-400">
-                      This will decline the application and notify the
-                      applicant. This action cannot be undone.
+                    <DialogDescription className="text-muted-foreground leading-relaxed">
+                      This will decline the scholarship application and notify
+                      the student with the review feedback. This action cannot
+                      be undone.
                     </DialogDescription>
                   </DialogHeader>
-                  <DialogFooter>
+                  <DialogFooter className="gap-3 pt-4">
                     <Button
                       variant="outline"
                       onClick={() => setOpenReject(false)}
                       disabled={loadingReject}
+                      className="flex-1"
                     >
                       Cancel
                     </Button>
                     <Button
-                      variant="outline"
-                      className="!bg-red-700 hover:!bg-red-600"
                       onClick={handleReject}
                       disabled={loadingReject}
+                      className="flex-1 bg-red-600 hover:bg-red-700 text-white"
                     >
                       {loadingReject ? (
                         <>
-                          Declining ...
-                          <Loader className="animate-spin" />
+                          <Loader className="w-4 h-4 mr-2 animate-spin" />
+                          Declining...
                         </>
                       ) : (
-                        "Confirm Decline"
+                        <>
+                          <UserRoundX className="w-4 h-4 mr-2" />
+                          Confirm Decline
+                        </>
                       )}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
+
+              {/* Back Button */}
               <Button
-                variant="secondary"
-                className="w-full border-neutral-300 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-all duration-200"
+                variant="outline"
+                className="flex-1 font-medium py-3 border-2 hover:bg-muted/50 transition-all duration-200"
                 onClick={() => HandleCloseDrawer(false)}
               >
-                Back
-                <ArrowLeftFromLine />
+                <ArrowLeftFromLine className="w-4 h-4 mr-2" />
+                Back to Applications
               </Button>
-            </>
+            </div>
           )}
         </DrawerFooter>
       </DrawerContent>

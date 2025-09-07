@@ -44,7 +44,7 @@ export default function Manage() {
   console.log(columnFilters);
 
   return (
-    <div className="min-h-screen px-4 relative z-10">
+    <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <TitleReusable
           title=" Manage Scholarships"

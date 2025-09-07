@@ -141,7 +141,7 @@ export default function RegisterStudent() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="w-1/2   mx-auto p-1 !border-0">
+      <DrawerContent className=" w-1/2   mx-auto p-1 !border-0">
         <DrawerHeader className="sr-only">
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>
@@ -150,7 +150,8 @@ export default function RegisterStudent() {
           </DrawerDescription>
         </DrawerHeader>
 
-        <div className="flex-1 flex justify-center items-center bg-background/50 rounded-lg p-8 overflow-auto">
+        <div className="relative flex-1 flex justify-center items-center bg-background/50 rounded-lg p-8 overflow-auto">
+        
           <div className="w-full space-y-10">
             <div className="space-y-3">
               <Stepper

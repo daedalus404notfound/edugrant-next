@@ -46,6 +46,7 @@ import { Separator } from "@/components/ui/separator";
 import { ChartBarMultiple } from "./dashboard/bar";
 import ChartAreaInteractive from "./dashboard/area-chart";
 import { SummaryCard, SummaryCardProps } from "./dashboard/summary";
+import { useAdminStore } from "@/store/adminUserStore";
 const summaryCards: SummaryCardProps[] = [
   {
     label: "Total Applicants",
@@ -100,6 +101,7 @@ export default function AdminDashboard() {
     from: new Date(),
     to: new Date(2025, 8, 15),
   });
+  const { admin } = useAdminStore();
   const [now, setNow] = useState<string>("");
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
@@ -121,33 +123,25 @@ export default function AdminDashboard() {
     <div className="relative min-h-screen z-10">
       <BGPattern
         variant="grid"
-        className="top-0 mask-gradient opacity-30 hidden dark:block"
-        mask="fade-bottom"
+        className="top-0  opacity-30 hidden dark:block"
+        mask="fade-top"
+        size={70}
       />
       <div className="lg:p-5 p-3 space-y-5 ">
-        <div className="  ">
-          <div className="flex justify-between lg:flex-row flex-col gap-5 ">
-            <div className="lg:space-y-2 ">
-              <h1 className="lg:text-2xl text-lg font-medium">
-                Hello, Wally Bayola!
-              </h1>
-              <p className="text-sm text-muted-foreground font-mono">
-                {isClient ? format(now, "PPP p") : "Loading..."}
-              </p>
-            </div>
-            <span className="space-x-2 flex">
-              <Button variant="outline" className="flex-1">
-                <Plus /> Add Application
-              </Button>
-              <Button variant="outline" className="flex-1">
-                <UserRoundCog />
-                Edit Profile
-              </Button>
-            </span>
-          </div>
-        </div>
         <div className=" grid lg:grid-cols-2 grid-cols-1 gap-5 ">
           <div className="  space-y-5 ">
+            <div className="">
+              <div className="flex justify-between lg:flex-row flex-col gap-5 ">
+                <div className="lg:space-y-2 ">
+                  <h1 className="lg:text-2xl text-lg font-medium">
+                    Hello, {admin?.firstName} {admin?.lastName}!
+                  </h1>
+                  <p className="text-sm text-muted-foreground font-mono">
+                    {isClient ? format(now, "PPP p") : "Loading..."}
+                  </p>
+                </div>
+              </div>
+            </div>
             <div className="grid lg:grid-cols-2 grid-cols-1 lg:gap-3 gap-2">
               {summaryCards.map((card, index) => (
                 <SummaryCard key={index} {...card} />

@@ -43,7 +43,7 @@ export type UserProfileTypes = {
   lastName: string;
   gender: string;
   dateOfBirth: string;
-
+  institute: string;
   // Contact
   studentEmail: string;
   contactNumber: string;
