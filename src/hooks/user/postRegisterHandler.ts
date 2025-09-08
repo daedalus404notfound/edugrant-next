@@ -147,7 +147,7 @@ export const useVerifyRegister = () => {
 
 export const useRegisterHandler = () => {
   const router = useRouter();
-  const [stepper, setStepper] = useState(1);
+  const [stepper, setStepper] = useState(3);
   const { personalForm, accountForm, otpForm, personalData, accountData } =
     useRegisterUser();
 
