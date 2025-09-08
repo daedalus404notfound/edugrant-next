@@ -368,12 +368,12 @@ export default function InterceptManageScholarshipClient() {
                           Required Documents
                         </h3>
                         <p className="font-medium text-lg">
-                          {Object.keys(data?.scholarshipDocuments || {}).length}
+                          {Object.keys(data?.scholarshipDocuments.documents || {}).length}
                         </p>
                       </div>
 
                       <div className=" divide-y">
-                        {Object.values(data?.scholarshipDocuments || {}).map(
+                        {Object.values(data?.scholarshipDocuments.documents || {}).map(
                           (doc, index) => (
                             <div
                               className="flex justify-between items-center py-5"
