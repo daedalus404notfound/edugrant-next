@@ -313,7 +313,6 @@ export default function InterceptManageApplicationClient() {
                     }}
                   >
                     {data[0]?.scholarship.scholarshipTitle}
-                    
                   </motion.span>
                   <p className="text-muted-foreground text-sm">
                     by {data[0]?.scholarship.scholarshipProvider}
@@ -333,9 +332,11 @@ export default function InterceptManageApplicationClient() {
                             </span>{" "}
                             &nbsp;
                             <span className="text-lg font-medium font-mono">
-                              {data[0]?.scholarship.scholarshipDocuments &&
+                              {data[0]?.scholarship.scholarshipDocuments
+                                .documents &&
                                 Object.entries(
                                   data[0]?.scholarship.scholarshipDocuments
+                                    .documents
                                 ).filter(
                                   ([_, doc]) =>
                                     doc?.requirementType === "required"
@@ -349,9 +350,11 @@ export default function InterceptManageApplicationClient() {
                             </span>{" "}
                             &nbsp;
                             <span className="text-lg font-medium font-mono">
-                              {data[0]?.scholarship.scholarshipDocuments &&
+                              {data[0]?.scholarship.scholarshipDocuments
+                                .documents &&
                                 Object.entries(
                                   data[0]?.scholarship.scholarshipDocuments
+                                    .documents
                                 ).filter(
                                   ([key, doc]) =>
                                     doc?.requirementType === "optional"
