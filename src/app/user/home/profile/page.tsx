@@ -898,7 +898,7 @@ export default function Profile() {
                       onClick={() =>
                         siblings.append({
                           fullName: "",
-                          age: 0,
+                          age: "",
                           occupation: "",
                         })
                       }
@@ -914,7 +914,7 @@ export default function Profile() {
                       item: {
                         id: string;
                         fullName: string;
-                        age: number;
+                        age: string;
                         occupation: string;
                       },
                       index
@@ -948,7 +948,6 @@ export default function Profile() {
                                 <FormLabel>Age</FormLabel>
                                 <FormControl>
                                   <Input
-                                    type="number"
                                     {...field}
                                     className="w-full bg-card"
                                   />

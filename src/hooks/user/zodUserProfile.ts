@@ -51,7 +51,7 @@ export const profileSchema = z.object({
       .array(
         z.object({
           fullName: z.string(),
-          age: z.number(),
+          age: z.string(),
           occupation: z.string(),
         })
       )

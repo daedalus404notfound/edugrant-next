@@ -77,6 +77,7 @@ export default function RegisterStudent() {
     handleOtpVerification,
     authLoading,
     verifyLoading,
+    requestNewCode,
   } = useLoginHandler();
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
@@ -470,8 +471,10 @@ export default function RegisterStudent() {
                         >
                           <div className=" border-b flex-1"></div>
                           <Label>
-                            Didn&apos;t get the code?{" "}
-                            <span className="underline">Resend Now</span>
+                            Didn&apos;t get the code?
+                            <span className="underline" onClick={requestNewCode}>
+                              Resend Now
+                            </span>
                           </Label>
                           <div className=" border-b flex-1"></div>
                         </motion.div>
