@@ -278,7 +278,7 @@ export default function LandingPage() {
                 <img className="size-10" src={bascLogo.src} alt="" />
                 <p className="font-semibold text-xl uppercase">basc</p>
               </span>
-              <Menu size={30} />
+              <ModeToggle />
             </div>
           </div>
           <div className="">
