@@ -296,7 +296,7 @@ export default function Create() {
                         Scholarship Amount <FormMessage />
                       </FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <Input type="number" placeholder="(Optional)" {...field} />
                       </FormControl>
                     </FormItem>
                   )}

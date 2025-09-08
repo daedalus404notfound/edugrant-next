@@ -196,6 +196,7 @@ import {
   Megaphone,
   UserCog,
   UserRound,
+  UserRoundCheck,
   UserRoundCog,
   UsersRound,
 } from "lucide-react";
@@ -293,13 +294,13 @@ const sidebarData = [
     icon: Home,
   },
   {
-    title: "View Profile",
+    title: "Staff Profile",
     url: "/administrator/home/profile",
-    icon: UserRound,
+    icon: UserRoundCheck,
   },
 
   {
-    title: "View Staffs",
+    title: "Staff Logs",
     url: "/administrator/home/admins/manage",
     icon: UsersRound,
   },

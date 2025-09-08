@@ -21,7 +21,7 @@ export const createScholarshipSchema = z.object({
   applicationDeadline: z.date({
     message: "Required",
   }),
-  scholarshipAmount: z.string().min(1, "Required"),
+  scholarshipAmount: z.string().optional(),
   forInterview: z.boolean(),
   scholarshipLimit: z.string(),
   detailsImage: z

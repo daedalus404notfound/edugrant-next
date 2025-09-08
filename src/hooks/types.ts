@@ -27,6 +27,10 @@ export type ScholarshipTypes = {
   };
 };
 
+
+export type NotificationsDataTypes = {
+  
+}
 export type EditScholarshipTypes = {
   scholarshipId: string;
   scholarshipTitle: string;

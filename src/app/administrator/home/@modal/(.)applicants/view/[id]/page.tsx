@@ -127,10 +127,20 @@ export default function InterceptReviewApplicants() {
   const totalDocs = data?.scholarship?.scholarshipDocuments
     ? Object.keys(data.scholarship.scholarshipDocuments).length
     : 0;
-  console.log("tota;'", data?.scholarship.scholarshipDocuments);
+
+  const totalRequiredDocs = data?.userDocuments
+    ? Object.entries(data.userDocuments).filter(
+        ([_, doc]) =>
+          doc.requirementType && doc.requirementType.trim() !== "optional"
+      ).length
+    : 0;
+  console.log("totalRequiredDocs;'", totalRequiredDocs);
   const reviewedDocs = data?.userDocuments
     ? Object.entries(data.userDocuments).filter(([key, doc]) => {
-        return doc.rejectMessage?.status || reviewData[key]?.status;
+        return (
+          doc.rejectMessage?.status ||
+          (reviewData[key]?.status && doc.requirementType.trim() === "required")
+        );
       }).length
     : 0;
   const progressValue = totalDocs > 0 ? (reviewedDocs / totalDocs) * 100 : 0;
@@ -431,8 +441,13 @@ export default function InterceptReviewApplicants() {
                   ) : (
                     <div className="grid grid-cols-1 divide-y">
                       {data?.userDocuments &&
-                        Object.entries(data.userDocuments).map(
-                          ([key, doc], index) => (
+                        Object.entries(data.userDocuments)
+                          .filter(
+                            ([_, doc]) =>
+                              doc.requirementType &&
+                              doc.requirementType.trim() !== ""
+                          ) // ✅ filter out empty requirementType
+                          .map(([key, doc], index) => (
                             <div key={index} className="flex gap-5 py-8">
                               <Reviewer
                                 fileFormat={mimeToLabelMap[doc.fileFormat]}
@@ -459,7 +474,8 @@ export default function InterceptReviewApplicants() {
                                         variant="secondary"
                                         className="text-xs"
                                       >
-                                        {mimeToLabelMap[doc.fileFormat]}
+                                        {/* {mimeToLabelMap[doc.fileFormat]} */}
+                                        {doc.requirementType}
                                       </Badge>
                                       {doc.rejectMessage?.status && (
                                         <Badge
@@ -579,8 +595,7 @@ export default function InterceptReviewApplicants() {
                                 </div>
                               </div>
                             </div>
-                          )
-                        )}
+                          ))}
                     </div>
                   )}
                 </div>
@@ -821,7 +836,7 @@ export default function InterceptReviewApplicants() {
                     <DialogTrigger asChild>
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={totalDocs !== reviewedDocs}
+                        disabled={totalDocs > reviewedDocs}
                       >
                         <UserRoundCheck className="w-4 h-4 mr-2" />
                         Approve Application
@@ -884,7 +899,7 @@ export default function InterceptReviewApplicants() {
                     <DialogTrigger asChild>
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={totalDocs !== reviewedDocs}
+                        disabled={totalRequiredDocs !== reviewedDocs}
                       >
                         <UserRoundCheck className="w-4 h-4 mr-2" />
                         Approve for Interview
@@ -949,7 +964,7 @@ export default function InterceptReviewApplicants() {
                     disabled={
                       data?.status === "APPROVED" ||
                       data?.status === "DECLINED" ||
-                      totalDocs !== reviewedDocs
+                      totalRequiredDocs !== reviewedDocs
                     }
                   >
                     <UserRoundX className="w-4 h-4 mr-2" />

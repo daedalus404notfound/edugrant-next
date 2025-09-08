@@ -213,7 +213,7 @@ export default function RegisterStudent() {
                           </FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Enter your middle name"
+                              placeholder="(Optional)"
                               {...field}
                               disabled={sendAuthCode.isLoading}
                             />

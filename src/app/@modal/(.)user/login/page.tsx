@@ -308,14 +308,20 @@ export default function RegisterStudent() {
                       <DialogTrigger className="underline text-blue-500 cursor-pointer">
                         Privacy Policy
                       </DialogTrigger>
-                      <DialogContent>
+                      <DialogContent className="max-w-lg p-4">
                         <DialogHeader>
                           <DialogTitle className="text-base">
-                            Privacy Policy
+                            PRIVACY NOTICE
                           </DialogTitle>
                           <DialogDescription className="sr-only">
-                            This document describes how we handle your data and
-                            privacy.
+                            By continuing this form, you are consenting to the
+                            collection of your personal information, i.e., name,
+                            email addresses, and other personal data. All
+                            information we collect shall be kept private and
+                            confidential by the (office/s) and shall be used
+                            solely for legal purposes as mandated by Republic
+                            Act No. 10173 or the Data Privacy Act, the BASC Data
+                            Privacy Manual, and other relevant laws.
                           </DialogDescription>
                         </DialogHeader>
                         <Separator />
@@ -341,7 +347,7 @@ export default function RegisterStudent() {
                       <DialogTrigger className="underline text-blue-500 cursor-pointer">
                         Terms of Service
                       </DialogTrigger>
-                      <DialogContent>
+                      <DialogContent className="max-w-lg p-4">
                         <DialogHeader>
                           <DialogTitle className="text-base">
                             Terms of Service
@@ -472,7 +478,10 @@ export default function RegisterStudent() {
                           <div className=" border-b flex-1"></div>
                           <Label>
                             Didn&apos;t get the code?
-                            <span className="underline" onClick={requestNewCode}>
+                            <span
+                              className="underline"
+                              onClick={requestNewCode}
+                            >
                               Resend Now
                             </span>
                           </Label>

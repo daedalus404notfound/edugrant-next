@@ -34,7 +34,9 @@ const addScholarshipApi = async (data: creatScholarshipFormData) => {
     "newScholarDeadline",
     data.applicationDeadline.toISOString()
   );
-  formDataToSend.append("scholarshipAmount", data.scholarshipAmount);
+  if (data.scholarshipAmount) {
+    formDataToSend.append("scholarshipAmount", data.scholarshipAmount);
+  }
   if (data.scholarshipLimit) {
     formDataToSend.append("scholarshipLimit", data.scholarshipLimit);
   }

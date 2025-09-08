@@ -15,7 +15,7 @@ type ApiError = AxiosError<ApiErrorResponse>;
 const createAdminpApi = async (data: createAdminFormData) => {
   const formDataToSend = new FormData();
   formDataToSend.append("firstName", data.firstName);
-  formDataToSend.append("middleName", data.middleName);
+
   formDataToSend.append("lastName", data.lastName);
   formDataToSend.append("phone", data.contactNumber);
   formDataToSend.append("email", data.email);
@@ -23,6 +23,9 @@ const createAdminpApi = async (data: createAdminFormData) => {
   formDataToSend.append("role", data.role);
   if (data.profileImage) {
     formDataToSend.append("profileImage", data.profileImage);
+  }
+  if (data.middleName) {
+    formDataToSend.append("middleName", data.middleName);
   }
 
   const res = await axios.post(
