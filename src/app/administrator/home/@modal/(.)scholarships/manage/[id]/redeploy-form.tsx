@@ -57,7 +57,7 @@ const options: Option[] = [
   { label: "JPEG Image", value: "image/jpeg" },
   { label: "PNG Image", value: "image/png" },
 ];
-export default function EditScholarship({
+export default function RedeployScholarship({
   data,
   setSection,
 }: {
@@ -221,10 +221,7 @@ export default function EditScholarship({
                             </Button>
                           </FormControl>
                         </PopoverTrigger>
-                        <PopoverContent
-                          className="w-auto p-0 !pointer-events-auto"
-                          align="start"
-                        >
+                        <PopoverContent className="w-auto p-0" align="start">
                           <div className="rounded-md border">
                             <Calendar
                               mode="single"

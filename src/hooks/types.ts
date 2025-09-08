@@ -21,7 +21,10 @@ export type ScholarshipTypes = {
   interview: boolean;
   scholarshipDescription: string;
   scholarshipAmount: string;
-  scholarshipDocuments: Record<string, scholarshipDocumentTypes>;
+  scholarshipDocuments: {
+    documents: scholarshipDocumentTypes[];
+    renewDocuments: scholarshipDocumentTypes[];
+  };
 };
 
 export type EditScholarshipTypes = {

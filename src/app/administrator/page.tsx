@@ -60,6 +60,7 @@ export default function LoginAdmin() {
     verifyLoading,
     // verifyError,
     // verifySuccess,
+    requestNewCode,
   } = useLoginHandler();
   const {
     reset,
@@ -239,7 +240,11 @@ text-5xl  zxczxc tracking-[-8px] bg-amber-400
                       transition={{ duration: 0.6, delay: 0.5 }}
                       className="flex flex-col  gap-2"
                     >
-                      <Button type="submit" className="w-full" disabled={authLoading}>
+                      <Button
+                        type="submit"
+                        className="w-full"
+                        disabled={authLoading}
+                      >
                         {authLoading ? (
                           <>
                             Logging in...
@@ -380,7 +385,9 @@ text-5xl  zxczxc tracking-[-8px] bg-amber-400
                     <div className=" border-b flex-1"></div>
                     <Label>
                       Didn&apos;t get the code?{" "}
-                      <span className="underline">Resend Now</span>
+                      <span onClick={requestNewCode} className="underline">
+                        Resend Now
+                      </span>
                     </Label>
                     <div className=" border-b flex-1"></div>
                   </motion.div>

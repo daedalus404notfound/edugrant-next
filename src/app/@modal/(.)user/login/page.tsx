@@ -96,7 +96,7 @@ export default function RegisterStudent() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="w-full bg-transparent  p-4 !border-0">
+      <DrawerContent className="w-full bg-transparent  lg:p-4 p-1.5 !border-0">
         <DrawerHeader className="sr-only">
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>
@@ -105,7 +105,7 @@ export default function RegisterStudent() {
           </DrawerDescription>
         </DrawerHeader>
         <div className="flex-1 bg-card p-1 rounded-lg">
-          <div className="h-full w-full p-4 bg-background/50 rounded-lg">
+          <div className="h-full w-full lg:p-4  bg-background/50 rounded-lg">
             {" "}
             <div className="relative z-10 flex justify-center items-center w-full  h-full">
               {step === "login" && (

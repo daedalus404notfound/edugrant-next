@@ -4,13 +4,13 @@ import useScholarshipData from "@/hooks/admin/getScholarship";
 import { Archive } from "lucide-react";
 import { useState } from "react";
 import { DataTable } from "@/app/administrator/table-components/data-table";
-import { columns } from "../manage-table-components/columns";
+import { columns } from "./manage-table-components/columns";
 import {
   ColumnFiltersState,
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
-import DataTableToolbar from "../manage-table-components/data-table-toolbar";
+import DataTableToolbar from "./manage-table-components/data-table-toolbar";
 import { ScholarshipTypes } from "@/hooks/types";
 import TitleReusable from "@/components/ui/title";
 

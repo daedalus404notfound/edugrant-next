@@ -46,7 +46,13 @@ const addScholarshipApi = async (data: updateScholarshipFormData) => {
   if (data.sponsorImage) {
     formDataToSend.append("sponsorLogo", data.sponsorImage);
   }
-  formDataToSend.append("requirements", JSON.stringify(data.documents));
+  const documentsPayload = {
+    documents: data.documents,
+  };
+  formDataToSend.append(
+    "scholarshipDocuments",
+    JSON.stringify(documentsPayload)
+  );
 
   const res = await axios.put(
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/updateScholarship`,

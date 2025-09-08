@@ -1,5 +1,19 @@
 "use client";
-import { Download, Edit, FileInput, Maximize, Trash2, X } from "lucide-react";
+import {
+  Building,
+  Calendar,
+  Download,
+  Edit,
+  FileInput,
+  Flame,
+  Maximize,
+  PhilippinePeso,
+  Share2,
+  StickyNote,
+  Trash2,
+  UserRound,
+  X,
+} from "lucide-react";
 import { motion } from "motion/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -22,11 +36,24 @@ import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import ScholarshipCards from "../../cards";
 import { Skeleton } from "@/components/ui/skeleton";
+import RedeployScholarship from "./redeploy-form";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
+import { format } from "date-fns";
 
 export default function InterceptManageScholarship() {
   const searchParams = useSearchParams();
-  const edit = searchParams.get("edit");
-  const [editMode, setEditMode] = useState(edit === "true");
+  const linkSection = searchParams.get("section");
+  const [section, setSection] = useState<"details" | "edit" | "redeploy">(
+    linkSection === "details" ||
+      linkSection === "edit" ||
+      linkSection === "redeploy"
+      ? linkSection
+      : "details"
+  );
+
   const [openAlert, setOpenAlert] = useState(false);
   const router = useRouter();
   const params = useParams();
@@ -85,68 +112,104 @@ export default function InterceptManageScholarship() {
           </div>
         </div>
 
-        {/* <BGPattern variant="dots" mask="fade-center" /> */}
-        {!editMode ? (
+        {section === "edit" ? (
+          <div className=" overflow-auto h-full no-scrollbar">
+            {data && <EditScholarship data={data} setSection={setSection} />}
+          </div>
+        ) : section === "details" ? (
           loading ? (
-            <div className="bg-background h-full w-full p-4 rounded-t-xl space-y-4 overflow-hidden">
-              <Skeleton className="h-45 w-full" />
-              <div className="space-y-4">
-                <Skeleton className="aspect-square rounded-full size-25" />
-                <Skeleton className="h-10 w-64" />
-                <Skeleton className="h-8 w-54" />
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <Skeleton className="h-30 w-full" />
-                <Skeleton className="h-30 w-full" />
-                <Skeleton className="h-30 w-full" />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <Skeleton className="aspect-video w-full" />
-                <Skeleton className="aspect-video w-full" />
+            <div className="h-full w-full">
+              <Skeleton className="flex-1 lg:aspect-[16/5] aspect-[16/9] w-full" />
+              <div className="lg:space-y-15 space-y-10 lg:px-6 px-2 mt-5">
+                <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
+                  <div className="space-y-3">
+                    <Skeleton className="h-11 w-full" />
+                    <Skeleton className="h-20 w-full" />
+                    <Skeleton className="h-20 w-full" />
+                    <Skeleton className="h-20 w-full" />
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <Skeleton className="flex-1 w-full" />
+                    <Skeleton className="h-20 w-full" />
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <Skeleton className="h-20 w-full" />
+                  <Skeleton className="h-20 w-full" />
+                </div>
               </div>
             </div>
           ) : (
-            <div className="relative h-full w-full overflow-auto no-scrollbar bg-background rounded-t-xl">
-              <div className="absolute top-0 left-0 h-80 w-full opacity-30   mask-gradient flex">
-                <img
+            <div className="relative h-full w-full overflow-auto  bg-background rounded-t-md">
+              <div className="absolute top-0 left-0 lg:h-80 h-60 w-full opacity-30   mask-gradient flex">
+                {/* <img
                   className="w-full h-full object-cover blur-md "
                   src={scholarshipCover}
                   alt=""
-                />
+                /> */}
               </div>
               <div className="  overflow-hidden">
                 <div className="relative flex justify-center items-center ">
-                  <div className="absolute inset-0border-b-2 border-black" />
+                  <div className="absolute inset-0border-b-2 border-black bg-card" />
+                  <div className="absolute left-2 -bottom-15 z-10 lg:px-8  px-2 flex  items-center ">
+                    <Avatar className="lg:size-25 size-20 border-background border-2 shadow-md">
+                      <AvatarImage
+                        className="object-cover"
+                        src={data?.scholarshipLogo}
+                      />
+                      <AvatarFallback>
+                        {data?.scholarshipProvider.slice(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
                   {scholarshipCover && (
                     <img
-                      className="w-full h-45 object-cover   rounded-t-md"
+                      className="w-full lg:aspect-[16/4] aspect-[16/9]  object-cover   rounded-lg shadow-md"
                       src={scholarshipCover}
                       alt=""
                     />
                   )}
-                  <Button
-                    className="absolute z-5 bottom-3 right-3"
-                    variant="secondary"
-                  >
-                    View <Maximize />
-                  </Button>
+
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="absolute z-5  !bg-black/60 !text-gray-200"
+                        size="sm"
+                      >
+                        View <Maximize />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="lg:w-3/4 w-full p-4">
+                      <img
+                        className="h-full w-full"
+                        src={data?.scholarshipCover}
+                        alt=""
+                      />
+                      <Link
+                        className="w-full"
+                        href={
+                          (data?.scholarshipCover && data?.scholarshipCover) ||
+                          ""
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <Button variant="secondary" className="w-full">
+                          <Download />
+                          Download
+                        </Button>
+                      </Link>
+                    </DialogContent>
+                  </Dialog>
                 </div>
 
-                <div className="relative z-10  p-4">
-                  <Avatar className="size-25">
-                    <AvatarImage
-                      className="object-cover"
-                      src={data?.scholarshipLogo}
-                    />
-                    <AvatarFallback>
-                      {data?.scholarshipProvider.slice(0, 2)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="space-y-1 mt-2">
+                <div className="lg:space-y-15 space-y-10 lg:px-6 px-2 mt-17">
+                  <div className="lg:space-y-1">
                     <motion.span
                       className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-                                                           flex items-center gap-1.5 text-2xl font-bold tracking-tight
-                                                          "
+                                                 flex items-center gap-1.5 lg:text-2xl text-xl font-semibold tracking-tight
+                                                "
                       initial={{ backgroundPosition: "200% 0" }}
                       animate={{ backgroundPosition: "-200% 0" }}
                       transition={{
@@ -157,57 +220,126 @@ export default function InterceptManageScholarship() {
                       }}
                     >
                       {data?.scholarshipTitle}
+                      {data?.scholarshipDeadline &&
+                      new Date(data.scholarshipDeadline).getTime() <
+                        Date.now() ? (
+                        <Badge className="bg-red-800 text-gray-200 tracking-wide">
+                          EXPIRED
+                        </Badge>
+                      ) : (
+                        <Badge className="bg-green-800 text-gray-200 tracking-wide">
+                          ACTIVE
+                        </Badge>
+                      )}
                     </motion.span>
                     <p className="text-muted-foreground text-sm">
                       by {data?.scholarshipProvider}
                     </p>
                   </div>
-                </div>
-                <div className="space-y-15 px-4 mt-5">
-                  {/* Stats Grid */}
-                  {data && <ScholarshipCards data={data} />}
-
-                  {/* Requirements */}
-
-                  <div className="grid grid-cols-2 gap-5">
+                  <div className="grid lg:grid-cols-2 grid-cols-1 gap-3">
                     <div className="space-y-3">
-                      <h2 className="text-xs text-muted-foreground uppercase tracking-wider font-medium">
-                        About scholarship
-                      </h2>
-                      <p className="text-muted-foreground leading-relaxed max-w-2xl">
-                        {data?.scholarshipDescription}
-                      </p>
-                    </div>
+                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                        <PhilippinePeso />
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                            Scholarship Amount
+                          </p>
+                          <h1 className="text-lg font-medium font-mono">
+                            {data?.scholarshipAmount}.00
+                          </h1>
+                        </div>
+                      </div>
+                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                        <Building />
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                            Scholarship Type
+                          </p>
+                          <h1 className="text-lg font-medium capitalize">
+                            {data?.scholarshipType}
+                          </h1>
+                        </div>
+                      </div>
 
-                    <div className="space-y-6">
-                      {" "}
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center px-3">
-                          <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-                            Required Documents
-                          </h3>
-                          <p className="font-medium text-lg">
-                            {
-                              Object.keys(data?.scholarshipDocuments || {})
-                                .length
-                            }
+                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                        <Calendar />
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                            Scholarship Deadline
+                          </p>
+                          <h1 className="text-lg font-medium">
+                            {data?.scholarshipDeadline
+                              ? format(
+                                  new Date(data?.scholarshipDeadline),
+                                  "PPP"
+                                )
+                              : "No deadline"}
+                          </h1>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex-1 p-4 space-y-2  rounded-md bg-card">
+                        <div className="flex gap-3 items-center">
+                          <StickyNote />
+                          <p className="text-muted-foreground text-sm">
+                            Scholarship Details
                           </p>
                         </div>
 
-                        <div className="space-y-1.5 grid grid-cols-1">
-                          {Object.values(data?.scholarshipDocuments || {}).map(
-                            (doc) => (
-                              <Button
-                                className="justify-start"
-                                variant="ghost"
-                                key={doc.label}
-                              >
-                                <FileInput />
-                                {doc.label}
-                              </Button>
-                            )
-                          )}
+                        <h1 className="text-sm leading-relaxed">
+                          {data?.scholarshipDescription}
+                        </h1>
+                      </div>
+                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                        <UserRound />
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                            Scholarship Slot
+                          </p>
+                          <h1 className="text-lg font-medium">
+                            {data?.scholarshipLimit} students
+                          </h1>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-6">
+                    {" "}
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                          Required Documents
+                        </h3>
+                        <p className="font-medium text-lg">
+                          {Object.keys(data?.scholarshipDocuments || {}).length}
+                        </p>
+                      </div>
+
+                      <div className=" divide-y">
+                        {Object.values(data?.scholarshipDocuments.documents || {}).map(
+                          (doc, index) => (
+                            <div
+                              className="flex justify-between items-center py-5"
+                              key={doc.label}
+                            >
+                              <span> {index + 1}. </span>
+                              {doc.label}
+                              <Badge
+                                className={`${
+                                  doc.requirementType === "required"
+                                    ? "bg-red-700/20 text-red-700"
+                                    : doc.requirementType === "optional"
+                                    ? "bg-blue-700/20 text-blue-700"
+                                    : ""
+                                } capitalize `}
+                              >
+                                {doc.requirementType}
+                              </Badge>
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
                   </div>
@@ -215,20 +347,27 @@ export default function InterceptManageScholarship() {
                     <h1 className="text-center text-sm font-medium">
                       Hurry before it ends
                     </h1>
-                    {deadline && (
-                      <AnimatedNumberCountdown endDate={new Date(deadline)} />
-                    )}
+                    <div className="transform scale-85 lg:scale-100">
+                      {deadline && (
+                        <AnimatedNumberCountdown endDate={new Date(deadline)} />
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           )
-        ) : (
+        ) : section === "redeploy" ? (
           <div className=" overflow-auto h-full no-scrollbar">
-            {data && <EditScholarship data={data} setEditMode={setEditMode} />}
+            {data && (
+              <RedeployScholarship data={data} setSection={setSection} />
+            )}
           </div>
+        ) : (
+          ""
         )}
-        {!editMode &&
+
+        {section === "details" &&
           (loading ? (
             <div className="p-4 sticky bottom-0 bg-card border-t">
               <div className="flex gap-3">
@@ -241,7 +380,7 @@ export default function InterceptManageScholarship() {
             <div className="p-4 sticky bottom-0 bg-card border-t">
               <div className="flex gap-3">
                 <Button
-                  onClick={() => setEditMode(true)}
+                  onClick={() => setSection("edit")}
                   className="flex-1 bg-blue-950 border border-blue-950 hover:bg-blue-800 text-gray-200 hover:border-blue-800"
                 >
                   <Edit /> Edit

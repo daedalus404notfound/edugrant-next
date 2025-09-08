@@ -6,6 +6,7 @@ import {
   Maximize,
   MoreHorizontal,
   PencilLine,
+  RefreshCcw,
   Trash2,
 } from "lucide-react";
 
@@ -65,13 +66,13 @@ export function DataTableRowActions<TData>({
         </Link>
         <Separator />
         <Link
-          href={`/administrator/home/scholarships/manage/${rowData.scholarshipId}?section=edit`}
+          href={`/administrator/home/scholarships/manage/${rowData.scholarshipId}?edit=true`}
           scroll={false}
           prefetch
           className="w-full"
         >
           <Button size="lg" className="justify-start w-full" variant="ghost">
-            <PencilLine /> Edit
+            <RefreshCcw /> Redeploy
           </Button>
         </Link>
         <Separator />

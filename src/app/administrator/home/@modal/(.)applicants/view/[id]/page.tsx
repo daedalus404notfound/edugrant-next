@@ -404,7 +404,7 @@ export default function InterceptReviewApplicants() {
             </div>
           </div>
 
-          <div className="p-4 b bg-card/30">
+          <div className="p-4 b bg-card/30 sticky top-0">
             <Tabs
               tabs={navigationTabs}
               onTabChange={(tabId) => setActiveSection(tabId)}

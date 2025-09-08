@@ -53,8 +53,8 @@ export function useUpdateScholarshipZod(data?: ScholarshipTypes) {
       forInterview: data?.interview,
       scholarshipAmount: data?.scholarshipAmount?.toString() || "",
       scholarshipLimit: data?.scholarshipLimit?.toString() || "",
-      documents: data?.scholarshipDocuments
-        ? Object.values(data.scholarshipDocuments).map((doc) => ({
+      documents: data?.scholarshipDocuments.documents
+        ? Object.values(data.scholarshipDocuments.documents).map((doc) => ({
             label: doc.label || "",
             formats: doc.formats?.map(String) || [],
             requirementType:
