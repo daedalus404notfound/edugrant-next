@@ -76,9 +76,7 @@ export default function Create() {
   } = useCreateScholarship();
 
   return (
-    <div
-      className="relative lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] "
-    >
+    <div className="relative lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto max-w-4xl w-full py-10">
         <TitleReusable
           title=" Create Scholarship"
@@ -492,7 +490,7 @@ export default function Create() {
                   <div className="lg:col-span-1 col-span-3">
                     <FormField
                       control={form.control}
-                      name={`documents.${index}.label`}
+                      name={`scholarshipDocuments.documents.${index}.label`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex justify-between items-center">
@@ -510,7 +508,7 @@ export default function Create() {
                   <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
                     <FormField
                       control={form.control}
-                      name={`documents.${index}.formats`}
+                      name={`scholarshipDocuments.documents.${index}.formats`}
                       render={({ field }) => (
                         <FormItem className="flex-1">
                           <FormLabel className="flex justify-between items-center">
@@ -547,7 +545,7 @@ export default function Create() {
                     />
                     <FormField
                       control={form.control}
-                      name={`documents.${index}.requirementType`}
+                      name={`scholarshipDocuments.documents.${index}.requirementType`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>

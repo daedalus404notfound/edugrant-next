@@ -498,7 +498,7 @@ export default function EditScholarship({
                   <div className="lg:col-span-1 col-span-3">
                     <FormField
                       control={form.control}
-                      name={`documents.${index}.label`}
+                      name={`scholarshipDocuments.documents.${index}.label`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex justify-between items-center">
@@ -516,7 +516,7 @@ export default function EditScholarship({
                   <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
                     <FormField
                       control={form.control}
-                      name={`documents.${index}.formats`}
+                      name={`scholarshipDocuments.documents.${index}.formats`}
                       render={({ field }) => (
                         <FormItem className="flex-1">
                           <FormLabel className="flex justify-between items-center">
@@ -553,7 +553,7 @@ export default function EditScholarship({
                     />
                     <FormField
                       control={form.control}
-                      name={`documents.${index}.requirementType`}
+                      name={`scholarshipDocuments.documents.${index}.requirementType`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>

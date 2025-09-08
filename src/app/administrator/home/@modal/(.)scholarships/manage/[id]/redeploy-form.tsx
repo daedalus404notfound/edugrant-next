@@ -33,7 +33,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { DragAndDropArea } from "@/components/ui/upload";
 import { ScholarshipTypes } from "@/hooks/types";
-import { useUpdateScholarship } from "@/hooks/admin/postUpdateScholarship";
 import { Label } from "@/components/ui/label";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import { motion } from "motion/react";
@@ -47,6 +46,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useRedeployScholarship } from "@/hooks/admin/postRedeployHandler";
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
   {
@@ -74,7 +74,7 @@ export default function RedeployScholarship({
     append,
     handleTriggerClick,
     remove,
-  } = useUpdateScholarship(data);
+  } = useRedeployScholarship(data);
   return (
     <div className=" bg-background rounded-t-lg">
       <div className="p-4  space-y-5">
@@ -91,7 +91,7 @@ export default function RedeployScholarship({
             ease: "linear",
           }}
         >
-          Update {data?.scholarshipTitle}
+          Redeploy {data?.scholarshipTitle} for 2nd phase
         </motion.span>
 
         <Form {...form}>
@@ -467,6 +467,7 @@ export default function RedeployScholarship({
 
           {/* Dynamic Required Documents */}
           <div className="space-y-5 mt-10">
+            <h1>Phase 1 Required Documents</h1>
             <div className="w-full flex items-center justify-end ">
               <Button
                 type="button"
@@ -495,7 +496,7 @@ export default function RedeployScholarship({
                   <div className="lg:col-span-1 col-span-3">
                     <FormField
                       control={form.control}
-                      name={`documents.${index}.label`}
+                      name={`scholarshipDocuments.documents.${index}.label`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex justify-between items-center">
@@ -513,7 +514,7 @@ export default function RedeployScholarship({
                   <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
                     <FormField
                       control={form.control}
-                      name={`documents.${index}.formats`}
+                      name={`scholarshipDocuments.documents.${index}.formats`}
                       render={({ field }) => (
                         <FormItem className="flex-1">
                           <FormLabel className="flex justify-between items-center">
@@ -550,7 +551,135 @@ export default function RedeployScholarship({
                     />
                     <FormField
                       control={form.control}
-                      name={`documents.${index}.requirementType`}
+                      name={`scholarshipDocuments.documents.${index}.requirementType`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            <FormMessage />
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Requirement type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectItem value="required">
+                                  Required
+                                </SelectItem>
+                                <SelectItem value="optional">
+                                  Optional
+                                </SelectItem>
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+                      )}
+                    />
+
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      disabled={fields.length === 1}
+                      onClick={() => remove(index)}
+                    >
+                      <Trash2 />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-5 mt-10">
+            <h1>Phase 2 Required Documents</h1>
+            <div className="w-full flex items-center justify-end ">
+              <Button
+                type="button"
+                size="sm"
+                onClick={() =>
+                  append({
+                    label: "",
+                    formats: [],
+                    requirementType: "required",
+                  })
+                }
+                variant="outline"
+              >
+                <Plus className="w-4 h-4 mr-1" />
+                Add requirements
+              </Button>
+            </div>
+
+            <div className="space-y-5">
+              {fields.map((field, index) => (
+                <div
+                  key={field.id}
+                  className="grid grid-cols-3 gap-3 items-center"
+                >
+                  {/* Label */}
+                  <div className="lg:col-span-1 col-span-3">
+                    <FormField
+                      control={form.control}
+                      name={`scholarshipDocuments.renewDocuments.${index}.label`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex justify-between items-center">
+                            Document Label {index + 1} <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. COR" {...field} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Formats */}
+                  <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
+                    <FormField
+                      control={form.control}
+                      name={`scholarshipDocuments.renewDocuments.${index}.formats`}
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel className="flex justify-between items-center">
+                            Document Formats
+                            <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <MultipleSelector
+                              className="bg-white/5"
+                              commandProps={{
+                                label: "Select document formats",
+                              }}
+                              value={options.filter((option) =>
+                                field.value?.includes(option.value)
+                              )}
+                              defaultOptions={options}
+                              placeholder="Choose formats"
+                              hideClearAllButton
+                              hidePlaceholderWhenSelected
+                              emptyIndicator={
+                                <p className="text-center text-sm">
+                                  No results found
+                                </p>
+                              }
+                              onChange={(selected) => {
+                                field.onChange(
+                                  selected.map((option) => option.value)
+                                );
+                              }}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name={`scholarshipDocuments.renewDocuments.${index}.requirementType`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>

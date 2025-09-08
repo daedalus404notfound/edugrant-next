@@ -66,7 +66,7 @@ export function DataTableRowActions<TData>({
         </Link>
         <Separator />
         <Link
-          href={`/administrator/home/scholarships/manage/${rowData.scholarshipId}?edit=true`}
+          href={`/administrator/home/scholarships/manage/${rowData.scholarshipId}?section=redeploy`}
           scroll={false}
           prefetch
           className="w-full"

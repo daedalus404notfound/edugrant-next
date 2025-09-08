@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { updateScholarshipFormData } from "./zodUpdateScholarship";
+import { redeployScholarshipFormData } from "./zodRedeploy";
 import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
@@ -11,10 +11,10 @@ interface ApiErrorResponse {
 }
 import { useAdminStore } from "@/store/adminUserStore";
 import { ScholarshipTypes } from "../types";
-import { useUpdateScholarshipZod } from "./zodUpdateScholarship";
+import { useRedeployScholarshipZod } from "./zodRedeploy";
 type ApiError = AxiosError<ApiErrorResponse>;
 const today = new Date().toISOString().split("T")[0];
-const addScholarshipApi = async (data: updateScholarshipFormData) => {
+const addScholarshipApi = async (data: redeployScholarshipFormData) => {
   const { admin } = useAdminStore.getState();
   const formDataToSend = new FormData();
   if (data.scholarshipId) {
@@ -46,13 +46,11 @@ const addScholarshipApi = async (data: updateScholarshipFormData) => {
   if (data.sponsorImage) {
     formDataToSend.append("sponsorLogo", data.sponsorImage);
   }
-  const documentsPayload = {
+  const docs = {
     documents: data.scholarshipDocuments.documents,
+    renewDocuments: data.scholarshipDocuments.renewDocuments,
   };
-  formDataToSend.append(
-    "scholarshipDocuments",
-    JSON.stringify(documentsPayload)
-  );
+  formDataToSend.append("scholarshipDocuments", JSON.stringify(docs));
 
   const res = await axios.put(
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/updateScholarship`,
@@ -94,13 +92,13 @@ export const useAddScholarship = () => {
   });
 };
 
-export const useUpdateScholarship = (data?: ScholarshipTypes) => {
+export const useRedeployScholarship = (data?: ScholarshipTypes) => {
   const { form, formData, fields, append, remove } =
-    useUpdateScholarshipZod(data);
+    useRedeployScholarshipZod(data);
   const addScholarship = useAddScholarship();
   const [open, setOpen] = useState(false);
 
-  const handleSubmit = async (data: updateScholarshipFormData) => {
+  const handleSubmit = async (data: redeployScholarshipFormData) => {
     try {
       const result = await addScholarship.mutateAsync(data);
 

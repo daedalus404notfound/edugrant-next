@@ -34,12 +34,17 @@ export const updateScholarshipSchema = z.object({
     documents: z
       .array(documentsSchema)
       .min(1, "At least one document is required"),
+    renewDocuments: z
+      .array(documentsSchema)
+      .min(1, "At least one document is required"),
   }),
 });
-export type updateScholarshipFormData = z.infer<typeof updateScholarshipSchema>;
+export type redeployScholarshipFormData = z.infer<
+  typeof updateScholarshipSchema
+>;
 
-export function useUpdateScholarshipZod(data?: ScholarshipTypes) {
-  const form = useForm<updateScholarshipFormData>({
+export function useRedeployScholarshipZod(data?: ScholarshipTypes) {
+  const form = useForm<redeployScholarshipFormData>({
     resolver: zodResolver(updateScholarshipSchema),
     defaultValues: {
       scholarshipType:
@@ -57,6 +62,17 @@ export function useUpdateScholarshipZod(data?: ScholarshipTypes) {
       scholarshipLimit: data?.scholarshipLimit?.toString() || "",
       scholarshipDocuments: {
         documents: data?.scholarshipDocuments?.documents
+          ? data.scholarshipDocuments.documents.map((doc) => ({
+              label: doc.label || "",
+              formats: doc.formats?.map(String) || [],
+              requirementType:
+                doc.requirementType === "optional" ||
+                doc.requirementType === "required"
+                  ? doc.requirementType
+                  : "required",
+            }))
+          : [{ label: "", formats: [], requirementType: "required" }],
+        renewDocuments: data?.scholarshipDocuments?.renewDocuments
           ? data.scholarshipDocuments.documents.map((doc) => ({
               label: doc.label || "",
               formats: doc.formats?.map(String) || [],
