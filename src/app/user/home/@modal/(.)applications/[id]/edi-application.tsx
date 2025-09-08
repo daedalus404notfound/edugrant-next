@@ -68,7 +68,7 @@ export default function EditApplication({
 
   // Get rejected documents
   const rejectedDocuments = Object.entries(
-    data.scholarship.scholarshipDocuments
+    data.scholarship.scholarshipDocuments.documents
   )
     .filter(([, doc]) => {
       const userDoc = data.userDocuments[doc.label];
