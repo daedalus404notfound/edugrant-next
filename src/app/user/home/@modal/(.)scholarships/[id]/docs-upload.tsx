@@ -52,7 +52,7 @@ const steps = [
 ];
 
 export const createFormSchema = (
-  requiredDocuments: Record<string, scholarshipDocumentTypes>
+  requiredDocuments: scholarshipDocumentTypes[]
 ) => {
   const schemaShape: Record<string, z.ZodType> = {};
   Object.entries(requiredDocuments).forEach(([key, doc]) => {
@@ -101,7 +101,7 @@ export default function UploadDocs({
   const [openAlert, setOpenAlert] = useState(false);
 
   // Create form schema based on scholarship documents
-  const requiredDocuments = data.scholarshipDocuments || {};
+  const requiredDocuments = data.scholarshipDocuments.documents || {};
   const allDocuments = Object.values(requiredDocuments);
   const requiredDocumentsCount = Object.values(requiredDocuments).filter(
     (doc) => doc.requirementType === "required"
