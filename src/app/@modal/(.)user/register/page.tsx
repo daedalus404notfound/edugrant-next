@@ -141,7 +141,7 @@ export default function RegisterStudent() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className=" lg:w-1/2 w-[98%]   mx-auto  !border-0">
+      <DrawerContent className=" lg:w-1/2 w-[98%] max-h-[90dvh]  mx-auto  !border-0">
         <DrawerHeader className="sr-only">
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>
@@ -151,7 +151,7 @@ export default function RegisterStudent() {
         </DrawerHeader>
 
         <div className="overflow-auto p-1 pb-0  rounded-t-md">
-          <div className="w-full space-y-10 bg-background p-2 pb-0">
+          <div className="w-full space-y-10 bg-background p-2 lg:p-4 pb-0">
             <Stepper
               defaultValue={1}
               value={stepper}
@@ -178,7 +178,7 @@ export default function RegisterStudent() {
                     <h1 className="text-lg font-semibold">
                       Personal Information
                     </h1>
-                    <p className="text-gray-600 text-sm mt-1">
+                    <p className="text-muted-foreground text-sm mt-1">
                       Tell us about yourself.
                     </p>
                   </div>
@@ -341,7 +341,7 @@ export default function RegisterStudent() {
                       control={personalForm.control}
                       name="address"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="lg:col-span-2">
                           <FormLabel className="flex items-center justify-between line-clamp-1">
                             Address (Street, Barangay, City/Municipality,
                             Province) <FormMessage />
@@ -452,12 +452,12 @@ export default function RegisterStudent() {
                     <h1 className="text-lg font-semibold">
                       Account Information
                     </h1>
-                    <p className="text-gray-600 text-sm mt-1">
+                    <p className="text-muted-foreground text-sm mt-1">
                       Fill out all required fields to start scholarship
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 gap-5">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                     <FormField
                       control={accountForm.control}
                       name="studentId"
@@ -811,7 +811,7 @@ export default function RegisterStudent() {
                       control={otpForm.control}
                       name="otp"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="lg: max-w-lg w-full mx-auto">
                           <FormLabel className="flex justify-between items-center">
                             Enter 6-digit code
                             <FormMessage />
