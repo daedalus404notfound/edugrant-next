@@ -141,7 +141,7 @@ export default function RegisterStudent() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className=" w-1/2   mx-auto p-1 !border-0">
+      <DrawerContent className=" lg:w-1/2 w-[98%]   mx-auto  !border-0">
         <DrawerHeader className="sr-only">
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>
@@ -150,32 +150,27 @@ export default function RegisterStudent() {
           </DrawerDescription>
         </DrawerHeader>
 
-        <div className="relative flex-1 flex justify-center items-center bg-background/50 rounded-lg p-8 overflow-auto">
-        
-          <div className="w-full space-y-10">
-            <div className="space-y-3">
-              <Stepper
-                defaultValue={1}
-                value={stepper}
-                className="items-start gap-3 "
-              >
-                {steps.map(({ step, title }) => (
-                  <StepperItem key={step} step={step} className="flex-1">
-                    <StepperTrigger className="w-full flex-col items-start gap-2 rounded">
-                      <StepperIndicator
-                        asChild
-                        className="bg-border h-1 w-full"
-                      >
-                        <span className="sr-only">{step}</span>
-                      </StepperIndicator>
-                      <div className="space-y-0.5">
-                        <StepperTitle>{title}</StepperTitle>
-                      </div>
-                    </StepperTrigger>
-                  </StepperItem>
-                ))}
-              </Stepper>
-            </div>
+        <div className="overflow-auto p-1 pb-0  rounded-t-md">
+          <div className="w-full space-y-10 bg-background p-2 pb-0">
+            <Stepper
+              defaultValue={1}
+              value={stepper}
+              className="items-start gap-3 "
+            >
+              {steps.map(({ step, title }) => (
+                <StepperItem key={step} step={step} className="flex-1">
+                  <StepperTrigger className="w-full flex-col items-start gap-2 rounded">
+                    <StepperIndicator asChild className="bg-border h-1 w-full">
+                      <span className="sr-only">{step}</span>
+                    </StepperIndicator>
+                    <div className="space-y-0.5">
+                      <StepperTitle>{title}</StepperTitle>
+                    </div>
+                  </StepperTrigger>
+                </StepperItem>
+              ))}
+            </Stepper>
+
             {stepper === 1 && (
               <Form {...personalForm}>
                 <div className="space-y-6">
@@ -188,12 +183,12 @@ export default function RegisterStudent() {
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-12">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                     <FormField
                       control={personalForm.control}
                       name="firstName"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="">
                           <FormLabel className="flex items-center justify-between">
                             First Name <FormMessage />
                           </FormLabel>
@@ -346,8 +341,8 @@ export default function RegisterStudent() {
                       control={personalForm.control}
                       name="address"
                       render={({ field }) => (
-                        <FormItem className="col-span-2">
-                          <FormLabel className="flex items-center justify-between">
+                        <FormItem>
+                          <FormLabel className="flex items-center justify-between line-clamp-1">
                             Address (Street, Barangay, City/Municipality,
                             Province) <FormMessage />
                           </FormLabel>
@@ -431,13 +426,14 @@ export default function RegisterStudent() {
                       )}
                     />
                   </div>
-
-                  <Button
-                    onClick={personalForm.handleSubmit(handlePersonalSubmit)}
-                    className="w-full mt-4"
-                  >
-                    Next <ArrowRight />
-                  </Button>
+                  <div className="w-full sticky bottom-0 py-2 bg-background">
+                    <Button
+                      onClick={personalForm.handleSubmit(handlePersonalSubmit)}
+                      className="w-full"
+                    >
+                      Next <ArrowRight />
+                    </Button>
+                  </div>
                 </div>
               </Form>
             )}
@@ -461,12 +457,12 @@ export default function RegisterStudent() {
                     </p>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+                  <div className="grid grid-cols-1 gap-5">
                     <FormField
                       control={accountForm.control}
                       name="studentId"
                       render={({ field }) => (
-                        <FormItem className=" col-span-2">
+                        <FormItem className=" lg:col-span-2">
                           <FormLabel className="flex items-center justify-between">
                             Student ID <FormMessage />
                           </FormLabel>
@@ -552,7 +548,7 @@ export default function RegisterStudent() {
                       control={accountForm.control}
                       name="course"
                       render={({ field }) => (
-                        <FormItem className="col-span-2">
+                        <FormItem className="lg:col-span-2">
                           <FormLabel className="flex items-center justify-between">
                             Course <FormMessage />
                           </FormLabel>
@@ -567,63 +563,62 @@ export default function RegisterStudent() {
                       )}
                     />
 
-                    <div className="flex col-span-2 gap-4">
-                      <FormField
-                        control={accountForm.control}
-                        name="yearLevel"
-                        render={({ field }) => (
-                          <FormItem className="flex-1">
-                            <FormLabel className="flex items-center justify-between">
-                              Year Level <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <Select
-                                disabled={sendAuthCode.isLoading}
-                                onValueChange={field.onChange}
-                                value={field.value}
-                              >
-                                <SelectTrigger className="w-full">
-                                  <SelectValue placeholder="Select Year Level" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="1st Year">
-                                    1st Year
-                                  </SelectItem>
-                                  <SelectItem value="2nd Year">
-                                    2nd Year
-                                  </SelectItem>
-                                  <SelectItem value="3rd Year">
-                                    3rd Year
-                                  </SelectItem>
-                                  <SelectItem value="4th Year">
-                                    4th Year
-                                  </SelectItem>
-                                </SelectContent>
-                              </Select>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
+                    <FormField
+                      control={accountForm.control}
+                      name="yearLevel"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel className="flex items-center justify-between">
+                            Year Level <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <Select
+                              disabled={sendAuthCode.isLoading}
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select Year Level" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="1st Year">
+                                  1st Year
+                                </SelectItem>
+                                <SelectItem value="2nd Year">
+                                  2nd Year
+                                </SelectItem>
+                                <SelectItem value="3rd Year">
+                                  3rd Year
+                                </SelectItem>
+                                <SelectItem value="4th Year">
+                                  4th Year
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
 
-                      <FormField
-                        control={accountForm.control}
-                        name="section"
-                        render={({ field }) => (
-                          <FormItem className="flex-1">
-                            <FormLabel className="flex items-center justify-between">
-                              Section <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Enter your section"
-                                {...field}
-                                disabled={sendAuthCode.isLoading}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
+                    <FormField
+                      control={accountForm.control}
+                      name="section"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel className="flex items-center justify-between">
+                            Section <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="Enter your section"
+                              {...field}
+                              disabled={sendAuthCode.isLoading}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+
                     <FormField
                       control={accountForm.control}
                       name="password"
@@ -672,7 +667,7 @@ export default function RegisterStudent() {
                         };
 
                         return (
-                          <FormItem className="col-span-2">
+                          <FormItem className="lg:col-span-2">
                             <FormLabel className="flex items-center justify-between">
                               Password <FormMessage />
                             </FormLabel>
@@ -760,7 +755,7 @@ export default function RegisterStudent() {
                     />
                   </div>
 
-                  <div className="flex gap-3 mt-13 items-center">
+                  <div className="flex gap-3 items-center sticky bottom-0 bg-background z-10 py-2">
                     <Button
                       type="button"
                       onClick={handlePrevStepper}
@@ -844,7 +839,7 @@ export default function RegisterStudent() {
                       )}
                     />
 
-                    <div className="flex gap-3 mt-13">
+                    <div className="flex gap-3 py-2 bg-background">
                       <Button variant="outline" className="flex-1" disabled>
                         Resend (0s)
                       </Button>
