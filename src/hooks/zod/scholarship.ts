@@ -1,0 +1,55 @@
+import z from "zod";
+
+export const documentsSchema = z.object({
+  label: z.string().min(1, "Requireds"),
+  formats: z.array(z.string()).min(1, "Required"),
+  requirementType: z.enum(["required", "optional"], {
+    message: "Required",
+  }),
+});
+
+export const scholarshipSchema = z.object({
+  type: z.enum(["government", "private"], {
+    message: "Please select scholarship type",
+  }),
+  title: z.string().min(1, "Required"),
+  providerName: z.string().min(1, "Required"),
+  description: z.string().min(1, "Required"),
+  requiredGWA: z.string(),
+  deadline: z.date({
+    message: "Required",
+  }),
+  amount: z.string().optional(),
+  interview: z.boolean(),
+  limit: z.string(),
+  cover: z
+    .any()
+    .refine(
+      (file) =>
+        typeof File !== "undefined" && file instanceof File && file.size > 0,
+      { message: "Image is required" }
+    ),
+  logo: z
+    .any()
+    .refine(
+      (file) =>
+        typeof File !== "undefined" && file instanceof File && file.size > 0,
+      { message: "Image is required" }
+    ),
+  form: z
+    .any()
+    .refine(
+      (file) =>
+        typeof File !== "undefined" && file instanceof File && file.size > 0,
+      { message: "Form is required" }
+    ),
+
+  documents: z.object({
+    documents: z
+      .array(documentsSchema)
+      .min(1, "At least one document is required"),
+  }),
+});
+
+export type scholarshipFormData = z.infer<typeof scholarshipSchema>;
+

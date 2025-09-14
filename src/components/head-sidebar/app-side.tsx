@@ -1,0 +1,355 @@
+"use client";
+
+import * as React from "react";
+import logo from "@/assets/basclogo.png";
+import {
+  Activity,
+  Archive,
+  BarChart,
+  Bell,
+  BookUser,
+  Bot,
+  CheckCheck,
+  CircleUserRound,
+  GraduationCap,
+  Home,
+  LayoutDashboard,
+  Megaphone,
+  PenLine,
+  UserCog,
+  UserRound,
+  UserRoundCheck,
+  UserRoundCog,
+  UserRoundPlus,
+  UserRoundSearch,
+  UserRoundX,
+  UsersRound,
+} from "lucide-react";
+import { motion } from "motion/react";
+import { NavMain } from "./nav-main";
+import { NavUser } from "./nav-user";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+} from "@/components/ui/sidebar";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+const data = {
+  user: {
+    name: "Admin User",
+    email: "admin@example.com",
+    avatar: "/avatars/admin.jpg",
+  },
+  navMain: [
+    {
+      title: "Scholarships",
+      url: "/administrator/home/scholarships",
+      icon: GraduationCap,
+      isActive: false,
+      items: [
+        {
+          title: "Add New Scholarship",
+          url: "/administrator/home/scholarships/create",
+        },
+        {
+          title: "Manage Scholarships",
+          url: "/administrator/home/scholarships/manage",
+        },
+        {
+          title: "Archived Scholarships",
+          url: "/administrator/home/scholarships/archived",
+        },
+      ],
+    },
+    {
+      title: "Applicants",
+      url: "/administrator/home/applicants",
+      icon: Bot,
+      items: [
+        {
+          title: "Pending Applications",
+          url: "/administrator/home/applicants/pending",
+        },
+        {
+          title: "Approved Applications",
+          url: "/administrator/home/applicants/approved",
+        },
+        {
+          title: "Applicants for Interview",
+          url: "/administrator/home/applicants/reviewed",
+          sa: true,
+        },
+        {
+          title: "Declined Applications",
+          url: "/administrator/home/applicants/rejected",
+        },
+      ],
+    },
+
+    {
+      title: "Announcements",
+      url: "/administrator/home/announcements",
+      icon: Megaphone,
+      items: [
+        {
+          title: "Post Announcement",
+          url: "/administrator/home/announcements/create",
+        },
+        {
+          title: "Manage Announcements",
+          url: "/administrator/home/announcements/manage",
+        },
+      ],
+    },
+  ],
+};
+const sidebarData = [
+  {
+    title: "Dashboard",
+    url: "/administrator/head/home",
+    icon: LayoutDashboard,
+  },
+  {
+    title: "Profile Details",
+    url: "/administrator/head/home/profile",
+    icon: BookUser,
+  },
+  {
+    title: "Announcements",
+    url: "/administrator/head/home/announcement",
+    icon: Megaphone,
+  },
+  {
+    title: "Reports & Statistics",
+    url: "/administrator/head/home/reports",
+    icon: Activity,
+  },
+];
+const sidebarScholar = [
+  {
+    title: "Post Scholarship",
+    url: "/administrator/head/home/create",
+    icon: PenLine,
+  },
+  {
+    title: "Manage Scholarship",
+    url: "/administrator/head/home/manage",
+    icon: GraduationCap,
+  },
+  {
+    title: "Archive Scholarship",
+    url: "/administrator/head/home/archive",
+    icon: Archive,
+  },
+];
+const sidebarStaff = [
+  {
+    title: "Add New Staff",
+    url: "/administrator/head/home/add",
+    icon: UserRoundPlus,
+  },
+  {
+    title: "Manage Staff",
+    url: "/administrator/head/home/manage-staff",
+    icon: UserRoundCheck,
+  },
+];
+const sidebarApplication = [
+  {
+    title: "Reviewed Application",
+    url: "/administrator/head/home/reviewed",
+    icon: UserRoundSearch,
+  },
+  {
+    title: "For Interview Application",
+    url: "/administrator/head/home/interview",
+    icon: CircleUserRound,
+  },
+  {
+    title: "Approved Application",
+    url: "/administrator/head/home/approved",
+    icon: CheckCheck,
+  },
+  {
+    title: "Rejected Application",
+    url: "/administrator/head/home/rejected",
+    icon: UserRoundX,
+  },
+];
+const sidebarAnnouncements = [
+  {
+    title: "Reviewed Application",
+    url: "/administrator/head/home",
+    icon: UserRoundSearch,
+  },
+  {
+    title: "For Interview Application",
+    url: "/administrator/head/home/profile",
+    icon: CheckCheck,
+  },
+  {
+    title: "Approved Application",
+    url: "/administrator/head/home/profile",
+    icon: CheckCheck,
+  },
+  {
+    title: "Archive Scholarship",
+    url: "/administrator/head/home/profile",
+    icon: Archive,
+  },
+];
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
+  return (
+    <Sidebar collapsible="icon" {...props}>
+      <SidebarHeader>
+        <SidebarMenuButton
+          size="lg"
+          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground pointer-events-none"
+        >
+          <div className=" text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+            <img src={logo.src} alt="" />
+          </div>
+          <div className="grid flex-1 text-left text-sm leading-tight">
+            <span className="flex gap-1">
+              <motion.span
+                className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-primary/70 truncate  text-xl havelock tracking-[-3px]
+          "
+                initial={{ backgroundPosition: "200% 0" }}
+                animate={{ backgroundPosition: "-200% 0" }}
+                transition={{
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  duration: 7,
+                  ease: "linear",
+                }}
+              >
+                Edugrant
+              </motion.span>
+              <p className="text-xs mt-1 tracking-wider uppercase font-medium text-muted-foreground">
+                HEAD
+              </p>
+            </span>
+          </div>
+        </SidebarMenuButton>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupLabel>Home</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {sidebarData.map((meow) => {
+                const isActive = pathname === meow.url;
+                return (
+                  <SidebarMenuItem key={meow.title}>
+                    <SidebarMenuButton isActive={isActive} asChild>
+                      <Link
+                        prefetch
+                        scroll={false}
+                        className="flex items-center gap-2 cursor-pointer"
+                        href={meow.url}
+                      >
+                        <meow.icon className="w-4 h-4" />
+                        {meow.title}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Scholarship</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {sidebarScholar.map((meow) => {
+                const isActive = pathname === meow.url;
+                return (
+                  <SidebarMenuItem key={meow.title}>
+                    <SidebarMenuButton isActive={isActive} asChild>
+                      <Link
+                        prefetch
+                        scroll={false}
+                        className="flex items-center gap-2 cursor-pointer"
+                        href={meow.url}
+                      >
+                        <meow.icon className="w-4 h-4" />
+                        {meow.title}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {sidebarApplication.map((meow) => {
+                const isActive = pathname === meow.url;
+                return (
+                  <SidebarMenuItem key={meow.title}>
+                    <SidebarMenuButton isActive={isActive} asChild>
+                      <Link
+                        prefetch
+                        scroll={false}
+                        className="flex items-center gap-2 cursor-pointer"
+                        href={meow.url}
+                      >
+                        <meow.icon className="w-4 h-4" />
+                        {meow.title}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Staff</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {sidebarStaff.map((meow) => {
+                const isActive = pathname === meow.url;
+                return (
+                  <SidebarMenuItem key={meow.title}>
+                    <SidebarMenuButton isActive={isActive} asChild>
+                      <Link
+                        prefetch
+                        scroll={false}
+                        className="flex items-center gap-2 cursor-pointer"
+                        href={meow.url}
+                      >
+                        <meow.icon className="w-4 h-4" />
+                        {meow.title}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter>
+        <NavUser />
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
+  );
+}
