@@ -57,7 +57,7 @@ export function DataTableRowActions<TData>({
         className="grid grid-cols-1 w-[180px] !p-0 border"
       >
         <Link
-          href={`/administrator/head/home/manage/${rowData.scholarshipId}`}
+          href={`/administrator/staff/home/scholarship/${rowData.scholarshipId}`}
           scroll={false}
           prefetch
           className="w-full"
