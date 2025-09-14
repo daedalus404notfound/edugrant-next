@@ -1,5 +1,6 @@
 import axios, { AxiosError } from "axios";
-import { ProfileFormData, useProfileForm } from "./zodUserProfile";
+import { useProfileForm } from "./zodUserProfile";
+import { UserFormData } from "../zod/user";
 import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
@@ -11,7 +12,7 @@ interface ApiErrorResponse {
 }
 
 type ApiError = AxiosError<ApiErrorResponse>;
-const updateUserApi = async (data: ProfileFormData) => {
+const updateUserApi = async (data: UserFormData) => {
   const familyBackground = {
     ...(data.Student.familyBackground.fatherFullName && {
       fatherFullName: data.Student.familyBackground.fatherFullName,
@@ -141,13 +142,13 @@ export const useProfile = () => {
   });
 };
 
-export const useUpdateProfile = (initialData?: ProfileFormData) => {
+export const useUpdateProfile = (initialData?: UserFormData) => {
   const { form, formData, siblings, hasChanges } = useProfileForm(initialData);
   const profileUpdate = useProfile();
   const [open, setOpen] = useState(false);
   const [reset, setReset] = useState(false);
 
-  const handleSubmit = async (data: ProfileFormData) => {
+  const handleSubmit = async (data: UserFormData) => {
     try {
       const result = await profileUpdate.mutateAsync(data);
 
