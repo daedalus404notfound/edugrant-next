@@ -62,7 +62,6 @@ export default function ClientScholarship() {
     pageSize,
     sortBy,
     order,
-    status,
   });
   const {
     open,

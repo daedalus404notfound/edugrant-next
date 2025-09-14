@@ -18,13 +18,13 @@ export default function useAnnouncementFetch({
   pageSize,
   sortBy,
   order,
-  status,
+
 }: {
   page: number;
   pageSize: number;
   sortBy?: string;
   order?: string;
-  status: string;
+ 
 }) {
   const [data, setData] = useState<AnnouncementFormData[]>([]);
   const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
@@ -40,9 +40,7 @@ export default function useAnnouncementFetch({
             process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
           }/getAnnouncement?page=${page}&dataPerPage=${pageSize}${
             sortBy ? `&sortBy=${sortBy}` : ""
-          }${order ? `&order=${order}` : ""}${
-            status ? `&status=${status}` : ""
-          }`,
+          }${order ? `&order=${order}` : ""}`,
 
           { withCredentials: true }
         );
