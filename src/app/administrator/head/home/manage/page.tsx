@@ -14,9 +14,11 @@ import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
 import DataTableToolbar from "./manage-table-components/data-table-toolbar";
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import TitleReusable from "@/components/ui/title";
+import { useScholarshipStore } from "@/store/deleteScholarshipStore";
 export default function Manage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("ACTIVE");
+  const { scholarshipIds } = useScholarshipStore();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -41,8 +43,10 @@ export default function Manage() {
     query: search,
     status: status,
   });
-  console.log(columnFilters);
-  console.log(data);
+  const filteredData = (search.trim().length > 0 ? searchData : data)?.filter(
+    (item) => !scholarshipIds.includes(item.scholarshipId)
+  );
+
   return (
     <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
@@ -55,7 +59,7 @@ export default function Manage() {
 
         <div className="py-8">
           <DataTable<scholarshipFormData, unknown>
-            data={search.trim().length > 0 ? searchData : data}
+            data={search.trim().length > 0 ? searchData : filteredData}
             columns={columns(status)}
             meta={search.trim().length > 0 ? searchMeta : meta}
             pagination={pagination}

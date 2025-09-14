@@ -8,19 +8,20 @@ type DeleteTypes = {
   accountId?: string;
 };
 
-export default function useDeleteScholarship({
+export default function useArchiveScholarship({
   scholarshipId,
   accountId,
 }: DeleteTypes) {
   const { addScholarshipIds } = useScholarshipStore();
   const [isSuccess, setIsSuccess] = useState(false);
-  const [deleteLoading, setLoading] = useState(false);
+  const [archiveLoading, setLoading] = useState(false);
+
   const onSubmit = async () => {
     try {
       setLoading(true);
-
+     
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/deleteScholarship`,
+        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/archiveScholarship`,
         {
           scholarshipId: JSON.stringify({
             data: scholarshipId,
@@ -31,29 +32,28 @@ export default function useDeleteScholarship({
       );
 
       if (res.status === 200) {
-        addScholarshipIds(scholarshipId ?? []);
+         addScholarshipIds(scholarshipId ?? []);
         StyledToast({
           status: "success",
-          title: "Scholarship Deleted",
+          title: "Scholarship Archived",
           description:
-            "The scholarship has been successfully removed from the system.",
+            "The scholarship has been successfully archived in the system.",
         });
         setIsSuccess(true);
-
-        setLoading(false);
       }
     } catch (error) {
       console.error(error);
       StyledToast({
         status: "error",
-        title: "Deletion Failed",
+        title: "Archiving Failed",
         description:
-          "The scholarship could not be removed. Please try again later.",
+          "The scholarship could not be archived. Please try again later.",
       });
       setIsSuccess(false);
+    } finally {
       setLoading(false);
     }
   };
 
-  return { onSubmit, isSuccess, deleteLoading };
+  return { onSubmit, isSuccess, archiveLoading };
 }

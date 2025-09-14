@@ -2,6 +2,7 @@
 
 import { Row } from "@tanstack/react-table";
 import {
+  Archive,
   Copy,
   Maximize,
   MoreHorizontal,
@@ -23,6 +24,8 @@ import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import Link from "next/link";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import { Separator } from "@/components/ui/separator";
+import { useAdminStore } from "@/store/adminUserStore";
+import useArchiveScholarship from "@/hooks/admin/postSetArchivedScholarship";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -35,8 +38,18 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const rowData = row.original as scholarshipFormData;
   const [openAlert, setOpenAlert] = useState(false);
+  const { admin } = useAdminStore();
   const { onSubmit, isSuccess, deleteLoading } = useDeleteScholarship({
     scholarshipId: [rowData.scholarshipId],
+    accountId: admin?.accountId.toString(),
+  });
+  const {
+    onSubmit: onSubmitArchive,
+    isSuccess: isSuccessArchive,
+    archiveLoading,
+  } = useArchiveScholarship({
+    scholarshipId: [rowData.scholarshipId],
+    accountId: admin?.accountId.toString(),
   });
 
   useEffect(() => {
@@ -109,6 +122,27 @@ export function DataTableRowActions<TData>({
               className="justify-start text-red-700 hover:text-red-600"
             >
               <Trash2 /> Delete
+            </Button>
+          }
+        />
+
+        <DeleteDialog
+          open={openAlert}
+          onOpenChange={setOpenAlert}
+          onConfirm={onSubmitArchive}
+          loading={archiveLoading}
+          confirmText="Archive"
+          confirmTextLoading="Please wait..."
+          title="Archive Scholarship?"
+          description="Are you sure you want to archive this scholarship?"
+          cancelText="Keep"
+          trigger={
+            <Button
+              size="lg"
+              variant="ghost"
+              className="justify-start text-orange-700 hover:text-orange-600"
+            >
+              <Archive /> Archive
             </Button>
           }
         />
