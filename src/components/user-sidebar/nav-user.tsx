@@ -41,7 +41,7 @@ export function NavUser() {
                 <span className="truncate font-medium">
                   {user?.Student.fName} {user?.Student.lName}
                 </span>
-                <span className="truncate text-xs">{user?.studentId}</span>
+                <span className="truncate text-xs">{user?.schoolId}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
