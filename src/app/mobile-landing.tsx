@@ -237,7 +237,7 @@ export default function MobileLandingPage() {
             className="grid grid-cols-2 gap-3 mt-10 w-full"
           >
             <Link className="col-span-2" href={`/user/login`}>
-              <Button variant="success" size="lg" className="w-full">
+              <Button variant="outline" size="lg" className="w-full">
                 <GraduationCap />
                 Apply for Scholarship <ChevronRight />
               </Button>
