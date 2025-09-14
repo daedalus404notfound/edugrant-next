@@ -76,7 +76,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useAdminLogout } from "@/hooks/head/postAdminLogout";
+import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
 import { useState } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { ModeToggle2 } from "@/components/ui/dark-mode2";
