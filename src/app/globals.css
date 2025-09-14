@@ -38,6 +38,10 @@
     transparent 100%
   );
 }
+
+/* * {
+  border: 1px solid red;
+} */
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -87,7 +91,7 @@
   --background: oklch(1 0 0);
   --whiteOnly: oklch(0.97 0 286);
   --foreground: oklch(0.141 0.005 285.823);
-  --card: oklch(0.92 0.00 0);
+  --card: oklch(0.92 0 0);
   --card-foreground: oklch(0.141 0.005 285.823);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.141 0.005 285.823);

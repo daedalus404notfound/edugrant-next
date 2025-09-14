@@ -2,7 +2,7 @@ import z from "zod";
 
 export const StudentSchema = z.object({
   PWD: z.boolean(),
-  studentId: z.number(),
+  studentId: z.string(),
   address: z.string(),
   contactNumber: z.string(),
   course: z.string(),
@@ -59,7 +59,7 @@ export const StudentSchema = z.object({
 
 export const UserSchema = z.object({
   Student: StudentSchema,
-  accountId: z.number(),
+  accountId: z.string(),
   dateCreated: z.string(),
   email: z.string(),
   hashedPassword: z.string(),
@@ -72,7 +72,7 @@ export type UserFormData = z.infer<typeof UserSchema>;
 export const UserDefault: UserFormData = {
   Student: {
     PWD: false,
-    studentId: 0,
+    studentId: "",
     address: "",
     contactNumber: "",
     course: "",
@@ -118,7 +118,7 @@ export const UserDefault: UserFormData = {
       role: "",
     },
   },
-  accountId: 0,
+  accountId: "",
   dateCreated: "",
   email: "",
   hashedPassword: "",

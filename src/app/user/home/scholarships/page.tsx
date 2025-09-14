@@ -153,13 +153,45 @@ export default function ClientScholarship() {
         "Browse through available scholarships. Click on any card to view details.",
     },
   ];
+  // Utility: check if all required fields are filled
+  const isFamilyBackgroundComplete = () => {
+    const fb = user?.Student.familyBackground;
+
+    if (!fb) return false;
+
+    const requiredFields = [
+      fb.fatherFullName,
+      fb.fatherAddress,
+      fb.fatherContactNumber,
+      fb.fatherOccupation,
+      fb.fatherHighestEducation,
+      fb.fatherStatus,
+      fb.fatherTotalParentsTaxableIncome,
+
+      fb.motherFullName,
+      fb.motherAddress,
+      fb.motherContactNumber,
+      fb.motherOccupation,
+      fb.motherHighestEducation,
+      fb.motherStatus,
+      fb.motherTotalParentsTaxableIncome,
+
+      fb.guardianFullName,
+      fb.guardianAddress,
+      fb.guardianContactNumber,
+      fb.guardianOccupation,
+      fb.guardianHighestEducation,
+      fb.guardianStatus,
+    ];
+
+    return requiredFields.every((field) => field && field.trim() !== "");
+  };
+
   return (
     <TourProvider steps={scholarshipTourSteps}>
       <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-        {familyLength !== 0 ? (
+        {!isFamilyBackgroundComplete() && (
           <div className="absolute inset-0 z-20 bg-black/80 "></div>
-        ) : (
-          ""
         )}
         <div className="mx-auto w-[95%] lg:pt-10  pt-3">
           <div className="flex justify-between items-end">
@@ -170,7 +202,7 @@ export default function ClientScholarship() {
             />
           </div>
           <div className="py-8 space-y-8">
-            {familyLength !== 0 ? (
+            {!isFamilyBackgroundComplete() && (
               <div className=" z-20 dark bg-muted rounded-md text-foreground px-4 py-3 sticky top-20">
                 <div className="flex flex-col justify-between gap-2 md:flex-row">
                   <div className="flex grow gap-3">
@@ -201,8 +233,6 @@ export default function ClientScholarship() {
                   </div>
                 </div>
               </div>
-            ) : (
-              ""
             )}
 
             <div className="flex flex-col lg:flex-row justify-between  w-full gap-3">

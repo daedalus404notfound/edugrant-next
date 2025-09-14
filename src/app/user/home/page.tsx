@@ -24,6 +24,7 @@ import { useEffect, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import {
   ArrowRight,
+  ArrowRightIcon,
   Calendar1,
   Calendar1Icon,
   CalendarIcon,
@@ -31,6 +32,7 @@ import {
   GalleryVerticalEnd,
   Ghost,
   GraduationCap,
+  Lock,
   Megaphone,
   Plus,
   TrendingUp,
@@ -44,6 +46,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
 import { SummaryCard, SummaryCardProps } from "@/components/ui/summary";
+import { useUserStore } from "@/store/useUserStore";
+import Link from "next/link";
 
 const summaryCards: SummaryCardProps[] = [
   {
@@ -90,6 +94,7 @@ const announcements = [
 export default function AdminDashboard() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [now, setNow] = useState<string>("");
+  const { user } = useUserStore();
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
     setIsClient(true);
@@ -118,7 +123,7 @@ export default function AdminDashboard() {
           <div className="flex justify-between lg:flex-row flex-col gap-5 ">
             <div className="lg:space-y-2 ">
               <h1 className="lg:text-2xl text-lg font-medium">
-                Hello, Wally Bayola!
+                Hello, {user?.Student.fName} {user?.Student.lName}!
               </h1>
               <p className="text-sm text-muted-foreground font-mono">
                 {isClient ? format(now, "PPP p") : "Loading..."}
@@ -135,9 +140,37 @@ export default function AdminDashboard() {
             </span>
           </div>
         </div>
-        <div className=" grid lg:grid-cols-3 grid-cols-1 gap-5 ">
+        <div className="flex flex-col justify-between gap-2 md:flex-row dark:bg-red-700/40 bg-red-200 rounded-md p-4">
+          <div className="flex grow gap-3">
+            <Lock
+              className="mt-0.5 shrink-0 opacity-60"
+              size={16}
+              aria-hidden="true"
+            />
+            <div className="flex grow flex-col justify-between gap-2 md:flex-row md:items-center">
+              <p className="text-sm">
+                Please complete your profile details to unlock the scholarship
+                and apply.
+              </p>
+              <Link
+                href="/user/home/profile"
+                prefetch={true}
+                scroll={false}
+                className="group text-sm font-medium whitespace-nowrap underline"
+              >
+                View Profile
+                <ArrowRightIcon
+                  className="ms-2 -mt-0.5 inline-flex opacity-60 transition-transform group-hover:translate-x-0.5"
+                  size={16}
+                  aria-hidden="true"
+                />
+              </Link>
+            </div>
+          </div>
+        </div>
+        <div className=" grid lg:grid-cols-3 grid-cols-1 lg:gap-5 ">
           <div className="  space-y-5 col-span-2">
-            <div className="grid  grid-cols-3 lg:gap-3 gap-3">
+            <div className="grid  lg:grid-cols-3 grid-cols-1 lg:gap-3 gap-3">
               {summaryCards.map((card, index) => (
                 <SummaryCard key={index} {...card} />
               ))}
@@ -155,7 +188,7 @@ export default function AdminDashboard() {
                   <TimelineItem
                     key={item.id}
                     step={item.id}
-                    className="!m-0  bg-card  p-4! rounded-md border !mb-3"
+                    className="!m-0  bg-card lg:p-6!  p-4! rounded-md border !mb-3"
                   >
                     <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
                       <TimelineTitle className="font-medium text-base">
@@ -166,7 +199,7 @@ export default function AdminDashboard() {
                       </TimelineDate>
                     </div>
 
-                    <TimelineContent className="text-foreground mt-1 font-light">
+                    <TimelineContent className="text-foreground mt-3 font-light">
                       {item.description}
                     </TimelineContent>
 
@@ -301,21 +334,11 @@ export default function AdminDashboard() {
           </div>
           <div className=" space-y-7">
             <div className="grid lg:grid-cols-1 grid-cols-1 gap-7 ">
-              <div className="p-4 border rounded-lg space-y-3 bg-card ">
-                <p>Complete your profile progress to unlock scholarships</p>
-                <div className="w-full flex items-center gap-5">
-                  <Progress className="flex-1" />
-                  <p>
-                    <span className="text-xl font-semibold">100</span> %
-                  </p>
-                </div>
-                <Button>Update Profile</Button>
-              </div>
               <Calendar
                 mode="single"
                 selected={date}
                 onSelect={setDate}
-                className="w-full aspect-square bg-card border font-mono rounded-lg p-6 dark:bg-zinc-950 "
+                className="w-full aspect-square bg-card border font-mono lg:rounded-lg rounded-md lg:p-6 p-3 dark:bg-zinc-950 "
                 captionLayout="dropdown"
               />
             </div>

@@ -67,7 +67,7 @@ export default function Profile() {
                   {user?.Student.lName}
                 </motion.span>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {user?.studentId}
+                  {user?.schoolId}
                 </p>
                 <div className="flex gap-2 mt-2 items-center justify-center uppercase">
                   <Badge variant="outline">{user?.Student.course}</Badge>
@@ -82,7 +82,10 @@ export default function Profile() {
               {hasChanges && (
                 <Button
                   variant="outline"
-                  onClick={form.handleSubmit(handleSubmit)}
+                  onClick={() => {
+                    console.log("Button clicked"); // Test this first
+                    form.handleSubmit(handleSubmit)();
+                  }}
                   disabled={loading}
                 >
                   <Save />
@@ -269,58 +272,9 @@ export default function Profile() {
           )}
           {tab === "account" && (
             <div className=" w-full space-y-10">
-              {/* <FormField
-                control={form.control}
-                name="studentEmail"
-                render={({ field }) => (
-                  <FormItem className="col-span-2 ">
-                    <FormLabel>Email</FormLabel>
-                    <div className="flex gap-3">
-                      <div className="flex-1">
-                        <FormControl className="">
-                          <Input {...field} className=" " disabled />
-                        </FormControl>
-                      </div>
-
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button variant="outline" className="gap-2">
-                            <Mail />
-                            Change Email
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Change Email Address
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Please enter your new email address below. A
-                              confirmation link will be sent to the new address
-                              to verify the change.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-
-                          <Input
-                            placeholder="newemail@example.com"
-                            type="email"
-                            className="w-full"
-                          />
-
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction>Update Email</AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
               <FormField
                 control={form.control}
-                name="studentId"
+                name="schoolId"
                 render={({ field }) => (
                   <FormItem className="">
                     <FormLabel>Student ID</FormLabel>

@@ -93,22 +93,21 @@ const updateUserApi = async (data: UserFormData) => {
   const res = await axios.post(
     `${process.env.NEXT_PUBLIC_USER_URL}/updateStudentInfo`,
     {
-      // address: data.address,
-      // contactNumber: data.contactNumber,
-      // course: data.course,
-      // dateOfBirth: data.dateOfBirth,
-      // firstName: data.firstName,
-      // gender: data.gender,
-      // lastName: data.lastName,
-      // middleName: data.middleName,
-      // section: data.section,
-      // studentId: data.studentId,
-      // userId: data.userId,
-      // year: data.year,
-      // familyBackground: hasFamilyBackground
-      //   ? JSON.stringify(familyBackground)
-      //   : JSON.stringify({}),
-      data,
+      address: data.Student.address,
+      contactNumber: data.Student.contactNumber,
+      course: data.Student.course,
+      dateOfBirth: data.Student.dateOfBirth,
+      firstName: data.Student.fName,
+      gender: data.Student.gender,
+      lastName: data.Student.lName,
+      middleName: data.Student.mName,
+      section: data.Student.section,
+      studentId: data.Student.studentId,
+      accountId: data.Student.studentId,
+      year: data.Student.year,
+      familyBackground: hasFamilyBackground
+        ? JSON.stringify(familyBackground)
+        : JSON.stringify({}),
     },
     { withCredentials: true }
   );
@@ -149,6 +148,7 @@ export const useUpdateProfile = (initialData?: UserFormData) => {
   const [reset, setReset] = useState(false);
 
   const handleSubmit = async (data: UserFormData) => {
+    console.log("111", data);
     try {
       const result = await profileUpdate.mutateAsync(data);
 

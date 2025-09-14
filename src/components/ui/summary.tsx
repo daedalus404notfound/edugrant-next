@@ -79,7 +79,7 @@ export function SummaryCard({
   loading = false,
 }: SummaryCardProps) {
   return (
-    <div className="dark:bg-background/40 bg-card z-10 flex flex-col justify-between rounded-lg aspect-[16/4] p-4 lg:gap-5 border border-input">
+    <div className=" bg-card z-10 flex flex-col justify-between rounded-lg aspect-[16/4] p-4 lg:gap-2 border border-input">
       <div className="flex justify-between items-start">
         <Button variant="secondary" className={colorStyles[color].text}>
           {icon}
