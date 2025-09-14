@@ -1,9 +1,19 @@
 "use client";
 import React, { useState } from "react";
 
-import { motion } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Lock, Save, Trash2, UserRound, X } from "lucide-react";
+import {
+  AlertCircle,
+  Check,
+  Loader,
+  Lock,
+  Mail,
+  Save,
+  Trash2,
+  UserRound,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +33,7 @@ import { Label } from "@/components/ui/label";
 
 import { Controller } from "react-hook-form";
 import { useUpdateProfile } from "@/hooks/user/postProfileUpdate";
+import { Separator } from "@/components/ui/separator";
 export default function Profile() {
   const { user } = useUserStore();
   const { form, siblings, hasChanges, handleSubmit, loading } =
@@ -35,24 +46,23 @@ export default function Profile() {
   const [tab, setTab] = useState("personal");
 
   const tabs = [
-    { id: "personal", label: "Personal", indicator: null },
-    { id: "account", label: "Account", indicator: null },
+    { id: "personal", label: "Student Information", indicator: null },
     { id: "family", label: "Family Composition", indicator: null },
     { id: "security", label: "Account Security", indicator: null },
   ];
   return (
-    <div className="relative  bg-background lg:px-4  pb-20 ">
+    <div className="relative  bg-background lg:px-4  ">
       <Form {...form}>
         <div className="mx-auto w-[95%] lg:w-4xl lg:pt-10  pt-3">
-          <div className="flex justify-between flex-col  lg:flex-row gap-5">
-            <div className="flex flex-col gap-2 items-center lg:flex-row">
-              <div className="size-20 rounded-full border flex justify-center items-center text-3xl font-semibold bg-emerald-700">
+          <div className="flex justify-between flex-col  lg:flex-row gap-5   rounded-md">
+            <div className="flex flex-col gap-5 items-center lg:flex-row">
+              <div className="size-20 rounded-full border flex justify-center items-center text-3xl font-semibold bg-primary-second">
                 {user?.Student.fName.slice(0, 1)}
               </div>
               <div className="lg:text-left text-center">
                 <motion.span
                   className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-              text-xl font-semibold flex items-center gap-1.5
+              text-2xl font-semibold flex items-center gap-1.5
               "
                   initial={{ backgroundPosition: "200% 0" }}
                   animate={{ backgroundPosition: "-200% 0" }}
@@ -69,322 +79,330 @@ export default function Profile() {
                 <p className="text-sm text-muted-foreground mt-1">
                   {user?.schoolId}
                 </p>
-                <div className="flex gap-2 mt-2 items-center justify-center uppercase">
-                  <Badge variant="outline">{user?.Student.course}</Badge>
-                  <Badge variant="outline">{user?.Student.year}</Badge>
-                  <Badge variant="outline">
-                    Section {user?.Student.section}
-                  </Badge>
-                </div>
               </div>
-            </div>
-            <div className="flex justify-center items-center">
-              {hasChanges && (
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    console.log("Button clicked"); // Test this first
-                    form.handleSubmit(handleSubmit)();
-                  }}
-                  disabled={loading}
-                >
-                  <Save />
-                  {loading ? "Saving..." : "Save Changes"}
-                </Button>
-              )}
             </div>
           </div>
           <div className="overflow-y-hidden overflow-x-auto py-11 no-scrollbar ">
             <Tabs tabs={tabs} onTabChange={(tabId) => setTab(tabId)} />
           </div>
           {tab === "personal" && (
-            <div className=" w-full space-y-5">
-              <FormField
-                control={form.control}
-                name="Student.fName"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel>First Name</FormLabel>
-                    <FormControl className="">
-                      <div className="relative w-full">
-                        <Input
-                          {...field}
-                          className="bg-card w-full capitalize"
-                        />
-                        <Button
-                          variant="ghost"
-                          className="absolute right-1 top-0"
-                        >
-                          <UserRound className="opacity-80" />
-                        </Button>
-                      </div>
-                    </FormControl>
+            <div className=" w-full space-y-8">
+              <div className="flex items-center gap-3">
+                <h3 className="text-lg font-medium flex gap-2 items-center">
+                  <UserRound className="h-5 w-5" /> Personal Information
+                </h3>
+                <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+              </div>
+              <div className="grid grid-cols-2 gap-8">
+                <FormField
+                  control={form.control}
+                  name="Student.fName"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel className="text-muted-foreground">
+                        First Name
+                      </FormLabel>
+                      <FormControl className="">
+                        <div className="relative w-full">
+                          <Input
+                            {...field}
+                            className="bg-card w-full capitalize border-0"
+                          />
+                          <Button
+                            variant="ghost"
+                            className="absolute right-1 top-0"
+                          >
+                            <UserRound className="opacity-80" />
+                          </Button>
+                        </div>
+                      </FormControl>
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="Student.mName"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel>Middle Name</FormLabel>
-                    <FormControl className="">
-                      <div className="relative w-full">
-                        <Input
-                          {...field}
-                          className="bg-card w-full capitalize"
-                        />
-                        <Button
-                          variant="ghost"
-                          className="absolute right-1 top-0"
-                        >
-                          <UserRound className="opacity-80" />
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="Student.lName"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel>Last Name</FormLabel>
-                    <FormControl className="">
-                      <div className="relative w-full">
-                        <Input
-                          {...field}
-                          className="bg-card w-full capitalize"
-                        />
-                        <Button
-                          variant="ghost"
-                          className="absolute right-1 top-0"
-                        >
-                          <UserRound className="opacity-80" />
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="Student.gender"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel>Gender</FormLabel>
-                    <FormControl className="">
-                      <div className="relative w-full">
-                        <Input
-                          {...field}
-                          className="bg-card w-full capitalize"
-                        />
-                        <Button
-                          variant="ghost"
-                          className="absolute right-1 top-0"
-                        >
-                          <UserRound className="opacity-80" />
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="Student.dateOfBirth"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel>Date of Birth</FormLabel>
-                    <FormControl className="">
-                      <div className="relative w-full">
-                        <Input
-                          {...field}
-                          className="bg-card w-full capitalize"
-                        />
-                        <Button
-                          variant="ghost"
-                          className="absolute right-1 top-0"
-                        >
-                          <UserRound className="opacity-80" />
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="Student.address"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel>Address</FormLabel>
-                    <FormControl className="">
-                      <div className="relative w-full">
-                        <Input
-                          {...field}
-                          className="bg-card w-full capitalize"
-                        />
-                        <Button
-                          variant="ghost"
-                          className="absolute right-1 top-0"
-                        >
-                          <UserRound className="opacity-80" />
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="Student.contactNumber"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel>Contact Number</FormLabel>
-                    <FormControl className="">
-                      <div className="relative w-full">
-                        <Input
-                          {...field}
-                          className="bg-card w-full capitalize"
-                        />
-                        <Button
-                          variant="ghost"
-                          className="absolute right-1 top-0"
-                        >
-                          <UserRound className="opacity-80" />
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          )}
-          {tab === "account" && (
-            <div className=" w-full space-y-10">
-              <FormField
-                control={form.control}
-                name="schoolId"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel>Student ID</FormLabel>
-                    <FormControl className="">
-                      <div className="w-full">
-                        <Input
-                          {...field}
-                          className="bg-card w-full capitalize"
-                          disabled
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="Student.course"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel>Course</FormLabel>
-                    <FormControl className="">
-                      <div className="relative w-full">
-                        <Input
-                          {...field}
-                          className="bg-card w-full capitalize"
-                        />
-                        <Button
-                          variant="ghost"
-                          className="absolute right-1 top-0"
-                        >
-                          <UserRound className="opacity-80" />
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="Student.year"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel>Year Level</FormLabel>
-                    <FormControl className="">
-                      <div className="relative w-full">
-                        <Input
-                          {...field}
-                          className="bg-card w-full capitalize"
-                        />
-                        <Button
-                          variant="ghost"
-                          className="absolute right-1 top-0"
-                        >
-                          <UserRound className="opacity-80" />
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="Student.section"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel>Section</FormLabel>
-                    <FormControl className="">
-                      <div className="relative w-full">
-                        <Input
-                          {...field}
-                          className="bg-card w-full capitalize"
-                        />
-                        <Button
-                          variant="ghost"
-                          className="absolute right-1 top-0"
-                        >
-                          <UserRound className="opacity-80" />
-                        </Button>
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="Student.mName"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel className="text-muted-foreground">
+                        Middle Name
+                      </FormLabel>
+                      <FormControl className="">
+                        <div className="relative w-full">
+                          <Input
+                            {...field}
+                            className="bg-card w-full capitalize border-0"
+                          />
+                          <Button
+                            variant="ghost"
+                            className="absolute right-1 top-0"
+                          >
+                            <UserRound className="opacity-80" />
+                          </Button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="Student.lName"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel className="text-muted-foreground">
+                        Last Name
+                      </FormLabel>
+                      <FormControl className="">
+                        <div className="relative w-full">
+                          <Input
+                            {...field}
+                            className="bg-card w-full capitalize border-0"
+                          />
+                          <Button
+                            variant="ghost"
+                            className="absolute right-1 top-0"
+                          >
+                            <UserRound className="opacity-80" />
+                          </Button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="Student.gender"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel className="text-muted-foreground">
+                        Gender
+                      </FormLabel>
+                      <FormControl className="">
+                        <div className="relative w-full">
+                          <Input
+                            {...field}
+                            className="bg-card w-full capitalize border-0"
+                          />
+                          <Button
+                            variant="ghost"
+                            className="absolute right-1 top-0"
+                          >
+                            <UserRound className="opacity-80" />
+                          </Button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="Student.dateOfBirth"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel className="text-muted-foreground">
+                        Date of Birth
+                      </FormLabel>
+                      <FormControl className="">
+                        <div className="relative w-full">
+                          <Input
+                            {...field}
+                            className="bg-card w-full capitalize border-0"
+                          />
+                          <Button
+                            variant="ghost"
+                            className="absolute right-1 top-0"
+                          >
+                            <UserRound className="opacity-80" />
+                          </Button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="Student.address"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel className="text-muted-foreground">
+                        Address
+                      </FormLabel>
+                      <FormControl className="">
+                        <div className="relative w-full">
+                          <Input
+                            {...field}
+                            className="bg-card w-full capitalize border-0"
+                          />
+                          <Button
+                            variant="ghost"
+                            className="absolute right-1 top-0"
+                          >
+                            <UserRound className="opacity-80" />
+                          </Button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="Student.contactNumber"
+                  render={({ field }) => (
+                    <FormItem className="col-span-2">
+                      <FormLabel className="text-muted-foreground">
+                        Contact Number
+                      </FormLabel>
+                      <FormControl className="">
+                        <div className="relative w-full">
+                          <Input
+                            {...field}
+                            className="bg-card w-full capitalize border-0"
+                          />
+                          <Button
+                            variant="ghost"
+                            className="absolute right-1 top-0"
+                          >
+                            <UserRound className="opacity-80" />
+                          </Button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+              <div className="flex items-center gap-3">
+                <h3 className="text-lg font-medium flex gap-2 items-center">
+                  <Mail className="h-5 w-5" /> Account Information
+                </h3>
+                <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+              </div>
+              <div className=" w-full grid grid-cols-2 gap-8">
+                <FormField
+                  control={form.control}
+                  name="schoolId"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel className="text-muted-foreground">
+                        Student ID
+                      </FormLabel>
+                      <FormControl className="">
+                        <div className="w-full">
+                          <Input
+                            {...field}
+                            className="bg-card w-full capitalize border-0"
+                            disabled
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="Student.course"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel className="text-muted-foreground">
+                        Course
+                      </FormLabel>
+                      <FormControl className="">
+                        <div className="relative w-full">
+                          <Input
+                            {...field}
+                            className="bg-card w-full capitalize border-0"
+                          />
+                          <Button
+                            variant="ghost"
+                            className="absolute right-1 top-0"
+                          >
+                            <UserRound className="opacity-80" />
+                          </Button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="Student.year"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel className="text-muted-foreground">
+                        Year Level
+                      </FormLabel>
+                      <FormControl className="">
+                        <div className="relative w-full">
+                          <Input
+                            {...field}
+                            className="bg-card w-full capitalize border-0"
+                          />
+                          <Button
+                            variant="ghost"
+                            className="absolute right-1 top-0"
+                          >
+                            <UserRound className="opacity-80" />
+                          </Button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="Student.section"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel className="text-muted-foreground">
+                        Section
+                      </FormLabel>
+                      <FormControl className="">
+                        <div className="relative w-full">
+                          <Input
+                            {...field}
+                            className="bg-card w-full capitalize border-0"
+                          />
+                          <Button
+                            variant="ghost"
+                            className="absolute right-1 top-0"
+                          >
+                            <UserRound className="opacity-80" />
+                          </Button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
             </div>
           )}
 
           {tab === "family" && (
-            <div className=" w-full divide-y">
-              <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-3 gap-y-6 pb-10">
+            <div className=" w-full ">
+              <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 pb-10">
+                <p className="text-sm text-muted-foreground p-4 bg-card col-span-2 rounded-md flex gap-2 items-center">
+                  <AlertCircle size={15} /> If no information available, type{" "}
+                  <span className="font-medium">N/A.</span>
+                </p>
                 <div className="lg:col-span-2 col-span-1 space-y-4">
-                  <div className="lg:flex-row flex-col gap-5 items-center flex justify-between">
-                    <motion.span
-                      className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-        text-lg font-semibold flex items-center gap-1.5"
-                      initial={{ backgroundPosition: "200% 0" }}
-                      animate={{ backgroundPosition: "-200% 0" }}
-                      transition={{
-                        repeat: Infinity,
-                        repeatType: "loop",
-                        duration: 7,
-                        ease: "linear",
-                      }}
-                    >
-                      Father
-                    </motion.span>
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-lg font-medium flex gap-2 items-center">
+                      <UserRound className="h-5 w-5" /> Father Information
+                    </h3>
+                    <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                     <Controller
                       control={form.control}
                       name="Student.familyBackground.fatherStatus" // matches Zod schema
@@ -432,11 +450,13 @@ export default function Profile() {
                   name="Student.familyBackground.fatherFullName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Full Name
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -450,11 +470,13 @@ export default function Profile() {
                   name="Student.familyBackground.fatherAddress"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Address</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Address
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -468,11 +490,13 @@ export default function Profile() {
                   name="Student.familyBackground.fatherContactNumber"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Contact Number</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Contact Number
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -486,11 +510,13 @@ export default function Profile() {
                   name="Student.familyBackground.fatherOccupation"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Occupation</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Occupation
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -504,11 +530,13 @@ export default function Profile() {
                   name="Student.familyBackground.fatherHighestEducation"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Highest Education Attainment</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Highest Education Attainment
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -522,11 +550,13 @@ export default function Profile() {
                   name="Student.familyBackground.fatherTotalParentsTaxableIncome"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Total Parents Taxable Income</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Total Parents Taxable Income
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -534,24 +564,14 @@ export default function Profile() {
                   )}
                 />
               </div>
-
-              <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-3 gap-y-6 py-10">
+              <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+              <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 py-10">
                 <div className="lg:col-span-2 col-span-1 space-y-4">
-                  <div className="lg:flex-row flex-col gap-5 flex justify-between items-center">
-                    <motion.span
-                      className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text text-emerald-600/70
-          text-lg font-semibold flex items-center gap-1.5"
-                      initial={{ backgroundPosition: "200% 0" }}
-                      animate={{ backgroundPosition: "-200% 0" }}
-                      transition={{
-                        repeat: Infinity,
-                        repeatType: "loop",
-                        duration: 7,
-                        ease: "linear",
-                      }}
-                    >
-                      Mother
-                    </motion.span>
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-lg font-medium flex gap-2 items-center">
+                      <UserRound className="h-5 w-5" /> Mother Information
+                    </h3>
+                    <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                     <Controller
                       control={form.control}
                       name="Student.familyBackground.motherStatus"
@@ -597,11 +617,13 @@ export default function Profile() {
                   name="Student.familyBackground.motherFullName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Full Name
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -614,11 +636,13 @@ export default function Profile() {
                   name="Student.familyBackground.motherAddress"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Address</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Address
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -631,11 +655,13 @@ export default function Profile() {
                   name="Student.familyBackground.motherContactNumber"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Contact Number</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Contact Number
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -648,11 +674,13 @@ export default function Profile() {
                   name="Student.familyBackground.motherOccupation"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Occupation</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Occupation
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -665,11 +693,13 @@ export default function Profile() {
                   name="Student.familyBackground.motherHighestEducation"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Highest Education Attainment</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Highest Education Attainment
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -682,11 +712,13 @@ export default function Profile() {
                   name="Student.familyBackground.motherTotalParentsTaxableIncome"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Total Parents Taxable Income</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Total Parents Taxable Income
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -694,24 +726,14 @@ export default function Profile() {
                   )}
                 />
               </div>
-
+              <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
               <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-3 gap-y-6 py-10">
                 <div className="lg:col-span-2 col-span-1 space-y-4">
-                  <div className="lg:flex-row flex-col gap-5 items-start flex justify-between">
-                    <motion.span
-                      className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text text-emerald-600/70
-          text-lg font-semibold flex items-center gap-1.5"
-                      initial={{ backgroundPosition: "200% 0" }}
-                      animate={{ backgroundPosition: "-200% 0" }}
-                      transition={{
-                        repeat: Infinity,
-                        repeatType: "loop",
-                        duration: 7,
-                        ease: "linear",
-                      }}
-                    >
-                      Legal Guardian
-                    </motion.span>
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-lg font-medium flex gap-2 items-center">
+                      <UserRound className="h-5 w-5" /> Guardian Information
+                    </h3>
+                    <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                   </div>
                 </div>
 
@@ -721,11 +743,13 @@ export default function Profile() {
                   name="Student.familyBackground.guardianFullName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Full Name
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -739,11 +763,13 @@ export default function Profile() {
                   name="Student.familyBackground.guardianAddress"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Address</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Address
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -757,11 +783,13 @@ export default function Profile() {
                   name="Student.familyBackground.guardianContactNumber"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Contact Number</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Contact Number
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -775,11 +803,13 @@ export default function Profile() {
                   name="Student.familyBackground.guardianOccupation"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Occupation</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Occupation
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -793,11 +823,13 @@ export default function Profile() {
                   name="Student.familyBackground.guardianHighestEducation"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Highest Education Attainment</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Highest Education Attainment
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -811,11 +843,13 @@ export default function Profile() {
                   name="Student.familyBackground.guardianStatus"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Status</FormLabel>
+                      <FormLabel className="text-muted-foreground">
+                        Status
+                      </FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          className="w-full bg-card capitalize"
+                          className="w-full bg-card capitalize border-0"
                         />
                       </FormControl>
                       <FormMessage />
@@ -825,20 +859,11 @@ export default function Profile() {
               </div>
               <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-3 gap-y-6 py-10">
                 <div className="lg:col-span-2 col-span-1 space-y-4">
-                  <div className="lg:flex-row flex-col gap-5 items-start flex justify-between">
-                    <motion.span
-                      className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text text-emerald-600/70 text-lg font-semibold flex items-center gap-1.5"
-                      initial={{ backgroundPosition: "200% 0" }}
-                      animate={{ backgroundPosition: "-200% 0" }}
-                      transition={{
-                        repeat: Infinity,
-                        repeatType: "loop",
-                        duration: 7,
-                        ease: "linear",
-                      }}
-                    >
-                      Siblings
-                    </motion.span>
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-lg font-medium flex gap-2 items-center">
+                      <UserRound className="h-5 w-5" /> Siblings Information
+                    </h3>
+                    <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                     <Button
                       size="sm"
                       onClick={() =>
@@ -872,12 +897,14 @@ export default function Profile() {
                             name={`Student.familyBackground.siblings.${index}.fullName`}
                             render={({ field }) => (
                               <FormItem className="flex-1">
-                                <FormLabel>Full Name</FormLabel>
+                                <FormLabel className="text-muted-foreground">
+                                  Full Name
+                                </FormLabel>
                                 <FormControl className="">
                                   <div className="flex-1">
                                     <Input
                                       {...field}
-                                      className="w-full bg-card capitalize"
+                                      className="w-full bg-card capitalize border-0"
                                     />
                                   </div>
                                 </FormControl>
@@ -891,7 +918,9 @@ export default function Profile() {
                             name={`Student.familyBackground.siblings.${index}.age`}
                             render={({ field }) => (
                               <FormItem className="flex-1">
-                                <FormLabel>Age</FormLabel>
+                                <FormLabel className="text-muted-foreground">
+                                  Age
+                                </FormLabel>
                                 <FormControl>
                                   <Input
                                     {...field}
@@ -908,12 +937,14 @@ export default function Profile() {
                             name={`Student.familyBackground.siblings.${index}.occupation`}
                             render={({ field }) => (
                               <FormItem className="flex-1">
-                                <FormLabel>Occupation</FormLabel>
+                                <FormLabel className="text-muted-foreground">
+                                  Occupation
+                                </FormLabel>
                                 <FormControl>
                                   <div className="w-full">
                                     <Input
                                       {...field}
-                                      className="w-full bg-card capitalize"
+                                      className="w-full bg-card capitalize border-0"
                                     />
                                   </div>
                                 </FormControl>
@@ -937,34 +968,106 @@ export default function Profile() {
             </div>
           )}
           {tab === "security" && (
-            <div className=" w-full mt-10 space-y-5">
-              <div className="flex items-center gap-3 mb-6">
-                <Button variant="outline">
-                  <Lock />
-                </Button>
-                <h2 className="text-lg font-semibold text-muted-foreground">
-                  Account Security
-                </h2>
+            <div className=" w-full space-y-8">
+              <div className="flex items-center gap-3">
+                <h3 className="text-lg font-medium flex gap-2 items-center">
+                  <UserRound className="h-5 w-5" />
+                  Change Password
+                </h3>
+                <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
               </div>
-              {/* <div className="grid grid-cols-2  gap-x-3 gap-y-6">
+              <div className="grid grid-cols-2 gap-8">
                 <FormField
                   control={form.control}
-                  name="userPassword"
+                  name="Student.contactNumber"
                   render={({ field }) => (
-                    <FormItem className="">
-                      <FormLabel>Password</FormLabel>
+                    <FormItem className="col-span-2">
+                      <FormLabel className="text-muted-foreground">
+                        Old Password
+                      </FormLabel>
                       <FormControl className="">
-                        <Input {...field} className="capitalize" />
+                        <div className="relative w-full">
+                          <Input
+                            {...field}
+                            className="bg-card w-full capitalize border-0"
+                          />
+                          <Button
+                            variant="ghost"
+                            className="absolute right-1 top-0"
+                          >
+                            <UserRound className="opacity-80" />
+                          </Button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-              </div> */}
+                <FormField
+                  control={form.control}
+                  name="Student.contactNumber"
+                  render={({ field }) => (
+                    <FormItem className="col-span-2">
+                      <FormLabel className="text-muted-foreground">
+                        New Password
+                      </FormLabel>
+                      <FormControl className="">
+                        <div className="relative w-full flex items-center gap-3">
+                          <Input
+                            {...field}
+                            className="bg-card w-full capitalize border-0"
+                          />
+                          <Button>
+                            <UserRound className="opacity-80" />
+                            Change Password
+                          </Button>
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
             </div>
           )}
         </div>
       </Form>
+      <AnimatePresence>
+        {hasChanges && (
+          <div className="sticky bottom-0 ">
+            <motion.div
+              className="bg-gradient-to-t from-background via-background/50 to-transparent w-full flex justify-center items-center py-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 30 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Button
+                  size="lg"
+                  className="cursor-pointer"
+                  onClick={() => {
+                    console.log("Button clicked"); // Test this first
+                    form.handleSubmit(handleSubmit)();
+                  }}
+                  disabled={loading}
+                >
+                  <Check />
+                  {loading ? "Saving..." : "Save Changes"}
+                  {loading && <Loader className="animate-spin" />}
+                </Button>
+              </motion.div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

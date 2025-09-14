@@ -117,6 +117,7 @@ export default function ClientScholarship() {
     search: search,
     status: status,
     filters: formatFilters(),
+    accountId: user?.accountId.toString(),
   });
 
   const familyLength = Object.keys(user?.Student.familyBackground || {}).length;

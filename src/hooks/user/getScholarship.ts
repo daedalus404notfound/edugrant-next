@@ -61,6 +61,7 @@ export default function useScholarshipData({
   status,
   filters,
   search,
+  accountId,
 }: {
   page: number;
   pageSize: number;
@@ -69,6 +70,7 @@ export default function useScholarshipData({
   status?: string;
   filters?: string;
   search?: string;
+  accountId?: string;
 }) {
   const [data, setData] = useState<scholarshipFormData[]>([]);
   const [meta, setMeta] = useState<MetaTypes>({
@@ -96,7 +98,7 @@ export default function useScholarshipData({
             status ? `&status=${status}` : ""
           }${filters ? `&filters=${encodeURIComponent(filters)}` : ""}${
             search ? `&search=${encodeURIComponent(search)}` : ""
-          }`;
+          }${accountId ? `&accountId=${accountId}` : ""}`;
 
           const res = await axios.get(endpoint, { withCredentials: true });
           console.log(endpoint);

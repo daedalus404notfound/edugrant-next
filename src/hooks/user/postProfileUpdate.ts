@@ -4,6 +4,7 @@ import { UserFormData } from "../zod/user";
 import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
+import { useUserStore } from "@/store/useUserStore";
 
 interface ApiErrorResponse {
   message?: string;
@@ -146,13 +147,14 @@ export const useUpdateProfile = (initialData?: UserFormData) => {
   const profileUpdate = useProfile();
   const [open, setOpen] = useState(false);
   const [reset, setReset] = useState(false);
-
+  const { setUser } = useUserStore();
   const handleSubmit = async (data: UserFormData) => {
     console.log("111", data);
     try {
       const result = await profileUpdate.mutateAsync(data);
 
       if (result) {
+        setUser(data);
         setOpen(false);
         setReset(true);
         profileUpdate.reset();
