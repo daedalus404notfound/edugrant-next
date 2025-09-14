@@ -52,4 +52,5 @@ export const scholarshipSchema = z.object({
 });
 
 export type scholarshipFormData = z.infer<typeof scholarshipSchema>;
+export type scholarshipDocumentFormData = z.infer<typeof documentsSchema>;
 
