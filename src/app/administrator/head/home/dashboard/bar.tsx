@@ -44,9 +44,9 @@ export function ChartBarMultiple() {
           accessibilityLayer
           data={
             data?.map((item) => ({
-              name: item.scholarshipTitle,
-              applicationsReceived: item.totalApplicants,
-              applicationsApproved: item.totalApproved,
+              name: item.title,
+              applicationsReceived: item.approved,
+              applicationsApproved: item.approved,
             })) ?? []
           }
         >

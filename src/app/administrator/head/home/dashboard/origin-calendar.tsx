@@ -10,7 +10,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/origin-select";
+} from "@/components/ui/select";
 
 export default function CalendarComponent() {
   const [date, setDate] = useState<Date | undefined>(new Date());
