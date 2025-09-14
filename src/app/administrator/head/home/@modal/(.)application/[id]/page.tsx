@@ -392,7 +392,7 @@ export default function InterceptReviewApplicants() {
                       </Badge>
                     </div>
                     <p className="text-muted-foreground font-mono text-sm">
-                      ID: {data?.Student.Account.studentId}
+                      ID: {data?.Student.Account.schoolId}
                     </p>
                   </div>
                 </div>
