@@ -24,7 +24,6 @@ import GlassFolder from "@/components/ui/folder";
 
 import ApplicationViewer from "./viewer";
 import { Badge } from "@/components/ui/badge";
-import EditApplication from "./edi-application";
 const mimeToLabelMap: Record<string, string> = {
   "application/pdf": "PDF",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
