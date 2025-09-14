@@ -1,7 +1,8 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { ApplicationTypes, MetaTypes } from "../zod-types";
+import { MetaTypes } from "../zodMeta";
+import { ApplicationFormData } from "../zod/application";
 const defaultMeta: MetaTypes = {
   page: 1,
   pageSize: 10,
@@ -27,7 +28,7 @@ export default function useApplicantsSearch({
   status: string;
   query: string;
 }) {
-  const [searchData, setSearchData] = useState<ApplicationTypes[]>([]);
+  const [searchData, setSearchData] = useState<ApplicationFormData[]>([]);
   const [searchMeta, setSearchMeta] = useState<MetaTypes>(defaultMeta);
   const [searchLoading, setLoading] = useState(false);
 
