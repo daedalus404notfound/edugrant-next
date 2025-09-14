@@ -7,6 +7,8 @@ import { ChevronDown, LogOut, UserRound } from "lucide-react";
 import { ModeToggle } from "@/components/ui/dark-mode";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { DeleteDialog } from "@/components/ui/delete-dialog";
+import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
 
 const tabs = [
   { id: "/administrator/staff/home", label: "Dashboard", indicator: null },
@@ -34,6 +36,7 @@ const tabs = [
 export default function StaffHeader() {
   const router = useRouter();
   const [tab, setTab] = useState("/administrator/staff/home");
+  const { handleLogout, loading, open, setOpen } = useAdminLogout();
   return (
     <div className="relative">
       <div className="relative">
@@ -69,9 +72,21 @@ export default function StaffHeader() {
               <UserRound /> Jerome Tecson <ChevronDown />
             </Button>
             <ModeToggle />
-            <Button variant="outline">
-              <LogOut />
-            </Button>
+
+            <DeleteDialog
+              open={open}
+              onOpenChange={setOpen}
+              onConfirm={handleLogout}
+              loading={loading}
+              title="Logout?"
+              description="Are you sure you want to log out of your account?"
+              cancelText="Stay Logged In"
+              trigger={
+                <Button variant="outline">
+                  <LogOut />
+                </Button>
+              }
+            />
           </div>
         </header>
         <div className="pb-2 border-b px-8">

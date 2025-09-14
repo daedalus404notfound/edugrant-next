@@ -5,18 +5,12 @@ import { useState } from "react";
 
 export function useAdminLogout() {
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
       setLoading(true);
-
-      StyledToast({
-        status: "checking",
-        title: "Logging out...",
-        description: "Please wait while we log you out.",
-      });
-
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/adminLogout`,
         {},
@@ -24,6 +18,7 @@ export function useAdminLogout() {
       );
 
       if (res.status === 200) {
+        setOpen(false);
         StyledToast({
           status: "success",
           title: "Successfully logged out",
@@ -36,9 +31,10 @@ export function useAdminLogout() {
           status: "error",
           title: "Logout failed",
           description: "Unexpected response from the server.",
-        });
+        });``
       }
     } catch (error) {
+      setOpen(false);
       StyledToast({
         status: "error",
         title: "Logout failed",
@@ -50,5 +46,5 @@ export function useAdminLogout() {
     }
   };
 
-  return { handleLogout, loading };
+  return { handleLogout, loading, open, setOpen };
 }
