@@ -33,7 +33,7 @@ export default function Profile() {
   //   }
   // }, [user, form]);
   const [tab, setTab] = useState("personal");
-  console.log("meow", user?.Student.accountId);
+
   const tabs = [
     { id: "personal", label: "Personal", indicator: null },
     { id: "account", label: "Account", indicator: null },
