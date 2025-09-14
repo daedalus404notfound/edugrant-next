@@ -55,15 +55,13 @@ export default function ClientScholarship() {
   const [pageSize] = useState(50);
   const [sortBy] = useState("");
   const [order] = useState("");
-  const [status, setStatus] = useState("ACTIVE");
-  const [openAlert, setOpenAlert] = useState(false);
-  const [selectedId, setSelectedId] = useState<string[]>([]);
+
   const { data, loading } = useAnnouncementFetch({
     page,
     pageSize,
     sortBy,
     order,
-    status,
+  
   });
 
   return (
