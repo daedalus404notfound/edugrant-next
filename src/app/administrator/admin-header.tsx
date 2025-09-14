@@ -68,7 +68,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { useAdminLogout } from "@/hooks/head/postAdminLogout";
+import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
 import { useState } from "react";
 
 import { format } from "date-fns";
