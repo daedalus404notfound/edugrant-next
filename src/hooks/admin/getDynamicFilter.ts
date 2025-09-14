@@ -1,7 +1,7 @@
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { FilterOptions } from "../zod-types";
+import { FilterOptions } from "../zod/filter";
 
 export default function useGetFilter({
   applicationStatus,
