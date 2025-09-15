@@ -4,15 +4,14 @@ import { z } from "zod";
 export const OptionsApplicationSchema = z.object({
   course: z.array(z.string()),
   section: z.array(z.string()),
-  title: z.array(z.string()),
   year: z.array(z.string()),
+  institute: z.array(z.string()),
 });
 
 // Scholarship-specific filters
 export const OptionsScholarshipSchema = z.object({
-  scholarshipAmount: z.array(z.string()),
-  scholarshipProvider: z.array(z.string()),
-  scholarshipTitle: z.array(z.string()),
+  provider: z.array(z.string()),
+  scholarship: z.array(z.string()),
 });
 
 // Final combined schema

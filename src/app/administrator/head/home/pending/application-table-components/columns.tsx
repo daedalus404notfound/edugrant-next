@@ -77,47 +77,54 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "scholarshipTitle",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Scholarship" />
-    ),
-    cell: ({ row }) => {
-      const scholar = row.original.Scholarship;
-      return <div className="font-medium truncate  w-50">{scholar.title}</div>;
-    },
-    enableSorting: true,
-    enableHiding: true,
-  },
-
-  {
-    accessorFn: (row) =>
-      `${row.Student.course} - ${row.Student.year.slice(0, 1)}${
-        row.Student.section
-      }`,
-    id: "Course_Year_&_Section",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Course, Year & Section" />
-    ),
-    cell: ({ row }) => <span>{row.getValue("Course_Year_&_Section")}</span>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-
-  {
-    accessorKey: "institute",
+    accessorFn: (row) => row.Student.institute,
+    id: "Institute",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Institute" />
     ),
-    cell: ({ row }) => {
-      const scholar = row.original.Student;
-      return (
-        <div className="font-medium truncate  w-50">{scholar.institute}</div>
-      );
-    },
+    cell: ({ row }) => (
+      <span className="capitalize">{row.getValue("Institute")}</span>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorFn: (row) => row.Student.course,
+    id: "Course",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Course" />
+    ),
+    cell: ({ row }) => (
+      <span className="capitalize">{row.getValue("Course")}</span>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorFn: (row) => row.Student.year,
+    id: "Year",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Year Level" />
+    ),
+    cell: ({ row }) => (
+      <span className="capitalize">{row.getValue("Year")}</span>
+    ),
     enableSorting: true,
     enableHiding: true,
   },
 
+  {
+    accessorFn: (row) => row.Scholarship.title,
+    id: "Scholarship",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Scholarship" />
+    ),
+    cell: ({ row }) => (
+      <span className="capitalize">{row.getValue("Scholarship")}</span>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
   {
     accessorKey: "status",
     header: ({ column }) => (

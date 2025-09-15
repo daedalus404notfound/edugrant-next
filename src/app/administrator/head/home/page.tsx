@@ -47,6 +47,7 @@ import { ChartBarMultiple } from "./dashboard/bar";
 import ChartAreaInteractive from "./dashboard/area-chart";
 import { SummaryCard, SummaryCardProps } from "./dashboard/summary";
 import { useAdminStore } from "@/store/adminUserStore";
+import useAnnouncementFetch from "@/hooks/admin/getAnnouncement";
 const summaryCards: SummaryCardProps[] = [
   {
     label: "Total Applicants",
@@ -77,26 +78,19 @@ const summaryCards: SummaryCardProps[] = [
     todayIncrement: 10,
   },
 ];
-const announcements = [
-  {
-    id: 1,
-    title: "Scholarship Application Deadline Extended",
-    description:
-      "The deadline for scholarship applications has been extended to June 30, 2025.",
-    date: "Dec 12, 2024",
-    priority: "high",
-  },
-  {
-    id: 2,
-    title: "Scholarship Application Deadline Extended",
-    description:
-      "The deadline for scholarship applications has been extended to June 30, 2025.",
-    date: "Dec 12, 2024",
-    priority: "high",
-  },
-];
 
 export default function AdminDashboard() {
+  const [page] = useState(1);
+  const [pageSize] = useState(50);
+  const [sortBy] = useState("");
+  const [order] = useState("");
+  const { data: dataAnnouncement, loading: loadingAnnouncement } =
+    useAnnouncementFetch({
+      page,
+      pageSize,
+      sortBy,
+      order,
+    });
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(),
     to: new Date(2025, 8, 15),
@@ -121,12 +115,7 @@ export default function AdminDashboard() {
   const sliced = data.slice(0, 4);
   return (
     <div className="relative min-h-screen z-10">
-      <BGPattern
-        variant="grid"
-        className="top-0  opacity-30 hidden dark:block"
-        mask="fade-top"
-        size={70}
-      />
+     
       <div className="lg:p-5 p-3 space-y-5 ">
         <div className=" grid lg:grid-cols-2 grid-cols-1 gap-5 ">
           <div className="  space-y-5 ">
@@ -165,16 +154,16 @@ export default function AdminDashboard() {
                 <TableBody className="">
                   {sliced.map((scholarship) => (
                     <TableRow key={scholarship.scholarshipId}>
-                      <TableCell className="py-6 px-3 font-medium">
+                      <TableCell className="py-4 px-2 font-medium">
                         {scholarship.title}
                       </TableCell>
-                      <TableCell className="py-6 px-3">
+                      <TableCell className="py-4 px-2">
                         {scholarship.Scholarship_Provider.name}
                       </TableCell>
-                      <TableCell className="py-6 px-3">
+                      <TableCell className="py-4 px-2">
                         {scholarship.type}
                       </TableCell>
-                      <TableCell className="py-6 px-3">
+                      <TableCell className="py-4 px-2">
                         <Badge className="bg-green-50 dark:bg-green-600/20 text-green-700">
                           ACTIVE
                         </Badge>
@@ -198,10 +187,10 @@ export default function AdminDashboard() {
               </Button>
 
               <Timeline className="space-y-5">
-                {announcements.map((item) => (
+                {dataAnnouncement.slice(0, 2).map((item, index) => (
                   <TimelineItem
-                    key={item.id}
-                    step={item.id}
+                    key={item.announcementId}
+                    step={index}
                     className="!m-0  bg-card  p-4! rounded-md border !mb-3"
                   >
                     <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
@@ -209,7 +198,8 @@ export default function AdminDashboard() {
                         {item.title ?? "Win scholarship is now open."}
                       </TimelineTitle>
                       <TimelineDate className="lg:text-sm text-xs text-muted-foreground flex items-center gap-1.5">
-                        <CalendarIcon size={13} /> {item.date}
+                        <CalendarIcon size={13} />{" "}
+                        {item.startDate && format(item.startDate, "PPP p")}
                       </TimelineDate>
                     </div>
 
@@ -256,16 +246,16 @@ export default function AdminDashboard() {
                 <TableBody className="">
                   {sliced.map((scholarship) => (
                     <TableRow key={scholarship.scholarshipId}>
-                      <TableCell className="py-6 px-3 font-medium">
+                      <TableCell className="py-4 px-2 font-medium">
                         {scholarship.title}
                       </TableCell>
-                      <TableCell className="py-6 px-3">
+                      <TableCell className="py-4 px-2">
                         {scholarship.Scholarship_Provider.name}
                       </TableCell>
-                      <TableCell className="py-6 px-3">
+                      <TableCell className="py-4 px-2">
                         {scholarship.type}
                       </TableCell>
-                      <TableCell className="py-6 px-3">
+                      <TableCell className="py-4 px-2">
                         <Badge className="bg-green-50 dark:bg-green-600/20 text-green-700">
                           ACTIVE
                         </Badge>

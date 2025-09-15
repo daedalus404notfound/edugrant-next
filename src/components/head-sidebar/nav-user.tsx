@@ -18,10 +18,19 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useAdminStore } from "@/store/adminUserStore";
+import { DeleteDialog } from "../ui/delete-dialog";
+import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
+import { Button } from "../ui/button";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { admin } = useAdminStore();
+  const {
+    handleLogout,
+    loading: loadingLogout,
+    open: openLogout,
+    setOpen: setOpenLogout,
+  } = useAdminLogout();
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -37,7 +46,7 @@ export function NavUser() {
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
-                  Admin {admin?.ISPSU_Head.fName}
+                  {admin?.ISPSU_Head.fName} {admin?.ISPSU_Head.lName}
                 </span>
                 <span className="truncate text-xs">{admin?.email}</span>
               </div>
@@ -67,10 +76,22 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
+            <DeleteDialog
+              open={openLogout}
+              onOpenChange={setOpenLogout}
+              onConfirm={handleLogout}
+              confirmText="Log out"
+              confirmTextLoading="Please wait..."
+              loading={loadingLogout}
+              title="Logout?"
+              description="Are you sure you want to log out of your account?"
+              cancelText="Stay Logged In"
+              trigger={
+                <Button variant="ghost" className="w-full justify-start">
+                  <LogOut /> Logout
+                </Button>
+              }
+            />
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

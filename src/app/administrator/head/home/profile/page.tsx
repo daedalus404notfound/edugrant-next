@@ -48,16 +48,16 @@ export default function Profile() {
   const [isEditing, setIsEditing] = useState(false);
   const { admin } = useAdminStore();
   return (
-    <div className="w-3/4 mx-auto py-10 gap-8 space-y-4">
+    <div className="w-full max-w-4xl mx-auto py-10 gap-8 space-y-10">
       {/* Header */}
-      <div className=" rounded-lg p-6 border py-10">
+      <div className="">
         {/* Profile Header */}
         <div className="flex items-center space-x-4">
           <div className="relative">
-            <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary rounded-full flex items-center justify-center  font-bold text-2xl">
+            <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary-second rounded-full flex items-center justify-center  font-bold text-2xl">
               JT
             </div>
-            <div className="absolute bottom-1 right-1 size-4 bg-green-500 rounded-full border"></div>
+            <div className="absolute bottom-1 right-1 size-3 bg-green-500 rounded-full border"></div>
           </div>
 
           <div className="flex-1">
@@ -80,14 +80,14 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Personal Information */}
-      <div className="grid grid-cols-2 gap-6 mt-8">
-        <div className=" rounded-lg p-6 border ">
-          <div className="flex items-center justify-between mb-6">
+      <div className="grid grid-cols-1 gap-8  space-y-10">
+        <div className="   ">
+          <div className="flex items-center justify-between mb-6 gap-3">
             <h3 className="text-lg font-semibold ">Personal Information</h3>
+            <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+          <div className="grid grid-cols-2 gap-6">
             {/* First Name */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-300">
@@ -189,9 +189,10 @@ export default function Profile() {
           </div>
         </div>
 
-        <div className=" rounded-lg p-6 border">
-          <div className="flex items-center justify-between mb-6">
+        <div className="">
+          <div className="flex items-center justify-between mb-6 gap-3">
             <h3 className="text-lg font-semibold ">Activity Logs</h3>
+            <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
           </div>
           <Timeline className="space-y-5">
             {announcements.map((item) => (
@@ -217,24 +218,6 @@ export default function Profile() {
           </Timeline>
         </div>
       </div>
-
-      {/* Save Button (only visible when editing) */}
-      {isEditing && (
-        <div className="flex justify-end space-x-4">
-          <button
-            onClick={() => setIsEditing(false)}
-            className="px-6 py-2 border  text-gray-300 rounded-lg hover:bg-card transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => setIsEditing(false)}
-            className="px-6 py-2 bg-primary hover:bg-primary  rounded-lg transition-colors"
-          >
-            Save Changes
-          </button>
-        </div>
-      )}
     </div>
   );
 }

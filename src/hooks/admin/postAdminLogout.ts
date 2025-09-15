@@ -1,4 +1,5 @@
 import StyledToast from "@/components/ui/toast-styled";
+import { useAdminStore } from "@/store/adminUserStore";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -7,7 +8,7 @@ export function useAdminLogout() {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
-
+  const { logout } = useAdminStore();
   const handleLogout = async () => {
     try {
       setLoading(true);
@@ -18,6 +19,7 @@ export function useAdminLogout() {
       );
 
       if (res.status === 200) {
+        logout();
         setOpen(false);
         StyledToast({
           status: "success",
@@ -31,7 +33,8 @@ export function useAdminLogout() {
           status: "error",
           title: "Logout failed",
           description: "Unexpected response from the server.",
-        });``
+        });
+        ``;
       }
     } catch (error) {
       setOpen(false);

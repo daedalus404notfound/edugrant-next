@@ -56,7 +56,7 @@ export default function useAnnouncementFetch({
       }
     }
     fetchAnnouncement();
-  }, [page, pageSize, sortBy, order, status]);
+  }, [page, pageSize, sortBy, order]);
 
   return { data, meta, loading };
 }

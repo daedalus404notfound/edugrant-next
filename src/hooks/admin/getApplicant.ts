@@ -26,7 +26,7 @@ export default function useFetchApplications({
   pageSize?: number;
   sortBy?: string;
   order?: string;
-  status: string;
+  status?: string;
   filters?: string;
 }) {
   const [data, setData] = useState<ApplicationFormData[]>([]);

@@ -45,6 +45,8 @@ import useAnnouncementFetch from "@/hooks/admin/getAnnouncement";
 import AnnouncementDescription from "@/components/ui/description";
 import { useCreateAnnouncement } from "@/hooks/admin/postCreateAnnouncement";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
+import NoDataFound from "@/components/ui/nodata";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ClientScholarship() {
   const [page] = useState(1);
@@ -80,7 +82,7 @@ export default function ClientScholarship() {
 
   return (
     <div className="  bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className="mx-auto w-[95%] lg:pt-10  pt-3">
+      <div className="mx-auto w-full max-w-4xl lg:pt-10  pt-3">
         <div className="flex justify-between items-end">
           <TitleReusable
             title="Announcements"
@@ -98,13 +100,19 @@ export default function ClientScholarship() {
             <div>
               <Timeline className="space-y-5">
                 {loading ? (
-                  <></>
+                  <div className="space-y-3">
+                    <Skeleton className="h-35 w-full" />
+                    <Skeleton className="h-35 w-full" />
+                    <Skeleton className="h-35 w-full" />
+                  </div>
+                ) : data.length === 0 ? (
+                  <NoDataFound />
                 ) : (
                   data.map((item, index) => (
                     <TimelineItem
                       key={index}
                       step={index}
-                      className="!m-0  bg-card  p-4! rounded-md border !mb-3"
+                      className="!m-0  bg-card  p-4! rounded-lg border !mb-3"
                     >
                       <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
                         <TimelineTitle className="font-medium text-base">
@@ -134,7 +142,7 @@ export default function ClientScholarship() {
           )}
 
           {tab === "2" && (
-            <div className="w-1/2 mx-auto py-10">
+            <div className="">
               <div className="flex items-center gap-3">
                 <h3 className="text-lg font-medium flex gap-2 items-center">
                   <PenLine className="h-5 w-5" /> Post Announcement

@@ -1,6 +1,7 @@
 "use client";
 import {
   ArrowRightIcon,
+  Building,
   GraduationCap,
   SearchIcon,
   Trash2,
@@ -17,8 +18,8 @@ import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
 
 import { ToolbarProps } from "@/app/table-components/data-table";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
-import ExportScholarshipDialog from "@/components/ui/export";
 import useFetchApplications from "@/hooks/admin/getApplicant";
+import ExportCsvScholarship from "./export";
 
 export default function DataTableToolbar<
   TData extends { applicationId: string }
@@ -29,26 +30,31 @@ export default function DataTableToolbar<
   });
 
   console.log(filter);
-  // const isFiltered = table.getState().columnFilters.length > 0;
-  // console.log(filter);
-  // const course = filter?.getFilterData.course.map((meow) => ({
-  //   label: meow,
-  //   value: meow,
-  //   icon: GraduationCap,
-  // }));
-  // const year = filter?.getFilterData.year.map((meow) => ({
-  //   label: meow,
-  //   value: meow,
-  //   icon: GraduationCap,
-  // }));
+  const isFiltered = table.getState().columnFilters.length > 0;
+  console.log(filter);
+  const course = filter?.getFilterData.course.map((meow) => ({
+    label: meow,
+    value: meow,
+    icon: GraduationCap,
+  }));
+  const year = filter?.getFilterData.year.map((meow) => ({
+    label: meow,
+    value: meow,
+    icon: GraduationCap,
+  }));
+  const institute = filter?.getFilterData.institute.map((meow) => ({
+    label: meow,
+    value: meow,
+    icon: Building,
+  }));
 
-  // const scholarships = filter?.getScholarshipsFilters.scholarshipTitle.map(
-  //   (meow) => ({
-  //     label: meow,
-  //     value: meow,
-  //     icon: GraduationCap,
-  //   })
-  // );
+  const scholarships = filter?.getScholarshipsFilters.scholarship.map(
+    (meow) => ({
+      label: meow,
+      value: meow,
+      icon: GraduationCap,
+    })
+  );
 
   const selectedRows = table.getSelectedRowModel().rows;
   const applicationIds = selectedRows.map((row) => row.original.applicationId);
@@ -65,15 +71,6 @@ export default function DataTableToolbar<
       setOpenAlert(false);
     }
   }, [isSuccess, table]);
-  const { data } = useFetchApplications({ status: status ? status : "" });
-  console.log("aaaa", data);
-  const student = data.map((meow) => ({
-    firstName: meow.Student.fName,
-    middleName: meow.Student?.mName,
-    lastName: meow.Student?.lName,
-    courseYearSection: meow.Student?.course,
-    scholarship: meow.Scholarship?.title,
-  }));
 
   return (
     <div className="flex items-center justify-between gap-1.5">
@@ -95,22 +92,28 @@ export default function DataTableToolbar<
             <ArrowRightIcon size={16} aria-hidden="true" />
           </button>
         </div>
-        {/* <DataTableFacetedFilter
+        <DataTableFacetedFilter
           disabled={!!search}
-          column={table.getColumn("scholarshipTitle")}
+          column={table.getColumn("Scholarship")}
           title="Scholarship"
           options={scholarships ?? []}
         />
         <DataTableFacetedFilter
           disabled={!!search}
-          column={table.getColumn("course")}
+          column={table.getColumn("Institute")}
+          title="Institute"
+          options={institute ?? []}
+        />
+        <DataTableFacetedFilter
+          disabled={!!search}
+          column={table.getColumn("Course")}
           title="Course"
           options={course ?? []}
         />
 
         <DataTableFacetedFilter
           disabled={!!search}
-          column={table.getColumn("year")}
+          column={table.getColumn("Year")}
           title="Year"
           options={year ?? []}
         />
@@ -124,7 +127,7 @@ export default function DataTableToolbar<
             Reset
             <X />
           </Button>
-        )} */}
+        )}
       </div>
 
       {selectedRows.length > 0 && (
@@ -144,7 +147,8 @@ export default function DataTableToolbar<
           }
         />
       )}
-      <ExportScholarshipDialog data={student} />
+      <ExportCsvScholarship status={status} />
+
       <DataTableViewOptions table={table} />
     </div>
   );

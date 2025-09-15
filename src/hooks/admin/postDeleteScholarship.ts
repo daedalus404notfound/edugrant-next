@@ -14,6 +14,7 @@ export default function useDeleteScholarship({
 }: DeleteTypes) {
   const { addScholarshipIds } = useScholarshipStore();
   const [isSuccess, setIsSuccess] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const [deleteLoading, setLoading] = useState(false);
   const onSubmit = async () => {
     try {
@@ -39,7 +40,7 @@ export default function useDeleteScholarship({
             "The scholarship has been successfully removed from the system.",
         });
         setIsSuccess(true);
-
+        setOpenDelete(false);
         setLoading(false);
       }
     } catch (error) {
@@ -52,8 +53,9 @@ export default function useDeleteScholarship({
       });
       setIsSuccess(false);
       setLoading(false);
+      setOpenDelete(false);
     }
   };
 
-  return { onSubmit, isSuccess, deleteLoading };
+  return { onSubmit, isSuccess, deleteLoading, openDelete, setOpenDelete };
 }

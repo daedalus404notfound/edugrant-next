@@ -37,32 +37,22 @@ export function DataTableRowActions<TData>({
   status,
 }: DataTableRowActionsProps<TData>) {
   const rowData = row.original as scholarshipFormData;
-  const [openDelete, setOpenDelete] = useState(false);
-  const [openArchive, setOpenArchive] = useState(false);
+
   const { admin } = useAdminStore();
-  const { onSubmit, isSuccess, deleteLoading } = useDeleteScholarship({
-    scholarshipId: [rowData.scholarshipId],
-    accountId: admin?.accountId.toString(),
-  });
+  const { onSubmit, deleteLoading, openDelete, setOpenDelete } =
+    useDeleteScholarship({
+      scholarshipId: [rowData.scholarshipId],
+      accountId: admin?.accountId.toString(),
+    });
   const {
     onSubmit: onSubmitArchive,
-    isSuccess: isSuccessArchive,
+    openArchive,
+    setOpenArchive,
     archiveLoading,
   } = useArchiveScholarship({
     scholarshipId: [rowData.scholarshipId],
     accountId: admin?.accountId.toString(),
   });
-
-  useEffect(() => {
-    if (isSuccess) {
-      setOpenDelete(false);
-    }
-  }, [isSuccess]);
-  useEffect(() => {
-    if (isSuccessArchive) {
-      setOpenArchive(false);
-    }
-  }, [isSuccess]);
 
   return (
     <Popover>
@@ -115,16 +105,13 @@ export function DataTableRowActions<TData>({
             onConfirm={onSubmitArchive}
             loading={archiveLoading}
             confirmText="Archive"
+            red={false}
             confirmTextLoading="Please wait..."
             title="Archive Scholarship?"
             description="Are you sure you want to archive this scholarship?"
             cancelText="Keep"
             trigger={
-              <Button
-                size="lg"
-                variant="ghost"
-                className="justify-start text-orange-700 hover:text-orange-600"
-              >
+              <Button size="lg" variant="ghost" className="justify-start ">
                 <Archive /> Archive
               </Button>
             }

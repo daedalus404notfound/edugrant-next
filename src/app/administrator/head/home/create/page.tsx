@@ -77,12 +77,13 @@ export default function Create() {
 
   return (
     <div className="relative lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className="mx-auto max-w-3/4 w-full py-10">
+      <div className="mx-auto  max-w-4xl w-full py-10">
         <TitleReusable
           title=" Create Scholarship"
           description="Fill out the form below to add a new scholarship."
           Icon={PenLine}
         />
+           <div className="flex grow items-center gap-3"></div>
         <Form {...form}>
           <div className="space-y-5 mt-10">
             <div className="grid grid-cols-3 gap-x-3 gap-y-8">
@@ -106,18 +107,8 @@ export default function Create() {
                           />
                           <div className="flex grow items-center gap-3">
                             <Landmark />
-                            <div className="grid grow gap-2">
-                              <Label>
-                                Government
-                                <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
-                                  (Sublabel)
-                                </span>
-                              </Label>
-                              <p className="text-muted-foreground text-xs">
-                                You can use this card with a label and a
-                                description.
-                              </p>
-                            </div>
+
+                            <Label>Government</Label>
                           </div>
                         </div>
 
@@ -127,20 +118,10 @@ export default function Create() {
                             value="private"
                             className="order-1 after:absolute after:inset-0"
                           />
-                          <div className="flex grow items-start gap-3">
+                          <div className="flex grow items-center gap-3">
                             <Building2 />
-                            <div className="grid grow gap-2">
-                              <Label>
-                                Private
-                                <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
-                                  (Sublabel)
-                                </span>
-                              </Label>
-                              <p className="text-muted-foreground text-xs">
-                                You can use this card with a label and a
-                                description.
-                              </p>
-                            </div>
+
+                            <Label>Private</Label>
                           </div>
                         </div>
                       </RadioGroup>

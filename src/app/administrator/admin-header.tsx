@@ -75,6 +75,7 @@ import { format } from "date-fns";
 
 import { useAdminStore } from "@/store/adminUserStore";
 import { ModeToggle } from "@/components/ui/dark-mode";
+import { DeleteDialog } from "@/components/ui/delete-dialog";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -90,7 +91,12 @@ export default function DynamicHeaderAdmin({
 }: HeaderTypes) {
   const { admin } = useAdminStore();
 
-  const { handleLogout } = useAdminLogout();
+  const {
+    handleLogout,
+    loading: loadingLogout,
+    open: openLogout,
+    setOpen: setOpenLogout,
+  } = useAdminLogout();
   const [open, setOpen] = useState(false);
   const [openNotif, setOpenNotif] = useState(false);
   const [openOut, setOpenOut] = useState(false);
@@ -123,6 +129,9 @@ export default function DynamicHeaderAdmin({
         </Breadcrumb>
       </div>
       <div className="flex items-center gap-2">
+        <Button>
+          <UserRound /> {admin?.ISPSU_Head.fName}
+        </Button>
         <Button
           variant="outline"
           onClick={() => {
@@ -131,40 +140,23 @@ export default function DynamicHeaderAdmin({
         >
           <Bell />
         </Button>
-
-        <ModeToggle />
-        <DropdownMenu open={open} onOpenChange={setOpen}>
-          <DropdownMenuTrigger asChild>
+        <DeleteDialog
+          open={openLogout}
+          onOpenChange={setOpenLogout}
+          onConfirm={handleLogout}
+          confirmText="Log out"
+          confirmTextLoading="Please wait..."
+          loading={loadingLogout}
+          title="Logout?"
+          description="Are you sure you want to log out of your account?"
+          cancelText="Stay Logged In"
+          trigger={
             <Button variant="outline">
-              <UserRound />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="lg:mr-5 mr-3 w-[200px]">
-            <DropdownMenuItem>
-              <UserRound />
-              My Account
-            </DropdownMenuItem>{" "}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                setOpenNotif(true);
-                setOpen(false);
-              }}
-            >
-              <Bell />
-              Notification
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                setOpenOut(true);
-                setOpen(false);
-              }}
-            >
               <LogOut />
-              Log out
-            </DropdownMenuItem>{" "}
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </Button>
+          }
+        />
+        <ModeToggle />
       </div>
       <Drawer direction="right" open={openNotif} onOpenChange={setOpenNotif}>
         <DrawerContent className="bg-transparent !border-0 p-4">
@@ -216,29 +208,7 @@ export default function DynamicHeaderAdmin({
           </div>
         </DrawerContent>
       </Drawer>
-      <Dialog open={openOut} onOpenChange={setOpenOut}>
-        <DialogContent showCloseButton={false} className="max-w-lg p-4">
-          <DialogHeader>
-            <DialogTitle>Logout?</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to log out of your account? You can log back
-              in anytime.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-end gap-2">
-            <Button
-              className="flex-1 lg:flex-none"
-              onClick={() => setOpenOut(false)}
-              variant="outline"
-            >
-              Cancel
-            </Button>
-            <Button variant="secondary" className="flex-1 lg:flex-none">
-              Logout
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+
       <Dialog open={openDark} onOpenChange={setOpenDark}>
         <DialogContent showCloseButton={false} className="max-w-lg p-4">
           <DialogHeader>

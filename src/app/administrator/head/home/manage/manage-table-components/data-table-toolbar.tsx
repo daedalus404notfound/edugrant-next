@@ -12,9 +12,8 @@ import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import { useEffect, useState } from "react";
 import { ToolbarProps } from "@/app/table-components/data-table";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
-import ExportScholarshipDialog from "@/components/ui/export";
-import useScholarshipData from "@/hooks/admin/getScholarship";
-import { format } from "date-fns";
+import ExportCsvScholarship from "./export";
+
 export default function DataTableToolbar<TData>({
   table,
   getRowId,
@@ -25,7 +24,7 @@ export default function DataTableToolbar<TData>({
   const { filter } = useGetFilter({ scholarshipStatus: status });
   const isFiltered = table.getState().columnFilters.length > 0;
   const providerOption =
-    filter?.getScholarshipsFilters.scholarshipProvider?.map((meow: string) => ({
+    filter?.getScholarshipsFilters.provider?.map((meow: string) => ({
       value: String(meow),
       label: String(meow),
     })) || [];
@@ -47,25 +46,13 @@ export default function DataTableToolbar<TData>({
     }
   }, [isSuccess, table]);
 
-  // const { data } = useScholarshipData({ status: status });
-  // console.log("232",data)
-  // const filteredHeader = data.map((meow) => ({
-  //   scholarshipTitle: meow.scholarshipTitle,
-  //   scholarshipProvider: meow.scholarshipProvider,
-  //   scholarshipGwa: meow.gwa,
-  //   scholarshipDeadline: format(meow.scholarshipDeadline, "PPP p"),
-  //   scholarshipLimit: meow.scholarshipLimit,
-  //   totalApplicants: meow.totalApplicants,
-  //   totalApproved: meow.totalApproved,
-  // }));
-
   return (
     <div className="flex items-center justify-between gap-1.5">
       <div className="flex flex-1 items-center space-x-2">
         <div className="relative">
           <Input
             placeholder="Filter scholarship..."
-            className="peer ps-9 pe-9 h-8 w-[150px] lg:w-[350px]"
+            className="peer ps-9 pe-9 h-8 w-[150px] lg:w-[250px]"
             onChange={(e) => setSearch?.(e.target.value)}
           />
           <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
@@ -79,6 +66,19 @@ export default function DataTableToolbar<TData>({
             <ArrowRightIcon size={16} aria-hidden="true" />
           </button>
         </div>
+
+        <DataTableFacetedFilter
+          disabled={!!search}
+          column={table.getColumn("title")}
+          title="Scholarship Title"
+          options={providerOption ?? []}
+        />
+        <DataTableFacetedFilter
+          disabled={!!search}
+          column={table.getColumn("Scholarship_Provider_name")}
+          title="Provider"
+          options={providerOption ?? []}
+        />
 
         {isFiltered && (
           <Button
@@ -107,7 +107,7 @@ export default function DataTableToolbar<TData>({
           }
         />
       )}
-      {/* <ExportScholarshipDialog data={filteredHeader} /> */}
+      <ExportCsvScholarship status={status} />
       <DataTableViewOptions table={table} />
       <Link prefetch href={`/administrator/home/scholarships/create`}>
         <Button size="sm" variant="secondary" className="relative">
