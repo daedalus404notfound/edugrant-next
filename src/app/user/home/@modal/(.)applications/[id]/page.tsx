@@ -250,7 +250,7 @@ export default function InterceptManageApplicationClient() {
                       src={data[0]?.Scholarship.logo}
                     />
                     <AvatarFallback>
-                      {data[0]?.Scholarship.providerName && data[0]?.Scholarship.providerName.slice(0, 2)}
+                      {data[0]?.Scholarship.Scholarship_Provider?.name && data[0]?.Scholarship.Scholarship_Provider?.name.slice(0, 2)}
                     </AvatarFallback>
                   </Avatar>
                 </div>
@@ -314,7 +314,7 @@ export default function InterceptManageApplicationClient() {
                     {data[0]?.Scholarship.title}
                   </motion.span>
                   <p className="text-muted-foreground text-sm">
-                    by {data[0]?.Scholarship.providerName}
+                    by {data[0]?.Scholarship.Scholarship_Provider?.name && data[0]?.Scholarship.Scholarship_Provider?.name}
                   </p>
                 </div>
                 <Accordion type="single" collapsible defaultValue="item-1">
