@@ -82,7 +82,7 @@ export default function ClientScholarship() {
   const [status, setStatus] = useState("ACTIVE");
   const { filter } = useGetFilter({ scholarshipStatus: status });
   const provider =
-    filter?.getScholarshipsFilters?.scholarshipProvider?.map(
+    filter?.getScholarshipsFilters?.provider?.map(
       (meow: string) => ({
         label: meow,
         value: meow,
