@@ -56,8 +56,11 @@ export default function Profile() {
         <div className="mx-auto w-[95%] lg:w-4xl lg:pt-10  pt-3">
           <div className="flex justify-between flex-col  lg:flex-row gap-5   rounded-md">
             <div className="flex flex-col gap-5 items-center lg:flex-row">
-              <div className="size-20 rounded-full border flex justify-center items-center text-3xl font-semibold bg-primary-second">
-                {user?.Student.fName.slice(0, 1)}
+              <div className="relative">
+                <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary-second rounded-full flex items-center justify-center  font-bold text-2xl text-white">
+                  {user?.Student.fName.slice(0, 1)}{user?.Student.lName.slice(0, 1)}
+                </div>
+                <div className="absolute bottom-1 right-1 size-3 bg-green-500 rounded-full border"></div>
               </div>
               <div className="lg:text-left text-center">
                 <motion.span

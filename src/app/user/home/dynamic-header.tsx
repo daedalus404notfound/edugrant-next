@@ -106,7 +106,7 @@ export default function DynamicHeaderUser({
   const [openDark, setOpenDark] = useState(false);
   const [loading, setLoading] = useState(false);
   return (
-    <header className="flex w-full z-30 items-center justify-between bg-card dark:bg-zinc-950/90 backdrop-blur-sm  sticky top-0">
+    <header className="flex w-full z-30 items-center justify-between  backdrop-blur-sm">
       <div className="flex h-16 shrink-0 items-center gap-2 lg:px-5 px-3">
         <SidebarTrigger className="-ml-1 lg:flex hidden" />
         <Separator

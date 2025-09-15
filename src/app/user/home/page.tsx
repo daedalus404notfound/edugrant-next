@@ -113,11 +113,7 @@ export default function AdminDashboard() {
   const sliced = data.slice(0, 4);
   return (
     <div className="relative min-h-screen z-10">
-      <BGPattern
-        variant="grid"
-        className="top-0 mask-gradient opacity-30 hidden dark:block"
-        mask="fade-bottom"
-      />
+    
       <div className="lg:p-5 p-3 space-y-5 ">
         <div className="  ">
           <div className="flex justify-between lg:flex-row flex-col gap-5 ">
