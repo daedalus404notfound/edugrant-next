@@ -4,6 +4,7 @@ import {
   Calendar,
   Download,
   Flame,
+  Inbox,
   Maximize,
   PhilippinePeso,
   Share2,
@@ -242,6 +243,45 @@ export default function InterceptManageScholarshipClient() {
                           </p>
                           <h1 className="text-lg font-medium font-mono">
                             {data?.amount}.00
+                          </h1>
+                        </div>
+                      </div>
+                    )}
+                      {data?.limit && (
+                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                        <Inbox />
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                            Scholarship Limit
+                          </p>
+                          <h1 className="text-lg font-medium font-mono">
+                            {data?.limit}
+                          </h1>
+                        </div>
+                      </div>
+                    )}
+                      {data?.requiredGWA && (
+                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                        <Inbox />
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                          Required GWA
+                          </p>
+                          <h1 className="text-lg font-medium font-mono">
+                            {data?.requiredGWA}
+                          </h1>
+                        </div>
+                      </div>
+                    )}
+                      {data?.requiredGWA && (
+                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                        <Inbox />
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                          Required GWA
+                          </p>
+                          <h1 className="text-lg font-medium font-mono">
+                            {data?.requiredGWA}
                           </h1>
                         </div>
                       </div>
