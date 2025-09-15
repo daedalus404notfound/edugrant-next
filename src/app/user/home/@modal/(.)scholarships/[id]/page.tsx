@@ -135,62 +135,25 @@ export default function InterceptManageScholarshipClient() {
               </div>
             </div>
           ) : (
-            <div className="relative h-full w-full overflow-auto  bg-background rounded-t-md">
-              <div className="absolute top-0 left-0 lg:h-80 h-60 w-full opacity-30   mask-gradient flex">
-                {/* <img
+            <div className="relative h-full w-full overflow-auto  bg-background rounded-t-md flex flex-col">
+              <div className="absolute top-0 left-0 lg:h-86 h-60 w-full opacity-30   mask-gradient flex">
+                <img
                   className="w-full h-full object-cover blur-md "
-                  src={scholarshipCover}
+                  src={data?.cover}
                   alt=""
-                /> */}
+                />
               </div>
-              <div className="  overflow-hidden">
-                <div className="relative flex justify-center items-center ">
-                  <div className="absolute inset-0border-b-2 border-black bg-card" />
-                  <div className="absolute left-2 -bottom-15 z-10 lg:px-8  px-2 flex  items-center ">
-                    <Avatar className="lg:size-25 size-20 border-background border-2 shadow-md">
-                      <AvatarImage className="object-cover" src={data?.logo} />
-                      <AvatarFallback>
-                        {data?.Scholarship_Provider?.name.slice(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                  </div>
-                  {data?.cover && (
-                    <img
-                      className="w-full lg:aspect-[16/4] aspect-[16/9]  object-cover   rounded-lg shadow-md"
-                      src={data?.cover}
-                      alt=""
-                    />
-                  )}
 
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="absolute z-5  !bg-black/60 !text-gray-200"
-                        size="sm"
-                      >
-                        View <Maximize />
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="lg:w-3/4 w-full p-4">
-                      <img className="h-full w-full" src={data?.cover} alt="" />
-                      <Link
-                        className="w-full"
-                        href={(data?.cover && data?.cover) || ""}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Button variant="secondary" className="w-full">
-                          <Download />
-                          Download
-                        </Button>
-                      </Link>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-
-                <div className="lg:space-y-15 space-y-10 lg:px-6 px-2 mt-17">
-                  <div className="lg:space-y-1">
+              <div className="relative flex justify-center items-center ">
+                <div className="absolute inset-0border-b-2 border-black bg-card" />
+                <div className="absolute left-2 -bottom-18 z-10 lg:px-6  px-2 flex  items-end gap-3 ">
+                  <Avatar className="lg:size-30 size-20 border-background border-2 shadow-md">
+                    <AvatarImage className="object-cover" src={data?.logo} />
+                    <AvatarFallback>
+                      {data?.Scholarship_Provider?.name.slice(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="">
                     <motion.span
                       className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
                                                  flex items-center gap-1.5 lg:text-2xl text-xl font-semibold tracking-tight
@@ -220,54 +183,57 @@ export default function InterceptManageScholarshipClient() {
                       by {data?.Scholarship_Provider?.name}
                     </p>
                   </div>
-                  <div className="grid lg:grid-cols-2 grid-cols-1 gap-3">
-                    <div className="space-y-3">
-                      <div className="flex gap-2 items-center justify-center">
-                        <Button
-                          variant="outline"
-                          className="flex-1"
-                          onClick={() => setIsApply(true)}
-                          disabled={
-                            data?.deadline
-                              ? new Date(data.deadline).getTime() < Date.now()
-                              : false
-                          }
-                        >
-                          <Flame />
-                          Apply Now
-                        </Button>
+                </div>
+                {data?.cover && (
+                  <img
+                    className="w-full lg:aspect-[16/4] aspect-[16/9]  object-cover   rounded-lg shadow-md"
+                    src={data?.cover}
+                    alt=""
+                  />
+                )}
 
-                        <Button
-                          variant="outline"
-                          disabled={
-                            data?.deadline
-                              ? new Date(data.deadline).getTime() < Date.now()
-                              : false
-                          }
-                          onClick={() => {
-                            if (navigator.share) {
-                              navigator
-                                .share({
-                                  title:
-                                    data?.title || "Scholarship Opportunity",
-                                  text: `Check out this scholarship opportunity and apply now!`,
-                                  url: window.location.href,
-                                })
-                                .then(() => console.log("Shared successfully"))
-                                .catch((error) =>
-                                  console.error("Sharing failed", error)
-                                );
-                            } else {
-                              toast("Sharing not supported", {
-                                description:
-                                  "You can copy the link manually or try Chrome on Android or Safari on iOS.",
-                              });
-                            }
-                          }}
-                        >
-                          <Share2 />
-                        </Button>
-                      </div>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="absolute z-5  !bg-black/60 !text-gray-200"
+                      size="sm"
+                    >
+                      View <Maximize />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="lg:w-3/4 w-full p-4">
+                    <img className="h-full w-full" src={data?.cover} alt="" />
+                    <Link
+                      className="w-full"
+                      href={(data?.cover && data?.cover) || ""}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Button variant="secondary" className="w-full">
+                        <Download />
+                        Download
+                      </Button>
+                    </Link>
+                  </DialogContent>
+                </Dialog>
+              </div>
+
+              <div className="flex-1 pt-30 px-6 space-y-8">
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">
+                    Scholarship Details
+                  </p>
+                  <p>{data?.description}</p>
+                </div>
+
+                <div className="space-y-5">
+                  <div className="flex gap-3 items-center">
+                    <h1 className="font-medium">Scholarship Details</h1>
+                    <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                  </div>
+                  <div className="grid lg:grid-cols-2 grid-cols-1 gap-3">
+                    {data?.amount && (
                       <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
                         <PhilippinePeso />
                         <div>
@@ -279,59 +245,33 @@ export default function InterceptManageScholarshipClient() {
                           </h1>
                         </div>
                       </div>
-                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                        <Building />
-                        <div>
-                          <p className="text-muted-foreground text-sm">
-                            Scholarship Type
-                          </p>
-                          <h1 className="text-lg font-medium capitalize">
-                            {data?.title}
-                          </h1>
-                        </div>
-                      </div>
-
-                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                        <Calendar />
-                        <div>
-                          <p className="text-muted-foreground text-sm">
-                            Scholarship Deadline
-                          </p>
-                          <h1 className="text-lg font-medium">
-                            {data?.deadline
-                              ? format(new Date(data?.deadline), "PPP")
-                              : "No deadline"}
-                          </h1>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex flex-col gap-3">
-                      <div className="flex-1 p-4 space-y-2  rounded-md bg-card">
-                        <div className="flex gap-3 items-center">
-                          <StickyNote />
-                          <p className="text-muted-foreground text-sm">
-                            Scholarship Details
-                          </p>
-                        </div>
-
-                        <h1 className="text-sm leading-relaxed">
-                          {data?.description}
+                    )}
+                    <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                      <Building />
+                      <div>
+                        <p className="text-muted-foreground text-sm">
+                          Scholarship Type
+                        </p>
+                        <h1 className="text-lg font-medium capitalize">
+                          {data?.type}
                         </h1>
                       </div>
-                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                        <UserRound />
-                        <div>
-                          <p className="text-muted-foreground text-sm">
-                            Scholarship Slot
-                          </p>
-                          <h1 className="text-lg font-medium">
-                            {data?.limit} students
-                          </h1>
-                        </div>
+                    </div>
+
+                    <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                      <Calendar />
+                      <div>
+                        <p className="text-muted-foreground text-sm">
+                          Scholarship Deadline
+                        </p>
+                        <h1 className="text-lg font-medium">
+                          {data?.deadline
+                            ? format(new Date(data?.deadline), "PPP")
+                            : "No deadline"}
+                        </h1>
                       </div>
                     </div>
                   </div>
-
                   <div className="space-y-6">
                     {" "}
                     <div className="space-y-3">
@@ -340,7 +280,7 @@ export default function InterceptManageScholarshipClient() {
                           Required Documents
                         </h3>
                         <p className="font-medium text-lg">
-                          {Object.keys(data?.documents.documents || {}).length}
+                          {Object.keys(data?.documents || {}).length}
                         </p>
                       </div>
 
@@ -383,6 +323,14 @@ export default function InterceptManageScholarshipClient() {
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className="p-4 flex gap-3 border-t sticky bottom-0 bg-background">
+                <Button onClick={() => setIsApply(true)} className="flex-1">
+                  Apply Scholarship
+                </Button>
+                <Button className="flex-1" variant="secondary">
+                  Close
+                </Button>
               </div>
             </div>
           )}
