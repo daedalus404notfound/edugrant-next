@@ -12,7 +12,6 @@ import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import { useEffect, useState } from "react";
 import { ToolbarProps } from "@/app/table-components/data-table";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
-import ExportScholarshipDialog from "@/components/ui/export";
 import useScholarshipData from "@/hooks/admin/getScholarship";
 import { format } from "date-fns";
 export default function DataTableToolbar<TData>({
@@ -25,7 +24,7 @@ export default function DataTableToolbar<TData>({
   const { filter } = useGetFilter({ scholarshipStatus: status });
   const isFiltered = table.getState().columnFilters.length > 0;
   const providerOption =
-    filter?.getScholarshipsFilters.scholarshipProvider?.map((meow: string) => ({
+    filter?.getScholarshipsFilters.provider?.map((meow: string) => ({
       value: String(meow),
       label: String(meow),
     })) || [];

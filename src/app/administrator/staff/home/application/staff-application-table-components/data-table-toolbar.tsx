@@ -16,9 +16,8 @@ import { useEffect, useState } from "react";
 import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
 
 import { ToolbarProps } from "@/app/table-components/data-table";
-import { DeleteDialog } from "@/components/ui/delete-dialog";
-import ExportScholarshipDialog from "@/components/ui/export";
-import useFetchApplications from "@/hooks/admin/getApplicant";
+
+
 
 export default function DataTableToolbar<
   TData extends { applicationId: string }
@@ -87,36 +86,7 @@ export default function DataTableToolbar<
             <ArrowRightIcon size={16} aria-hidden="true" />
           </button>
         </div>
-        {/* <DataTableFacetedFilter
-          disabled={!!search}
-          column={table.getColumn("scholarshipTitle")}
-          title="Scholarship"
-          options={scholarships ?? []}
-        />
-        <DataTableFacetedFilter
-          disabled={!!search}
-          column={table.getColumn("course")}
-          title="Course"
-          options={course ?? []}
-        />
-
-        <DataTableFacetedFilter
-          disabled={!!search}
-          column={table.getColumn("year")}
-          title="Year"
-          options={year ?? []}
-        />
-
-        {isFiltered && (
-          <Button
-            variant="ghost"
-            onClick={() => table.resetColumnFilters()}
-            className="h-8 px-2 lg:px-3"
-          >
-            Reset
-            <X />
-          </Button>
-        )} */}
+    
       </div>
 
   
