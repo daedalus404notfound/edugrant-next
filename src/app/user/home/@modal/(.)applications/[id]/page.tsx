@@ -250,7 +250,7 @@ export default function InterceptManageApplicationClient() {
                       src={data[0]?.Scholarship.logo}
                     />
                     <AvatarFallback>
-                      {data[0]?.Scholarship.providerName.slice(0, 2)}
+                      {data[0]?.Scholarship.providerName && data[0]?.Scholarship.providerName.slice(0, 2)}
                     </AvatarFallback>
                   </Avatar>
                 </div>
