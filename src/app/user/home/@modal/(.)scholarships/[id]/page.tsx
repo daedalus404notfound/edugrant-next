@@ -276,7 +276,7 @@ export default function InterceptManageScholarshipClient() {
                     {" "}
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
-                        <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                        <h3 className="text-xs font-medium text-muted-foreground  tracking-wide">
                           Required Documents
                         </h3>
                         <p className="font-medium text-lg">
@@ -291,8 +291,10 @@ export default function InterceptManageScholarshipClient() {
                               className="flex justify-between items-center py-5"
                               key={doc.label}
                             >
-                              <span> {index + 1}. </span>
-                              {doc.label}
+                              <div>
+                                <span> {index + 1}.  </span> 
+                                {doc.label}
+                              </div>
                               <Badge
                                 className={`${
                                   doc.requirementType === "required"
