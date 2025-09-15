@@ -141,12 +141,12 @@ const sidebarScholar = [
     icon: PenLine,
   },
   {
-    title: "Manage Scholarship",
+    title: "Active Scholarship",
     url: "/administrator/head/home/manage",
     icon: GraduationCap,
   },
   {
-    title: "Archive Scholarship",
+    title: "Inactive Scholarships",
     url: "/administrator/head/home/archive",
     icon: Archive,
   },
@@ -270,7 +270,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarGroupLabel>Scholarship</SidebarGroupLabel>
+          <SidebarGroupLabel>Manage Scholarship</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarScholar.map((meow) => {
@@ -296,7 +296,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Manage Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarApplication.map((meow) => {
@@ -321,7 +321,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarGroupLabel>Staff</SidebarGroupLabel>
+          <SidebarGroupLabel>Manage Staff</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarStaff.map((meow) => {

@@ -103,7 +103,7 @@ export function DataTable<TData, TValue>({
               status === "ACTIVE"
                 ? "dark:bg-green-900 bg-green-100"
                 : status === "ARCHIVED"
-                ? "dark:bg-red-900 bg-red-100"
+                ? "dark:bg-gray-900 bg-gray-100"
                 : status === "PENDING"
                 ? "dark:bg-yellow-900 bg-yellow-100"
                 : status === "DECLINED"
@@ -114,6 +114,8 @@ export function DataTable<TData, TValue>({
                 ? "dark:bg-blue-900 bg-blue-100"
                 : status === "REVIEWED"
                 ? "dark:bg-orange-900 bg-orange-100"
+                : status === "EXPIRED"
+                ? "dark:bg-red-900 bg-orange-100"
                 : "bg-card"
             }`}
           >

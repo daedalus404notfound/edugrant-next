@@ -37,7 +37,8 @@ export function DataTableRowActions<TData>({
   status,
 }: DataTableRowActionsProps<TData>) {
   const rowData = row.original as scholarshipFormData;
-  const [openAlert, setOpenAlert] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openArchive, setOpenArchive] = useState(false);
   const { admin } = useAdminStore();
   const { onSubmit, isSuccess, deleteLoading } = useDeleteScholarship({
     scholarshipId: [rowData.scholarshipId],
@@ -54,7 +55,12 @@ export function DataTableRowActions<TData>({
 
   useEffect(() => {
     if (isSuccess) {
-      setOpenAlert(false);
+      setOpenDelete(false);
+    }
+  }, [isSuccess]);
+  useEffect(() => {
+    if (isSuccessArchive) {
+      setOpenArchive(false);
     }
   }, [isSuccess]);
 
@@ -102,14 +108,35 @@ export function DataTableRowActions<TData>({
               <RefreshCcw /> Renewal
             </Button>
           </Link>
+        ) : status === "EXPIRED" ? (
+          <DeleteDialog
+            open={openArchive}
+            onOpenChange={setOpenArchive}
+            onConfirm={onSubmitArchive}
+            loading={archiveLoading}
+            confirmText="Archive"
+            confirmTextLoading="Please wait..."
+            title="Archive Scholarship?"
+            description="Are you sure you want to archive this scholarship?"
+            cancelText="Keep"
+            trigger={
+              <Button
+                size="lg"
+                variant="ghost"
+                className="justify-start text-orange-700 hover:text-orange-600"
+              >
+                <Archive /> Archive
+              </Button>
+            }
+          />
         ) : (
           ""
         )}
         <Separator />
 
         <DeleteDialog
-          open={openAlert}
-          onOpenChange={setOpenAlert}
+          open={openDelete}
+          onOpenChange={setOpenDelete}
           onConfirm={onSubmit}
           loading={deleteLoading}
           title="Delete Scholarship?"
@@ -122,27 +149,6 @@ export function DataTableRowActions<TData>({
               className="justify-start text-red-700 hover:text-red-600"
             >
               <Trash2 /> Delete
-            </Button>
-          }
-        />
-
-        <DeleteDialog
-          open={openAlert}
-          onOpenChange={setOpenAlert}
-          onConfirm={onSubmitArchive}
-          loading={archiveLoading}
-          confirmText="Archive"
-          confirmTextLoading="Please wait..."
-          title="Archive Scholarship?"
-          description="Are you sure you want to archive this scholarship?"
-          cancelText="Keep"
-          trigger={
-            <Button
-              size="lg"
-              variant="ghost"
-              className="justify-start text-orange-700 hover:text-orange-600"
-            >
-              <Archive /> Archive
             </Button>
           }
         />

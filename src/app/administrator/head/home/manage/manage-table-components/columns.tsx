@@ -96,9 +96,9 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
           className={`${
             status === "ACTIVE"
               ? "bg-green-500/10 text-green-700"
-              : status
+              : status === "EXPIRED"
               ? "bg-red-500/10 text-red-700"
-              : ""
+              : "bg-gray-500/10 text-gray-700"
           }`}
         >
           <CircleCheck />
@@ -127,7 +127,21 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
     enableSorting: true,
     enableHiding: true,
   },
-
+  {
+    accessorKey: "pending",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Pending" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <span className="max-w-[500px] truncate">
+          {row.getValue("pending")}
+        </span>
+      );
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
   {
     accessorKey: "approved",
     header: ({ column }) => (
@@ -137,6 +151,21 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
       return (
         <span className="max-w-[500px] truncate">
           {row.getValue("approved")}
+        </span>
+      );
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorKey: "declined",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Rejected" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <span className="max-w-[500px] truncate">
+          {row.getValue("declined")}
         </span>
       );
     },
