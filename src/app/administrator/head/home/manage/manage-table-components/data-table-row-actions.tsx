@@ -87,35 +87,41 @@ export function DataTableRowActions<TData>({
               <PencilLine /> Edit
             </Button>
           </Link>
-        ) : status === "ARCHIVED" ? (
-          <Link
-            href={`/administrator/head/home/manage/${rowData.scholarshipId}?section=redeploy`}
-            scroll={false}
-            prefetch
-            className="w-full"
-          >
-            <Button size="lg" className="justify-start w-full" variant="ghost">
-              <RefreshCcw /> Renewal
-            </Button>
-          </Link>
         ) : status === "EXPIRED" ? (
-          <DeleteDialog
-            open={openArchive}
-            onOpenChange={setOpenArchive}
-            onConfirm={onSubmitArchive}
-            loading={archiveLoading}
-            confirmText="Archive"
-            red={false}
-            confirmTextLoading="Please wait..."
-            title="Archive Scholarship?"
-            description="Are you sure you want to archive this scholarship?"
-            cancelText="Keep"
-            trigger={
-              <Button size="lg" variant="ghost" className="justify-start ">
-                <Archive /> Archive
+          <>
+            <Link
+              href={`/administrator/head/home/manage/${rowData.scholarshipId}?section=redeploy`}
+              scroll={false}
+              prefetch
+              className="w-full"
+            >
+              <Button
+                size="lg"
+                className="justify-start w-full"
+                variant="ghost"
+              >
+                <RefreshCcw /> Renewal
               </Button>
-            }
-          />
+            </Link>
+   
+            <DeleteDialog
+              open={openArchive}
+              onOpenChange={setOpenArchive}
+              onConfirm={onSubmitArchive}
+              loading={archiveLoading}
+              confirmText="Archive"
+              red={false}
+              confirmTextLoading="Please wait..."
+              title="Archive Scholarship?"
+              description="Are you sure you want to archive this scholarship?"
+              cancelText="Keep"
+              trigger={
+                <Button size="lg" variant="ghost" className="justify-start ">
+                  <Archive /> Archive
+                </Button>
+              }
+            />
+          </>
         ) : (
           ""
         )}
