@@ -370,8 +370,8 @@ export default function InterceptManageApplicationClient() {
                       </div> */}
                       </div>
                       <div className="grid  lg:grid-cols-1 grid-cols-1 divide-y">
-                        {data?.[0]?.submittedDocuments &&
-                          Object.entries(data[0].submittedDocuments).map(
+                        {data?.[0]?.submittedDocuments.documents &&
+                          Object.entries(data[0].submittedDocuments.documents).map(
                             ([key, doc]) => (
                               <div
                                 key={key}
