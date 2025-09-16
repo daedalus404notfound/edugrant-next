@@ -36,7 +36,7 @@ export function DataTableRowActions<TData>({
   const rowData = row.original as scholarshipFormData;
   const [openAlert, setOpenAlert] = useState(false);
   const { onSubmit, isSuccess, deleteLoading } = useDeleteScholarship({
-    scholarshipId: [rowData.scholarshipId],
+    scholarshipId: rowData.scholarshipId,
   });
 
   useEffect(() => {
@@ -66,9 +66,6 @@ export function DataTableRowActions<TData>({
             <Maximize /> View
           </Button>
         </Link>
-       
-
-    
       </PopoverContent>
     </Popover>
   );
