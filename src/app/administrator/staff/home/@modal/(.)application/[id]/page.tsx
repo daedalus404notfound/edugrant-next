@@ -158,7 +158,7 @@ export default function InterceptReviewApplicants() {
     id,
     adminId: admin?.accountId,
     documentUpdate: reviewData,
-    scholarshipId: data?.scholarshipId ? data?.scholarshipId : "",
+    scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
   });
 
   const {
@@ -170,7 +170,7 @@ export default function InterceptReviewApplicants() {
   } = useApprovedHandler({
     id,
     adminId: admin?.accountId,
-    scholarshipId: data?.scholarshipId ? data?.scholarshipId : "",
+    scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
   });
 
   const {
@@ -183,7 +183,7 @@ export default function InterceptReviewApplicants() {
     id,
     adminId: admin?.accountId,
     documentUpdate: reviewData,
-    scholarshipId: data?.scholarshipId ? data?.scholarshipId : "",
+    scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
   });
 
   useEffect(() => {
