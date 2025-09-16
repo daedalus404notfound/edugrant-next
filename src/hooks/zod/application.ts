@@ -27,7 +27,7 @@ const ApplicationSchema = z.object({
   decisionId: z.string(),
   interviewId: z.string(),
   ownerId: z.string(),
-  scholarshipId: z.string(),
+  scholarshipId: z.number(),
   status: z.string(),
   submittedDocuments: z.object({
     documents: z.record(z.string(), SubmittedDocumentSchema),

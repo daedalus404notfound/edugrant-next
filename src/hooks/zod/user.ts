@@ -1,6 +1,36 @@
 import z from "zod";
 
+const SubmittedDocumentSchema = z.object({
+  document: z.string(),
+  fileFormat: z.string(),
+  fileUrl: z.string(),
+  requirementType: z.string(),
+  resourceType: z.string(),
+  supabasePath: z.string(),
+  rejectMessage: z.object({
+    status: z.string(),
+    comment: z.string(),
+  }),
+});
+const ApplicationSchema = z.object({
+  applicationId: z.number().optional(),
+  dateCreated: z.string().optional(),
+  decisionId: z.string().nullable().optional(),
+  interviewId: z.string().nullable().optional(),
+  ownerId: z.number().optional(),
+  scholarshipId: z.number(),
+  status: z.string().optional(),
+  submittedDocuments: z
+    .object({
+      documents: z.record(z.string(), SubmittedDocumentSchema),
+      renewDocuments: z.record(z.string(), SubmittedDocumentSchema),
+    })
+    .optional(),
+  supabasePath: z.array(z.string()).optional(),
+});
+
 export const StudentSchema = z.object({
+  Application: z.array(ApplicationSchema),
   PWD: z.boolean(),
   studentId: z.number(),
   address: z.string(),
@@ -71,6 +101,7 @@ export type UserFormData = z.infer<typeof UserSchema>;
 
 export const UserDefault: UserFormData = {
   Student: {
+    Application: [],
     PWD: false,
     studentId: 0,
     address: "",

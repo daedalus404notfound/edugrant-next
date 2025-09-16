@@ -52,10 +52,9 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ScholarshipCards from "../cards";
 import { Badge } from "@/components/ui/badge";
-import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
 import { format } from "date-fns";
 import Link from "next/link";
+import { useUserStore } from "@/store/useUserStore";
 export default function InterceptManageScholarshipClient() {
   const searchParams = useSearchParams();
   const apply = searchParams.get("apply");
@@ -73,7 +72,7 @@ export default function InterceptManageScholarshipClient() {
       }, 300);
     }
   };
-
+  const { user } = useUserStore();
   return (
     <Drawer
       open={open}
@@ -247,7 +246,7 @@ export default function InterceptManageScholarshipClient() {
                         </div>
                       </div>
                     )}
-                      {data?.limit && (
+                    {data?.limit && (
                       <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
                         <Inbox />
                         <div>
@@ -260,12 +259,12 @@ export default function InterceptManageScholarshipClient() {
                         </div>
                       </div>
                     )}
-                      {data?.requiredGWA && (
+                    {data?.requiredGWA && (
                       <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
                         <Inbox />
                         <div>
                           <p className="text-muted-foreground text-sm">
-                          Required GWA
+                            Required GWA
                           </p>
                           <h1 className="text-lg font-medium font-mono">
                             {data?.requiredGWA}
@@ -273,12 +272,12 @@ export default function InterceptManageScholarshipClient() {
                         </div>
                       </div>
                     )}
-                      {data?.requiredGWA && (
+                    {data?.requiredGWA && (
                       <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
                         <Inbox />
                         <div>
                           <p className="text-muted-foreground text-sm">
-                          Required GWA
+                            Required GWA
                           </p>
                           <h1 className="text-lg font-medium font-mono">
                             {data?.requiredGWA}
@@ -332,7 +331,7 @@ export default function InterceptManageScholarshipClient() {
                               key={doc.label}
                             >
                               <div>
-                                <span> {index + 1}.  </span> 
+                                <span> {index + 1}. </span>
                                 {doc.label}
                               </div>
                               <Badge
@@ -367,9 +366,26 @@ export default function InterceptManageScholarshipClient() {
                 </div>
               </div>
               <div className="p-4 flex gap-3 border-t sticky bottom-0 bg-background">
-                <Button onClick={() => setIsApply(true)} className="flex-1">
-                  Apply Scholarship
-                </Button>
+                {user?.Student.Application.find(
+                  (meow) => meow.scholarshipId === data?.scholarshipId // cast if needed
+                ) ? (
+                  <Link
+                    href={`/user/home/applications/${
+                      user.Student.Application.find(
+                        (meow) =>
+                          meow.scholarshipId === data?.scholarshipId
+                      )?.applicationId
+                    }`}
+                    className="flex-1"
+                  >
+                    <Button className="w-full">Track Scholarship</Button>
+                  </Link>
+                ) : (
+                  <Button className="flex-1" onClick={() => setIsApply(true)}>
+                    Apply Scholarship
+                  </Button>
+                )}
+
                 <Button className="flex-1" variant="secondary">
                   Close
                 </Button>

@@ -35,7 +35,7 @@ export const scholarshipSchema = z.object({
   limit: z.string(),
   logo: z.any().optional(),
   requiredGWA: z.string(),
-  scholarshipId: z.string().min(1, "Required"),
+  scholarshipId: z.number().min(1, "Required"),
   type: z.enum(["government", "private"], {
     message: "Please select scholarship type",
   }),
@@ -82,7 +82,7 @@ export function useUpdateScholarshipZod(data?: scholarshipFormData) {
       limit: data?.limit || "",
       logo: data?.logo,
       requiredGWA: data?.requiredGWA || "",
-      scholarshipId: data?.scholarshipId || "",
+      scholarshipId: data?.scholarshipId || 0,
       type: data?.type === "private" ? "private" : "government",
       title: data?.title || "",
       documents: {

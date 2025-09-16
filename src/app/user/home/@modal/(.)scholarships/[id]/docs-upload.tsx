@@ -93,6 +93,7 @@ export default function UploadDocs({
   setIsApply: (value: boolean) => void;
 }) {
   const router = useRouter();
+  const { updateApplicationScholarship } = useUserStore.getState();
   const user = useUserStore((state) => state.user);
   const userId = user?.accountId;
   const scholarId = data.scholarshipId;
@@ -168,6 +169,7 @@ export default function UploadDocs({
       );
 
       if (res.status === 200) {
+        updateApplicationScholarship(scholarId);
         StyledToast({
           status: "success",
           title: "Upload successful!",

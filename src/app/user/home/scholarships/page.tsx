@@ -82,13 +82,11 @@ export default function ClientScholarship() {
   const [status, setStatus] = useState("ACTIVE");
   const { filter } = useGetFilter({ scholarshipStatus: status });
   const provider =
-    filter?.getScholarshipsFilters?.provider?.map(
-      (meow: string) => ({
-        label: meow,
-        value: meow,
-        icon: PhilippinePeso,
-      })
-    ) ?? [];
+    filter?.getScholarshipsFilters?.provider?.map((meow: string) => ({
+      label: meow,
+      value: meow,
+      icon: PhilippinePeso,
+    })) ?? [];
   const { user } = useUserStore();
   const formatFilters = () => {
     const filterArray: Filter[] = [];
@@ -390,6 +388,7 @@ export default function ClientScholarship() {
                             >
                               {status}
                             </Badge>
+
                             <img
                               className={`h-full w-full object-cover ${
                                 status === "EXPIRED" ? "grayscale-80" : ""
@@ -401,9 +400,20 @@ export default function ClientScholarship() {
                           <div className=" lg:p-4 p-2 space-y-5">
                             <div className="flex items-start justify-start">
                               <div className="flex-1 lg:space-y-1">
-                                <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight">
-                                  {scholarship.title}
-                                </h3>
+                                <div className="flex justify-between items-center">
+                                  <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight">
+                                    {scholarship.title}
+                                  </h3>
+                                  {user?.Student?.Application?.some(
+                                    (app) =>
+                                      app.scholarshipId ===
+                                      scholarship.scholarshipId
+                                  ) && (
+                                    <Badge className=" bg-blue-800 text-white">
+                                      APPLIED
+                                    </Badge>
+                                  )}
+                                </div>
                                 <p className="text-sm text-muted-foreground">
                                   {scholarship.Scholarship_Provider.name}
                                 </p>
