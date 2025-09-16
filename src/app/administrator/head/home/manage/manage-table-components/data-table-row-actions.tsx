@@ -50,7 +50,7 @@ export function DataTableRowActions<TData>({
     setOpenArchive,
     archiveLoading,
   } = useArchiveScholarship({
-    scholarshipId: [rowData.scholarshipId],
+    scholarshipId: rowData.scholarshipId,
     accountId: admin?.accountId.toString(),
   });
 
