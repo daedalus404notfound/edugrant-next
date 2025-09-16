@@ -30,21 +30,11 @@ export default function DataTableToolbar<TData>({
     })) || [];
   console.log(filter);
   const selectedRows = table.getSelectedRowModel().rows;
-  const scholarshipId = selectedRows.map((row) =>
-    getRowId ? getRowId(row.original) : row.id
-  );
-  console.log(scholarshipId);
+
+ 
 
   const [openAlert, setOpenAlert] = useState(false);
-  const { onSubmit, isSuccess, deleteLoading } = useDeleteScholarship({
-    scholarshipId,
-  });
-  useEffect(() => {
-    if (isSuccess) {
-      table.toggleAllRowsSelected(false);
-      setOpenAlert(false);
-    }
-  }, [isSuccess, table]);
+
 
   return (
     <div className="flex items-center justify-between gap-1.5">
@@ -91,22 +81,7 @@ export default function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      {selectedRows.length > 0 && (
-        <DeleteDialog
-          open={openAlert}
-          onOpenChange={setOpenAlert}
-          onConfirm={onSubmit}
-          loading={deleteLoading}
-          title="Delete Scholarship?"
-          description="Are you sure you want to delete this scholarship?"
-          cancelText="Keep"
-          trigger={
-            <Button size="sm" variant="destructive" className="justify-start">
-              <Trash2 /> Delete
-            </Button>
-          }
-        />
-      )}
+
       <ExportCsvScholarship status={status} />
       <DataTableViewOptions table={table} />
       <Link prefetch href={`/administrator/home/scholarships/create`}>
