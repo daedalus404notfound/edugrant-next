@@ -14,19 +14,19 @@ export function useRedeployScholarshipZod(data?: scholarshipFormData) {
   const form = useForm<scholarshipFormData>({
     resolver: zodResolver(scholarshipSchema),
     defaultValues: {
-      ISPSUId: data?.ISPSUId || "",
-      SPId: data?.SPId || "",
+      ISPSUId: data?.ISPSUId || 0,
+      SPId: data?.SPId || 0,
       Scholarship_Provider: {
-        SPId: data?.Scholarship_Provider?.SPId || "",
+        SPId: data?.Scholarship_Provider?.SPId || 0,
         dateCreated: data?.Scholarship_Provider?.dateCreated
           ? new Date(data.Scholarship_Provider.dateCreated)
           : new Date(),
         name: data?.Scholarship_Provider?.name || "",
       },
       amount: data?.amount || "",
-      approved: data?.approved || "0",
-      declined: data?.declined || "0",
-      pending: data?.pending || "0",
+      approved: data?.approved || 0,
+      declined: data?.declined || 0,
+      pending: data?.pending || 0,
       archived: data?.archived ?? false,
       renew: data?.renew ?? false,
       cover: data?.cover,
@@ -38,7 +38,7 @@ export function useRedeployScholarshipZod(data?: scholarshipFormData) {
       limit: data?.limit || "",
       logo: data?.logo,
       requiredGWA: data?.requiredGWA || "",
-      scholarshipId: data?.scholarshipId || "",
+      scholarshipId: data?.scholarshipId || 0,
       type: data?.type === "private" ? "private" : "government",
       title: data?.title || "",
       documents: {

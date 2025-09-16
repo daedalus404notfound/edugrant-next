@@ -17,7 +17,7 @@ const addScholarshipApi = async (data: scholarshipFormData) => {
   const { admin } = useAdminStore.getState();
   const formDataToSend = new FormData();
   if (data.scholarshipId) {
-    formDataToSend.append("scholarshipId", data.scholarshipId);
+    formDataToSend.append("scholarshipId", data.scholarshipId.toString());
   }
   formDataToSend.append("newScholarTitle", data.title);
   formDataToSend.append("newScholarProvider", data.Scholarship_Provider.name);
