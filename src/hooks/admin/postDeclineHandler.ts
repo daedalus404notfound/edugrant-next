@@ -68,7 +68,7 @@ import axios from "axios";
 import { useState } from "react";
 type RecjectTypes = {
   id: number;
-  adminId?: string;
+  adminId?: number;
   scholarshipId: number;
   documentUpdate: Record<string, { comment: string; status: string }>;
 };

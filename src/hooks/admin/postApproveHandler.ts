@@ -3,7 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 type ApproveTypes = {
   id: number;
-  adminId?: string;
+  adminId?: number;
   scholarshipId: number;
 };
 interface ApiErrorResponse {
