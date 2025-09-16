@@ -103,7 +103,7 @@ export default function InterceptReviewApplicants() {
   const { admin } = useAdminStore();
   const [open, setOpen] = useState(true);
   const [activeSection, setActiveSection] = useState("documents");
-  const id = params.id as string;
+  const id = Number(params.id);
   const { data, loading } = useApplicationById(id);
   console.log("123", data?.submittedDocuments);
   const [reviewData, setReviewData] = useState<
