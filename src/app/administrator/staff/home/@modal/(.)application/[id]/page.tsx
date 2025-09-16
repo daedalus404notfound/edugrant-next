@@ -103,7 +103,7 @@ export default function InterceptReviewApplicants() {
   const [reviewData, setReviewData] = useState<
     Record<string, { comment: string; status: string }>
   >({});
-  console.log("111",admin);
+  console.log("111", admin);
   const updateReviewData = (
     docKey: string,
     field: "comment" | "status",
@@ -123,12 +123,14 @@ export default function InterceptReviewApplicants() {
     : 0;
 
   const totalRequiredDocs = data
-    ? Object.entries(data.submittedDocuments.documents).filter(
-        ([_, doc]) =>
+    ? Object.values(data.submittedDocuments.documents).filter(
+        (doc) =>
           doc.requirementType && doc.requirementType.trim() !== "optional"
       ).length
     : 0;
-  console.log("totalRequiredDocs;'", totalRequiredDocs);
+
+  console.log("totalRequiredDocs", totalRequiredDocs);
+
   const reviewedDocs = data?.submittedDocuments.documents
     ? Object.entries(data.submittedDocuments.documents).filter(([key, doc]) => {
         return (
@@ -138,7 +140,7 @@ export default function InterceptReviewApplicants() {
       }).length
     : 0;
   const progressValue = totalDocs > 0 ? (reviewedDocs / totalDocs) * 100 : 0;
-
+  console.log("reviewedDocs", reviewedDocs);
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
@@ -822,7 +824,7 @@ export default function InterceptReviewApplicants() {
                     <DialogTrigger asChild>
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={totalDocs > reviewedDocs}
+                        disabled={reviewedDocs < totalRequiredDocs}
                       >
                         <UserRoundCheck className="w-4 h-4 mr-2" />
                         Approve Application
@@ -883,7 +885,7 @@ export default function InterceptReviewApplicants() {
                     <DialogTrigger asChild>
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={totalDocs > reviewedDocs}
+                        disabled={reviewedDocs < totalRequiredDocs}
                       >
                         <UserRoundCheck className="w-4 h-4 mr-2" />
                         Approve Application
@@ -946,7 +948,7 @@ export default function InterceptReviewApplicants() {
                     <DialogTrigger asChild>
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={totalRequiredDocs !== reviewedDocs}
+                        disabled={reviewedDocs < totalRequiredDocs}
                       >
                         <UserRoundCheck className="w-4 h-4 mr-2" />
                         Approve for Interview
@@ -1011,7 +1013,7 @@ export default function InterceptReviewApplicants() {
                     disabled={
                       data?.status === "APPROVED" ||
                       data?.status === "DECLINED" ||
-                      totalRequiredDocs !== reviewedDocs
+                      reviewedDocs < totalRequiredDocs
                     }
                   >
                     <UserRoundX className="w-4 h-4 mr-2" />
