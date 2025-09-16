@@ -17,7 +17,7 @@ const addScholarshipApi = async (data: scholarshipFormData) => {
   const { admin } = useAdminStore.getState();
   const formDataToSend = new FormData();
   if (data.scholarshipId) {
-    formDataToSend.append("scholarshipId", data.scholarshipId);
+    formDataToSend.append("scholarshipId", data.scholarshipId.toString());
   }
   formDataToSend.append("newScholarTitle", data.title);
   formDataToSend.append("newScholarProvider", data.Scholarship_Provider.name);
@@ -25,7 +25,7 @@ const addScholarshipApi = async (data: scholarshipFormData) => {
     formDataToSend.append("gwa", data.requiredGWA);
   }
   if (admin?.accountId) {
-    formDataToSend.append("adminId", String(admin.accountId));
+    formDataToSend.append("accountId", String(admin.accountId));
   }
   formDataToSend.append("newScholarDescription", data.description);
   formDataToSend.append("applicationStartDate", today);
@@ -114,6 +114,7 @@ export const useUpdateScholarship = (data?: scholarshipFormData) => {
       setOpen(true); // Only open dialog if validation passes
     } else {
       // Optionally show a toast for validation errors
+      console.error("Validation failed. Errors:", form.formState.errors);
       setOpen(false);
       StyledToast({
         status: "error",

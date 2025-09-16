@@ -11,30 +11,30 @@ export const documentsSchema = z.object({
 });
 
 export const scholarshipSchema = z.object({
-  ISPSUId: z.string(),
-  SPId: z.string(),
+  ISPSUId: z.number(),
+  SPId: z.number(),
   Scholarship_Provider: z.object({
-    SPId: z.string(),
+    SPId: z.number(),
     dateCreated: z.date(),
     name: z.string(),
   }),
   amount: z.string().optional(),
-  approved: z.string(),
-  declined: z.string(),
-  pending: z.string(),
-  archived: z.boolean(),
-  renew: z.boolean(),
+  approved: z.number().optional(),
+  declined: z.number().optional(),
+  pending: z.number().optional(),
+  archived: z.boolean().optional(),
+  renew: z.boolean().optional(),
   cover: z.any().optional(),
-  dateCreated: z.date(),
+  dateCreated: z.date().optional(),
   deadline: z.date({
     message: "Required",
   }),
   description: z.string().min(1, "Required"),
   form: z.any().optional(),
   interview: z.boolean(),
-  limit: z.string(),
+  limit: z.string().optional(),
   logo: z.any().optional(),
-  requiredGWA: z.string(),
+  requiredGWA: z.string().optional(),
   scholarshipId: z.number().min(1, "Required"),
   type: z.enum(["government", "private"], {
     message: "Please select scholarship type",
@@ -45,11 +45,13 @@ export const scholarshipSchema = z.object({
     documents: z.array(documentsSchema).optional(),
     renewDocuments: z.array(documentsSchema).optional(),
   }),
-  supabasePath: z.object({
-    cover: z.string(),
-    form: z.string(),
-    logo: z.string(),
-  }),
+  supabasePath: z
+    .object({
+      cover: z.string(),
+      form: z.string(),
+      logo: z.string(),
+    })
+    .optional(),
 });
 export type scholarshipFormData = z.infer<typeof scholarshipSchema>;
 export type documentFormData = z.infer<typeof documentsSchema>;
@@ -58,19 +60,19 @@ export function useUpdateScholarshipZod(data?: scholarshipFormData) {
   const form = useForm<scholarshipFormData>({
     resolver: zodResolver(scholarshipSchema),
     defaultValues: {
-      ISPSUId: data?.ISPSUId || "",
-      SPId: data?.SPId || "",
+      ISPSUId: data?.ISPSUId || 0,
+      SPId: data?.SPId ||0,
       Scholarship_Provider: {
-        SPId: data?.Scholarship_Provider?.SPId || "",
+        SPId: data?.Scholarship_Provider?.SPId ||0,
         dateCreated: data?.Scholarship_Provider?.dateCreated
           ? new Date(data.Scholarship_Provider.dateCreated)
           : new Date(),
         name: data?.Scholarship_Provider?.name || "",
       },
       amount: data?.amount || "",
-      approved: data?.approved || "0",
-      declined: data?.declined || "0",
-      pending: data?.pending || "0",
+      approved: data?.approved || 0,
+      declined: data?.declined || 0,
+      pending: data?.pending || 0,
       archived: data?.archived ?? false,
       renew: data?.renew ?? false,
       cover: data?.cover,
