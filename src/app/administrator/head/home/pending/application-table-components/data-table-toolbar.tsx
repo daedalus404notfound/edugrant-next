@@ -22,7 +22,7 @@ import useFetchApplications from "@/hooks/admin/getApplicant";
 import ExportCsvScholarship from "./export";
 
 export default function DataTableToolbar<
-  TData extends { applicationId: string }
+  TData extends { applicationId: number }
 >({ table, search, setSearch, status }: ToolbarProps<TData>) {
   const { filter } = useGetFilter({
     applicationStatus: "PENDING",
