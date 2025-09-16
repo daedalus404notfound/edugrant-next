@@ -14,11 +14,11 @@ import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
 import DataTableToolbar from "./manage-table-components/data-table-toolbar";
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import TitleReusable from "@/components/ui/title";
-import { useApplicationUIStore } from "@/store/deleteScholarshipStore";
+import { useApplicationUIStore } from "@/store/updateUIStore";
 export default function Manage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("ACTIVE");
-  const { deletedScholarshipIds } = useApplicationUIStore();
+
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -43,6 +43,7 @@ export default function Manage() {
     query: search,
     status: status,
   });
+  const { deletedScholarshipIds } = useApplicationUIStore();
   const filteredData = (search.trim().length > 0 ? searchData : data)?.filter(
     (item) => !deletedScholarshipIds.includes(item.scholarshipId)
   );

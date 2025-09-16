@@ -17,10 +17,8 @@ import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
 
 import { ToolbarProps } from "@/app/table-components/data-table";
 
-
-
 export default function DataTableToolbar<
-  TData extends { applicationId: string }
+  TData extends { applicationId: number }
 >({ table, search, setSearch, status }: ToolbarProps<TData>) {
   const { filter } = useGetFilter({
     applicationStatus: "PENDING",
@@ -64,8 +62,7 @@ export default function DataTableToolbar<
       setOpenAlert(false);
     }
   }, [isSuccess, table]);
- 
- 
+
   return (
     <div className="flex items-center justify-between gap-1.5">
       <div className="flex flex-1 items-center space-x-2">
@@ -86,10 +83,8 @@ export default function DataTableToolbar<
             <ArrowRightIcon size={16} aria-hidden="true" />
           </button>
         </div>
-    
       </div>
 
-  
       <DataTableViewOptions table={table} />
     </div>
   );

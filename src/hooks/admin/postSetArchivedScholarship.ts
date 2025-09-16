@@ -1,5 +1,5 @@
 import StyledToast from "@/components/ui/toast-styled";
-import { useApplicationUIStore } from "@/store/deleteScholarshipStore";
+import { useApplicationUIStore } from "@/store/updateUIStore";
 import axios from "axios";
 import { useState } from "react";
 
@@ -12,7 +12,7 @@ export default function useArchiveScholarship({
   scholarshipId,
   accountId,
 }: DeleteTypes) {
-  const { addDeletedScholarshipId } = useApplicationUIStore();
+  const { addArchiveScholarshipId } = useApplicationUIStore();
   const [isSuccess, setIsSuccess] = useState(false);
   const [archiveLoading, setLoading] = useState(false);
 
@@ -33,7 +33,7 @@ export default function useArchiveScholarship({
       );
 
       if (res.status === 200) {
-        addDeletedScholarshipId(scholarshipId);
+        addArchiveScholarshipId(scholarshipId);
         StyledToast({
           status: "success",
           title: "Scholarship Archived",

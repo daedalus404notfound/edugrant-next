@@ -63,10 +63,11 @@
 // }
 
 import StyledToast from "@/components/ui/toast-styled";
+import { useApplicationUIStore } from "@/store/updateUIStore";
 import axios from "axios";
 import { useState } from "react";
 type RecjectTypes = {
-  id: string;
+  id: number;
   adminId?: string;
   scholarshipId: number;
   documentUpdate: Record<string, { comment: string; status: string }>;
@@ -85,6 +86,9 @@ export function useRecjectHandler({
   const [loadingReject, setLoadingReject] = useState(false);
   const [openReject, setOpenReject] = useState(false);
   const [isSuccessReject, setIsSuccessReject] = useState(false);
+  const { addRejectedId, rejectedIds } = useApplicationUIStore();
+  console.log("app id", id);
+  console.log("rejectedIds", rejectedIds);
   const handleReject = async () => {
     try {
       setOpenReject(true);
@@ -105,6 +109,7 @@ export function useRecjectHandler({
           title: "Application Rejected",
           description: "The applicant has been notified of the rejection.",
         });
+        addRejectedId(id);
         setLoadingReject(false);
         setOpenReject(false);
         setIsSuccessReject(true);

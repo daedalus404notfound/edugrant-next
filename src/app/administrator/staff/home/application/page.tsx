@@ -13,6 +13,7 @@ import { ApplicationFormData } from "@/hooks/zod/application";
 import useApplicantsSearch from "@/hooks/admin/getApplicantSearch";
 import useFetchApplications from "@/hooks/admin/getApplicant";
 import TitleReusable from "@/components/ui/title";
+import { useApplicationUIStore } from "@/store/updateUIStore";
 
 export default function PendingApplication() {
   const [search, setSearch] = useState("");
@@ -32,7 +33,7 @@ export default function PendingApplication() {
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
     status: status,
   });
-
+  console.log("dataa", data);
   const { searchData, searchLoading, searchMeta } = useApplicantsSearch({
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
@@ -41,7 +42,11 @@ export default function PendingApplication() {
     query: search,
     status: status,
   });
-  console.log(columnFilters);
+  const { rejectedIds } = useApplicationUIStore();
+  const filteredData = (search.trim().length > 0 ? searchData : data)?.filter(
+    (item) => !rejectedIds.includes(item.applicationId)
+  );
+
   return (
     <div className="w-full">
       <TitleReusable
@@ -51,7 +56,7 @@ export default function PendingApplication() {
 
       <div className="py-8">
         <DataTable<ApplicationFormData, unknown>
-          data={search.trim().length > 0 ? searchData : data}
+          data={filteredData}
           columns={columns}
           meta={search.trim().length > 0 ? searchMeta : meta}
           pagination={pagination}

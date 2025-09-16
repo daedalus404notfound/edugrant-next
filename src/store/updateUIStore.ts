@@ -46,15 +46,17 @@ import { create } from "zustand";
 //   clearScholarshipIds: () => set({ scholarshipIds: [] }),
 // }));
 type ApplicationUIState = {
-  deletedScholarshipIds: (string | number)[];
-  approvedIds: (string | number)[];
-  pendingIds: (string | number)[];
-  rejectedIds: (string | number)[];
+  deletedScholarshipIds: number[];
+  archiveScholarshipIds: number[];
+  approvedIds: number[];
+  pendingIds: number[];
+  rejectedIds: number[];
 
-  addDeletedScholarshipId: (id: string | number) => void;
-  addApprovedId: (id: string | number) => void;
-  addPendingId: (id: string | number) => void;
-  addRejectedId: (id: string | number) => void;
+  addDeletedScholarshipId: (id: number) => void;
+  addArchiveScholarshipId: (id: number) => void;
+  addApprovedId: (id: number) => void;
+  addPendingId: (id: number) => void;
+  addRejectedId: (id: number) => void;
 
   clearDeleted: () => void;
   clearApproved: () => void;
@@ -64,12 +66,19 @@ type ApplicationUIState = {
 
 export const useApplicationUIStore = create<ApplicationUIState>((set) => ({
   deletedScholarshipIds: [],
+  archiveScholarshipIds: [],
   approvedIds: [],
   pendingIds: [],
   rejectedIds: [],
 
   addDeletedScholarshipId: (id) =>
-    set((state) => ({ deletedScholarshipIds: [...state.deletedScholarshipIds, id] })),
+    set((state) => ({
+      deletedScholarshipIds: [...state.deletedScholarshipIds, id],
+    })),
+  addArchiveScholarshipId: (id) =>
+    set((state) => ({
+      archiveScholarshipIds: [...state.archiveScholarshipIds, id],
+    })),
   addApprovedId: (id) =>
     set((state) => ({ approvedIds: [...state.approvedIds, id] })),
   addPendingId: (id) =>
@@ -78,6 +87,7 @@ export const useApplicationUIStore = create<ApplicationUIState>((set) => ({
     set((state) => ({ rejectedIds: [...state.rejectedIds, id] })),
 
   clearDeleted: () => set({ deletedScholarshipIds: [] }),
+  clearArchive: () => set({ archiveScholarshipIds: [] }),
   clearApproved: () => set({ approvedIds: [] }),
   clearPending: () => set({ pendingIds: [] }),
   clearRejected: () => set({ rejectedIds: [] }),

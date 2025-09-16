@@ -22,11 +22,11 @@ const supabasePathSchema = z.object({
 const ApplicationSchema = z.object({
   Scholarship: scholarshipSchema, // field name = Scholarship
   Student: StudentSchema, // field name = Student
-  applicationId: z.string(),
+  applicationId: z.number(),
   dateCreated: z.date(),
-  decisionId: z.string(),
+  decisionId: z.number(),
   interviewId: z.string(),
-  ownerId: z.string(),
+  ownerId: z.number(),
   scholarshipId: z.number(),
   status: z.string(),
   submittedDocuments: z.object({

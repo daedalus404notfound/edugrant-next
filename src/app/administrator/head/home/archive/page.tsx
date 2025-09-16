@@ -14,6 +14,7 @@ import DataTableToolbar from "../manage/manage-table-components/data-table-toolb
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import TitleReusable from "@/components/ui/title";
 import { Tabs } from "@/components/ui/vercel-tabs";
+import { useApplicationUIStore } from "@/store/updateUIStore";
 const tabs = [
   { id: "EXPIRED", label: "Expired", indicator: null },
   { id: "ARCHIVED", label: "Archived", indicator: null },
@@ -36,8 +37,14 @@ export default function Manage() {
     filters:
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
   });
+  const { deletedScholarshipIds } = useApplicationUIStore();
+  const { archiveScholarshipIds } = useApplicationUIStore();
+  const filteredData = data.filter(
+    (item) =>
+      !deletedScholarshipIds.includes(item.scholarshipId) &&
+      !archiveScholarshipIds.includes(item.scholarshipId)
+  );
 
-  console.log(columnFilters);
   return (
     <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
@@ -50,7 +57,7 @@ export default function Manage() {
         <div className="py-8 space-y-5">
           <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
           <DataTable<scholarshipFormData, unknown>
-            data={data}
+            data={filteredData}
             columns={columns(status)}
             meta={meta}
             pagination={pagination}

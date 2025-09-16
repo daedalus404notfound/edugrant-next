@@ -97,13 +97,13 @@ export default function InterceptReviewApplicants() {
   const { admin } = useAdminStore();
   const [open, setOpen] = useState(true);
   const [activeSection, setActiveSection] = useState("documents");
-  const id = params.id as string;
+  const id = Number(params.id);
   const { data, loading } = useApplicationById(id);
 
   const [reviewData, setReviewData] = useState<
     Record<string, { comment: string; status: string }>
   >({});
-  console.log("111", admin);
+
   const updateReviewData = (
     docKey: string,
     field: "comment" | "status",
@@ -129,8 +129,6 @@ export default function InterceptReviewApplicants() {
       ).length
     : 0;
 
-  console.log("totalRequiredDocs", totalRequiredDocs);
-
   const reviewedDocs = data?.submittedDocuments.documents
     ? Object.entries(data.submittedDocuments.documents).filter(([key, doc]) => {
         return (
@@ -140,7 +138,7 @@ export default function InterceptReviewApplicants() {
       }).length
     : 0;
   const progressValue = totalDocs > 0 ? (reviewedDocs / totalDocs) * 100 : 0;
-  console.log("reviewedDocs", reviewedDocs);
+
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {

@@ -24,6 +24,7 @@ import {
   UserRoundSearch,
   UserRoundX,
   UsersRound,
+  X,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { NavMain } from "./nav-main";
@@ -165,11 +166,6 @@ const sidebarStaff = [
 ];
 const sidebarApplication = [
   {
-    title: "Reviewed Application",
-    url: "/administrator/head/home/reviewed",
-    icon: UserRoundSearch,
-  },
-  {
     title: "For Interview Application",
     url: "/administrator/head/home/interview",
     icon: CircleUserRound,
@@ -183,6 +179,11 @@ const sidebarApplication = [
     title: "Rejected Application",
     url: "/administrator/head/home/rejected",
     icon: UserRoundX,
+  },
+  {
+    title: "Blocked Application",
+    url: "/administrator/head/home/blocked",
+    icon: X,
   },
 ];
 const sidebarAnnouncements = [

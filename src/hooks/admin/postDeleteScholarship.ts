@@ -1,11 +1,11 @@
 import StyledToast from "@/components/ui/toast-styled";
-import { useApplicationUIStore } from "@/store/deleteScholarshipStore";
+import { useApplicationUIStore } from "@/store/updateUIStore";
 import axios from "axios";
 import { useState } from "react";
 
 type DeleteTypes = {
-  scholarshipId: string | number;
-  accountId?: string | number;
+  scholarshipId: number;
+  accountId?: number;
 };
 
 export default function useDeleteScholarship({

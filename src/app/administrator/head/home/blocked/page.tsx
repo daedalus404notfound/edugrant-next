@@ -1,6 +1,6 @@
 "use client";
 import "ldrs/react/Ring.css";
-import {  UserRoundSearch } from "lucide-react";
+import { UserRoundSearch } from "lucide-react";
 import { useState } from "react";
 import { DataTable } from "@/app/table-components/data-table";
 import { columns } from "../pending/application-table-components/columns";
@@ -17,7 +17,7 @@ import TitleReusable from "@/components/ui/title";
 
 export default function PendingApplication() {
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("REVIEWED");
+  const [status, setStatus] = useState("BLOCKED");
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,

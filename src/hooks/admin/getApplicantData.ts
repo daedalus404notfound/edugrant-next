@@ -3,7 +3,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { ApplicationFormData } from "../zod/application";
 
-export default function useApplicationById(id: string) {
+export default function useApplicationById(id: number) {
   const [data, setData] = useState<ApplicationFormData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");

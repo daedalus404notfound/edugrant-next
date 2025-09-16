@@ -2,7 +2,7 @@ import StyledToast from "@/components/ui/toast-styled";
 import axios from "axios";
 import { useState } from "react";
 type InterviewTypes = {
-  id: string;
+  id: number;
   adminId?: string;
   scholarshipId: number;
   documentUpdate: Record<string, { comment: string; status: string }>;
