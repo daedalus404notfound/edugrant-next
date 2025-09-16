@@ -4,7 +4,7 @@ import { useState } from "react";
 type ApproveTypes = {
   id: string;
   adminId?: string;
-  scholarshipId: string;
+  scholarshipId: number;
 };
 interface ApiErrorResponse {
   message?: string;

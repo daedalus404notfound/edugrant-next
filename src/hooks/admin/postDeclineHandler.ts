@@ -68,7 +68,7 @@ import { useState } from "react";
 type RecjectTypes = {
   id: string;
   adminId?: string;
-  scholarshipId: string;
+  scholarshipId: number;
   documentUpdate: Record<string, { comment: string; status: string }>;
 };
 interface ApiErrorResponse {
