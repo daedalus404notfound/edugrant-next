@@ -41,8 +41,8 @@ export function DataTableRowActions<TData>({
   const { admin } = useAdminStore();
   const { onSubmit, deleteLoading, openDelete, setOpenDelete } =
     useDeleteScholarship({
-      scholarshipId: [rowData.scholarshipId],
-      accountId: admin?.accountId.toString(),
+      scholarshipId: rowData.scholarshipId,
+      accountId: admin?.accountId,
     });
   const {
     onSubmit: onSubmitArchive,

@@ -10,43 +10,16 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { CircleCheck } from "lucide-react";
 export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <div className="pl-4">
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-          className="translate-y-[2px]"
-        />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="pl-4">
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-          className="translate-y-[2px]"
-        />
-      </div>
-    ),
-    enableSorting: true,
-    enableHiding: false,
-  },
+
   {
     accessorKey: "title",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Title" />
+      <DataTableColumnHeader className="pl-4" column={column} title="Title" />
     ),
     cell: ({ row }) => {
       const { title, logo } = row.original;
       return (
-        <div className="flex gap-2  items-center ">
+        <div className="flex gap-2  items-center pl-4">
           <Avatar>
             <AvatarImage className="object-cover" src={logo} />
             <AvatarFallback>

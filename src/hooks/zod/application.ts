@@ -29,7 +29,10 @@ const ApplicationSchema = z.object({
   ownerId: z.string(),
   scholarshipId: z.string(),
   status: z.string(),
-  submittedDocuments: z.record(z.string(), SubmittedDocumentSchema),
+  submittedDocuments: z.object({
+    documents: z.record(z.string(), SubmittedDocumentSchema),
+    renewDocuments: z.record(z.string(), SubmittedDocumentSchema),
+  }),
   supabasePath: z.record(z.string(), supabasePathSchema),
 });
 export type ApplicationFormData = z.infer<typeof ApplicationSchema>;

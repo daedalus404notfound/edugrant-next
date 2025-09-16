@@ -31,7 +31,7 @@ export function useInterviewdHandler({
           applicationId: id,
           accountId: adminId,
           scholarshipId: scholarshipId,
-          rejectMessage: JSON.stringify(documentUpdate),
+          reviewFeedback: JSON.stringify(documentUpdate),
         },
         { withCredentials: true }
       );

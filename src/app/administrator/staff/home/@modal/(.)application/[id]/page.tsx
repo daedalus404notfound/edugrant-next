@@ -123,14 +123,14 @@ export default function InterceptReviewApplicants() {
     : 0;
 
   const totalRequiredDocs = data
-    ? Object.entries(data.submittedDocuments).filter(
+    ? Object.entries(data.submittedDocuments.documents).filter(
         ([_, doc]) =>
           doc.requirementType && doc.requirementType.trim() !== "optional"
       ).length
     : 0;
   console.log("totalRequiredDocs;'", totalRequiredDocs);
-  const reviewedDocs = data?.submittedDocuments
-    ? Object.entries(data.submittedDocuments).filter(([key, doc]) => {
+  const reviewedDocs = data?.submittedDocuments.documents
+    ? Object.entries(data.submittedDocuments.documents).filter(([key, doc]) => {
         return (
           doc.rejectMessage?.status ||
           (reviewData[key]?.status && doc.requirementType.trim() === "required")
@@ -428,8 +428,8 @@ export default function InterceptReviewApplicants() {
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 divide-y">
-                      {data?.submittedDocuments &&
-                        Object.entries(data.submittedDocuments)
+                      {data?.submittedDocuments.documents &&
+                        Object.entries(data.submittedDocuments.documents)
                           .filter(
                             ([_, doc]) =>
                               doc.requirementType &&

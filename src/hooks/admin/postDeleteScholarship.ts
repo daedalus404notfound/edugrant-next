@@ -4,15 +4,15 @@ import axios from "axios";
 import { useState } from "react";
 
 type DeleteTypes = {
-  scholarshipId?: (string | number)[];
-  accountId?: string;
+  scholarshipId: string | number;
+  accountId?: string | number;
 };
 
 export default function useDeleteScholarship({
   scholarshipId,
   accountId,
 }: DeleteTypes) {
-  const { addScholarshipIds } = useScholarshipStore();
+  const { addScholarshipId } = useScholarshipStore();
   const [isSuccess, setIsSuccess] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [deleteLoading, setLoading] = useState(false);
@@ -23,16 +23,14 @@ export default function useDeleteScholarship({
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/deleteScholarship`,
         {
-          scholarshipId: JSON.stringify({
-            data: scholarshipId,
-          }),
+          scholarshipId: scholarshipId,
           accountId: accountId,
         },
         { withCredentials: true }
       );
 
       if (res.status === 200) {
-        addScholarshipIds(scholarshipId ?? []);
+        addScholarshipId(scholarshipId);
         StyledToast({
           status: "success",
           title: "Scholarship Deleted",

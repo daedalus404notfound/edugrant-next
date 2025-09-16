@@ -105,11 +105,10 @@ export default function InterceptReviewApplicants() {
   const [activeSection, setActiveSection] = useState("documents");
   const id = params.id as string;
   const { data, loading } = useApplicationById(id);
-
+  console.log("123", data?.submittedDocuments);
   const [reviewData, setReviewData] = useState<
     Record<string, { comment: string; status: string }>
   >({});
-  console.log("111",admin);
   const updateReviewData = (
     docKey: string,
     field: "comment" | "status",
@@ -129,14 +128,14 @@ export default function InterceptReviewApplicants() {
     : 0;
 
   const totalRequiredDocs = data
-    ? Object.entries(data.submittedDocuments).filter(
+    ? Object.entries(data.submittedDocuments.documents).filter(
         ([_, doc]) =>
           doc.requirementType && doc.requirementType.trim() !== "optional"
       ).length
     : 0;
   console.log("totalRequiredDocs;'", totalRequiredDocs);
-  const reviewedDocs = data?.submittedDocuments
-    ? Object.entries(data.submittedDocuments).filter(([key, doc]) => {
+  const reviewedDocs = data?.submittedDocuments.documents
+    ? Object.entries(data.submittedDocuments.documents).filter(([key, doc]) => {
         return (
           doc.rejectMessage?.status ||
           (reviewData[key]?.status && doc.requirementType.trim() === "required")
@@ -434,8 +433,8 @@ export default function InterceptReviewApplicants() {
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 divide-y">
-                      {data?.submittedDocuments &&
-                        Object.entries(data.submittedDocuments)
+                      {data?.submittedDocuments.documents &&
+                        Object.entries(data.submittedDocuments.documents)
                           .filter(
                             ([_, doc]) =>
                               doc.requirementType &&
