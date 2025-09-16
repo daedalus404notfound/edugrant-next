@@ -4,8 +4,8 @@ import axios from "axios";
 import { useState } from "react";
 
 type DeleteTypes = {
-  scholarshipId: string | number;
-  accountId?: string;
+  scholarshipId: number;
+  accountId?: number;
 };
 
 export default function useArchiveScholarship({

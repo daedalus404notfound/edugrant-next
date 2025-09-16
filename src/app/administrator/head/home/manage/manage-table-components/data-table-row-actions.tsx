@@ -51,7 +51,7 @@ export function DataTableRowActions<TData>({
     archiveLoading,
   } = useArchiveScholarship({
     scholarshipId: rowData.scholarshipId,
-    accountId: admin?.accountId.toString(),
+    accountId: admin?.accountId,
   });
 
   return (

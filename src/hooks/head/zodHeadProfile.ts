@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 
 export const profileSchema = z.object({
-  accountId: z.string(),
+  accountId: z.number(),
   email: z.string(),
   hashedPassword: z.string(),
   role: z.string(),
@@ -28,7 +28,7 @@ export type ProfileFormData = z.infer<typeof profileSchema>;
 
 export function useProfileForm(initialData?: ProfileFormData) {
   const defaultValues: ProfileFormData = {
-    accountId: "",
+    accountId: 0,
     email: "",
     hashedPassword: "",
     role: "",
