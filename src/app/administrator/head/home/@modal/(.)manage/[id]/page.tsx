@@ -60,7 +60,7 @@ export default function InterceptManageScholarship() {
   const [open, setOpen] = useState(true);
   const id = params.id as string;
   const { data, loading } = useScholarshipUserByIdAdmin(id);
-  const scholarshipId = data?.scholarshipId ? [data.scholarshipId] : [];
+
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
@@ -70,7 +70,7 @@ export default function InterceptManageScholarship() {
     }
   };
   const { onSubmit, isSuccess, deleteLoading } = useDeleteScholarship({
-    scholarshipId,
+    scholarshipId: data?.scholarshipId ? data?.scholarshipId : "",
   });
 
   useEffect(() => {
