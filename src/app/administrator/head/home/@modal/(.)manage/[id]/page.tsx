@@ -70,7 +70,7 @@ export default function InterceptManageScholarship() {
     }
   };
   const { onSubmit, isSuccess, deleteLoading } = useDeleteScholarship({
-    scholarshipId: data?.scholarshipId ? data?.scholarshipId : "",
+    scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
   });
 
   useEffect(() => {
