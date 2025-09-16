@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 
 type DeleteTypes = {
-  scholarshipId?: (string | number)[];
+  scholarshipId: string | number;
   accountId?: string;
 };
 
@@ -12,7 +12,7 @@ export default function useArchiveScholarship({
   scholarshipId,
   accountId,
 }: DeleteTypes) {
-  const { addScholarshipIds } = useScholarshipStore();
+  const { addScholarshipId } = useScholarshipStore();
   const [isSuccess, setIsSuccess] = useState(false);
   const [archiveLoading, setLoading] = useState(false);
 
@@ -33,7 +33,7 @@ export default function useArchiveScholarship({
       );
 
       if (res.status === 200) {
-        addScholarshipIds(scholarshipId ?? []);
+        addScholarshipId(scholarshipId);
         StyledToast({
           status: "success",
           title: "Scholarship Archived",
