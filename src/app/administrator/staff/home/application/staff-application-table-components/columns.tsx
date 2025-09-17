@@ -1,9 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-
 import { Checkbox } from "@/components/ui/checkbox";
-import { format } from "date-fns";
 import { ApplicationFormData } from "@/hooks/zod/application";
 import { DataTableColumnHeader } from "@/app/table-components/data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
@@ -12,14 +10,43 @@ import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
 export const columns: ColumnDef<ApplicationFormData>[] = [
   {
+    id: "select",
+    header: ({ table }) => (
+      <div className="pl-4">
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+          className="translate-y-[2px]"
+        />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="pl-4">
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+          className="translate-y-[2px]"
+        />
+      </div>
+    ),
+    enableSorting: true,
+    enableHiding: false,
+  },
+
+  {
     accessorKey: "firstName",
     header: ({ column }) => (
-      <DataTableColumnHeader className="pl-4" column={column} title="Name" />
+      <DataTableColumnHeader column={column} title="Name" />
     ),
     cell: ({ row }) => {
       const student = row.original.Student;
       return (
-        <div className="flex gap-2 items-center pl-4">
+        <div className="flex gap-2 items-center">
           <Avatar>
             <AvatarImage src={`/avatars/${student.studentId}.jpg`} />
             <AvatarFallback className="uppercase">
@@ -50,47 +77,54 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     enableHiding: true,
   },
   {
-    accessorKey: "scholarshipTitle",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Scholarship" />
-    ),
-    cell: ({ row }) => {
-      const scholar = row.original.Scholarship;
-      return <div className="font-medium truncate  w-50">{scholar.title}</div>;
-    },
-    enableSorting: true,
-    enableHiding: true,
-  },
-
-  {
-    accessorFn: (row) =>
-      `${row.Student.course} - ${row.Student.year.slice(0, 1)}${
-        row.Student.section
-      }`,
-    id: "Course_Year_&_Section",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Course, Year & Section" />
-    ),
-    cell: ({ row }) => <span>{row.getValue("Course_Year_&_Section")}</span>,
-    enableSorting: true,
-    enableHiding: true,
-  },
-
-  {
-    accessorKey: "institute",
+    accessorFn: (row) => row.Student.institute,
+    id: "Institute",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Institute" />
     ),
-    cell: ({ row }) => {
-      const scholar = row.original.Student;
-      return (
-        <div className="font-medium truncate  w-50">{scholar.institute}</div>
-      );
-    },
+    cell: ({ row }) => (
+      <span className="capitalize">{row.getValue("Institute")}</span>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorFn: (row) => row.Student.course,
+    id: "Course",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Course" />
+    ),
+    cell: ({ row }) => (
+      <span className="capitalize">{row.getValue("Course")}</span>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorFn: (row) => row.Student.year,
+    id: "Year",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Year Level" />
+    ),
+    cell: ({ row }) => (
+      <span className="capitalize">{row.getValue("Year")}</span>
+    ),
     enableSorting: true,
     enableHiding: true,
   },
 
+  {
+    accessorFn: (row) => row.Scholarship.title,
+    id: "Scholarship",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Scholarship" />
+    ),
+    cell: ({ row }) => (
+      <span className="capitalize">{row.getValue("Scholarship")}</span>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
   {
     accessorKey: "status",
     header: ({ column }) => (
@@ -119,24 +153,7 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     enableSorting: true,
     enableHiding: true,
   },
-  // {
-  //   accessorKey: "applicationDate",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Application Date" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     return (
-  //       <span className="max-w-[500px] truncate">
-  //         {format(
-  //           (row.getValue("applicationDate")),
-  //           "MMM d, yyyy 'at' hh:mm a"
-  //         )}
-  //       </span>
-  //     );
-  //   },
-  //   enableSorting: true,
-  //   enableHiding: true,
-  // },
+
   {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,

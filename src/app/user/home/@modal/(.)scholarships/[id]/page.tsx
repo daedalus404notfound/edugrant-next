@@ -4,12 +4,14 @@ import {
   Calendar,
   Download,
   Flame,
+  GraduationCap,
   Inbox,
   Maximize,
   PhilippinePeso,
   Share2,
   StickyNote,
   UserRound,
+  X,
 } from "lucide-react";
 import {
   Dialog,
@@ -89,6 +91,28 @@ export default function InterceptManageScholarshipClient() {
           <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
+        <div className="flex items-center justify-between pb-2">
+          <div className="flex items-center gap-3">
+            <Button
+              className="relative justify-start"
+              variant="ghost"
+              size="sm"
+            >
+              <GraduationCap/>
+              Scholarship Details
+            </Button>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              className="ghost"
+              variant="ghost"
+              size="sm"
+              onClick={() => HandleCloseDrawer(false)}
+            >
+              <X />
+            </Button>
+          </div>
+        </div>
 
         <div className=" overflow-auto h-full no-scrollbar">
           {isApply ? (

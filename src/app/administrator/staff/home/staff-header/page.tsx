@@ -14,7 +14,12 @@ const tabs = [
   { id: "/administrator/staff/home", label: "Dashboard", indicator: null },
   {
     id: "/administrator/staff/home/application",
-    label: "Application",
+    label: "Pending Application",
+    indicator: null,
+  },
+  {
+    id: "/administrator/staff/home/for-interview",
+    label: "For Interview",
     indicator: null,
   },
   {

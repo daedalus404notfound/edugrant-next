@@ -1,6 +1,7 @@
 "use client";
 import {
   ArrowRightIcon,
+  Building,
   GraduationCap,
   SearchIcon,
   Trash2,
@@ -16,6 +17,8 @@ import { useEffect, useState } from "react";
 import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
 
 import { ToolbarProps } from "@/app/table-components/data-table";
+import { DeleteDialog } from "@/components/ui/delete-dialog";
+import useFetchApplications from "@/hooks/admin/getApplicant";
 
 export default function DataTableToolbar<
   TData extends { applicationId: number }
@@ -26,26 +29,31 @@ export default function DataTableToolbar<
   });
 
   console.log(filter);
-  // const isFiltered = table.getState().columnFilters.length > 0;
-  // console.log(filter);
-  // const course = filter?.getFilterData.course.map((meow) => ({
+  const isFiltered = table.getState().columnFilters.length > 0;
+  console.log(filter);
+  const course = filter?.getFilterData.course.map((meow) => ({
+    label: meow,
+    value: meow,
+    icon: GraduationCap,
+  }));
+  const year = filter?.getFilterData.year.map((meow) => ({
+    label: meow,
+    value: meow,
+    icon: GraduationCap,
+  }));
+  // const institute = filter?.getFilterData.institute.map((meow) => ({
   //   label: meow,
   //   value: meow,
-  //   icon: GraduationCap,
-  // }));
-  // const year = filter?.getFilterData.year.map((meow) => ({
-  //   label: meow,
-  //   value: meow,
-  //   icon: GraduationCap,
+  //   icon: Building,
   // }));
 
-  // const scholarships = filter?.getScholarshipsFilters.scholarshipTitle.map(
-  //   (meow) => ({
-  //     label: meow,
-  //     value: meow,
-  //     icon: GraduationCap,
-  //   })
-  // );
+  const scholarships = filter?.getScholarshipsFilters.scholarship.map(
+    (meow) => ({
+      label: meow,
+      value: meow,
+      icon: GraduationCap,
+    })
+  );
 
   const selectedRows = table.getSelectedRowModel().rows;
   const applicationIds = selectedRows.map((row) => row.original.applicationId);
@@ -83,7 +91,61 @@ export default function DataTableToolbar<
             <ArrowRightIcon size={16} aria-hidden="true" />
           </button>
         </div>
+        <DataTableFacetedFilter
+          disabled={!!search}
+          column={table.getColumn("Scholarship")}
+          title="Scholarship"
+          options={scholarships ?? []}
+        />
+        {/* <DataTableFacetedFilter
+          disabled={!!search}
+          column={table.getColumn("Institute")}
+          title="Institute"
+          options={institute ?? []}
+        /> */}
+        <DataTableFacetedFilter
+          disabled={!!search}
+          column={table.getColumn("Course")}
+          title="Course"
+          options={course ?? []}
+        />
+
+        <DataTableFacetedFilter
+          disabled={!!search}
+          column={table.getColumn("Year")}
+          title="Year"
+          options={year ?? []}
+        />
+
+        {isFiltered && (
+          <Button
+            variant="ghost"
+            onClick={() => table.resetColumnFilters()}
+            className="h-8 px-2 lg:px-3"
+          >
+            Reset
+            <X />
+          </Button>
+        )}
       </div>
+
+      {selectedRows.length > 0 && (
+        <DeleteDialog
+          open={openAlert}
+          onOpenChange={setOpenAlert}
+          onConfirm={onSubmit}
+          loading={loading}
+          title="Delete application?"
+          description="This will permanently delete all applications and cannot be undone."
+          confirmText="Delete All"
+          cancelText="Keep Items"
+          trigger={
+            <Button size="sm" variant="destructive" className="justify-start">
+              <Trash2 /> Delete
+            </Button>
+          }
+        />
+      )}
 
       <DataTableViewOptions table={table} />
     </div>
