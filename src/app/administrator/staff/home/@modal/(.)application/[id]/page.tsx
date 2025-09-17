@@ -29,6 +29,12 @@ import { Badge } from "@/components/ui/badge";
 import useApplicationById from "@/hooks/admin/getApplicantData";
 import { Button } from "@/components/ui/button";
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   ArrowLeftFromLine,
   Calendar,
   CheckCheck,
@@ -61,6 +67,8 @@ import {
   AlertTriangle,
   Eye,
   Maximize,
+  UsersRound,
+  Inbox,
 } from "lucide-react";
 
 import Reviewer from "./reviewer";
@@ -76,7 +84,8 @@ import TitleReusable from "@/components/ui/title";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import Link from "next/link";
 import { BGPattern } from "@/components/ui/grid";
-
+import AnimatedNumberCountdown from "@/components/ui/countdown";
+import { AnimatePresence, motion } from "motion/react";
 const mimeToLabelMap: Record<string, string> = {
   "application/pdf": "PDF",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
@@ -99,11 +108,10 @@ export default function InterceptReviewApplicants() {
   const [activeSection, setActiveSection] = useState("documents");
   const id = Number(params.id);
   const { data, loading } = useApplicationById(id);
-
+  console.log("123", data?.submittedDocuments);
   const [reviewData, setReviewData] = useState<
     Record<string, { comment: string; status: string }>
   >({});
-
   const updateReviewData = (
     docKey: string,
     field: "comment" | "status",
@@ -123,12 +131,12 @@ export default function InterceptReviewApplicants() {
     : 0;
 
   const totalRequiredDocs = data
-    ? Object.values(data.submittedDocuments.documents).filter(
-        (doc) =>
+    ? Object.entries(data.submittedDocuments.documents).filter(
+        ([_, doc]) =>
           doc.requirementType && doc.requirementType.trim() !== "optional"
       ).length
     : 0;
-
+  console.log("totalRequiredDocs;'", totalRequiredDocs);
   const reviewedDocs = data?.submittedDocuments.documents
     ? Object.entries(data.submittedDocuments.documents).filter(([key, doc]) => {
         return (
@@ -187,10 +195,10 @@ export default function InterceptReviewApplicants() {
   });
 
   useEffect(() => {
-    if (isSuccessInterview || isSuccessReject || isSuccessApprove) {
+    if (isSuccessInterview || isSuccessReject) {
       HandleCloseDrawer(false);
     }
-  }, [isSuccessInterview, isSuccessReject, isSuccessApprove]);
+  }, [isSuccessInterview, isSuccessReject]);
 
   const fatherDetails = [
     {
@@ -204,15 +212,16 @@ export default function InterceptReviewApplicants() {
       value: data?.Student.familyBackground.fatherStatus,
     },
     {
-      label: "Address",
-      icon: Locate,
-      value: data?.Student.familyBackground.fatherAddress,
-    },
-    {
       label: "Contact No.",
       icon: Phone,
       value: data?.Student.familyBackground.fatherContactNumber,
     },
+    {
+      label: "Address",
+      icon: Locate,
+      value: data?.Student.familyBackground.fatherAddress,
+    },
+
     {
       label: "Occupation",
       icon: Briefcase,
@@ -242,15 +251,16 @@ export default function InterceptReviewApplicants() {
       value: data?.Student.familyBackground.motherStatus,
     },
     {
-      label: "Address",
-      icon: UserRound,
-      value: data?.Student.familyBackground.motherAddress,
-    },
-    {
       label: "Contact No.",
       icon: Phone,
       value: data?.Student.familyBackground.motherContactNumber,
     },
+    {
+      label: "Address",
+      icon: UserRound,
+      value: data?.Student.familyBackground.motherAddress,
+    },
+
     {
       label: "Occupation",
       icon: Briefcase,
@@ -280,15 +290,16 @@ export default function InterceptReviewApplicants() {
       value: data?.Student.familyBackground.guardianContactNumber,
     },
     {
-      label: "Address",
-      icon: Locate,
-      value: data?.Student.familyBackground.guardianAddress,
-    },
-    {
       label: "Occupation",
       icon: Briefcase,
       value: data?.Student.familyBackground.guardianOccupation,
     },
+    {
+      label: "Address",
+      icon: Locate,
+      value: data?.Student.familyBackground.guardianAddress,
+    },
+
     {
       label: "Highest Education Attainment",
       icon: GraduationCap,
@@ -296,15 +307,30 @@ export default function InterceptReviewApplicants() {
     },
   ];
 
-  const studentInformation = [
+  const personalInformation = [
     {
-      label: "Contact No.",
-      icon: Phone,
-      value: data?.Student.contactNumber,
+      label: "First Name",
+      icon: UserRound,
+      value: data?.Student.fName,
+    },
+    {
+      label: "Middle Name",
+      icon: UserRound,
+      value: data?.Student.mName,
+    },
+    {
+      label: "Last Name",
+      icon: UserRound,
+      value: data?.Student.lName,
     },
     {
       label: "Gender",
       icon: VenusAndMars,
+      value: data?.Student.gender,
+    },
+    {
+      label: "Date of Birth",
+      icon: Calendar,
       value: data?.Student.gender,
     },
     {
@@ -313,9 +339,22 @@ export default function InterceptReviewApplicants() {
       value: data?.Student.address,
     },
     {
+      label: "Contact No.",
+      icon: Phone,
+      value: data?.Student.contactNumber,
+    },
+
+    {
       label: "Email",
       icon: Mail,
       value: data?.Student.Account.email,
+    },
+  ];
+  const academicInformation = [
+    {
+      label: "Student Id",
+      icon: Building2,
+      value: data?.Student.Account.schoolId,
     },
     {
       label: "Institute",
@@ -323,11 +362,19 @@ export default function InterceptReviewApplicants() {
       value: data?.Student.institute,
     },
     {
-      label: "Course, Year & Section",
-      icon: GraduationCap,
-      value: `${data?.Student.course} - ${data?.Student.year.slice(0, 1)}${
-        data?.Student.section
-      }`,
+      label: "Course",
+      icon: Building2,
+      value: data?.Student.course,
+    },
+    {
+      label: "Year",
+      icon: Building2,
+      value: data?.Student.year,
+    },
+    {
+      label: "Section",
+      icon: Building2,
+      value: data?.Student.section,
     },
   ];
 
@@ -350,17 +397,17 @@ export default function InterceptReviewApplicants() {
           <DrawerTitle></DrawerTitle>
           <DrawerDescription></DrawerDescription>
         </DrawerHeader>
-        <div className="bg-background rounded-lg flex-1 overflow-auto flex flex-col divide-y">
+        <div className="bg-background rounded-lg flex-1 overflow-auto flex flex-col ">
           {/* Enhanced Header */}
           <div className="  bg-gradient-to-r from-background to-card">
-            <div className="relative p-4 h-35">
+            <div className="relative p-4 ">
               <BGPattern
                 variant="grid"
                 className="top-0  z-1 opacity-30 hidden dark:block mask-gradient"
                 size={40}
               />
               <div className="relative flex items-start justify-between z-20">
-                <div className="flex items-center justify-center gap-5">
+                <div className="flex items-center justify-center gap-3">
                   <Avatar className="size-18 border-2 border-border ">
                     <AvatarFallback className="text-2xl font-semibold">
                       JT
@@ -401,13 +448,14 @@ export default function InterceptReviewApplicants() {
               </div>
             </div>
           </div>
-
-          <div className="p-4 b bg-card/30 sticky top-0">
+          <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+          <div className="p-4  bg-card/70 backdrop-blur-sm sticky top-0">
             <Tabs
               tabs={navigationTabs}
               onTabChange={(tabId) => setActiveSection(tabId)}
             />
           </div>
+          <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
 
           {/* Content Area */}
           <div className="flex-1">
@@ -415,16 +463,16 @@ export default function InterceptReviewApplicants() {
               {/* Documents Section */}
               {activeSection === "documents" && (
                 <div className="space-y-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <FileText className="w-5 h-5" />
-                    <h2 className="text-xl font-semibold">
-                      Submitted Documents
-                    </h2>
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-lg font-medium flex gap-2 items-center">
+                      <StickyNote className="h-5 w-5" /> Submitted Documents
+                    </h3>
+                    <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                   </div>
                   {loading ? (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      <Skeleton className="h-80 w-full" />
-                      <Skeleton className="h-80 w-full" />
+                    <div className="grid grid-cols-1 gap-6">
+                      <Skeleton className="h-40 w-full" />
+                      <Skeleton className="h-40 w-full" />
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 divide-y">
@@ -460,7 +508,7 @@ export default function InterceptReviewApplicants() {
                                     <div className="flex items-center gap-2">
                                       <Badge
                                         variant="secondary"
-                                        className="text-xs"
+                                        className="uppercase bg-red-800/20 text-red-700"
                                       >
                                         {/* {mimeToLabelMap[doc.fileFormat]} */}
                                         {doc.requirementType}
@@ -517,7 +565,7 @@ export default function InterceptReviewApplicants() {
                                         doc.rejectMessage?.status ===
                                           "APPROVED" ||
                                         reviewData[key]?.status === "APPROVED"
-                                          ? "!bg-green-700 hover:!bg-green-800"
+                                          ? ""
                                           : "hover:bg-green-50 hover:border-green-200 hover:text-green-700"
                                       }`}
                                       onClick={() => {
@@ -591,36 +639,72 @@ export default function InterceptReviewApplicants() {
 
               {/* Student Information Section */}
               {activeSection === "student" && (
-                <div className="space-y-6">
-                  <div className="flex items-center gap-2 mb-6">
-                    <UserRound className="w-5 h-5" />
-                    <h2 className="text-xl font-semibold">
-                      Student Information
-                    </h2>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {studentInformation.map((info, index) => (
-                      <div
-                        key={index}
-                        className={`bg-card border rounded-lg p-4 hover:shadow-sm transition-all duration-200 ${
-                          info.label === "Address" || info.label === "Email"
-                            ? "md:col-span-2"
-                            : ""
-                        }`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <info.icon className="w-5 h-5 text-muted-foreground mt-1 flex-shrink-0" />
-                          <div className="min-w-0 flex-1">
-                            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
-                              {info.label}
-                            </p>
-                            <p className="font-medium text-foreground">
-                              {info.value}
-                            </p>
+                <div className="space-y-10">
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-lg font-medium flex gap-2 items-center">
+                        <UserRound className="h-5 w-5" /> Personal Information
+                      </h3>
+                      <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {personalInformation.map((info, index) => (
+                        <div
+                          key={index}
+                          className={` ${
+                            info.label === "Address" || info.label === "Email"
+                              ? "md:col-span-2"
+                              : ""
+                          }`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm text-muted-foreground mb-1">
+                                {info.label}
+                              </p>
+                              <div className=" bg-card p-2 rounded-md flex gap-3 items-center">
+                                <info.icon size={16} />
+                                <p className="">{info.value}</p>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                  </div>
+                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-lg font-medium flex gap-2 items-center">
+                        <GraduationCap className="h-5 w-5" /> Academic
+                        Information
+                      </h3>
+                      <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {academicInformation.map((info, index) => (
+                        <div
+                          key={index}
+                          className={` ${
+                            info.label === "Address" || info.label === "Email"
+                              ? "md:col-span-2"
+                              : ""
+                          }`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm text-muted-foreground mb-1">
+                                {info.label}
+                              </p>
+                              <div className=" bg-card p-2 rounded-md flex gap-3 items-center">
+                                <info.icon size={16} />
+                                <p className="">{info.value}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}
@@ -628,87 +712,96 @@ export default function InterceptReviewApplicants() {
               {/* Family Background Section */}
               {activeSection === "family" && (
                 <div className="space-y-8">
-                  <div className="flex items-center gap-2 mb-6">
-                    <Users className="w-5 h-5" />
-                    <h2 className="text-xl font-semibold">Family Background</h2>
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-lg font-medium flex gap-2 items-center">
+                      <UsersRound className="h-5 w-5" /> Family Composition
+                    </h3>
+                    <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                   </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    {/* Father Details */}
-                    <div className="space-y-4">
-                      <TitleReusable title="Father" description="" />
-                      <div className="bg-card border rounded-lg p-6">
-                        <div className="space-y-4">
-                          {fatherDetails.map((detail, index) => (
-                            <div
-                              key={index}
-                              className="flex items-start gap-3 py-2 border-b border-border/50 last:border-0"
-                            >
-                              <detail.icon className="w-4 h-4 text-muted-foreground mt-1 flex-shrink-0" />
+
+                  {/* Father Details */}
+                  <div className="space-y-4">
+                    <TitleReusable title="Father" description="" />
+                    <div className="">
+                      <div className="grid grid-cols-3 gap-4">
+                        {fatherDetails.map((detail, index) => (
+                          <div
+                            key={index}
+                            className={` ${
+                              detail.label === "Address" ? "md:col-span-3" : ""
+                            }`}
+                          >
+                            <div className="flex items-start gap-3">
                               <div className="min-w-0 flex-1">
-                                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                <p className="text-sm text-muted-foreground mb-1">
                                   {detail.label}
                                 </p>
-                                <p className="font-medium text-sm mt-1">
-                                  {detail.value}
-                                </p>
+                                <div className=" bg-card p-2 rounded-md flex gap-3 items-center">
+                                  <detail.icon size={16} />
+                                  <p className="">{detail.value}</p>
+                                </div>
                               </div>
                             </div>
-                          ))}
-                        </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-
-                    {/* Mother Details */}
-                    <div className="space-y-4">
-                      <TitleReusable title="Mother" description="" />
-                      <div className="bg-card border rounded-lg p-6">
-                        <div className="space-y-4">
-                          {motherDetails.map((detail, index) => (
-                            <div
-                              key={index}
-                              className="flex items-start gap-3 py-2 border-b border-border/50 last:border-0"
-                            >
-                              <detail.icon className="w-4 h-4 text-muted-foreground mt-1 flex-shrink-0" />
+                  </div>
+                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+                  {/* Mother Details */}
+                  <div className="space-y-4">
+                    <TitleReusable title="Mother" description="" />
+                    <div className="">
+                      <div className="grid grid-cols-3 gap-4">
+                        {motherDetails.map((detail, index) => (
+                          <div
+                            key={index}
+                            className={` ${
+                              detail.label === "Address" ? "md:col-span-3" : ""
+                            }`}
+                          >
+                            <div className="flex items-start gap-3">
                               <div className="min-w-0 flex-1">
-                                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                <p className="text-sm text-muted-foreground mb-1">
                                   {detail.label}
                                 </p>
-                                <p className="font-medium text-sm mt-1">
-                                  {detail.value}
-                                </p>
+                                <div className=" bg-card p-2 rounded-md flex gap-3 items-center">
+                                  <detail.icon size={16} />
+                                  <p className="">{detail.value}</p>
+                                </div>
                               </div>
                             </div>
-                          ))}
-                        </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-
-                    {/* Guardian Details */}
-                    <div className="space-y-4 lg:col-span-2">
-                      <TitleReusable title="Guardian" description="" />
-                      <div className="bg-card border rounded-lg p-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                          {guardianDetails.map((detail, index) => (
-                            <div
-                              key={index}
-                              className={`flex items-start gap-3 ${
-                                detail.label === "Address"
-                                  ? "md:col-span-2 lg:col-span-3"
-                                  : ""
-                              }`}
-                            >
-                              <detail.icon className="w-4 h-4 text-muted-foreground mt-1 flex-shrink-0" />
+                  </div>
+                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+                  {/* Guardian Details */}
+                  <div className="space-y-4 lg:col-span-2">
+                    <TitleReusable title="Guardian" description="" />
+                    <div className="">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {guardianDetails.map((detail, index) => (
+                          <div
+                            key={index}
+                            className={` ${
+                              detail.label === "Address" ? "md:col-span-2" : ""
+                            }`}
+                          >
+                            <div className="flex items-start gap-3">
                               <div className="min-w-0 flex-1">
-                                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                <p className="text-sm text-muted-foreground mb-1">
                                   {detail.label}
                                 </p>
-                                <p className="font-medium text-sm mt-1">
-                                  {detail.value}
-                                </p>
+                                <div className=" bg-card p-2 rounded-md flex gap-3 items-center">
+                                  <detail.icon size={16} />
+                                  <p className="">{detail.value}</p>
+                                </div>
                               </div>
                             </div>
-                          ))}
-                        </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
@@ -717,85 +810,263 @@ export default function InterceptReviewApplicants() {
 
               {/* Scholarship Details Section */}
               {activeSection === "scholarship" && (
-                <div className="space-y-6">
-                  <div className="flex items-center gap-2 mb-6">
-                    <Building className="w-5 h-5" />
-                    <h2 className="text-xl font-semibold">
-                      Scholarship Details
-                    </h2>
+                <div className="relative h-full w-full overflow-auto  bg-background rounded-t-md flex flex-col no-scrollbar">
+                  <div className="absolute top-0 left-0 lg:h-86 h-60 w-full opacity-30   mask-gradient flex">
+                    <img
+                      className="w-full h-full object-cover blur-md "
+                      src={data?.Scholarship.cover}
+                      alt=""
+                    />
                   </div>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <div className="bg-card border rounded-lg p-6 hover:shadow-sm transition-all duration-200">
-                        <div className="flex items-center gap-4">
-                          <div className="p-3 bg-green-100 dark:bg-green-900/20 rounded-lg">
-                            <PhilippinePeso className="w-6 h-6 text-green-600 dark:text-green-400" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-muted-foreground">
-                              Scholarship Amount
-                            </p>
-                            <h3 className="text-2xl font-bold text-foreground font-mono">
-                              ₱{data?.Scholarship.amount}.00
-                            </h3>
-                          </div>
-                        </div>
-                      </div>
 
-                      <div className="bg-card border rounded-lg p-6 hover:shadow-sm transition-all duration-200">
-                        <div className="flex items-center gap-4">
-                          <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-lg">
-                            <Building className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                  <div className="relative flex justify-center items-center ">
+                    <div className="absolute inset-0border-b-2 border-black bg-card" />
+                    <div className="absolute left-2 -bottom-18 z-10 lg:px-6  px-2 flex  items-end gap-3 ">
+                      <Avatar className="lg:size-30 size-20 border-background border-2 shadow-md">
+                        <AvatarImage
+                          className="object-cover"
+                          src={data?.Scholarship.logo}
+                        />
+                        <AvatarFallback>
+                          {data?.Scholarship.Scholarship_Provider?.name &&
+                            data?.Scholarship.Scholarship_Provider.name.slice(
+                              0,
+                              2
+                            )}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="">
+                        <motion.span
+                          className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
+                                                 flex items-center gap-1.5 lg:text-2xl text-xl font-semibold tracking-tight
+                                                "
+                          initial={{ backgroundPosition: "200% 0" }}
+                          animate={{ backgroundPosition: "-200% 0" }}
+                          transition={{
+                            repeat: Infinity,
+                            repeatType: "loop",
+                            duration: 7,
+                            ease: "linear",
+                          }}
+                        >
+                          {data?.Scholarship.title}
+                          {data?.Scholarship.deadline &&
+                          new Date(data.Scholarship.deadline).getTime() <
+                            Date.now() ? (
+                            <Badge className="bg-red-800 text-gray-200 tracking-wide">
+                              EXPIRED
+                            </Badge>
+                          ) : (
+                            <Badge className="bg-green-800 text-gray-200 tracking-wide">
+                              ACTIVE
+                            </Badge>
+                          )}
+                        </motion.span>
+                        <p className="text-muted-foreground text-sm">
+                          by {data?.Scholarship.Scholarship_Provider?.name}
+                        </p>
+                      </div>
+                    </div>
+                    {data?.Scholarship.cover && (
+                      <img
+                        className="w-full lg:aspect-[16/4] aspect-[16/9]  object-cover   rounded-lg shadow-md"
+                        src={data?.Scholarship.cover}
+                        alt=""
+                      />
+                    )}
+
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className="absolute z-5  !bg-black/60 !text-gray-200"
+                          size="sm"
+                        >
+                          View <Maximize />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="p-4">
+                        <DialogHeader className="sr-only">
+                          <DialogTitle>Are you absolutely sure?</DialogTitle>
+                          <DialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete your account and remove your data from our
+                            servers.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="w-[300px]">
+                          <img
+                            className="h-full w-full"
+                            src={data?.Scholarship.cover}
+                            alt=""
+                          />
+                        </div>
+                        <Link
+                          className="w-full"
+                          href={
+                            (data?.Scholarship.cover &&
+                              data?.Scholarship.cover) ||
+                            ""
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Button variant="secondary" className="w-full">
+                            <Download />
+                            Download
+                          </Button>
+                        </Link>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+
+                  <div className="flex-1 pt-30 pb-10 px-6 space-y-8">
+                    <div className="space-y-1">
+                      <p className="text-sm text-muted-foreground">About</p>
+                      <p>{data?.Scholarship.description}</p>
+                    </div>
+
+                    <div className="space-y-5">
+                      <div className="flex gap-3 items-center">
+                        <h1 className="font-medium">Scholarship Details</h1>
+                        <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                      </div>
+                      <div className="grid lg:grid-cols-2 grid-cols-1 gap-3">
+                        {data?.Scholarship.amount && (
+                          <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                            <PhilippinePeso />
+                            <div>
+                              <p className="text-muted-foreground text-sm">
+                                Scholarship Amount
+                              </p>
+                              <h1 className="text-lg font-medium font-mono">
+                                {data?.Scholarship.amount}.00
+                              </h1>
+                            </div>
                           </div>
+                        )}
+                        {data?.Scholarship.limit && (
+                          <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                            <Inbox />
+                            <div>
+                              <p className="text-muted-foreground text-sm">
+                                Scholarship Limit
+                              </p>
+                              <h1 className="text-lg font-medium font-mono">
+                                {data?.Scholarship.limit}
+                              </h1>
+                            </div>
+                          </div>
+                        )}
+                        {data?.Scholarship.requiredGWA && (
+                          <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                            <Inbox />
+                            <div>
+                              <p className="text-muted-foreground text-sm">
+                                Required GWA
+                              </p>
+                              <h1 className="text-lg font-medium font-mono">
+                                {data?.Scholarship.requiredGWA}
+                              </h1>
+                            </div>
+                          </div>
+                        )}
+                        {data?.Scholarship.requiredGWA && (
+                          <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                            <Inbox />
+                            <div>
+                              <p className="text-muted-foreground text-sm">
+                                Required GWA
+                              </p>
+                              <h1 className="text-lg font-medium font-mono">
+                                {data?.Scholarship.requiredGWA}
+                              </h1>
+                            </div>
+                          </div>
+                        )}
+                        <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                          <Building />
                           <div>
-                            <p className="text-sm font-medium text-muted-foreground">
+                            <p className="text-muted-foreground text-sm">
                               Scholarship Type
                             </p>
-                            <h3 className="text-xl font-semibold capitalize">
+                            <h1 className="text-lg font-medium capitalize">
                               {data?.Scholarship.type}
-                            </h3>
+                            </h1>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="bg-card border rounded-lg p-6 hover:shadow-sm transition-all duration-200">
-                        <div className="flex items-center gap-4">
-                          <div className="p-3 bg-orange-100 dark:bg-orange-900/20 rounded-lg">
-                            <Calendar className="w-6 h-6 text-orange-600 dark:text-orange-400" />
-                          </div>
+                        <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                          <Calendar />
                           <div>
-                            <p className="text-sm font-medium text-muted-foreground">
-                              Application Deadline
+                            <p className="text-muted-foreground text-sm">
+                              Scholarship Deadline
                             </p>
-                            <h3 className="text-lg font-semibold">
-                              {data?.Scholarship?.deadline
+                            <h1 className="text-lg font-medium">
+                              {data?.Scholarship.deadline
                                 ? format(
-                                    new Date(data.Scholarship.deadline),
+                                    new Date(data?.Scholarship.deadline),
                                     "PPP"
                                   )
                                 : "No deadline"}
-                            </h3>
+                            </h1>
                           </div>
                         </div>
                       </div>
-                    </div>
+                      <div className="space-y-6">
+                        {" "}
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <h3 className="text-xs font-medium text-muted-foreground  tracking-wide">
+                              Required Documents
+                            </h3>
+                            <p className="font-medium text-lg">
+                              {
+                                Object.keys(data?.Scholarship.documents || {})
+                                  .length
+                              }
+                            </p>
+                          </div>
 
-                    <div className="bg-card border rounded-lg p-6 hover:shadow-sm transition-all duration-200">
-                      <div className="flex items-start gap-3 mb-4">
-                        <div className="p-2 bg-purple-100 dark:bg-purple-900/20 rounded-lg">
-                          <StickyNote className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground">
-                            Scholarship Description
-                          </p>
+                          <div className=" divide-y">
+                            {Object.values(
+                              data?.Scholarship.documents.documents || {}
+                            ).map((doc, index) => (
+                              <div
+                                className="flex justify-between items-center py-5"
+                                key={doc.label}
+                              >
+                                <div>
+                                  <span> {index + 1}. </span>
+                                  {doc.label}
+                                </div>
+                                <Badge
+                                  className={`${
+                                    doc.requirementType === "required"
+                                      ? "bg-red-700/20 text-red-700"
+                                      : doc.requirementType === "optional"
+                                      ? "bg-blue-700/20 text-blue-700"
+                                      : ""
+                                  } capitalize `}
+                                >
+                                  {doc.requirementType}
+                                </Badge>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
-                      <div className="pl-12">
-                        <p className="text-sm leading-relaxed text-foreground">
-                          {data?.Scholarship.description ||
-                            "No description available"}
-                        </p>
+                      <div className="p-4 bg-card rounded-md">
+                        <h1 className="text-center text-sm font-medium">
+                          Hurry before it ends
+                        </h1>
+                        <div className="transform scale-85 lg:scale-100">
+                          {data?.Scholarship.deadline && (
+                            <AnimatedNumberCountdown
+                              endDate={new Date(data?.Scholarship.deadline)}
+                            />
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -822,7 +1093,7 @@ export default function InterceptReviewApplicants() {
                     <DialogTrigger asChild>
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={reviewedDocs < totalRequiredDocs}
+                        disabled={totalDocs > reviewedDocs}
                       >
                         <UserRoundCheck className="w-4 h-4 mr-2" />
                         Approve Application
@@ -883,7 +1154,7 @@ export default function InterceptReviewApplicants() {
                     <DialogTrigger asChild>
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={reviewedDocs < totalRequiredDocs}
+                        disabled={totalDocs > reviewedDocs}
                       >
                         <UserRoundCheck className="w-4 h-4 mr-2" />
                         Approve Application
@@ -946,7 +1217,7 @@ export default function InterceptReviewApplicants() {
                     <DialogTrigger asChild>
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={reviewedDocs < totalRequiredDocs}
+                        disabled={totalRequiredDocs !== reviewedDocs}
                       >
                         <UserRoundCheck className="w-4 h-4 mr-2" />
                         Approve for Interview
@@ -1011,7 +1282,7 @@ export default function InterceptReviewApplicants() {
                     disabled={
                       data?.status === "APPROVED" ||
                       data?.status === "DECLINED" ||
-                      reviewedDocs < totalRequiredDocs
+                      totalRequiredDocs !== reviewedDocs
                     }
                   >
                     <UserRoundX className="w-4 h-4 mr-2" />

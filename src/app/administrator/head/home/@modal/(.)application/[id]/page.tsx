@@ -397,17 +397,17 @@ export default function InterceptReviewApplicants() {
           <DrawerTitle></DrawerTitle>
           <DrawerDescription></DrawerDescription>
         </DrawerHeader>
-        <div className="bg-background rounded-lg flex-1 overflow-auto flex flex-col divide-y">
+        <div className="bg-background rounded-lg flex-1 overflow-auto flex flex-col ">
           {/* Enhanced Header */}
           <div className="  bg-gradient-to-r from-background to-card">
-            <div className="relative p-4 h-35">
+            <div className="relative p-4 ">
               <BGPattern
                 variant="grid"
                 className="top-0  z-1 opacity-30 hidden dark:block mask-gradient"
                 size={40}
               />
               <div className="relative flex items-start justify-between z-20">
-                <div className="flex items-center justify-center gap-5">
+                <div className="flex items-center justify-center gap-3">
                   <Avatar className="size-18 border-2 border-border ">
                     <AvatarFallback className="text-2xl font-semibold">
                       JT
@@ -448,13 +448,14 @@ export default function InterceptReviewApplicants() {
               </div>
             </div>
           </div>
-
-          <div className="p-4 b bg-card/30 sticky top-0">
+          <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+          <div className="p-4  bg-card/70 backdrop-blur-sm sticky top-0">
             <Tabs
               tabs={navigationTabs}
               onTabChange={(tabId) => setActiveSection(tabId)}
             />
           </div>
+          <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
 
           {/* Content Area */}
           <div className="flex-1">
@@ -469,9 +470,9 @@ export default function InterceptReviewApplicants() {
                     <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                   </div>
                   {loading ? (
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                      <Skeleton className="h-80 w-full" />
-                      <Skeleton className="h-80 w-full" />
+                    <div className="grid grid-cols-1 gap-6">
+                      <Skeleton className="h-40 w-full" />
+                      <Skeleton className="h-40 w-full" />
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 divide-y">
