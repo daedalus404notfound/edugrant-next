@@ -187,10 +187,10 @@ export default function InterceptReviewApplicants() {
   });
 
   useEffect(() => {
-    if (isSuccessInterview || isSuccessReject) {
+    if (isSuccessInterview || isSuccessReject || isSuccessApprove) {
       HandleCloseDrawer(false);
     }
-  }, [isSuccessInterview, isSuccessReject]);
+  }, [isSuccessInterview, isSuccessReject, isSuccessApprove]);
 
   const fatherDetails = [
     {

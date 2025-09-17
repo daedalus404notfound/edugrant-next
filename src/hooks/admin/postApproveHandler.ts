@@ -1,4 +1,5 @@
 import StyledToast from "@/components/ui/toast-styled";
+import { useApplicationUIStore } from "@/store/updateUIStore";
 import axios from "axios";
 import { useState } from "react";
 type ApproveTypes = {
@@ -19,6 +20,7 @@ export function useApprovedHandler({
   const [loadingApprove, setLoadingApprove] = useState(false);
   const [openApprove, setOpenApprove] = useState(false);
   const [isSuccessApprove, setIsSuccessApprove] = useState(false);
+  const { addApprovedId } = useApplicationUIStore();
   const handleApprove = async () => {
     try {
       setOpenApprove(true);
@@ -29,6 +31,7 @@ export function useApprovedHandler({
         { withCredentials: true }
       );
       if (res.status === 200) {
+        addApprovedId(id);
         StyledToast({
           status: "success",
           title: "Application Approved",

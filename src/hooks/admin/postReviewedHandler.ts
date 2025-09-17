@@ -1,4 +1,5 @@
 import StyledToast from "@/components/ui/toast-styled";
+import { useApplicationUIStore } from "@/store/updateUIStore";
 import axios from "axios";
 import { useState } from "react";
 type InterviewTypes = {
@@ -21,6 +22,7 @@ export function useInterviewdHandler({
   const [loadingInterview, setLoadingInterview] = useState(false);
   const [openInterview, setOpenInterview] = useState(false);
   const [isSuccessInterview, setIsSuccessInterview] = useState(false);
+  const { addForInterview } = useApplicationUIStore();
   const handleInterview = async () => {
     try {
       setOpenInterview(true);
@@ -36,6 +38,7 @@ export function useInterviewdHandler({
         { withCredentials: true }
       );
       if (res.status === 200) {
+        addForInterview(id);
         StyledToast({
           status: "success",
           title: "Application Interview",

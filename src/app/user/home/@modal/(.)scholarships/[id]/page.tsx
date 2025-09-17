@@ -110,7 +110,7 @@ export default function InterceptManageScholarshipClient() {
                 </div>
               </div>
             ) : (
-              data && <UploadDocs data={data} setIsApply={setIsApply} />
+              data && <UploadDocs data={data} setIsApply={HandleCloseDrawer} />
             )
           ) : loading ? (
             <div className="h-full w-full">
@@ -372,8 +372,7 @@ export default function InterceptManageScholarshipClient() {
                   <Link
                     href={`/user/home/applications/${
                       user.Student.Application.find(
-                        (meow) =>
-                          meow.scholarshipId === data?.scholarshipId
+                        (meow) => meow.scholarshipId === data?.scholarshipId
                       )?.applicationId
                     }`}
                     className="flex-1"

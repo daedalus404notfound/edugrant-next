@@ -51,17 +51,20 @@ type ApplicationUIState = {
   approvedIds: number[];
   pendingIds: number[];
   rejectedIds: number[];
+  ForInterviewIds: number[];
 
   addDeletedScholarshipId: (id: number) => void;
   addArchiveScholarshipId: (id: number) => void;
   addApprovedId: (id: number) => void;
   addPendingId: (id: number) => void;
   addRejectedId: (id: number) => void;
+  addForInterview: (id: number) => void;
 
   clearDeleted: () => void;
   clearApproved: () => void;
   clearPending: () => void;
   clearRejected: () => void;
+  clearForInterview: () => void;
 };
 
 export const useApplicationUIStore = create<ApplicationUIState>((set) => ({
@@ -70,6 +73,7 @@ export const useApplicationUIStore = create<ApplicationUIState>((set) => ({
   approvedIds: [],
   pendingIds: [],
   rejectedIds: [],
+  ForInterviewIds: [],
 
   addDeletedScholarshipId: (id) =>
     set((state) => ({
@@ -85,10 +89,13 @@ export const useApplicationUIStore = create<ApplicationUIState>((set) => ({
     set((state) => ({ pendingIds: [...state.pendingIds, id] })),
   addRejectedId: (id) =>
     set((state) => ({ rejectedIds: [...state.rejectedIds, id] })),
+  addForInterview: (id) =>
+    set((state) => ({ rejectedIds: [...state.rejectedIds, id] })),
 
   clearDeleted: () => set({ deletedScholarshipIds: [] }),
   clearArchive: () => set({ archiveScholarshipIds: [] }),
   clearApproved: () => set({ approvedIds: [] }),
   clearPending: () => set({ pendingIds: [] }),
   clearRejected: () => set({ rejectedIds: [] }),
+  clearForInterview: () => set({ rejectedIds: [] }),
 }));
