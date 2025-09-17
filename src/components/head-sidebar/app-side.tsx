@@ -166,11 +166,6 @@ const sidebarStaff = [
 ];
 const sidebarApplication = [
   {
-    title: "For Interview Application",
-    url: "/administrator/head/home/interview",
-    icon: CircleUserRound,
-  },
-  {
     title: "Approved Application",
     url: "/administrator/head/home/approved",
     icon: CheckCheck,

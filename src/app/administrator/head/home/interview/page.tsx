@@ -14,6 +14,7 @@ import { ApplicationFormData } from "@/hooks/zod/application";
 import useApplicantsSearch from "@/hooks/admin/getApplicantSearch";
 import useFetchApplications from "@/hooks/admin/getApplicant";
 import TitleReusable from "@/components/ui/title";
+import { useApplicationUIStore } from "@/store/updateUIStore";
 
 export default function PendingApplication() {
   const [search, setSearch] = useState("");
@@ -42,6 +43,15 @@ export default function PendingApplication() {
     query: search,
     status: status,
   });
+  const { rejectedIds } = useApplicationUIStore();
+  const { approvedIds } = useApplicationUIStore();
+  const { ForInterviewIds } = useApplicationUIStore();
+  const filteredData = (search.trim().length > 0 ? searchData : data)?.filter(
+    (item) =>
+      !rejectedIds.includes(item.applicationId) &&
+      !approvedIds.includes(item.applicationId) &&
+      !ForInterviewIds.includes(item.applicationId)
+  );
   return (
     <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
@@ -53,7 +63,7 @@ export default function PendingApplication() {
 
         <div className="py-8">
           <DataTable<ApplicationFormData, unknown>
-            data={search.trim().length > 0 ? searchData : data}
+            data={filteredData}
             columns={columns}
             meta={search.trim().length > 0 ? searchMeta : meta}
             pagination={pagination}
