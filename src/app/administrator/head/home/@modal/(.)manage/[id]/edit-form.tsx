@@ -47,6 +47,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useModeStore } from "@/store/scholarshipModalStore";
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
   {
@@ -59,10 +60,8 @@ const options: Option[] = [
 ];
 export default function EditScholarship({
   data,
-  setSection,
 }: {
   data: scholarshipFormData;
-  setSection: (section: "details" | "redeploy" | "edit") => void;
 }) {
   const {
     open,
@@ -75,6 +74,7 @@ export default function EditScholarship({
     appendDocument,
     removeDocument,
   } = useUpdateScholarship(data);
+  const { setMode } = useModeStore();
   return (
     <div className=" bg-background rounded-t-lg">
       <div className="p-4  space-y-5">
@@ -622,7 +622,7 @@ export default function EditScholarship({
           />
 
           <Button
-            onClick={() => setSection("details")}
+            onClick={() => setMode("details")}
             className="flex-1"
             variant="outline"
           >

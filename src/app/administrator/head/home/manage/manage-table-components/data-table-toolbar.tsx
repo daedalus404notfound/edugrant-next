@@ -31,10 +31,7 @@ export default function DataTableToolbar<TData>({
   console.log(filter);
   const selectedRows = table.getSelectedRowModel().rows;
 
- 
-
   const [openAlert, setOpenAlert] = useState(false);
-
 
   return (
     <div className="flex items-center justify-between gap-1.5">

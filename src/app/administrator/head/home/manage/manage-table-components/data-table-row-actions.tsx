@@ -26,6 +26,7 @@ import { DeleteDialog } from "@/components/ui/delete-dialog";
 import { Separator } from "@/components/ui/separator";
 import { useAdminStore } from "@/store/adminUserStore";
 import useArchiveScholarship from "@/hooks/admin/postSetArchivedScholarship";
+import { useModeStore } from "@/store/scholarshipModalStore";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -37,7 +38,7 @@ export function DataTableRowActions<TData>({
   status,
 }: DataTableRowActionsProps<TData>) {
   const rowData = row.original as scholarshipFormData;
-
+  const { mode, setMode, resetMode } = useModeStore();
   const { admin } = useAdminStore();
   const { onSubmit, deleteLoading, openDelete, setOpenDelete } =
     useDeleteScholarship({
@@ -90,10 +91,11 @@ export function DataTableRowActions<TData>({
         ) : status === "EXPIRED" ? (
           <>
             <Link
-              href={`/administrator/head/home/manage/${rowData.scholarshipId}?section=redeploy`}
+              href={`/administrator/head/home/manage/${rowData.scholarshipId}`}
               scroll={false}
               prefetch
               className="w-full"
+              onClick={() => setMode("renewal")}
             >
               <Button
                 size="lg"
@@ -103,7 +105,7 @@ export function DataTableRowActions<TData>({
                 <RefreshCcw /> Renewal
               </Button>
             </Link>
-   
+
             <DeleteDialog
               open={openArchive}
               onOpenChange={setOpenArchive}

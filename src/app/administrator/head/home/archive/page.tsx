@@ -1,77 +1,39 @@
 "use client";
 import "ldrs/react/Ring.css";
-import useScholarshipData from "@/hooks/admin/getScholarship";
 import { Archive } from "lucide-react";
 import { useState } from "react";
-import { DataTable } from "@/app/table-components/data-table";
-import { columns } from "../manage/manage-table-components/columns";
-import {
-  ColumnFiltersState,
-  PaginationState,
-  SortingState,
-} from "@tanstack/react-table";
-import DataTableToolbar from "../manage/manage-table-components/data-table-toolbar";
-import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import TitleReusable from "@/components/ui/title";
 import { Tabs } from "@/components/ui/vercel-tabs";
-import { useApplicationUIStore } from "@/store/updateUIStore";
-const tabs = [
-  { id: "EXPIRED", label: "Expired", indicator: null },
-  { id: "ARCHIVED", label: "Archived", indicator: null },
-];
+import ManageExpiredScholarship from "./expired";
+import ManageArchivedScholarship from "./archive";
 
 export default function Manage() {
-  const [status, setStatus] = useState("EXPIRED");
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { data, meta, loading } = useScholarshipData({
-    page: pagination.pageIndex + 1,
-    pageSize: pagination.pageSize,
-    sortBy: sorting[0]?.id ?? "",
-    order: sorting[0]?.desc ? "desc" : "asc",
-    status: status,
-    filters:
-      columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
-  });
-  const { deletedScholarshipIds } = useApplicationUIStore();
-  const { archiveScholarshipIds } = useApplicationUIStore();
-  const filteredData = data.filter(
-    (item) =>
-      !deletedScholarshipIds.includes(item.scholarshipId) &&
-      !archiveScholarshipIds.includes(item.scholarshipId)
-  );
+  const [expired, setExpired] = useState(0);
+  const [archived, setArchived] = useState(0);
+  const [tab, setTabs] = useState("EXPIRED");
+
+  const tabs = [
+    { id: "EXPIRED", label: "Expired Scholarships", indicator: expired },
+    { id: "ARCHIVED", label: "Archived Scholarships", indicator: archived },
+  ];
 
   return (
     <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <TitleReusable
           title="Inactive Scholarships"
-          description="Explore archived and expired scholarships in one place."
+          description="Manage inactive scholarships here. Switch between expired and archived scholarships using the tabs below."
           Icon={Archive}
         />
 
         <div className="py-8 space-y-5">
-          <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
-          <DataTable<scholarshipFormData, unknown>
-            data={filteredData}
-            columns={columns(status)}
-            meta={meta}
-            pagination={pagination}
-            setPagination={setPagination}
-            getRowId={(row) => row.scholarshipId}
-            loading={loading}
-            status={status}
-            setStatus={setStatus}
-            sorting={sorting}
-            setSorting={setSorting}
-            columnFilters={columnFilters}
-            setColumnFilters={setColumnFilters}
-            toolbar={DataTableToolbar}
-          />
+          <Tabs tabs={tabs} onTabChange={(tabId) => setTabs(tabId)} />
+          {tab === "EXPIRED" && (
+            <ManageExpiredScholarship setExpired={setExpired} />
+          )}
+          {tab === "ARCHIVED" && (
+            <ManageArchivedScholarship setArchived={setArchived} />
+          )}
         </div>
       </div>
     </div>
