@@ -74,7 +74,7 @@ export default function RedeployScholarship({
     append,
     handleTriggerClick,
     remove,
-  } = useRedeployScholarship(data);
+  } = useRedeployScholarship();
   return (
     <div className=" bg-background rounded-t-lg">
       <div className="p-4  space-y-5">
@@ -96,376 +96,93 @@ export default function RedeployScholarship({
 
         <Form {...form}>
           <div className="space-y-5 mt-10">
-            <div className="grid grid-cols-3 gap-x-3 gap-y-8">
+            <div className="">
               <FormField
                 control={form.control}
-                name="type"
+                name="renewDeadline"
                 render={({ field }) => (
-                  <FormItem className="col-span-3">
-                    <FormLabel>Scholarship Type</FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        className="gap-3 flex"
-                      >
-                        {/* Radio card #1 */}
-                        <div className="border-input has-data-[state=checked]:border-primary/50 relative flex flex-1 items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
-                          <RadioGroupItem
-                            value="government"
-                            className="order-1 after:absolute after:inset-0"
+                  <FormItem className="flex flex-col">
+                    <FormLabel className="flex items-center justify-between">
+                      Deadline <FormMessage />
+                    </FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant={"outline"}
+                            className={cn(
+                              "w-full  text-left font-normal",
+                              !field.value && "text-muted-foreground"
+                            )}
+                          >
+                            {field.value ? (
+                              format(field.value, "MMM d, yyyy 'at' h:mm a")
+                            ) : (
+                              <span>Pick a date</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <div className="rounded-md border">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={(date) => {
+                              if (!date) return;
+
+                              const current = field.value ?? new Date();
+                              date.setHours(current.getHours());
+                              date.setMinutes(current.getMinutes());
+                              date.setSeconds(current.getSeconds());
+                              field.onChange(date);
+                            }}
+                            captionLayout="dropdown"
                           />
-                          <div className="flex grow items-center gap-3">
-                            <Landmark />
-                            <div className="grid grow gap-2">
-                              <Label>
-                                Government
-                                <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
-                                  (Sublabel)
-                                </span>
-                              </Label>
-                              <p className="text-muted-foreground text-xs">
-                                You can use this card with a label and a
-                                description.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Radio card #2 */}
-                        <div className="border-input has-data-[state=checked]:border-primary/50 relative flex flex-1 items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
-                          <RadioGroupItem
-                            value="private"
-                            className="order-1 after:absolute after:inset-0"
-                          />
-                          <div className="flex grow items-start gap-3">
-                            <Building2 />
-                            <div className="grid grow gap-2">
-                              <Label>
-                                Private
-                                <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
-                                  (Sublabel)
-                                </span>
-                              </Label>
-                              <p className="text-muted-foreground text-xs">
-                                You can use this card with a label and a
-                                description.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="col-span-2">
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex justify-between items-center">
-                        Scholarship Title <FormMessage />
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="">
-                <FormField
-                  control={form.control}
-                  name="Scholarship_Provider.name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex justify-between items-center">
-                        Provider Name <FormMessage />
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="">
-                <FormField
-                  control={form.control}
-                  name="deadline"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel className="flex items-center justify-between">
-                        Deadline <FormMessage />
-                      </FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant={"outline"}
-                              className={cn(
-                                "w-full  text-left font-normal",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value ? (
-                                format(field.value, "MMM d, yyyy 'at' h:mm a")
-                              ) : (
-                                <span>Pick a date</span>
-                              )}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <div className="rounded-md border">
-                            <Calendar
-                              mode="single"
-                              selected={field.value}
-                              onSelect={(date) => {
-                                if (!date) return;
-
-                                const current = field.value ?? new Date();
-                                date.setHours(current.getHours());
-                                date.setMinutes(current.getMinutes());
-                                date.setSeconds(current.getSeconds());
-                                field.onChange(date);
-                              }}
-                              captionLayout="dropdown"
-                            />
-                            <div className="border-t p-3">
-                              <div className="flex items-center gap-3">
-                                <Label className="text-xs">Enter time</Label>
-                                <div className="relative grow">
-                                  <Input
-                                    type="time"
-                                    step="1"
-                                    value={
-                                      field.value
-                                        ? `${String(
-                                            field.value.getHours()
-                                          ).padStart(2, "0")}:${String(
-                                            field.value.getMinutes()
-                                          ).padStart(2, "0")}:${String(
-                                            field.value.getSeconds()
-                                          ).padStart(2, "0")}`
-                                        : ""
-                                    }
-                                    onChange={(e) => {
-                                      const [hours, minutes, seconds] =
-                                        e.target.value.split(":").map(Number);
-                                      const updated = field.value ?? new Date();
-                                      updated.setHours(hours);
-                                      updated.setMinutes(minutes);
-                                      updated.setSeconds(seconds || 0);
-                                      field.onChange(updated);
-                                    }}
-                                    className="peer appearance-none ps-9 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-                                  />
-                                  <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-                                    <ClockIcon size={16} aria-hidden="true" />
-                                  </div>
+                          <div className="border-t p-3">
+                            <div className="flex items-center gap-3">
+                              <Label className="text-xs">Enter time</Label>
+                              <div className="relative grow">
+                                <Input
+                                  type="time"
+                                  step="1"
+                                  value={
+                                    field.value
+                                      ? `${String(
+                                          field.value.getHours()
+                                        ).padStart(2, "0")}:${String(
+                                          field.value.getMinutes()
+                                        ).padStart(2, "0")}:${String(
+                                          field.value.getSeconds()
+                                        ).padStart(2, "0")}`
+                                      : ""
+                                  }
+                                  onChange={(e) => {
+                                    const [hours, minutes, seconds] =
+                                      e.target.value.split(":").map(Number);
+                                    const updated = field.value ?? new Date();
+                                    updated.setHours(hours);
+                                    updated.setMinutes(minutes);
+                                    updated.setSeconds(seconds || 0);
+                                    field.onChange(updated);
+                                  }}
+                                  className="peer appearance-none ps-9 [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
+                                />
+                                <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+                                  <ClockIcon size={16} aria-hidden="true" />
                                 </div>
                               </div>
                             </div>
                           </div>
-                        </PopoverContent>
-                      </Popover>
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="col-span-2">
-                <FormField
-                  control={form.control}
-                  name="requiredGWA"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex justify-between items-center">
-                        Required GWA <FormMessage />
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="(Optional)" />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="col-span-2">
-                <FormField
-                  control={form.control}
-                  name="amount"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex justify-between items-center">
-                        Scholarship Amount <FormMessage />
-                      </FormLabel>
-                      <FormControl>
-                        <Input type="number" {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="">
-                <FormField
-                  control={form.control}
-                  name="limit"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex justify-between items-center">
-                        Scholarship Limit
-                        <FormMessage />
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="(Optional)"
-                          type="number"
-                          {...field}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="col-span-3">
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex justify-between items-center">
-                        Scholarship Description <FormMessage />
-                      </FormLabel>
-                      <FormControl>
-                        <Textarea {...field} />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="space-y-5 mt-10">
-            <div className="w-full flex gap-5">
-              {/* Backdrop Image */}
-              <div className="flex flex-col flex-1 gap-2">
-                <FormField
-                  control={form.control}
-                  name="cover"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex justify-between items-center">
-                        Details Cover
-                        <FormMessage />
-                      </FormLabel>
-                      <FormControl>
-                        <DragAndDropArea
-                          label="backdrop image"
-                          accept={["image/png", "image/jpeg", "image/jpg"]}
-                          onFilesChange={(files) => field.onChange(files[0])} // Single file
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              {/* Sponsor Logo Image */}
-              <div className="flex flex-col flex-1 gap-2">
-                <FormField
-                  control={form.control}
-                  name="logo"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex justify-between items-center">
-                        Sponsor Logo/Image <FormMessage />
-                      </FormLabel>
-                      <FormControl>
-                        <DragAndDropArea
-                          label="sponsor logo"
-                          accept={["image/png", "image/jpeg", "image/jpg"]}
-                          onFilesChange={(files) => field.onChange(files[0])} // Single file
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-            <div className="col-span-3">
-              <FormField
-                control={form.control}
-                name="form"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Scholarship Form <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <DragAndDropArea
-                        label="scholarship form"
-                        accept={["*/*"]}
-                        onFilesChange={(files) => field.onChange(files[0])} // Single file
-                      />
-                    </FormControl>
+                        </div>
+                      </PopoverContent>
+                    </Popover>
                   </FormItem>
                 )}
               />
             </div>
-            <FormField
-              control={form.control}
-              name="interview"
-              render={({ field }) => (
-                <FormItem className="border-input has-data-[state=checked]:border-primary/50 relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
-                  <FormControl>
-                    <Checkbox
-                      checked={field.value || false}
-                      onCheckedChange={(checked) =>
-                        field.onChange(checked === true)
-                      }
-                      className="order-1 after:absolute after:inset-0"
-                      aria-describedby="for-interview-description"
-                    />
-                  </FormControl>
 
-                  <div className="flex grow items-center gap-3">
-                    {/* SVG Icon */}
-                    <MessagesSquare />
-
-                    {/* Label + Description */}
-                    <div className="grid gap-2">
-                      <FormLabel>
-                        For Interview{" "}
-                        <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
-                          (Optional)
-                        </span>
-                      </FormLabel>
-                      <p
-                        id="for-interview-description"
-                        className="text-muted-foreground text-xs"
-                      >
-                        Check this if the approved application is selected for
-                        an interview.
-                      </p>
-                    </div>
-                  </div>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="space-y-5 mt-10">
             <h1>Phase 2 Required Documents</h1>
             <div className="w-full flex items-center justify-end ">
               <Button
@@ -495,7 +212,7 @@ export default function RedeployScholarship({
                   <div className="lg:col-span-1 col-span-3">
                     <FormField
                       control={form.control}
-                      name={`documents.renewDocuments.${index}.label`}
+                      name={`renewDocuments.${index}.label`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex justify-between items-center">
@@ -513,7 +230,7 @@ export default function RedeployScholarship({
                   <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
                     <FormField
                       control={form.control}
-                      name={`documents.renewDocuments.${index}.formats`}
+                      name={`renewDocuments.${index}.formats`}
                       render={({ field }) => (
                         <FormItem className="flex-1">
                           <FormLabel className="flex justify-between items-center">
@@ -550,7 +267,7 @@ export default function RedeployScholarship({
                     />
                     <FormField
                       control={form.control}
-                      name={`documents.renewDocuments.${index}.requirementType`}
+                      name={`renewDocuments.${index}.requirementType`}
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>

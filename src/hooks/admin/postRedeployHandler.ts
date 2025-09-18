@@ -8,45 +8,21 @@ interface ApiErrorResponse {
   error?: string;
   statusCode?: number;
 }
-import { useAdminStore } from "@/store/adminUserStore";
 import { scholarshipFormData } from "./zodUpdateScholarship";
-import { useRedeployScholarshipZod } from "@/hooks/admin/zodRedeploy";
+import {
+  renewDocumentsFormData,
+  useRedeployScholarshipZod,
+} from "./zodRedeploy";
 type ApiError = AxiosError<ApiErrorResponse>;
-const today = new Date().toISOString().split("T")[0];
-const addScholarshipApi = async (data: scholarshipFormData) => {
-  const { admin } = useAdminStore.getState();
-  const formDataToSend = new FormData();
-  if (data.scholarshipId) {
-    formDataToSend.append("scholarshipId", data.scholarshipId.toString());
-  }
-  formDataToSend.append("newScholarTitle", data.title);
-  formDataToSend.append("newScholarProvider", data.Scholarship_Provider.name);
-  if (data.requiredGWA) {
-    formDataToSend.append("gwa", data.requiredGWA);
-  }
-  if (admin?.accountId) {
-    formDataToSend.append("adminId", String(admin.accountId));
-  }
-  formDataToSend.append("newScholarDescription", data.description);
-  formDataToSend.append("applicationStartDate", today);
-  formDataToSend.append("newScholarDeadline", data.deadline.toISOString());
-  if (data.amount) {
-    formDataToSend.append("scholarshipAmount", data.amount);
-  }
-  if (data.limit) {
-    formDataToSend.append("scholarshipLimit", data.limit);
-  }
-  if (data.cover) {
-    formDataToSend.append("coverImg", data.cover);
-  }
-  if (data.logo) {
-    formDataToSend.append("sponsorLogo", data.logo);
-  }
 
-  formDataToSend.append("scholarshipDocuments", JSON.stringify(data.documents));
+const addScholarshipApi = async (data: renewDocumentsFormData) => {
+  const formDataToSend = new FormData();
+
+  formDataToSend.append("renewDeadline", data.renewDeadline.toISOString());
+  formDataToSend.append("renewDocuments", JSON.stringify(data.renewDocuments));
 
   const res = await axios.put(
-    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/updateScholarship`,
+    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/renewScholarship`,
     formDataToSend,
     {
       withCredentials: true,
@@ -85,13 +61,13 @@ export const useAddScholarship = () => {
   });
 };
 
-export const useRedeployScholarship = (data?: scholarshipFormData) => {
+export const useRedeployScholarship = () => {
   const { form, formData, fields, append, remove } =
-    useRedeployScholarshipZod(data);
+    useRedeployScholarshipZod();
   const addScholarship = useAddScholarship();
   const [open, setOpen] = useState(false);
 
-  const handleSubmit = async (data: scholarshipFormData) => {
+  const handleSubmit = async (data: renewDocumentsFormData) => {
     try {
       const result = await addScholarship.mutateAsync(data);
 
