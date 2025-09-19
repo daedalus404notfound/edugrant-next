@@ -29,7 +29,7 @@ const addScholarshipApi = async (data: renewDocumentsFormData) => {
   }
   formDataToSend.append("renewDocuments", JSON.stringify(data.renewDocuments));
 
-  const res = await axios.put(
+  const res = await axios.post(
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/renewScholarship`,
     formDataToSend,
     {
