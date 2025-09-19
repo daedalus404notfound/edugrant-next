@@ -15,25 +15,18 @@ import {
 type ApiError = AxiosError<ApiErrorResponse>;
 
 const addScholarshipApi = async (data: renewDocumentsFormData) => {
-
-  const formDataToSend = new FormData();
-
-  formDataToSend.append("renewDeadline", data.renewDeadline.toISOString());
-  if (data.scholarshipId) {
-    formDataToSend.append("scholarshipId", data.scholarshipId.toString());
-  }
-  if (data?.accountId) {
-    formDataToSend.append("accountId", data?.accountId.toString());
-  }
-  formDataToSend.append("renewDocuments", JSON.stringify(data.renewDocuments));
-
   const res = await axios.post(
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/renewScholarship`,
-    formDataToSend,
+    {
+      renewDeadline: data.renewDeadline.toISOString(),
+      scholarshipId: data.scholarshipId ?? null,
+      accountId: data.accountId ?? null,
+      renewDocuments: data.renewDocuments,
+    },
     {
       withCredentials: true,
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
       },
     }
   );
