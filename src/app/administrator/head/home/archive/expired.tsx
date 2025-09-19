@@ -12,6 +12,7 @@ import {
 import DataTableToolbar from "../manage/manage-table-components/data-table-toolbar";
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import { useApplicationUIStore } from "@/store/updateUIStore";
+import { useAdminStore } from "@/store/adminUserStore";
 
 export default function ManageExpiredScholarship({
   setExpired,
@@ -23,6 +24,7 @@ export default function ManageExpiredScholarship({
     pageIndex: 0,
     pageSize: 10,
   });
+  const { admin } = useAdminStore();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const { data, meta, loading } = useScholarshipData({
@@ -33,6 +35,7 @@ export default function ManageExpiredScholarship({
     status: status,
     filters:
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
+    accountId: admin?.accountId,
   });
   useEffect(() => {
     if (meta?.totalRows !== undefined) {

@@ -13,6 +13,7 @@ import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
 import DataTableToolbar from "./manage-table-components/data-table-toolbar";
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import { useApplicationUIStore } from "@/store/updateUIStore";
+import { useAdminStore } from "@/store/adminUserStore";
 export default function ManageActiveScholarship({
   setActive,
 }: {
@@ -20,7 +21,7 @@ export default function ManageActiveScholarship({
 }) {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("ACTIVE");
-
+  const { admin } = useAdminStore();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -35,6 +36,7 @@ export default function ManageActiveScholarship({
     filters:
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
     status: status,
+    accountId: admin?.accountId,
   });
   useEffect(() => {
     if (meta?.totalRows !== undefined) {

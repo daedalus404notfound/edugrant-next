@@ -11,6 +11,7 @@ export default function useScholarshipSearch({
   order,
   status,
   query,
+  accountId,
 }: {
   page: number;
   pageSize: number;
@@ -18,6 +19,7 @@ export default function useScholarshipSearch({
   order?: string;
   status: string;
   query: string;
+  accountId?: number;
 }) {
   const [searchData, setSearchData] = useState<scholarshipFormData[]>([]);
   const [searchMeta, setSearchMeta] = useState<MetaTypes>({
@@ -42,17 +44,19 @@ export default function useScholarshipSearch({
     setLoading(true);
     const delayDebounce = setTimeout(async () => {
       try {
-        const res = await axios.get(
-          `${
-            process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
-          }/searchScholarship?page=${page}&dataPerPage=${pageSize}${
-            sortBy ? `&sortBy=${sortBy}` : ""
-          }${order ? `&order=${order}` : ""}${
-            status ? `&status=${status}` : ""
-          }&search=${trimmedQuery}`,
+        const params = new URLSearchParams();
+        if (status) params.append("status", status);
+        if (page) params.append("page", page.toString());
+        if (pageSize) params.append("dataPerPage", pageSize.toString());
+        if (sortBy) params.append("sortBy", sortBy);
+        if (order) params.append("order", order);
+        if (accountId) params.append("accountId", accountId.toString());
+        const endpoint = `${
+          process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
+        }/getScholarship?${params.toString()}`;
+        console.log("Fetching:", endpoint);
 
-          { withCredentials: true }
-        );
+        const res = await axios.get(endpoint, { withCredentials: true });
 
         if (res.status === 200) {
           setSearchData(res.data.data);

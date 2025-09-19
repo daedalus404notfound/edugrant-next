@@ -12,6 +12,7 @@ export default function useRenewScholarshipData({
   order,
   status,
   filters,
+  accountId,
 }: {
   page?: number;
   pageSize?: number;
@@ -19,6 +20,7 @@ export default function useRenewScholarshipData({
   order?: string;
   status?: string;
   filters?: string;
+  accountId?: number;
 }) {
   const [data, setData] = useState<scholarshipFormData[]>([]);
   const [meta, setMeta] = useState<MetaTypes>({
@@ -46,6 +48,7 @@ export default function useRenewScholarshipData({
         if (sortBy) params.append("sortBy", sortBy);
         if (order) params.append("order", order);
         if (filters) params.append("filters", filters);
+        if (accountId) params.append("accountId", accountId.toString());
 
         const endpoint = `${
           process.env.NEXT_PUBLIC_ADMINISTRATOR_URL

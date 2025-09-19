@@ -13,6 +13,7 @@ import DataTableToolbar from "./manage-table-components/data-table-toolbar";
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import { useApplicationUIStore } from "@/store/updateUIStore";
 import useRenewScholarshipData from "@/hooks/admin/getRenewScholarship";
+import { useAdminStore } from "@/store/adminUserStore";
 export default function ManageRenewScholarship({
   setRenewal,
 }: {
@@ -20,7 +21,7 @@ export default function ManageRenewScholarship({
 }) {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("ACTIVE");
-
+  const { admin } = useAdminStore();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -49,6 +50,7 @@ export default function ManageRenewScholarship({
     order: sorting[0]?.desc ? "desc" : "asc",
     query: search,
     status: status,
+    accountId: admin?.accountId,
   });
   const { deletedScholarshipIds } = useApplicationUIStore();
   const filteredData = (search.trim().length > 0 ? searchData : data)?.filter(

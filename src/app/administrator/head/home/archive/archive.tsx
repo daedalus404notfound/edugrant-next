@@ -12,6 +12,7 @@ import {
 import DataTableToolbar from "../manage/manage-table-components/data-table-toolbar";
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import { useApplicationUIStore } from "@/store/updateUIStore";
+import { useAdminStore } from "@/store/adminUserStore";
 
 export default function ManageArchivedScholarship({
   setArchived,
@@ -19,6 +20,7 @@ export default function ManageArchivedScholarship({
   setArchived: (archived: number) => void;
 }) {
   const [status, setStatus] = useState("ARCHIVED");
+  const { admin } = useAdminStore();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -33,6 +35,7 @@ export default function ManageArchivedScholarship({
     status: status,
     filters:
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
+    accountId: admin?.accountId,
   });
   useEffect(() => {
     if (meta?.totalRows !== undefined) {
