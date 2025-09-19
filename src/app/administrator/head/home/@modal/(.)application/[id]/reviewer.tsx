@@ -19,7 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ZoomIn, ZoomOut, RotateCw, RefreshCw } from "lucide-react";
+import { ZoomIn, ZoomOut, RotateCw, RefreshCw, Loader } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import GlassFolder from "@/components/ui/folder";
 import { Textarea } from "@/components/ui/textarea";
@@ -48,6 +48,7 @@ export default function Reviewer({
   console.log(fileFormat);
   const [open, setOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [loading, setIsLoading] = useState(true);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
@@ -224,6 +225,11 @@ export default function Reviewer({
           </div>
         ) : (
           <div className="relative h-full w-full">
+            {loading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-20">
+                <Loader className="h-8 w-8 animate-spin text-white" />
+              </div>
+            )}
             <iframe
               ref={iframeRef}
               key={fileUrl}
@@ -237,17 +243,17 @@ export default function Reviewer({
                       fileUrl
                     )}&embedded=true`
               }
-            
               title={`Document preview: ${document}`}
+              onLoad={() => setIsLoading(false)}
             />
-            <Button
+            {/* <Button
               className="absolute top-4 right-4 z-10"
               variant="ghost"
               size="sm"
               onClick={() => setOpen(false)}
             >
               ✕
-            </Button>
+            </Button> */}
           </div>
         )}
       </DialogContent>

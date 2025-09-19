@@ -14,6 +14,8 @@ import { ToolbarProps } from "@/app/table-components/data-table";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import useScholarshipData from "@/hooks/admin/getScholarship";
 import { format } from "date-fns";
+import { TourTrigger } from "@/components/tour/tour-trigger";
+import { TourStep } from "@/components/tour/tour-step";
 export default function DataTableToolbar<TData>({
   table,
   getRowId,
@@ -37,29 +39,44 @@ export default function DataTableToolbar<TData>({
 
   const [openAlert, setOpenAlert] = useState(false);
 
-
-
   return (
     <div className="flex items-center justify-between gap-1.5">
       <div className="flex flex-1 items-center space-x-2">
-        <div className="relative">
-          <Input
-            placeholder="Filter scholarship..."
-            className="peer ps-9 pe-9 h-8 w-[150px] lg:w-[350px]"
-            onChange={(e) => setSearch?.(e.target.value)}
-          />
-          <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-            <SearchIcon size={16} />
+        <TourStep stepId="search">
+          <div className="relative">
+            <Input
+              placeholder="Filter scholarship..."
+              className="peer ps-9 pe-9 h-8 w-[150px] lg:w-[250px]"
+              onChange={(e) => setSearch?.(e.target.value)}
+            />
+            <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+              <SearchIcon size={16} />
+            </div>
+            <button
+              className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+              aria-label="Submit search"
+              type="submit"
+            >
+              <ArrowRightIcon size={16} aria-hidden="true" />
+            </button>
           </div>
-          <button
-            className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-            aria-label="Submit search"
-            type="submit"
-          >
-            <ArrowRightIcon size={16} aria-hidden="true" />
-          </button>
-        </div>
-
+        </TourStep>
+        <TourStep stepId="filters">
+          <div className="flex gap-2">
+            <DataTableFacetedFilter
+              disabled={!!search}
+              column={table.getColumn("title")}
+              title="Scholarship Title"
+              options={providerOption ?? []}
+            />
+            <DataTableFacetedFilter
+              disabled={!!search}
+              column={table.getColumn("Scholarship_Provider_name")}
+              title="Provider"
+              options={providerOption ?? []}
+            />
+          </div>
+        </TourStep>
         {isFiltered && (
           <Button
             variant="ghost"
@@ -71,10 +88,11 @@ export default function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-     
-  
-      <DataTableViewOptions table={table} />
-     
+      <TourTrigger />
+
+      <TourStep stepId="view">
+        <DataTableViewOptions table={table} />
+      </TourStep>
     </div>
   );
 }

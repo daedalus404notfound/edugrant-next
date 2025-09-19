@@ -1,76 +1,91 @@
 "use client";
-import "ldrs/react/Ring.css";
-import useScholarshipData from "@/hooks/admin/getScholarship";
-import { Activity } from "lucide-react";
-import { useState } from "react";
-import { DataTable } from "@/app/table-components/data-table";
-import { columns } from "./manage-table-components/columns";
-import {
-  ColumnFiltersState,
-  PaginationState,
-  SortingState,
-} from "@tanstack/react-table";
-import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
-import DataTableToolbar from "./manage-table-components/data-table-toolbar";
-import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
+import { GraduationCap } from "lucide-react";
+import { TourProvider } from "@/components/tour/tour-provider";
+import { TourStep } from "@/components/tour/tour-step";
+import { TourTrigger } from "@/components/tour/tour-trigger";
+import type { TourStep as TourStepType } from "@/lib/use-tour";
 import TitleReusable from "@/components/ui/title";
+import { Tabs } from "@/components/ui/vercel-tabs";
+import { useState } from "react";
+import ManageActiveScholarship from "./new";
+import ManageRenewScholarship from "./renewal";
 export default function Manage() {
-  const [search, setSearch] = useState("");
   const [status, setStatus] = useState("ACTIVE");
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { data, meta, loading } = useScholarshipData({
-    page: pagination.pageIndex + 1,
-    pageSize: pagination.pageSize,
-    sortBy: sorting[0]?.id ?? "",
-    order: sorting[0]?.desc ? "desc" : "asc",
-    filters:
-      columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
-    status: status,
-  });
+  const [active, setActive] = useState(0);
+  const [renewal, setRenewal] = useState(0);
+  const tabs = [
+    { id: "ACTIVE", label: "Active Scholarship", indicator: active },
+    { id: "RENEW", label: "Scholarship Renewals", indicator: renewal },
+  ];
+  const scholarshipTourSteps: TourStepType[] = [
+    {
+      id: "tabs",
+      title: "Active vs Renewals",
+      description:
+        "Switch between active scholarships and renewal applications using these tabs.",
+    },
+    {
+      id: "search",
+      title: "Search Scholarships",
+      description:
+        "Find scholarships quickly by typing their name in the search bar.",
+    },
+    {
+      id: "filters",
+      title: "Filter Options",
+      description:
+        "Apply filters to narrow down scholarships based on specific criteria.",
+    },
 
-  const { searchData, searchLoading, searchMeta } = useScholarshipSearch({
-    page: pagination.pageIndex + 1,
-    pageSize: pagination.pageSize,
-    sortBy: sorting[0]?.id ?? "",
-    order: sorting[0]?.desc ? "desc" : "asc",
-    query: search,
-    status: status,
-  });
-  console.log(columnFilters);
-  console.log(data);
+    {
+      id: "view",
+      title: "Table View Options",
+      description: "Show or hide table columns to customize your view.",
+    },
+
+    {
+      id: "table",
+      title: "Scholarship Table",
+      description:
+        "View all available scholarships in a table format. Click a row to see more details.",
+    },
+    {
+      id: "rowperpage",
+      title: "Table Row Per Page",
+      description:
+        "Navigate between multiple pages of scholarships using the pagination controls.",
+    },
+    {
+      id: "pagination",
+      title: "Table Pagination",
+      description:
+        "Navigate between multiple pages of scholarships using the pagination controls.",
+    },
+  ];
+
   return (
-    <div className="w-full">
-      <TitleReusable
-        title=" Actve Scholarships"
-        description="Browse the list of active scholarships."
-        Icon={Activity}
-      />
-
-      <div className="py-8">
-        <DataTable<scholarshipFormData, unknown>
-          data={search.trim().length > 0 ? searchData : data}
-          columns={columns(status)}
-          meta={search.trim().length > 0 ? searchMeta : meta}
-          pagination={pagination}
-          setPagination={setPagination}
-          getRowId={(row) => row.scholarshipId}
-          loading={search ? searchLoading : loading}
-          search={search}
-          setSearch={setSearch}
-          status={status}
-          setStatus={setStatus}
-          sorting={sorting}
-          setSorting={setSorting}
-          columnFilters={columnFilters}
-          setColumnFilters={setColumnFilters}
-          toolbar={DataTableToolbar}
+    <TourProvider steps={scholarshipTourSteps}>
+      <div className="w-full">
+        <TitleReusable
+          title="Scholarship Management"
+          description="View and manage scholarships. Switch between active scholarships and renewals using the tabs below."
+          Icon={GraduationCap}
         />
+
+        <div className="py-8 space-y-5">
+          <div className="flex">
+            <TourStep stepId="tabs">
+              <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
+            </TourStep>
+          </div>
+          {status === "ACTIVE" && (
+            <ManageActiveScholarship setActive={setActive} />
+          )}
+          {status === "RENEW" && (
+            <ManageRenewScholarship setRenewal={setRenewal} />
+          )}
+        </div>
       </div>
-    </div>
+    </TourProvider>
   );
 }
