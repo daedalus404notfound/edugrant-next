@@ -85,7 +85,7 @@ export const createFormSchema = (requiredDocuments: documentFormData[]) => {
   return z.object(schemaShape);
 };
 
-export default function UploadDocs({
+export default function UploadRenewDocs({
   data,
   setIsApply,
 }: {
@@ -104,7 +104,7 @@ export default function UploadDocs({
   const [openAlert, setOpenAlert] = useState(false);
 
   // Create form schema based on scholarship documents
-  const requiredDocuments = data.documents.documents || [];
+  const requiredDocuments = data.documents.renewDocuments || [];
   const allDocuments = Object.values(requiredDocuments);
 
   const requiredDocumentsCount = Object.values(requiredDocuments).filter(
@@ -159,7 +159,7 @@ export default function UploadDocs({
       });
 
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_USER_URL}/applyScholarship`,
+        `${process.env.NEXT_PUBLIC_USER_URL}/renewScholarship`,
         formData,
         {
           withCredentials: true,
@@ -204,6 +204,7 @@ export default function UploadDocs({
 
   return (
     <div className="min-h-screen bg-background flex flex-col rounded-t-lg">
+      RENEW
       <div className="flex-1 p-4 space-y-10">
         <Stepper defaultValue={1} className="items-start gap-4">
           {steps.map(({ step, title, description }) => (
