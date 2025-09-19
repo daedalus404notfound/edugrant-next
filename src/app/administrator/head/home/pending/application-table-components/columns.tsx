@@ -142,7 +142,7 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
               ? "bg-blue-500/10 text-blue-500"
               : row.getValue("status") === "APPROVED"
               ? "bg-green-500/10 text-green-500"
-              : ""
+              : "bg-gray-500/10 text-gray-400"
           }
         >
           <Clock />

@@ -2,86 +2,101 @@
 import "ldrs/react/Ring.css";
 import { UserRoundMinus } from "lucide-react";
 import { useState } from "react";
-import { DataTable } from "@/app/table-components/data-table";
-import { columns } from "../pending/application-table-components/columns";
-import {
-  ColumnFiltersState,
-  PaginationState,
-  SortingState,
-} from "@tanstack/react-table";
-import DataTableToolbar from "../pending/application-table-components/data-table-toolbar";
-import { ApplicationFormData } from "@/hooks/zod/application";
-import useApplicantsSearch from "@/hooks/admin/getApplicantSearch";
-import useFetchApplications from "@/hooks/admin/getApplicant";
+import { TourProvider } from "@/components/tour/tour-provider";
+import { TourStep } from "@/components/tour/tour-step";
+import type { TourStep as TourStepType } from "@/lib/use-tour";
 import TitleReusable from "@/components/ui/title";
-import { useApplicationUIStore } from "@/store/updateUIStore";
+import { Tabs } from "@/components/ui/vercel-tabs";
+import ApprovedApplication from "./rejected";
+import ApprovedRenewApplication from "./renew-rejected";
 
-export default function PendingApplication() {
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("DECLINED");
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { data, meta, loading } = useFetchApplications({
-    page: pagination.pageIndex + 1,
-    pageSize: pagination.pageSize,
-    sortBy: sorting[0]?.id ?? "",
-    order: sorting[0]?.desc ? "desc" : "asc",
-    filters:
-      columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
-    status: status,
-  });
-
-  const { searchData, searchLoading, searchMeta } = useApplicantsSearch({
-    page: pagination.pageIndex + 1,
-    pageSize: pagination.pageSize,
-    sortBy: sorting[0]?.id ?? "",
-    order: sorting[0]?.desc ? "desc" : "asc",
-    query: search,
-    status: status,
-  });
-  const { rejectedIds } = useApplicationUIStore();
-  const { approvedIds } = useApplicationUIStore();
-  const { ForInterviewIds } = useApplicationUIStore();
-  const filteredData = (search.trim().length > 0 ? searchData : data)?.filter(
-    (item) =>
-      !rejectedIds.includes(item.applicationId) &&
-      !approvedIds.includes(item.applicationId) &&
-      !ForInterviewIds.includes(item.applicationId)
-  );
+export default function RejectedApplication() {
+  const [status, setStatus] = useState("REJECTED");
+  const [rejected, setRejected] = useState(0);
+  const [rejectedRenewal, setRenewRejected] = useState(0);
+  const tabs = [
+    { id: "REJECTED", label: "Rejected Application", indicator: rejected },
+    {
+      id: "RENEWREJECTED",
+      label: "Rejected Renewals",
+      indicator: rejectedRenewal,
+    },
+  ];
+  const applicationTourSteps: TourStepType[] = [
+    {
+      id: "tabs",
+      title: "Expired vs Archived",
+      description:
+        "Switch between active scholarships and renewal applications using these tabs.",
+    },
+    {
+      id: "search",
+      title: "Search Scholarships",
+      description:
+        "Find scholarships quickly by typing their name in the search bar.",
+    },
+    {
+      id: "filters",
+      title: "Filter Options",
+      description:
+        "Apply filters to narrow down scholarships based on specific criteria.",
+    },
+    {
+      id: "export",
+      title: "Export CSV",
+      description:
+        "Download the list of scholarships as a CSV file for easy access.",
+    },
+    {
+      id: "view",
+      title: "Table View Options",
+      description: "Show or hide table columns to customize your view.",
+    },
+    {
+      id: "add",
+      title: "Add Scholarship Shortcut",
+      description: "Quickly add a new scholarship using this shortcut button.",
+    },
+    {
+      id: "table",
+      title: "Scholarship Table",
+      description:
+        "View all available scholarships in a table format. Click a row to see more details.",
+    },
+    {
+      id: "rowperpage",
+      title: "Table Row Per Page",
+      description:
+        "Navigate between multiple pages of scholarships using the pagination controls.",
+    },
+    {
+      id: "pagination",
+      title: "Table Pagination",
+      description:
+        "Navigate between multiple pages of scholarships using the pagination controls.",
+    },
+  ];
   return (
-    <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
-        <TitleReusable
-          title="Rejected Applications"
-          description="Applications that have been reviewed and not approved."
-          Icon={UserRoundMinus}
-        />
-
-        <div className="py-8">
-          <DataTable<ApplicationFormData, unknown>
-            data={filteredData}
-            columns={columns}
-            meta={search.trim().length > 0 ? searchMeta : meta}
-            pagination={pagination}
-            setPagination={setPagination}
-            getRowId={(row) => row.scholarshipId}
-            loading={search ? searchLoading : loading}
-            search={search}
-            setSearch={setSearch}
-            status={status}
-            setStatus={setStatus}
-            sorting={sorting}
-            setSorting={setSorting}
-            columnFilters={columnFilters}
-            setColumnFilters={setColumnFilters}
-            toolbar={DataTableToolbar}
+    <TourProvider steps={applicationTourSteps}>
+      <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+        <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
+          <TitleReusable
+            title="Rejected Applications"
+            description="View and manage applications and renewals that were not approved."
+            Icon={UserRoundMinus}
           />
+
+          <div className="py-8 space-y-5">
+            <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
+            {status === "REJECTED" && (
+              <ApprovedApplication setRejected={setRejected} />
+            )}
+            {status === "RENEWREJECTED" && (
+              <ApprovedRenewApplication setRenewRejected={setRenewRejected} />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </TourProvider>
   );
 }

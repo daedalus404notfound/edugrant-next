@@ -11,7 +11,7 @@ import {
   ColumnFiltersState,
   Table as TanstackTable,
 } from "@tanstack/react-table";
-
+import { TourStep } from "@/components/tour/tour-step";
 import {
   Table,
   TableBody,
@@ -95,90 +95,91 @@ export function DataTable<TData, TValue>({
           setSearch={setSearch}
         />
       )}
-
-      <div className="overflow-hidden rounded-md border">
-        <Table>
-          <TableHeader
-            className={` ${
-              status === "ACTIVE"
-                ? "dark:bg-green-900 bg-green-100"
-                : status === "ARCHIVED"
-                ? "dark:bg-gray-900 bg-gray-100"
-                : status === "PENDING"
-                ? "dark:bg-yellow-900 bg-yellow-100"
-                : status === "DECLINED"
-                ? "dark:bg-red-900 bg-red-100"
-                : status === "APPROVED"
-                ? "dark:bg-green-900 bg-green-100"
-                : status === "INTERVIEW"
-                ? "dark:bg-blue-900 bg-blue-100"
-                : status === "REVIEWED"
-                ? "dark:bg-blue-900 bg-blue-100"
-                : status === "EXPIRED"
-                ? "dark:bg-red-900 bg-orange-100"
-                : "bg-card"
-            }`}
-          >
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className=" text-center space-y-2"
-                >
-                  <Skeleton className="h-10 w-full" />
-                  <Skeleton className="h-10 w-full" />
-                  <Skeleton className="h-10 w-full" />
-                  <Skeleton className="h-10 w-full" />
-                  <Skeleton className="h-10 w-full" />
-                </TableCell>
-              </TableRow>
-            ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
+      <TourStep stepId="table">
+        <div className="overflow-hidden rounded-md border">
+          <Table>
+            <TableHeader
+              className={` ${
+                status === "ACTIVE"
+                  ? "dark:bg-green-900 bg-green-100"
+                  : status === "ARCHIVED"
+                  ? "dark:bg-gray-900 bg-gray-100"
+                  : status === "PENDING"
+                  ? "dark:bg-yellow-900 bg-yellow-100"
+                  : status === "DECLINED"
+                  ? "dark:bg-red-900 bg-red-100"
+                  : status === "APPROVED"
+                  ? "dark:bg-green-900 bg-green-100"
+                  : status === "INTERVIEW"
+                  ? "dark:bg-blue-900 bg-blue-100"
+                  : status === "REVIEWED"
+                  ? "dark:bg-blue-900 bg-blue-100"
+                  : status === "EXPIRED"
+                  ? "dark:bg-red-900 bg-orange-100"
+                  : "bg-card"
+              }`}
+            >
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    );
+                  })}
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className=" text-center space-y-2"
+                  >
+                    <Skeleton className="h-10 w-full" />
+                    <Skeleton className="h-10 w-full" />
+                    <Skeleton className="h-10 w-full" />
+                    <Skeleton className="h-10 w-full" />
+                    <Skeleton className="h-10 w-full" />
+                  </TableCell>
+                </TableRow>
+              ) : table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center"
+                  >
+                    No results.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </TourStep>
       <DataTablePagination
         table={table}
         totalPage={meta.totalPage}

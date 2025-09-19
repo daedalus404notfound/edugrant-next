@@ -10,7 +10,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { CircleCheck } from "lucide-react";
 export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
-
   {
     accessorKey: "title",
     header: ({ column }) => (
