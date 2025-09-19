@@ -19,8 +19,8 @@ const addScholarshipApi = async (data: renewDocumentsFormData) => {
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/renewScholarship`,
     {
       renewDeadline: data.renewDeadline.toISOString(),
-      scholarshipId: data.scholarshipId,
-      accountId: data.accountId,
+      scholarshipId: data.accountId,
+      accountId: data.scholarshipId,
       renewDocuments: JSON.stringify(data.renewDocuments),
     },
     {
