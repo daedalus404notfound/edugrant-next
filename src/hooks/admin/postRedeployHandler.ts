@@ -13,12 +13,20 @@ import {
   renewDocumentsFormData,
   useRedeployScholarshipZod,
 } from "./zodRedeploy";
+import { useAdminStore } from "@/store/adminUserStore";
 type ApiError = AxiosError<ApiErrorResponse>;
 
 const addScholarshipApi = async (data: renewDocumentsFormData) => {
+  const { admin } = useAdminStore();
   const formDataToSend = new FormData();
 
   formDataToSend.append("renewDeadline", data.renewDeadline.toISOString());
+  if (data.scholarshipId) {
+    formDataToSend.append("scholarshipId", data.scholarshipId.toString());
+  }
+  if (admin?.accountId) {
+    formDataToSend.append("accountId", admin?.accountId.toString());
+  }
   formDataToSend.append("renewDocuments", JSON.stringify(data.renewDocuments));
 
   const res = await axios.put(
@@ -61,9 +69,17 @@ export const useAddScholarship = () => {
   });
 };
 
-export const useRedeployScholarship = () => {
-  const { form, formData, fields, append, remove } =
-    useRedeployScholarshipZod();
+export const useRedeployScholarship = ({
+  scholarshipId,
+  accountId,
+}: {
+  scholarshipId: number;
+  accountId?: number;
+}) => {
+  const { form, formData, fields, append, remove } = useRedeployScholarshipZod({
+    scholarshipId,
+    accountId,
+  });
   const addScholarship = useAddScholarship();
   const [open, setOpen] = useState(false);
 

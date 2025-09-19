@@ -60,6 +60,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Link from "next/link";
+import { useAdminStore } from "@/store/adminUserStore";
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
   {
@@ -75,6 +76,7 @@ export default function RedeployScholarship({
 }: {
   data: scholarshipFormData;
 }) {
+  const { admin } = useAdminStore();
   const {
     open,
     setOpen,
@@ -85,7 +87,10 @@ export default function RedeployScholarship({
     append,
     handleTriggerClick,
     remove,
-  } = useRedeployScholarship();
+  } = useRedeployScholarship({
+    scholarshipId: data.scholarshipId,
+    accountId: admin?.accountId,
+  });
   const { setMode } = useModeStore();
   return (
     <div className="relative bg-background rounded-t-lg">
