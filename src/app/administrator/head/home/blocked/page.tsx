@@ -47,12 +47,6 @@ export default function PendingApplication() {
   });
   const applicationTourSteps: TourStepType[] = [
     {
-      id: "tabs",
-      title: "Expired vs Archived",
-      description:
-        "Switch between active scholarships and renewal applications using these tabs.",
-    },
-    {
       id: "search",
       title: "Search Scholarships",
       description:
@@ -75,11 +69,7 @@ export default function PendingApplication() {
       title: "Table View Options",
       description: "Show or hide table columns to customize your view.",
     },
-    {
-      id: "add",
-      title: "Add Scholarship Shortcut",
-      description: "Quickly add a new scholarship using this shortcut button.",
-    },
+
     {
       id: "table",
       title: "Scholarship Table",

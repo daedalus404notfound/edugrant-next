@@ -73,8 +73,8 @@ export default function StaffHeader() {
             </div>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline">
-              <UserRound /> Jerome Tecson <ChevronDown />
+            <Button variant="ghost">
+              <UserRound /> Jerome Tecson
             </Button>
             <ModeToggle />
 

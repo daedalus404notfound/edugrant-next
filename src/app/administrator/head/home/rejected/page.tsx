@@ -52,11 +52,7 @@ export default function RejectedApplication() {
       title: "Table View Options",
       description: "Show or hide table columns to customize your view.",
     },
-    {
-      id: "add",
-      title: "Add Scholarship Shortcut",
-      description: "Quickly add a new scholarship using this shortcut button.",
-    },
+  
     {
       id: "table",
       title: "Scholarship Table",
@@ -87,7 +83,11 @@ export default function RejectedApplication() {
           />
 
           <div className="py-8 space-y-5">
-            <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
+            <div className="flex">
+              <TourStep stepId="tabs">
+                <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
+              </TourStep>
+            </div>
             {status === "REJECTED" && (
               <ApprovedApplication setRejected={setRejected} />
             )}

@@ -20,6 +20,8 @@ import { ToolbarProps } from "@/app/table-components/data-table";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import useFetchApplications from "@/hooks/admin/getApplicant";
 import ExportCsvScholarship from "./export";
+import { TourTrigger } from "@/components/tour/tour-trigger";
+import { TourStep } from "@/components/tour/tour-step";
 
 export default function DataTableToolbar<
   TData extends { applicationId: number }
@@ -75,49 +77,55 @@ export default function DataTableToolbar<
   return (
     <div className="flex items-center justify-between gap-1.5">
       <div className="flex flex-1 items-center space-x-2">
-        <div className="relative">
-          <Input
-            placeholder="Filter scholarship..."
-            className="peer ps-9 pe-9 h-8 w-[150px] lg:w-[250px]"
-            onChange={(e) => setSearch?.(e.target.value)}
-          />
-          <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
-            <SearchIcon size={16} />
+        <TourStep stepId="search">
+          <div className="relative">
+            <Input
+              placeholder="Filter scholarship..."
+              className="peer ps-9 pe-9 h-8 w-[150px] lg:w-[250px]"
+              onChange={(e) => setSearch?.(e.target.value)}
+            />
+            <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 peer-disabled:opacity-50">
+              <SearchIcon size={16} />
+            </div>
+            <button
+              className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
+              aria-label="Submit search"
+              type="submit"
+            >
+              <ArrowRightIcon size={16} aria-hidden="true" />
+            </button>
           </div>
-          <button
-            className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md transition-[color,box-shadow] outline-none focus:z-10 focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-            aria-label="Submit search"
-            type="submit"
-          >
-            <ArrowRightIcon size={16} aria-hidden="true" />
-          </button>
-        </div>
-        <DataTableFacetedFilter
-          disabled={!!search}
-          column={table.getColumn("Scholarship")}
-          title="Scholarship"
-          options={scholarships ?? []}
-        />
-        {/* <DataTableFacetedFilter
+        </TourStep>
+
+        <TourStep stepId="filters">
+          <div className="space-x-1">
+            <DataTableFacetedFilter
+              disabled={!!search}
+              column={table.getColumn("Scholarship")}
+              title="Scholarship"
+              options={scholarships ?? []}
+            />
+            {/* <DataTableFacetedFilter
           disabled={!!search}
           column={table.getColumn("Institute")}
           title="Institute"
           options={institute ?? []}
         /> */}
-        <DataTableFacetedFilter
-          disabled={!!search}
-          column={table.getColumn("Course")}
-          title="Course"
-          options={course ?? []}
-        />
+            <DataTableFacetedFilter
+              disabled={!!search}
+              column={table.getColumn("Course")}
+              title="Course"
+              options={course ?? []}
+            />
 
-        <DataTableFacetedFilter
-          disabled={!!search}
-          column={table.getColumn("Year")}
-          title="Year"
-          options={year ?? []}
-        />
-
+            <DataTableFacetedFilter
+              disabled={!!search}
+              column={table.getColumn("Year")}
+              title="Year"
+              options={year ?? []}
+            />
+          </div>
+        </TourStep>
         {isFiltered && (
           <Button
             variant="ghost"
@@ -147,9 +155,14 @@ export default function DataTableToolbar<
           }
         />
       )}
-      <ExportCsvScholarship status={status} />
+      <TourStep stepId="export">
+        <ExportCsvScholarship status={status} />
+      </TourStep>
+      <TourStep stepId="view">
+        <DataTableViewOptions table={table} />
+      </TourStep>
 
-      <DataTableViewOptions table={table} />
+      <TourTrigger />
     </div>
   );
 }
