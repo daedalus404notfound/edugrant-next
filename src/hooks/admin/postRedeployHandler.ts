@@ -8,24 +8,22 @@ interface ApiErrorResponse {
   error?: string;
   statusCode?: number;
 }
-import { scholarshipFormData } from "./zodUpdateScholarship";
 import {
   renewDocumentsFormData,
   useRedeployScholarshipZod,
 } from "./zodRedeploy";
-import { useAdminStore } from "@/store/adminUserStore";
 type ApiError = AxiosError<ApiErrorResponse>;
 
 const addScholarshipApi = async (data: renewDocumentsFormData) => {
-  const { admin } = useAdminStore();
+
   const formDataToSend = new FormData();
 
   formDataToSend.append("renewDeadline", data.renewDeadline.toISOString());
   if (data.scholarshipId) {
     formDataToSend.append("scholarshipId", data.scholarshipId.toString());
   }
-  if (admin?.accountId) {
-    formDataToSend.append("accountId", admin?.accountId.toString());
+  if (data?.accountId) {
+    formDataToSend.append("accountId", data?.accountId.toString());
   }
   formDataToSend.append("renewDocuments", JSON.stringify(data.renewDocuments));
 
