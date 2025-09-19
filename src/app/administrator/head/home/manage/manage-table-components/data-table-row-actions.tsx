@@ -79,10 +79,11 @@ export function DataTableRowActions<TData>({
         <Separator />
         {status === "ACTIVE" ? (
           <Link
-            href={`/administrator/head/home/manage/${rowData.scholarshipId}?section=edit`}
+            href={`/administrator/head/home/manage/${rowData.scholarshipId}`}
             scroll={false}
             prefetch
             className="w-full"
+            onClick={() => setMode("edit")}
           >
             <Button size="lg" className="justify-start w-full" variant="ghost">
               <PencilLine /> Edit
