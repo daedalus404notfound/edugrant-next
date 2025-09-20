@@ -162,10 +162,11 @@ export default function ClientScholarship() {
                         </Badge>
                         <span>
                           Submitted{" "}
-                          {format(
-                            meow.Application_Decision.dateCreated,
-                            "MM/dd/yy"
-                          )}
+                          {meow.Application_Decision.dateCreated &&
+                            format(
+                              meow.Application_Decision.dateCreated,
+                              "MM/dd/yy"
+                            )}
                         </span>
                       </div>
                     </div>
