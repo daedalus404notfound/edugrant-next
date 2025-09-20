@@ -58,6 +58,7 @@ import {
   Edit,
   Eye,
   GraduationCap,
+  Inbox,
   Info,
   Link,
   Maximize,
@@ -102,8 +103,10 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Doc } from "zod/v4/core";
 import { useUserStore } from "@/store/useUserStore";
+import { Tabs } from "@/components/ui/vercel-tabs";
 
 export default function InterceptManageApplicationClient() {
+  const [activeSection, setActiveSection] = useState("documents");
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(true);
@@ -124,40 +127,11 @@ export default function InterceptManageApplicationClient() {
     applicationId: id,
     userId: userId?.toString(),
   });
-  // const items = [
-  //   {
-  //     id: 1,
-  //     date: data[0]?.,
-  //     title: "Submitted",
-  //     description:
-  //       "Your scholarship application has been successfully submitted.",
-  //   },
-  //   {
-  //     id: 2,
-  //     date: data[0]?.applicationDate,
-  //     title: "Pending",
-  //     description: "Your document is awaiting verification.",
-  //   },
-  //   {
-  //     id: 3,
-  //     date: data[0]?.applicationResponseDate,
-  //     title: "Under Review",
-  //     description: "Your application is currently under review by the OSAS.",
-  //   },
-  //   {
-  //     id: 4,
-  //     date: data[0]?.applicationResponseDate,
-  //     title: "Final Decision",
-  //     description:
-  //       data[0]?.status === "APPROVED"
-  //         ? "✅ Congratulations! Your scholarship application has been approved."
-  //         : data[0]?.status === "DECLINED"
-  //         ? "❌ Unfortunately, your scholarship application was declined."
-  //         : data[0]?.status === "BLOCKED"
-  //         ? "⚠️ Your scholarship application was blocked because you already have an approved government scholarship."
-  //         : "A final decision has been made regarding your scholarship application.",
-  //   },
-  // ];
+  const navigationTabs = [
+    { id: "documents", label: "Documents", indicator: null },
+
+    { id: "scholarship", label: "Scholarship Details", indicator: null },
+  ];
 
   console.log(data[0]);
   return (
@@ -167,7 +141,7 @@ export default function InterceptManageApplicationClient() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="lg:w-[56%] w-[98%] mx-auto lg:h-[95dvh] h-[90dvh] outline-0 border-0 lg:p-1">
+      <DrawerContent className="lg:w-[56%] w-[98%] mx-auto max-lg:h-[95dvh] max-h-[90dvh] outline-0 border-0 lg:p-1">
         <DrawerHeader className="p-0">
           <div className="sr-only">
             <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
@@ -240,429 +214,338 @@ export default function InterceptManageApplicationClient() {
           <>loading</>
         ) : (
           <div className="flex-1 flex flex-col bg-background overflow-auto ">
-            <div className="flex-1 space-y-1 ">
-              <div className="relative flex justify-center items-center ">
-                <div className="absolute inset-0border-b-2 border-black bg-card" />
-                <div className="absolute left-2 -bottom-15 z-10 lg:px-8  px-2 flex  items-center ">
-                  <Avatar className="lg:size-25 size-20 border-background border-2 shadow-md">
-                    <AvatarImage
-                      className="object-cover"
-                      src={data[0]?.Scholarship.logo}
-                    />
-                    <AvatarFallback>
-                      {data[0]?.Scholarship.Scholarship_Provider?.name && data[0]?.Scholarship.Scholarship_Provider?.name.slice(0, 2)}
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-                {data[0]?.Scholarship.cover && (
-                  <img
-                    className="w-full lg:aspect-[16/4] aspect-[16/9]  object-cover   rounded-lg shadow-md"
-                    src={data[0].Scholarship.cover}
-                    alt=""
-                  />
-                )}
-
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="absolute z-5  !bg-black/60 !text-gray-200"
-                      size="sm"
-                    >
-                      View <Maximize />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="lg:w-3/4 w-full p-4">
-                    <img
-                      className="h-full w-full"
-                      src={data[0]?.Scholarship.cover}
-                      alt=""
-                    />
-                    <Link
-                      className="w-full"
-                      href={
-                        (data[0]?.Scholarship.cover &&
-                          data[0]?.Scholarship.cover) ||
-                        ""
-                      }
-                      target="_blank"
-                    >
-                      <Button variant="secondary" className="w-full">
-                        <Download />
-                        Download
-                      </Button>
-                    </Link>
-                  </DialogContent>
-                </Dialog>
-              </div>
-
-              <div className="lg:p-4 p-2 mt-15">
-                <div className="lg:space-y-1">
-                  <motion.span
-                    className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-                                                 flex items-center gap-1.5 lg:text-2xl text-xl font-semibold tracking-tight
-                                                "
-                    initial={{ backgroundPosition: "200% 0" }}
-                    animate={{ backgroundPosition: "-200% 0" }}
-                    transition={{
-                      repeat: Infinity,
-                      repeatType: "loop",
-                      duration: 7,
-                      ease: "linear",
-                    }}
-                  >
-                    {data[0]?.Scholarship.title}
-                  </motion.span>
-                  <p className="text-muted-foreground text-sm">
-                    by {data[0]?.Scholarship.Scholarship_Provider?.name && data[0]?.Scholarship.Scholarship_Provider?.name}
-                  </p>
-                </div>
-                <Accordion type="single" collapsible defaultValue="item-1">
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger className="text-base">
-                      Submitted Documents
-                    </AccordionTrigger>
-                    <AccordionContent>
-                      <div className="flex justify-between items-center py-4">
-                        <div className="flex items-center gap-5 ">
-                          <p>
-                            <span className="text-sm text-muted-foreground">
-                              Required
-                            </span>{" "}
-                            &nbsp;
-                            <span className="text-lg font-medium font-mono">
-                              {data[0]?.Scholarship.documents.documents &&
-                                Object.entries(
-                                  data[0]?.Scholarship.documents.documents
-                                ).filter(
-                                  ([_, doc]) =>
-                                    doc?.requirementType === "required"
-                                ).length}
-                            </span>
-                          </p>
-                          <span className="text-primary/50">|</span>
-                          <p>
-                            <span className="text-sm text-muted-foreground">
-                              Optional
-                            </span>{" "}
-                            &nbsp;
-                            <span className="text-lg font-medium font-mono">
-                              {data[0]?.Scholarship.documents.documents &&
-                                Object.entries(
-                                  data[0]?.Scholarship.documents.documents
-                                ).filter(
-                                  ([key, doc]) =>
-                                    doc?.requirementType === "optional"
-                                ).length}
-                            </span>
-                          </p>
-                        </div>
-                        {/* <div className="lg:hidden">
-                        {data[0]?.scholarship.scholarshipDocuments &&
+            <div className="p-4">
+              <TitleReusable
+                title={data[0]?.Scholarship.title}
+                description={
+                  data[0]?.Scholarship.Scholarship_Provider?.name
+                    ? data[0]?.Scholarship.Scholarship_Provider?.name
+                    : ""
+                }
+              />
+            </div>
+            <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+            <div className="p-4  bg-card/70 backdrop-blur-sm sticky top-0">
+              <Tabs
+                tabs={navigationTabs}
+                onTabChange={(tabId) => setActiveSection(tabId)}
+              />
+            </div>
+            <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+            {activeSection === "documents" && (
+              <div className="flex-1 space-y-1 p-4">
+                <div className="flex justify-between items-center py-4">
+                  <div className="flex items-center gap-5 ">
+                    <p>
+                      <span className="text-sm text-muted-foreground">
+                        Required
+                      </span>{" "}
+                      &nbsp;
+                      <span className="text-lg font-medium font-mono">
+                        {data[0]?.Scholarship.documents.documents &&
                           Object.entries(
-                            data[0]?.scholarship.scholarshipDocuments
-                          ).map(([_, doc]) => doc?.requirementType).length}{" "}
-                        /
-                        {data[0]?.userDocuments &&
-                          Object.entries(data[0]?.userDocuments).map(
-                            ([_, doc]) => doc?.requirementType
+                            data[0]?.Scholarship.documents.documents
+                          ).filter(
+                            ([_, doc]) => doc?.requirementType === "required"
                           ).length}
-                      </div> */}
-                      </div>
-                      <div className="grid  lg:grid-cols-1 grid-cols-1 divide-y">
-                        {data?.[0]?.submittedDocuments.documents &&
-                          Object.entries(data[0].submittedDocuments.documents).map(
-                            ([key, doc]) => (
-                              <div
-                                key={key}
-                                className="lg:py-10 py-8 space-y-2"
-                              >
-                                <div className="flex lg:gap-5 gap-3">
-                                  <ApplicationViewer
-                                    fileFormat={mimeToLabelMap[doc.fileFormat]}
-                                    resourceType={doc.resourceType}
-                                    fileUrl={doc.fileUrl}
-                                    document={doc.document}
-                                    supabasePath={doc.supabasePath}
-                                    requirementType={doc.requirementType}
-                                  />
-                                  <div className="flex-1 flex flex-col lg:justify-end justify-between gap-5 relative">
-                                    <DropdownMenu>
-                                      <DropdownMenuTrigger className="absolute top-0 right-0">
-                                        <MoreVertical size={20} />
-                                      </DropdownMenuTrigger>
-                                      <DropdownMenuContent align="end">
-                                        <DropdownMenuLabel className="line-clamp-1">
-                                          {doc.document}
-                                        </DropdownMenuLabel>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuItem>
-                                          <Eye />
-                                          View
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                          onClick={() => setOpenDialog(true)}
-                                          disabled={
-                                            doc.rejectMessage?.status ===
-                                              "APPROVED" ||
-                                            doc.rejectMessage?.status ===
-                                              "REJECTED"
-                                          }
-                                        >
-                                          <Edit />
-                                          Change
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem>
-                                          <TableOfContents />
-                                          Details
-                                        </DropdownMenuItem>
-                                      </DropdownMenuContent>
-                                    </DropdownMenu>
-                                    <div>
-                                      {!isMobile && (
-                                        <div className="flex gap-3 capitalize">
-                                          <p className="font-medium lg:text-base text-sm">
-                                            {key}
-                                          </p>
-                                          <Badge
-                                            variant="outline"
-                                            className="hidden lg:block"
-                                          >
-                                            {doc.requirementType}
-                                          </Badge>
-                                        </div>
-                                      )}
-                                      <p className="uppercase lg:text-sm text-xs text-muted-foreground lg:mt-1">
-                                        {doc.fileFormat}
-                                      </p>
-                                    </div>
-
-                                    {doc.rejectMessage?.status === "REJECTED" &&
-                                      !isMobile && (
-                                        <div className="rounded-md px-4 py-3 bg-card">
-                                          <p className="text-sm line-clamp-1">
-                                            <TriangleAlert
-                                              className="me-3 -mt-0.5 inline-flex text-red-500"
-                                              size={16}
-                                              aria-hidden="true"
-                                            />
-                                            {doc.rejectMessage?.comment ||
-                                              "Document has been rejected"}
-                                          </p>
-                                        </div>
-                                      )}
-                                    {data[0]?.status === "PENDING" &&
-                                      !isMobile && (
-                                        <div className="rounded-md px-4 py-3 bg-card">
-                                          <p className="text-sm line-clamp-1">
-                                            <Clock
-                                              className="me-3 -mt-0.5 inline-flex text-yellow-500"
-                                              size={16}
-                                              aria-hidden="true"
-                                            />
-                                            Your document is awaiting
-                                            verification.
-                                          </p>
-                                        </div>
-                                      )}
-
-                                    {doc.rejectMessage?.status === "APPROVED" &&
-                                      !isMobile && (
-                                        <div className=" rounded-md border px-4 py-3 bg-card">
-                                          <p className="text-sm">
-                                            <CircleCheckIcon
-                                              className="me-3 -mt-0.5 inline-flex text-emerald-500"
-                                              size={16}
-                                              aria-hidden="true"
-                                            />
-                                            Document has been approved
-                                          </p>
-                                        </div>
-                                      )}
-                                  </div>
-                                </div>
-                                {isMobile && (
-                                  <div className="flex gap- justify-between items-center capitalize">
+                      </span>
+                    </p>
+                    <span className="text-primary/50">|</span>
+                    <p>
+                      <span className="text-sm text-muted-foreground">
+                        Optional
+                      </span>{" "}
+                      &nbsp;
+                      <span className="text-lg font-medium font-mono">
+                        {data[0]?.Scholarship.documents.documents &&
+                          Object.entries(
+                            data[0]?.Scholarship.documents.documents
+                          ).filter(
+                            ([key, doc]) => doc?.requirementType === "optional"
+                          ).length}
+                      </span>
+                    </p>
+                  </div>
+                </div>
+                <div className="grid  lg:grid-cols-1 grid-cols-1 divide-y">
+                  {data?.[0]?.submittedDocuments.documents &&
+                    Object.entries(data[0].submittedDocuments.documents).map(
+                      ([key, doc]) => (
+                        <div key={key} className="lg:py-10 py-8 space-y-2">
+                          <div className="flex lg:gap-5 gap-3">
+                            <ApplicationViewer
+                              fileFormat={mimeToLabelMap[doc.fileFormat]}
+                              resourceType={doc.resourceType}
+                              fileUrl={doc.fileUrl}
+                              document={doc.document}
+                              supabasePath={doc.supabasePath}
+                              requirementType={doc.requirementType}
+                            />
+                            <div className="flex-1 flex flex-col lg:justify-end justify-between gap-5 relative">
+                              <div>
+                                {!isMobile && (
+                                  <div className="flex gap-3 capitalize">
                                     <p className="font-medium lg:text-base text-sm">
                                       {key}
                                     </p>
-                                    <Badge variant="outline" className="">
+                                    <Badge
+                                      variant="outline"
+                                      className="hidden lg:block"
+                                    >
                                       {doc.requirementType}
                                     </Badge>
                                   </div>
                                 )}
-                                {doc.rejectMessage?.status === "REJECTED" &&
-                                  isMobile && (
-                                    <div className="rounded-md px-4 py-3 bg-card">
-                                      <p className="text-sm line-clamp-1">
-                                        <TriangleAlert
-                                          className="me-3 -mt-0.5 inline-flex text-red-500"
-                                          size={16}
-                                          aria-hidden="true"
-                                        />
-                                        {doc.rejectMessage?.comment ||
-                                          "Document has been rejected"}
-                                      </p>
-                                    </div>
-                                  )}
-                                {data[0]?.status === "PENDING" && isMobile && (
+                                <p className="uppercase lg:text-sm text-xs text-muted-foreground lg:mt-1">
+                                  {doc.fileFormat}
+                                </p>
+                              </div>
+
+                              {doc.rejectMessage?.status === "REJECTED" &&
+                                !isMobile && (
                                   <div className="rounded-md px-4 py-3 bg-card">
                                     <p className="text-sm line-clamp-1">
-                                      <Clock
-                                        className="me-3 -mt-0.5 inline-flex text-yellow-500"
+                                      <TriangleAlert
+                                        className="me-3 -mt-0.5 inline-flex text-red-500"
                                         size={16}
                                         aria-hidden="true"
                                       />
-                                      Your document is awaiting verification.
+                                      {doc.rejectMessage?.comment ||
+                                        "Document has been rejected"}
                                     </p>
                                   </div>
                                 )}
+                              {data[0]?.status === "PENDING" && !isMobile && (
+                                <div className="rounded-md px-4 py-3 bg-card">
+                                  <p className="text-sm line-clamp-1">
+                                    <Clock
+                                      className="me-3 -mt-0.5 inline-flex text-yellow-500"
+                                      size={16}
+                                      aria-hidden="true"
+                                    />
+                                    Your document is awaiting verification.
+                                  </p>
+                                </div>
+                              )}
 
-                                {doc.rejectMessage?.status === "APPROVED" &&
-                                  isMobile && (
-                                    <div className=" rounded-md  px-4 py-3 bg-card">
-                                      <p className="text-sm">
-                                        <CircleCheckIcon
-                                          className="me-3 -mt-0.5 inline-flex text-emerald-500"
-                                          size={16}
-                                          aria-hidden="true"
-                                        />
-                                        Document has been approved
-                                      </p>
-                                    </div>
-                                  )}
-                              </div>
-                            )
+                              {doc.rejectMessage?.status === "APPROVED" &&
+                                !isMobile && (
+                                  <div className=" rounded-md border px-4 py-3 bg-card">
+                                    <p className="text-sm">
+                                      <CircleCheckIcon
+                                        className="me-3 -mt-0.5 inline-flex text-emerald-500"
+                                        size={16}
+                                        aria-hidden="true"
+                                      />
+                                      Document has been approved
+                                    </p>
+                                  </div>
+                                )}
+                            </div>
+                          </div>
+                          {isMobile && (
+                            <div className="flex gap- justify-between items-center capitalize">
+                              <p className="font-medium lg:text-base text-sm">
+                                {key}
+                              </p>
+                              <Badge variant="outline" className="">
+                                {doc.requirementType}
+                              </Badge>
+                            </div>
                           )}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-                <Accordion type="single" collapsible>
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger className="text-base">
-                      Application Timeline
-                    </AccordionTrigger>
-                    <AccordionContent className="py-5">
-                      {/* <Timeline
-                        value={
-                          data[0]?.status === "PENDING"
-                            ? 2
-                            : data[0]?.status === "REVIEWED"
-                            ? 3
-                            : ["APPROVED", "DECLINED", "BLOCKED"].includes(
-                                data[0]?.status
-                              )
-                            ? 4
-                            : 1
-                        }
-                      >
-                        {items.map((item) => (
-                          <TimelineItem
-                            key={item.id}
-                            step={item.id}
-                            className="group-data-[orientation=vertical]/timeline:sm:ms-28 "
-                          >
-                            <TimelineHeader>
-                              <TimelineSeparator />
-                              <TimelineDate className="group-data-[orientation=vertical]/timeline:sm:absolute group-data-[orientation=vertical]/timeline:sm:-left-32 group-data-[orientation=vertical]/timeline:sm:w-20 group-data-[orientation=vertical]/timeline:sm:text-right">
-                                {item.date && format(item.date, "PP")}
-                              </TimelineDate>
-                              <TimelineTitle className="sm:-mt-0.5">
-                                {item.title}
-                              </TimelineTitle>
-                              <TimelineIndicator />
-                            </TimelineHeader>
-                            <TimelineContent className="text-foreground mt-2 rounded-lg px-4 py-3 bg-card">
-                              {item.description}
-                            </TimelineContent>
-                          </TimelineItem>
-                        ))}
-                      </Timeline> */}
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
+                          {doc.rejectMessage?.status === "REJECTED" &&
+                            isMobile && (
+                              <div className="rounded-md px-4 py-3 bg-card">
+                                <p className="text-sm line-clamp-1">
+                                  <TriangleAlert
+                                    className="me-3 -mt-0.5 inline-flex text-red-500"
+                                    size={16}
+                                    aria-hidden="true"
+                                  />
+                                  {doc.rejectMessage?.comment ||
+                                    "Document has been rejected"}
+                                </p>
+                              </div>
+                            )}
+                          {data[0]?.status === "PENDING" && isMobile && (
+                            <div className="rounded-md px-4 py-3 bg-card">
+                              <p className="text-sm line-clamp-1">
+                                <Clock
+                                  className="me-3 -mt-0.5 inline-flex text-yellow-500"
+                                  size={16}
+                                  aria-hidden="true"
+                                />
+                                Your document is awaiting verification.
+                              </p>
+                            </div>
+                          )}
 
-                <Accordion type="single" collapsible>
-                  <AccordionItem value="item-1">
-                    <AccordionTrigger className="text-base">
-                      {data[0]?.Scholarship.title} Details
-                    </AccordionTrigger>
-                    <AccordionContent className="grid lg:grid-cols-2 grid-cols-1 gap-3">
-                      <div className="space-y-3">
-                        <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                          <PhilippinePeso />
-                          <div>
-                            <p className="text-muted-foreground text-sm">
-                              Scholarship Amount
-                            </p>
-                            <h1 className="text-lg font-medium font-mono">
-                              {data[0]?.Scholarship.amount}.00
-                            </h1>
-                          </div>
+                          {doc.rejectMessage?.status === "APPROVED" &&
+                            isMobile && (
+                              <div className=" rounded-md  px-4 py-3 bg-card">
+                                <p className="text-sm">
+                                  <CircleCheckIcon
+                                    className="me-3 -mt-0.5 inline-flex text-emerald-500"
+                                    size={16}
+                                    aria-hidden="true"
+                                  />
+                                  Document has been approved
+                                </p>
+                              </div>
+                            )}
                         </div>
-                        <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                          <Building />
-                          <div>
-                            <p className="text-muted-foreground text-sm">
-                              Scholarship Type
-                            </p>
-                            <h1 className="text-lg font-medium capitalize">
-                              {data[0]?.Scholarship.type}
-                            </h1>
-                          </div>
-                        </div>
-
-                        <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                          <Calendar />
-                          <div>
-                            <p className="text-muted-foreground text-sm">
-                              Scholarship Deadline
-                            </p>
-                            <h1 className="text-lg font-medium">
-                              {data[0]?.Scholarship?.deadline
-                                ? format(
-                                    new Date(data[0].Scholarship.deadline),
-                                    "PPP"
-                                  )
-                                : "No deadline"}
-                            </h1>
-                          </div>
-                        </div>
-                      </div>
-                      <div className=" p-4 space-y-2  rounded-md bg-card">
-                        <div className="flex gap-3 items-center">
-                          <StickyNote />
-                          <p className="text-muted-foreground text-sm">
-                            Scholarship Details
-                          </p>
-                        </div>
-
-                        <h1>{data[0]?.Scholarship.description}</h1>
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                </Accordion>
-              </div>
-            </div>
-
-            {/* {data[0]?.status === "DECLINED" && (
-              <div className="bg-background/70 backdrop-blur-sm space-y-3  sticky bottom-0 lg:p-4 p-2 border-t z-50 ">
-                <div className="flex gap-3">
-                  {" "}
-                  <Button
-                    variant="destructive"
-                    className="flex-1"
-                    onClick={() => setEdit(true)}
-                  >
-                    Re-Apply {data[0].scholarship.scholarshipTitle}{" "}
-                    <ArrowRight />
-                  </Button>
+                      )
+                    )}
                 </div>
               </div>
-            )} */}
+            )}
+            {activeSection === "scholarship" && (
+              <div className="flex-1 p-4 space-y-8">
+                <div className="space-y-1">
+                  <p className="text-sm text-muted-foreground">About</p>
+                  <p>{data[0]?.Scholarship.description}</p>
+                </div>
+
+                <div className="space-y-5">
+                  <div className="flex gap-3 items-center">
+                    <h1 className="font-medium">Scholarship Details</h1>
+                    <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                  </div>
+                  <div className="grid lg:grid-cols-2 grid-cols-1 gap-3">
+                    {data[0]?.Scholarship.amount && (
+                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                        <PhilippinePeso />
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                            Scholarship Amount
+                          </p>
+                          <h1 className="text-lg font-medium font-mono">
+                            {data[0]?.Scholarship.amount}.00
+                          </h1>
+                        </div>
+                      </div>
+                    )}
+                    {data[0]?.Scholarship.limit && (
+                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                        <Inbox />
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                            Scholarship Limit
+                          </p>
+                          <h1 className="text-lg font-medium font-mono">
+                            {data[0]?.Scholarship.limit}
+                          </h1>
+                        </div>
+                      </div>
+                    )}
+                    {data[0]?.Scholarship.requiredGWA && (
+                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                        <Inbox />
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                            Required GWA
+                          </p>
+                          <h1 className="text-lg font-medium font-mono">
+                            {data[0]?.Scholarship.requiredGWA}
+                          </h1>
+                        </div>
+                      </div>
+                    )}
+                    {data[0]?.Scholarship.requiredGWA && (
+                      <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                        <Inbox />
+                        <div>
+                          <p className="text-muted-foreground text-sm">
+                            Required GWA
+                          </p>
+                          <h1 className="text-lg font-medium font-mono">
+                            {data[0]?.Scholarship.requiredGWA}
+                          </h1>
+                        </div>
+                      </div>
+                    )}
+                    <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                      <Building />
+                      <div>
+                        <p className="text-muted-foreground text-sm">
+                          Scholarship Type
+                        </p>
+                        <h1 className="text-lg font-medium capitalize">
+                          {data[0]?.Scholarship.type}
+                        </h1>
+                      </div>
+                    </div>
+
+                    <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
+                      <Calendar />
+                      <div>
+                        <p className="text-muted-foreground text-sm">
+                          Scholarship Deadline
+                        </p>
+                        <h1 className="text-lg font-medium">
+                          {data[0]?.Scholarship.deadline
+                            ? format(
+                                new Date(data[0]?.Scholarship.deadline),
+                                "PPP"
+                              )
+                            : "No deadline"}
+                        </h1>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-6">
+                    {" "}
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-xs font-medium text-muted-foreground  tracking-wide">
+                          Required Documents
+                        </h3>
+                        <p className="font-medium text-lg">
+                          {
+                            Object.keys(data[0]?.Scholarship.documents || {})
+                              .length
+                          }
+                        </p>
+                      </div>
+
+                      <div className=" divide-y">
+                        {Object.values(
+                          data[0]?.Scholarship.documents.documents || {}
+                        ).map((doc, index) => (
+                          <div
+                            className="flex justify-between items-center py-5"
+                            key={doc.label}
+                          >
+                            <div>
+                              <span> {index + 1}. </span>
+                              {doc.label}
+                            </div>
+                            <Badge
+                              className={`${
+                                doc.requirementType === "required"
+                                  ? "bg-red-700/20 text-red-700"
+                                  : doc.requirementType === "optional"
+                                  ? "bg-blue-700/20 text-blue-700"
+                                  : ""
+                              } capitalize `}
+                            >
+                              {doc.requirementType}
+                            </Badge>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
+
+        <div className="flex gap-3 p-4">
+          <Button className="flex-1">Edit Documents</Button>
+          <Button className="flex-1">Close</Button>
+        </div>
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogContent className="lg:w-[56%] w-full">
             <DialogHeader>
