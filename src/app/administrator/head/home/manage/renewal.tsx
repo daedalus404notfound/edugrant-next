@@ -14,13 +14,14 @@ import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import { useApplicationUIStore } from "@/store/updateUIStore";
 import useRenewScholarshipData from "@/hooks/admin/getRenewScholarship";
 import { useAdminStore } from "@/store/adminUserStore";
+import useScholarshipData from "@/hooks/admin/getScholarship";
 export default function ManageRenewScholarship({
   setRenewal,
 }: {
   setRenewal: (renewal: number) => void;
 }) {
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("ACTIVE");
+  const [status, setStatus] = useState("RENEW");
   const { admin } = useAdminStore();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -28,7 +29,7 @@ export default function ManageRenewScholarship({
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { data, meta, loading } = useRenewScholarshipData({
+  const { data, meta, loading } = useScholarshipData({
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
     sortBy: sorting[0]?.id ?? "",
@@ -36,6 +37,7 @@ export default function ManageRenewScholarship({
     filters:
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
     status: status,
+    accountId: admin?.accountId,
   });
   useEffect(() => {
     if (meta?.totalRows !== undefined) {
