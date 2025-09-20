@@ -161,7 +161,11 @@ export default function ClientScholarship() {
                           GOVERNMENT
                         </Badge>
                         <span>
-                          Submitted {format(meow.dateCreated, "MM/dd/yy")}
+                          Submitted{" "}
+                          {format(
+                            meow.Application_Decision.dateCreated,
+                            "MM/dd/yy"
+                          )}
                         </span>
                       </div>
                     </div>
