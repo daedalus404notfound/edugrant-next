@@ -9,6 +9,10 @@ const SubmittedDocumentSchema = z.object({
   requirementType: z.string(),
   resourceType: z.string(),
   supabasePath: z.string(),
+  rejectMessage: z.object({
+    status: z.string(),
+    comment: z.string(),
+  }),
 });
 const supabasePathSchema = z.object({
   cover: z.string(),
