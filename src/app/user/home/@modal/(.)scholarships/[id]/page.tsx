@@ -388,7 +388,19 @@ export default function InterceptManageScholarshipClient() {
                     </div>
                   </div>
                   <div className="p-4 flex gap-3 border-t sticky bottom-0 bg-background">
-                    {user?.Student.Application.find(
+                    <Button
+                      className="flex-1"
+                      onClick={() => setIsApply("renew")}
+                    >
+                      Apply Renew Scholarship
+                    </Button>
+                    <Button
+                      className="flex-1"
+                      onClick={() => setIsApply("apply")}
+                    >
+                      Apply Scholarship
+                    </Button>
+                    {/* {user?.Student.Application.find(
                       (meow) => meow.scholarshipId === data?.scholarshipId // cast if needed
                     ) ? (
                       <Link
@@ -415,7 +427,7 @@ export default function InterceptManageScholarshipClient() {
                       >
                         Apply Scholarship
                       </Button>
-                    )}
+                    )} */}
 
                     <Button className="flex-1" variant="secondary">
                       Close

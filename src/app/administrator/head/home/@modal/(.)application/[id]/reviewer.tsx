@@ -31,9 +31,6 @@ interface UserDocument {
   requirementType: string;
   resourceType: string;
   supabasePath: string;
-  onUpdate: (field: "comment" | "status", value: string) => void;
-  docStatus: string;
-  docComment: string;
 }
 
 export default function Reviewer({
@@ -41,8 +38,6 @@ export default function Reviewer({
   resourceType,
   fileUrl,
   document,
-  docStatus,
-  onUpdate,
 }: UserDocument) {
   const [rotation, setRotation] = useState(0);
   console.log(fileFormat);
@@ -110,96 +105,6 @@ export default function Reviewer({
                       }}
                     >
                       <RefreshCw className="h-4 w-4" />
-                    </Button>
-                  </div>
-
-                  <div className="absolute top-4 right-4 z-10 flex gap-2 bg-card p-2 rounded-lg">
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          disabled={
-                            // Disable if doc already has any status (approved or rejected)
-                            !!docStatus
-                          }
-                        >
-                          Approve
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="text-green-800">
-                            Approve Document?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action will approve the document.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction asChild>
-                            <Button
-                              variant="ghost"
-                              onClick={() => {
-                                onUpdate("status", "APPROVED");
-                                setOpen(false);
-                              }}
-                            >
-                              Approve
-                            </Button>
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          disabled={
-                            // Disable if doc already has any status (approved or rejected)
-                            !!docStatus
-                          }
-                        >
-                          Reject
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="text-red-800">
-                            Reject Document?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action will rejected the document.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <Textarea
-                          placeholder="Add a reason for rejection (optional)"
-                          onChange={(e) => onUpdate("comment", e.target.value)}
-                        />
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction asChild>
-                            <Button
-                              variant="ghost"
-                              onClick={() => {
-                                onUpdate("status", "REJECTED");
-                                setOpen(false);
-                              }}
-                            >
-                              Reject
-                            </Button>
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      className="text-white hover:bg-white/20"
-                      onClick={() => setOpen(false)}
-                    >
-                      ✕
                     </Button>
                   </div>
 

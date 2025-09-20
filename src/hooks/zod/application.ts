@@ -9,22 +9,32 @@ const SubmittedDocumentSchema = z.object({
   requirementType: z.string(),
   resourceType: z.string(),
   supabasePath: z.string(),
-  rejectMessage: z.object({
-    status: z.string(),
-    comment: z.string(),
-  }),
 });
 const supabasePathSchema = z.object({
   cover: z.string(),
   form: z.string(),
   logo: z.string(),
 });
+const DecisionMessageSchema = z.record(
+  z.string(),
+  z.object({
+    status: z.string(),
+    comment: z.string(),
+  })
+);
+
 const ApplicationSchema = z.object({
   Scholarship: scholarshipSchema, // field name = Scholarship
   Student: StudentSchema, // field name = Student
+  Application_Decision: z.object({
+    dateCreated: z.date(),
+    decisionId: z.number(),
+    staffId: z.number(),
+    status: z.string(),
+    message: DecisionMessageSchema.optional(),
+  }),
   applicationId: z.number(),
-  dateCreated: z.date(),
-  decisionId: z.number(),
+
   interviewId: z.string(),
   ownerId: z.number(),
   scholarshipId: z.number(),

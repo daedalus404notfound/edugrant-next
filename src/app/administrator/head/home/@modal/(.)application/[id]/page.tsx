@@ -108,44 +108,6 @@ export default function InterceptReviewApplicants() {
   const [activeSection, setActiveSection] = useState("documents");
   const id = Number(params.id);
   const { data, loading } = useApplicationById(id);
-  console.log("123", data?.submittedDocuments);
-  const [reviewData, setReviewData] = useState<
-    Record<string, { comment: string; status: string }>
-  >({});
-  const updateReviewData = (
-    docKey: string,
-    field: "comment" | "status",
-    value: string
-  ) => {
-    setReviewData((prev) => ({
-      ...prev,
-      [docKey]: {
-        ...prev[docKey],
-        [field]: value,
-      },
-    }));
-  };
-
-  const totalDocs = data?.Scholarship.documents
-    ? Object.keys(data?.Scholarship.documents).length
-    : 0;
-
-  const totalRequiredDocs = data
-    ? Object.entries(data.submittedDocuments.documents).filter(
-        ([_, doc]) =>
-          doc.requirementType && doc.requirementType.trim() !== "optional"
-      ).length
-    : 0;
-  console.log("totalRequiredDocs;'", totalRequiredDocs);
-  const reviewedDocs = data?.submittedDocuments.documents
-    ? Object.entries(data.submittedDocuments.documents).filter(([key, doc]) => {
-        return (
-          doc.rejectMessage?.status ||
-          (reviewData[key]?.status && doc.requirementType.trim() === "required")
-        );
-      }).length
-    : 0;
-  const progressValue = totalDocs > 0 ? (reviewedDocs / totalDocs) * 100 : 0;
 
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
@@ -155,50 +117,21 @@ export default function InterceptReviewApplicants() {
       }, 200);
     }
   };
+  const submittedKeys = Object.keys(data?.submittedDocuments?.documents || {});
 
-  const {
-    handleInterview,
-    loadingInterview,
-    setOpenInterview,
-    openInterview,
-    isSuccessInterview,
-  } = useInterviewdHandler({
-    id,
-    adminId: admin?.accountId,
-    documentUpdate: reviewData,
-    scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
-  });
+  const matchedDocKey = submittedKeys.find(
+    (k) => !!data?.Application_Decision?.message?.[k]
+  );
 
-  const {
-    handleApprove,
-    loadingApprove,
-    setOpenApprove,
-    openApprove,
-    isSuccessApprove,
-  } = useApprovedHandler({
-    id,
-    adminId: admin?.accountId,
-    scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
-  });
+  const matchedComment =
+    matchedDocKey && data?.Application_Decision?.message
+      ? data.Application_Decision.message[matchedDocKey]?.comment ?? ""
+      : "";
 
-  const {
-    handleReject,
-    loadingReject,
-    openReject,
-    setOpenReject,
-    isSuccessReject,
-  } = useRecjectHandler({
-    id,
-    adminId: admin?.accountId,
-    documentUpdate: reviewData,
-    scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
-  });
-
-  useEffect(() => {
-    if (isSuccessInterview || isSuccessReject) {
-      HandleCloseDrawer(false);
-    }
-  }, [isSuccessInterview, isSuccessReject]);
+  const matchedStatus =
+    matchedDocKey && data?.Application_Decision?.message
+      ? data.Application_Decision.message[matchedDocKey]?.status ?? ""
+      : "";
 
   const fatherDetails = [
     {
@@ -377,9 +310,26 @@ export default function InterceptReviewApplicants() {
       value: data?.Student.section,
     },
   ];
-
+  const applicationDetails = [
+    {
+      label: "Date Created",
+      icon: Building2,
+      value: data?.Application_Decision.dateCreated,
+    },
+    {
+      label: "Staff ID",
+      icon: Building2,
+      value: data?.Application_Decision.staffId,
+    },
+    {
+      label: "Status",
+      icon: Building2,
+      value: data?.Application_Decision.status,
+    },
+  ];
   const navigationTabs = [
     { id: "documents", label: "Documents", indicator: null },
+    { id: "details", label: "Review Details", indicator: null },
     { id: "student", label: "Student Info", indicator: null },
     { id: "family", label: "Family Background", indicator: null },
     { id: "scholarship", label: "Scholarship Details", indicator: null },
@@ -491,12 +441,7 @@ export default function InterceptReviewApplicants() {
                                 fileUrl={doc.fileUrl}
                                 document={doc.document}
                                 supabasePath={doc.supabasePath}
-                                docStatus={doc.rejectMessage?.status}
                                 requirementType={doc.requirementType}
-                                docComment={doc.rejectMessage?.comment}
-                                onUpdate={(field, value) =>
-                                  updateReviewData(key, field, value)
-                                }
                               />
 
                               <div className="flex-1 flex flex-col justify-between">
@@ -513,18 +458,6 @@ export default function InterceptReviewApplicants() {
                                         {/* {mimeToLabelMap[doc.fileFormat]} */}
                                         {doc.requirementType}
                                       </Badge>
-                                      {doc.rejectMessage?.status && (
-                                        <Badge
-                                          className={`text-xs ${
-                                            doc.rejectMessage.status ===
-                                            "APPROVED"
-                                              ? statusColors.APPROVED
-                                              : statusColors.REJECTED
-                                          }`}
-                                        >
-                                          {doc.rejectMessage.status}
-                                        </Badge>
-                                      )}
                                     </div>
                                   </div>
                                   <Button size="sm" variant="outline">
@@ -535,98 +468,14 @@ export default function InterceptReviewApplicants() {
                                   <div className="flex-1">
                                     {" "}
                                     <Textarea
-                                      placeholder="Add review comment..."
-                                      value={
-                                        doc.rejectMessage?.comment ||
-                                        reviewData[key]?.comment ||
-                                        ""
-                                      }
-                                      disabled={!!doc.rejectMessage?.status}
-                                      onChange={(e) =>
-                                        updateReviewData(
-                                          key,
-                                          "comment",
-                                          e.target.value
-                                        )
-                                      }
+                                      placeholder="Staff comment..."
+                                      defaultValue={matchedComment}
                                       className="min-h-9"
+                                      disabled
                                     />
                                   </div>
                                   <div className="flex gap-2">
-                                    <Button
-                                      variant={
-                                        doc.rejectMessage?.status ===
-                                          "APPROVED" ||
-                                        reviewData[key]?.status === "APPROVED"
-                                          ? "default"
-                                          : "outline"
-                                      }
-                                      className={`font-medium transition-all ${
-                                        doc.rejectMessage?.status ===
-                                          "APPROVED" ||
-                                        reviewData[key]?.status === "APPROVED"
-                                          ? ""
-                                          : "hover:bg-green-50 hover:border-green-200 hover:text-green-700"
-                                      }`}
-                                      onClick={() => {
-                                        updateReviewData(
-                                          key,
-                                          "status",
-                                          "APPROVED"
-                                        );
-                                      }}
-                                      disabled={!!doc.rejectMessage?.status}
-                                    >
-                                      {doc.rejectMessage?.status ===
-                                      "APPROVED" ? (
-                                        <>
-                                          <CheckCheck className="w-4 h-4 mr-2" />
-                                          Accepted
-                                        </>
-                                      ) : (
-                                        <>
-                                          <UserCheck2 className="w-4 h-4 mr-2" />
-                                          Accept
-                                        </>
-                                      )}
-                                    </Button>
-                                    <Button
-                                      variant={
-                                        doc.rejectMessage?.status ===
-                                          "REJECTED" ||
-                                        reviewData[key]?.status === "REJECTED"
-                                          ? "destructive"
-                                          : "outline"
-                                      }
-                                      className={`font-medium transition-all ${
-                                        doc.rejectMessage?.status !==
-                                          "REJECTED" &&
-                                        reviewData[key]?.status !== "REJECTED"
-                                          ? "hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-                                          : ""
-                                      }`}
-                                      onClick={() => {
-                                        updateReviewData(
-                                          key,
-                                          "status",
-                                          "REJECTED"
-                                        );
-                                      }}
-                                      disabled={!!doc.rejectMessage?.status}
-                                    >
-                                      {doc.rejectMessage?.status ===
-                                      "REJECTED" ? (
-                                        <>
-                                          <UserRoundX className="w-4 h-4 mr-2" />
-                                          Rejected
-                                        </>
-                                      ) : (
-                                        <>
-                                          <UserX2 className="w-4 h-4 mr-2" />
-                                          Reject
-                                        </>
-                                      )}
-                                    </Button>
+                                    <Button>{matchedStatus}</Button>
                                   </div>
                                 </div>
                               </div>
@@ -636,7 +485,49 @@ export default function InterceptReviewApplicants() {
                   )}
                 </div>
               )}
-
+              {activeSection === "details" && (
+                <div className="space-y-10">
+                  <div className="space-y-6">
+                    {/* <div className="flex items-center gap-3">
+                      <h3 className="text-lg font-medium flex gap-2 items-center">
+                        <UserRound className="h-5 w-5" /> Personal Information
+                      </h3>
+                      <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                    </div> */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {applicationDetails.map((info, index) => (
+                        <div
+                          key={index}
+                          className={` ${
+                            info.label === "Address" || info.label === "Email"
+                              ? "md:col-span-2"
+                              : ""
+                          }`}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className="min-w-0 flex-1">
+                              <p className="text-sm text-muted-foreground mb-1">
+                                {info.label}
+                              </p>
+                              <div className=" bg-card p-2 rounded-md flex gap-3 items-center">
+                                <info.icon size={16} />
+                                <p>
+                                  {info.label === "Date Created"
+                                    ? format(
+                                        new Date(info.value as string),
+                                        "PPP"
+                                      )
+                                    : String(info.value ?? "")}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
               {/* Student Information Section */}
               {activeSection === "student" && (
                 <div className="space-y-10">
@@ -1077,279 +968,6 @@ export default function InterceptReviewApplicants() {
         </div>
 
         {/* Enhanced Footer */}
-        <DrawerFooter className="bg-gradient-to-r from-card/50 to-card border-t p-6">
-          {loading ? (
-            <div className="grid grid-cols-3 gap-3">
-              <Skeleton className="h-11 flex-1 rounded-lg" />
-              <Skeleton className="h-11 flex-1 rounded-lg" />
-              <Skeleton className="h-11 flex-1 rounded-lg" />
-            </div>
-          ) : (
-            <div className="grid grid-cols-3 gap-4">
-              {/* Approve Button */}
-              {data?.status === "PENDING" &&
-                data.Scholarship.interview === false && (
-                  <Dialog open={openApprove} onOpenChange={setOpenApprove}>
-                    <DialogTrigger asChild>
-                      <Button
-                        className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={totalDocs > reviewedDocs}
-                      >
-                        <UserRoundCheck className="w-4 h-4 mr-2" />
-                        Approve Application
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent
-                      className="max-w-lg p-6 rounded-xl"
-                      onInteractOutside={(e) => e.preventDefault()}
-                      onEscapeKeyDown={(e) => e.preventDefault()}
-                      showCloseButton={false}
-                    >
-                      <DialogHeader className="text-center pb-4">
-                        <div className="mx-auto w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mb-4">
-                          <UserRoundCheck className="w-6 h-6 text-green-600 dark:text-green-400" />
-                        </div>
-                        <DialogTitle className="text-xl font-semibold text-green-700 dark:text-green-300">
-                          Approve Application
-                        </DialogTitle>
-                        <DialogDescription className="text-muted-foreground leading-relaxed">
-                          This will approve the scholarship application and
-                          notify the student of the positive decision. This
-                          action cannot be undone.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <DialogFooter className="gap-3 pt-4">
-                        <Button
-                          variant="outline"
-                          onClick={() => setOpenApprove(false)}
-                          disabled={loadingApprove}
-                          className="flex-1"
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          onClick={handleApprove}
-                          disabled={loadingApprove}
-                          className="flex-1 bg-green-700 hover:bg-green-800 text-white"
-                        >
-                          {loadingApprove ? (
-                            <>
-                              <Loader className="w-4 h-4 mr-2 animate-spin" />
-                              Approving...
-                            </>
-                          ) : (
-                            <>
-                              <CheckCheck className="w-4 h-4 mr-2" />
-                              Confirm Approval
-                            </>
-                          )}
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                )}
-              {data?.status === "INTERVIEW" &&
-                data.Scholarship.interview === true && (
-                  <Dialog open={openApprove} onOpenChange={setOpenApprove}>
-                    <DialogTrigger asChild>
-                      <Button
-                        className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={totalDocs > reviewedDocs}
-                      >
-                        <UserRoundCheck className="w-4 h-4 mr-2" />
-                        Approve Application
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent
-                      className="max-w-lg p-6 rounded-xl"
-                      onInteractOutside={(e) => e.preventDefault()}
-                      onEscapeKeyDown={(e) => e.preventDefault()}
-                      showCloseButton={false}
-                    >
-                      <DialogHeader className="text-center pb-4">
-                        <div className="mx-auto w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mb-4">
-                          <UserRoundCheck className="w-6 h-6 text-green-600 dark:text-green-400" />
-                        </div>
-                        <DialogTitle className="text-xl font-semibold text-green-700 dark:text-green-300">
-                          Approve Application
-                        </DialogTitle>
-                        <DialogDescription className="text-muted-foreground leading-relaxed">
-                          This will approve the scholarship application and
-                          notify the student of the positive decision. This
-                          action cannot be undone.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <DialogFooter className="gap-3 pt-4">
-                        <Button
-                          variant="outline"
-                          onClick={() => setOpenApprove(false)}
-                          disabled={loadingApprove}
-                          className="flex-1"
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          onClick={handleApprove}
-                          disabled={loadingApprove}
-                          className="flex-1 bg-green-700 hover:bg-green-800 text-white"
-                        >
-                          {loadingApprove ? (
-                            <>
-                              <Loader className="w-4 h-4 mr-2 animate-spin" />
-                              Approving...
-                            </>
-                          ) : (
-                            <>
-                              <CheckCheck className="w-4 h-4 mr-2" />
-                              Confirm Approval
-                            </>
-                          )}
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                )}
-
-              {/* Approve for Interview Button */}
-              {data?.status === "PENDING" &&
-                data.Scholarship.interview === true && (
-                  <Dialog open={openInterview} onOpenChange={setOpenInterview}>
-                    <DialogTrigger asChild>
-                      <Button
-                        className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={totalRequiredDocs !== reviewedDocs}
-                      >
-                        <UserRoundCheck className="w-4 h-4 mr-2" />
-                        Approve for Interview
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent
-                      className="max-w-lg p-6 rounded-xl"
-                      onInteractOutside={(e) => e.preventDefault()}
-                      onEscapeKeyDown={(e) => e.preventDefault()}
-                      showCloseButton={false}
-                    >
-                      <DialogHeader className="text-center pb-4">
-                        <div className="mx-auto w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mb-4">
-                          <Clock className="w-6 h-6 text-green-600 dark:text-green-400" />
-                        </div>
-                        <DialogTitle className="text-xl font-semibold text-green-700 dark:text-green-300">
-                          Approve for Interview
-                        </DialogTitle>
-                        <DialogDescription className="text-muted-foreground leading-relaxed">
-                          This will approve the application for the interview
-                          stage and notify the student. This action cannot be
-                          undone.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <DialogFooter className="gap-3 pt-4">
-                        <Button
-                          variant="outline"
-                          onClick={() => setOpenInterview(false)}
-                          disabled={loadingInterview}
-                          className="flex-1"
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          onClick={handleInterview}
-                          disabled={loadingInterview}
-                          className="flex-1 bg-green-700 hover:bg-green-800 text-white"
-                        >
-                          {loadingInterview ? (
-                            <>
-                              <Loader className="w-4 h-4 mr-2 animate-spin" />
-                              Processing...
-                            </>
-                          ) : (
-                            <>
-                              <CheckCheck className="w-4 h-4 mr-2" />
-                              Confirm Approval
-                            </>
-                          )}
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                )}
-
-              {/* Decline Button */}
-              <Dialog open={openReject} onOpenChange={setOpenReject}>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="destructive"
-                    className="flex-1 font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                    disabled={
-                      data?.status === "APPROVED" ||
-                      data?.status === "DECLINED" ||
-                      totalRequiredDocs !== reviewedDocs
-                    }
-                  >
-                    <UserRoundX className="w-4 h-4 mr-2" />
-                    Decline Application
-                  </Button>
-                </DialogTrigger>
-                <DialogContent
-                  className="max-w-lg p-6 rounded-xl"
-                  onInteractOutside={(e) => e.preventDefault()}
-                  onEscapeKeyDown={(e) => e.preventDefault()}
-                  showCloseButton={false}
-                >
-                  <DialogHeader className="text-center pb-4">
-                    <div className="mx-auto w-12 h-12 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
-                      <UserRoundX className="w-6 h-6 text-red-600 dark:text-red-400" />
-                    </div>
-                    <DialogTitle className="text-xl font-semibold text-red-700 dark:text-red-300">
-                      Decline Application
-                    </DialogTitle>
-                    <DialogDescription className="text-muted-foreground leading-relaxed">
-                      This will decline the scholarship application and notify
-                      the student with the review feedback. This action cannot
-                      be undone.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter className="gap-3 pt-4">
-                    <Button
-                      variant="outline"
-                      onClick={() => setOpenReject(false)}
-                      disabled={loadingReject}
-                      className="flex-1"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={handleReject}
-                      disabled={loadingReject}
-                      className="flex-1 bg-red-600 hover:bg-red-700 text-white"
-                    >
-                      {loadingReject ? (
-                        <>
-                          <Loader className="w-4 h-4 mr-2 animate-spin" />
-                          Declining...
-                        </>
-                      ) : (
-                        <>
-                          <UserRoundX className="w-4 h-4 mr-2" />
-                          Confirm Decline
-                        </>
-                      )}
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-
-              {/* Back Button */}
-              <Button
-                variant="outline"
-                className="flex-1 font-medium py-3 border-2 hover:bg-muted/50 transition-all duration-200"
-                onClick={() => HandleCloseDrawer(false)}
-              >
-                <ArrowLeftFromLine className="w-4 h-4 mr-2" />
-                Back to Applications
-              </Button>
-            </div>
-          )}
-        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );
