@@ -6,6 +6,8 @@ import {
   ArrowRightIcon,
   Building,
   Building2,
+  CheckCheck,
+  CheckCircle,
   Ellipsis,
   Ghost,
   Lock,
@@ -49,6 +51,7 @@ import Link from "next/link";
 const tabs = [
   { id: "ACTIVE", label: "Active", indicator: null },
   { id: "RENEW", label: "Renewal", indicator: null },
+  { id: "EXPIRED", label: "Expired", indicator: null },
 ];
 const scholarshipTypes = [
   { label: "Government", value: "government", icon: Building2 },
@@ -372,26 +375,29 @@ export default function ClientScholarship() {
                       <div className="relative rounded-lg bg-background ">
                         <img
                           className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
-                            status === "EXPIRED" ? "grayscale-80" : ""
+                            status === "EXPIRED" ? "" : ""
                           }`}
                           src={scholarship.cover}
                           alt=""
                         />
                         <div className="relative z-10">
                           <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
-                            <Badge
-                              className={`absolute top-2 z-10 right-2  text-gray-200 ${
-                                status === "ACTIVE"
-                                  ? "bg-green-800"
-                                  : "bg-red-800"
-                              }`}
-                            >
-                              {status}
-                            </Badge>
+                            {user?.Student.Application.find(
+                              (meow) =>
+                                meow.scholarshipId === scholarship.scholarshipId
+                            ) &&
+                              scholarship.renew === false && (
+                                <div className="absolute z-20 inset-0 bg-black/60 flex justify-center items-center">
+                                  <span className=" bg-black/40 text-center px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium">
+                                    {" "}
+                                    Applied <CheckCheck size={18} />
+                                  </span>
+                                </div>
+                              )}
 
                             <img
                               className={`h-full w-full object-cover ${
-                                status === "EXPIRED" ? "grayscale-80" : ""
+                                status === "EXPIRED" ? "" : ""
                               }`}
                               src={scholarship.cover}
                               alt=""
@@ -404,15 +410,12 @@ export default function ClientScholarship() {
                                   <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight">
                                     {scholarship.title}
                                   </h3>
-                                  {user?.Student?.Application?.some(
-                                    (app) =>
-                                      app.scholarshipId ===
-                                      scholarship.scholarshipId
-                                  ) && (
-                                    <Badge className=" bg-blue-800 text-white">
-                                      APPLIED
-                                    </Badge>
-                                  )}
+                                  <Badge
+                                    variant="secondary"
+                                    className="uppercase"
+                                  >
+                                    {scholarship.type}
+                                  </Badge>
                                 </div>
                                 <p className="text-sm text-muted-foreground">
                                   {scholarship.Scholarship_Provider.name}
@@ -421,9 +424,34 @@ export default function ClientScholarship() {
                             </div>
 
                             <div className="flex items-center justify-between text-sm text-muted-foreground ">
-                              <Badge variant="outline" className="uppercase">
-                                {scholarship.type}
-                              </Badge>
+                              <div className="space-x-2">
+                                {(status === "ACTIVE" ||
+                                  status === "RENEW") && (
+                                  <Badge className="bg-green-800 text-gray-200">
+                                    ACTIVE
+                                  </Badge>
+                                )}
+                                {scholarship.renew === true && (
+                                  <Badge className="bg-blue-800 text-gray-200">
+                                    RENEWAL
+                                  </Badge>
+                                )}
+                                {status === "EXPIRED" && (
+                                  <Badge className="bg-red-800 text-gray-200">
+                                    EXPIRED
+                                  </Badge>
+                                )}
+                              </div>
+
+                              {/* {user?.Student?.Application?.some(
+                                (app) =>
+                                  app.scholarshipId ===
+                                  scholarship.scholarshipId
+                              ) && (
+                                <Badge className=" bg-blue-800 text-white">
+                                  APPLIED
+                                </Badge>
+                              )} */}
                               <span>
                                 Deadline:{" "}
                                 {format(scholarship.deadline, "MM/dd/yy")}

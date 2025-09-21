@@ -196,12 +196,21 @@ export default function InterceptManageScholarshipClient() {
                               ACTIVE
                             </Badge>
                           )}
+                          {data?.renew === true && (
+                            <Badge className="bg-blue-800 text-gray-200 tracking-wide">
+                              RENEWAL
+                            </Badge>
+                          )}
                         </motion.span>
                         <p className="text-muted-foreground text-sm">
                           by {data?.Scholarship_Provider?.name}
                         </p>
                       </div>
                     </div>
+                    <p className="italic text-sm text-muted-foreground absolute right-2 -bottom-18 z-10 lg:px-6  px-2 ">
+                      Posted on {""}
+                      {data?.dateCreated && format(data?.dateCreated, "PPP")}
+                    </p>
                     {data?.cover && (
                       <img
                         className="w-full lg:aspect-[16/4] aspect-[16/9]  object-cover   rounded-lg shadow-md"
@@ -346,8 +355,11 @@ export default function InterceptManageScholarshipClient() {
                           </div>
 
                           <div className=" divide-y">
-                            {Object.values(data?.documents.documents || {}).map(
-                              (doc, index) => (
+                            {(data?.documents.documents ||
+                              data?.renew === false) &&
+                              Object.values(
+                                data?.documents.documents || {}
+                              ).map((doc, index) => (
                                 <div
                                   className="flex justify-between items-center py-5"
                                   key={doc.label}
@@ -368,8 +380,33 @@ export default function InterceptManageScholarshipClient() {
                                     {doc.requirementType}
                                   </Badge>
                                 </div>
-                              )
-                            )}
+                              ))}
+                            {(data?.documents.renewDocuments ||
+                              data?.renew === true) &&
+                              Object.values(
+                                data?.documents.renewDocuments || {}
+                              ).map((doc, index) => (
+                                <div
+                                  className="flex justify-between items-center py-5"
+                                  key={doc.label}
+                                >
+                                  <div>
+                                    <span> {index + 1}. </span>
+                                    {doc.label}
+                                  </div>
+                                  <Badge
+                                    className={`${
+                                      doc.requirementType === "required"
+                                        ? "bg-red-700/20 text-red-700"
+                                        : doc.requirementType === "optional"
+                                        ? "bg-blue-700/20 text-blue-700"
+                                        : ""
+                                    } capitalize `}
+                                  >
+                                    {doc.requirementType}
+                                  </Badge>
+                                </div>
+                              ))}
                           </div>
                         </div>
                       </div>
@@ -388,18 +425,30 @@ export default function InterceptManageScholarshipClient() {
                     </div>
                   </div>
                   <div className="p-4 flex gap-3 border-t sticky bottom-0 bg-background">
-                    <Button
-                      className="flex-1"
-                      onClick={() => setIsApply("renew")}
-                    >
-                      Apply Renew Scholarship
-                    </Button>
-                    <Button
-                      className="flex-1"
-                      onClick={() => setIsApply("apply")}
-                    >
-                      Apply Scholarship
-                    </Button>
+                    {data?.renew === false ? (
+                      <Button
+                        className="flex-1"
+                        onClick={() => setIsApply("apply")}
+                        disabled={
+                          data?.deadline &&
+                          new Date(data.deadline).getTime() < Date.now()
+                        }
+                      >
+                        Apply Scholarship
+                      </Button>
+                    ) : (
+                      <Button
+                        className="flex-1"
+                        onClick={() => setIsApply("renew")}
+                        disabled={
+                          data?.deadline &&
+                          new Date(data.deadline).getTime() < Date.now()
+                        }
+                      >
+                        Apply Renew Scholarship
+                      </Button>
+                    )}
+
                     {/* {user?.Student.Application.find(
                       (meow) => meow.scholarshipId === data?.scholarshipId // cast if needed
                     ) ? (
@@ -429,7 +478,11 @@ export default function InterceptManageScholarshipClient() {
                       </Button>
                     )} */}
 
-                    <Button className="flex-1" variant="secondary">
+                    <Button
+                      className="flex-1"
+                      variant="secondary"
+                      onClick={() => HandleCloseDrawer(false)}
+                    >
                       Close
                     </Button>
                   </div>

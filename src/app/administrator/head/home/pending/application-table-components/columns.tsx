@@ -113,18 +113,18 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     enableHiding: true,
   },
 
-  {
-    accessorFn: (row) => row.Scholarship.title,
-    id: "Scholarship",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Scholarship" />
-    ),
-    cell: ({ row }) => (
-      <span className="capitalize">{row.getValue("Scholarship")}</span>
-    ),
-    enableSorting: true,
-    enableHiding: true,
-  },
+  // {
+  //   accessorFn: (row) => row.Scholarship.title ?? "",
+  //   id: "Scholarship",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Scholarship" />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <span className="capitalize">{row.getValue("Scholarship")}</span>
+  //   ),
+  //   enableSorting: true,
+  //   enableHiding: true,
+  // },
   {
     accessorKey: "status",
     header: ({ column }) => (

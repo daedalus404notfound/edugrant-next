@@ -111,11 +111,11 @@ export default function AdminDashboard() {
     page: 1,
     pageSize: 10,
     status: "ACTIVE",
+    accountId: admin?.accountId,
   });
   const sliced = data.slice(0, 4);
   return (
     <div className="relative min-h-screen z-10">
-     
       <div className="lg:p-5 p-3 space-y-5 ">
         <div className=" grid lg:grid-cols-2 grid-cols-1 gap-5 ">
           <div className="  space-y-5 ">

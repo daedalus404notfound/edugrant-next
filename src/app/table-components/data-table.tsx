@@ -110,7 +110,7 @@ export function DataTable<TData, TValue>({
                   ? "dark:bg-red-900 bg-red-100"
                   : status === "APPROVED"
                   ? "dark:bg-green-900 bg-green-100"
-                  : status === "INTERVIEW"
+                  : status === "RENEW"
                   ? "dark:bg-blue-900 bg-blue-100"
                   : status === "REVIEWED"
                   ? "dark:bg-blue-900 bg-blue-100"

@@ -93,7 +93,7 @@ export default function UploadDocs({
   setIsApply: (isApply: "details" | "apply" | "renew") => void;
 }) {
   const router = useRouter();
-  // const addScholarshipId = useUserStore((state) => state.addScholarshipId);
+  const addScholarshipId = useUserStore((state) => state.addScholarshipId);
 
   const user = useUserStore((state) => state.user);
   const userId = user?.accountId;
@@ -170,7 +170,7 @@ export default function UploadDocs({
       );
 
       if (res.status === 200) {
-        // addScholarshipId(scholarId);
+        addScholarshipId(scholarId);
         StyledToast({
           status: "success",
           title: "Upload successful!",
@@ -203,7 +203,7 @@ export default function UploadDocs({
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col rounded-t-lg">
+    <div className=" bg-background flex flex-col rounded-t-lg">
       <div className="flex-1 p-4 space-y-10">
         <Stepper defaultValue={1} className="items-start gap-4">
           {steps.map(({ step, title, description }) => (
@@ -249,7 +249,7 @@ export default function UploadDocs({
           </div>
 
           <Form {...form}>
-            <div className=" grid lg:grid-cols-2 grid-cols-1 gap-3">
+            <div className=" grid lg:grid-cols-2 grid-cols-1 gap-5">
               {Object.values(requiredDocuments).map((doc, index) => (
                 <FormField
                   key={`required-${index}`}
@@ -257,7 +257,7 @@ export default function UploadDocs({
                   name={doc.label as keyof FormData}
                   render={() => (
                     <FormItem>
-                      <div className="space-y-4 bg-card p-4 rounded-md">
+                      <div className="space-y-4 p-4 rounded-md border">
                         <div className="space-y-1">
                           <FormLabel className="flex items-center justify-between">
                             <span className="text-base font-medium">
@@ -277,13 +277,9 @@ export default function UploadDocs({
                           </FormLabel>
                           <div className="flex items-center gap-2 text-xs text-muted-foreground">
                             {doc.formats.map((format, formatIndex) => (
-                              <Badge
-                                key={formatIndex}
-                                variant="outline"
-                                className="text-xs"
-                              >
-                                .{mimeToLabelMap[format] || format}
-                              </Badge>
+                              <p key={formatIndex} className="text-xs">
+                                {mimeToLabelMap[format] || format}
+                              </p>
                             ))}
                           </div>
                         </div>

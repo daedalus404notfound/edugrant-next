@@ -71,7 +71,7 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
               : status === "EXPIRED"
               ? "bg-red-500/10 text-red-700"
               : status === "RENEW"
-              ? "bg-yellow-500/10 text-yellow-700"
+              ? "bg-blue-500/10 text-blue-700"
               : "bg-gray-500/10 text-gray-700"
           }`}
         >
