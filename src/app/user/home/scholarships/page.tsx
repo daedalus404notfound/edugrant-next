@@ -390,7 +390,7 @@ export default function ClientScholarship() {
                                 (meow) =>
                                   meow.scholarshipId ===
                                   scholarship.scholarshipId
-                              )?.status !== "APPROVED" && (
+                              )?.status !== "RENEW" && (
                                 <div className="absolute z-20 inset-0 bg-black/60 flex justify-center items-center">
                                   <span className="absolute top-3 right-0 bg-black/40 text-center pl-4 pr-6 py-2 rounded-l-lg flex items-center gap-2 text-sm font-medium">
                                     {" "}

@@ -427,9 +427,10 @@ export default function InterceptManageScholarshipClient() {
                   <div className="p-4 flex gap-3 border-t sticky bottom-0 bg-background">
                     {user?.Student.Application.find(
                       (meow) => meow.scholarshipId === data?.scholarshipId
-                    ) ? (
-                      <></>
-                    ) : data?.renew === false ? (
+                    ) &&
+                    user?.Student.Application.find(
+                      (meow) => meow.scholarshipId === data?.scholarshipId
+                    )?.status !== "RENEW" ? (
                       <Button
                         className="flex-1"
                         onClick={() => setIsApply("apply")}
