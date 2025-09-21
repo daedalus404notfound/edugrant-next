@@ -366,7 +366,7 @@ export default function EditScholarship({
           </div>
 
           {/* Dynamic Required Documents */}
-          {data.interview === false && (
+          {data.renew === false && (
             <div className="space-y-5 mt-10">
               <div className="w-full flex items-center justify-end ">
                 <Button
@@ -387,83 +387,6 @@ export default function EditScholarship({
               </div>
 
               <div className="space-y-5">
-                <div className="space-y-1">
-                  <h1 className="text-sm font-medium">
-                    Existing Required Documents (Uneditable)
-                  </h1>
-                  <div className="space-y-5">
-                    {data.documents.documents &&
-                      data.documents.documents.map((doc, index) => (
-                        <div
-                          key={doc.label}
-                          className="grid grid-cols-3 gap-3 items-center"
-                        >
-                          <div className="lg:col-span-1 col-span-3">
-                            <Input
-                              placeholder="e.g. COR"
-                              value={doc.label}
-                              disabled
-                              readOnly
-                            />
-                          </div>
-
-                          {/* Formats + Requirement */}
-                          <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
-                            {/* Formats */}
-                            <div className="flex-1">
-                              <MultipleSelector
-                                className="bg-white/5"
-                                commandProps={{
-                                  label: "Select document formats",
-                                }}
-                                value={options.filter((option) =>
-                                  doc.formats?.includes(option.value)
-                                )}
-                                defaultOptions={options}
-                                placeholder="Choose formats"
-                                hideClearAllButton
-                                hidePlaceholderWhenSelected
-                                emptyIndicator={
-                                  <p className="text-center text-sm">
-                                    No results found
-                                  </p>
-                                }
-                                disabled
-                              />
-                            </div>
-
-                            {/* Requirement Type */}
-                            <div>
-                              <Select value={doc.requirementType} disabled>
-                                <SelectTrigger className="w-[180px]">
-                                  <SelectValue placeholder="Requirement type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectGroup>
-                                    <SelectItem value="required">
-                                      Required
-                                    </SelectItem>
-                                    <SelectItem value="optional">
-                                      Optional
-                                    </SelectItem>
-                                  </SelectGroup>
-                                </SelectContent>
-                              </Select>
-                            </div>
-
-                            {/* Remove Button */}
-                            <Button
-                              type="button"
-                              variant="destructive"
-                              disabled
-                            >
-                              <Trash2 />
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                </div>
                 {documentFields.map((field, index) => (
                   <div
                     key={field.id}
@@ -573,7 +496,7 @@ export default function EditScholarship({
             </div>
           )}
 
-          {data.interview === true && (
+          {data.renew === true && (
             <div className="space-y-5 mt-10">
               <div className="w-full flex items-center justify-end ">
                 <Button
@@ -594,83 +517,6 @@ export default function EditScholarship({
               </div>
 
               <div className="space-y-5">
-                <div className="space-y-1">
-                  <h1 className="text-sm font-medium">
-                    Existing Required Documents (Uneditable)
-                  </h1>
-                  <div className="space-y-5">
-                    {data.documents.renewDocuments &&
-                      data.documents.renewDocuments.map((doc, index) => (
-                        <div
-                          key={doc.label}
-                          className="grid grid-cols-3 gap-3 items-center"
-                        >
-                          <div className="lg:col-span-1 col-span-3">
-                            <Input
-                              placeholder="e.g. COR"
-                              value={doc.label}
-                              disabled
-                              readOnly
-                            />
-                          </div>
-
-                          {/* Formats + Requirement */}
-                          <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
-                            {/* Formats */}
-                            <div className="flex-1">
-                              <MultipleSelector
-                                className="bg-white/5"
-                                commandProps={{
-                                  label: "Select document formats",
-                                }}
-                                value={options.filter((option) =>
-                                  doc.formats?.includes(option.value)
-                                )}
-                                defaultOptions={options}
-                                placeholder="Choose formats"
-                                hideClearAllButton
-                                hidePlaceholderWhenSelected
-                                emptyIndicator={
-                                  <p className="text-center text-sm">
-                                    No results found
-                                  </p>
-                                }
-                                disabled
-                              />
-                            </div>
-
-                            {/* Requirement Type */}
-                            <div>
-                              <Select value={doc.requirementType} disabled>
-                                <SelectTrigger className="w-[180px]">
-                                  <SelectValue placeholder="Requirement type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectGroup>
-                                    <SelectItem value="required">
-                                      Required
-                                    </SelectItem>
-                                    <SelectItem value="optional">
-                                      Optional
-                                    </SelectItem>
-                                  </SelectGroup>
-                                </SelectContent>
-                              </Select>
-                            </div>
-
-                            {/* Remove Button */}
-                            <Button
-                              type="button"
-                              variant="destructive"
-                              disabled
-                            >
-                              <Trash2 />
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
-                </div>
                 {renewDocumentFields.map((field, index) => (
                   <div
                     key={field.id}

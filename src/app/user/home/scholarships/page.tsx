@@ -364,33 +364,35 @@ export default function ClientScholarship() {
                 ) : data.length === 0 ? (
                   <NoDataFound />
                 ) : (
-                  data.map((scholarship) => (
-                    <Link
-                      href={`/user/home/scholarships/${scholarship.scholarshipId}`}
-                      prefetch
-                      scroll={false}
-                      key={scholarship.scholarshipId}
-                      className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
-                    >
-                      <div className="relative rounded-lg bg-background ">
-                        <img
-                          className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
-                            status === "EXPIRED" ? "" : ""
-                          }`}
-                          src={scholarship.cover}
-                          alt=""
-                        />
-                        <div className="relative z-10">
-                          <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
-                            {user?.Student.Application.find(
-                              (meow) =>
-                                meow.scholarshipId === scholarship.scholarshipId
-                            ) &&
-                              user?.Student.Application.find(
-                                (meow) =>
-                                  meow.scholarshipId ===
-                                  scholarship.scholarshipId
-                              )?.status !== "RENEW" && (
+                  data.map((scholarship) => {
+                    const findMatch = user?.Student.Application.find(
+                      (meow) =>
+                        meow.scholarshipId === scholarship?.scholarshipId
+                    );
+                    const isNotRenew =
+                      user?.Student.Application.find(
+                        (meow) =>
+                          meow.scholarshipId === scholarship?.scholarshipId
+                      )?.status !== "RENEW";
+                    return (
+                      <Link
+                        href={`/user/home/scholarships/${scholarship.scholarshipId}`}
+                        prefetch
+                        scroll={false}
+                        key={scholarship.scholarshipId}
+                        className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
+                      >
+                        <div className="relative rounded-lg bg-background ">
+                          <img
+                            className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
+                              status === "EXPIRED" ? "" : ""
+                            }`}
+                            src={scholarship.cover}
+                            alt=""
+                          />
+                          <div className="relative z-10">
+                            <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
+                              {findMatch && isNotRenew && (
                                 <div className="absolute z-20 inset-0 bg-black/60 flex justify-center items-center">
                                   <span className="absolute top-3 right-0 bg-black/40 text-center pl-4 pr-6 py-2 rounded-l-lg flex items-center gap-2 text-sm font-medium">
                                     {" "}
@@ -399,55 +401,55 @@ export default function ClientScholarship() {
                                 </div>
                               )}
 
-                            <img
-                              className={`h-full w-full object-cover ${
-                                status === "EXPIRED" ? "" : ""
-                              }`}
-                              src={scholarship.cover}
-                              alt=""
-                            />
-                          </div>
-                          <div className=" lg:p-4 p-2 space-y-5">
-                            <div className="flex items-start justify-start">
-                              <div className="flex-1 lg:space-y-1">
-                                <div className="flex justify-between items-center">
-                                  <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight">
-                                    {scholarship.title}
-                                  </h3>
-                                  <Badge
-                                    variant="secondary"
-                                    className="uppercase"
-                                  >
-                                    {scholarship.type}
-                                  </Badge>
-                                </div>
-                                <p className="text-sm text-muted-foreground">
-                                  {scholarship.Scholarship_Provider.name}
-                                </p>
-                              </div>
+                              <img
+                                className={`h-full w-full object-cover ${
+                                  status === "EXPIRED" ? "" : ""
+                                }`}
+                                src={scholarship.cover}
+                                alt=""
+                              />
                             </div>
-
-                            <div className="flex items-center justify-between text-sm text-muted-foreground ">
-                              <div className="space-x-2">
-                                {(status === "ACTIVE" ||
-                                  status === "RENEW") && (
-                                  <Badge className="bg-green-800 text-gray-200">
-                                    ACTIVE
-                                  </Badge>
-                                )}
-                                {scholarship.renew === true && (
-                                  <Badge className="bg-blue-800 text-gray-200">
-                                    RENEWAL
-                                  </Badge>
-                                )}
-                                {status === "EXPIRED" && (
-                                  <Badge className="bg-red-800 text-gray-200">
-                                    EXPIRED
-                                  </Badge>
-                                )}
+                            <div className=" lg:p-4 p-2 space-y-5">
+                              <div className="flex items-start justify-start">
+                                <div className="flex-1 lg:space-y-1">
+                                  <div className="flex justify-between items-center">
+                                    <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight">
+                                      {scholarship.title}
+                                    </h3>
+                                    <Badge
+                                      variant="secondary"
+                                      className="uppercase"
+                                    >
+                                      {scholarship.type}
+                                    </Badge>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground">
+                                    {scholarship.Scholarship_Provider.name}
+                                  </p>
+                                </div>
                               </div>
 
-                              {/* {user?.Student?.Application?.some(
+                              <div className="flex items-center justify-between text-sm text-muted-foreground ">
+                                <div className="space-x-2">
+                                  {(status === "ACTIVE" ||
+                                    status === "RENEW") && (
+                                    <Badge className="bg-green-800 text-gray-200">
+                                      ACTIVE
+                                    </Badge>
+                                  )}
+                                  {scholarship.renew === true && (
+                                    <Badge className="bg-blue-800 text-gray-200">
+                                      RENEWAL
+                                    </Badge>
+                                  )}
+                                  {status === "EXPIRED" && (
+                                    <Badge className="bg-red-800 text-gray-200">
+                                      EXPIRED
+                                    </Badge>
+                                  )}
+                                </div>
+
+                                {/* {user?.Student?.Application?.some(
                                 (app) =>
                                   app.scholarshipId ===
                                   scholarship.scholarshipId
@@ -456,16 +458,17 @@ export default function ClientScholarship() {
                                   APPLIED
                                 </Badge>
                               )} */}
-                              <span>
-                                Deadline:{" "}
-                                {format(scholarship.deadline, "MM/dd/yy")}
-                              </span>
+                                <span>
+                                  Deadline:{" "}
+                                  {format(scholarship.deadline, "MM/dd/yy")}
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </Link>
-                  ))
+                      </Link>
+                    );
+                  })
                 )}
               </div>
             </TourStep>

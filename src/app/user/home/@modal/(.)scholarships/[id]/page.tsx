@@ -79,6 +79,13 @@ export default function InterceptManageScholarshipClient() {
     }
   };
   const { user } = useUserStore();
+  const findMatch = user?.Student.Application.find(
+    (meow) => meow.scholarshipId === data?.scholarshipId
+  );
+  const isNotRenew =
+    user?.Student.Application.find(
+      (meow) => meow.scholarshipId === data?.scholarshipId
+    )?.status !== "RENEW";
   return (
     <Drawer
       open={open}
@@ -425,12 +432,7 @@ export default function InterceptManageScholarshipClient() {
                     </div>
                   </div>
                   <div className="p-4 flex gap-3 border-t sticky bottom-0 bg-background">
-                    {user?.Student.Application.find(
-                      (meow) => meow.scholarshipId === data?.scholarshipId
-                    ) &&
-                    user?.Student.Application.find(
-                      (meow) => meow.scholarshipId === data?.scholarshipId
-                    )?.status !== "RENEW" ? (
+                    {findMatch && isNotRenew ? (
                       <Button
                         className="flex-1"
                         onClick={() => setIsApply("apply")}
