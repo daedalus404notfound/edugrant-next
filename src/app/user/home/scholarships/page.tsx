@@ -388,9 +388,9 @@ export default function ClientScholarship() {
                             ) &&
                               scholarship.renew === false && (
                                 <div className="absolute z-20 inset-0 bg-black/60 flex justify-center items-center">
-                                  <span className=" bg-black/40 text-center px-4 py-2 rounded-md flex items-center gap-2 text-sm font-medium">
+                                  <span className="absolute top-3 right-0 bg-black/40 text-center pl-4 pr-6 py-2 rounded-l-lg flex items-center gap-2 text-sm font-medium">
                                     {" "}
-                                    Applied <CheckCheck size={18} />
+                                    Applied
                                   </span>
                                 </div>
                               )}
