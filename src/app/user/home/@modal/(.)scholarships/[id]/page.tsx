@@ -425,33 +425,26 @@ export default function InterceptManageScholarshipClient() {
                     </div>
                   </div>
                   <div className="p-4 flex gap-3 border-t sticky bottom-0 bg-background">
-                    {user?.Student.Application.find(
-                      (meow) => meow.scholarshipId === data?.scholarshipId
-                    ) ? (
-                      <></>
-                    ) : data?.renew === false ? (
-                      <Button
-                        className="flex-1"
-                        onClick={() => setIsApply("apply")}
-                        disabled={
-                          data?.deadline &&
-                          new Date(data.deadline).getTime() < Date.now()
-                        }
-                      >
-                        Apply Scholarship
-                      </Button>
-                    ) : (
-                      <Button
-                        className="flex-1"
-                        onClick={() => setIsApply("renew")}
-                        disabled={
-                          data?.deadline &&
-                          new Date(data.deadline).getTime() < Date.now()
-                        }
-                      >
-                        Apply Renew Scholarship
-                      </Button>
-                    )}
+                    <Button
+                      className="flex-1"
+                      onClick={() => setIsApply("apply")}
+                      disabled={
+                        data?.deadline &&
+                        new Date(data.deadline).getTime() < Date.now()
+                      }
+                    >
+                      Apply Scholarship
+                    </Button>
+                    <Button
+                      className="flex-1"
+                      onClick={() => setIsApply("renew")}
+                      disabled={
+                        data?.deadline &&
+                        new Date(data.deadline).getTime() < Date.now()
+                      }
+                    >
+                      Apply Renew Scholarship
+                    </Button>
 
                     <Button
                       className="flex-1"

@@ -113,11 +113,14 @@ export default function ClientScholarship() {
                 className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
               >
                 <div className="relative rounded-lg bg-background ">
-                  <img
-                    className="absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs "
-                    src={meow.Scholarship.logo}
-                    alt=""
-                  />
+                  {meow.Scholarship.logo && (
+                    <img
+                      className="absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs "
+                      src={meow.Scholarship.logo}
+                      alt=""
+                    />
+                  )}
+
                   <div className="relative z-10">
                     <div className=" aspect-[16/8.5] w-full rounded-md overflow-hidden">
                       <img
