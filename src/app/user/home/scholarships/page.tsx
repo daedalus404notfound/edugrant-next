@@ -345,7 +345,7 @@ export default function ClientScholarship() {
             </div>
 
             <TourStep stepId="cards">
-              <div className=" grid lg:grid-cols-3 grid-cols-1 gap-4">
+              <div className=" grid lg:grid-cols-3 grid-cols-1 gap-6">
                 {loading ? (
                   [...Array(3)].map((_, index) => (
                     <div
