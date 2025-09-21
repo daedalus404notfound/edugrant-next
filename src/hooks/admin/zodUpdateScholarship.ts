@@ -88,9 +88,10 @@ export function useUpdateScholarshipZod(data?: scholarshipFormData) {
       type: data?.type === "private" ? "private" : "government",
       title: data?.title || "",
       documents: {
-        documents: data?.documents.documents,
+        documents: data?.renew === false ? data?.documents.documents : [],
 
-        renewDocuments: data?.documents.renewDocuments,
+        renewDocuments:
+          data?.renew === true ? data?.documents.renewDocuments : [],
       },
       supabasePath: {
         cover: data?.supabasePath?.cover || "",

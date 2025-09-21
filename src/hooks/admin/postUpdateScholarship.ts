@@ -42,8 +42,17 @@ const addScholarshipApi = async (data: scholarshipFormData) => {
   if (data.logo) {
     formDataToSend.append("sponsorLogo", data.logo);
   }
-
-  formDataToSend.append("scholarshipDocuments", JSON.stringify(data.documents));
+  if (data.renew === false) {
+    formDataToSend.append(
+      "scholarshipDocuments",
+      JSON.stringify({ documents: data.documents.documents })
+    );
+  } else if (data.renew === true) {
+    formDataToSend.append(
+      "scholarshipDocuments",
+      JSON.stringify({ renewDocuments: data.documents.renewDocuments })
+    );
+  }
 
   const res = await axios.put(
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/updateScholarship`,

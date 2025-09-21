@@ -82,6 +82,11 @@ export default function InterceptManageScholarshipClient() {
   const findMatch = user?.Student.Application.find(
     (meow) => meow.scholarshipId === data?.scholarshipId
   );
+  const isRenew =
+    user?.Student.Application.find(
+      (meow) => meow.scholarshipId === data?.scholarshipId
+    )?.status === "RENEW";
+
   const isNotRenew =
     user?.Student.Application.find(
       (meow) => meow.scholarshipId === data?.scholarshipId
@@ -432,18 +437,7 @@ export default function InterceptManageScholarshipClient() {
                     </div>
                   </div>
                   <div className="p-4 flex gap-3 border-t sticky bottom-0 bg-background">
-                    {findMatch && isNotRenew ? (
-                      <Button
-                        className="flex-1"
-                        onClick={() => setIsApply("apply")}
-                        disabled={
-                          data?.deadline &&
-                          new Date(data.deadline).getTime() < Date.now()
-                        }
-                      >
-                        Apply Scholarship
-                      </Button>
-                    ) : (
+                    {findMatch && isRenew ? (
                       <Button
                         className="flex-1"
                         onClick={() => setIsApply("renew")}
@@ -453,6 +447,18 @@ export default function InterceptManageScholarshipClient() {
                         }
                       >
                         Apply Renew Scholarship
+                      </Button>
+                    ) : (
+                      <Button
+                        className="flex-1"
+                        onClick={() => setIsApply("apply")}
+                        disabled={
+                          (data?.deadline &&
+                            new Date(data.deadline).getTime() < Date.now()) ||
+                          !!findMatch
+                        }
+                      >
+                        Apply Scholarship
                       </Button>
                     )}
 
