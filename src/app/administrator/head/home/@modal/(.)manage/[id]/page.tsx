@@ -192,6 +192,11 @@ export default function InterceptManageScholarship() {
                           ACTIVE
                         </Badge>
                       )}
+                      {data?.interview === true && (
+                        <Badge className="bg-blue-800 text-gray-200 tracking-wide">
+                          RENEWAL
+                        </Badge>
+                      )}
                     </motion.span>
                     <p className="text-muted-foreground text-sm">
                       by {data?.Scholarship_Provider?.name}
@@ -334,22 +339,68 @@ export default function InterceptManageScholarship() {
                     </div>
                   </div>
                   <div className="space-y-6">
-                    {" "}
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <h3 className="text-xs font-medium text-muted-foreground  tracking-wide">
-                          Required Documents
-                        </h3>
-                        <p className="font-medium text-lg">
-                          {Object.keys(data?.documents || {}).length}
-                        </p>
-                      </div>
+                    {data?.interview === false && (
+                      <div className="space-y-3">
+                        <div className="flex gap-3 items-center">
+                          <h1 className="font-medium">Required Documents</h1>
+                          <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                          <p className="font-medium text-lg">
+                            {
+                              Object.keys(data?.documents.documents || {})
+                                .length
+                            }
+                          </p>
+                        </div>
 
-                      <div className=" divide-y">
-                        {Object.values(data?.documents.documents || {}).map(
-                          (doc, index) => (
+                        <div className="space-y-2">
+                          {Object.values(data?.documents.documents || {}).map(
+                            (doc, index) => (
+                              <div
+                                className="flex justify-between items-center p-4 bg-card rounded-md"
+                                key={doc.label}
+                              >
+                                <div>
+                                  <span> {index + 1}. </span>
+                                  {doc.label}
+                                </div>
+                                <Badge
+                                  className={`${
+                                    doc.requirementType === "required"
+                                      ? "bg-red-700/20 text-red-700"
+                                      : doc.requirementType === "optional"
+                                      ? "bg-blue-700/20 text-blue-700"
+                                      : ""
+                                  } capitalize `}
+                                >
+                                  {doc.requirementType}
+                                </Badge>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    {data?.interview === true && (
+                      <div className="space-y-3">
+                        <div className="flex gap-3 items-center">
+                          <h1 className="font-medium">
+                            Required Documents for Renewal
+                          </h1>
+                          <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                          <p className="font-medium text-lg">
+                            {
+                              Object.keys(data?.documents.renewDocuments || {})
+                                .length
+                            }
+                          </p>
+                        </div>
+
+                        <div className=" space-y-2">
+                          {Object.values(
+                            data?.documents.renewDocuments || {}
+                          ).map((doc, index) => (
                             <div
-                              className="flex justify-between items-center py-5"
+                              className="flex justify-between items-center p-4 rounded-md bg-card"
                               key={doc.label}
                             >
                               <div>
@@ -368,10 +419,10 @@ export default function InterceptManageScholarship() {
                                 {doc.requirementType}
                               </Badge>
                             </div>
-                          )
-                        )}
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                   <div className="p-4 bg-card rounded-md">
                     <h1 className="text-center text-sm font-medium">
@@ -409,10 +460,7 @@ export default function InterceptManageScholarship() {
           ) : (
             <div className="p-4 sticky bottom-0 bg-card border-t">
               <div className="flex gap-3">
-                <Button
-                  onClick={() => setMode("edit")}
-                  className="flex-1 bg-blue-950 border border-blue-950 hover:bg-blue-800 text-gray-200 hover:border-blue-800"
-                >
+                <Button onClick={() => setMode("edit")} className="flex-1">
                   <Edit /> Edit
                 </Button>
 

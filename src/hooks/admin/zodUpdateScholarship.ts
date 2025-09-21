@@ -61,9 +61,9 @@ export function useUpdateScholarshipZod(data?: scholarshipFormData) {
     resolver: zodResolver(scholarshipSchema),
     defaultValues: {
       ISPSUId: data?.ISPSUId || 0,
-      SPId: data?.SPId ||0,
+      SPId: data?.SPId || 0,
       Scholarship_Provider: {
-        SPId: data?.Scholarship_Provider?.SPId ||0,
+        SPId: data?.Scholarship_Provider?.SPId || 0,
         dateCreated: data?.Scholarship_Provider?.dateCreated
           ? new Date(data.Scholarship_Provider.dateCreated)
           : new Date(),
@@ -88,17 +88,9 @@ export function useUpdateScholarshipZod(data?: scholarshipFormData) {
       type: data?.type === "private" ? "private" : "government",
       title: data?.title || "",
       documents: {
-        documents: data?.documents?.documents
-          ? data.documents.documents.map((doc) => ({
-              label: doc.label || "",
-              formats: doc.formats?.map(String) || [],
-              requirementType:
-                doc.requirementType === "optional" ||
-                doc.requirementType === "required"
-                  ? doc.requirementType
-                  : "required",
-            }))
-          : [{ label: "", formats: [], requirementType: "required" }],
+        documents: [],
+
+        renewDocuments: [],
       },
       supabasePath: {
         cover: data?.supabasePath?.cover || "",

@@ -86,8 +86,16 @@ export const useAddScholarship = () => {
 };
 
 export const useUpdateScholarship = (data?: scholarshipFormData) => {
-  const { form, formData, documentFields, appendDocument, removeDocument } =
-    useUpdateScholarshipZod(data);
+  const {
+    form,
+    formData,
+    documentFields,
+    appendDocument,
+    removeDocument,
+    renewDocumentFields,
+    appendRenewDocument,
+    removeRenewDocument,
+  } = useUpdateScholarshipZod(data);
   const addScholarship = useAddScholarship();
   const [open, setOpen] = useState(false);
 
@@ -145,5 +153,8 @@ export const useUpdateScholarship = (data?: scholarshipFormData) => {
     documentFields,
     appendDocument,
     removeDocument,
+    renewDocumentFields,
+    appendRenewDocument,
+    removeRenewDocument,
   };
 };
