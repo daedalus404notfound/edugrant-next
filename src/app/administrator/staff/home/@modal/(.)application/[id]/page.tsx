@@ -145,6 +145,8 @@ export default function InterceptReviewApplicants() {
         );
       }).length
     : 0;
+
+  console.log("total docs", totalRequiredDocs, "reviewedDocs", reviewedDocs);
   const progressValue = totalDocs > 0 ? (reviewedDocs / totalDocs) * 100 : 0;
 
   const HandleCloseDrawer = (value: boolean) => {
@@ -1093,7 +1095,7 @@ export default function InterceptReviewApplicants() {
                     <DialogTrigger asChild>
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={totalDocs > reviewedDocs}
+                        disabled={totalRequiredDocs > reviewedDocs}
                       >
                         <UserRoundCheck className="w-4 h-4 mr-2" />
                         Approve Application
@@ -1154,7 +1156,7 @@ export default function InterceptReviewApplicants() {
                     <DialogTrigger asChild>
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={totalDocs > reviewedDocs}
+                        disabled={totalRequiredDocs > reviewedDocs}
                       >
                         <UserRoundCheck className="w-4 h-4 mr-2" />
                         Approve Application

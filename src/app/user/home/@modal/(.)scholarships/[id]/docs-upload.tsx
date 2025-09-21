@@ -93,7 +93,7 @@ export default function UploadDocs({
   setIsApply: (isApply: "details" | "apply" | "renew") => void;
 }) {
   const router = useRouter();
-  const addScholarshipId = useUserStore((state) => state.addScholarshipId);
+  const { addApplication } = useUserStore.getState();
 
   const user = useUserStore((state) => state.user);
   const userId = user?.accountId;
@@ -170,7 +170,7 @@ export default function UploadDocs({
       );
 
       if (res.status === 200) {
-        addScholarshipId(scholarId);
+        addApplication(scholarId, "PENDING");
         StyledToast({
           status: "success",
           title: "Upload successful!",
