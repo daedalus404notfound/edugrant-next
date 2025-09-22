@@ -39,7 +39,7 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
   },
 
   {
-    accessorKey: "firstName",
+    accessorKey: "fName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Name" />
     ),
@@ -66,65 +66,77 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
   },
   {
     accessorFn: (row) => row.Student.Account.schoolId,
-    id: "Student_Account_studentId",
+    id: "schoolId",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Student ID" />
     ),
-    cell: ({ row }) => (
-      <span className="">{row.getValue("Student_Account_studentId")}</span>
-    ),
+    cell: ({ row }) => <span className="">{row.getValue("schoolId")}</span>,
     enableSorting: true,
     enableHiding: true,
   },
   {
     accessorFn: (row) => row.Student.institute,
-    id: "Institute",
+    id: "institute",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Institute" />
     ),
     cell: ({ row }) => (
-      <span className="capitalize">{row.getValue("Institute")}</span>
+      <span className="capitalize">{row.getValue("institute")}</span>
     ),
     enableSorting: true,
     enableHiding: true,
   },
   {
     accessorFn: (row) => row.Student.course,
-    id: "Course",
+    id: "course",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Course" />
     ),
     cell: ({ row }) => (
-      <span className="capitalize">{row.getValue("Course")}</span>
+      <span className="capitalize">{row.getValue("course")}</span>
     ),
     enableSorting: true,
     enableHiding: true,
   },
   {
     accessorFn: (row) => row.Student.year,
-    id: "Year",
+    id: "year",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Year Level" />
     ),
     cell: ({ row }) => (
-      <span className="capitalize">{row.getValue("Year")}</span>
+      <span className="capitalize">{row.getValue("year")}</span>
     ),
     enableSorting: true,
     enableHiding: true,
   },
 
-  // {
-  //   accessorFn: (row) => row.Scholarship.title ?? "",
-  //   id: "Scholarship",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Scholarship" />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <span className="capitalize">{row.getValue("Scholarship")}</span>
-  //   ),
-  //   enableSorting: true,
-  //   enableHiding: true,
-  // },
+  {
+    accessorFn: (row) => ({
+      title: row.Scholarship?.title,
+      renew: row.Scholarship?.renew,
+    }),
+    id: "title",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Scholarship" />
+    ),
+    cell: ({ row }) => {
+      const value = row.getValue("title") as {
+        title?: string;
+        renew?: string;
+      };
+      return (
+        <div className="flex items-center gap-2">
+          <span className="capitalize">{value?.title}</span>
+          {value?.renew && (
+            <Badge className="bg-blue-800 text-gray-200">RENEWAL</Badge>
+          )}
+        </div>
+      );
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
   {
     accessorKey: "status",
     header: ({ column }) => (

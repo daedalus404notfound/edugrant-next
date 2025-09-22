@@ -44,11 +44,11 @@ export default function DataTableToolbar<
     value: meow,
     icon: GraduationCap,
   }));
-  // const institute = filter?.getFilterData.institute.map((meow) => ({
-  //   label: meow,
-  //   value: meow,
-  //   icon: Building,
-  // }));
+  const institute = filter?.getFilterData.institute.map((meow) => ({
+    label: meow,
+    value: meow,
+    icon: Building,
+  }));
 
   const scholarships = filter?.getScholarshipsFilters.scholarship.map(
     (meow) => ({
@@ -101,26 +101,26 @@ export default function DataTableToolbar<
           <div className="space-x-1">
             <DataTableFacetedFilter
               disabled={!!search}
-              column={table.getColumn("Scholarship")}
+              column={table.getColumn("title")}
               title="Scholarship"
               options={scholarships ?? []}
             />
-            {/* <DataTableFacetedFilter
-          disabled={!!search}
-          column={table.getColumn("Institute")}
-          title="Institute"
-          options={institute ?? []}
-        /> */}
             <DataTableFacetedFilter
               disabled={!!search}
-              column={table.getColumn("Course")}
+              column={table.getColumn("institute")}
+              title="Institute"
+              options={institute ?? []}
+            />
+            <DataTableFacetedFilter
+              disabled={!!search}
+              column={table.getColumn("course")}
               title="Course"
               options={course ?? []}
             />
 
             <DataTableFacetedFilter
               disabled={!!search}
-              column={table.getColumn("Year")}
+              column={table.getColumn("year")}
               title="Year"
               options={year ?? []}
             />

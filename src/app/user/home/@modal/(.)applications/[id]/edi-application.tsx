@@ -61,6 +61,7 @@ export default function EditApplication({
   const user = useUserStore((state) => state.user);
   const userId = user?.accountId;
   const scholarId = data.scholarshipId;
+  const renew = data.Scholarship.renew;
   const [loading, setLoading] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
   const applicationId = data.applicationId;
@@ -102,6 +103,12 @@ export default function EditApplication({
       data.append("accountId", String(userId));
       data.append("scholarshipId", String(scholarId));
       data.append("applicationId", String(applicationId));
+      if (renew === true) {
+        data.append("renew", "true");
+      }
+      if (renew === false) {
+        data.append("renew", "false");
+      }
 
       Object.entries(formData).forEach(([label, files]) => {
         if (files && Array.isArray(files) && files.length > 0) {
