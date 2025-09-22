@@ -34,11 +34,12 @@ import { useState } from "react";
 import TitleReusable from "@/components/ui/title";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { useAdminStore } from "@/store/adminUserStore";
 
 export default function ExportCsvScholarship({ status }: { status?: string }) {
   const [searchTerm, setSearchTerm] = useState("");
-
-  const { data } = useScholarshipData({ status });
+  const { admin } = useAdminStore();
+  const { data } = useScholarshipData({ status, accountId: admin?.accountId });
 
   // Prepare exportable data
   const exportableData = data.map((meow) => ({

@@ -83,17 +83,7 @@ export default function Manage() {
           />
 
           <div className="py-8 space-y-5">
-            <div className="flex">
-              <TourStep stepId="tabs">
-                <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
-              </TourStep>
-            </div>
-            {status === "ACTIVE" && (
-              <ManageActiveScholarship setActive={setActive} />
-            )}
-            {status === "RENEW" && (
-              <ManageRenewScholarship setRenewal={setRenewal} />
-            )}
+            <ManageActiveScholarship setActive={setActive} />
           </div>
         </div>
       </div>
