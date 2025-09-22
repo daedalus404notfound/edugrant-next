@@ -23,21 +23,89 @@ import {
 import { useEffect, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import {
+  Activity,
   ArrowRight,
   ArrowRightIcon,
   Calendar1,
   Calendar1Icon,
   CalendarIcon,
   CheckCheck,
+  Eclipse,
+  ExternalLink,
+  GalleryHorizontalEnd,
   GalleryVerticalEnd,
   Ghost,
   GraduationCap,
+  Grid2X2,
   Lock,
   Megaphone,
   Plus,
+  Table2,
   TrendingUp,
   UserRoundCog,
 } from "lucide-react";
+
+const mockApplications = [
+  {
+    id: "1",
+    scholarshipName: "Merit Excellence Scholarship",
+    appliedDate: "2024-01-15",
+    status: "Under Review",
+    amount: "$5,000",
+    progress: 75,
+  },
+  {
+    id: "2",
+    scholarshipName: "STEM Innovation Grant",
+    appliedDate: "2024-01-10",
+    status: "Approved",
+    amount: "$3,500",
+    progress: 100,
+  },
+  {
+    id: "3",
+    scholarshipName: "Community Leadership Award",
+    appliedDate: "2024-01-20",
+    status: "Pending Documents",
+    amount: "$2,500",
+    progress: 40,
+  },
+];
+const programmingLanguages = [
+  {
+    id: "1",
+    name: "JavaScript",
+    releaseYear: "1995",
+    developer: "Brendan Eich",
+    typing: "Dynamic",
+    paradigm: "Multi-paradigm",
+    extension: ".js",
+    latestVersion: "ES2021",
+    popularity: "High",
+  },
+  {
+    id: "2",
+    name: "Python",
+    releaseYear: "1991",
+    developer: "Guido van Rossum",
+    typing: "Dynamic",
+    paradigm: "Multi-paradigm",
+    extension: ".py",
+    latestVersion: "3.10",
+    popularity: "High",
+  },
+  {
+    id: "3",
+    name: "Java",
+    releaseYear: "1995",
+    developer: "James Gosling",
+    typing: "Static",
+    paradigm: "Object-oriented",
+    extension: ".java",
+    latestVersion: "17",
+    popularity: "High",
+  },
+];
 import { format } from "date-fns";
 import { BGPattern } from "@/components/ui/grid";
 import useScholarshipData from "@/hooks/admin/getScholarship";
@@ -51,14 +119,14 @@ import Link from "next/link";
 
 const summaryCards: SummaryCardProps[] = [
   {
-    label: "Total Applicants",
+    label: "Total Applcations",
     data: 1,
     icon: <TrendingUp />,
     color: "blue",
     todayIncrement: 100,
   },
   {
-    label: "Approved Applicants",
+    label: "Approved Applications",
     data: 2,
     icon: <CheckCheck />,
     color: "green",
@@ -75,19 +143,30 @@ const summaryCards: SummaryCardProps[] = [
 const announcements = [
   {
     id: 1,
-    title: "Scholarship Application Deadline Extended",
+    title: "New Scholarship Program Launch",
     description:
-      "The deadline for scholarship applications has been extended to June 30, 2025.",
-    date: "Dec 12, 2024",
+      "We're excited to announce our new Graduate Excellence Scholarship worth $10,000 for outstanding graduate students.",
+    date: "Jan 18, 2025",
     priority: "high",
+    tag: "New Program",
   },
   {
     id: 2,
-    title: "Scholarship Application Deadline Extended",
+    title: "Application Deadline Extension",
     description:
-      "The deadline for scholarship applications has been extended to June 30, 2025.",
-    date: "Dec 12, 2024",
-    priority: "high",
+      "Due to high demand, we've extended the deadline for Merit Excellence applications to March 30, 2025.",
+    date: "Jan 15, 2025",
+    priority: "medium",
+    tag: "Deadline Update",
+  },
+  {
+    id: 3,
+    title: "Virtual Info Session",
+    description:
+      "Join us for a virtual information session about scholarship opportunities on February 5th at 2 PM EST.",
+    date: "Jan 12, 2025",
+    priority: "low",
+    tag: "Event",
   },
 ];
 
@@ -111,80 +190,127 @@ export default function AdminDashboard() {
     status: "ACTIVE",
   });
   const sliced = data.slice(0, 4);
-  return (
-    <div className="relative min-h-screen z-10">
-    
-      <div className="lg:p-5 p-3 space-y-5 ">
-        <div className="  ">
-          <div className="flex justify-between lg:flex-row flex-col gap-5 ">
-            <div className="lg:space-y-2 ">
-              <h1 className="lg:text-2xl text-lg font-medium">
-                Hello, {user?.Student.fName} {user?.Student.lName}!
-              </h1>
-              <p className="text-sm text-muted-foreground font-mono">
-                {isClient ? format(now, "PPP p") : "Loading..."}
-              </p>
-            </div>
-            <span className="space-x-2 flex">
-              <Button variant="outline" className="flex-1">
-                <Plus /> Add Application
-              </Button>
-              <Button variant="outline" className="flex-1">
-                <UserRoundCog />
-                Edit Profile
-              </Button>
+  function ApplicationCard({ application }: { application: any }) {
+    const getStatusColor = (status: string) => {
+      switch (status) {
+        case "Approved":
+          return "text-green-400 bg-green-400/10";
+        case "Under Review":
+          return "text-yellow-400 bg-yellow-400/10";
+        case "Pending Documents":
+          return "text-orange-400 bg-orange-400/10";
+        default:
+          return "text-gray-400 bg-gray-400/10";
+      }
+    };
+
+    return (
+      <div className="bg-card backdrop-blur-sm border  rounded-lg p-6  ">
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h3 className="font-semibold text-white">
+              {application.scholarshipName}
+            </h3>
+            <p className="text-sm text-gray-400 mt-1">
+              Applied on {application.appliedDate}
+            </p>
+          </div>
+          <span
+            className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(
+              application.status
+            )}`}
+          >
+            {application.status}
+          </span>
+        </div>
+
+        <div className="mb-3">
+          <div className="flex justify-between items-center mb-2">
+            <span className="text-sm text-gray-400">Documents Submitted</span>
+            <span className="text-sm text-muted-foreground">
+              <span className="text-lg font-medium text-white">3</span> / 3
             </span>
           </div>
         </div>
-        <div className="flex flex-col justify-between gap-2 md:flex-row dark:bg-red-700/40 bg-red-200 rounded-md p-4">
-          <div className="flex grow gap-3">
-            <Lock
-              className="mt-0.5 shrink-0 opacity-60"
-              size={16}
-              aria-hidden="true"
-            />
-            <div className="flex grow flex-col justify-between gap-2 md:flex-row md:items-center">
-              <p className="text-sm">
-                Please complete your profile details to unlock the scholarship
-                and apply.
-              </p>
-              <Link
-                href="/user/home/profile"
-                prefetch={true}
-                scroll={false}
-                className="group text-sm font-medium whitespace-nowrap underline"
-              >
-                View Profile
-                <ArrowRightIcon
-                  className="ms-2 -mt-0.5 inline-flex opacity-60 transition-transform group-hover:translate-x-0.5"
-                  size={16}
-                  aria-hidden="true"
-                />
-              </Link>
+
+        <Button className="w-full mt-2" variant="secondary">
+          View Details
+        </Button>
+      </div>
+    );
+  }
+  return (
+    <div className="relative min-h-screen z-10">
+      <div className="lg:p-5 p-3 space-y-5 ">
+        <div className="bg-card text-foreground px-4 py-3 rounded-md">
+          <div className="flex flex-col justify-between gap-2 md:flex-row">
+            <div className="flex grow gap-3">
+              <Lock
+                className="mt-0.5 shrink-0 opacity-60"
+                size={16}
+                aria-hidden="true"
+              />
+              <div className="flex grow flex-col justify-between gap-2 md:flex-row md:items-center">
+                <p className="text-sm">
+                  Complete profile details first to access apply scholarship
+                  feature
+                </p>
+                <a
+                  href="#"
+                  className="group text-sm font-medium whitespace-nowrap"
+                >
+                  View Profile
+                  <ArrowRightIcon
+                    className="ms-1 -mt-0.5 inline-flex opacity-60 transition-transform group-hover:translate-x-0.5"
+                    size={16}
+                    aria-hidden="true"
+                  />
+                </a>
+              </div>
             </div>
           </div>
         </div>
-        <div className=" grid lg:grid-cols-3 grid-cols-1 lg:gap-5 ">
-          <div className="  space-y-5 col-span-2">
+        <div className="lg:space-y-2 flex items-center justify-between">
+          <div>
+            <p className="text-sm text-muted-foreground tracking-wide">
+              {isClient ? format(now, "PPP p") : "Loading..."}
+            </p>
+            <h1 className="lg:text-2xl text-lg font-medium tracking-wide">
+              Hello, {user?.Student.fName} {user?.Student.lName}!
+            </h1>
+          </div>
+          <div className="space-x-3">
+            <Button size="lg">
+              <GraduationCap />
+              Apply
+            </Button>
+            <Button size="lg">
+              <Grid2X2 />
+              Track
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-8 mt-10 ">
+          <div className="space-y-8">
             <div className="grid  lg:grid-cols-3 grid-cols-1 lg:gap-3 gap-3">
               {summaryCards.map((card, index) => (
                 <SummaryCard key={index} {...card} />
               ))}
             </div>
-            <div>
-              <Button
-                variant="ghost"
-                className="pointer-events-auto !p-0 text-base"
-              >
-                <Megaphone /> Announcements
-              </Button>
-
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <h1 className="text-base font-medium">Announcements</h1>
+                <Button size="sm" variant="link">
+                  See All <ExternalLink />
+                </Button>
+              </div>
               <Timeline className="space-y-5">
                 {announcements.map((item) => (
                   <TimelineItem
                     key={item.id}
                     step={item.id}
-                    className="!m-0  bg-card lg:p-6!  p-4! rounded-md border !mb-3"
+                    className="!m-0  bg-card lg:px-6! lg:py-4!  p-4! rounded-md border-l-3 border-green-800 !mb-3"
                   >
                     <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
                       <TimelineTitle className="font-medium text-base">
@@ -206,137 +332,79 @@ export default function AdminDashboard() {
                   </TimelineItem>
                 ))}
               </Timeline>
-              <div className="flex justify-center items-center">
-                <Button variant="link" size="lg" className="!p-0">
-                  View all <ArrowRight />
-                </Button>
-              </div>
-            </div>
-
-            <div className=" ">
-              <Button
-                variant="ghost"
-                className="pointer-events-auto !p-0 text-base"
-              >
-                <GraduationCap /> Active Scholarships
-              </Button>
-
-              <div className="rounded-lg bg-card border lg:p-6 p-3">
-                {loading ? (
-                  <div className="space-y-3">
-                    {Array.from({ length: 4 }).map((_, i) => (
-                      <Skeleton className="h-10 w-full" key={i} />
-                    ))}
-                  </div>
-                ) : sliced.length === 0 ? (
-                  <div className="flex justify-center items-center flex-col p-4 h-30">
-                    <Ghost />
-                    <p className="text-sm mt-2">No scholarship found.</p>
-                  </div>
-                ) : (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-[240px]">
-                          Scholarship Title
-                        </TableHead>
-                        <TableHead>Sponsor</TableHead>
-                        <TableHead>Deadline</TableHead>
-                        <TableHead className="text-right">Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {sliced.map((meow) => (
-                        <TableRow key={meow.scholarshipId}>
-                          <TableCell className="font-medium">
-                            {meow.title}
-                          </TableCell>
-                          <TableCell>
-                            {meow.Scholarship_Provider.name}
-                          </TableCell>
-                          <TableCell>{format(meow.deadline, "PPP")}</TableCell>
-                          <TableCell className="text-right">
-                            <Badge variant="outline">ACTIVE</Badge>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                )}
-              </div>
-              <div className="flex justify-center items-center">
-                <Button variant="link" size="lg" className="!p-0">
-                  View all <ArrowRight />
-                </Button>
-              </div>
-            </div>
-            <div className=" ">
-              <Button
-                variant="ghost"
-                className="pointer-events-auto !p-0 text-base"
-              >
-                <GalleryVerticalEnd /> Recent Application
-              </Button>
-
-              <div className="rounded-lg bg-card border lg:p-6 p-3">
-                {loading ? (
-                  <div className="space-y-3">
-                    {Array.from({ length: 4 }).map((_, i) => (
-                      <Skeleton className="h-10 w-full" key={i} />
-                    ))}
-                  </div>
-                ) : sliced.length === 0 ? (
-                  <div className="flex justify-center items-center flex-col p-4 h-30">
-                    <Ghost />
-                    <p className="text-sm mt-2">No scholarship found.</p>
-                  </div>
-                ) : (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="w-[240px]">
-                          Scholarship Title
-                        </TableHead>
-                        <TableHead>Sponsor</TableHead>
-                        <TableHead>Deadline</TableHead>
-                        <TableHead className="text-right">Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {sliced.map((meow) => (
-                        <TableRow key={meow.scholarshipId}>
-                          <TableCell className="font-medium">
-                            {meow.title}
-                          </TableCell>
-                          <TableCell>
-                            {meow.Scholarship_Provider.name}
-                          </TableCell>
-                          <TableCell>{format(meow.deadline, "PPP")}</TableCell>
-                          <TableCell className="text-right">
-                            <Badge variant="outline">ACTIVE</Badge>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                )}
-              </div>
-              <div className="flex justify-center items-center">
-                <Button variant="link" size="lg" className="!p-0">
-                  View all <ArrowRight />
-                </Button>
-              </div>
             </div>
           </div>
-          <div className=" space-y-7">
-            <div className="grid lg:grid-cols-1 grid-cols-1 gap-7 ">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={setDate}
-                className="w-full aspect-square bg-card border font-mono lg:rounded-lg rounded-md lg:p-6 p-3 dark:bg-zinc-950 "
-                captionLayout="dropdown"
-              />
+
+          <div className="space-y-2">
+            <div className="bg-card backdrop-blur-sm border  rounded-lg px-6 py-4  ">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <h3 className="font-semibold flex gap-2 items-center">
+                    <UserRoundCog /> Complete your profile
+                  </h3>
+                  <p className="text-sm text-gray-400">
+                    Complete your profile to unlock scholarships.
+                  </p>
+                </div>
+                <Button variant="secondary">View Details</Button>
+              </div>
+
+              <div className="mb-3">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm text-gray-400">Progress</span>
+                  <span className="text-sm text-gray-300">30%</span>
+                </div>
+                <div className="w-full bg-gray-700 rounded-full h-2">
+                  <Progress />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex justify-between items-center mt-8">
+              <h1 className="text-base font-medium">Recent Application</h1>
+              <Button size="sm" variant="link">
+                See All <ExternalLink />
+              </Button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {mockApplications.slice(0, 2).map((application) => (
+                <ApplicationCard
+                  key={application.id}
+                  application={application}
+                />
+              ))}
+            </div>
+            <div className="flex justify-between items-center mt-8">
+              <h1 className="text-base font-medium">Active Scholarship</h1>
+              <Button size="sm" variant="link">
+                See All <ExternalLink />
+              </Button>
+            </div>
+            <div className="rounded-md border overflow-hidden bg-card">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-muted/50">
+                    <TableHead className="py-2 pl-4">Name</TableHead>
+                    <TableHead className="py-2">Release Year</TableHead>
+                    <TableHead className="py-2">Developer</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {programmingLanguages.map((language) => (
+                    <TableRow key={language.id}>
+                      <TableCell className="py-2 font-medium pl-4">
+                        {language.name}
+                      </TableCell>
+                      <TableCell className="py-4">
+                        {language.releaseYear}
+                      </TableCell>
+                      <TableCell className="py-4">
+                        {language.developer}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
           </div>
         </div>

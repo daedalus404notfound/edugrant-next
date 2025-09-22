@@ -133,7 +133,7 @@ export default function DynamicHeaderUser({
       </div>
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
-          <Button className="p-0" variant="ghost">
+          <Button className="p-0 " variant="ghost">
             <Hamburger toggled={open} toggle={setOpen} size={28} rounded />
           </Button>
         </DropdownMenuTrigger>
