@@ -153,15 +153,23 @@ export default function InterceptReviewApplicants() {
     : 0;
 
   const reviewedDocsRenew = data?.submittedDocuments.renewDocuments
-    ? Object.entries(data.submittedDocuments.documents).filter(([key, doc]) => {
-        return (
-          doc.rejectMessage?.status ||
-          (reviewData[key]?.status && doc.requirementType.trim() === "required")
-        );
-      }).length
+    ? Object.entries(data.submittedDocuments.renewDocuments).filter(
+        ([key, doc]) => {
+          return (
+            doc.rejectMessage?.status ||
+            (reviewData[key]?.status &&
+              doc.requirementType.trim() === "required")
+          );
+        }
+      ).length
     : 0;
 
-  console.log("total docs", totalRequiredDocs, "reviewedDocs", reviewedDocs);
+  console.log(
+    "total docs",
+    totalRequiredDocsRenew,
+    "reviewedDocs",
+    reviewedDocsRenew
+  );
   const progressValue = totalDocs > 0 ? (reviewedDocs / totalDocs) * 100 : 0;
 
   const HandleCloseDrawer = (value: boolean) => {
@@ -728,6 +736,7 @@ export default function InterceptReviewApplicants() {
                                     />
                                   </div>
                                   <div className="flex gap-2">
+                                    1
                                     <Button
                                       variant={
                                         doc.rejectMessage?.status ===
@@ -1269,7 +1278,7 @@ export default function InterceptReviewApplicants() {
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
                         disabled={
-                          totalRequiredDocs > reviewedDocs ||
+                          totalRequiredDocs > reviewedDocs &&
                           totalRequiredDocsRenew > reviewedDocsRenew
                         }
                       >
@@ -1333,7 +1342,7 @@ export default function InterceptReviewApplicants() {
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
                         disabled={
-                          totalRequiredDocs > reviewedDocs ||
+                          totalRequiredDocs > reviewedDocs &&
                           totalRequiredDocsRenew > reviewedDocsRenew
                         }
                       >
@@ -1463,8 +1472,8 @@ export default function InterceptReviewApplicants() {
                     disabled={
                       data?.status === "APPROVED" ||
                       data?.status === "DECLINED" ||
-                      totalRequiredDocs !== reviewedDocs ||
-                      totalRequiredDocsRenew !== reviewedDocsRenew
+                      (totalRequiredDocs !== reviewedDocs &&
+                        totalRequiredDocsRenew !== reviewedDocsRenew)
                     }
                   >
                     <UserRoundX className="w-4 h-4 mr-2" />
