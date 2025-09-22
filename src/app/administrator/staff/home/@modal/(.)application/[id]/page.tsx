@@ -125,44 +125,51 @@ export default function InterceptReviewApplicants() {
     }));
   };
 
-  const totalDocs = data?.Scholarship.documents
-    ? Object.keys(data?.Scholarship.documents).length
-    : 0;
+  const totalRequiredDocs =
+    data && !data.Scholarship.renew
+      ? Object.entries(data.submittedDocuments.documents).filter(
+          ([_, doc]) =>
+            doc.requirementType && doc.requirementType.trim() === "required"
+        ).length
+      : 0;
 
-  const totalRequiredDocs = data
-    ? Object.entries(data.submittedDocuments.documents).filter(
-        ([_, doc]) =>
-          doc.requirementType && doc.requirementType.trim() !== "optional"
-      ).length
-    : 0;
+  const reviewedDocs =
+    data && !data.Scholarship.renew && data.submittedDocuments.documents
+      ? Object.entries(data.submittedDocuments.documents).filter(
+          ([key, doc]) => {
+            return (
+              doc.rejectMessage?.status ||
+              (reviewData[key]?.status &&
+                doc.requirementType.trim() === "required")
+            );
+          }
+        ).length
+      : 0;
 
-  const totalRequiredDocsRenew = data
-    ? Object.entries(data?.submittedDocuments?.renewDocuments ?? {}).filter(
-        ([_, doc]) =>
-          doc.requirementType && doc.requirementType.trim() !== "optional"
-      ).length
-    : 0;
+  // For renewal documents
+  const totalRequiredDocsRenew =
+    data && data.Scholarship.renew
+      ? Object.entries(data?.submittedDocuments?.renewDocuments ?? {}).filter(
+          ([_, doc]) =>
+            doc.requirementType && doc.requirementType.trim() === "required"
+        ).length
+      : 0;
 
-  const reviewedDocs = data?.submittedDocuments.documents
-    ? Object.entries(data.submittedDocuments.documents).filter(([key, doc]) => {
-        return (
-          doc.rejectMessage?.status ||
-          (reviewData[key]?.status && doc.requirementType.trim() === "required")
-        );
-      }).length
-    : 0;
-
-  const reviewedDocsRenew = data?.submittedDocuments.renewDocuments
-    ? Object.entries(data.submittedDocuments.renewDocuments).filter(
-        ([key, doc]) => {
-          return (
-            doc.rejectMessage?.status ||
-            (reviewData[key]?.status &&
-              doc.requirementType.trim() === "required")
-          );
-        }
-      ).length
-    : 0;
+  const reviewedDocsRenew =
+    data && data.Scholarship.renew && data.submittedDocuments.renewDocuments
+      ? Object.entries(data.submittedDocuments.renewDocuments).filter(
+          ([key, doc]) => {
+            return (
+              doc.rejectMessage?.status ||
+              (reviewData[key]?.status &&
+                doc.requirementType.trim() === "required")
+            );
+          }
+        ).length
+      : 0;
+  const isButtonDisabled = data?.Scholarship.renew
+    ? totalRequiredDocsRenew !== reviewedDocsRenew
+    : totalRequiredDocs !== reviewedDocs;
 
   console.log(
     "total docs",
@@ -170,7 +177,7 @@ export default function InterceptReviewApplicants() {
     "reviewedDocs",
     reviewedDocsRenew
   );
-  const progressValue = totalDocs > 0 ? (reviewedDocs / totalDocs) * 100 : 0;
+  // const progressValue = totalDocs > 0 ? (reviewedDocs / totalDocs) * 100 : 0;
 
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
@@ -1277,10 +1284,7 @@ export default function InterceptReviewApplicants() {
                     <DialogTrigger asChild>
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={
-                          totalRequiredDocs > reviewedDocs &&
-                          totalRequiredDocsRenew > reviewedDocsRenew
-                        }
+                        disabled={isButtonDisabled}
                       >
                         <UserRoundCheck className="w-4 h-4 mr-2" />
                         Approve Application
@@ -1341,10 +1345,7 @@ export default function InterceptReviewApplicants() {
                     <DialogTrigger asChild>
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={
-                          totalRequiredDocs > reviewedDocs &&
-                          totalRequiredDocsRenew > reviewedDocsRenew
-                        }
+                        disabled={isButtonDisabled}
                       >
                         <UserRoundCheck className="w-4 h-4 mr-2" />
                         Approve Application
@@ -1472,8 +1473,7 @@ export default function InterceptReviewApplicants() {
                     disabled={
                       data?.status === "APPROVED" ||
                       data?.status === "DECLINED" ||
-                      (totalRequiredDocs !== reviewedDocs &&
-                        totalRequiredDocsRenew !== reviewedDocsRenew)
+                      isButtonDisabled
                     }
                   >
                     <UserRoundX className="w-4 h-4 mr-2" />
