@@ -24,12 +24,6 @@ export default function RejectedApplication() {
   ];
   const applicationTourSteps: TourStepType[] = [
     {
-      id: "tabs",
-      title: "Expired vs Archived",
-      description:
-        "Switch between active scholarships and renewal applications using these tabs.",
-    },
-    {
       id: "search",
       title: "Search Scholarships",
       description:

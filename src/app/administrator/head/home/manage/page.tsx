@@ -19,12 +19,6 @@ export default function Manage() {
   ];
   const scholarshipTourSteps: TourStepType[] = [
     {
-      id: "tabs",
-      title: "Active vs Renewals",
-      description:
-        "Switch between active scholarships and renewal applications using these tabs.",
-    },
-    {
       id: "search",
       title: "Search Scholarships",
       description:
