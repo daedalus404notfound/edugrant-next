@@ -137,7 +137,7 @@ export default function InterceptReviewApplicants() {
     : 0;
 
   const totalRequiredDocsRenew = data
-    ? Object.entries(data.submittedDocuments.renewDocuments).filter(
+    ? Object.entries(data?.submittedDocuments?.renewDocuments ?? {}).filter(
         ([_, doc]) =>
           doc.requirementType && doc.requirementType.trim() !== "optional"
       ).length
