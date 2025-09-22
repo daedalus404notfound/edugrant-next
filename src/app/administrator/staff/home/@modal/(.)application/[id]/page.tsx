@@ -444,7 +444,7 @@ export default function InterceptReviewApplicants() {
                     {data?.Scholarship.title}
                   </h2>
                   <p className="text-muted-foreground">
-                    {data?.Scholarship.providerName}
+                    {data?.Scholarship.Scholarship_Provider.name}
                   </p>
                 </div>
               </div>
