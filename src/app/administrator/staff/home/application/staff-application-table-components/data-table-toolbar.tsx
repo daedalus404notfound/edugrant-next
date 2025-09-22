@@ -96,31 +96,33 @@ export default function DataTableToolbar<
           </div>
         </TourStep>
         <TourStep stepId="filters">
-          <DataTableFacetedFilter
-            disabled={!!search}
-            column={table.getColumn("Scholarship")}
-            title="Scholarship"
-            options={scholarships ?? []}
-          />
-          {/* <DataTableFacetedFilter
+          <div className="space-x-2">
+            <DataTableFacetedFilter
+              disabled={!!search}
+              column={table.getColumn("title")}
+              title="Scholarship"
+              options={scholarships ?? []}
+            />
+            {/* <DataTableFacetedFilter
           disabled={!!search}
           column={table.getColumn("Institute")}
           title="Institute"
           options={institute ?? []}
         /> */}
-          <DataTableFacetedFilter
-            disabled={!!search}
-            column={table.getColumn("Course")}
-            title="Course"
-            options={course ?? []}
-          />
+            <DataTableFacetedFilter
+              disabled={!!search}
+              column={table.getColumn("course")}
+              title="Course"
+              options={course ?? []}
+            />
 
-          <DataTableFacetedFilter
-            disabled={!!search}
-            column={table.getColumn("Year")}
-            title="Year"
-            options={year ?? []}
-          />
+            <DataTableFacetedFilter
+              disabled={!!search}
+              column={table.getColumn("year")}
+              title="Year"
+              options={year ?? []}
+            />
+          </div>
         </TourStep>
 
         {isFiltered && (

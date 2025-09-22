@@ -108,7 +108,6 @@ export default function InterceptReviewApplicants() {
   const [activeSection, setActiveSection] = useState("documents");
   const id = Number(params.id);
   const { data, loading } = useApplicationById(id);
-  console.log("123", data?.submittedDocuments);
   const [reviewData, setReviewData] = useState<
     Record<string, { comment: string; status: string }>
   >({});
@@ -136,8 +135,24 @@ export default function InterceptReviewApplicants() {
           doc.requirementType && doc.requirementType.trim() !== "optional"
       ).length
     : 0;
-  console.log("totalRequiredDocs;'", totalRequiredDocs);
+
+  const totalRequiredDocsRenew = data
+    ? Object.entries(data.submittedDocuments.renewDocuments).filter(
+        ([_, doc]) =>
+          doc.requirementType && doc.requirementType.trim() !== "optional"
+      ).length
+    : 0;
+
   const reviewedDocs = data?.submittedDocuments.documents
+    ? Object.entries(data.submittedDocuments.documents).filter(([key, doc]) => {
+        return (
+          doc.rejectMessage?.status ||
+          (reviewData[key]?.status && doc.requirementType.trim() === "required")
+        );
+      }).length
+    : 0;
+
+  const reviewedDocsRenew = data?.submittedDocuments.renewDocuments
     ? Object.entries(data.submittedDocuments.documents).filter(([key, doc]) => {
         return (
           doc.rejectMessage?.status ||
@@ -478,13 +493,171 @@ export default function InterceptReviewApplicants() {
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 divide-y">
-                      {data?.submittedDocuments.documents &&
+                      {data?.Scholarship.renew === false &&
+                        data?.submittedDocuments.documents &&
                         Object.entries(data.submittedDocuments.documents)
                           .filter(
                             ([_, doc]) =>
                               doc.requirementType &&
                               doc.requirementType.trim() !== ""
-                          ) // ✅ filter out empty requirementType
+                          )
+                          .map(([key, doc], index) => (
+                            <div key={index} className="flex gap-5 py-8">
+                              <Reviewer
+                                fileFormat={mimeToLabelMap[doc.fileFormat]}
+                                resourceType={doc.resourceType}
+                                fileUrl={doc.fileUrl}
+                                document={doc.document}
+                                supabasePath={doc.supabasePath}
+                                docStatus={doc.rejectMessage?.status}
+                                requirementType={doc.requirementType}
+                                docComment={doc.rejectMessage?.comment}
+                                onUpdate={(field, value) =>
+                                  updateReviewData(key, field, value)
+                                }
+                              />
+
+                              <div className="flex-1 flex flex-col justify-between">
+                                <div className="flex items-start justify-between">
+                                  <div className="flex-1">
+                                    <h4 className="text-lg font-semibold mb-1">
+                                      {doc.document}
+                                    </h4>
+                                    <div className="flex items-center gap-2">
+                                      <Badge
+                                        variant="secondary"
+                                        className="uppercase bg-red-800/20 text-red-700"
+                                      >
+                                        {/* {mimeToLabelMap[doc.fileFormat]} */}
+                                        {doc.requirementType}
+                                      </Badge>
+                                      {doc.rejectMessage?.status && (
+                                        <Badge
+                                          className={`text-xs ${
+                                            doc.rejectMessage.status ===
+                                            "APPROVED"
+                                              ? statusColors.APPROVED
+                                              : statusColors.REJECTED
+                                          }`}
+                                        >
+                                          {doc.rejectMessage.status}
+                                        </Badge>
+                                      )}
+                                    </div>
+                                  </div>
+                                  <Button size="sm" variant="outline">
+                                    <Download className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                                <div className="flex gap-3">
+                                  <div className="flex-1">
+                                    {" "}
+                                    <Textarea
+                                      placeholder="Add review comment..."
+                                      value={
+                                        doc.rejectMessage?.comment ||
+                                        reviewData[key]?.comment ||
+                                        ""
+                                      }
+                                      disabled={!!doc.rejectMessage?.status}
+                                      onChange={(e) =>
+                                        updateReviewData(
+                                          key,
+                                          "comment",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="min-h-9"
+                                    />
+                                  </div>
+                                  <div className="flex gap-2">
+                                    <Button
+                                      variant={
+                                        doc.rejectMessage?.status ===
+                                          "APPROVED" ||
+                                        reviewData[key]?.status === "APPROVED"
+                                          ? "default"
+                                          : "outline"
+                                      }
+                                      className={`font-medium transition-all ${
+                                        doc.rejectMessage?.status ===
+                                          "APPROVED" ||
+                                        reviewData[key]?.status === "APPROVED"
+                                          ? ""
+                                          : "hover:bg-green-50 hover:border-green-200 hover:text-green-700"
+                                      }`}
+                                      onClick={() => {
+                                        updateReviewData(
+                                          key,
+                                          "status",
+                                          "APPROVED"
+                                        );
+                                      }}
+                                      disabled={!!doc.rejectMessage?.status}
+                                    >
+                                      {doc.rejectMessage?.status ===
+                                      "APPROVED" ? (
+                                        <>
+                                          <CheckCheck className="w-4 h-4 mr-2" />
+                                          Accepted
+                                        </>
+                                      ) : (
+                                        <>
+                                          <UserCheck2 className="w-4 h-4 mr-2" />
+                                          Accept
+                                        </>
+                                      )}
+                                    </Button>
+                                    <Button
+                                      variant={
+                                        doc.rejectMessage?.status ===
+                                          "REJECTED" ||
+                                        reviewData[key]?.status === "REJECTED"
+                                          ? "destructive"
+                                          : "outline"
+                                      }
+                                      className={`font-medium transition-all ${
+                                        doc.rejectMessage?.status !==
+                                          "REJECTED" &&
+                                        reviewData[key]?.status !== "REJECTED"
+                                          ? "hover:bg-red-50 hover:border-red-200 hover:text-red-700"
+                                          : ""
+                                      }`}
+                                      onClick={() => {
+                                        updateReviewData(
+                                          key,
+                                          "status",
+                                          "REJECTED"
+                                        );
+                                      }}
+                                      disabled={!!doc.rejectMessage?.status}
+                                    >
+                                      {doc.rejectMessage?.status ===
+                                      "REJECTED" ? (
+                                        <>
+                                          <UserRoundX className="w-4 h-4 mr-2" />
+                                          Rejected
+                                        </>
+                                      ) : (
+                                        <>
+                                          <UserX2 className="w-4 h-4 mr-2" />
+                                          Reject
+                                        </>
+                                      )}
+                                    </Button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                      {data?.Scholarship.renew === true &&
+                        data?.submittedDocuments.renewDocuments &&
+                        Object.entries(data.submittedDocuments.renewDocuments)
+                          .filter(
+                            ([_, doc]) =>
+                              doc.requirementType &&
+                              doc.requirementType.trim() !== ""
+                          )
                           .map(([key, doc], index) => (
                             <div key={index} className="flex gap-5 py-8">
                               <Reviewer
@@ -1095,7 +1268,10 @@ export default function InterceptReviewApplicants() {
                     <DialogTrigger asChild>
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={totalRequiredDocs > reviewedDocs}
+                        disabled={
+                          totalRequiredDocs > reviewedDocs ||
+                          totalRequiredDocsRenew > reviewedDocsRenew
+                        }
                       >
                         <UserRoundCheck className="w-4 h-4 mr-2" />
                         Approve Application
@@ -1156,7 +1332,10 @@ export default function InterceptReviewApplicants() {
                     <DialogTrigger asChild>
                       <Button
                         className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={totalRequiredDocs > reviewedDocs}
+                        disabled={
+                          totalRequiredDocs > reviewedDocs ||
+                          totalRequiredDocsRenew > reviewedDocsRenew
+                        }
                       >
                         <UserRoundCheck className="w-4 h-4 mr-2" />
                         Approve Application
@@ -1284,7 +1463,8 @@ export default function InterceptReviewApplicants() {
                     disabled={
                       data?.status === "APPROVED" ||
                       data?.status === "DECLINED" ||
-                      totalRequiredDocs !== reviewedDocs
+                      totalRequiredDocs !== reviewedDocs ||
+                      totalRequiredDocsRenew !== reviewedDocsRenew
                     }
                   >
                     <UserRoundX className="w-4 h-4 mr-2" />

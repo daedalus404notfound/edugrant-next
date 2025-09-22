@@ -7,21 +7,13 @@ import type { TourStep as TourStepType } from "@/lib/use-tour";
 
 import TitleReusable from "@/components/ui/title";
 import { Tabs } from "@/components/ui/vercel-tabs";
-import PendingRenewalApplication from "./pending-renew";
 import PendingStaffApplication from "./pending";
 
 export default function PendingApplication() {
   const [status, setStatus] = useState("PENDING");
   const [pending, setPending] = useState(0);
   const [pendingRenewal, setRenewPending] = useState(0);
-  const tabs = [
-    { id: "PENDING", label: "Pending Application", indicator: pending },
-    {
-      id: "RENEWPENDING",
-      label: "Pending Renewals",
-      indicator: pendingRenewal,
-    },
-  ];
+
   const applicationTourSteps: TourStepType[] = [
     {
       id: "tabs",
@@ -74,17 +66,7 @@ export default function PendingApplication() {
         />
 
         <div className="py-8 space-y-5">
-          <div className="flex">
-            <TourStep stepId="tabs">
-              <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
-            </TourStep>
-          </div>
-          {status === "PENDING" && (
-            <PendingStaffApplication setPending={setPending} />
-          )}
-          {status === "RENEWPENDING" && (
-            <PendingRenewalApplication setPendingRenew={setRenewPending} />
-          )}
+          <PendingStaffApplication setPending={setPending} />
         </div>
       </div>
     </TourProvider>
