@@ -1,6 +1,9 @@
 import z from "zod";
 import { StudentSchema } from "./user";
-import { scholarshipSchema, scholarshipFormData } from "./scholarship";
+import {
+  scholarshipFormData,
+  scholarshipSchema,
+} from "../admin/zodUpdateScholarship";
 
 const SubmittedDocumentSchema = z.object({
   document: z.string(),

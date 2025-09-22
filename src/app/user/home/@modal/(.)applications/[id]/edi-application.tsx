@@ -63,7 +63,7 @@ export default function EditApplication({
   const scholarId = data.scholarshipId;
   const [loading, setLoading] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
-
+  const applicationId = data.applicationId;
   // Transform the data structure to match what createFormSchema expects
   const editDocuments: Record<string, documentFormData> = Object.entries(
     data.submittedDocuments.documents
@@ -99,8 +99,9 @@ export default function EditApplication({
       setLoading(true);
 
       const data = new FormData();
-      data.append("userId", String(userId));
+      data.append("accountId", String(userId));
       data.append("scholarshipId", String(scholarId));
+      data.append("applicationId", String(applicationId));
 
       Object.entries(formData).forEach(([label, files]) => {
         if (files && Array.isArray(files) && files.length > 0) {
@@ -111,7 +112,7 @@ export default function EditApplication({
       });
 
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_USER_URL}/editDocumentScholarship`,
+        `${process.env.NEXT_PUBLIC_USER_URL}/updateApplication`,
         data,
         {
           withCredentials: true,

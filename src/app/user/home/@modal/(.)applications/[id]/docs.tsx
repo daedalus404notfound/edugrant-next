@@ -17,7 +17,7 @@ export default function DocsStudent({ data }: DocsStudentProps) {
     "image/png": "PNG",
   };
   return (
-    <div className="flex-1 space-y-1 p-4">
+    <div className="flex-1 space-y-1">
       <div className="flex justify-between items-center py-4">
         <div className="flex items-center gap-5 ">
           <p>
@@ -46,20 +46,23 @@ export default function DocsStudent({ data }: DocsStudentProps) {
       <div className="grid  lg:grid-cols-1 grid-cols-1 divide-y">
         {data?.submittedDocuments.documents &&
           Object.entries(data.submittedDocuments.documents).map(
-            ([key, doc]) => (
-              <div key={key} className="lg:py-10 py-8 space-y-2">
-                <div className="flex lg:gap-5 gap-3">
-                  <ApplicationViewer
-                    fileFormat={mimeToLabelMap[doc.fileFormat]}
-                    resourceType={doc.resourceType}
-                    fileUrl={doc.fileUrl}
-                    document={doc.document}
-                    supabasePath={doc.supabasePath}
-                    requirementType={doc.requirementType}
-                  />
-                  <div className="flex-1 flex flex-col lg:justify-end justify-between gap-5 relative">
-                    <div>
-                      {!isMobile && (
+            ([key, doc]) => {
+              const rejectMessage =
+                data?.Application_Decision?.message?.[key] || null;
+
+              return (
+                <div key={key} className="lg:py-10 py-8 space-y-2">
+                  <div className="flex lg:gap-5 gap-3">
+                    <ApplicationViewer
+                      fileFormat={mimeToLabelMap[doc.fileFormat]}
+                      resourceType={doc.resourceType}
+                      fileUrl={doc.fileUrl}
+                      document={doc.document}
+                      supabasePath={doc.supabasePath}
+                      requirementType={doc.requirementType}
+                    />
+                    <div className="flex-1 flex flex-col lg:justify-end justify-between gap-5 relative">
+                      <div>
                         <div className="flex gap-3 capitalize">
                           <p className="font-medium lg:text-base text-sm">
                             {key}
@@ -68,100 +71,94 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                             {doc.requirementType}
                           </Badge>
                         </div>
+
+                        <p className="uppercase lg:text-sm text-xs text-muted-foreground lg:mt-1">
+                          {doc.fileFormat}
+                        </p>
+                      </div>
+
+                      {/* ✅ Show reject message from Application_Decision */}
+                      {rejectMessage?.status === "REJECTED" && !isMobile && (
+                        <div className="rounded-md px-4 py-3 bg-card">
+                          <p className="text-sm line-clamp-1">
+                            <TriangleAlert
+                              className="me-3 -mt-0.5 inline-flex text-red-500"
+                              size={16}
+                              aria-hidden="true"
+                            />
+                            {rejectMessage?.comment ||
+                              "Document has been rejected"}
+                          </p>
+                        </div>
                       )}
-                      <p className="uppercase lg:text-sm text-xs text-muted-foreground lg:mt-1">
-                        {doc.fileFormat}
+
+                      {data?.status === "PENDING" && !isMobile && (
+                        <div className="rounded-md px-4 py-3 bg-card">
+                          <p className="text-sm line-clamp-1">
+                            <Clock
+                              className="me-3 -mt-0.5 inline-flex text-yellow-500"
+                              size={16}
+                              aria-hidden="true"
+                            />
+                            Your document is awaiting verification.
+                          </p>
+                        </div>
+                      )}
+
+                      {rejectMessage?.status === "APPROVED" && !isMobile && (
+                        <div className="rounded-md border px-4 py-3 bg-card">
+                          <p className="text-sm">
+                            <CircleCheckIcon
+                              className="me-3 -mt-0.5 inline-flex text-emerald-500"
+                              size={16}
+                              aria-hidden="true"
+                            />
+                            Document has been approved
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {rejectMessage?.status === "REJECTED" && isMobile && (
+                    <div className="rounded-md px-4 py-3 bg-card">
+                      <p className="text-sm line-clamp-1">
+                        <TriangleAlert
+                          className="me-3 -mt-0.5 inline-flex text-red-500"
+                          size={16}
+                          aria-hidden="true"
+                        />
+                        {rejectMessage?.comment || "Document has been rejected"}
                       </p>
                     </div>
-
-                    {doc.rejectMessage?.status === "REJECTED" && !isMobile && (
-                      <div className="rounded-md px-4 py-3 bg-card">
-                        <p className="text-sm line-clamp-1">
-                          <TriangleAlert
-                            className="me-3 -mt-0.5 inline-flex text-red-500"
-                            size={16}
-                            aria-hidden="true"
-                          />
-                          {doc.rejectMessage?.comment ||
-                            "Document has been rejected"}
-                        </p>
-                      </div>
-                    )}
-                    {data?.status === "PENDING" && !isMobile && (
-                      <div className="rounded-md px-4 py-3 bg-card">
-                        <p className="text-sm line-clamp-1">
-                          <Clock
-                            className="me-3 -mt-0.5 inline-flex text-yellow-500"
-                            size={16}
-                            aria-hidden="true"
-                          />
-                          Your document is awaiting verification.
-                        </p>
-                      </div>
-                    )}
-
-                    {doc.rejectMessage?.status === "APPROVED" && !isMobile && (
-                      <div className=" rounded-md border px-4 py-3 bg-card">
-                        <p className="text-sm">
-                          <CircleCheckIcon
-                            className="me-3 -mt-0.5 inline-flex text-emerald-500"
-                            size={16}
-                            aria-hidden="true"
-                          />
-                          Document has been approved
-                        </p>
-                      </div>
-                    )}
-                  </div>
+                  )}
+                  {data?.status === "PENDING" && isMobile && (
+                    <div className="rounded-md px-4 py-3 bg-card">
+                      <p className="text-sm line-clamp-1">
+                        <Clock
+                          className="me-3 -mt-0.5 inline-flex text-yellow-500"
+                          size={16}
+                          aria-hidden="true"
+                        />
+                        Your document is awaiting verification.
+                      </p>
+                    </div>
+                  )}
+                  {rejectMessage?.status === "APPROVED" && isMobile && (
+                    <div className="rounded-md px-4 py-3 bg-card">
+                      <p className="text-sm">
+                        <CircleCheckIcon
+                          className="me-3 -mt-0.5 inline-flex text-emerald-500"
+                          size={16}
+                          aria-hidden="true"
+                        />
+                        Document has been approved
+                      </p>
+                    </div>
+                  )}
                 </div>
-                {isMobile && (
-                  <div className="flex gap- justify-between items-center capitalize">
-                    <p className="font-medium lg:text-base text-sm">{key}</p>
-                    <Badge variant="outline" className="">
-                      {doc.requirementType}
-                    </Badge>
-                  </div>
-                )}
-                {doc.rejectMessage?.status === "REJECTED" && isMobile && (
-                  <div className="rounded-md px-4 py-3 bg-card">
-                    <p className="text-sm line-clamp-1">
-                      <TriangleAlert
-                        className="me-3 -mt-0.5 inline-flex text-red-500"
-                        size={16}
-                        aria-hidden="true"
-                      />
-                      {doc.rejectMessage?.comment ||
-                        "Document has been rejected"}
-                    </p>
-                  </div>
-                )}
-                {data?.status === "PENDING" && isMobile && (
-                  <div className="rounded-md px-4 py-3 bg-card">
-                    <p className="text-sm line-clamp-1">
-                      <Clock
-                        className="me-3 -mt-0.5 inline-flex text-yellow-500"
-                        size={16}
-                        aria-hidden="true"
-                      />
-                      Your document is awaiting verification.
-                    </p>
-                  </div>
-                )}
-
-                {doc.rejectMessage?.status === "APPROVED" && isMobile && (
-                  <div className=" rounded-md  px-4 py-3 bg-card">
-                    <p className="text-sm">
-                      <CircleCheckIcon
-                        className="me-3 -mt-0.5 inline-flex text-emerald-500"
-                        size={16}
-                        aria-hidden="true"
-                      />
-                      Document has been approved
-                    </p>
-                  </div>
-                )}
-              </div>
-            )
+              );
+            }
           )}
       </div>
     </div>

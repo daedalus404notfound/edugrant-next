@@ -459,6 +459,7 @@ export default function ClientScholarship() {
                                 </Badge>
                               )} */}
                                 <span>
+                                  {scholarship.renew === true && "Renewal"}{" "}
                                   Deadline:{" "}
                                   {format(scholarship.deadline, "MM/dd/yy")}
                                 </span>

@@ -355,47 +355,22 @@ export default function InterceptManageScholarshipClient() {
                         </div>
                       </div>
                       <div className="space-y-6">
-                        {" "}
-                        <div className="space-y-3">
-                          <div className="flex justify-between items-center">
-                            <h3 className="text-xs font-medium text-muted-foreground  tracking-wide">
-                              Required Documents
-                            </h3>
-                            <p className="font-medium text-lg">
-                              {Object.keys(data?.documents || {}).length}
-                            </p>
-                          </div>
-
-                          <div className=" divide-y">
-                            {(data?.documents.documents ||
-                              data?.renew === false) &&
-                              Object.values(
-                                data?.documents.documents || {}
-                              ).map((doc, index) => (
-                                <div
-                                  className="flex justify-between items-center py-5"
-                                  key={doc.label}
-                                >
-                                  <div>
-                                    <span> {index + 1}. </span>
-                                    {doc.label}
-                                  </div>
-                                  <Badge
-                                    className={`${
-                                      doc.requirementType === "required"
-                                        ? "bg-red-700/20 text-red-700"
-                                        : doc.requirementType === "optional"
-                                        ? "bg-blue-700/20 text-blue-700"
-                                        : ""
-                                    } capitalize `}
-                                  >
-                                    {doc.requirementType}
-                                  </Badge>
-                                </div>
-                              ))}
-                            {(data?.documents.renewDocuments ||
-                              data?.renew === true) &&
-                              Object.values(
+                        {data?.renew === true && (
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <h3 className="text-xs font-medium text-muted-foreground  tracking-wide">
+                                Required Documents for Renewal
+                              </h3>
+                              <p className="font-medium text-lg">
+                                {
+                                  Object.keys(
+                                    data?.documents.renewDocuments || {}
+                                  ).length
+                                }
+                              </p>
+                            </div>
+                            <div className=" divide-y">
+                              {Object.values(
                                 data?.documents.renewDocuments || {}
                               ).map((doc, index) => (
                                 <div
@@ -419,8 +394,47 @@ export default function InterceptManageScholarshipClient() {
                                   </Badge>
                                 </div>
                               ))}
+                            </div>
                           </div>
-                        </div>
+                        )}
+                        {data?.renew === false && (
+                          <div className="space-y-3">
+                            <div className="flex justify-between items-center">
+                              <h3 className="text-xs font-medium text-muted-foreground  tracking-wide">
+                                Required Documents
+                              </h3>
+                              <p className="font-medium text-lg">
+                                {Object.keys(data?.documents || {}).length}
+                              </p>
+                            </div>
+                            <div className=" divide-y">
+                              {Object.values(
+                                data?.documents.documents || {}
+                              ).map((doc, index) => (
+                                <div
+                                  className="flex justify-between items-center py-5"
+                                  key={doc.label}
+                                >
+                                  <div>
+                                    <span> {index + 1}. </span>
+                                    {doc.label}
+                                  </div>
+                                  <Badge
+                                    className={`${
+                                      doc.requirementType === "required"
+                                        ? "bg-red-700/20 text-red-700"
+                                        : doc.requirementType === "optional"
+                                        ? "bg-blue-700/20 text-blue-700"
+                                        : ""
+                                    } capitalize `}
+                                  >
+                                    {doc.requirementType}
+                                  </Badge>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                       <div className="p-4 bg-card rounded-md">
                         <h1 className="text-center text-sm font-medium">
