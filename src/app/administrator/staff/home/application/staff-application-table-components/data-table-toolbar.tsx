@@ -43,11 +43,11 @@ export default function DataTableToolbar<
     value: meow,
     icon: GraduationCap,
   }));
-  // const institute = filter?.getFilterData.institute.map((meow) => ({
-  //   label: meow,
-  //   value: meow,
-  //   icon: Building,
-  // }));
+  const institute = filter?.getFilterData.institute.map((meow) => ({
+    label: meow,
+    value: meow,
+    icon: Building,
+  }));
 
   const scholarships = filter?.getScholarshipsFilters.scholarship.map(
     (meow) => ({
@@ -103,12 +103,12 @@ export default function DataTableToolbar<
               title="Scholarship"
               options={scholarships ?? []}
             />
-            {/* <DataTableFacetedFilter
-          disabled={!!search}
-          column={table.getColumn("Institute")}
-          title="Institute"
-          options={institute ?? []}
-        /> */}
+            <DataTableFacetedFilter
+              disabled={!!search}
+              column={table.getColumn("Institute")}
+              title="Institute"
+              options={institute ?? []}
+            />
             <DataTableFacetedFilter
               disabled={!!search}
               column={table.getColumn("course")}
