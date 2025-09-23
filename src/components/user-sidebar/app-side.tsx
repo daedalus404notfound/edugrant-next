@@ -102,15 +102,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 const isActive = pathname === meow.url;
                 return (
                   <SidebarMenuItem key={meow.title}>
-                    <SidebarMenuButton
-                      isActive={isActive}
-                      asChild
-                      className={
-                        isActive
-                          ? "dark:!bg-emerald-700/20 dark:!text-emerald-400 !bg-emerald-800 rounded-[5px] !border-0"
-                          : "dark:hover:!bg-emerald-700/20 rounded-[5px] !border-0 hover:!bg-emerald-700"
-                      }
-                    >
+                    <SidebarMenuButton isActive={isActive} asChild>
                       <Link
                         prefetch
                         scroll={false}

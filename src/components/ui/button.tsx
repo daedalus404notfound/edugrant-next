@@ -10,17 +10,18 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "dark:bg-primary-second/20 bg-primary/10 text-primary shadow-xs hover:bg-primary-second/10 border border-primary-second/80",
-        gold: "bg-yellow-600 hover:bg-yellow-700 text-foreground shadow-xs",
+          // Soft primary background w/ text adapting to theme
+          "bg-primary/90 text-white shadow-sm hover:bg-primary dark:bg-primary-second/80 dark:hover:bg-primary-second transition-colors border border-transparent",
+        gold: "bg-yellow-500 text-black shadow-sm hover:bg-yellow-600 dark:bg-yellow-400 dark:hover:bg-yellow-500 transition-colors",
         destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "bg-red-600 text-white shadow-sm hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 focus-visible:ring-red-300 dark:focus-visible:ring-red-700",
         outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "border border-input bg-transparent text-foreground shadow-sm hover:bg-accent/10 dark:border-neutral-700 dark:text-neutral-200 dark:hover:bg-neutral-800 transition-colors",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+          "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 dark:bg-neutral-800 dark:text-neutral-100 dark:hover:bg-neutral-700",
         ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
+          "text-foreground hover:bg-accent/10 dark:text-neutral-200 dark:hover:bg-neutral-800 transition-colors",
+        link: "text-primary underline-offset-4 hover:underline dark:text-primary-light",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

@@ -200,7 +200,7 @@ export default function AdminDashboard() {
         case "Pending Documents":
           return "text-orange-400 bg-orange-400/10";
         default:
-          return "text-gray-400 bg-gray-400/10";
+          return "text-muted-foreground bg-gray-400/10";
       }
     };
 
@@ -208,10 +208,8 @@ export default function AdminDashboard() {
       <div className="bg-card backdrop-blur-sm border  rounded-lg p-6  ">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className="font-semibold text-white">
-              {application.scholarshipName}
-            </h3>
-            <p className="text-sm text-gray-400 mt-1">
+            <h3 className="font-semibold ">{application.scholarshipName}</h3>
+            <p className="text-sm text-muted-foreground mt-1">
               Applied on {application.appliedDate}
             </p>
           </div>
@@ -226,9 +224,11 @@ export default function AdminDashboard() {
 
         <div className="mb-3">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-gray-400">Documents Submitted</span>
             <span className="text-sm text-muted-foreground">
-              <span className="text-lg font-medium text-white">3</span> / 3
+              Documents Submitted
+            </span>
+            <span className="text-sm text-muted-foreground">
+              <span className="text-lg font-medium ">3</span> / 3
             </span>
           </div>
         </div>
@@ -240,8 +240,8 @@ export default function AdminDashboard() {
     );
   }
   return (
-    <div className="relative min-h-screen z-10">
-      <div className="lg:p-5 p-3 space-y-5 ">
+    <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+      <div className="py-8 px-5 space-y-5">
         <div className="bg-card text-foreground px-4 py-3 rounded-md">
           <div className="flex flex-col justify-between gap-2 md:flex-row">
             <div className="flex grow gap-3">
@@ -270,29 +270,29 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
-        <div className="lg:space-y-2 flex items-center justify-between">
-          <div>
-            <p className="text-sm text-muted-foreground tracking-wide">
-              {isClient ? format(now, "PPP p") : "Loading..."}
-            </p>
-            <h1 className="lg:text-2xl text-lg font-medium tracking-wide">
-              Hello, {user?.Student.fName} {user?.Student.lName}!
-            </h1>
-          </div>
-          <div className="space-x-3">
-            <Button size="lg">
-              <GraduationCap />
-              Apply
-            </Button>
-            <Button size="lg">
-              <Grid2X2 />
-              Track
-            </Button>
-          </div>
-        </div>
 
-        <div className="grid grid-cols-2 gap-8 mt-10 ">
-          <div className="space-y-8">
+        <div className="grid grid-cols-2 gap-8 ">
+          <div className="space-y-10">
+            <div className="lg:space-y-2 flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground tracking-wide">
+                  {isClient ? format(now, "PPP p") : "Loading..."}
+                </p>
+                <h1 className="lg:text-2xl text-lg havelock tracking-[-3px]">
+                  Hi, {user?.Student.fName} {user?.Student.lName}!
+                </h1>
+              </div>
+              <div className="space-x-3">
+                <Button size="lg">
+                  <GraduationCap />
+                  Apply
+                </Button>
+                <Button size="lg">
+                  <Grid2X2 />
+                  Track
+                </Button>
+              </div>
+            </div>
             <div className="grid  lg:grid-cols-3 grid-cols-1 lg:gap-3 gap-3">
               {summaryCards.map((card, index) => (
                 <SummaryCard key={index} {...card} />
@@ -310,7 +310,7 @@ export default function AdminDashboard() {
                   <TimelineItem
                     key={item.id}
                     step={item.id}
-                    className="!m-0  bg-card lg:px-6! lg:py-4!  p-4! rounded-md border-l-3 border-green-800 !mb-3"
+                    className="!m-0  bg-card lg:px-6! lg:py-4!  p-4! rounded-md border-l-3 dark:border-green-800 border-green-500 !mb-3"
                   >
                     <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
                       <TimelineTitle className="font-medium text-base">
@@ -321,7 +321,7 @@ export default function AdminDashboard() {
                       </TimelineDate>
                     </div>
 
-                    <TimelineContent className="text-foreground mt-3 font-light">
+                    <TimelineContent className="text-foreground mt-3 line-clamp-1">
                       {item.description}
                     </TimelineContent>
 
@@ -335,14 +335,14 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-12">
             <div className="bg-card backdrop-blur-sm border  rounded-lg px-6 py-4  ">
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="font-semibold flex gap-2 items-center">
-                    <UserRoundCog /> Complete your profile
+                    <UserRoundCog size={18} /> Complete your profile
                   </h3>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-muted-foreground">
                     Complete your profile to unlock scholarships.
                   </p>
                 </div>
@@ -351,60 +351,63 @@ export default function AdminDashboard() {
 
               <div className="mb-3">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-gray-400">Progress</span>
-                  <span className="text-sm text-gray-300">30%</span>
+                  <span className="text-sm">Progress</span>
+                  <span className="text-sm">30%</span>
                 </div>
-                <div className="w-full bg-gray-700 rounded-full h-2">
-                  <Progress />
-                </div>
+
+                <Progress />
               </div>
             </div>
 
-            <div className="flex justify-between items-center mt-8">
-              <h1 className="text-base font-medium">Recent Application</h1>
-              <Button size="sm" variant="link">
-                See All <ExternalLink />
-              </Button>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <h1 className="text-base font-medium">Recent Application</h1>
+                <Button size="sm" variant="link">
+                  See All <ExternalLink />
+                </Button>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {mockApplications.slice(0, 2).map((application) => (
+                  <ApplicationCard
+                    key={application.id}
+                    application={application}
+                  />
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {mockApplications.slice(0, 2).map((application) => (
-                <ApplicationCard
-                  key={application.id}
-                  application={application}
-                />
-              ))}
-            </div>
-            <div className="flex justify-between items-center mt-8">
-              <h1 className="text-base font-medium">Active Scholarship</h1>
-              <Button size="sm" variant="link">
-                See All <ExternalLink />
-              </Button>
-            </div>
-            <div className="rounded-md border overflow-hidden bg-card">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-muted/50">
-                    <TableHead className="py-2 pl-4">Name</TableHead>
-                    <TableHead className="py-2">Release Year</TableHead>
-                    <TableHead className="py-2">Developer</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {programmingLanguages.map((language) => (
-                    <TableRow key={language.id}>
-                      <TableCell className="py-2 font-medium pl-4">
-                        {language.name}
-                      </TableCell>
-                      <TableCell className="py-4">
-                        {language.releaseYear}
-                      </TableCell>
-                      <TableCell className="py-4">
-                        {language.developer}
-                      </TableCell>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center mt-8">
+                <h1 className="text-base font-medium">Active Scholarship</h1>
+                <Button size="sm" variant="link">
+                  Browse All <ExternalLink />
+                </Button>
+              </div>
+              <div className="rounded-md border overflow-hidden bg-card">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/50">
+                      <TableHead className="py-2 pl-4">Name</TableHead>
+                      <TableHead className="py-2">Release Year</TableHead>
+                      <TableHead className="py-2">Developer</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {programmingLanguages.map((language) => (
+                      <TableRow key={language.id}>
+                        <TableCell className="py-2 font-medium pl-4">
+                          {language.name}
+                        </TableCell>
+                        <TableCell className="py-4">
+                          {language.releaseYear}
+                        </TableCell>
+                        <TableCell className="py-4">
+                          {language.developer}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           </div>
         </div>

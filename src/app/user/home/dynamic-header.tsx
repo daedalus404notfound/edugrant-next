@@ -65,6 +65,7 @@ import {
   Moon,
   User,
   UserRound,
+  UserRoundIcon,
 } from "lucide-react";
 import {
   Drawer,
@@ -84,6 +85,8 @@ import AnnouncementDescription from "@/components/ui/description";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import TitleReusable from "@/components/ui/title";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -99,6 +102,7 @@ export default function DynamicHeaderUser({
 }: HeaderTypes) {
   const { user } = useUserStore();
   // console.log(admin);
+  const isMobile = useIsMobile();
   const { handleLogout } = useAdminLogout();
   const [open, setOpen] = useState(false);
   const [openNotif, setOpenNotif] = useState(false);
@@ -131,56 +135,92 @@ export default function DynamicHeaderUser({
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <DropdownMenu open={open} onOpenChange={setOpen}>
-        <DropdownMenuTrigger asChild>
-          <Button className="p-0 " variant="ghost">
-            <Hamburger toggled={open} toggle={setOpen} size={28} rounded />
+      {!isMobile && (
+        <div className="flex items-center gap-2 lg:px-5 px-3">
+          <Button variant="ghost">
+            <Avatar>
+              <AvatarFallback>
+                <UserRoundIcon
+                  size={16}
+                  className="opacity-60"
+                  aria-hidden="true"
+                />
+              </AvatarFallback>
+            </Avatar>
+            {user?.Student.fName} {user?.Student.lName}
           </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="lg:mr-5 mr-3 w-[200px]">
-          <DropdownMenuItem>
-            <UserRound />
-            My Account
-          </DropdownMenuItem>{" "}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
+          <Button
+            variant="outline"
             onClick={() => {
               setOpenNotif(true);
-              setOpen(false);
             }}
           >
             <Bell />
-            Notification
-          </DropdownMenuItem>{" "}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
+          </Button>
+
+          <ModeToggle />
+          <Button
+            variant="outline"
             onClick={() => {
               setOpenOut(true);
-              setOpen(false);
             }}
           >
             <LogOut />
-            Log out
-          </DropdownMenuItem>{" "}
-          <DropdownMenuSeparator />
-          <DropdownMenuItem
-            onClick={() => {
-              setOpenDark(true);
-              setOpen(false);
-            }}
-          >
-            <Moon />
-            Dark mode
-          </DropdownMenuItem>{" "}
-        </DropdownMenuContent>
-      </DropdownMenu>
+          </Button>
+        </div>
+      )}
+      {isMobile && (
+        <DropdownMenu open={open} onOpenChange={setOpen}>
+          <DropdownMenuTrigger asChild>
+            <Button className="p-0 " variant="ghost">
+              <Hamburger toggled={open} toggle={setOpen} size={28} rounded />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="lg:mr-5 mr-3 w-[200px]">
+            <DropdownMenuItem>
+              <UserRound />
+              My Account
+            </DropdownMenuItem>{" "}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                setOpenNotif(true);
+                setOpen(false);
+              }}
+            >
+              <Bell />
+              Notification
+            </DropdownMenuItem>{" "}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                setOpenOut(true);
+                setOpen(false);
+              }}
+            >
+              <LogOut />
+              Log out
+            </DropdownMenuItem>{" "}
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                setOpenDark(true);
+                setOpen(false);
+              }}
+            >
+              <Moon />
+              Dark mode
+            </DropdownMenuItem>{" "}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
       <Drawer direction="right" open={openNotif} onOpenChange={setOpenNotif}>
         <DrawerContent className="bg-transparent !border-0 p-4">
           <DrawerHeader className="sr-only">
             <DrawerTitle>Are you absolutely sure?</DrawerTitle>
             <DrawerDescription>This action cannot be undone.</DrawerDescription>
           </DrawerHeader>
-          <div className="flex flex-col bg-background flex-1 rounded-lg p-4 gap-y-10">
+          <div className="flex flex-col bg-card flex-1 rounded-lg p-4 gap-y-10">
             <div className="flex justify-between items-center">
               <TitleReusable title="Notification" description="" />
               <Button size="sm">Mark all as read</Button>

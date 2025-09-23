@@ -26,9 +26,9 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
       }
     >
       <AppSidebar variant="inset" />
-      <SidebarInset>
+      <SidebarInset className="overflow-hidden">
         {/* <div className="fixed your-class h-screen w-full pointer-events-none"></div> */}
-        <div className="relative">
+        <div className="relative ">
           <DynamicHeaderUser
             first={segmentedPath[2]}
             second={segmentedPath[3]}
