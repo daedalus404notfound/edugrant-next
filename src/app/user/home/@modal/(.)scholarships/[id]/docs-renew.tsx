@@ -35,6 +35,7 @@ import {
   StepperTrigger,
 } from "@/components/ui/stepper";
 import { Separator } from "@/components/ui/separator";
+import TitleReusable from "@/components/ui/title";
 
 const steps = [
   {
@@ -88,9 +89,11 @@ export const createFormSchema = (requiredDocuments: documentFormData[]) => {
 export default function UploadRenewDocs({
   data,
   setIsApply,
+  HandleCloseDrawer,
 }: {
   data: scholarshipFormData;
   setIsApply: (isApply: "details" | "apply" | "renew") => void;
+  HandleCloseDrawer: (close: boolean) => void;
 }) {
   const router = useRouter();
   const { addApplication } = useUserStore.getState();
@@ -178,9 +181,7 @@ export default function UploadRenewDocs({
         });
         setIsApply("details");
         setLoading(false);
-        setTimeout(() => {
-          router.back();
-        }, 300);
+        HandleCloseDrawer(false);
       }
     } catch (error) {
       StyledToast({
@@ -204,24 +205,7 @@ export default function UploadRenewDocs({
 
   return (
     <div className="min-h-screen bg-background flex flex-col rounded-t-lg">
-      RENEW
       <div className="flex-1 p-4 space-y-10">
-        <Stepper defaultValue={1} className="items-start gap-4">
-          {steps.map(({ step, title, description }) => (
-            <StepperItem key={step} step={step} className="flex-1">
-              <StepperTrigger className="w-full flex-col items-start gap-2 rounded">
-                <StepperIndicator asChild className="bg-border h-1 w-full">
-                  <span className="sr-only">{step}</span>
-                </StepperIndicator>
-                <div className="space-y-0.5">
-                  <StepperTitle>{title}</StepperTitle>
-                </div>
-                <StepperDescription>{description}</StepperDescription>
-              </StepperTrigger>
-            </StepperItem>
-          ))}
-        </Stepper>
-        <Separator />
         <div>
           <h2 className="text-lg font-semibold mb-4">Before you start</h2>
           <div className="grid gap-3 text-sm text-muted-foreground">
@@ -229,25 +213,17 @@ export default function UploadRenewDocs({
             <p>• Only upload files in accepted formats (PDF, DOCX, JPG, PNG)</p>
             <p>• Each file must not exceed 2MB in size</p>
             <p>
-              • Review carefully before submitting — changes aren't permitted
-              after submission
-            </p>
-            <p>
               • Optional documents aren't required but may strengthen your
               application.
             </p>
           </div>
         </div>
-        <Separator />
+        <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
         <div className="space-y-5">
-          <div>
-            <h1 className="text-lg font-semibold text-balance">
-              Upload Documents
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Complete your application for {data.title}
-            </p>
-          </div>
+          <TitleReusable
+            title="Upload Documents for Renewal"
+            description={` Complete your application for ${data.title}`}
+          />
 
           <Form {...form}>
             <div className=" grid lg:grid-cols-2 grid-cols-1 gap-3">
@@ -329,8 +305,8 @@ export default function UploadRenewDocs({
             onOpenChange={setOpenAlert}
             loading={loading}
             red={false}
-            title="Submit Application?"
-            description="Please review your uploaded documents before submitting. Once submitted, you will not be able to make changes."
+            title="Submit Renewal Application?"
+            description="Please review your uploaded documents before submitting."
             confirmText="Submit Application"
             confirmTextLoading="Submitting..."
             onConfirm={form.handleSubmit(onSubmit)}
@@ -341,7 +317,7 @@ export default function UploadRenewDocs({
                 className="flex-1"
               >
                 <Upload className="h-4 w-4 mr-2" />
-                Submit Application
+                Submit Renewal
               </Button>
             }
           />

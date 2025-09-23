@@ -3,26 +3,14 @@ import {
   Building,
   Calendar,
   Download,
-  Flame,
+  ExternalLink,
   GraduationCap,
   Inbox,
   Maximize,
   PhilippinePeso,
-  Share2,
-  StickyNote,
-  UserRound,
   X,
 } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Ring } from "ldrs/react";
-import "ldrs/react/Ring.css";
+
 import { motion } from "motion/react";
 export function formatPHP(amount: number) {
   return new Intl.NumberFormat("en-PH", {
@@ -45,22 +33,19 @@ import { Button } from "@/components/ui/button";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import useScholarshipUserById from "@/hooks/user/getScholarshipData";
-
 import UploadDocs from "./docs-upload";
-import { useSearchParams } from "next/navigation";
-
 import AnimatedNumberCountdown from "@/components/ui/countdown";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import ScholarshipCards from "../cards";
+
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useUserStore } from "@/store/useUserStore";
 import UploadRenewDocs from "./docs-renew";
 export default function InterceptManageScholarshipClient() {
-  const searchParams = useSearchParams();
-  const apply = searchParams.get("apply");
+  const [showCover, setShowCover] = useState(false);
+
   const [isApply, setIsApply] = useState<"details" | "apply" | "renew">(
     "details"
   );
@@ -132,10 +117,18 @@ export default function InterceptManageScholarshipClient() {
 
         <div className=" overflow-auto h-full no-scrollbar">
           {isApply === "apply" && data && (
-            <UploadDocs data={data} setIsApply={setIsApply} />
+            <UploadDocs
+              data={data}
+              setIsApply={setIsApply}
+              HandleCloseDrawer={HandleCloseDrawer}
+            />
           )}
           {isApply === "renew" && data && (
-            <UploadRenewDocs data={data} setIsApply={setIsApply} />
+            <UploadRenewDocs
+              data={data}
+              setIsApply={setIsApply}
+              HandleCloseDrawer={HandleCloseDrawer}
+            />
           )}
           {isApply === "details" && (
             <>
@@ -162,7 +155,7 @@ export default function InterceptManageScholarshipClient() {
                   </div>
                 </div>
               ) : (
-                <div className="relative h-full w-full overflow-auto  bg-background rounded-t-md flex flex-col">
+                <div className="relative h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md flex flex-col">
                   <div className="absolute top-0 left-0 lg:h-86 h-60 w-full opacity-30   mask-gradient flex">
                     <img
                       className="w-full h-full object-cover blur-md "
@@ -231,35 +224,15 @@ export default function InterceptManageScholarshipClient() {
                       />
                     )}
 
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="absolute z-5  !bg-black/60 !text-gray-200"
-                          size="sm"
-                        >
-                          View <Maximize />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="lg:w-3/4 w-full p-4">
-                        <img
-                          className="h-full w-full"
-                          src={data?.cover}
-                          alt=""
-                        />
-                        <Link
-                          className="w-full"
-                          href={(data?.cover && data?.cover) || ""}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Button variant="secondary" className="w-full">
-                            <Download />
-                            Download
-                          </Button>
-                        </Link>
-                      </DialogContent>
-                    </Dialog>
+                    <Link
+                      target="_blank"
+                      href={data?.cover}
+                      className="absolute z-5  "
+                    >
+                      <Button variant="secondary" size="sm">
+                        View <ExternalLink />
+                      </Button>
+                    </Link>
                   </div>
 
                   <div className="flex-1 pt-30 px-6 space-y-8">

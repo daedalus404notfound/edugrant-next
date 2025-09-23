@@ -49,10 +49,11 @@ const frameworks = [
 ];
 import Link from "next/link";
 const tabs = [
-  { id: "ACTIVE", label: "Active", indicator: null },
-  { id: "RENEW", label: "Renewal", indicator: null },
-  { id: "EXPIRED", label: "Expired", indicator: null },
+  { id: "ACTIVE", label: "Ongoing", indicator: null },
+  { id: "RENEW", label: "For Renewal", indicator: null },
+  { id: "EXPIRED", label: "Closed", indicator: null },
 ];
+
 const scholarshipTypes = [
   { label: "Government", value: "government", icon: Building2 },
   { label: "Private", value: "private", icon: Building },
@@ -159,54 +160,51 @@ export default function ClientScholarship() {
   ];
 
   return (
-    <TourProvider steps={scholarshipTourSteps}>
-      <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-        {!completed && (
-          <div className="absolute inset-0 z-20 bg-black/80 "></div>
-        )}
-        <div className="mx-auto w-[95%] lg:pt-10  pt-3">
-          <div className="flex justify-between items-end">
-            <TitleReusable
-              title="Available Scholarships"
-              description=""
-              Icon={TextSearch}
-            />
-          </div>
-          <div className="py-8 space-y-8">
-            {!completed && (
-              <div className=" z-20 dark bg-muted rounded-md text-foreground px-4 py-3 sticky top-20">
-                <div className="flex flex-col justify-between gap-2 md:flex-row">
-                  <div className="flex grow gap-3">
-                    <Lock
-                      className="mt-0.5 shrink-0 opacity-60"
-                      size={16}
-                      aria-hidden="true"
-                    />
-                    <div className="flex grow flex-col justify-between gap-2 md:flex-row md:items-center">
-                      <p className="text-sm">
-                        Please complete your profile details to unlock the
-                        scholarship and apply.
-                      </p>
-                      <Link
-                        href="/user/home/profile"
-                        prefetch={true}
-                        scroll={false}
-                        className="group text-sm font-medium whitespace-nowrap underline"
-                      >
-                        View Profile
-                        <ArrowRightIcon
-                          className="ms-2 -mt-0.5 inline-flex opacity-60 transition-transform group-hover:translate-x-0.5"
-                          size={16}
-                          aria-hidden="true"
-                        />
-                      </Link>
-                    </div>
+    <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+      {!completed && <div className="absolute inset-0 z-20 bg-black/80 "></div>}
+      <div className="mx-auto w-[95%] lg:pt-10  pt-3">
+        <div className="flex justify-between items-end">
+          <TitleReusable
+            title="Available Scholarships"
+            description="View the list of scholarships currently open for application."
+            Icon={TextSearch}
+          />
+        </div>
+        <div className="py-8 space-y-8">
+          {!completed && (
+            <div className=" z-20 dark bg-muted rounded-md text-foreground px-4 py-3 sticky top-20">
+              <div className="flex flex-col justify-between gap-2 md:flex-row">
+                <div className="flex grow gap-3">
+                  <Lock
+                    className="mt-0.5 shrink-0 opacity-60"
+                    size={16}
+                    aria-hidden="true"
+                  />
+                  <div className="flex grow flex-col justify-between gap-2 md:flex-row md:items-center">
+                    <p className="text-sm">
+                      Please complete your profile details to unlock the
+                      scholarship and apply.
+                    </p>
+                    <Link
+                      href="/user/home/profile"
+                      prefetch={true}
+                      scroll={false}
+                      className="group text-sm font-medium whitespace-nowrap underline"
+                    >
+                      View Profile
+                      <ArrowRightIcon
+                        className="ms-2 -mt-0.5 inline-flex opacity-60 transition-transform group-hover:translate-x-0.5"
+                        size={16}
+                        aria-hidden="true"
+                      />
+                    </Link>
                   </div>
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
-            <div className="flex flex-col lg:flex-row justify-between  w-full gap-3">
+          {/* <div className="flex flex-col lg:flex-row justify-between  w-full gap-3">
               <div className="flex items-center  gap-3 flex-col lg:flex-row">
                 <div className=" flex gap-2 w-full">
                   <TourStep stepId="search" className="w-full">
@@ -302,123 +300,114 @@ export default function ClientScholarship() {
                   <TourTrigger className="flex-1" />
                 </TourStep>
               </div>
-            </div>
-            <div className="flex">
-              <TourStep stepId="tabs">
-                <Tabs
-                  tabs={tabs}
-                  onTabChange={(tabsId) => setStatus(tabsId)}
-                  className="bg-background rounded-md"
-                />
-              </TourStep>
-            </div>
+            </div> */}
 
-            <TourStep stepId="cards">
-              <div className=" grid lg:grid-cols-3 grid-cols-1 gap-6">
-                {loading ? (
-                  [...Array(3)].map((_, index) => (
-                    <div
-                      key={index}
-                      className="p-2 bg-background/40 relative rounded-md border space-y-3"
-                    >
-                      <Skeleton className="aspect-[16/8.5]" />
-                      <Skeleton className="h-10" />
-                      <div className="flex gap-3 h-11">
-                        <Skeleton className="flex-1" />
-                        <Skeleton className="flex-1" />
-                        <Skeleton className="flex-1" />
-                      </div>
-                    </div>
-                  ))
-                ) : data.length === 0 ? (
-                  <NoDataFound />
-                ) : (
-                  data.map((scholarship) => {
-                    const findMatch = user?.Student.Application.find(
-                      (meow) =>
-                        meow.scholarshipId === scholarship?.scholarshipId
-                    );
-                    const isNotRenew =
-                      user?.Student.Application.find(
-                        (meow) =>
-                          meow.scholarshipId === scholarship?.scholarshipId
-                      )?.status !== "RENEW";
-                    return (
-                      <Link
-                        href={`/user/home/scholarships/${scholarship.scholarshipId}`}
-                        prefetch
-                        scroll={false}
-                        key={scholarship.scholarshipId}
-                        className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
-                      >
-                        <div className="relative rounded-lg bg-background ">
+          <div className="overflow-y-hidden overflow-x-auto py-3 no-scrollbar ">
+            <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
+          </div>
+
+          <div className=" grid lg:grid-cols-3 grid-cols-1 gap-6">
+            {loading ? (
+              [...Array(3)].map((_, index) => (
+                <div
+                  key={index}
+                  className="p-2 bg-background/40 relative rounded-md border space-y-3"
+                >
+                  <Skeleton className="aspect-[16/8.5]" />
+                  <Skeleton className="h-10" />
+                  <div className="flex gap-3 h-11">
+                    <Skeleton className="flex-1" />
+                    <Skeleton className="flex-1" />
+                    <Skeleton className="flex-1" />
+                  </div>
+                </div>
+              ))
+            ) : data.length === 0 ? (
+              <NoDataFound />
+            ) : (
+              data.map((scholarship) => {
+                const findMatch = user?.Student.Application.find(
+                  (meow) => meow.scholarshipId === scholarship?.scholarshipId
+                );
+                const isNotRenew =
+                  user?.Student.Application.find(
+                    (meow) => meow.scholarshipId === scholarship?.scholarshipId
+                  )?.status !== "RENEW";
+                return (
+                  <Link
+                    href={`/user/home/scholarships/${scholarship.scholarshipId}`}
+                    prefetch
+                    scroll={false}
+                    key={scholarship.scholarshipId}
+                    className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
+                  >
+                    <div className="relative rounded-lg bg-background ">
+                      <img
+                        className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
+                          status === "EXPIRED" ? "" : ""
+                        }`}
+                        src={scholarship.cover}
+                        alt=""
+                      />
+                      <div className="relative z-10">
+                        <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
+                          {findMatch && isNotRenew && (
+                            <div className="absolute z-20 inset-0 bg-black/60 flex justify-center items-center">
+                              <span className="absolute top-3 right-0 bg-black/40 text-center pl-4 pr-6 py-2 rounded-l-lg flex items-center gap-2 text-sm font-medium">
+                                {" "}
+                                Applied
+                              </span>
+                            </div>
+                          )}
+
                           <img
-                            className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
+                            className={`h-full w-full object-cover ${
                               status === "EXPIRED" ? "" : ""
                             }`}
                             src={scholarship.cover}
                             alt=""
                           />
-                          <div className="relative z-10">
-                            <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
-                              {findMatch && isNotRenew && (
-                                <div className="absolute z-20 inset-0 bg-black/60 flex justify-center items-center">
-                                  <span className="absolute top-3 right-0 bg-black/40 text-center pl-4 pr-6 py-2 rounded-l-lg flex items-center gap-2 text-sm font-medium">
-                                    {" "}
-                                    Applied
-                                  </span>
-                                </div>
-                              )}
-
-                              <img
-                                className={`h-full w-full object-cover ${
-                                  status === "EXPIRED" ? "" : ""
-                                }`}
-                                src={scholarship.cover}
-                                alt=""
-                              />
-                            </div>
-                            <div className=" lg:p-4 p-2 space-y-5">
-                              <div className="flex items-start justify-start">
-                                <div className="flex-1 lg:space-y-1">
-                                  <div className="flex justify-between items-center">
-                                    <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight">
-                                      {scholarship.title}
-                                    </h3>
-                                    <Badge
-                                      variant="secondary"
-                                      className="uppercase"
-                                    >
-                                      {scholarship.type}
-                                    </Badge>
-                                  </div>
-                                  <p className="text-sm text-muted-foreground">
-                                    {scholarship.Scholarship_Provider.name}
-                                  </p>
-                                </div>
+                        </div>
+                        <div className=" lg:p-4 p-2 space-y-5">
+                          <div className="flex items-start justify-start">
+                            <div className="flex-1 lg:space-y-1">
+                              <div className="flex justify-between items-center">
+                                <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight">
+                                  {scholarship.title}
+                                </h3>
+                                <Badge
+                                  variant="secondary"
+                                  className="uppercase"
+                                >
+                                  {scholarship.type}
+                                </Badge>
                               </div>
+                              <p className="text-sm text-muted-foreground">
+                                {scholarship.Scholarship_Provider.name}
+                              </p>
+                            </div>
+                          </div>
 
-                              <div className="flex items-center justify-between text-sm text-muted-foreground ">
-                                <div className="space-x-2">
-                                  {(status === "ACTIVE" ||
-                                    status === "RENEW") && (
-                                    <Badge className="bg-green-800 text-gray-200">
-                                      ACTIVE
-                                    </Badge>
-                                  )}
-                                  {scholarship.renew === true && (
-                                    <Badge className="bg-blue-800 text-gray-200">
-                                      RENEWAL
-                                    </Badge>
-                                  )}
-                                  {status === "EXPIRED" && (
-                                    <Badge className="bg-red-800 text-gray-200">
-                                      EXPIRED
-                                    </Badge>
-                                  )}
-                                </div>
+                          <div className="flex items-center justify-between text-sm text-muted-foreground ">
+                            <div className="space-x-2">
+                              {(status === "ACTIVE" || status === "RENEW") && (
+                                <Badge className="bg-green-800 text-gray-200">
+                                  ACTIVE
+                                </Badge>
+                              )}
+                              {scholarship.renew === true && (
+                                <Badge className="bg-blue-800 text-gray-200">
+                                  RENEWAL
+                                </Badge>
+                              )}
+                              {status === "EXPIRED" && (
+                                <Badge className="bg-red-800 text-gray-200">
+                                  EXPIRED
+                                </Badge>
+                              )}
+                            </div>
 
-                                {/* {user?.Student?.Application?.some(
+                            {/* {user?.Student?.Application?.some(
                                 (app) =>
                                   app.scholarshipId ===
                                   scholarship.scholarshipId
@@ -427,24 +416,22 @@ export default function ClientScholarship() {
                                   APPLIED
                                 </Badge>
                               )} */}
-                                <span>
-                                  {scholarship.renew === true && "Renewal"}{" "}
-                                  Deadline:{" "}
-                                  {format(scholarship.deadline, "MM/dd/yy")}
-                                </span>
-                              </div>
-                            </div>
+                            <span>
+                              {scholarship.renew === true && "Renewal"}{" "}
+                              Deadline:{" "}
+                              {format(scholarship.deadline, "MM/dd/yy")}
+                            </span>
                           </div>
                         </div>
-                      </Link>
-                    );
-                  })
-                )}
-              </div>
-            </TourStep>
+                      </div>
+                    </div>
+                  </Link>
+                );
+              })
+            )}
           </div>
         </div>
       </div>
-    </TourProvider>
+    </div>
   );
 }

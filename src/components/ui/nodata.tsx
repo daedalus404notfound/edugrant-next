@@ -1,24 +1,38 @@
 "use client";
 
 import { motion } from "framer-motion";
-import ghost from "@/assets/pngfind.com-cute-ghost-png-2853935.png";
+import { Inbox } from "lucide-react";
 
 export default function NoDataFound() {
   return (
-    <div className="lg:col-span-3 h-[50dvh] flex flex-col justify-center items-center gap-1.5">
-      <motion.img
-        src={ghost.src}
-        alt="Floating Ghost"
-        className="size-12"
-        animate={{ y: [0, -10, 0] }} // moves up and down
-        transition={{
-          duration: 2, // time for one cycle
-          repeat: Infinity, // loops forever
-          ease: "easeInOut",
-        }}
-      />
-      <h1 className="font-semibold">Nothing Here...</h1>
-      <p className="text-sm text-muted-foreground">No data found.</p>
+    <div className="lg:col-span-3 h-[50dvh] flex flex-col justify-center items-center gap-3 text-center">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+        className="flex items-center justify-center rounded-full bg-muted p-4 shadow-sm"
+      >
+        <Inbox className="w-10 h-10 text-muted-foreground" />
+      </motion.div>
+
+      <motion.h1
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="text-lg font-semibold"
+      >
+        No Data Available
+      </motion.h1>
+
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.4, duration: 0.5 }}
+        className="text-sm text-muted-foreground max-w-sm"
+      >
+        We couldn’t find any records to display. Please refresh the page or
+        check back later
+      </motion.p>
     </div>
   );
 }

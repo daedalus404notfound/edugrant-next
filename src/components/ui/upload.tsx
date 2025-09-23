@@ -54,7 +54,13 @@ export function DragAndDropArea({
       setReset?.(false); // ✅ safe optional call
     }
   }, [reset, uploadedFiles, clearAllFiles, setReset]);
-
+  const mimeToLabelMap: Record<string, string> = {
+    "application/pdf": "PDF",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+      "DOCX",
+    "image/jpeg": "JPG",
+    "image/png": "PNG",
+  };
   return (
     <SpotlightBorderWrapper>
       <div className="space-y-3">
@@ -76,7 +82,7 @@ export function DragAndDropArea({
           <input {...getInputProps()} />
           <div className="z-10 relative size-15 flex justify-center items-center">
             <BGPattern variant="grid" mask="fade-edges" />
-            <Upload/>
+            <Upload />
           </div>
 
           <p className="text-muted-foreground text-sm">
@@ -84,6 +90,13 @@ export function DragAndDropArea({
               ? `Drop your ${label} file here...`
               : `Drag & drop or click to upload ${label}`}
           </p>
+          <span className="flex gap-3 items-center justify-center mt-2 tracking-wide">
+            {accept.map((format, formatIndex) => (
+              <p key={formatIndex} className="text-xs">
+                {mimeToLabelMap[format] || format}
+              </p>
+            ))}
+          </span>
         </div>
 
         {fileRejections.length > 0 && (

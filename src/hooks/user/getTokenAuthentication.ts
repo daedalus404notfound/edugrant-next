@@ -23,22 +23,22 @@ export default function useAuthenticatedUser() {
 
         if (res.status === 200) {
           setUser(res.data.userData);
-          // if (pathname === "/") {
-          //   router.push("/user/home");
-          // }
+          if (pathname === "/") {
+            router.push("/user/home");
+          }
 
           console.log("authapi:", res.data);
         }
       } catch (error) {
-        // if (pathname !== "/") {
-        //   router.replace("/");
-        // }
         if (axios.isAxiosError<ApiErrorResponse>(error)) {
           StyledToast({
             status: "error",
             title: error?.response?.data.message ?? "An error occurred.",
             description: "Cannot process your request.",
           });
+          if (pathname !== "/") {
+            router.replace("/");
+          }
         }
       } finally {
         setLoading(false);

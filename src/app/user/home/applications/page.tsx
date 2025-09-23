@@ -55,13 +55,14 @@ export default function ClientScholarship() {
 
   console.log(pendingLength);
   const tabs = [
-    { id: "", label: "All Application", indicator: null },
+    { id: "", label: "All Applications", indicator: null },
     { id: "PENDING", label: "Pending", indicator: pendingLength },
     { id: "INTERVIEW", label: "For Interview", indicator: reviewedLength },
     { id: "APPROVED", label: "Approved", indicator: approvedLength },
-    { id: "DECLINED", label: "Rejected", indicator: declinedLength },
-    { id: "BLOCKED", label: "Blocked", indicator: blockedLength },
+    { id: "DECLINED", label: "Declined", indicator: declinedLength },
+    { id: "BLOCKED", label: "Restricted", indicator: blockedLength },
   ];
+
   const findMatch = user?.Student.Application.find(
     (meow) => meow.scholarshipId === meow?.scholarshipId
   );
@@ -75,7 +76,7 @@ export default function ClientScholarship() {
         <div className="flex justify-between items-end">
           <TitleReusable
             title="My Applications"
-            description=""
+            description="Track and manage your submitted scholarship applications."
             Icon={TextSearch}
           />
         </div>
@@ -91,7 +92,7 @@ export default function ClientScholarship() {
         <div className="overflow-y-hidden overflow-x-auto py-3 no-scrollbar ">
           <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
         </div>
-        <div className=" grid lg:grid-cols-3 grid-cols-1 gap-4 ">
+        <div className=" grid lg:grid-cols-3 grid-cols-1 gap-6">
           {loading ? (
             [...Array(3)].map((_, index) => (
               <div
