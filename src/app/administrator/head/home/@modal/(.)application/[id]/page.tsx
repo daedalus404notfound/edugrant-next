@@ -390,6 +390,9 @@ export default function InterceptReviewApplicants() {
                 <div className="text-right">
                   <h2 className="text-xl font-semibold text-foreground">
                     {data?.Scholarship.title}
+                    {data?.Scholarship.renew === true && (
+                      <Badge className="bg-blue-700">RENEWAL</Badge>
+                    )}
                   </h2>
                   <p className="text-muted-foreground">
                     {data?.Scholarship.Scholarship_Provider.name}

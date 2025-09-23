@@ -123,7 +123,31 @@ export default function InterceptManageScholarship() {
 
         {mode === "edit" ? (
           <div className=" overflow-auto h-full no-scrollbar">
-            {data && <EditScholarship data={data} />}
+            {loading ? (
+              <div className="h-full w-full bg-background">
+                <Skeleton className="flex-1 lg:aspect-[16/5] aspect-[16/9] w-full" />
+                <div className="lg:space-y-15 space-y-10 lg:px-6 px-2 mt-5">
+                  <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
+                    <div className="space-y-3">
+                      <Skeleton className="h-11 w-full" />
+                      <Skeleton className="h-20 w-full" />
+                      <Skeleton className="h-20 w-full" />
+                      <Skeleton className="h-20 w-full" />
+                    </div>
+                    <div className="flex flex-col gap-3">
+                      <Skeleton className="flex-1 w-full" />
+                      <Skeleton className="h-20 w-full" />
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <Skeleton className="h-20 w-full" />
+                    <Skeleton className="h-20 w-full" />
+                  </div>
+                </div>
+              </div>
+            ) : (
+              data && <EditScholarship data={data} />
+            )}
           </div>
         ) : mode === "details" ? (
           loading ? (
@@ -441,9 +465,33 @@ export default function InterceptManageScholarship() {
             </div>
           )
         ) : mode === "renewal" ? (
-          <div className=" overflow-auto h-full no-scrollbar">
-            {data && <RedeployScholarship data={data} />}
-          </div>
+          loading ? (
+            <div className="h-full w-full bg-background">
+              <Skeleton className="flex-1 lg:aspect-[16/5] aspect-[16/9] w-full" />
+              <div className="lg:space-y-15 space-y-10 lg:px-6 px-2 mt-5">
+                <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
+                  <div className="space-y-3">
+                    <Skeleton className="h-11 w-full" />
+                    <Skeleton className="h-20 w-full" />
+                    <Skeleton className="h-20 w-full" />
+                    <Skeleton className="h-20 w-full" />
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    <Skeleton className="flex-1 w-full" />
+                    <Skeleton className="h-20 w-full" />
+                  </div>
+                </div>
+                <div className="space-y-3">
+                  <Skeleton className="h-20 w-full" />
+                  <Skeleton className="h-20 w-full" />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className=" overflow-auto h-full no-scrollbar">
+              {data && <RedeployScholarship data={data} />}
+            </div>
+          )
         ) : (
           ""
         )}
