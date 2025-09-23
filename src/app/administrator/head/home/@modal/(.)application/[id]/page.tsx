@@ -390,9 +390,6 @@ export default function InterceptReviewApplicants() {
                 <div className="text-right">
                   <h2 className="text-xl font-semibold text-foreground">
                     {data?.Scholarship.title}
-                    {data?.Scholarship.renew === true && (
-                      <Badge className="bg-blue-700">RENEWAL</Badge>
-                    )}
                   </h2>
                   <p className="text-muted-foreground">
                     {data?.Scholarship.Scholarship_Provider.name}
@@ -969,41 +966,73 @@ export default function InterceptReviewApplicants() {
                         <div className="space-y-3">
                           <div className="flex justify-between items-center">
                             <h3 className="text-xs font-medium text-muted-foreground  tracking-wide">
-                              Required Documents
+                              {data?.Scholarship.renew === false
+                                ? " Required Documents"
+                                : " Required Documents for Renewal"}
                             </h3>
                             <p className="font-medium text-lg">
-                              {
-                                Object.keys(data?.Scholarship.documents || {})
-                                  .length
-                              }
+                              {data?.Scholarship.renew === false
+                                ? Object.keys(
+                                    data?.Scholarship.documents.documents || {}
+                                  ).length
+                                : Object.keys(
+                                    data?.Scholarship.documents
+                                      .renewDocuments || {}
+                                  ).length}
                             </p>
                           </div>
 
                           <div className=" divide-y">
-                            {Object.values(
-                              data?.Scholarship.documents.documents || {}
-                            ).map((doc, index) => (
-                              <div
-                                className="flex justify-between items-center py-5"
-                                key={doc.label}
-                              >
-                                <div>
-                                  <span> {index + 1}. </span>
-                                  {doc.label}
-                                </div>
-                                <Badge
-                                  className={`${
-                                    doc.requirementType === "required"
-                                      ? "bg-red-700/20 text-red-700"
-                                      : doc.requirementType === "optional"
-                                      ? "bg-blue-700/20 text-blue-700"
-                                      : ""
-                                  } capitalize `}
-                                >
-                                  {doc.requirementType}
-                                </Badge>
-                              </div>
-                            ))}
+                            {data?.Scholarship.renew === false
+                              ? Object.values(
+                                  data?.Scholarship.documents.documents || {}
+                                ).map((doc, index) => (
+                                  <div
+                                    className="flex justify-between items-center py-5"
+                                    key={doc.label}
+                                  >
+                                    <div>
+                                      <span> {index + 1}. </span>
+                                      {doc.label}
+                                    </div>
+                                    <Badge
+                                      className={`${
+                                        doc.requirementType === "required"
+                                          ? "bg-red-700/20 text-red-700"
+                                          : doc.requirementType === "optional"
+                                          ? "bg-blue-700/20 text-blue-700"
+                                          : ""
+                                      } capitalize `}
+                                    >
+                                      {doc.requirementType}
+                                    </Badge>
+                                  </div>
+                                ))
+                              : Object.values(
+                                  data?.Scholarship.documents.renewDocuments ||
+                                    {}
+                                ).map((doc, index) => (
+                                  <div
+                                    className="flex justify-between items-center py-5"
+                                    key={doc.label}
+                                  >
+                                    <div>
+                                      <span> {index + 1}. </span>
+                                      {doc.label}
+                                    </div>
+                                    <Badge
+                                      className={`${
+                                        doc.requirementType === "required"
+                                          ? "bg-red-700/20 text-red-700"
+                                          : doc.requirementType === "optional"
+                                          ? "bg-blue-700/20 text-blue-700"
+                                          : ""
+                                      } capitalize `}
+                                    >
+                                      {doc.requirementType}
+                                    </Badge>
+                                  </div>
+                                ))}
                           </div>
                         </div>
                       </div>
