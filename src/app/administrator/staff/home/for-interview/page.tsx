@@ -27,12 +27,6 @@ export default function PendingApplication() {
   ];
   const applicationTourSteps: TourStepType[] = [
     {
-      id: "tabs",
-      title: "Pending vs Pending Renewals",
-      description:
-        "Switch between active scholarships and renewal applications using these tabs.",
-    },
-    {
       id: "search",
       title: "Search Scholarships",
       description:
@@ -79,19 +73,7 @@ export default function PendingApplication() {
         />
 
         <div className="py-8 space-y-5">
-          <div className="flex">
-            <TourStep stepId="tabs">
-              <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
-            </TourStep>
-          </div>
-          {status === "INTERVIEW" && (
-            <ForInterviewApplication setInterview={setInterview} />
-          )}
-          {status === "RENEWINTERVIEW" && (
-            <InterviewRenewalApplication
-              setRenewInterview={setRenewInterview}
-            />
-          )}
+          <ForInterviewApplication setInterview={setInterview} />
         </div>
       </div>
     </TourProvider>
