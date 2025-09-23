@@ -23,7 +23,6 @@ export default function PendingApplication() {
     },
   ];
   const applicationTourSteps: TourStepType[] = [
- 
     {
       id: "search",
       title: "Search Scholarships",
@@ -78,17 +77,7 @@ export default function PendingApplication() {
           />
 
           <div className="py-8 space-y-5">
-            <div className="flex">
-              <TourStep stepId="tabs">
-                <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
-              </TourStep>
-            </div>
-            {status === "APPROVED" && (
-              <ApprovedApplication setApproved={setApproved} />
-            )}
-            {status === "RENEWAPPROVED" && (
-              <ApprovedRenewApplication setRenewApproved={setRenewApproved} />
-            )}
+            <ApprovedApplication setApproved={setApproved} />
           </div>
         </div>
       </div>
