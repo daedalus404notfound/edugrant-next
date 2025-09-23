@@ -8,6 +8,7 @@ import {
   Inbox,
   Maximize,
   PhilippinePeso,
+  Upload,
   X,
 } from "lucide-react";
 
@@ -224,15 +225,17 @@ export default function InterceptManageScholarshipClient() {
                       />
                     )}
 
-                    <Link
-                      target="_blank"
-                      href={data?.cover}
-                      className="absolute z-5  "
-                    >
-                      <Button variant="secondary" size="sm">
-                        View <ExternalLink />
-                      </Button>
-                    </Link>
+                    {data?.cover && (
+                      <Link
+                        target="_blank"
+                        href={data?.cover}
+                        className="absolute z-5  "
+                      >
+                        <Button variant="secondary" size="sm">
+                          View <ExternalLink />
+                        </Button>
+                      </Link>
+                    )}
                   </div>
 
                   <div className="flex-1 pt-30 px-6 space-y-8">
@@ -433,7 +436,7 @@ export default function InterceptManageScholarshipClient() {
                           new Date(data.deadline).getTime() < Date.now()
                         }
                       >
-                        Apply Renew Scholarship
+                        <Upload /> Apply Renew Scholarship
                       </Button>
                     ) : (
                       <Button
@@ -445,7 +448,7 @@ export default function InterceptManageScholarshipClient() {
                           !!findMatch
                         }
                       >
-                        Apply Scholarship
+                        <Upload /> Apply Scholarship
                       </Button>
                     )}
                   </div>

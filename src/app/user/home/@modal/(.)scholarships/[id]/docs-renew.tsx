@@ -219,14 +219,14 @@ export default function UploadRenewDocs({
           </div>
         </div>
         <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-        <div className="space-y-5">
+        <div className="space-y-8">
           <TitleReusable
             title="Upload Documents for Renewal"
             description={` Complete your application for ${data.title}`}
           />
 
           <Form {...form}>
-            <div className=" grid lg:grid-cols-2 grid-cols-1 gap-3">
+            <div className=" grid lg:grid-cols-2 grid-cols-1 gap-8">
               {Object.values(requiredDocuments).map((doc, index) => (
                 <FormField
                   key={`required-${index}`}
@@ -234,7 +234,7 @@ export default function UploadRenewDocs({
                   name={doc.label as keyof FormData}
                   render={() => (
                     <FormItem>
-                      <div className="space-y-4 bg-card p-4 rounded-md">
+                      <div className="space-y-4  rounded-md">
                         <div className="space-y-1">
                           <FormLabel className="flex items-center justify-between">
                             <span className="text-base font-medium">
