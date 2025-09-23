@@ -475,14 +475,6 @@ export default function InterceptManageScholarshipClient() {
                         Apply Scholarship
                       </Button>
                     )}
-
-                    <Button
-                      className="flex-1"
-                      variant="secondary"
-                      onClick={() => HandleCloseDrawer(false)}
-                    >
-                      Close
-                    </Button>
                   </div>
                 </div>
               )}
