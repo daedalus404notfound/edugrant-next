@@ -196,7 +196,7 @@ export default function EditApplication({
         </div>
       </div>
 
-      <div className="lg:p-4 p-2 sticky bottom-0 border-t bg-background/40 flex gap-3">
+      <div className="lg:p-4 p-2 sticky bottom-0 border-t bg-background flex gap-3">
         <DeleteDialog
           open={openAlert}
           onOpenChange={setOpenAlert}

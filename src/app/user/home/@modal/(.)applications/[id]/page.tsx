@@ -51,6 +51,7 @@ import {
   Clock,
   Download,
   Edit,
+  Edit2,
   Eye,
   GraduationCap,
   Inbox,
@@ -60,6 +61,7 @@ import {
   MoreHorizontal,
   MoreVertical,
   Pen,
+  PenLine,
   PhilippinePeso,
   StickyNote,
   TableOfContents,
@@ -133,7 +135,23 @@ export default function InterceptManageApplicationClient() {
 
     { id: "scholarship", label: "Scholarship Details", indicator: null },
   ];
-
+  const steps = [
+    {
+      step: 1,
+      title: "Step One",
+      description: "Choose Scholarship",
+    },
+    {
+      step: 2,
+      title: "Step Two",
+      description: "Upload Documents",
+    },
+    {
+      step: 3,
+      title: "Step Three",
+      description: "Wait for Approval",
+    },
+  ];
   return (
     <Drawer
       open={open}
@@ -142,7 +160,7 @@ export default function InterceptManageApplicationClient() {
       }}
     >
       <DrawerContent
-        className={`lg:w-[56%] w-[98%] mx-auto outline-0 border-0 lg:p-1 bg-background ${
+        className={`lg:w-[56%] bg-card w-[98%] mx-auto outline-0 border-0 lg:p-1  ${
           loading ? " lg:h-[75dvh] h-[68dvh]" : " lg:h-[95dvh] h-[90dvh]"
         }`}
       >
@@ -175,7 +193,7 @@ export default function InterceptManageApplicationClient() {
           </div>
         </div>
         {loading ? (
-          <div className="h-full w-full">
+          <div className="h-full w-full bg-background">
             <Skeleton className="flex-1 lg:aspect-[16/5] aspect-[16/9] w-full" />
             <div className="lg:space-y-15 space-y-10 lg:px-6 px-2 mt-5">
               <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
@@ -205,7 +223,7 @@ export default function InterceptManageApplicationClient() {
         ) : (
           <>
             <div className=" flex-1 flex flex-col bg-background overflow-auto rounded-t-lg space-y-2 no-scrollbar">
-              <div className="relative">
+              {/* <div className="relative">
                 <div className="absolute top-0 left-0 lg:h-70 h-60 w-full opacity-30   mask-gradient flex">
                   <img
                     className="w-full h-full object-cover blur-md "
@@ -311,8 +329,29 @@ export default function InterceptManageApplicationClient() {
                     </DialogContent>
                   </Dialog>
                 </div>
-              </div>
-              <div className="p-8 mt-15 space-y-3">
+              </div> */}
+              <div className="p-4 space-y-8">
+                <TitleReusable
+                  title={data[0].Scholarship.title}
+                  description={`Application Details for ${data[0].Scholarship.title}`}
+                />
+                <Stepper defaultValue={2} className="items-start gap-4">
+                  {steps.map(({ step, title, description }) => (
+                    <StepperItem key={step} step={step} className="flex-1">
+                      <StepperTrigger className="w-full flex-col items-start gap-2 rounded">
+                        <StepperIndicator
+                          asChild
+                          className="bg-border h-1 w-full"
+                        >
+                          <span className="sr-only">{step}</span>
+                        </StepperIndicator>
+                        <StepperTitle>{title}</StepperTitle>
+                        <StepperDescription>{description}</StepperDescription>
+                      </StepperTrigger>
+                    </StepperItem>
+                  ))}
+                </Stepper>
+
                 <div>
                   <Tabs
                     tabs={navigationTabs}
@@ -322,6 +361,7 @@ export default function InterceptManageApplicationClient() {
 
                   <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
                 </div>
+
                 {data[0]?.status === "DECLINED" && (
                   <div className="relative z-20 bg-red-700/10 rounded-md  px-4 py-3 text-red-500">
                     <p className="text-sm">
@@ -384,14 +424,17 @@ export default function InterceptManageApplicationClient() {
                 )}
               </div>
             </div>
-            <div className="flex gap-3 p-4">
-              <Button
-                className="flex-1"
-                onClick={() => setEdit(true)}
-                disabled={data[0]?.status !== "PENDING"}
-              >
-                Edit Documents
-              </Button>
+            <div>
+              <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+              <div className="flex gap-3 bg-background p-4">
+                <Button
+                  className="flex-1"
+                  onClick={() => setEdit(true)}
+                  disabled={data[0]?.status !== "PENDING"}
+                >
+                  <PenLine /> Edit Documents
+                </Button>
+              </div>
             </div>
           </>
         )}
