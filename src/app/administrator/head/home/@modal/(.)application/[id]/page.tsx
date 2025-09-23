@@ -482,6 +482,62 @@ export default function InterceptReviewApplicants() {
                               </div>
                             </div>
                           ))}
+                      {data?.Scholarship.renew === true &&
+                        data?.submittedDocuments.renewDocuments &&
+                        Object.entries(data.submittedDocuments.renewDocuments)
+                          .filter(
+                            ([_, doc]) =>
+                              doc.requirementType &&
+                              doc.requirementType.trim() !== ""
+                          ) // ✅ filter out empty requirementType
+                          .map(([key, doc], index) => (
+                            <div key={index} className="flex gap-5 py-8">
+                              <Reviewer
+                                fileFormat={mimeToLabelMap[doc.fileFormat]}
+                                resourceType={doc.resourceType}
+                                fileUrl={doc.fileUrl}
+                                document={doc.document}
+                                supabasePath={doc.supabasePath}
+                                requirementType={doc.requirementType}
+                              />
+
+                              <div className="flex-1 flex flex-col justify-between">
+                                <div className="flex items-start justify-between">
+                                  <div className="flex-1">
+                                    <h4 className="text-lg font-semibold mb-1">
+                                      {doc.document}
+                                    </h4>
+                                    <div className="flex items-center gap-2">
+                                      <Badge
+                                        variant="secondary"
+                                        className="uppercase bg-red-800/20 text-red-700"
+                                      >
+                                        {/* {mimeToLabelMap[doc.fileFormat]} */}
+                                        {doc.requirementType}
+                                      </Badge>
+                                    </div>
+                                  </div>
+                                  <Button size="sm" variant="outline">
+                                    <Download className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                                <div className="flex gap-3">
+                                  <div className="flex-1">
+                                    {" "}
+                                    <Textarea
+                                      placeholder="Staff comment..."
+                                      defaultValue={matchedComment}
+                                      className="min-h-9"
+                                      disabled
+                                    />
+                                  </div>
+                                  <div className="flex gap-2">
+                                    <Button>{matchedStatus}</Button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
                     </div>
                   )}
                 </div>
