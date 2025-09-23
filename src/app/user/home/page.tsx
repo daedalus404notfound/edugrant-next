@@ -23,28 +23,17 @@ import {
 import { useEffect, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import {
-  Activity,
-  ArrowRight,
   ArrowRightIcon,
-  Calendar1,
-  Calendar1Icon,
   CalendarIcon,
   CheckCheck,
-  Eclipse,
   ExternalLink,
-  GalleryHorizontalEnd,
-  GalleryVerticalEnd,
-  Ghost,
   GraduationCap,
   Grid2X2,
   Lock,
-  Megaphone,
-  Plus,
-  Table2,
   TrendingUp,
   UserRoundCog,
 } from "lucide-react";
-
+import { getFamilyBackgroundProgress } from "@/lib/isFamilyComplete";
 const mockApplications = [
   {
     id: "1",
@@ -108,7 +97,6 @@ const programmingLanguages = [
 ];
 import { format } from "date-fns";
 import { BGPattern } from "@/components/ui/grid";
-import useScholarshipData from "@/hooks/admin/getScholarship";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
@@ -174,6 +162,7 @@ export default function AdminDashboard() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [now, setNow] = useState<string>("");
   const { user } = useUserStore();
+  const { percentage, completed } = getFamilyBackgroundProgress(user?.Student);
   const [isClient, setIsClient] = useState(false);
   useEffect(() => {
     setIsClient(true);
@@ -184,12 +173,6 @@ export default function AdminDashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  const { data, loading } = useScholarshipData({
-    page: 1,
-    pageSize: 10,
-    status: "ACTIVE",
-  });
-  const sliced = data.slice(0, 4);
   function ApplicationCard({ application }: { application: any }) {
     const getStatusColor = (status: string) => {
       switch (status) {
@@ -242,34 +225,36 @@ export default function AdminDashboard() {
   return (
     <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="py-8 px-5 space-y-5">
-        <div className="bg-card text-foreground px-4 py-3 rounded-md">
-          <div className="flex flex-col justify-between gap-2 md:flex-row">
-            <div className="flex grow gap-3">
-              <Lock
-                className="mt-0.5 shrink-0 opacity-60"
-                size={16}
-                aria-hidden="true"
-              />
-              <div className="flex grow flex-col justify-between gap-2 md:flex-row md:items-center">
-                <p className="text-sm">
-                  Complete profile details first to access apply scholarship
-                  feature
-                </p>
-                <a
-                  href="#"
-                  className="group text-sm font-medium whitespace-nowrap"
-                >
-                  View Profile
-                  <ArrowRightIcon
-                    className="ms-1 -mt-0.5 inline-flex opacity-60 transition-transform group-hover:translate-x-0.5"
-                    size={16}
-                    aria-hidden="true"
-                  />
-                </a>
+        {!completed && (
+          <div className="bg-card text-foreground px-4 py-3 rounded-md">
+            <div className="flex flex-col justify-between gap-2 md:flex-row">
+              <div className="flex grow gap-3">
+                <Lock
+                  className="mt-0.5 shrink-0 opacity-60"
+                  size={16}
+                  aria-hidden="true"
+                />
+                <div className="flex grow flex-col justify-between gap-2 md:flex-row md:items-center">
+                  <p className="text-sm">
+                    Complete profile details first to access apply scholarship
+                    feature
+                  </p>
+                  <a
+                    href="#"
+                    className="group text-sm font-medium whitespace-nowrap"
+                  >
+                    View Profile
+                    <ArrowRightIcon
+                      className="ms-1 -mt-0.5 inline-flex opacity-60 transition-transform group-hover:translate-x-0.5"
+                      size={16}
+                      aria-hidden="true"
+                    />
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className="grid grid-cols-2 gap-8 ">
           <div className="space-y-10">
@@ -352,10 +337,10 @@ export default function AdminDashboard() {
               <div className="mb-3">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm">Progress</span>
-                  <span className="text-sm">30%</span>
+                  <span className="text-sm">{percentage}%</span>
                 </div>
 
-                <Progress />
+                <Progress value={percentage} />
               </div>
             </div>
 
