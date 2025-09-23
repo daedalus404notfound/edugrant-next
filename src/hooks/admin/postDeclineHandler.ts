@@ -66,17 +66,14 @@ import StyledToast from "@/components/ui/toast-styled";
 import { useApplicationUIStore } from "@/store/updateUIStore";
 import axios from "axios";
 import { useState } from "react";
+import { ApiErrorResponse } from "./postReviewedHandler";
 type RecjectTypes = {
   id: number;
   adminId?: number;
   scholarshipId: number;
   documentUpdate: Record<string, { comment: string; status: string }>;
 };
-interface ApiErrorResponse {
-  message?: string;
-  error?: string;
-  statusCode?: number;
-}
+
 export function useRecjectHandler({
   id,
   adminId,

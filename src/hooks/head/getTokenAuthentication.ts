@@ -3,6 +3,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAdminStore } from "@/store/adminUserStore";
 import { usePathname, useRouter } from "next/navigation";
+import { ApiErrorResponse } from "../admin/postReviewedHandler";
+import StyledToast from "@/components/ui/toast-styled";
 
 export default function useAuthenticatedUser() {
   const { setAdmin, setLoading, setError } = useAdminStore();
@@ -39,7 +41,13 @@ export default function useAuthenticatedUser() {
           setSucces(true);
         }
       } catch (error) {
-        console.error(error);
+        if (axios.isAxiosError<ApiErrorResponse>(error)) {
+          StyledToast({
+            status: "error",
+            title: error?.response?.data.message ?? "An error occurred.",
+            description: "Cannot process your request.",
+          });
+        }
         setSucces(false);
         if (pathname !== "/") {
           router.replace("/administrator");

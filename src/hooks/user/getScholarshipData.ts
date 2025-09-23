@@ -2,6 +2,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { scholarshipFormData } from "../admin/zodUpdateScholarship";
+import StyledToast from "@/components/ui/toast-styled";
+import { ApiErrorResponse } from "../admin/postReviewedHandler";
 
 export default function useScholarshipUserById(id: string) {
   const [data, setData] = useState<scholarshipFormData | null>(null);
@@ -24,10 +26,12 @@ export default function useScholarshipUserById(id: string) {
             setData(res.data.scholarship);
           }
         } catch (error) {
-          if (axios.isAxiosError(error)) {
-            if (error.message === "Network Error") {
-              setError("No internet connection. Please check your network.");
-            }
+          if (axios.isAxiosError<ApiErrorResponse>(error)) {
+            StyledToast({
+              status: "error",
+              title: error?.response?.data.message ?? "An error occurred.",
+              description: "Cannot process your request.",
+            });
           }
         } finally {
           setLoading(false);

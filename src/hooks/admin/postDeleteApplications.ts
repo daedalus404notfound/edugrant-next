@@ -1,6 +1,7 @@
 import StyledToast from "@/components/ui/toast-styled";
 import axios from "axios";
 import { useState } from "react";
+import { ApiErrorResponse } from "./postReviewedHandler";
 
 type DeleteTypes = {
   applicationId?: (string | number)[];
@@ -34,15 +35,15 @@ export default function useDeleteApplication({ applicationId }: DeleteTypes) {
         setLoading(false);
       }
     } catch (error) {
-      console.error(error);
-      StyledToast({
-        status: "error",
-        title: "Deletion Failed",
-        description:
-          "The application could not be removed. Please try again later.",
-      });
-      setIsSuccess(false);
-      setLoading(false);
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        StyledToast({
+          status: "error",
+          title: error?.response?.data.message ?? "An error occurred.",
+          description: "Cannot process your request.",
+        });
+        setIsSuccess(false);
+        setLoading(false);
+      }
     }
   };
 

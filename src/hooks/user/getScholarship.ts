@@ -52,6 +52,8 @@ import { useEffect, useState } from "react";
 
 import { scholarshipFormData } from "../admin/zodUpdateScholarship";
 import { MetaTypes } from "../zodMeta";
+import { ApiErrorResponse } from "../admin/postReviewedHandler";
+import StyledToast from "@/components/ui/toast-styled";
 
 export default function useScholarshipData({
   page,
@@ -107,7 +109,13 @@ export default function useScholarshipData({
             setMeta(res.data.meta);
           }
         } catch (error) {
-          console.error(error);
+          if (axios.isAxiosError<ApiErrorResponse>(error)) {
+            StyledToast({
+              status: "error",
+              title: error?.response?.data.message ?? "An error occurred.",
+              description: "Cannot process your request.",
+            });
+          }
         } finally {
           setLoading(false);
         }

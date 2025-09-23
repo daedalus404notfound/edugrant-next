@@ -2,6 +2,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { ApplicationFormData } from "../zod/application";
+import { ApiErrorResponse } from "./postReviewedHandler";
+import StyledToast from "@/components/ui/toast-styled";
 
 export default function useApplicationById(id: number) {
   const [data, setData] = useState<ApplicationFormData | null>(null);
@@ -25,10 +27,12 @@ export default function useApplicationById(id: number) {
             setData(res.data.data);
           }
         } catch (error) {
-          if (axios.isAxiosError(error)) {
-            if (error.message === "Network Error") {
-              setError("No internet connection. Please check your network.");
-            }
+          if (axios.isAxiosError<ApiErrorResponse>(error)) {
+            StyledToast({
+              status: "error",
+              title: error?.response?.data.message ?? "An error occurred.",
+              description: "Cannot process your request.",
+            });
           }
         } finally {
           setLoading(false);

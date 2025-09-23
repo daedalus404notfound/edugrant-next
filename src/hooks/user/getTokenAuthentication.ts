@@ -3,6 +3,8 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useUserStore } from "../../store/useUserStore";
 import { usePathname, useRouter } from "next/navigation";
+import { ApiErrorResponse } from "../admin/postReviewedHandler";
+import StyledToast from "@/components/ui/toast-styled";
 
 export default function useAuthenticatedUser() {
   const { setUser, setLoading, setError } = useUserStore();
@@ -31,10 +33,12 @@ export default function useAuthenticatedUser() {
         // if (pathname !== "/") {
         //   router.replace("/");
         // }
-        if (axios.isAxiosError(error) && error.message === "Network Error") {
-          setError("No network connection");
-        } else {
-          setError("Failed to fetch user data");
+        if (axios.isAxiosError<ApiErrorResponse>(error)) {
+          StyledToast({
+            status: "error",
+            title: error?.response?.data.message ?? "An error occurred.",
+            description: "Cannot process your request.",
+          });
         }
       } finally {
         setLoading(false);

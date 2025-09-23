@@ -2,6 +2,7 @@ import StyledToast from "@/components/ui/toast-styled";
 import { useApplicationUIStore } from "@/store/updateUIStore";
 import axios from "axios";
 import { useState } from "react";
+import { ApiErrorResponse } from "./postReviewedHandler";
 
 type DeleteTypes = {
   scholarshipId: number;
@@ -44,15 +45,15 @@ export default function useArchiveScholarship({
         setOpenArchive(false);
       }
     } catch (error) {
-      console.error(error);
-      StyledToast({
-        status: "error",
-        title: "Archiving Failed",
-        description:
-          "The scholarship could not be archived. Please try again later.",
-      });
-      setIsSuccess(false);
-      setOpenArchive(false);
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        StyledToast({
+          status: "error",
+          title: error?.response?.data.message ?? "An error occurred.",
+          description: "Cannot process your request.",
+        });
+        setIsSuccess(false);
+        setOpenArchive(false);
+      }
     } finally {
       setLoading(false);
     }

@@ -2,6 +2,7 @@ import StyledToast from "@/components/ui/toast-styled";
 import { useApplicationUIStore } from "@/store/updateUIStore";
 import axios from "axios";
 import { useState } from "react";
+import { ApiErrorResponse } from "./postReviewedHandler";
 
 type DeleteTypes = {
   scholarshipId: number;
@@ -42,16 +43,16 @@ export default function useDeleteScholarship({
         setLoading(false);
       }
     } catch (error) {
-      console.error(error);
-      StyledToast({
-        status: "error",
-        title: "Deletion Failed",
-        description:
-          "The scholarship could not be removed. Please try again later.",
-      });
-      setIsSuccess(false);
-      setLoading(false);
-      setOpenDelete(false);
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        StyledToast({
+          status: "error",
+          title: error?.response?.data.message ?? "An error occurred.",
+          description: "Cannot process your request.",
+        });
+        setIsSuccess(false);
+        setLoading(false);
+        setOpenDelete(false);
+      }
     }
   };
 

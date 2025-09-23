@@ -3,6 +3,7 @@ import { useAdminStore } from "@/store/adminUserStore";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { ApiErrorResponse } from "./postReviewedHandler";
 
 export function useAdminLogout() {
   const [loading, setLoading] = useState(false);
@@ -37,13 +38,14 @@ export function useAdminLogout() {
         ``;
       }
     } catch (error) {
-      setOpen(false);
-      StyledToast({
-        status: "error",
-        title: "Logout failed",
-        description: "An error occurred while logging out.",
-      });
-      console.error("Logout error:", error);
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        StyledToast({
+          status: "error",
+          title: error?.response?.data.message ?? "An error occurred.",
+          description: "Cannot process your request.",
+        });
+        setOpen(false);
+      }
     } finally {
       setLoading(false);
     }

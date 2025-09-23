@@ -2,6 +2,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FilterOptions } from "../zod/filter";
+import { ApiErrorResponse } from "./postReviewedHandler";
+import StyledToast from "@/components/ui/toast-styled";
 
 export default function useGetFilter({
   applicationStatus,
@@ -31,7 +33,13 @@ export default function useGetFilter({
           setFilter(res.data);
         }
       } catch (error) {
-        console.error(error);
+        if (axios.isAxiosError<ApiErrorResponse>(error)) {
+          StyledToast({
+            status: "error",
+            title: error?.response?.data.message ?? "An error occurred.",
+            description: "Cannot process your request.",
+          });
+        }
       } finally {
         setFilterLoading(false);
       }

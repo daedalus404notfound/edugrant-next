@@ -8,7 +8,7 @@ type InterviewTypes = {
   scholarshipId: number;
   documentUpdate: Record<string, { comment: string; status: string }>;
 };
-interface ApiErrorResponse {
+export interface ApiErrorResponse {
   message?: string;
   error?: string;
   statusCode?: number;
@@ -48,7 +48,7 @@ export function useInterviewdHandler({
         setOpenInterview(false);
         setIsSuccessInterview(true);
       }
-    } catch (error: unknown) {
+    } catch (error) {
       if (axios.isAxiosError<ApiErrorResponse>(error)) {
         StyledToast({
           status: "error",

@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 
 import { ApplicationFormData } from "../zod/application";
 import { MetaTypes } from "../zodMeta";
+import { ApiErrorResponse } from "./postReviewedHandler";
+import StyledToast from "@/components/ui/toast-styled";
 const defaultMeta: MetaTypes = {
   page: 1,
   pageSize: 10,
@@ -53,7 +55,13 @@ export default function useFetchRenewApplications({
             setMeta(res.data.meta);
           }
         } catch (error) {
-          console.error(error);
+          if (axios.isAxiosError<ApiErrorResponse>(error)) {
+            StyledToast({
+              status: "error",
+              title: error?.response?.data.message ?? "An error occurred.",
+              description: "Cannot process your request.",
+            });
+          }
         } finally {
           setLoading(false);
         }
