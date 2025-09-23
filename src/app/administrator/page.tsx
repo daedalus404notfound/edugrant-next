@@ -109,7 +109,6 @@ text-5xl  havelock tracking-[-8px]
             className="text-2xl"
           />
         </div>
-      
       </div>
       <div className="flex flex-col gap-4 p-6 md:p-10 bg-card">
         {step === "login" && (
@@ -179,6 +178,7 @@ text-5xl  havelock tracking-[-8px]
                                   placeholder="Enter your password"
                                   {...field}
                                   disabled={authLoading}
+                                  type="password"
                                 />
                               </FormControl>
                               <Dialog>
