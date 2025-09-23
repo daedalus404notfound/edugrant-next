@@ -210,6 +210,7 @@ export default function InterceptReviewApplicants() {
   } = useApprovedHandler({
     id,
     adminId: admin?.accountId,
+    documentUpdate: reviewData,
     scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
   });
 

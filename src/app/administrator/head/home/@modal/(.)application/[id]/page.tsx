@@ -426,7 +426,8 @@ export default function InterceptReviewApplicants() {
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 divide-y">
-                      {data?.submittedDocuments.documents &&
+                      {data?.Scholarship.renew === false &&
+                        data?.submittedDocuments.documents &&
                         Object.entries(data.submittedDocuments.documents)
                           .filter(
                             ([_, doc]) =>

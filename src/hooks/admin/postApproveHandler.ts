@@ -6,6 +6,7 @@ type ApproveTypes = {
   id: number;
   adminId?: number;
   scholarshipId: number;
+  documentUpdate: Record<string, { comment: string; status: string }>;
 };
 interface ApiErrorResponse {
   message?: string;
@@ -16,6 +17,7 @@ export function useApprovedHandler({
   id,
   adminId,
   scholarshipId,
+  documentUpdate,
 }: ApproveTypes) {
   const [loadingApprove, setLoadingApprove] = useState(false);
   const [openApprove, setOpenApprove] = useState(false);
@@ -27,7 +29,12 @@ export function useApprovedHandler({
       setLoadingApprove(true);
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/approveApplication`,
-        { applicationId: id, adminId: adminId, scholarshipId: scholarshipId },
+        {
+          applicationId: id,
+          adminId: adminId,
+          scholarshipId: scholarshipId,
+          rejectMessage: JSON.stringify(documentUpdate),
+        },
         { withCredentials: true }
       );
       if (res.status === 200) {
