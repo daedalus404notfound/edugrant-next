@@ -55,7 +55,6 @@ export default function ClientScholarship() {
 
   console.log(pendingLength);
   const tabs = [
-    { id: "", label: "All Applications", indicator: null },
     { id: "PENDING", label: "Pending", indicator: pendingLength },
     { id: "INTERVIEW", label: "For Interview", indicator: reviewedLength },
     { id: "APPROVED", label: "Approved", indicator: approvedLength },
