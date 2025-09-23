@@ -173,6 +173,18 @@ export default function AdminDashboard() {
     return () => clearInterval(interval);
   }, []);
 
+  const getProgressBarColor = (percentage: number) => {
+    if (percentage < 30) return "bg-red-500";
+    if (percentage < 70) return "bg-yellow-500";
+    return "bg-green-500";
+  };
+
+  const getProgressContainerColor = (percentage: number) => {
+    if (percentage < 30) return "bg-red-500/20";
+    if (percentage < 70) return "bg-yellow-500/20";
+    return "bg-green-500/20";
+  };
+
   function ApplicationCard({ application }: { application: any }) {
     const getStatusColor = (status: string) => {
       switch (status) {
@@ -239,9 +251,9 @@ export default function AdminDashboard() {
                     Complete profile details first to access apply scholarship
                     feature
                   </p>
-                  <a
-                    href="#"
+                  <Link
                     className="group text-sm font-medium whitespace-nowrap"
+                    href={"/user/home/profile"}
                   >
                     View Profile
                     <ArrowRightIcon
@@ -249,7 +261,7 @@ export default function AdminDashboard() {
                       size={16}
                       aria-hidden="true"
                     />
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -268,14 +280,18 @@ export default function AdminDashboard() {
                 </h1>
               </div>
               <div className="space-x-3">
-                <Button size="lg">
-                  <GraduationCap />
-                  Apply
-                </Button>
-                <Button size="lg">
-                  <Grid2X2 />
-                  Track
-                </Button>
+                <Link href={"/user/home/scholarships"}>
+                  <Button size="lg">
+                    <GraduationCap />
+                    Apply
+                  </Button>
+                </Link>
+                <Link href={"/user/home/applications"}>
+                  <Button size="lg">
+                    <Grid2X2 />
+                    Track
+                  </Button>
+                </Link>
               </div>
             </div>
             <div className="grid  lg:grid-cols-3 grid-cols-1 lg:gap-3 gap-3">
@@ -286,9 +302,11 @@ export default function AdminDashboard() {
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <h1 className="text-base font-medium">Announcements</h1>
-                <Button size="sm" variant="link">
-                  See All <ExternalLink />
-                </Button>
+                <Link href={"/user/home/announcements"}>
+                  <Button size="sm" variant="link">
+                    See All <ExternalLink />
+                  </Button>
+                </Link>
               </div>
               <Timeline className="space-y-5">
                 {announcements.map((item) => (
@@ -331,7 +349,9 @@ export default function AdminDashboard() {
                     Complete your profile to unlock scholarships.
                   </p>
                 </div>
-                <Button variant="secondary">View Details</Button>
+                <Link href={"/user/home/profile"}>
+                  <Button variant="secondary">View Details</Button>
+                </Link>
               </div>
 
               <div className="mb-3">
@@ -340,16 +360,29 @@ export default function AdminDashboard() {
                   <span className="text-sm">{percentage}%</span>
                 </div>
 
-                <Progress value={percentage} />
+                <div
+                  className={`w-full ${getProgressContainerColor(
+                    percentage
+                  )} rounded-full h-2`}
+                >
+                  <div
+                    className={`h-2 rounded-full transition-all duration-300 ${getProgressBarColor(
+                      percentage
+                    )}`}
+                    style={{ width: `${percentage}%` }}
+                  ></div>
+                </div>
               </div>
             </div>
 
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <h1 className="text-base font-medium">Recent Application</h1>
-                <Button size="sm" variant="link">
-                  See All <ExternalLink />
-                </Button>
+                <Link href={"/user/home/applications"}>
+                  <Button size="sm" variant="link">
+                    See All <ExternalLink />
+                  </Button>
+                </Link>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {mockApplications.slice(0, 2).map((application) => (
@@ -363,9 +396,12 @@ export default function AdminDashboard() {
             <div className="space-y-2">
               <div className="flex justify-between items-center mt-8">
                 <h1 className="text-base font-medium">Active Scholarship</h1>
-                <Button size="sm" variant="link">
-                  Browse All <ExternalLink />
-                </Button>
+
+                <Link href={"/user/home/scholarships"}>
+                  <Button size="sm" variant="link">
+                    Browse All <ExternalLink />
+                  </Button>
+                </Link>
               </div>
               <div className="rounded-md border overflow-hidden bg-card">
                 <Table>

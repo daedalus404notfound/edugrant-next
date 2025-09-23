@@ -58,7 +58,8 @@ export default function Profile() {
             <div className="flex flex-col gap-5 items-center lg:flex-row">
               <div className="relative">
                 <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary-second rounded-full flex items-center justify-center  font-bold text-2xl text-white">
-                  {user?.Student.fName.slice(0, 1)}{user?.Student.lName.slice(0, 1)}
+                  {user?.Student.fName.slice(0, 1)}
+                  {user?.Student.lName.slice(0, 1)}
                 </div>
                 <div className="absolute bottom-1 right-1 size-3 bg-green-500 rounded-full border"></div>
               </div>
