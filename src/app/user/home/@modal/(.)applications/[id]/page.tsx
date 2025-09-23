@@ -104,6 +104,7 @@ import ScholarDetails from "./scholarship";
 import EditApplication from "./edi-application";
 import { Skeleton } from "@/components/ui/skeleton";
 import DocsStudentRenew from "./doc-renew";
+import EditApplicationRenew from "./edit-renew";
 
 export default function InterceptManageApplicationClient() {
   const [activeSection, setActiveSection] = useState("documents");
@@ -196,7 +197,11 @@ export default function InterceptManageApplicationClient() {
             </div>
           </div>
         ) : edit ? (
-          <EditApplication data={data[0]} setEdit={setEdit} />
+          data[0].Scholarship.renew === false ? (
+            <EditApplication data={data[0]} setEdit={setEdit} />
+          ) : (
+            <EditApplicationRenew data={data[0]} setEdit={setEdit} />
+          )
         ) : (
           <>
             <div className=" flex-1 flex flex-col bg-background overflow-auto rounded-t-lg space-y-2 no-scrollbar">
