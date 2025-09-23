@@ -48,8 +48,8 @@ export default function DocsStudentRenew({ data }: DocsStudentProps) {
         </div>
       </div>
       <div className="grid  lg:grid-cols-1 grid-cols-1 divide-y">
-        {data?.submittedDocuments.documents &&
-          Object.entries(data.submittedDocuments.documents).map(
+        {data?.submittedDocuments.renewDocuments &&
+          Object.entries(data.submittedDocuments.renewDocuments).map(
             ([key, doc]) => {
               const rejectMessage =
                 data?.Application_Decision?.message?.[key] || null;

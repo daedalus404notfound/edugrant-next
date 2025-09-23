@@ -368,9 +368,12 @@ export default function InterceptManageApplicationClient() {
                     </p>
                   </div>
                 )}
-                {activeSection === "documents" && (
-                  <DocsStudentRenew data={data[0]} />
-                )}
+                {activeSection === "documents" &&
+                  (data[0].Scholarship.renew === false ? (
+                    <DocsStudent data={data[0]} />
+                  ) : (
+                    <DocsStudentRenew data={data[0]} />
+                  ))}
                 {activeSection === "scholarship" && (
                   <ScholarDetails data={data[0]} />
                 )}
