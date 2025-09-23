@@ -72,13 +72,18 @@ export default function ClientScholarship() {
   return (
     <div className="  bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:pt-10  pt-3 space-y-8">
-        <div className="flex justify-between items-end">
+        <motion.div
+          className="flex justify-between items-end"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <TitleReusable
             title="My Applications"
             description="Track and manage your submitted scholarship applications."
             Icon={TextSearch}
           />
-        </div>
+        </motion.div>
 
         {/* <div className="flex gap-2 mt-5">
           <div className="flex-1">
@@ -88,14 +93,27 @@ export default function ClientScholarship() {
             <MoreHorizontal />
           </Button>
         </div> */}
-        <div className="overflow-y-hidden overflow-x-auto py-3 no-scrollbar ">
+
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="overflow-y-hidden overflow-x-auto py-3 no-scrollbar "
+        >
           <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
-        </div>
+        </motion.div>
         <div className=" grid lg:grid-cols-3 grid-cols-1 gap-6">
           {loading ? (
             [...Array(3)].map((_, index) => (
-              <div
+              <motion.div
                 key={index}
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{
+                  duration: 0.5,
+                  delay: index * 0.15,
+                  ease: "easeOut",
+                }}
                 className="p-2 bg-background/40 relative rounded-md border space-y-3"
               >
                 <Skeleton className="aspect-[16/8.5]" />
@@ -105,96 +123,107 @@ export default function ClientScholarship() {
                   <Skeleton className="flex-1" />
                   <Skeleton className="flex-1" />
                 </div>
-              </div>
+              </motion.div>
             ))
           ) : data.length === 0 ? (
             <NoDataFound />
           ) : (
-            data.map((meow) => (
-              <Link
-                href={`/user/home/applications/${meow.applicationId}`}
+            data.map((meow, index) => (
+              <motion.div
                 key={meow.applicationId}
-                prefetch
-                scroll={false}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  duration: 0.3,
+                  delay: index * 0.1,
+                  ease: "easeOut",
+                }}
                 className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
               >
-                <div className="relative rounded-lg bg-background ">
-                  <img
-                    className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
-                      status === "EXPIRED" ? "" : ""
-                    }`}
-                    src={meow.Scholarship.cover}
-                    alt=""
-                  />
-                  <div className="relative z-10">
-                    <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
-                      {meow.status && (
-                        <span
-                          className={`absolute top-3 right-0 text-center pl-4 pr-6 py-2 rounded-l-lg flex items-center gap-2 text-sm font-medium ${
-                            meow.status === "BLOCKED"
-                              ? "bg-gray-700"
-                              : meow.status === "APPROVED"
-                              ? "bg-green-800"
-                              : meow.status === "PENDING"
-                              ? "bg-amber-700"
-                              : meow.status === "INTERVIEW"
-                              ? "bg-blue-700"
-                              : meow.status === "DECLINED"
-                              ? "bg-red-700"
-                              : ""
+                <Link
+                  href={`/user/home/applications/${meow.applicationId}`}
+                  key={meow.applicationId}
+                  prefetch
+                  scroll={false}
+                >
+                  <div className="relative rounded-lg bg-background ">
+                    <img
+                      className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
+                        status === "EXPIRED" ? "" : ""
+                      }`}
+                      src={meow.Scholarship.cover}
+                      alt=""
+                    />
+                    <div className="relative z-10">
+                      <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
+                        {meow.status && (
+                          <span
+                            className={`absolute top-3 right-0 text-center pl-4 pr-6 py-2 rounded-l-lg flex items-center gap-2 text-sm font-medium ${
+                              meow.status === "BLOCKED"
+                                ? "bg-gray-700"
+                                : meow.status === "APPROVED"
+                                ? "bg-green-800"
+                                : meow.status === "PENDING"
+                                ? "bg-amber-700"
+                                : meow.status === "INTERVIEW"
+                                ? "bg-blue-700"
+                                : meow.status === "DECLINED"
+                                ? "bg-red-700"
+                                : ""
+                            }`}
+                          >
+                            {" "}
+                            {meow.status}
+                          </span>
+                        )}
+
+                        <img
+                          className={`h-full w-full object-cover ${
+                            status === "EXPIRED" ? "" : ""
                           }`}
-                        >
-                          {" "}
-                          {meow.status}
-                        </span>
-                      )}
-
-                      <img
-                        className={`h-full w-full object-cover ${
-                          status === "EXPIRED" ? "" : ""
-                        }`}
-                        src={meow.Scholarship.cover}
-                        alt=""
-                      />
-                    </div>
-                    <div className=" lg:p-4 p-2 space-y-5">
-                      <div className="flex items-start justify-start">
-                        <div className="flex-1 lg:space-y-1">
-                          <div className="flex justify-between items-center">
-                            <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight">
-                              {meow.Scholarship.title}
-                            </h3>
-                            <Badge variant="secondary" className="uppercase">
-                              {meow.Scholarship.type}
-                            </Badge>
-                          </div>
-                          <p className="text-sm text-muted-foreground">
-                            {meow.Scholarship.Scholarship_Provider.name}
-                          </p>
-                        </div>
+                          src={meow.Scholarship.cover}
+                          alt=""
+                        />
                       </div>
-
-                      <div className="flex items-center justify-between text-sm text-muted-foreground ">
-                        <div className="space-x-2">
-                          {meow.Scholarship?.deadline &&
-                          new Date(meow.Scholarship?.deadline).getTime() <
-                            Date.now() ? (
-                            <Badge className="bg-red-800 text-gray-200 tracking-wide">
-                              EXPIRED
-                            </Badge>
-                          ) : (
-                            <Badge className="bg-green-800 text-gray-200 tracking-wide">
-                              ACTIVE
-                            </Badge>
-                          )}
-                          {meow.Scholarship.renew === true && (
-                            <Badge className="bg-blue-800 text-gray-200">
-                              RENEWAL
-                            </Badge>
-                          )}
+                      <div className=" lg:p-4 p-2 space-y-5">
+                        <div className="flex items-start justify-start">
+                          <div className="flex-1 lg:space-y-1">
+                            <div className="flex justify-between items-center">
+                              <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight">
+                                {meow.Scholarship.title}
+                              </h3>
+                              <Badge variant="secondary" className="uppercase">
+                                {meow.Scholarship.type}
+                              </Badge>
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              {meow.Scholarship.Scholarship_Provider.name}
+                            </p>
+                          </div>
                         </div>
 
-                        {/* {user?.Student?.Application?.some(
+                        <div className="flex items-center justify-between text-sm text-muted-foreground ">
+                          <div className="space-x-2">
+                            {meow.Scholarship?.deadline &&
+                            new Date(meow.Scholarship?.deadline).getTime() <
+                              Date.now() ? (
+                              <Badge className="bg-red-800 text-gray-200 tracking-wide">
+                                EXPIRED
+                              </Badge>
+                            ) : (
+                              <Badge className="bg-green-800 text-gray-200 tracking-wide">
+                                ACTIVE
+                              </Badge>
+                            )}
+                            {meow.Scholarship.renew === true && (
+                              <Badge className="bg-blue-800 text-gray-200">
+                                RENEWAL
+                              </Badge>
+                            )}
+                          </div>
+
+                          {/* {user?.Student?.Application?.some(
                                 (app) =>
                                   app.scholarshipId ===
                                   meow.Scholarship.scholarshipId
@@ -203,16 +232,17 @@ export default function ClientScholarship() {
                                   APPLIED
                                 </Badge>
                               )} */}
-                        <span>
-                          {meow.Scholarship.renew === true && "Renewal"}{" "}
-                          Deadline:{" "}
-                          {format(meow.Scholarship.deadline, "MM/dd/yy")}
-                        </span>
+                          <span>
+                            {meow.Scholarship.renew === true && "Renewal"}{" "}
+                            Deadline:{" "}
+                            {format(meow.Scholarship.deadline, "MM/dd/yy")}
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </motion.div>
             ))
           )}
         </div>

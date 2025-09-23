@@ -9,7 +9,13 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Upload, Check } from "lucide-react";
+import {
+  ArrowLeft,
+  Upload,
+  Check,
+  DownloadIcon,
+  LoaderCircleIcon,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -36,6 +42,7 @@ import {
 } from "@/components/ui/stepper";
 import { Separator } from "@/components/ui/separator";
 import TitleReusable from "@/components/ui/title";
+import Link from "next/link";
 
 const steps = [
   {
@@ -204,8 +211,44 @@ export default function UploadDocs({
   };
 
   return (
-    <div className=" bg-background flex flex-col rounded-t-lg">
+    <div className="h-full bg-background flex flex-col rounded-t-lg">
       <div className="flex-1 p-4 space-y-10">
+        {data.form && (
+          <div className="bg-muted px-4 py-3 md:py-2 rounded-md">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+              <p className="text-sm">{data.title} Form</p>
+
+              <Button
+                size="sm"
+                variant="outline"
+                className="min-w-24"
+                onClick={async () => {
+                  try {
+                    const response = await fetch(data.form);
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `${data.title} Scholarship Form.pdf`;
+                    a.click();
+
+                    window.URL.revokeObjectURL(url);
+                  } catch (error) {
+                    console.error("Download failed:", error);
+                  }
+                }}
+              >
+                <DownloadIcon
+                  size={16}
+                  className="-ms-0.5"
+                  aria-hidden="true"
+                />
+                Download
+              </Button>
+            </div>
+          </div>
+        )}
         <div>
           <h2 className="text-lg font-semibold mb-4">Before you start</h2>
           <div className="grid gap-3 text-sm text-muted-foreground">
@@ -283,54 +326,58 @@ export default function UploadDocs({
           </Form>
         </div>
       </div>
-      <div className="sticky bottom-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t p-4">
-        <div className="flex items-center gap-4 mb-6">
-          <div className="flex-1">
-            <div className="flex items-center justify-between text-sm mb-2">
-              <span className="text-muted-foreground">Progress</span>
-              <span className="font-medium">
-                {completedCount} of {requiredDocumentsCount} required documents
-              </span>
+      <div className="sticky bottom-0 ">
+        <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+        <div className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60  p-4">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="flex-1">
+              <div className="flex items-center justify-between text-sm mb-2">
+                <span className="font-medium">Progress</span>
+                <span className="font-medium">
+                  {completedCount} out of {requiredDocumentsCount} required
+                  documents to unlock submit
+                </span>
+              </div>
+              <Progress
+                value={(completedCount / requiredDocumentsCount) * 100}
+                className="h-2"
+              />
             </div>
-            <Progress
-              value={(completedCount / requiredDocumentsCount) * 100}
-              className="h-2"
-            />
           </div>
-        </div>
 
-        <div className="flex gap-3">
-          <DeleteDialog
-            open={openAlert}
-            onOpenChange={setOpenAlert}
-            loading={loading}
-            red={false}
-            title="Submit Application?"
-            description="Please review your uploaded documents before submitting."
-            confirmText="Submit Application"
-            confirmTextLoading="Submitting..."
-            onConfirm={form.handleSubmit(onSubmit)}
-            cancelText="Cancel"
-            trigger={
-              <Button
-                disabled={completedCount < requiredDocumentsCount || disable}
-                className="flex-1"
-              >
-                <Upload className="h-4 w-4 mr-2" />
-                Submit Application
-              </Button>
-            }
-          />
+          <div className="flex gap-3">
+            <DeleteDialog
+              open={openAlert}
+              onOpenChange={setOpenAlert}
+              loading={loading}
+              red={false}
+              title="Submit Application?"
+              description="Please review your uploaded documents before submitting."
+              confirmText="Submit Application"
+              confirmTextLoading="Submitting..."
+              onConfirm={form.handleSubmit(onSubmit)}
+              cancelText="Cancel"
+              trigger={
+                <Button
+                  disabled={completedCount < requiredDocumentsCount || disable}
+                  className="flex-1"
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  Submit Application
+                </Button>
+              }
+            />
 
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setIsApply("details")}
-            className="flex-1"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Details
-          </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setIsApply("details")}
+              className="flex-1"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Details
+            </Button>
+          </div>
         </div>
       </div>
     </div>

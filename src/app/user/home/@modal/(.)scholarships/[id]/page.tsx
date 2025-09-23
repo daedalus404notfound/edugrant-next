@@ -241,9 +241,9 @@ export default function InterceptManageScholarshipClient() {
                   <div className="flex-1 pt-30 px-6 space-y-8">
                     <div className="space-y-1">
                       <p className="text-sm text-muted-foreground">
-                        Scholarship Details
+                        About {data?.title}
                       </p>
-                      <p>{data?.description}</p>
+                      <p className="whitespace-pre-line">{data?.description}</p>
                     </div>
 
                     <div className="space-y-5">
@@ -426,31 +426,34 @@ export default function InterceptManageScholarshipClient() {
                       </div>
                     </div>
                   </div>
-                  <div className="p-4 flex gap-3 border-t sticky bottom-0 bg-background">
-                    {findMatch && isRenew ? (
-                      <Button
-                        className="flex-1"
-                        onClick={() => setIsApply("renew")}
-                        disabled={
-                          data?.deadline &&
-                          new Date(data.deadline).getTime() < Date.now()
-                        }
-                      >
-                        <Upload /> Apply Renew Scholarship
-                      </Button>
-                    ) : (
-                      <Button
-                        className="flex-1"
-                        onClick={() => setIsApply("apply")}
-                        disabled={
-                          (data?.deadline &&
-                            new Date(data.deadline).getTime() < Date.now()) ||
-                          !!findMatch
-                        }
-                      >
-                        <Upload /> Apply Scholarship
-                      </Button>
-                    )}
+                  <div className=" sticky bottom-0">
+                    <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+                    <div className="p-6 flex gap-3  bg-background">
+                      {findMatch && isRenew ? (
+                        <Button
+                          className="flex-1"
+                          onClick={() => setIsApply("renew")}
+                          disabled={
+                            data?.deadline &&
+                            new Date(data.deadline).getTime() < Date.now()
+                          }
+                        >
+                          <Upload /> Apply Renew Scholarship
+                        </Button>
+                      ) : (
+                        <Button
+                          className="flex-1"
+                          onClick={() => setIsApply("apply")}
+                          disabled={
+                            (data?.deadline &&
+                              new Date(data.deadline).getTime() < Date.now()) ||
+                            !!findMatch
+                          }
+                        >
+                          <Upload /> Apply Scholarship
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}

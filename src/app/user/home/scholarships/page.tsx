@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
-
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRightIcon,
   Building,
@@ -163,13 +162,19 @@ export default function ClientScholarship() {
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       {!completed && <div className="absolute inset-0 z-20 bg-black/80 "></div>}
       <div className="mx-auto w-[95%] lg:pt-10  pt-3">
-        <div className="flex justify-between items-end">
+        <motion.div
+          className="flex justify-between items-end"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
           <TitleReusable
             title="Available Scholarships"
             description="View the list of scholarships currently open for application."
             Icon={TextSearch}
           />
-        </div>
+        </motion.div>
+
         <div className="py-8 space-y-8">
           {!completed && (
             <div className=" z-20 dark bg-muted rounded-md text-foreground px-4 py-3 sticky top-20">
@@ -204,210 +209,138 @@ export default function ClientScholarship() {
             </div>
           )}
 
-          {/* <div className="flex flex-col lg:flex-row justify-between  w-full gap-3">
-              <div className="flex items-center  gap-3 flex-col lg:flex-row">
-                <div className=" flex gap-2 w-full">
-                  <TourStep stepId="search" className="w-full">
-                    <Input
-                      className="w-full lg:w-md bg-background"
-                      type="search"
-                      onChange={(e) => setSearch(e.target.value)}
-                      placeholder="Search Scholarship Title..."
-                    />
-                  </TourStep>
-                  <Button
-                    className="lg:hidden"
-                    onClick={() => setHide(!hide)}
-                    variant="secondary"
-                  >
-                    <Ellipsis />
-                  </Button>
-                </div>
-                <TourStep
-                  stepId="filters"
-                  className={`w-full ${hide ? "flex" : "hidden"} lg:flex`}
-                >
-                  <div className="flex gap-2 w-full">
-                    <DataTableFacetedFilterClient
-                      title="Provider"
-                      options={provider}
-                      selectedValues={selectedProviders}
-                      onChange={setSelectedProviders}
-                    />
-                    <DataTableFacetedFilterClient
-                      title="Type"
-                      options={scholarshipTypes}
-                      selectedValues={selectedTypes}
-                      onChange={setSelectedTypes}
-                    />
-                  </div>
-                </TourStep>
-              </div>
-              <div
-                className={` ${hide ? "flex" : "hidden"} lg:flex`}
-                // className="flex items-center  gap-2 "
-              >
-                <TourStep stepId="sort" className=" flex-1 flex gap-2">
-                  <Popover open={open} onOpenChange={setOpen}>
-                    <PopoverTrigger asChild className="flex-1">
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        aria-expanded={open}
-                        className="w-full"
-                        size="sm"
-                      >
-                        <ChevronsUpDown />
-                        {value
-                          ? frameworks.find(
-                              (framework) => framework.value === value
-                            )?.label
-                          : "Sort"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-[200px] p-0">
-                      <Command>
-                        <CommandList>
-                          <CommandEmpty>No framework found.</CommandEmpty>
-                          <CommandGroup>
-                            {frameworks.map((framework) => (
-                              <CommandItem
-                                key={framework.value}
-                                value={framework.value}
-                                onSelect={(currentValue) => {
-                                  setValue(
-                                    currentValue === value ? "" : currentValue
-                                  );
-                                  setOpen(false);
-                                }}
-                              >
-                                {framework.label}
-                                <Check
-                                  className={cn(
-                                    "ml-auto",
-                                    value === framework.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                  <TourTrigger className="flex-1" />
-                </TourStep>
-              </div>
-            </div> */}
-
-          <div className="overflow-y-hidden overflow-x-auto py-3 no-scrollbar ">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="overflow-y-hidden overflow-x-auto py-3 no-scrollbar "
+          >
             <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
-          </div>
+          </motion.div>
 
           <div className=" grid lg:grid-cols-3 grid-cols-1 gap-6">
-            {loading ? (
-              [...Array(3)].map((_, index) => (
-                <div
-                  key={index}
-                  className="p-2 bg-background/40 relative rounded-md border space-y-3"
-                >
-                  <Skeleton className="aspect-[16/8.5]" />
-                  <Skeleton className="h-10" />
-                  <div className="flex gap-3 h-11">
-                    <Skeleton className="flex-1" />
-                    <Skeleton className="flex-1" />
-                    <Skeleton className="flex-1" />
-                  </div>
-                </div>
-              ))
-            ) : data.length === 0 ? (
-              <NoDataFound />
-            ) : (
-              data.map((scholarship) => {
-                const findMatch = user?.Student.Application.find(
-                  (meow) => meow.scholarshipId === scholarship?.scholarshipId
-                );
-                const isNotRenew =
-                  user?.Student.Application.find(
-                    (meow) => meow.scholarshipId === scholarship?.scholarshipId
-                  )?.status !== "RENEW";
-                return (
-                  <Link
-                    href={`/user/home/scholarships/${scholarship.scholarshipId}`}
-                    prefetch
-                    scroll={false}
-                    key={scholarship.scholarshipId}
-                    className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
+            <AnimatePresence mode="wait">
+              {loading ? (
+                [...Array(3)].map((_, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ y: 50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{
+                      duration: 0.5,
+                      delay: index * 0.15,
+                      ease: "easeOut",
+                    }}
+                    className="p-2 bg-background/40 relative rounded-md border space-y-3"
                   >
-                    <div className="relative rounded-lg bg-background ">
-                      <img
-                        className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
-                          status === "EXPIRED" ? "" : ""
-                        }`}
-                        src={scholarship.cover}
-                        alt=""
-                      />
-                      <div className="relative z-10">
-                        <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
-                          {findMatch && isNotRenew && (
-                            <div className="absolute z-20 inset-0 bg-black/60 flex justify-center items-center">
-                              <span className="absolute top-3 right-0 bg-black/40 text-center pl-4 pr-6 py-2 rounded-l-lg flex items-center gap-2 text-sm font-medium">
-                                {" "}
-                                Applied
-                              </span>
-                            </div>
-                          )}
-
+                    <Skeleton className="aspect-[16/8.5]" />
+                    <Skeleton className="h-10" />
+                    <div className="flex gap-3 h-11">
+                      <Skeleton className="flex-1" />
+                      <Skeleton className="flex-1" />
+                      <Skeleton className="flex-1" />
+                    </div>
+                  </motion.div>
+                ))
+              ) : data.length === 0 ? (
+                <NoDataFound />
+              ) : (
+                data.map((scholarship, index) => {
+                  const findMatch = user?.Student.Application.find(
+                    (meow) => meow.scholarshipId === scholarship?.scholarshipId
+                  );
+                  const isNotRenew =
+                    user?.Student.Application.find(
+                      (meow) =>
+                        meow.scholarshipId === scholarship?.scholarshipId
+                    )?.status !== "RENEW";
+                  return (
+                    <motion.div
+                      key={scholarship.scholarshipId}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{
+                        duration: 0.3,
+                        delay: index * 0.1,
+                        ease: "easeOut",
+                      }}
+                      className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
+                    >
+                      <Link
+                        href={`/user/home/scholarships/${scholarship.scholarshipId}`}
+                        prefetch
+                        scroll={false}
+                        key={scholarship.scholarshipId}
+                      >
+                        <div className="relative rounded-lg bg-background ">
                           <img
-                            className={`h-full w-full object-cover ${
+                            className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
                               status === "EXPIRED" ? "" : ""
                             }`}
                             src={scholarship.cover}
                             alt=""
                           />
-                        </div>
-                        <div className=" lg:p-4 p-2 space-y-5">
-                          <div className="flex items-start justify-start">
-                            <div className="flex-1 lg:space-y-1">
-                              <div className="flex justify-between items-center">
-                                <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight">
-                                  {scholarship.title}
-                                </h3>
-                                <Badge
-                                  variant="secondary"
-                                  className="uppercase"
-                                >
-                                  {scholarship.type}
-                                </Badge>
+                          <div className="relative z-10">
+                            <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
+                              {findMatch && isNotRenew && (
+                                <div className="absolute z-20 inset-0 bg-black/60 flex justify-center items-center">
+                                  <span className="absolute top-3 right-0 bg-black/40 text-center pl-4 pr-6 py-2 rounded-l-lg flex items-center gap-2 text-sm font-medium">
+                                    {" "}
+                                    Applied
+                                  </span>
+                                </div>
+                              )}
+
+                              <img
+                                className={`h-full w-full object-cover ${
+                                  status === "EXPIRED" ? "" : ""
+                                }`}
+                                src={scholarship.cover}
+                                alt=""
+                              />
+                            </div>
+                            <div className=" lg:p-4 p-2 space-y-5">
+                              <div className="flex items-start justify-start">
+                                <div className="flex-1 lg:space-y-1">
+                                  <div className="flex justify-between items-center">
+                                    <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight">
+                                      {scholarship.title}
+                                    </h3>
+                                    <Badge
+                                      variant="secondary"
+                                      className="uppercase"
+                                    >
+                                      {scholarship.type}
+                                    </Badge>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground">
+                                    {scholarship.Scholarship_Provider.name}
+                                  </p>
+                                </div>
                               </div>
-                              <p className="text-sm text-muted-foreground">
-                                {scholarship.Scholarship_Provider.name}
-                              </p>
-                            </div>
-                          </div>
 
-                          <div className="flex items-center justify-between text-sm text-muted-foreground ">
-                            <div className="space-x-2">
-                              {(status === "ACTIVE" || status === "RENEW") && (
-                                <Badge className="bg-green-800 text-gray-200">
-                                  ACTIVE
-                                </Badge>
-                              )}
-                              {scholarship.renew === true && (
-                                <Badge className="bg-blue-800 text-gray-200">
-                                  RENEWAL
-                                </Badge>
-                              )}
-                              {status === "EXPIRED" && (
-                                <Badge className="bg-red-800 text-gray-200">
-                                  EXPIRED
-                                </Badge>
-                              )}
-                            </div>
+                              <div className="flex items-center justify-between text-sm text-muted-foreground ">
+                                <div className="space-x-2">
+                                  {(status === "ACTIVE" ||
+                                    status === "RENEW") && (
+                                    <Badge className="bg-green-800 text-gray-200">
+                                      ACTIVE
+                                    </Badge>
+                                  )}
+                                  {scholarship.renew === true && (
+                                    <Badge className="bg-blue-800 text-gray-200">
+                                      RENEWAL
+                                    </Badge>
+                                  )}
+                                  {status === "EXPIRED" && (
+                                    <Badge className="bg-red-800 text-gray-200">
+                                      EXPIRED
+                                    </Badge>
+                                  )}
+                                </div>
 
-                            {/* {user?.Student?.Application?.some(
+                                {/* {user?.Student?.Application?.some(
                                 (app) =>
                                   app.scholarshipId ===
                                   scholarship.scholarshipId
@@ -416,19 +349,21 @@ export default function ClientScholarship() {
                                   APPLIED
                                 </Badge>
                               )} */}
-                            <span>
-                              {scholarship.renew === true && "Renewal"}{" "}
-                              Deadline:{" "}
-                              {format(scholarship.deadline, "MM/dd/yy")}
-                            </span>
+                                <span>
+                                  {scholarship.renew === true && "Renewal"}{" "}
+                                  Deadline:{" "}
+                                  {format(scholarship.deadline, "MM/dd/yy")}
+                                </span>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })
-            )}
+                      </Link>
+                    </motion.div>
+                  );
+                })
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
