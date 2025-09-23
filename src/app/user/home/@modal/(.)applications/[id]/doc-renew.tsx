@@ -21,7 +21,9 @@ export default function DocsStudentRenew({ data }: DocsStudentProps) {
       <div className="flex justify-between items-center py-4">
         <div className="flex items-center gap-5 ">
           <p>
-            <span className="text-sm text-muted-foreground">Required</span>{" "}
+            <span className="text-sm text-muted-foreground">
+              Required Renewal
+            </span>{" "}
             &nbsp;
             <span className="text-lg font-medium font-mono">
               {data?.Scholarship.documents.renewDocuments &&
