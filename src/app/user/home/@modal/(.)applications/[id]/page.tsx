@@ -103,6 +103,7 @@ import DocsStudent from "./docs";
 import ScholarDetails from "./scholarship";
 import EditApplication from "./edi-application";
 import { Skeleton } from "@/components/ui/skeleton";
+import DocsStudentRenew from "./doc-renew";
 
 export default function InterceptManageApplicationClient() {
   const [activeSection, setActiveSection] = useState("documents");
@@ -367,9 +368,13 @@ export default function InterceptManageApplicationClient() {
                     </p>
                   </div>
                 )}
-                {activeSection === "documents" && (
-                  <DocsStudent data={data[0]} />
-                )}
+                {activeSection === "documents" &&
+                  (data[0].Scholarship.renew === false ? (
+                    <DocsStudent data={data[0]} />
+                  ) : (
+                    <DocsStudentRenew data={data[0]} />
+                  ))}
+
                 {activeSection === "scholarship" && (
                   <ScholarDetails data={data[0]} />
                 )}
