@@ -176,9 +176,22 @@ export default function ClientScholarship() {
 
                       <div className="flex items-center justify-between text-sm text-muted-foreground ">
                         <div className="space-x-2">
-                          <Badge className="bg-green-800 text-gray-200">
-                            ACTIVE
-                          </Badge>
+                          {meow.Scholarship?.deadline &&
+                          new Date(meow.Scholarship?.deadline).getTime() <
+                            Date.now() ? (
+                            <Badge className="bg-red-800 text-gray-200 tracking-wide">
+                              EXPIRED
+                            </Badge>
+                          ) : (
+                            <Badge className="bg-green-800 text-gray-200 tracking-wide">
+                              ACTIVE
+                            </Badge>
+                          )}
+                          {meow.Scholarship.renew === true && (
+                            <Badge className="bg-blue-800 text-gray-200">
+                              RENEWAL
+                            </Badge>
+                          )}
                         </div>
 
                         {/* {user?.Student?.Application?.some(
