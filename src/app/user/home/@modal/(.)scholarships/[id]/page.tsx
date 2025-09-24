@@ -77,6 +77,14 @@ export default function InterceptManageScholarshipClient() {
     user?.Student.Application.find(
       (meow) => meow.scholarshipId === data?.scholarshipId
     )?.status !== "RENEW";
+
+  const documentPhases = Object.keys(data?.documents ?? {}).filter((key) =>
+    key.startsWith("phase")
+  );
+  const documentPhasesLength = documentPhases.length;
+  const lastPhaseKey = documentPhases[documentPhasesLength - 1];
+  const lastPhase = data?.documents?.[lastPhaseKey] ?? [];
+  const lastPhaseLength = Object.keys(lastPhase).length;
   return (
     <Drawer
       open={open}
@@ -331,86 +339,40 @@ export default function InterceptManageScholarshipClient() {
                         </div>
                       </div>
                       <div className="space-y-6">
-                        {data?.renew === true && (
-                          <div className="space-y-3">
-                            <div className="flex justify-between items-center">
-                              <h3 className="text-xs font-medium text-muted-foreground  tracking-wide">
-                                Required Documents for Renewal
-                              </h3>
-                              <p className="font-medium text-lg">
-                                {
-                                  Object.keys(
-                                    data?.documents.renewDocuments || {}
-                                  ).length
-                                }
-                              </p>
-                            </div>
-                            <div className=" divide-y">
-                              {Object.values(
-                                data?.documents.renewDocuments || {}
-                              ).map((doc, index) => (
-                                <div
-                                  className="flex justify-between items-center py-5"
-                                  key={doc.label}
-                                >
-                                  <div>
-                                    <span> {index + 1}. </span>
-                                    {doc.label}
-                                  </div>
-                                  <Badge
-                                    className={`${
-                                      doc.requirementType === "required"
-                                        ? "bg-red-700/20 text-red-700"
-                                        : doc.requirementType === "optional"
-                                        ? "bg-blue-700/20 text-blue-700"
-                                        : ""
-                                    } capitalize `}
-                                  >
-                                    {doc.requirementType}
-                                  </Badge>
-                                </div>
-                              ))}
-                            </div>
+                        <div className="space-y-3">
+                          <div className="flex justify-between items-center">
+                            <h3 className="text-xs font-medium text-muted-foreground  tracking-wide">
+                              Phase {documentPhasesLength} Required Documents
+                            </h3>
+                            <p className="font-medium text-lg">
+                              {lastPhaseLength}
+                            </p>
                           </div>
-                        )}
-                        {data?.renew === false && (
-                          <div className="space-y-3">
-                            <div className="flex justify-between items-center">
-                              <h3 className="text-xs font-medium text-muted-foreground  tracking-wide">
-                                Required Documents
-                              </h3>
-                              <p className="font-medium text-lg">
-                                {Object.keys(data?.documents || {}).length}
-                              </p>
-                            </div>
-                            <div className=" divide-y">
-                              {Object.values(
-                                data?.documents.documents || {}
-                              ).map((doc, index) => (
-                                <div
-                                  className="flex justify-between items-center py-5"
-                                  key={doc.label}
-                                >
-                                  <div>
-                                    <span> {index + 1}. </span>
-                                    {doc.label}
-                                  </div>
-                                  <Badge
-                                    className={`${
-                                      doc.requirementType === "required"
-                                        ? "bg-red-700/20 text-red-700"
-                                        : doc.requirementType === "optional"
-                                        ? "bg-blue-700/20 text-blue-700"
-                                        : ""
-                                    } capitalize `}
-                                  >
-                                    {doc.requirementType}
-                                  </Badge>
+                          <div className=" divide-y">
+                            {Object.values(lastPhase).map((doc, index) => (
+                              <div
+                                className="flex justify-between items-center py-5"
+                                key={doc.label}
+                              >
+                                <div>
+                                  <span> {index + 1}. </span>
+                                  {doc.label}
                                 </div>
-                              ))}
-                            </div>
+                                <Badge
+                                  className={`${
+                                    doc.requirementType === "required"
+                                      ? "bg-red-700/20 text-red-700"
+                                      : doc.requirementType === "optional"
+                                      ? "bg-blue-700/20 text-blue-700"
+                                      : ""
+                                  } capitalize `}
+                                >
+                                  {doc.requirementType}
+                                </Badge>
+                              </div>
+                            ))}
                           </div>
-                        )}
+                        </div>
                       </div>
                       <div className="p-4 bg-card rounded-md">
                         <h1 className="text-center text-sm font-medium">
@@ -429,7 +391,7 @@ export default function InterceptManageScholarshipClient() {
                   <div className=" sticky bottom-0">
                     <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
                     <div className="p-6 flex gap-3  bg-background">
-                      {findMatch && isRenew ? (
+                      {/* {findMatch && isRenew ? (
                         <Button
                           className="flex-1"
                           onClick={() => setIsApply("renew")}
@@ -452,7 +414,18 @@ export default function InterceptManageScholarshipClient() {
                         >
                           <Upload /> Apply Scholarship
                         </Button>
-                      )}
+                      )} */}
+                      <Button
+                        className="flex-1"
+                        onClick={() => setIsApply("apply")}
+                        disabled={
+                          (data?.deadline &&
+                            new Date(data.deadline).getTime() < Date.now()) ||
+                          !!findMatch
+                        }
+                      >
+                        <Upload /> Apply Scholarship
+                      </Button>
                     </div>
                   </div>
                 </div>

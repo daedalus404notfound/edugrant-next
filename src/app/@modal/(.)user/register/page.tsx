@@ -148,7 +148,7 @@ export default function RegisterStudent() {
           </DrawerDescription>
         </DrawerHeader>
 
-        <div className="w-full space-y-10 p-2 lg:p-4 pb-0 overflow-auto">
+        <div className="w-full space-y-10 p-2 lg:p-8 pb-0 overflow-auto">
           <Stepper
             defaultValue={1}
             value={stepper}
@@ -180,7 +180,7 @@ export default function RegisterStudent() {
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   <FormField
                     control={personalForm.control}
                     name="firstName"

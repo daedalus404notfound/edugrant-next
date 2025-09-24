@@ -71,9 +71,7 @@ export default function UploadDocs({
   setIsApply: (isApply: "details" | "apply" | "renew") => void;
   HandleCloseDrawer: (close: boolean) => void;
 }) {
-  const router = useRouter();
   const { addApplication } = useUserStore.getState();
-
   const user = useUserStore((state) => state.user);
   const userId = user?.accountId;
   const scholarId = data.scholarshipId;
@@ -81,15 +79,22 @@ export default function UploadDocs({
   const [loading, setLoading] = useState(false);
   const [disable, setDisable] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
-  const requiredDocuments = data.documents.documents || [];
-  const allDocuments = Object.values(requiredDocuments);
 
-  const requiredDocumentsCount = Object.values(requiredDocuments).filter(
+  const documentPhases = Object.keys(data?.documents ?? {}).filter((key) =>
+    key.startsWith("phase")
+  );
+  const documentPhasesLength = documentPhases.length;
+  const lastPhaseKey = documentPhases[documentPhasesLength - 1];
+  const lastPhase = data?.documents?.[lastPhaseKey] ?? [];
+  const lastPhaseLength = Object.keys(lastPhase).length;
+
+  const allDocuments = Object.values(lastPhase);
+
+  const requiredDocumentsCount = Object.values(lastPhase).filter(
     (doc) => doc.requirementType === "required"
   ).length;
 
-  const allDocumentsCount = Object.keys(requiredDocuments).length;
-  const formSchema = createFormSchema(requiredDocuments);
+  const formSchema = createFormSchema(lastPhase);
   type FormData = z.infer<typeof formSchema>;
 
   // Initialize default values
@@ -108,7 +113,7 @@ export default function UploadDocs({
     form.trigger(label as keyof FormData);
 
     // Count how many REQUIRED document fields are filled (not optional ones)
-    const filledRequired = Object.values(requiredDocuments).filter((doc) => {
+    const filledRequired = Object.values(lastPhase).filter((doc) => {
       // Only count required documents
       if (doc.requirementType !== "required") return false;
 
@@ -212,13 +217,13 @@ export default function UploadDocs({
         <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
         <div className="space-y-8">
           <TitleReusable
-            title="Upload Documents"
+            title={`Upload Documents for Phase ${documentPhasesLength}`}
             description={` Complete your application for ${data.title}`}
           />
 
           <Form {...form}>
             <div className=" grid lg:grid-cols-2 grid-cols-1 gap-8">
-              {Object.values(requiredDocuments).map((doc, index) => (
+              {Object.values(lastPhase).map((doc, index) => (
                 <FormField
                   key={`required-${index}`}
                   control={form.control}
