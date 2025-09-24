@@ -67,10 +67,8 @@ const verifyRegisterApi = async ({
       verificationCode: data.otp,
       studentFirstName: personalData.firstName,
       studentMiddleName: personalData.middleName,
-      indigenous: personalData.indigenous
-        ? personalData.indigenous.toString()
-        : "false",
-      pwd: personalData.pwd ? personalData.pwd.toString() : "false",
+      indigenous: personalData.indigenous,
+      pwd: personalData.pwd,
       institute: accountData.institute,
       studentLastName: personalData.lastName,
       studentContact: personalData.contactNumber,
