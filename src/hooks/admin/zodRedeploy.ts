@@ -1,6 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
-import { documentsSchema, scholarshipFormData } from "./zodUpdateScholarship";
+import {
+  displayDocumentsSchema,
+  scholarshipFormData,
+} from "./zodUpdateScholarship";
 import z from "zod";
 
 export const renewDocumentSchema = z.object({
@@ -8,7 +11,7 @@ export const renewDocumentSchema = z.object({
   scholarshipId: z.number().optional(),
   renewDeadline: z.date(),
   interview: z.boolean().optional(),
-  renewDocuments: z.array(documentsSchema),
+  renewDocuments: z.array(displayDocumentsSchema),
 });
 
 export type renewDocumentsFormData = z.infer<typeof renewDocumentSchema>;
