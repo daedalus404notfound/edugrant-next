@@ -357,6 +357,44 @@ export default function RegisterStudent() {
                     control={personalForm.control}
                     name="indigenous"
                     render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center justify-between line-clamp-1">
+                          Indigenous Group <FormMessage />
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Please specify your Indigenous group (if applicable)"
+                            {...field}
+                            disabled={sendAuthCode.isLoading}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={personalForm.control}
+                    name="pwd"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center justify-between line-clamp-1">
+                          Person with Disability (PWD) <FormMessage />
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Please specify your disability (if applicable)"
+                            {...field}
+                            disabled={sendAuthCode.isLoading}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* <FormField
+                    control={personalForm.control}
+                    name="indigenous"
+                    render={({ field }) => (
                       <FormItem className="border-input has-data-[state=checked]:border-primary/50 relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
                         <FormControl>
                           <Checkbox
@@ -370,10 +408,9 @@ export default function RegisterStudent() {
                         </FormControl>
 
                         <div className="flex grow items-center gap-3">
-                          {/* SVG Icon */}
+                         
                           <UserRound />
 
-                          {/* Label + Description */}
 
                           <FormLabel>
                             Indigenous
@@ -386,8 +423,8 @@ export default function RegisterStudent() {
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
-                  <FormField
+                  /> */}
+                  {/* <FormField
                     control={personalForm.control}
                     name="pwd"
                     render={({ field }) => (
@@ -404,10 +441,10 @@ export default function RegisterStudent() {
                         </FormControl>
 
                         <div className="flex grow items-center gap-3">
-                          {/* SVG Icon */}
+                         
                           <Accessibility />
 
-                          {/* Label + Description */}
+                        
 
                           <FormLabel>
                             Person with disability
@@ -420,7 +457,7 @@ export default function RegisterStudent() {
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
+                  /> */}
                 </div>
                 <div className="w-full sticky bottom-0 py-2 bg-background">
                   <Button

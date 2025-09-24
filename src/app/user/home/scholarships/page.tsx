@@ -325,7 +325,7 @@ export default function ClientScholarship() {
                                 <div className="space-x-2">
                                   {(status === "ACTIVE" ||
                                     status === "RENEW") && (
-                                    <Badge className="bg-green-800 text-gray-200">
+                                    <Badge className="bg-green-800 tracking-wide text-gray-200">
                                       ACTIVE
                                     </Badge>
                                   )}
