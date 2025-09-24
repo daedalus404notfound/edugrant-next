@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/stepper";
 import { Separator } from "@/components/ui/separator";
 import TitleReusable from "@/components/ui/title";
+import { ApiErrorResponse } from "@/hooks/admin/postReviewedHandler";
 
 const steps = [
   {
@@ -184,14 +185,15 @@ export default function UploadRenewDocs({
         HandleCloseDrawer(false);
       }
     } catch (error) {
-      StyledToast({
-        status: "error",
-        title: "Upload failed",
-        description: "Something went wrong. Please try again.",
-      });
-      console.error("Upload error:", error);
-      setLoading(false);
-      setDisable(false);
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        StyledToast({
+          status: "error",
+          title: error?.response?.data.message ?? "An error occurred.",
+          description: "Cannot process your request.",
+        });
+        setLoading(false);
+        setDisable(false);
+      }
     }
   };
 
