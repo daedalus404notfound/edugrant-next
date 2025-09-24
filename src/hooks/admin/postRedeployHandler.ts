@@ -21,6 +21,7 @@ const addScholarshipApi = async (data: renewDocumentsFormData) => {
       renewDeadline: data.renewDeadline.toISOString(),
       scholarshipId: data.accountId,
       accountId: data.scholarshipId,
+      isForInterview: data.interview,
       renewDocuments: JSON.stringify(data.renewDocuments),
     },
     {

@@ -7,6 +7,7 @@ export const renewDocumentSchema = z.object({
   accountId: z.number().optional(),
   scholarshipId: z.number().optional(),
   renewDeadline: z.date(),
+  interview: z.boolean().optional(),
   renewDocuments: z.array(documentsSchema),
 });
 

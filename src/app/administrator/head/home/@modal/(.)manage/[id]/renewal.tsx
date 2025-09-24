@@ -61,6 +61,7 @@ import {
 } from "@/components/ui/dialog";
 import Link from "next/link";
 import { useAdminStore } from "@/store/adminUserStore";
+import { Checkbox } from "@/components/ui/checkbox";
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
   {
@@ -264,6 +265,51 @@ export default function RedeployScholarship({
                         </div>
                       </PopoverContent>
                     </Popover>
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div>
+              <FormField
+                control={form.control}
+                name="interview"
+                render={({ field }) => (
+                  <FormItem className="border-input has-data-[state=checked]:border-primary/50 relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value || false}
+                        onCheckedChange={(checked) =>
+                          field.onChange(checked === true)
+                        }
+                        className="order-1 after:absolute after:inset-0"
+                        aria-describedby="for-interview-description"
+                      />
+                    </FormControl>
+
+                    <div className="flex grow items-center gap-3">
+                      {/* SVG Icon */}
+                      <MessagesSquare />
+
+                      {/* Label + Description */}
+                      <div className="grid gap-2">
+                        <FormLabel>
+                          For Interview (Renewal)
+                          <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
+                            (Optional)
+                          </span>
+                        </FormLabel>
+                        <p
+                          id="for-interview-description"
+                          className="text-muted-foreground text-xs"
+                        >
+                          Check this if the approved application is selected for
+                          an interview.
+                        </p>
+                      </div>
+                    </div>
+
+                    <FormMessage />
                   </FormItem>
                 )}
               />

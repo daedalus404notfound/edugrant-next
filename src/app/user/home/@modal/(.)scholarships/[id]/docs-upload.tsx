@@ -9,13 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ArrowLeft,
-  Upload,
-  Check,
-  DownloadIcon,
-  LoaderCircleIcon,
-} from "lucide-react";
+import { ArrowLeft, Upload, DownloadIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -32,36 +26,10 @@ import { Progress } from "@/components/ui/progress";
 import { useState } from "react";
 import StyledToast from "@/components/ui/toast-styled";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
-import {
-  Stepper,
-  StepperDescription,
-  StepperIndicator,
-  StepperItem,
-  StepperTitle,
-  StepperTrigger,
-} from "@/components/ui/stepper";
 import { Separator } from "@/components/ui/separator";
 import TitleReusable from "@/components/ui/title";
-import Link from "next/link";
 import { ApiErrorResponse } from "@/hooks/admin/postReviewedHandler";
-
-const steps = [
-  {
-    step: 1,
-    title: "Step One",
-    description: "Choose Scholarship",
-  },
-  {
-    step: 2,
-    title: "Step Two",
-    description: "Upload Documents",
-  },
-  {
-    step: 3,
-    title: "Step Three",
-    description: "Wait for Approval",
-  },
-];
+import { downloadFile } from "@/lib/downloadUtils";
 
 export const createFormSchema = (requiredDocuments: documentFormData[]) => {
   const schemaShape: Record<string, z.ZodType> = {};
@@ -113,8 +81,6 @@ export default function UploadDocs({
   const [loading, setLoading] = useState(false);
   const [disable, setDisable] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
-
-  // Create form schema based on scholarship documents
   const requiredDocuments = data.documents.documents || [];
   const allDocuments = Object.values(requiredDocuments);
 
@@ -216,22 +182,9 @@ export default function UploadDocs({
                 size="sm"
                 variant="outline"
                 className="min-w-24"
-                onClick={async () => {
-                  try {
-                    const response = await fetch(data.form);
-                    const blob = await response.blob();
-                    const url = window.URL.createObjectURL(blob);
-
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = `${data.title} Scholarship Form.pdf`;
-                    a.click();
-
-                    window.URL.revokeObjectURL(url);
-                  } catch (error) {
-                    console.error("Download failed:", error);
-                  }
-                }}
+                onClick={() =>
+                  downloadFile(data.form, `${data.title} Scholarship Form.pdf`)
+                }
               >
                 <DownloadIcon
                   size={16}
