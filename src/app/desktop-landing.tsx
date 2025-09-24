@@ -18,11 +18,7 @@ import {
   Mail,
   HelpCircle,
   Zap,
-  MapPin,
-  Github,
-  GraduationCap,
-  FacebookIcon,
-  Menu,
+  Building,
 } from "lucide-react";
 import bascLogo from "@/assets/basclogo.png";
 import bascImage from "@/assets/BASCjf5989_03 copy.jpg";
@@ -119,11 +115,11 @@ const HowitworksComponent = () => {
       >
         How It Works <MonitorCog />
       </h1>
-      <div className="grid md:grid-cols-2 gap-6 ">
+      <div className="grid md:grid-cols-2 gap-8 ">
         {howItWorks.map((step, index) => (
           <SpotlightBorderWrapper key={index}>
             <div className="flex  border flex-col sm:flex-row items-start gap-6 p-4 shadow-black/10   dark:bg-primary/5 bg-card rounded-lg ">
-              <div className="w-3/4 aspect-[16/10] overflow-hidden rounded-md bg-background dark:bg-transparent">
+              <div className="w-3/4 aspect-[16/8.5] overflow-hidden rounded-md bg-background dark:bg-transparent">
                 <img
                   src={step.image}
                   alt={step.title}
@@ -201,7 +197,7 @@ export default function DesktopLandingPage() {
         </span>
         <span className="flex gap-3 items-center">
           <Link href={"/user/login"} prefetch={true}>
-            <Button variant="outline">
+            <Button variant="secondary">
               Login <LogInIcon />
             </Button>
           </Link>
@@ -223,7 +219,7 @@ export default function DesktopLandingPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="relative min-h-[75vh]  mx-auto w-[95%]   rounded-3xl overflow-hidden  flex items-center bg-primary-second "
+            className="relative min-h-[75vh]  mx-auto w-[95%]   rounded-3xl overflow-hidden  flex items-center dark:bg-primary-second/50  bg-green-800 shadow "
           >
             <div className="absolute inset-0 h-full w-full flex items-center rounded-3xl x">
               <img
@@ -232,18 +228,18 @@ export default function DesktopLandingPage() {
                 alt=""
               />
               <img
-                className="h-full w-[40%] object-cover absolute right-0 [mask-image:linear-gradient(to_right,transparent,black_80%)] z-10"
+                className="h-full w-[40%] object-cover absolute right-0 [mask-image:linear-gradient(to_right,transparent,black_80%)] z-10 opacity-90"
                 src={bascImage.src}
                 alt=""
               />
             </div>
 
             <div className="absolute z-10 left-10 h-full w-full flex flex-col justify-center">
-              <Badge variant="static" className="border bg-transparent">
-                Office of Student Affairs and Services
+              <Badge className="bg-yellow-500/15 text-yellow-500">
+                <Building /> Office of Student Affairs and Services
               </Badge>
               <motion.span
-                className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-primary/70
+                className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  dark:text-primary/70 text-gray-200
   text-6xl  havelock tracking-[-8px] -translate-x-2 mt-1.5
   "
                 initial={{ backgroundPosition: "200% 0" }}
