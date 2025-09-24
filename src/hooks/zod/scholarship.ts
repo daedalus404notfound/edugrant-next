@@ -14,11 +14,13 @@ export const scholarshipSchema = z.object({
   }),
   title: z.string().min(1, "Required"),
   providerName: z.string().min(1, "Required"),
-  Scholarship_Provider: z.object({
-SPId: z.string().optional(),
-dateCreated: z.string().optional(),
-name: z.string().optional()
-  }).optional(),
+  Scholarship_Provider: z
+    .object({
+      SPId: z.string().optional(),
+      dateCreated: z.string().optional(),
+      name: z.string().optional(),
+    })
+    .optional(),
   description: z.string().min(1, "Required"),
   requiredGWA: z.string(),
   deadline: z.date({
@@ -58,4 +60,3 @@ name: z.string().optional()
 
 export type scholarshipFormData = z.infer<typeof scholarshipSchema>;
 export type scholarshipDocumentFormData = z.infer<typeof documentsSchema>;
-

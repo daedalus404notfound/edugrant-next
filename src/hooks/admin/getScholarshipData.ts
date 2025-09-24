@@ -2,11 +2,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
+import { displayScholarshipFormData } from "./displayScholarshipData";
 import { ApiErrorResponse } from "./postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
 export default function useScholarshipUserByIdAdmin(id: string) {
-  const [data, setData] = useState<scholarshipFormData | null>(null);
+  const [data, setData] = useState<displayScholarshipFormData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -16,7 +16,7 @@ export default function useScholarshipUserByIdAdmin(id: string) {
         setLoading(true);
         try {
           const res = await axios.get<{
-            scholarship: scholarshipFormData;
+            scholarship: displayScholarshipFormData;
           }>(
             `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/getScholarshipsById?scholarshipId=${id}`,
 

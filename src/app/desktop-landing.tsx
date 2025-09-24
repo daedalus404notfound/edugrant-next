@@ -21,6 +21,7 @@ import {
   Building,
 } from "lucide-react";
 import bascLogo from "@/assets/basclogo.png";
+import osas from "@/assets/osas.jpg";
 import bascImage from "@/assets/BASCjf5989_03 copy.jpg";
 import { AnimatePresence, motion } from "motion/react";
 import {
@@ -169,6 +170,7 @@ export default function DesktopLandingPage() {
         <span className="flex items-center gap-5 h-15 py-3">
           <span className="flex items-center gap-2">
             <img className="h-10 w-10" src={bascLogo.src} alt="" />
+            <img className="h-10 w-10" src={osas.src} alt="" />
             <p className="font-semibold text-xl ">BASC Edugrant</p>
           </span>
           <Separator orientation="vertical" />

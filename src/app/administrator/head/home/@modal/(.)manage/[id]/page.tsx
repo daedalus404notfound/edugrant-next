@@ -60,6 +60,16 @@ export default function InterceptManageScholarship() {
   const [open, setOpen] = useState(true);
   const id = params.id as string;
   const { data, loading } = useScholarshipUserByIdAdmin(id);
+
+  const documentPhases = Object.keys(data?.documents ?? {}).filter((key) =>
+    key.startsWith("phase")
+  );
+
+  const documentPhasesLength = documentPhases.length;
+  const lastPhaseKey = documentPhases[documentPhasesLength - 1];
+  const lastPhase = data?.documents?.[lastPhaseKey] ?? [];
+  const lastPhaseLength = Object.keys(lastPhase).length;
+
   const { mode, setMode, resetMode } = useModeStore();
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
@@ -146,7 +156,12 @@ export default function InterceptManageScholarship() {
                 </div>
               </div>
             ) : (
-              data && <EditScholarship data={data} />
+              data && (
+                <EditScholarship
+                  data={data}
+                  HandleCloseDrawer={HandleCloseDrawer}
+                />
+              )
             )}
           </div>
         ) : mode === "details" ? (
@@ -366,41 +381,38 @@ export default function InterceptManageScholarship() {
                     {data?.interview === false && (
                       <div className="space-y-3">
                         <div className="flex gap-3 items-center">
-                          <h1 className="font-medium">Required Documents</h1>
+                          <h1 className="font-medium">
+                            Phase {documentPhasesLength} Required Documents
+                          </h1>
                           <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                           <p className="font-medium text-lg">
-                            {
-                              Object.keys(data?.documents.documents || {})
-                                .length
-                            }
+                            {lastPhaseLength}
                           </p>
                         </div>
 
                         <div className="space-y-2">
-                          {Object.values(data?.documents.documents || {}).map(
-                            (doc, index) => (
-                              <div
-                                className="flex justify-between items-center p-4 bg-card rounded-md"
-                                key={doc.label}
-                              >
-                                <div>
-                                  <span> {index + 1}. </span>
-                                  {doc.label}
-                                </div>
-                                <Badge
-                                  className={`${
-                                    doc.requirementType === "required"
-                                      ? "bg-red-700/20 text-red-700"
-                                      : doc.requirementType === "optional"
-                                      ? "bg-blue-700/20 text-blue-700"
-                                      : ""
-                                  } capitalize `}
-                                >
-                                  {doc.requirementType}
-                                </Badge>
+                          {Object.values(lastPhase).map((doc, index) => (
+                            <div
+                              className="flex justify-between items-center p-4 bg-card rounded-md"
+                              key={doc.label}
+                            >
+                              <div>
+                                <span> {index + 1}. </span>
+                                {doc.label}
                               </div>
-                            )
-                          )}
+                              <Badge
+                                className={`${
+                                  doc.requirementType === "required"
+                                    ? "bg-red-700/20 text-red-700"
+                                    : doc.requirementType === "optional"
+                                    ? "bg-blue-700/20 text-blue-700"
+                                    : ""
+                                } capitalize `}
+                              >
+                                {doc.requirementType}
+                              </Badge>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     )}

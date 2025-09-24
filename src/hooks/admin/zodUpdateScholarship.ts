@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import z from "zod";
 
-export const documentsSchema = z.object({
+export const displayDocumentsSchema = z.object({
   label: z.string().min(1, "Requireds"),
   formats: z.array(z.string()).min(1, "Required"),
   requirementType: z.enum(["required", "optional"], {
@@ -41,10 +41,7 @@ export const scholarshipSchema = z.object({
   }),
   title: z.string().min(1, "Required"),
 
-  documents: z.object({
-    documents: z.array(documentsSchema).optional(),
-    renewDocuments: z.array(documentsSchema).optional(),
-  }),
+  documents: z.record(z.string(), z.array(displayDocumentsSchema).optional()),
   supabasePath: z
     .object({
       cover: z.string(),
@@ -54,9 +51,15 @@ export const scholarshipSchema = z.object({
     .optional(),
 });
 export type scholarshipFormData = z.infer<typeof scholarshipSchema>;
-export type documentFormData = z.infer<typeof documentsSchema>;
+export type documentFormData = z.infer<typeof displayDocumentsSchema>;
 
 export function useUpdateScholarshipZod(data?: scholarshipFormData) {
+  const documentPhases = Object.keys(data?.documents ?? {}).filter((key) =>
+    key.startsWith("phase")
+  );
+  const documentPhasesLength = documentPhases.length;
+  const lastPhaseKey = documentPhases[documentPhasesLength - 1];
+
   const form = useForm<scholarshipFormData>({
     resolver: zodResolver(scholarshipSchema),
     defaultValues: {
@@ -88,10 +91,7 @@ export function useUpdateScholarshipZod(data?: scholarshipFormData) {
       type: data?.type === "private" ? "private" : "government",
       title: data?.title || "",
       documents: {
-        documents: data?.renew === false ? data?.documents.documents : [],
-
-        renewDocuments:
-          data?.renew === true ? data?.documents.renewDocuments : [],
+        [lastPhaseKey]: data?.documents?.[lastPhaseKey] ?? [],
       },
       supabasePath: {
         cover: data?.supabasePath?.cover || "",
@@ -108,16 +108,7 @@ export function useUpdateScholarshipZod(data?: scholarshipFormData) {
     remove: removeDocument,
   } = useFieldArray({
     control: form.control,
-    name: "documents.documents",
-  });
-
-  const {
-    fields: renewDocumentFields,
-    append: appendRenewDocument,
-    remove: removeRenewDocument,
-  } = useFieldArray({
-    control: form.control,
-    name: "documents.renewDocuments",
+    name: `documents.${lastPhaseKey}`,
   });
 
   return {
@@ -126,8 +117,5 @@ export function useUpdateScholarshipZod(data?: scholarshipFormData) {
     documentFields,
     appendDocument,
     removeDocument,
-    renewDocumentFields,
-    appendRenewDocument,
-    removeRenewDocument,
   };
 }

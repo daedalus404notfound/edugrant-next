@@ -15,6 +15,7 @@ type ApiError = AxiosError<ApiErrorResponse>;
 const today = new Date().toISOString().split("T")[0];
 const addScholarshipApi = async (data: scholarshipFormData) => {
   const { admin } = useAdminStore.getState();
+
   const formDataToSend = new FormData();
   if (data.scholarshipId) {
     formDataToSend.append("scholarshipId", data.scholarshipId.toString());
@@ -42,17 +43,11 @@ const addScholarshipApi = async (data: scholarshipFormData) => {
   if (data.logo) {
     formDataToSend.append("sponsorLogo", data.logo);
   }
-  if (data.renew === false) {
-    formDataToSend.append(
-      "scholarshipDocuments",
-      JSON.stringify({ documents: data.documents.documents })
-    );
-  } else if (data.renew === true) {
-    formDataToSend.append(
-      "scholarshipDocuments",
-      JSON.stringify({ renewDocuments: data.documents.renewDocuments })
-    );
-  }
+
+  formDataToSend.append(
+    "scholarshipDocuments",
+    JSON.stringify({ documents: data.documents })
+  );
 
   const res = await axios.put(
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/updateScholarship`,
@@ -94,17 +89,12 @@ export const useAddScholarship = () => {
   });
 };
 
-export const useUpdateScholarship = (data?: scholarshipFormData) => {
-  const {
-    form,
-    formData,
-    documentFields,
-    appendDocument,
-    removeDocument,
-    renewDocumentFields,
-    appendRenewDocument,
-    removeRenewDocument,
-  } = useUpdateScholarshipZod(data);
+export const useUpdateScholarship = (
+  data?: scholarshipFormData,
+  HandleCloseDrawer?: (drawer: boolean) => void
+) => {
+  const { form, formData, documentFields, appendDocument, removeDocument } =
+    useUpdateScholarshipZod(data);
   const addScholarship = useAddScholarship();
   const [open, setOpen] = useState(false);
 
@@ -114,6 +104,7 @@ export const useUpdateScholarship = (data?: scholarshipFormData) => {
 
       if (result) {
         setOpen(false);
+        HandleCloseDrawer?.(false);
         addScholarship.reset();
         form.reset();
       }
@@ -162,8 +153,5 @@ export const useUpdateScholarship = (data?: scholarshipFormData) => {
     documentFields,
     appendDocument,
     removeDocument,
-    renewDocumentFields,
-    appendRenewDocument,
-    removeRenewDocument,
   };
 };

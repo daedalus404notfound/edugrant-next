@@ -59,11 +59,15 @@ const options: Option[] = [
   { label: "JPEG Image", value: "image/jpeg" },
   { label: "PNG Image", value: "image/png" },
 ];
+
+interface EditScholarshipProps {
+  data: scholarshipFormData;
+  HandleCloseDrawer: (drawer: boolean) => void;
+}
 export default function EditScholarship({
   data,
-}: {
-  data: scholarshipFormData;
-}) {
+  HandleCloseDrawer,
+}: EditScholarshipProps) {
   const {
     open,
     setOpen,
@@ -74,11 +78,15 @@ export default function EditScholarship({
     documentFields,
     appendDocument,
     removeDocument,
-    renewDocumentFields,
-    appendRenewDocument,
-    removeRenewDocument,
-  } = useUpdateScholarship(data);
+  } = useUpdateScholarship(data, HandleCloseDrawer);
   const { setMode } = useModeStore();
+  const documentPhases = Object.keys(data?.documents ?? {}).filter((key) =>
+    key.startsWith("phase")
+  );
+
+  const documentPhasesLength = documentPhases.length;
+  const lastPhaseKey = documentPhases[documentPhasesLength - 1];
+  console.log(lastPhaseKey);
   return (
     <div className=" bg-background rounded-t-lg">
       <div className="p-4  space-y-5">
@@ -365,266 +373,133 @@ export default function EditScholarship({
             </div>
           </div>
 
-          {/* Dynamic Required Documents */}
-          {data.renew === false && (
-            <div className="space-y-5 mt-10">
-              <div className="w-full flex items-center justify-end ">
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={() =>
-                    appendDocument({
-                      label: "",
-                      formats: [],
-                      requirementType: "required",
-                    })
-                  }
-                  variant="outline"
-                >
-                  <Plus className="w-4 h-4 mr-1" />
-                  Add New requirements
-                </Button>
-              </div>
-
-              <div className="space-y-5">
-                {documentFields.map((field, index) => (
-                  <div
-                    key={field.id}
-                    className="grid grid-cols-3 gap-3 items-center"
-                  >
-                    {/* Label */}
-                    <div className="lg:col-span-1 col-span-3">
-                      <FormField
-                        control={form.control}
-                        name={`documents.documents.${index}.label`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex justify-between items-center">
-                              Document Label {index + 1} <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <Input placeholder="e.g. COR" {...field} />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    {/* Formats */}
-                    <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
-                      <FormField
-                        control={form.control}
-                        name={`documents.documents.${index}.formats`}
-                        render={({ field }) => (
-                          <FormItem className="flex-1">
-                            <FormLabel className="flex justify-between items-center">
-                              Document Formats
-                              <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <MultipleSelector
-                                className="bg-white/5"
-                                commandProps={{
-                                  label: "Select document formats",
-                                }}
-                                value={options.filter((option) =>
-                                  field.value?.includes(option.value)
-                                )}
-                                defaultOptions={options}
-                                placeholder="Choose formats"
-                                hideClearAllButton
-                                hidePlaceholderWhenSelected
-                                emptyIndicator={
-                                  <p className="text-center text-sm">
-                                    No results found
-                                  </p>
-                                }
-                                onChange={(selected) => {
-                                  field.onChange(
-                                    selected.map((option) => option.value)
-                                  );
-                                }}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`documents.documents.${index}.requirementType`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              <FormMessage />
-                            </FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger className="w-[180px]">
-                                  <SelectValue placeholder="Requirement type" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectItem value="required">
-                                    Required
-                                  </SelectItem>
-                                  <SelectItem value="optional">
-                                    Optional
-                                  </SelectItem>
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
-                          </FormItem>
-                        )}
-                      />
-
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        disabled={documentFields.length === 1}
-                        onClick={() => removeDocument(index)}
-                      >
-                        <Trash2 />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          <div className="space-y-5 mt-10">
+            <div className="w-full flex items-center justify-end ">
+              <Button
+                type="button"
+                size="sm"
+                onClick={() =>
+                  appendDocument({
+                    label: "",
+                    formats: [],
+                    requirementType: "required",
+                  })
+                }
+                variant="outline"
+              >
+                <Plus className="w-4 h-4 mr-1" />
+                Add New requirements
+              </Button>
             </div>
-          )}
 
-          {data.renew === true && (
-            <div className="space-y-5 mt-10">
-              <div className="w-full flex items-center justify-end ">
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={() =>
-                    appendRenewDocument({
-                      label: "",
-                      formats: [],
-                      requirementType: "required",
-                    })
-                  }
-                  variant="outline"
+            <div className="space-y-5">
+              {documentFields.map((field, index) => (
+                <div
+                  key={field.id}
+                  className="grid grid-cols-3 gap-3 items-center"
                 >
-                  <Plus className="w-4 h-4 mr-1" />
-                  Add requirements for Renewal
-                </Button>
-              </div>
-
-              <div className="space-y-5">
-                {renewDocumentFields.map((field, index) => (
-                  <div
-                    key={field.id}
-                    className="grid grid-cols-3 gap-3 items-center"
-                  >
-                    {/* Label */}
-                    <div className="lg:col-span-1 col-span-3">
-                      <FormField
-                        control={form.control}
-                        name={`documents.renewDocuments.${index}.label`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex justify-between items-center">
-                              Document Label {index + 1} <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <Input placeholder="e.g. COR" {...field} />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    {/* Formats */}
-                    <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
-                      <FormField
-                        control={form.control}
-                        name={`documents.renewDocuments.${index}.formats`}
-                        render={({ field }) => (
-                          <FormItem className="flex-1">
-                            <FormLabel className="flex justify-between items-center">
-                              Document Formats
-                              <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <MultipleSelector
-                                className="bg-white/5"
-                                commandProps={{
-                                  label: "Select document formats",
-                                }}
-                                value={options.filter((option) =>
-                                  field.value?.includes(option.value)
-                                )}
-                                defaultOptions={options}
-                                placeholder="Choose formats"
-                                hideClearAllButton
-                                hidePlaceholderWhenSelected
-                                emptyIndicator={
-                                  <p className="text-center text-sm">
-                                    No results found
-                                  </p>
-                                }
-                                onChange={(selected) => {
-                                  field.onChange(
-                                    selected.map((option) => option.value)
-                                  );
-                                }}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`documents.renewDocuments.${index}.requirementType`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              <FormMessage />
-                            </FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
-                              <FormControl>
-                                <SelectTrigger className="w-[180px]">
-                                  <SelectValue placeholder="Requirement type" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectItem value="required">
-                                    Required
-                                  </SelectItem>
-                                  <SelectItem value="optional">
-                                    Optional
-                                  </SelectItem>
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
-                          </FormItem>
-                        )}
-                      />
-
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        disabled={renewDocumentFields.length === 1}
-                        onClick={() => removeRenewDocument(index)}
-                      >
-                        <Trash2 />
-                      </Button>
-                    </div>
+                  {/* Label */}
+                  <div className="lg:col-span-1 col-span-3">
+                    <FormField
+                      control={form.control}
+                      name={`documents.${lastPhaseKey}.${index}.label`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex justify-between items-center">
+                            Document Label {index + 1} <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <Input placeholder="e.g. COR" {...field} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
                   </div>
-                ))}
-              </div>
+
+                  {/* Formats */}
+                  <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
+                    <FormField
+                      control={form.control}
+                      name={`documents.${lastPhaseKey}.${index}.formats`}
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel className="flex justify-between items-center">
+                            Document Formats
+                            <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <MultipleSelector
+                              className="bg-white/5"
+                              commandProps={{
+                                label: "Select document formats",
+                              }}
+                              value={options.filter((option) =>
+                                field.value?.includes(option.value)
+                              )}
+                              defaultOptions={options}
+                              placeholder="Choose formats"
+                              hideClearAllButton
+                              hidePlaceholderWhenSelected
+                              emptyIndicator={
+                                <p className="text-center text-sm">
+                                  No results found
+                                </p>
+                              }
+                              onChange={(selected) => {
+                                field.onChange(
+                                  selected.map((option) => option.value)
+                                );
+                              }}
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name={`documents.${lastPhaseKey}.${index}.requirementType`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            <FormMessage />
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-[180px]">
+                                <SelectValue placeholder="Requirement type" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectGroup>
+                                <SelectItem value="required">
+                                  Required
+                                </SelectItem>
+                                <SelectItem value="optional">
+                                  Optional
+                                </SelectItem>
+                              </SelectGroup>
+                            </SelectContent>
+                          </Select>
+                        </FormItem>
+                      )}
+                    />
+
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      disabled={documentFields.length === 1}
+                      onClick={() => removeDocument(index)}
+                    >
+                      <Trash2 />
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </div>
-          )}
+          </div>
         </Form>
       </div>
       <div className="p-4 sticky bottom-0 bg-card  border-t">
@@ -637,6 +512,7 @@ export default function EditScholarship({
             red={false}
             title="Apply Changes?"
             description="This will be saved to database."
+            confirmTextLoading="Updating..."
             confirmText="Save"
             cancelText="Cancel"
             trigger={
