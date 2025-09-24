@@ -29,10 +29,8 @@ const sendAuthApi = async ({ personalData, accountData }: sendAuthData) => {
       studentFirstName: personalData.firstName,
       studentMiddleName: personalData.middleName,
       studentLastName: personalData.lastName,
-      indigenous: personalData.indigenous
-        ? personalData.indigenous.toString()
-        : "false",
-      pwd: personalData.pwd ? personalData.pwd.toString() : "false",
+      indigenous: personalData.indigenous,
+      pwd: personalData.pwd,
       studentContact: personalData.contactNumber,
       studentGender: personalData.gender,
       studentDateofBirth: personalData.dateOfBirth,
