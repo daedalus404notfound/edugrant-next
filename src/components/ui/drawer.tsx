@@ -200,7 +200,7 @@ function DrawerContent({
         )}
         {...props}
       >
-        <div className="absolute left-1/2 top-1 bg-muted mt-1 mb-1 hidden h-1.5 w-[100px] -translate-x-1/2 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
+        <div className="absolute left-1/2 opacity-0 lg:opacity-100 top-1 bg-muted mt-1 mb-1 hidden h-1.5 w-[100px] -translate-x-1/2 rounded-full group-data-[vaul-drawer-direction=bottom]/drawer-content:block" />
 
         {children}
       </DrawerPrimitive.Content>

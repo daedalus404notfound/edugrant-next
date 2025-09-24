@@ -176,13 +176,13 @@ export default function AdminDashboard() {
   const getProgressBarColor = (percentage: number) => {
     if (percentage < 30) return "bg-red-500";
     if (percentage < 70) return "bg-yellow-500";
-    return "bg-green-500";
+    return "bg-green-800";
   };
 
   const getProgressContainerColor = (percentage: number) => {
     if (percentage < 30) return "bg-red-500/20";
     if (percentage < 70) return "bg-yellow-500/20";
-    return "bg-green-500/20";
+    return "bg-green-800/20";
   };
 
   function ApplicationCard({ application }: { application: any }) {
@@ -236,7 +236,7 @@ export default function AdminDashboard() {
   }
   return (
     <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className="py-8 px-5 space-y-5">
+      <div className="py-8 lg:px-5 px-2 space-y-5">
         {!completed && (
           <div className="bg-card text-foreground px-4 py-3 rounded-md">
             <div className="flex flex-col justify-between gap-2 md:flex-row">
@@ -268,14 +268,14 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        <div className="grid grid-cols-2 gap-8 ">
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 ">
           <div className="space-y-10">
-            <div className="lg:space-y-2 flex items-center justify-between">
+            <div className="lg:space-y-2 flex flex-col lg:flex-row lg:items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground tracking-wide">
                   {isClient ? format(now, "PPP p") : "Loading..."}
                 </p>
-                <h1 className="lg:text-2xl text-lg havelock tracking-[-3px]">
+                <h1 className="lg:text-2xl text-lg  font-semibold">
                   Hi, {user?.Student.fName} {user?.Student.lName}!
                 </h1>
               </div>

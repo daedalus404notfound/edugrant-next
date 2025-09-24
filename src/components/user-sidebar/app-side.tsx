@@ -106,7 +106,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <Link
                         prefetch
                         scroll={false}
-                        className="flex items-center gap-2 cursor-pointer"
+                        className={
+                          isActive
+                            ? "dark:!bg-emerald-700/20  !bg-emerald-800 !text-gray-200"
+                            : ""
+                        }
                         href={meow.url}
                       >
                         <meow.icon className="w-4 h-4" />
@@ -132,8 +136,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       asChild
                       className={
                         isActive
-                          ? "dark:!bg-emerald-700/20 dark:!text-emerald-400 !bg-emerald-800 rounded-[5px] !border-0"
-                          : "dark:hover:!bg-emerald-700/20 rounded-[5px] !border-0 hover:!bg-emerald-700"
+                          ? "dark:!bg-emerald-700/20  !bg-emerald-800 !text-gray-200"
+                          : ""
                       }
                     >
                       <Link

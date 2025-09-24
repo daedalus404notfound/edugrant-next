@@ -31,6 +31,7 @@ export default function MobDock() {
       label: "Track",
       icon: GalleryVerticalEnd,
     },
+    { href: "/user/home/announcements", label: "Announce", icon: Megaphone },
     { href: "/user/home/profile", label: "Profile", icon: UserRound },
   ];
 
@@ -62,7 +63,7 @@ export default function MobDock() {
         );
       })}
 
-      <DropdownMenu>
+      {/* <DropdownMenu>
         <DropdownMenuTrigger>
           <div className="flex justify-center gap-1 flex-col items-center px-2 py-0.5 w-15 transition-colors">
             <MoreHorizontal size={23} />
@@ -70,12 +71,18 @@ export default function MobDock() {
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="mr-2">
-          <DropdownMenuItem><Megaphone/>Announcements</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Megaphone />
+            Announcements
+          </DropdownMenuItem>
 
           <DropdownMenuSeparator />
-          <DropdownMenuItem><History/>Application History</DropdownMenuItem>
+          <DropdownMenuItem>
+            <History />
+            Application History
+          </DropdownMenuItem>
         </DropdownMenuContent>
-      </DropdownMenu>
+      </DropdownMenu> */}
     </div>
   );
 }

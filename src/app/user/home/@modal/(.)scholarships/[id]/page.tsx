@@ -101,7 +101,7 @@ export default function InterceptManageScholarshipClient() {
           <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
-        <div className="flex items-center justify-between pb-2">
+        <div className="flex items-center justify-between lg:pb-2 ">
           <div className="flex items-center gap-3">
             <Button
               className="relative justify-start"
@@ -175,7 +175,7 @@ export default function InterceptManageScholarshipClient() {
 
                   <div className="relative flex justify-center items-center ">
                     <div className="absolute inset-0border-b-2 border-black bg-card" />
-                    <div className="absolute left-2 -bottom-18 z-10 lg:px-6  px-2 flex  items-end gap-3 ">
+                    <div className="absolute left-0 lg:-bottom-18 -bottom-25 z-10 lg:px-6  px-2 flex flex-col lg:flex-row w-full  lg:items-end lg:gap-3 gap-2">
                       <Avatar className="lg:size-30 size-20 border-background border-2 shadow-md">
                         <AvatarImage
                           className="object-cover"
@@ -199,29 +199,31 @@ export default function InterceptManageScholarshipClient() {
                             ease: "linear",
                           }}
                         >
-                          {data?.title}
-                          {data?.deadline &&
-                          new Date(data.deadline).getTime() < Date.now() ? (
-                            <Badge className="bg-red-800 text-gray-200 tracking-wide">
-                              EXPIRED
-                            </Badge>
-                          ) : (
-                            <Badge className="bg-green-800 text-gray-200 tracking-wide">
-                              ACTIVE
-                            </Badge>
-                          )}
-                          {data?.renew === true && (
-                            <Badge className="bg-blue-800 text-gray-200 tracking-wide">
-                              RENEWAL
-                            </Badge>
-                          )}
+                          <span className="line-clamp-1"> {data?.title}</span>
+                          <span className="hidden lg:flex">
+                            {data?.deadline &&
+                            new Date(data.deadline).getTime() < Date.now() ? (
+                              <Badge className="bg-red-800 text-gray-200 tracking-wide">
+                                EXPIRED
+                              </Badge>
+                            ) : (
+                              <Badge className="bg-green-800 text-gray-200 tracking-wide">
+                                ACTIVE
+                              </Badge>
+                            )}
+                            {data?.renew === true && (
+                              <Badge className="bg-blue-800 text-gray-200 tracking-wide">
+                                RENEWAL
+                              </Badge>
+                            )}
+                          </span>
                         </motion.span>
                         <p className="text-muted-foreground text-sm">
                           by {data?.Scholarship_Provider?.name}
                         </p>
                       </div>
                     </div>
-                    <p className="italic text-sm text-muted-foreground absolute right-2 -bottom-18 z-10 lg:px-6  px-2 ">
+                    <p className="italic lg:text-sm text-xs text-muted-foreground absolute right-2 lg:-bottom-18 -bottom-7 z-10 lg:px-6  px-2 ">
                       Posted on {""}
                       {data?.dateCreated && format(data?.dateCreated, "PPP")}
                     </p>
@@ -246,7 +248,8 @@ export default function InterceptManageScholarshipClient() {
                     )}
                   </div>
 
-                  <div className="flex-1 pt-30 px-6 space-y-8">
+                  <div className="flex-1 pt-30 lg:px-6 px-2 space-y-8">
+                    <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                     <div className="space-y-1">
                       <p className="text-sm text-muted-foreground">
                         About {data?.title}
@@ -286,19 +289,7 @@ export default function InterceptManageScholarshipClient() {
                             </div>
                           </div>
                         )}
-                        {data?.requiredGWA && (
-                          <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                            <Inbox />
-                            <div>
-                              <p className="text-muted-foreground text-sm">
-                                Required GWA
-                              </p>
-                              <h1 className="text-lg font-medium font-mono">
-                                {data?.requiredGWA}
-                              </h1>
-                            </div>
-                          </div>
-                        )}
+
                         {data?.requiredGWA && (
                           <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
                             <Inbox />
@@ -374,7 +365,7 @@ export default function InterceptManageScholarshipClient() {
                           </div>
                         </div>
                       </div>
-                      <div className="p-4 bg-card rounded-md">
+                      <div className="lg:p-4 p-2 bg-card rounded-md">
                         <h1 className="text-center text-sm font-medium">
                           Hurry before it ends
                         </h1>
@@ -390,7 +381,7 @@ export default function InterceptManageScholarshipClient() {
                   </div>
                   <div className=" sticky bottom-0">
                     <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-                    <div className="p-6 flex gap-3  bg-background">
+                    <div className="lg:p-6 p-2 flex gap-3  bg-background">
                       {/* {findMatch && isRenew ? (
                         <Button
                           className="flex-1"

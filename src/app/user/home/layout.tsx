@@ -26,7 +26,7 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
       }
     >
       <AppSidebar variant="inset" />
-      <SidebarInset className="overflow-hidden">
+      <SidebarInset>
         {/* <div className="fixed your-class h-screen w-full pointer-events-none"></div> */}
         <div className="relative ">
           <DynamicHeaderUser

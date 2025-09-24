@@ -1,10 +1,6 @@
 import z from "zod";
 import { StudentSchema } from "./user";
-import {
-  scholarshipFormData,
-  scholarshipSchema,
-} from "../admin/zodUpdateScholarship";
-
+import { displayScholarshipSchema } from "../admin/displayScholarshipData";
 const SubmittedDocumentSchema = z.object({
   document: z.string(),
   fileFormat: z.string(),
@@ -31,7 +27,7 @@ const DecisionMessageSchema = z.record(
 );
 
 const ApplicationSchema = z.object({
-  Scholarship: scholarshipSchema, // field name = Scholarship
+  Scholarship: displayScholarshipSchema, // field name = Scholarship
   Student: StudentSchema, // field name = Student
   Application_Decision: z.object({
     dateCreated: z.date(),
@@ -46,10 +42,8 @@ const ApplicationSchema = z.object({
   ownerId: z.number(),
   scholarshipId: z.number(),
   status: z.string(),
-  submittedDocuments: z.object({
-    documents: z.record(z.string(), SubmittedDocumentSchema),
-    renewDocuments: z.record(z.string(), SubmittedDocumentSchema),
-  }),
+  submittedDocuments: z.record(z.string(), z.array(SubmittedDocumentSchema)),
   supabasePath: z.record(z.string(), supabasePathSchema),
 });
 export type ApplicationFormData = z.infer<typeof ApplicationSchema>;
+export type SubmittedDocumentFormData = z.infer<typeof SubmittedDocumentSchema>;

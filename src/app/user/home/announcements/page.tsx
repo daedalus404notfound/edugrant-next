@@ -1,16 +1,8 @@
 "use client";
-
-import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  CalendarIcon,
-  Megaphone,
-  MoreHorizontal,
-} from "lucide-react";
+import { CalendarIcon, Megaphone } from "lucide-react";
 
 import { useState } from "react";
-import { Tabs } from "@/components/ui/vercel-tabs";
-
+import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import {
   Timeline,
@@ -19,24 +11,6 @@ import {
   TimelineItem,
   TimelineTitle,
 } from "@/components/ui/timeline";
-const announcements = [
-  {
-    id: 1,
-    title: "Scholarship Application Deadline Extended",
-    description:
-      "The deadline for scholarship applications has been extended to June 30, 2025.",
-    date: "Dec 12, 2024",
-    priority: "high",
-  },
-  {
-    id: 2,
-    title: "Scholarship Application Deadline Extended",
-    description:
-      "The deadline for scholarship applications has been extended to June 30, 2025.",
-    date: "Dec 12, 2024",
-    priority: "high",
-  },
-];
 
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
@@ -61,24 +35,46 @@ export default function ClientScholarship() {
     pageSize,
     sortBy,
     order,
-  
   });
 
   return (
     <div className="  bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:pt-10  pt-3 space-y-8">
         <div className="flex justify-between items-end">
-          <TitleReusable
-            title="Announcements"
-            description=""
-            Icon={Megaphone}
-          />
+          <motion.div
+            className="flex justify-between items-end"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
+          >
+            <TitleReusable
+              title="Announcements"
+              description="Keep track of all scholarship-related news and important alerts for your applications."
+              Icon={Megaphone}
+            />
+          </motion.div>
         </div>
 
         <div>
           <Timeline className="space-y-5">
             {loading ? (
-              <></>
+              [...Array(3)].map((_, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ y: 50, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: index * 0.1,
+                    ease: "easeOut",
+                  }}
+                  className="bg-background/40 relative rounded-md border space-y-3"
+                >
+                  <Skeleton className="h-30" />
+                </motion.div>
+              ))
+            ) : data.length === 0 ? (
+              <NoDataFound />
             ) : (
               data.map((item, index) => (
                 <TimelineItem
@@ -108,11 +104,6 @@ export default function ClientScholarship() {
               ))
             )}
           </Timeline>
-          <div className="flex justify-center items-center">
-            <Button variant="link" size="lg" className="!p-0">
-              Load More <ArrowRight />
-            </Button>
-          </div>
         </div>
       </div>
     </div>

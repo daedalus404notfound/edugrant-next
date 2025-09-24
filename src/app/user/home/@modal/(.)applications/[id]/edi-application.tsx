@@ -1,8 +1,5 @@
-import { Button } from "@/components/ui/button";
-import StyledToast from "@/components/ui/toast-styled";
-import { ApplicationFormData } from "@/hooks/zod/application";
-import { documentFormData } from "@/hooks/admin/zodUpdateScholarship";
-import { useUserStore } from "@/store/useUserStore";
+"use client";
+
 import {
   Form,
   FormControl,
@@ -12,26 +9,33 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import { ArrowLeft, Upload, DownloadIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import * as z from "zod";
 import { useForm } from "react-hook-form";
-import z from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  documentFormData,
+  scholarshipFormData,
+} from "@/hooks/admin/zodUpdateScholarship";
+import { useUserStore } from "@/store/useUserStore";
 import { DragAndDropArea } from "@/components/ui/upload";
+import { Badge } from "@/components/ui/badge";
+import axios from "axios";
+import { Progress } from "@/components/ui/progress";
+import { useState } from "react";
+import StyledToast from "@/components/ui/toast-styled";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
-import { Upload } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import TitleReusable from "@/components/ui/title";
+import { ApiErrorResponse } from "@/hooks/admin/postReviewedHandler";
+import { downloadFile } from "@/lib/downloadUtils";
+import { ApplicationFormData } from "@/hooks/zod/application";
 
-type EditApplicationTypes = {
-  data: ApplicationFormData;
-  setEdit: (edit: boolean) => void;
-};
-
-const createFormSchema = (editDocuments: Record<string, documentFormData>) => {
+export const createFormSchema = (requiredDocuments: documentFormData[]) => {
   const schemaShape: Record<string, z.ZodType> = {};
-
-  Object.entries(editDocuments).forEach(([, doc]) => {
-    const validation = z
+  Object.entries(requiredDocuments).forEach(([key, doc]) => {
+    const baseValidation = z
       .array(z.instanceof(File))
       .refine(
         (files) =>
@@ -44,46 +48,59 @@ const createFormSchema = (editDocuments: Record<string, documentFormData>) => {
           files.length === 0 ||
           files.every((file) => file.size <= 2 * 1024 * 1024),
         `File size must be less than 2MB for ${doc.label}`
-      )
-      .default([]);
-
-    schemaShape[doc.label] = validation;
+      );
+    if (doc.requirementType === "required") {
+      schemaShape[doc.label] = baseValidation.min(
+        1,
+        `${doc.label} is required`
+      );
+    } else {
+      // For optional documents, allow empty array
+      schemaShape[doc.label] = baseValidation.default([]);
+    }
   });
 
   return z.object(schemaShape);
 };
-
+type EditApplicationTypes = {
+  data: ApplicationFormData;
+  setEdit: (edit: boolean) => void;
+};
 export default function EditApplication({
   data,
   setEdit,
 }: EditApplicationTypes) {
-  const router = useRouter();
+  const { addApplication } = useUserStore.getState();
   const user = useUserStore((state) => state.user);
   const userId = user?.accountId;
   const scholarId = data.scholarshipId;
-  const renew = data.Scholarship.renew;
+  const [completedCount, setCompletedCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [disable, setDisable] = useState(false);
   const [openAlert, setOpenAlert] = useState(false);
-  const applicationId = data.applicationId;
-  // Transform the data structure to match what createFormSchema expects
-  const editDocuments: Record<string, documentFormData> = Object.entries(
-    data.submittedDocuments.documents
-  ).reduce((acc, [key, doc]) => {
-    acc[key] = {
-      label: doc.document,
-      formats: [doc.fileFormat],
-      requirementType: doc.requirementType as "optional" | "required",
-    };
-    return acc;
-  }, {} as Record<string, documentFormData>);
 
-  const formSchema = createFormSchema(editDocuments);
+  const documentPhases = Object.keys(data?.Scholarship.documents ?? {}).filter(
+    (key) => key.startsWith("phase")
+  );
+  const documentPhasesLength = documentPhases.length;
+  const lastPhaseKey = documentPhases[documentPhasesLength - 1];
+  const lastPhase = data?.Scholarship.documents?.[lastPhaseKey] ?? [];
+  const lastPhaseLength = Object.keys(lastPhase).length;
+
+  const allDocuments = Object.values(lastPhase);
+
+  const requiredDocumentsCount = Object.values(lastPhase).filter(
+    (doc) => doc.requirementType === "required"
+  ).length;
+
+  const formSchema = createFormSchema(lastPhase);
   type FormData = z.infer<typeof formSchema>;
 
-  const defaultValues = Object.values(editDocuments).reduce((acc, doc) => {
-    acc[doc.label] = [];
-    return acc;
-  }, {} as Record<string, File[]>);
+  // Initialize default values
+  const defaultValues: Record<string, File[]> = {};
+  allDocuments.forEach((doc) => {
+    defaultValues[doc.label] = [];
+  });
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -93,135 +110,224 @@ export default function EditApplication({
   const handleFilesChange = (label: string, files: File[]) => {
     form.setValue(label as keyof FormData, files as File[]);
     form.trigger(label as keyof FormData);
-  };
 
-  const onSubmit = async (formData: FormData) => {
+    // Count how many REQUIRED document fields are filled (not optional ones)
+    const filledRequired = Object.values(lastPhase).filter((doc) => {
+      // Only count required documents
+      if (doc.requirementType !== "required") return false;
+
+      const fieldFiles = form.getValues(doc.label as keyof FormData) as File[];
+      return fieldFiles && fieldFiles.length > 0;
+    }).length;
+
+    setCompletedCount(filledRequired);
+  };
+  const onSubmit = async (data: FormData) => {
     try {
       setLoading(true);
+      setDisable(true);
+      const formData = new FormData();
+      formData.append("accountId", String(userId));
+      formData.append("scholarshipId", String(scholarId));
 
-      const data = new FormData();
-      data.append("accountId", String(userId));
-      data.append("scholarshipId", String(scholarId));
-      data.append("applicationId", String(applicationId));
-      if (renew === true) {
-        data.append("renew", "true");
-      }
-      if (renew === false) {
-        data.append("renew", "false");
-      }
-
-      Object.entries(formData).forEach(([label, files]) => {
+      Object.entries(data).forEach(([label, files]) => {
+        // Check if files exists and has length > 0
         if (files && Array.isArray(files) && files.length > 0) {
           files.forEach((file: File) => {
-            data.append(label, file);
+            formData.append(label, file);
           });
         }
       });
 
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_USER_URL}/updateApplication`,
-        data,
+        formData,
         {
           withCredentials: true,
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
 
       if (res.status === 200) {
+        addApplication(scholarId, "PENDING");
         StyledToast({
           status: "success",
           title: "Upload successful!",
-          description:
-            "Your rejected documents have been resubmitted successfully.",
+          description: " Your documents have been submitted successfully.",
         });
 
         setLoading(false);
-        setTimeout(() => router.back(), 300);
       }
     } catch (error) {
-      StyledToast({
-        status: "error",
-        title: "Upload failed",
-        description: "Something went wrong. Please try again.",
-      });
-      console.error("Upload error:", error);
-      setLoading(false);
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        StyledToast({
+          status: "error",
+          title: error?.response?.data.message ?? "An error occurred.",
+          description: "Cannot process your request.",
+        });
+        setLoading(false);
+        setDisable(false);
+      }
     }
   };
 
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
-      <div className="flex-1 bg-background rounded-t-lg lg:p-4 p-2">
-        <TitleReusable title="Update documents" description="" />
-        <div className="flex-1 grid lg:grid-cols-2 grid-cols-1 gap-5">
-          <Form {...form}>
-            {Object.entries(data.submittedDocuments.documents).map(
-              ([key, originalDoc]) => {
-                const transformedDoc = editDocuments[key];
+    <div className="h-full bg-background flex flex-col rounded-t-lg">
+      <div className="flex-1 lg:p-4 p-2 space-y-10">
+        {data.Scholarship.form && (
+          <div className="bg-muted px-4 py-3 md:py-2 rounded-md">
+            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+              <p className="text-sm">{data.Scholarship.title} Form</p>
 
-                return (
-                  <FormField
-                    key={transformedDoc.label}
-                    control={form.control}
-                    name={transformedDoc.label as keyof FormData}
-                    render={() => (
-                      <FormItem>
-                        <div className="space-y-3">
-                          <div className="space-y-1">
-                            <FormLabel className="flex items-center justify-between">
-                              <span className="text-base font-medium">
-                                {transformedDoc.label}
-                              </span>
-                            </FormLabel>
-                          </div>
-                          <FormControl>
-                            <DragAndDropArea
-                              label={transformedDoc.label}
-                              accept={transformedDoc.formats}
-                              initialImageUrl={originalDoc.fileUrl}
-                              onFilesChange={(files) =>
-                                handleFilesChange(transformedDoc.label, files)
-                              }
-                            />
-                          </FormControl>
-                          <FormMessage />
+              <Button
+                size="sm"
+                variant="outline"
+                className="min-w-24"
+                onClick={() =>
+                  downloadFile(
+                    data.Scholarship.form,
+                    `${data.Scholarship.title} Scholarship Form.pdf`
+                  )
+                }
+              >
+                <DownloadIcon
+                  size={16}
+                  className="-ms-0.5"
+                  aria-hidden="true"
+                />
+                Download
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {/* <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" /> */}
+        <div className="space-y-8">
+          <TitleReusable
+            title={`Upload Documents for Phase ${documentPhasesLength}`}
+            description={` Complete your application for ${data.Scholarship.title}`}
+          />
+
+          <Form {...form}>
+            <div className=" grid lg:grid-cols-2 grid-cols-1 gap-8">
+              {lastPhase.map((doc, index) => (
+                <FormField
+                  key={`required-${index}`}
+                  control={form.control}
+                  name={doc.label}
+                  render={() => (
+                    <FormItem>
+                      <div className="space-y-4 rounded-md ">
+                        <div className="space-y-1">
+                          <FormLabel className="flex items-center justify-between">
+                            <span className="text-base font-medium">
+                              {doc.label}{" "}
+                              {doc.requirementType === "required" && (
+                                <span className="text-red-700">*</span>
+                              )}
+                            </span>
+                            <Badge
+                              className={`text-xs capitalize ${
+                                doc.requirementType === "required"
+                                  ? "bg-red-800/20 text-red-700"
+                                  : doc.requirementType === "optional"
+                                  ? "bg-blue-800/20 text-blue-700"
+                                  : " "
+                              }`}
+                            >
+                              {doc.requirementType}
+                            </Badge>
+                          </FormLabel>
+                          {/* <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            {doc.formats.map((format, formatIndex) => (
+                              <p key={formatIndex} className="text-xs">
+                                {mimeToLabelMap[format] || format}
+                              </p>
+                            ))}
+                          </div> */}
                         </div>
-                      </FormItem>
-                    )}
-                  />
-                );
-              }
-            )}
+                        <FormControl>
+                          <DragAndDropArea
+                            label={doc.label}
+                            accept={doc.formats}
+                            onFilesChange={(files) =>
+                              handleFilesChange(doc.label, files)
+                            }
+                            initialImageUrl={
+                              data.submittedDocuments?.[lastPhaseKey]?.find(
+                                (submittedDoc) =>
+                                  submittedDoc.document === doc.label
+                              )?.fileUrl
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              ))}
+            </div>
           </Form>
         </div>
       </div>
+      <div className="sticky bottom-0 ">
+        <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+        <div className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60  lg:p-4 p-2">
+          <div className="flex items-center gap-4 mb-6">
+            <div className="flex-1">
+              <div className="flex items-center justify-between text-sm mb-2">
+                <span className="font-medium">Progress</span>
+                <span className="font-medium">
+                  {completedCount} out of {requiredDocumentsCount}{" "}
+                  <span className="hidden lg:block">
+                    required documents to unlock submit
+                  </span>
+                </span>
+              </div>
+              <Progress
+                value={(completedCount / requiredDocumentsCount) * 100}
+                className="h-2"
+              />
+            </div>
+          </div>
 
-      <div className="lg:p-4 p-2 sticky bottom-0 border-t bg-background flex gap-3">
-        <DeleteDialog
-          open={openAlert}
-          onOpenChange={setOpenAlert}
-          loading={loading}
-          red={false}
-          title="Resubmit Rejected Documents?"
-          description="Please review your updated documents before resubmitting. Make sure you've addressed the rejection reasons."
-          confirmText="Resubmit Documents"
-          confirmTextLoading="Resubmitting..."
-          onConfirm={form.handleSubmit(onSubmit)}
-          cancelText="Cancel"
-          trigger={
-            <Button className="flex-1">
-              <Upload className="h-4 w-4 mr-2" />
-              Resubmit Documents
+          <div className="flex flex-col lg:flex-row gap-3">
+            <DeleteDialog
+              open={openAlert}
+              onOpenChange={setOpenAlert}
+              loading={loading}
+              red={false}
+              title="Submit Application?"
+              description="Please review your uploaded documents before submitting."
+              confirmText="Submit Application"
+              confirmTextLoading="Submitting..."
+              onConfirm={form.handleSubmit(onSubmit)}
+              cancelText="Cancel"
+              trigger={
+                <Button
+                  disabled={completedCount < requiredDocumentsCount || disable}
+                  className="flex-1"
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  Submit Application
+                </Button>
+              }
+            />
+
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => setEdit(false)}
+              className="flex-1"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Details
             </Button>
-          }
-        />
-        <Button
-          variant="secondary"
-          className="flex-1"
-          onClick={() => setEdit(false)}
-        >
-          Back
-        </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

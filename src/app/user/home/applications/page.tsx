@@ -76,7 +76,7 @@ export default function ClientScholarship() {
           className="flex justify-between items-end"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
+          transition={{ duration: 0.3, delay: 0.4 }}
         >
           <TitleReusable
             title="My Applications"
@@ -97,7 +97,7 @@ export default function ClientScholarship() {
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3, delay: 0.4 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
           className="overflow-y-hidden overflow-x-auto py-3 no-scrollbar "
         >
           <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />

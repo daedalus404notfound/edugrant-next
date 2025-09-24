@@ -125,58 +125,28 @@ export default function InterceptReviewApplicants() {
     }));
   };
 
-  const totalRequiredDocs =
-    data && !data.Scholarship.renew
-      ? Object.entries(data.submittedDocuments.documents).filter(
-          ([_, doc]) =>
-            doc.requirementType && doc.requirementType.trim() === "required"
-        ).length
-      : 0;
-
-  const reviewedDocs =
-    data && !data.Scholarship.renew && data.submittedDocuments.documents
-      ? Object.entries(data.submittedDocuments.documents).filter(
-          ([key, doc]) => {
-            return (
-              doc.rejectMessage?.status ||
-              (reviewData[key]?.status &&
-                doc.requirementType.trim() === "required")
-            );
-          }
-        ).length
-      : 0;
-
-  // For renewal documents
-  const totalRequiredDocsRenew =
-    data && data.Scholarship.renew
-      ? Object.entries(data?.submittedDocuments?.renewDocuments ?? {}).filter(
-          ([_, doc]) =>
-            doc.requirementType && doc.requirementType.trim() === "required"
-        ).length
-      : 0;
-
-  const reviewedDocsRenew =
-    data && data.Scholarship.renew && data.submittedDocuments.renewDocuments
-      ? Object.entries(data.submittedDocuments.renewDocuments).filter(
-          ([key, doc]) => {
-            return (
-              doc.rejectMessage?.status ||
-              (reviewData[key]?.status &&
-                doc.requirementType.trim() === "required")
-            );
-          }
-        ).length
-      : 0;
-  const isButtonDisabled = data?.Scholarship.renew
-    ? totalRequiredDocsRenew !== reviewedDocsRenew
-    : totalRequiredDocs !== reviewedDocs;
-
-  console.log(
-    "total docs",
-    totalRequiredDocsRenew,
-    "reviewedDocs",
-    reviewedDocsRenew
+  const documentPhases = Object.keys(data?.submittedDocuments ?? {}).filter(
+    (key) => key.startsWith("phase")
   );
+  const documentPhasesLength = documentPhases.length;
+  const lastPhaseKey = documentPhases[documentPhasesLength - 1];
+  const lastPhase = data?.submittedDocuments?.[lastPhaseKey] ?? [];
+  const lastPhaseLength = Object.keys(lastPhase).length;
+
+  const totalRequiredDocs = lastPhase.filter(
+    (meow) => meow.requirementType === "required"
+  ).length;
+
+  const reviewedDocs = lastPhase.filter((doc) => {
+    const hasExistingStatus = doc.rejectMessage?.status;
+    const hasNewReviewStatus = reviewData[doc.document]?.status;
+    const isRequired = doc.requirementType?.trim() === "required";
+
+    return isRequired && (hasExistingStatus || hasNewReviewStatus);
+  }).length;
+
+  const isButtonDisabled = totalRequiredDocs !== reviewedDocs;
+
   // const progressValue = totalDocs > 0 ? (reviewedDocs / totalDocs) * 100 : 0;
 
   const HandleCloseDrawer = (value: boolean) => {
@@ -509,321 +479,157 @@ export default function InterceptReviewApplicants() {
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 divide-y">
-                      {data?.Scholarship.renew === false &&
-                        data?.submittedDocuments.documents &&
-                        Object.entries(data.submittedDocuments.documents)
+                      {lastPhase &&
+                        lastPhase
                           .filter(
-                            ([_, doc]) =>
+                            (doc) =>
                               doc.requirementType &&
                               doc.requirementType.trim() !== ""
                           )
-                          .map(([key, doc], index) => (
-                            <div key={index} className="flex gap-5 py-8">
-                              <Reviewer
-                                fileFormat={mimeToLabelMap[doc.fileFormat]}
-                                resourceType={doc.resourceType}
-                                fileUrl={doc.fileUrl}
-                                document={doc.document}
-                                supabasePath={doc.supabasePath}
-                                docStatus={doc.rejectMessage?.status}
-                                requirementType={doc.requirementType}
-                                docComment={doc.rejectMessage?.comment}
-                                onUpdate={(field, value) =>
-                                  updateReviewData(key, field, value)
-                                }
-                              />
+                          .map((doc, index) => {
+                            // Get the current status from either existing data or new review data
+                            const currentStatus =
+                              reviewData[doc.document]?.status ||
+                              doc.rejectMessage?.status;
+                            const currentComment =
+                              reviewData[doc.document]?.comment ||
+                              doc.rejectMessage?.comment ||
+                              "";
 
-                              <div className="flex-1 flex flex-col justify-between">
-                                <div className="flex items-start justify-between">
-                                  <div className="flex-1">
-                                    <h4 className="text-lg font-semibold mb-1">
-                                      {doc.document}
-                                    </h4>
-                                    <div className="flex items-center gap-2">
-                                      <Badge
-                                        variant="secondary"
-                                        className="uppercase bg-red-800/20 text-red-700"
-                                      >
-                                        {/* {mimeToLabelMap[doc.fileFormat]} */}
-                                        {doc.requirementType}
-                                      </Badge>
-                                      {doc.rejectMessage?.status && (
+                            return (
+                              <div key={index} className="flex gap-5 py-8">
+                                <Reviewer
+                                  fileFormat={mimeToLabelMap[doc.fileFormat]}
+                                  resourceType={doc.resourceType}
+                                  fileUrl={doc.fileUrl}
+                                  document={doc.document}
+                                  supabasePath={doc.supabasePath}
+                                  docStatus={currentStatus}
+                                  requirementType={doc.requirementType}
+                                  docComment={currentComment}
+                                  onUpdate={(field, value) =>
+                                    updateReviewData(doc.document, field, value)
+                                  }
+                                />
+
+                                <div className="flex-1 flex flex-col justify-between">
+                                  <div className="flex items-start justify-between">
+                                    <div className="flex-1">
+                                      <h4 className="text-lg font-semibold mb-1">
+                                        {doc.document}
+                                      </h4>
+                                      <div className="flex items-center gap-2">
                                         <Badge
-                                          className={`text-xs ${
-                                            doc.rejectMessage.status ===
-                                            "APPROVED"
-                                              ? statusColors.APPROVED
-                                              : statusColors.REJECTED
-                                          }`}
+                                          variant="secondary"
+                                          className="uppercase bg-red-800/20 text-red-700"
                                         >
-                                          {doc.rejectMessage.status}
+                                          {doc.requirementType}
                                         </Badge>
-                                      )}
+                                        {/* Show current status badge */}
+                                        {currentStatus && (
+                                          <Badge
+                                            className={`text-xs ${
+                                              currentStatus === "APPROVED"
+                                                ? statusColors.APPROVED
+                                                : statusColors.REJECTED
+                                            }`}
+                                          >
+                                            {currentStatus}
+                                          </Badge>
+                                        )}
+                                      </div>
                                     </div>
-                                  </div>
-                                  <Button size="sm" variant="outline">
-                                    <Download className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                                <div className="flex gap-3">
-                                  <div className="flex-1">
-                                    {" "}
-                                    <Textarea
-                                      placeholder="Add review comment..."
-                                      value={
-                                        doc.rejectMessage?.comment ||
-                                        reviewData[key]?.comment ||
-                                        ""
-                                      }
-                                      disabled={!!doc.rejectMessage?.status}
-                                      onChange={(e) =>
-                                        updateReviewData(
-                                          key,
-                                          "comment",
-                                          e.target.value
-                                        )
-                                      }
-                                      className="min-h-9"
-                                    />
-                                  </div>
-                                  <div className="flex gap-2">
-                                    <Button
-                                      variant={
-                                        doc.rejectMessage?.status ===
-                                          "APPROVED" ||
-                                        reviewData[key]?.status === "APPROVED"
-                                          ? "default"
-                                          : "outline"
-                                      }
-                                      className={`font-medium transition-all ${
-                                        doc.rejectMessage?.status ===
-                                          "APPROVED" ||
-                                        reviewData[key]?.status === "APPROVED"
-                                          ? ""
-                                          : "hover:bg-green-50 hover:border-green-200 hover:text-green-700"
-                                      }`}
-                                      onClick={() => {
-                                        updateReviewData(
-                                          key,
-                                          "status",
-                                          "APPROVED"
-                                        );
-                                      }}
-                                      disabled={!!doc.rejectMessage?.status}
-                                    >
-                                      {doc.rejectMessage?.status ===
-                                      "APPROVED" ? (
-                                        <>
-                                          <CheckCheck className="w-4 h-4 mr-2" />
-                                          Accepted
-                                        </>
-                                      ) : (
-                                        <>
-                                          <UserCheck2 className="w-4 h-4 mr-2" />
-                                          Accept
-                                        </>
-                                      )}
+                                    <Button size="sm" variant="outline">
+                                      <Download className="w-4 h-4" />
                                     </Button>
-                                    <Button
-                                      variant={
-                                        doc.rejectMessage?.status ===
-                                          "REJECTED" ||
-                                        reviewData[key]?.status === "REJECTED"
-                                          ? "destructive"
-                                          : "outline"
-                                      }
-                                      className={`font-medium transition-all ${
-                                        doc.rejectMessage?.status !==
-                                          "REJECTED" &&
-                                        reviewData[key]?.status !== "REJECTED"
-                                          ? "hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-                                          : ""
-                                      }`}
-                                      onClick={() => {
-                                        updateReviewData(
-                                          key,
-                                          "status",
-                                          "REJECTED"
-                                        );
-                                      }}
-                                      disabled={!!doc.rejectMessage?.status}
-                                    >
-                                      {doc.rejectMessage?.status ===
-                                      "REJECTED" ? (
-                                        <>
-                                          <UserRoundX className="w-4 h-4 mr-2" />
-                                          Rejected
-                                        </>
-                                      ) : (
-                                        <>
-                                          <UserX2 className="w-4 h-4 mr-2" />
-                                          Reject
-                                        </>
-                                      )}
-                                    </Button>
+                                  </div>
+                                  <div className="flex gap-3">
+                                    <div className="flex-1">
+                                      <Textarea
+                                        placeholder="Add review comment..."
+                                        value={currentComment}
+                                        disabled={!!doc.rejectMessage?.status}
+                                        onChange={(e) =>
+                                          updateReviewData(
+                                            doc.document,
+                                            "comment",
+                                            e.target.value
+                                          )
+                                        }
+                                        className="min-h-9"
+                                      />
+                                    </div>
+                                    <div className="flex gap-2">
+                                      <Button
+                                        variant={
+                                          currentStatus === "APPROVED"
+                                            ? "default"
+                                            : "outline"
+                                        }
+                                        className={`font-medium transition-all ${
+                                          currentStatus === "APPROVED"
+                                            ? ""
+                                            : "hover:bg-green-50 hover:border-green-200 hover:text-green-700"
+                                        }`}
+                                        onClick={() =>
+                                          updateReviewData(
+                                            doc.document,
+                                            "status",
+                                            "APPROVED"
+                                          )
+                                        }
+                                        disabled={!!doc.rejectMessage?.status}
+                                      >
+                                        {currentStatus === "APPROVED" ? (
+                                          <>
+                                            <CheckCheck className="w-4 h-4 mr-2" />
+                                            Accepted
+                                          </>
+                                        ) : (
+                                          <>
+                                            <UserCheck2 className="w-4 h-4 mr-2" />
+                                            Accept
+                                          </>
+                                        )}
+                                      </Button>
+                                      <Button
+                                        variant={
+                                          currentStatus === "REJECTED"
+                                            ? "destructive"
+                                            : "outline"
+                                        }
+                                        className={`font-medium transition-all ${
+                                          currentStatus !== "REJECTED"
+                                            ? "hover:bg-red-50 hover:border-red-200 hover:text-red-700"
+                                            : ""
+                                        }`}
+                                        onClick={() =>
+                                          updateReviewData(
+                                            doc.document,
+                                            "status",
+                                            "REJECTED"
+                                          )
+                                        }
+                                        disabled={!!doc.rejectMessage?.status}
+                                      >
+                                        {currentStatus === "REJECTED" ? (
+                                          <>
+                                            <UserRoundX className="w-4 h-4 mr-2" />
+                                            Rejected
+                                          </>
+                                        ) : (
+                                          <>
+                                            <UserX2 className="w-4 h-4 mr-2" />
+                                            Reject
+                                          </>
+                                        )}
+                                      </Button>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          ))}
-                      {data?.Scholarship.renew === true &&
-                        data?.submittedDocuments.renewDocuments &&
-                        Object.entries(data.submittedDocuments.renewDocuments)
-                          .filter(
-                            ([_, doc]) =>
-                              doc.requirementType &&
-                              doc.requirementType.trim() !== ""
-                          )
-                          .map(([key, doc], index) => (
-                            <div key={index} className="flex gap-5 py-8">
-                              <Reviewer
-                                fileFormat={mimeToLabelMap[doc.fileFormat]}
-                                resourceType={doc.resourceType}
-                                fileUrl={doc.fileUrl}
-                                document={doc.document}
-                                supabasePath={doc.supabasePath}
-                                docStatus={doc.rejectMessage?.status}
-                                requirementType={doc.requirementType}
-                                docComment={doc.rejectMessage?.comment}
-                                onUpdate={(field, value) =>
-                                  updateReviewData(key, field, value)
-                                }
-                              />
-
-                              <div className="flex-1 flex flex-col justify-between">
-                                <div className="flex items-start justify-between">
-                                  <div className="flex-1">
-                                    <h4 className="text-lg font-semibold mb-1">
-                                      {doc.document}
-                                    </h4>
-                                    <div className="flex items-center gap-2">
-                                      <Badge
-                                        variant="secondary"
-                                        className="uppercase bg-red-800/20 text-red-700"
-                                      >
-                                        {/* {mimeToLabelMap[doc.fileFormat]} */}
-                                        {doc.requirementType}
-                                      </Badge>
-                                      {doc.rejectMessage?.status && (
-                                        <Badge
-                                          className={`text-xs ${
-                                            doc.rejectMessage.status ===
-                                            "APPROVED"
-                                              ? statusColors.APPROVED
-                                              : statusColors.REJECTED
-                                          }`}
-                                        >
-                                          {doc.rejectMessage.status}
-                                        </Badge>
-                                      )}
-                                    </div>
-                                  </div>
-                                  <Button size="sm" variant="outline">
-                                    <Download className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                                <div className="flex gap-3">
-                                  <div className="flex-1">
-                                    {" "}
-                                    <Textarea
-                                      placeholder="Add review comment..."
-                                      value={
-                                        doc.rejectMessage?.comment ||
-                                        reviewData[key]?.comment ||
-                                        ""
-                                      }
-                                      disabled={!!doc.rejectMessage?.status}
-                                      onChange={(e) =>
-                                        updateReviewData(
-                                          key,
-                                          "comment",
-                                          e.target.value
-                                        )
-                                      }
-                                      className="min-h-9"
-                                    />
-                                  </div>
-                                  <div className="flex gap-2">
-                                    1
-                                    <Button
-                                      variant={
-                                        doc.rejectMessage?.status ===
-                                          "APPROVED" ||
-                                        reviewData[key]?.status === "APPROVED"
-                                          ? "default"
-                                          : "outline"
-                                      }
-                                      className={`font-medium transition-all ${
-                                        doc.rejectMessage?.status ===
-                                          "APPROVED" ||
-                                        reviewData[key]?.status === "APPROVED"
-                                          ? ""
-                                          : "hover:bg-green-50 hover:border-green-200 hover:text-green-700"
-                                      }`}
-                                      onClick={() => {
-                                        updateReviewData(
-                                          key,
-                                          "status",
-                                          "APPROVED"
-                                        );
-                                      }}
-                                      disabled={!!doc.rejectMessage?.status}
-                                    >
-                                      {doc.rejectMessage?.status ===
-                                      "APPROVED" ? (
-                                        <>
-                                          <CheckCheck className="w-4 h-4 mr-2" />
-                                          Accepted
-                                        </>
-                                      ) : (
-                                        <>
-                                          <UserCheck2 className="w-4 h-4 mr-2" />
-                                          Accept
-                                        </>
-                                      )}
-                                    </Button>
-                                    <Button
-                                      variant={
-                                        doc.rejectMessage?.status ===
-                                          "REJECTED" ||
-                                        reviewData[key]?.status === "REJECTED"
-                                          ? "destructive"
-                                          : "outline"
-                                      }
-                                      className={`font-medium transition-all ${
-                                        doc.rejectMessage?.status !==
-                                          "REJECTED" &&
-                                        reviewData[key]?.status !== "REJECTED"
-                                          ? "hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-                                          : ""
-                                      }`}
-                                      onClick={() => {
-                                        updateReviewData(
-                                          key,
-                                          "status",
-                                          "REJECTED"
-                                        );
-                                      }}
-                                      disabled={!!doc.rejectMessage?.status}
-                                    >
-                                      {doc.rejectMessage?.status ===
-                                      "REJECTED" ? (
-                                        <>
-                                          <UserRoundX className="w-4 h-4 mr-2" />
-                                          Rejected
-                                        </>
-                                      ) : (
-                                        <>
-                                          <UserX2 className="w-4 h-4 mr-2" />
-                                          Reject
-                                        </>
-                                      )}
-                                    </Button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                     </div>
                   )}
                 </div>

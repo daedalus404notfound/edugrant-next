@@ -5,14 +5,14 @@ import { Inbox } from "lucide-react";
 
 export default function NoDataFound() {
   return (
-    <div className="lg:col-span-3 h-[50dvh] flex flex-col justify-center items-center gap-3 text-center">
+    <div className="lg:col-span-3 lg:h-[50dvh] h-[40dvh] flex flex-col justify-center items-center gap-3 text-center">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="flex items-center justify-center rounded-full bg-muted p-4 shadow-sm"
       >
-        <Inbox className="w-10 h-10 text-muted-foreground" />
+        <Inbox className="lg:w-10 w-8 lg:h-10 h-8 text-muted-foreground" />
       </motion.div>
 
       <motion.h1

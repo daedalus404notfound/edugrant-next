@@ -11,72 +11,22 @@ import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import useClientApplications from "@/hooks/user/getApplications";
-import GlassFolder from "@/components/ui/folder";
 
-import ApplicationViewer from "./viewer";
-import { Badge } from "@/components/ui/badge";
-
-import {
-  Timeline,
-  TimelineContent,
-  TimelineDate,
-  TimelineHeader,
-  TimelineIndicator,
-  TimelineItem,
-  TimelineSeparator,
-  TimelineTitle,
-} from "@/components/ui/timeline";
 import TitleReusable from "@/components/ui/title";
 import {
-  ArrowRight,
-  ArrowRightIcon,
   Ban,
-  Building,
-  Calendar,
-  Check,
-  CheckCircle,
   CircleAlert,
   CircleCheck,
-  CircleCheckIcon,
-  CircleX,
   Clock,
-  Download,
-  Edit,
-  Edit2,
-  Eye,
   GraduationCap,
-  Inbox,
-  Info,
-  Link,
-  Maximize,
-  MoreHorizontal,
-  MoreVertical,
-  Pen,
   PenLine,
-  PhilippinePeso,
-  StickyNote,
-  TableOfContents,
-  TriangleAlert,
-  UserRound,
   X,
 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
 import {
   Stepper,
   StepperDescription,
@@ -88,17 +38,7 @@ import {
 } from "@/components/ui/stepper";
 import { format } from "date-fns";
 import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { Doc } from "zod/v4/core";
+
 import { useUserStore } from "@/store/useUserStore";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import DocsStudent from "./docs";
@@ -106,7 +46,6 @@ import ScholarDetails from "./scholarship";
 import EditApplication from "./edi-application";
 import { Skeleton } from "@/components/ui/skeleton";
 import DocsStudentRenew from "./doc-renew";
-import EditApplicationRenew from "./edit-renew";
 
 export default function InterceptManageApplicationClient() {
   const [activeSection, setActiveSection] = useState("documents");
@@ -130,6 +69,7 @@ export default function InterceptManageApplicationClient() {
     applicationId: id,
     userId: userId?.toString(),
   });
+
   const navigationTabs = [
     { id: "documents", label: "Submitted Documents", indicator: null },
 
@@ -215,11 +155,7 @@ export default function InterceptManageApplicationClient() {
             </div>
           </div>
         ) : edit ? (
-          data[0].Scholarship.renew === false ? (
-            <EditApplication data={data[0]} setEdit={setEdit} />
-          ) : (
-            <EditApplicationRenew data={data[0]} setEdit={setEdit} />
-          )
+          <EditApplication data={data[0]} setEdit={setEdit} />
         ) : (
           <>
             <div className=" flex-1 flex flex-col bg-background overflow-auto rounded-t-lg space-y-2 no-scrollbar">
@@ -332,7 +268,7 @@ export default function InterceptManageApplicationClient() {
               </div> */}
               <div className="p-4 space-y-8">
                 <TitleReusable
-                  title={data[0].Scholarship.title}
+                  title={data[0]?.Scholarship.title}
                   description={`Application Details for ${data[0].Scholarship.title}`}
                 />
                 <Stepper defaultValue={2} className="items-start gap-4">
@@ -413,12 +349,9 @@ export default function InterceptManageApplicationClient() {
                     </p>
                   </div>
                 )}
-                {activeSection === "documents" &&
-                  (data[0].Scholarship.renew === false ? (
-                    <DocsStudent data={data[0]} />
-                  ) : (
-                    <DocsStudentRenew data={data[0]} />
-                  ))}
+                {activeSection === "documents" && (
+                  <DocsStudent data={data[0]} />
+                )}
                 {activeSection === "scholarship" && (
                   <ScholarDetails data={data[0]} />
                 )}

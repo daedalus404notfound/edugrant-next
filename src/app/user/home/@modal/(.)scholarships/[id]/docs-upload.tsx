@@ -177,7 +177,7 @@ export default function UploadDocs({
 
   return (
     <div className="h-full bg-background flex flex-col rounded-t-lg">
-      <div className="flex-1 p-4 space-y-10">
+      <div className="flex-1 lg:p-4 p-2 space-y-10">
         {data.form && (
           <div className="bg-muted px-4 py-3 md:py-2 rounded-md">
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
@@ -280,14 +280,16 @@ export default function UploadDocs({
       </div>
       <div className="sticky bottom-0 ">
         <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-        <div className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60  p-4">
+        <div className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60  lg:p-4 p-2">
           <div className="flex items-center gap-4 mb-6">
             <div className="flex-1">
               <div className="flex items-center justify-between text-sm mb-2">
                 <span className="font-medium">Progress</span>
                 <span className="font-medium">
-                  {completedCount} out of {requiredDocumentsCount} required
-                  documents to unlock submit
+                  {completedCount} out of {requiredDocumentsCount}{" "}
+                  <span className="hidden lg:block">
+                    required documents to unlock submit
+                  </span>
                 </span>
               </div>
               <Progress
@@ -297,7 +299,7 @@ export default function UploadDocs({
             </div>
           </div>
 
-          <div className="flex gap-3">
+          <div className="flex flex-col lg:flex-row gap-3">
             <DeleteDialog
               open={openAlert}
               onOpenChange={setOpenAlert}
