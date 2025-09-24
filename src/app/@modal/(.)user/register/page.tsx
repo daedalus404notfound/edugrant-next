@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Accessibility,
   ArrowRight,
+  Calendar1,
   CheckIcon,
   ChevronDownIcon,
   EyeIcon,
@@ -291,43 +292,48 @@ export default function RegisterStudent() {
                           Date of Birth <FormMessage />
                         </FormLabel>
                         <FormControl>
-                          <Popover
-                            open={openCalendar}
-                            onOpenChange={setOpenCalendar}
-                          >
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                id="date"
-                                className="w-full justify-between font-normal"
-                              >
-                                {field.value
-                                  ? new Date(field.value).toLocaleDateString()
-                                  : "Select date"}
-                                <ChevronDownIcon />
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto overflow-hidden p-0 pointer-events-auto"
-                              align="start"
+                          <div className="flex gap-2">
+                            <Input
+                              type="date"
+                              value={field.value ? field.value : ""}
+                              onChange={(e) => field.onChange(e.target.value)}
+                              className="flex-1"
+                            />
+                            <Popover
+                              open={openCalendar}
+                              onOpenChange={setOpenCalendar}
                             >
-                              <Calendar
-                                mode="single"
-                                selected={
-                                  field.value
-                                    ? new Date(field.value)
-                                    : undefined
-                                }
-                                captionLayout="dropdown"
-                                onSelect={(date) => {
-                                  field.onChange(
-                                    date ? format(date, "yyyy-MM-dd") : ""
-                                  );
-                                  setOpenCalendar(false);
-                                }}
-                              />
-                            </PopoverContent>
-                          </Popover>
+                              <PopoverTrigger asChild>
+                                <Button
+                                  variant="outline"
+                                  id="date"
+                                  className=" font-normal"
+                                >
+                                  <Calendar1 />
+                                </Button>
+                              </PopoverTrigger>
+                              <PopoverContent
+                                className="w-auto overflow-hidden p-0 pointer-events-auto"
+                                align="start"
+                              >
+                                <Calendar
+                                  mode="single"
+                                  selected={
+                                    field.value
+                                      ? new Date(field.value)
+                                      : undefined
+                                  }
+                                  captionLayout="dropdown"
+                                  onSelect={(date) => {
+                                    field.onChange(
+                                      date ? format(date, "yyyy-MM-dd") : ""
+                                    );
+                                    setOpenCalendar(false);
+                                  }}
+                                />
+                              </PopoverContent>
+                            </Popover>
+                          </div>
                         </FormControl>
                       </FormItem>
                     )}

@@ -18,6 +18,17 @@
     transparent 80%
   );
 }
+/* Hide native calendar icon in Chrome/Safari */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+/* Hide in Firefox */
+input[type="date"]::-moz-calendar-picker-indicator {
+  display: none;
+}
+
 .no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
