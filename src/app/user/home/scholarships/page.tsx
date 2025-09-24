@@ -51,6 +51,7 @@ const tabs = [
   { id: "ACTIVE", label: "Ongoing", indicator: null },
   { id: "RENEW", label: "For Renewal", indicator: null },
   { id: "EXPIRED", label: "Closed", indicator: null },
+  { id: "BLOCKED", label: "Restricted", indicator: null },
 ];
 
 const scholarshipTypes = [
