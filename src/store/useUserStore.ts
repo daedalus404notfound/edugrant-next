@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { UserFormData } from "@/hooks/user/zodUserProfile";
 
-
 type UserStore = {
   user: UserFormData | null;
   loading: boolean;
@@ -21,23 +20,57 @@ export const useUserStore = create<UserStore>()(
       loading: false,
       error: null,
       setUser: (user) => set({ user }),
+      // addApplication: (scholarshipId, status) =>
+      //   set((state) => {
+      //     if (!state.user) return state; // no user yet
+
+      //     return {
+      //       user: {
+      //         ...state.user,
+      //         Student: {
+      //           ...state.user.Student,
+      //           Application: [
+      //             ...state.user.Student.Application,
+      //             { scholarshipId, status },
+      //           ],
+      //         },
+      //       },
+      //     };
+      //   }),
+
       addApplication: (scholarshipId, status) =>
         set((state) => {
           if (!state.user) return state; // no user yet
+
+          const existingApplications = state.user.Student.Application;
+          const appIndex = existingApplications.findIndex(
+            (app) => app.scholarshipId === scholarshipId
+          );
+
+          let updatedApplications;
+          if (appIndex !== -1) {
+            // overwrite existing
+            updatedApplications = [...existingApplications];
+            updatedApplications[appIndex] = { scholarshipId, status };
+          } else {
+            // add new
+            updatedApplications = [
+              ...existingApplications,
+              { scholarshipId, status },
+            ];
+          }
 
           return {
             user: {
               ...state.user,
               Student: {
                 ...state.user.Student,
-                Application: [
-                  ...state.user.Student.Application,
-                  { scholarshipId, status }, // ✅ now adds both
-                ],
+                Application: updatedApplications,
               },
             },
           };
         }),
+
       setLoading: (loading) => set({ loading }),
       setError: (error) => set({ error }),
       logout: () => set({ user: null }),
