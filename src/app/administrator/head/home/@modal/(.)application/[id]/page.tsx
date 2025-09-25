@@ -124,21 +124,21 @@ export default function InterceptReviewApplicants() {
   const lastPhaseKey = documentPhases[documentPhasesLength - 1];
   const lastPhase = data?.submittedDocuments?.[lastPhaseKey] ?? [];
   const lastPhaseLength = Object.keys(lastPhase).length;
-  const submittedKeys = Object.keys(data?.submittedDocuments?.documents || {});
 
-  const matchedDocKey = submittedKeys.find(
-    (k) => !!data?.Application_Decision?.message?.[k]
+  const matchedDoc = lastPhase.find(
+    (doc) => !!data?.Application_Decision?.message?.[doc.document]
   );
 
-  const matchedComment =
-    matchedDocKey && data?.Application_Decision?.message
-      ? data.Application_Decision.message[matchedDocKey]?.comment ?? ""
+  const matchedStatus =
+    matchedDoc && data?.Application_Decision?.message
+      ? data.Application_Decision.message[matchedDoc.document]?.status ?? ""
       : "";
 
-  const matchedStatus =
-    matchedDocKey && data?.Application_Decision?.message
-      ? data.Application_Decision.message[matchedDocKey]?.status ?? ""
+  const matchedComment =
+    matchedDoc && data?.Application_Decision?.message
+      ? data.Application_Decision.message[matchedDoc.document]?.comment ?? ""
       : "";
+  console.log("2323", matchedStatus);
 
   const fatherDetails = [
     {
