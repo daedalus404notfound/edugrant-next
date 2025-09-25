@@ -64,7 +64,7 @@ export default function InterceptManageScholarshipClient() {
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
         <ModalHeader HandleCloseDrawer={HandleCloseDrawer} />
-        <div className="relative h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md flex flex-col">
+        <div className="relative h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md">
           {applying === true ? (
             data && (
               <UploadDocs
@@ -76,7 +76,7 @@ export default function InterceptManageScholarshipClient() {
           ) : loading ? (
             <ScholarshipModalLoading />
           ) : (
-            <>
+            <div>
               {data && <ScholarshipModal data={data} />}
               <div className=" sticky bottom-0">
                 <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
@@ -94,7 +94,7 @@ export default function InterceptManageScholarshipClient() {
                   </Button>
                 </div>
               </div>
-            </>
+            </div>
           )}
         </div>
       </DrawerContent>

@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { useProfileForm } from "./zodUserProfile";
-import { UserFormData } from "../zod/user";
+import { UserFormData } from "./zodUserProfile";
 import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
@@ -142,8 +142,8 @@ export const useProfile = () => {
   });
 };
 
-export const useUpdateProfile = (initialData?: UserFormData) => {
-  const { form, formData, siblings, hasChanges } = useProfileForm(initialData);
+export const useUpdateProfile = (data: UserFormData) => {
+  const { form, siblings, isChanged } = useProfileForm(data);
   const profileUpdate = useProfile();
   const [open, setOpen] = useState(false);
   const [reset, setReset] = useState(false);
@@ -203,8 +203,7 @@ export const useUpdateProfile = (initialData?: UserFormData) => {
     reset,
     setReset,
     form,
-    formData,
+    isChanged,
     siblings,
-    hasChanges,
   };
 };

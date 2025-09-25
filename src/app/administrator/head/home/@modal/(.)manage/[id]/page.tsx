@@ -92,7 +92,7 @@ export default function InterceptManageScholarship() {
               <ScholarshipModalLoading />
             ) : (
               data && (
-                <>
+                <div>
                   <ScholarshipModal data={data} />
                   <div className="p-4 sticky bottom-0 bg-card border-t">
                     <div className="flex gap-3">
@@ -124,7 +124,7 @@ export default function InterceptManageScholarship() {
                       />
                     </div>
                   </div>
-                </>
+                </div>
               )
             )
           ) : mode === "renewal" ? (
