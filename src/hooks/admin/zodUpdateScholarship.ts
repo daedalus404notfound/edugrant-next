@@ -23,7 +23,7 @@ export const scholarshipSchema = z.object({
   declined: z.number().optional(),
   pending: z.number().optional(),
   archived: z.boolean().optional(),
-  renew: z.boolean().optional(),
+  phase: z.number(),
   cover: z.any().optional(),
   dateCreated: z.date().optional(),
   deadline: z.date({
@@ -77,7 +77,7 @@ export function useUpdateScholarshipZod(data?: scholarshipFormData) {
       declined: data?.declined || 0,
       pending: data?.pending || 0,
       archived: data?.archived ?? false,
-      renew: data?.renew ?? false,
+      phase: data?.phase,
       cover: data?.cover,
       dateCreated: data?.dateCreated ? new Date(data.dateCreated) : new Date(),
       deadline: data?.deadline ? new Date(data.deadline) : new Date(),

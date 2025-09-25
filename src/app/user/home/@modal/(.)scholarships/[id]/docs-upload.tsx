@@ -174,6 +174,57 @@ export default function UploadDocs({
       }
     }
   };
+  const onSubmitRenewal = async (data: FormData) => {
+    try {
+      setLoading(true);
+      setDisable(true);
+      const formData = new FormData();
+      formData.append("accountId", String(userId));
+      formData.append("scholarshipId", String(scholarId));
+
+      Object.entries(data).forEach(([label, files]) => {
+        // Check if files exists and has length > 0
+        if (files && Array.isArray(files) && files.length > 0) {
+          files.forEach((file: File) => {
+            formData.append(label, file);
+          });
+        }
+      });
+
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_USER_URL}/renewScholarship`,
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (res.status === 200) {
+        addApplication(scholarId, "PENDING");
+        StyledToast({
+          status: "success",
+          title: "Upload successful!",
+          description: " Your documents have been submitted successfully.",
+        });
+        setIsApply("details");
+        setLoading(false);
+        HandleCloseDrawer(false);
+      }
+    } catch (error) {
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        StyledToast({
+          status: "error",
+          title: error?.response?.data.message ?? "An error occurred.",
+          description: "Cannot process your request.",
+        });
+        setLoading(false);
+        setDisable(false);
+      }
+    }
+  };
 
   return (
     <div className="h-full bg-background flex flex-col rounded-t-lg">
@@ -300,27 +351,55 @@ export default function UploadDocs({
           </div>
 
           <div className="flex flex-col lg:flex-row gap-3">
-            <DeleteDialog
-              open={openAlert}
-              onOpenChange={setOpenAlert}
-              loading={loading}
-              red={false}
-              title="Submit Application?"
-              description="Please review your uploaded documents before submitting."
-              confirmText="Submit Application"
-              confirmTextLoading="Submitting..."
-              onConfirm={form.handleSubmit(onSubmit)}
-              cancelText="Cancel"
-              trigger={
-                <Button
-                  disabled={completedCount < requiredDocumentsCount || disable}
-                  className="flex-1"
-                >
-                  <Upload className="h-4 w-4 mr-2" />
-                  Submit Application
-                </Button>
-              }
-            />
+            {data.phase > 1 ? (
+              <DeleteDialog
+                open={openAlert}
+                onOpenChange={setOpenAlert}
+                loading={loading}
+                red={false}
+                title="Submit Renewal Application?"
+                description="Please review your uploaded documents before submitting."
+                confirmText="Submit Renewal Application"
+                confirmTextLoading="Submitting..."
+                onConfirm={form.handleSubmit(onSubmitRenewal)}
+                cancelText="Cancel"
+                trigger={
+                  <Button
+                    disabled={
+                      completedCount < requiredDocumentsCount || disable
+                    }
+                    className="flex-1"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Submit Renewal Application
+                  </Button>
+                }
+              />
+            ) : (
+              <DeleteDialog
+                open={openAlert}
+                onOpenChange={setOpenAlert}
+                loading={loading}
+                red={false}
+                title="Submit Application?"
+                description="Please review your uploaded documents before submitting."
+                confirmText="Submit Application"
+                confirmTextLoading="Submitting..."
+                onConfirm={form.handleSubmit(onSubmit)}
+                cancelText="Cancel"
+                trigger={
+                  <Button
+                    disabled={
+                      completedCount < requiredDocumentsCount || disable
+                    }
+                    className="flex-1"
+                  >
+                    <Upload className="h-4 w-4 mr-2" />
+                    Submit Application
+                  </Button>
+                }
+              />
+            )}
 
             <Button
               type="button"

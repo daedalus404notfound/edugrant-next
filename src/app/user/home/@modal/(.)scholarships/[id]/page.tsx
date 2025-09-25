@@ -43,7 +43,7 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useUserStore } from "@/store/useUserStore";
-import UploadRenewDocs from "./docs-renew";
+import { getPhaseLabel } from "../../../scholarships/page";
 export default function InterceptManageScholarshipClient() {
   const [showCover, setShowCover] = useState(false);
 
@@ -132,13 +132,7 @@ export default function InterceptManageScholarshipClient() {
               HandleCloseDrawer={HandleCloseDrawer}
             />
           )}
-          {isApply === "renew" && data && (
-            <UploadRenewDocs
-              data={data}
-              setIsApply={setIsApply}
-              HandleCloseDrawer={HandleCloseDrawer}
-            />
-          )}
+
           {isApply === "details" && (
             <>
               {loading ? (
@@ -200,7 +194,7 @@ export default function InterceptManageScholarshipClient() {
                           }}
                         >
                           <span className="line-clamp-1"> {data?.title}</span>
-                          <span className="hidden lg:flex">
+                          <span className="hidden lg:flex gap-1.5">
                             {data?.deadline &&
                             new Date(data.deadline).getTime() < Date.now() ? (
                               <Badge className="bg-red-800 text-gray-200 tracking-wide">
@@ -211,9 +205,9 @@ export default function InterceptManageScholarshipClient() {
                                 ACTIVE
                               </Badge>
                             )}
-                            {data?.renew === true && (
-                              <Badge className="bg-blue-800 text-gray-200 tracking-wide">
-                                RENEWAL
+                            {data?.phase && data?.phase > 1 && (
+                              <Badge className="bg-blue-800 text-gray-200 uppercase">
+                                {getPhaseLabel(data?.phase)}
                               </Badge>
                             )}
                           </span>
@@ -412,7 +406,7 @@ export default function InterceptManageScholarshipClient() {
                         disabled={
                           (data?.deadline &&
                             new Date(data.deadline).getTime() < Date.now()) ||
-                          !!findMatch
+                          findMatch?.status === "PENDING"
                         }
                       >
                         <Upload /> Apply Scholarship

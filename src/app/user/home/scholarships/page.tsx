@@ -9,6 +9,7 @@ import {
   CheckCircle,
   Ellipsis,
   Ghost,
+  Landmark,
   Lock,
   PhilippinePeso,
   TextSearch,
@@ -75,6 +76,22 @@ import { format } from "date-fns";
 import NoDataFound from "@/components/ui/nodata";
 import { useUserStore } from "@/store/useUserStore";
 import { getFamilyBackgroundProgress } from "@/lib/isFamilyComplete";
+export const getPhaseLabel = (num: number) => {
+  if (num % 100 >= 11 && num % 100 <= 13) {
+    return `${num}th phase`; // special case: 11th, 12th, 13th
+  }
+  switch (num % 10) {
+    case 1:
+      return `${num}st phase`;
+    case 2:
+      return `${num}nd phase`;
+    case 3:
+      return `${num}rd phase`;
+    default:
+      return `${num}th phase`;
+  }
+};
+
 export default function ClientScholarship() {
   const [currentPage] = useState(1);
   const [rowsPerPage] = useState(20);
@@ -312,7 +329,7 @@ export default function ClientScholarship() {
                                       variant="secondary"
                                       className="uppercase"
                                     >
-                                      {scholarship.type}
+                                      <Landmark /> {scholarship.type}
                                     </Badge>
                                   </div>
                                   <p className="text-sm text-muted-foreground">
@@ -329,11 +346,12 @@ export default function ClientScholarship() {
                                       ACTIVE
                                     </Badge>
                                   )}
-                                  {scholarship.renew === true && (
-                                    <Badge className="bg-blue-800 text-gray-200">
-                                      RENEWAL
+                                  {scholarship.phase > 1 && (
+                                    <Badge className="bg-blue-800 text-gray-200 uppercase">
+                                      {getPhaseLabel(scholarship.phase)}
                                     </Badge>
                                   )}
+
                                   {status === "EXPIRED" && (
                                     <Badge className="bg-red-800 text-gray-200">
                                       EXPIRED
@@ -350,8 +368,9 @@ export default function ClientScholarship() {
                                   APPLIED
                                 </Badge>
                               )} */}
-                                <span>
-                                  {scholarship.renew === true && "Renewal"}{" "}
+                                <span className="capitalize">
+                                  {scholarship.phase > 1 &&
+                                    `${getPhaseLabel(scholarship.phase)}`}{" "}
                                   Deadline:{" "}
                                   {format(scholarship.deadline, "MM/dd/yy")}
                                 </span>

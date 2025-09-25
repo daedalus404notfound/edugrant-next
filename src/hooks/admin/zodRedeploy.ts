@@ -10,7 +10,7 @@ export const renewDocumentSchema = z.object({
   accountId: z.number().optional(),
   scholarshipId: z.number().optional(),
   renewDeadline: z.date(),
-  interview: z.boolean().optional(),
+  interview: z.boolean(),
   renewDocuments: z.array(displayDocumentsSchema),
 });
 
@@ -28,6 +28,7 @@ export function useRedeployScholarshipZod({
       accountId: scholarshipId,
       scholarshipId: accountId,
       renewDeadline: undefined,
+      interview: false,
       renewDocuments: [{ label: "", formats: [], requirementType: "required" }],
     },
   });
