@@ -11,7 +11,7 @@ import {
   Upload,
   X,
 } from "lucide-react";
-
+import { getPhaseLabel } from "@/lib/phaseLevel";
 import { motion } from "motion/react";
 export function formatPHP(amount: number) {
   return new Intl.NumberFormat("en-PH", {
@@ -43,7 +43,6 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useUserStore } from "@/store/useUserStore";
-import { getPhaseLabel } from "../../../scholarships/page";
 export default function InterceptManageScholarshipClient() {
   const [showCover, setShowCover] = useState(false);
 
