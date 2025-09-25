@@ -30,8 +30,10 @@ import { Separator } from "@/components/ui/separator";
 import TitleReusable from "@/components/ui/title";
 export default function Profile() {
   const { user } = useUserStore();
-  const { form, siblings, handleSubmit, loading, isChanged } =
-    useUpdateProfile(user);
+
+  const { form, siblings, handleSubmit, loading, isChanged } = useUpdateProfile(
+    user ?? undefined
+  );
   const [tab, setTab] = useState("personal");
 
   const tabs = [

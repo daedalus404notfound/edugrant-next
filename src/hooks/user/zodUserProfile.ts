@@ -5,18 +5,14 @@ import deepEqual from "fast-deep-equal";
 
 import z from "zod";
 
-const SubmittedDocumentSchema = z.object({
-  document: z.string(),
-  fileFormat: z.string(),
-  fileUrl: z.string(),
-  requirementType: z.string(),
-  resourceType: z.string(),
-  supabasePath: z.string(),
-  rejectMessage: z.object({
-    status: z.string(),
-    comment: z.string(),
+export const displayDocumentsSchema = z.object({
+  label: z.string().min(1, "Requireds"),
+  formats: z.array(z.string()).min(1, "Required"),
+  requirementType: z.enum(["required", "optional"], {
+    message: "Required",
   }),
 });
+
 const ApplicationSchema = z.object({
   applicationId: z.number().optional(),
   dateCreated: z.string().optional(),
@@ -25,11 +21,8 @@ const ApplicationSchema = z.object({
   ownerId: z.number().optional(),
   scholarshipId: z.number(),
   status: z.string().optional(),
-  submittedDocuments: z
-    .object({
-      documents: z.record(z.string(), SubmittedDocumentSchema),
-      renewDocuments: z.record(z.string(), SubmittedDocumentSchema),
-    })
+  submitteDocuments: z
+    .record(z.string(), z.array(displayDocumentsSchema).optional())
     .optional(),
   supabasePath: z.array(z.string()).optional(),
 });
@@ -104,7 +97,7 @@ export const UserSchema = z.object({
 
 export type UserFormData = z.infer<typeof UserSchema>;
 
-export function useProfileForm(data: UserFormData) {
+export function useProfileForm(data?: UserFormData) {
   const defaultValues: UserFormData = {
     Student: {
       Application: [
@@ -116,10 +109,7 @@ export function useProfileForm(data: UserFormData) {
           ownerId: 0,
           scholarshipId: 0,
           status: "",
-          submittedDocuments: {
-            documents: {},
-            renewDocuments: {},
-          },
+          submitteDocuments: {},
           supabasePath: [],
         },
       ],

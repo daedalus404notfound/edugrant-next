@@ -142,7 +142,7 @@ export const useProfile = () => {
   });
 };
 
-export const useUpdateProfile = (data: UserFormData) => {
+export const useUpdateProfile = (data?: UserFormData) => {
   const { form, siblings, isChanged } = useProfileForm(data);
   const profileUpdate = useProfile();
   const [open, setOpen] = useState(false);
@@ -203,7 +203,7 @@ export const useUpdateProfile = (data: UserFormData) => {
     reset,
     setReset,
     form,
-    isChanged,
     siblings,
+    isChanged,
   };
 };
