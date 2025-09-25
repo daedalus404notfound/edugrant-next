@@ -88,7 +88,7 @@
 // ): boolean {
 //   return getFamilyBackgroundProgress(student).completed;
 // }
-import { UserFormData } from "@/hooks/zod/user";
+import { UserFormData } from "@/hooks/user/zodUserProfile";
 
 // ✅ Return both percentage and completion status
 export function getFamilyBackgroundProgress(
