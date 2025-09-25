@@ -9,6 +9,7 @@ import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { CircleCheck } from "lucide-react";
+import { getPhaseLabel } from "@/lib/phaseLevel";
 export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
   // {
   //   accessorKey: "title",
@@ -35,7 +36,7 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
   {
     accessorFn: (row) => ({
       title: row?.title,
-      renew: row?.renew,
+      renew: row?.phase,
       logo: row?.logo,
     }),
     id: "title",
@@ -49,7 +50,7 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
     cell: ({ row }) => {
       const value = row.getValue("title") as {
         title?: string;
-        renew?: string;
+        phase?: number;
         logo?: string;
       };
       return (
@@ -61,8 +62,10 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
             </AvatarFallback>
           </Avatar>
           <span className="capitalize">{value?.title}</span>
-          {value?.renew && (
-            <Badge className="bg-blue-800 text-gray-200">RENEWAL</Badge>
+          {value?.phase && (
+            <Badge className="bg-blue-800 text-gray-200">
+              {getPhaseLabel(value.phase)}
+            </Badge>
           )}
         </div>
       );

@@ -9,29 +9,47 @@ import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { CircleCheck } from "lucide-react";
+import { getPhaseLabel } from "@/lib/phaseLevel";
 export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
-
   {
-    accessorKey: "title",
+    accessorFn: (row) => ({
+      title: row?.title,
+      renew: row?.phase,
+      logo: row?.logo,
+    }),
+    id: "title",
     header: ({ column }) => (
-      <DataTableColumnHeader className="pl-4" column={column} title="Title" />
+      <DataTableColumnHeader
+        className="pl-4"
+        column={column}
+        title="Scholarship Title"
+      />
     ),
     cell: ({ row }) => {
-      const { title, logo } = row.original;
+      const value = row.getValue("title") as {
+        title?: string;
+        phase?: number;
+        logo?: string;
+      };
       return (
-        <div className="flex gap-2  items-center pl-4 ">
+        <div className="flex items-center gap-2 pl-4">
           <Avatar>
-            <AvatarImage className="object-cover" src={logo} />
+            <AvatarImage className="object-cover" src={value.logo} />
             <AvatarFallback>
               {row.original.Scholarship_Provider.name.slice(0, 1)}
             </AvatarFallback>
           </Avatar>
-          <div>
-            <div className="font-medium truncate">{title}</div>
-          </div>
+          <span className="capitalize">{value?.title}</span>
+          {value?.phase && (
+            <Badge className="bg-blue-800 text-gray-200">
+              {getPhaseLabel(value.phase)}
+            </Badge>
+          )}
         </div>
       );
     },
+    enableSorting: true,
+    enableHiding: true,
   },
   {
     accessorFn: (row) => row.Scholarship_Provider?.name,
