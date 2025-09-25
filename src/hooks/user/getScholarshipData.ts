@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { scholarshipFormData } from "../admin/zodUpdateScholarship";
 import StyledToast from "@/components/ui/toast-styled";
 import { ApiErrorResponse } from "../admin/postReviewedHandler";
+import { displayScholarshipFormData } from "../admin/displayScholarshipData";
 
 export default function useScholarshipUserById(id: string) {
-  const [data, setData] = useState<scholarshipFormData | null>(null);
+  const [data, setData] = useState<displayScholarshipFormData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 

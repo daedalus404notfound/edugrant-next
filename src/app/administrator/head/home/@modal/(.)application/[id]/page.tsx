@@ -916,12 +916,14 @@ export default function InterceptReviewApplicants() {
                         <div className="space-y-3">
                           <div className="flex justify-between items-center">
                             <h3 className="text-xs font-medium text-muted-foreground  tracking-wide">
-                              {data?.Scholarship.renew === false
+                              {data?.Scholarship.phase &&
+                              data?.Scholarship.phase > 1
                                 ? " Required Documents"
                                 : " Required Documents for Renewal"}
                             </h3>
                             <p className="font-medium text-lg">
-                              {data?.Scholarship.renew === false
+                              {data?.Scholarship.phase &&
+                              data?.Scholarship.phase > 0
                                 ? Object.keys(
                                     data?.Scholarship.documents.documents || {}
                                   ).length

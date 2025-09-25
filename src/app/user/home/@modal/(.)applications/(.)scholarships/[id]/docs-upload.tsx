@@ -30,6 +30,7 @@ import { Separator } from "@/components/ui/separator";
 import TitleReusable from "@/components/ui/title";
 import { ApiErrorResponse } from "@/hooks/admin/postReviewedHandler";
 import { downloadFile } from "@/lib/downloadUtils";
+import { displayScholarshipFormData } from "@/hooks/admin/displayScholarshipData";
 
 export const createFormSchema = (requiredDocuments: documentFormData[]) => {
   const schemaShape: Record<string, z.ZodType> = {};
@@ -64,11 +65,11 @@ export const createFormSchema = (requiredDocuments: documentFormData[]) => {
 
 export default function UploadDocs({
   data,
-  setIsApply,
+  setApplying,
   HandleCloseDrawer,
 }: {
-  data: scholarshipFormData;
-  setIsApply: (isApply: "details" | "apply" | "renew") => void;
+  data: displayScholarshipFormData;
+  setApplying: (applying: boolean) => void;
   HandleCloseDrawer: (close: boolean) => void;
 }) {
   const { addApplication } = useUserStore.getState();
@@ -158,7 +159,7 @@ export default function UploadDocs({
           title: "Upload successful!",
           description: " Your documents have been submitted successfully.",
         });
-        setIsApply("details");
+        setApplying(false);
         setLoading(false);
         HandleCloseDrawer(false);
       }
@@ -209,7 +210,7 @@ export default function UploadDocs({
           title: "Upload successful!",
           description: " Your documents have been submitted successfully.",
         });
-        setIsApply("details");
+        setApplying(false);
         setLoading(false);
         HandleCloseDrawer(false);
       }
@@ -404,7 +405,7 @@ export default function UploadDocs({
             <Button
               type="button"
               variant="secondary"
-              onClick={() => setIsApply("details")}
+              onClick={() => setApplying(false)}
               className="flex-1"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
