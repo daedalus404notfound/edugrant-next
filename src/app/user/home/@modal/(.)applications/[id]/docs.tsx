@@ -28,7 +28,7 @@ export default function DocsStudent({ data }: DocsStudentProps) {
   return (
     <div className="flex-1 space-y-1">
       <div className="flex justify-between items-center py-4"></div>
-      <div className="grid  lg:grid-cols-2 gap-8 grid-cols-1">
+      <div className="grid gap-8 grid-cols-1">
         {lastPhase &&
           lastPhase.map((meow) => {
             const rejectMessage =

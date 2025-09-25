@@ -136,7 +136,7 @@ export default function InterceptManageApplicationClient() {
           <div className="h-full w-full bg-background">
             <Skeleton className="flex-1 lg:aspect-[16/5] aspect-[16/9] w-full" />
             <div className="lg:space-y-15 space-y-10 lg:px-6 px-2 mt-5">
-              <div className="grid  grid-cols-1 gap-5">
+              <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
                 <div className="space-y-3">
                   <Skeleton className="h-11 w-full" />
                   <Skeleton className="h-20 w-full" />
