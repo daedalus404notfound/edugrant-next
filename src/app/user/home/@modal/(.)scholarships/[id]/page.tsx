@@ -89,7 +89,8 @@ export default function InterceptManageScholarshipClient() {
                         new Date(data.deadline).getTime() < Date.now()) ||
                       findMatch?.status === "APPROVED" ||
                       findMatch?.status === "PENDING" ||
-                      findMatch?.status === "INTERVIEW"
+                      findMatch?.status === "INTERVIEW" ||
+                      findMatch?.status === "BLOCKED"
                     }
                   >
                     <Upload /> Apply Scholarship
