@@ -80,7 +80,7 @@ export default function InterceptManageScholarshipClient() {
               {data && <ScholarshipModal data={data} />}
               <div className=" sticky bottom-0">
                 <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-                <div className="lg:p-6 p-2 flex gap-3  bg-background">
+                <div className="lg:px-6 lg:py-6 px-2 py-4 flex gap-3  bg-background">
                   <Button
                     className="flex-1"
                     onClick={() => setApplying(true)}

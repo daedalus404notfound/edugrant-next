@@ -43,7 +43,7 @@ export default function Profile() {
   ];
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className=" lg:pt-10  pt-3 w-3/4 mx-auto">
+      <div className=" lg:pt-10  pt-3 lg:w-3/4 w-full p-2 lg:p-0 mx-auto">
         <motion.div
           className="flex justify-between items-end"
           initial={{ opacity: 0, x: -20 }}
@@ -78,12 +78,12 @@ export default function Profile() {
                       <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                     </div>
                     <div className="">
-                      <div className="grid grid-cols-3 gap-5">
+                      <div className="grid lg:grid-cols-3 lg:gap-5">
                         <FormField
                           control={form.control}
                           name="Student.fName"
                           render={({ field }) => (
-                            <FormItem className="py-8">
+                            <FormItem className="lg:py-8 py-4">
                               <FormLabel className="text-muted-foreground">
                                 First Name
                               </FormLabel>
@@ -110,7 +110,7 @@ export default function Profile() {
                           control={form.control}
                           name="Student.mName"
                           render={({ field }) => (
-                            <FormItem className="py-8">
+                            <FormItem className="lg:py-8 py-4">
                               <FormLabel className="text-muted-foreground">
                                 Middle Name
                               </FormLabel>
@@ -136,7 +136,7 @@ export default function Profile() {
                           control={form.control}
                           name="Student.lName"
                           render={({ field }) => (
-                            <FormItem className="py-8">
+                            <FormItem className="lg:py-8 py-4">
                               <FormLabel className="text-muted-foreground">
                                 Last Name
                               </FormLabel>
@@ -159,13 +159,13 @@ export default function Profile() {
                           )}
                         />
                       </div>
-                      <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-                      <div className="grid grid-cols-2 gap-5">
+                      <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
+                      <div className="grid lg:grid-cols-2 lg:gap-5">
                         <FormField
                           control={form.control}
                           name="Student.gender"
                           render={({ field }) => (
-                            <FormItem className="py-8">
+                            <FormItem className="lg:py-8 py-4">
                               <FormLabel className="text-muted-foreground">
                                 Gender
                               </FormLabel>
@@ -191,7 +191,7 @@ export default function Profile() {
                           control={form.control}
                           name="Student.dateOfBirth"
                           render={({ field }) => (
-                            <FormItem className="py-8">
+                            <FormItem className="lg:py-8 py-4">
                               <FormLabel className="text-muted-foreground">
                                 Date of Birth
                               </FormLabel>
@@ -214,13 +214,13 @@ export default function Profile() {
                           )}
                         />
                       </div>
-                      <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-                      <div className="grid grid-cols-2 gap-5">
+                      <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
+                      <div className="grid lg:grid-cols-2 lg:gap-5">
                         <FormField
                           control={form.control}
                           name="Student.address"
                           render={({ field }) => (
-                            <FormItem className="py-8">
+                            <FormItem className="lg:py-8 py-4">
                               <FormLabel className="text-muted-foreground">
                                 Address
                               </FormLabel>
@@ -247,7 +247,7 @@ export default function Profile() {
                           control={form.control}
                           name="Student.contactNumber"
                           render={({ field }) => (
-                            <FormItem className="py-8">
+                            <FormItem className="lg:py-8 py-4">
                               <FormLabel className="text-muted-foreground">
                                 Contact Number
                               </FormLabel>
@@ -280,12 +280,12 @@ export default function Profile() {
                       </h3>
                       <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                     </div>
-                    <div className="grid grid-cols-2 gap-5">
+                    <div className="grid lg:grid-cols-2 lg:gap-5">
                       <FormField
                         control={form.control}
                         name="schoolId"
                         render={({ field }) => (
-                          <FormItem className="py-8">
+                          <FormItem className="lg:py-8 py-4">
                             <FormLabel className="text-muted-foreground">
                               Student ID
                             </FormLabel>
@@ -306,7 +306,7 @@ export default function Profile() {
                         control={form.control}
                         name="Student.course"
                         render={({ field }) => (
-                          <FormItem className="py-8">
+                          <FormItem className="lg:py-8 py-4">
                             <FormLabel className="text-muted-foreground">
                               Course
                             </FormLabel>
@@ -329,13 +329,13 @@ export default function Profile() {
                         )}
                       />
                     </div>
-                    <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-                    <div className="grid grid-cols-2 gap-5">
+                    <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
+                    <div className="grid lg:grid-cols-2 lg:gap-5">
                       <FormField
                         control={form.control}
                         name="Student.year"
                         render={({ field }) => (
-                          <FormItem className="py-8">
+                          <FormItem className="lg:py-8 py-4">
                             <FormLabel className="text-muted-foreground">
                               Year Level
                             </FormLabel>
@@ -361,7 +361,7 @@ export default function Profile() {
                         control={form.control}
                         name="Student.section"
                         render={({ field }) => (
-                          <FormItem className="py-8">
+                          <FormItem className="lg:py-8 py-4">
                             <FormLabel className="text-muted-foreground">
                               Section
                             </FormLabel>
@@ -391,14 +391,14 @@ export default function Profile() {
               {tab === "family" && (
                 <div className=" w-full ">
                   <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 pb-10">
-                    <p className="text-sm text-muted-foreground p-4 bg-card col-span-2 rounded-md flex gap-2 items-center">
+                    {/* <p className="text-sm text-muted-foreground p-4 bg-card col-span-2 rounded-md flex gap-2 items-center">
                       <AlertCircle size={15} /> If no information available,
                       type <span className="font-medium">N/A.</span>
-                    </p>
+                    </p> */}
                     <div className="lg:col-span-2 col-span-1 space-y-4">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3 flex-col">
                         <h3 className="text-lg font-medium flex gap-2 items-center">
-                          <UserRound className="h-5 w-5" /> Father Information
+                          Father Information
                         </h3>
                         <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                         <Controller
@@ -564,12 +564,12 @@ export default function Profile() {
                       )}
                     />
                   </div>
-                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
                   <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 py-10">
                     <div className="lg:col-span-2 col-span-1 space-y-4">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3 flex-col">
                         <h3 className="text-lg font-medium flex gap-2 items-center">
-                          <UserRound className="h-5 w-5" /> Mother Information
+                          Mother Information
                         </h3>
                         <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                         <Controller
@@ -728,12 +728,12 @@ export default function Profile() {
                       )}
                     />
                   </div>
-                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
                   <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-3 gap-y-6 py-10">
                     <div className="lg:col-span-2 col-span-1 space-y-4">
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3 flex-col">
                         <h3 className="text-lg font-medium flex gap-2 items-center">
-                          <UserRound className="h-5 w-5" /> Guardian Information
+                          Guardian Information
                         </h3>
                         <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                       </div>
@@ -863,7 +863,7 @@ export default function Profile() {
                     <div className="lg:col-span-2 col-span-1 space-y-4">
                       <div className="flex items-center gap-3">
                         <h3 className="text-lg font-medium flex gap-2 items-center">
-                          <UserRound className="h-5 w-5" /> Siblings Information
+                          Siblings Information
                         </h3>
                         <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                         <Button
@@ -973,12 +973,11 @@ export default function Profile() {
                 <div className=" w-full space-y-8">
                   <div className="flex items-center gap-3">
                     <h3 className="text-lg font-medium flex gap-2 items-center">
-                      <UserRound className="h-5 w-5" />
                       Change Password
                     </h3>
                     <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                   </div>
-                  <div className="grid grid-cols-2 gap-8">
+                  <div className="grid lg:grid-cols-2 gap-8">
                     <FormField
                       control={form.control}
                       name="Student.contactNumber"
@@ -1031,14 +1030,14 @@ export default function Profile() {
                     />
                   </div>
 
-                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
                 </div>
               )}
             </div>
           </Form>
           <AnimatePresence>
             {isChanged && (
-              <div className="sticky bottom-0 ">
+              <div className="sticky bottom-16 lg:bottom-0 ">
                 <motion.div
                   className="bg-gradient-to-t from-background via-background/50 to-transparent w-full flex justify-center items-center py-8"
                   initial={{ opacity: 0 }}

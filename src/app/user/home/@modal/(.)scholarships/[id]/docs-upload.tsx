@@ -231,14 +231,14 @@ export default function UploadDocs({
     <div className="h-full bg-background flex flex-col rounded-t-lg">
       <div className="flex-1 lg:p-4 p-2 space-y-10">
         {data.form && (
-          <div className="bg-muted px-4 py-3 md:py-2 rounded-md">
+          <div className="lg:bg-muted lg:px-4 py-3 md:py-2 rounded-md">
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
               <p className="text-sm">{data.title} Form</p>
 
               <Button
                 size="sm"
                 variant="outline"
-                className="min-w-24"
+                className="min-w-24 w-full"
                 onClick={() =>
                   downloadFile(data.form, `${data.title} Scholarship Form.pdf`)
                 }

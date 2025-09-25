@@ -102,7 +102,7 @@ export default function InterceptManageApplicationClient() {
     >
       <DrawerContent
         className={`lg:w-[56%] bg-card w-[98%] mx-auto outline-0 border-0 lg:p-1  ${
-          loading ? " lg:h-[75dvh] h-[68dvh]" : "h-auto"
+          loading ? " lg:h-[75dvh] h-[68dvh]" : "h-auto !max-h-[90dvh]"
         }`}
       >
         <DrawerHeader className="p-0">
@@ -122,13 +122,11 @@ export default function InterceptManageApplicationClient() {
             <EditApplication data={data[0]} setEdit={setEdit} />
           ) : (
             <div>
-              <div className="p-4 space-y-3">
-                <div className="p-4 bg-card rounded-md">
-                  <TitleReusable
-                    title={data[0]?.Scholarship.title}
-                    description={`Application Details for ${data[0].Scholarship.title}`}
-                  />
-                </div>
+              <div className="lg:p-4 p-2 space-y-3">
+                <TitleReusable
+                  title={data[0]?.Scholarship.title}
+                  description={`Application Details for ${data[0].Scholarship.title}`}
+                />
 
                 <div>
                   <Tabs
@@ -201,7 +199,7 @@ export default function InterceptManageApplicationClient() {
 
               <div className="sticky bottom-0 z-50">
                 <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-                <div className="flex gap-3 bg-background p-4">
+                <div className="flex gap-3 bg-background lg:p-4 p-2">
                   <Button
                     className="flex-1"
                     onClick={() => setEdit(true)}

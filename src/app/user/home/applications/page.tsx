@@ -3,9 +3,15 @@ import { AnimatePresence, motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
+  Ban,
   Calendar,
+  CheckCheck,
+  CircleX,
+  Mic,
   MoreHorizontal,
   TextSearch,
+  UserRound,
+  UserRoundMinus,
   Wallet,
 } from "lucide-react";
 
@@ -149,7 +155,7 @@ export default function ClientScholarship() {
                     prefetch
                     scroll={false}
                   >
-                    <div className="relative rounded-lg bg-background ">
+                    <div className="relative rounded-lg bg-background overflow-hidden">
                       <img
                         className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
                           status === "EXPIRED" ? "" : ""
@@ -161,22 +167,35 @@ export default function ClientScholarship() {
                         <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
                           {meow.status && (
                             <span
-                              className={`absolute top-3 right-0 text-center pl-4 pr-6 py-2 rounded-l-lg flex items-center gap-2 text-sm font-medium ${
+                              className={`absolute  right-0 text-center pl-5 pr-5 py-2 rounded-bl-lg flex items-center gap-2 text-sm font-medium text-gray-200 tracking-wide ${
                                 meow.status === "BLOCKED"
-                                  ? "bg-gray-700"
+                                  ? " bg-black/80"
                                   : meow.status === "APPROVED"
-                                  ? "bg-green-800"
+                                  ? " bg-green-900/90"
                                   : meow.status === "PENDING"
-                                  ? "bg-amber-700"
+                                  ? "bg-yellow-700/90"
                                   : meow.status === "INTERVIEW"
-                                  ? "bg-blue-700"
+                                  ? "bg-blue-800/90"
                                   : meow.status === "DECLINED"
-                                  ? "bg-red-700"
+                                  ? "bg-red-800/90"
                                   : ""
                               }`}
                             >
                               {" "}
                               {meow.status}
+                              {/* {meow.status === "BLOCKED" ? (
+                                <CircleX size={17} />
+                              ) : meow.status === "APPROVED" ? (
+                                <CheckCheck size={17} />
+                              ) : meow.status === "PENDING" ? (
+                                <UserRoundMinus size={17} />
+                              ) : meow.status === "INTERVIEW" ? (
+                                <Mic size={17} />
+                              ) : meow.status === "DECLINED" ? (
+                                <Ban size={17} />
+                              ) : (
+                                ""
+                              )} */}
                             </span>
                           )}
 
@@ -192,7 +211,7 @@ export default function ClientScholarship() {
                           <div className="flex items-start justify-start">
                             <div className="flex-1 lg:space-y-1">
                               <div className="flex justify-between items-center">
-                                <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight">
+                                <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight line-clamp-1">
                                   {meow.Scholarship.title}
                                 </h3>
                                 <Badge
@@ -209,7 +228,7 @@ export default function ClientScholarship() {
                           </div>
 
                           <div className="flex items-center justify-between text-sm text-muted-foreground ">
-                            <div className="space-x-2">
+                            <div className="flex gap-1.5 items-center">
                               {meow.Scholarship?.deadline &&
                               new Date(meow.Scholarship?.deadline).getTime() <
                                 Date.now() ? (
@@ -238,8 +257,6 @@ export default function ClientScholarship() {
                                 </Badge>
                               )} */}
                             <span>
-                              {meow.Scholarship.phase > 1 &&
-                                getPhaseLabel(meow.Scholarship.phase)}{" "}
                               Deadline:{" "}
                               {format(meow.Scholarship.deadline, "MM/dd/yy")}
                             </span>

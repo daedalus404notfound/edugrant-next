@@ -81,7 +81,7 @@ export function DragAndDropArea({
         >
           <input {...getInputProps()} />
           <div className="z-10 relative size-15 flex justify-center items-center">
-            <BGPattern variant="grid" mask="fade-edges" />
+            {/* <BGPattern variant="grid" mask="fade-edges" /> */}
             <Upload />
           </div>
 

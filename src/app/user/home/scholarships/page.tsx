@@ -13,6 +13,7 @@ import {
   Lock,
   PhilippinePeso,
   TextSearch,
+  UserRoundCheck,
 } from "lucide-react";
 import { TourProvider } from "@/components/tour/tour-provider";
 import { TourStep } from "@/components/tour/tour-step";
@@ -252,11 +253,11 @@ export default function ClientScholarship() {
                   const findMatch = user?.Student.Application.find(
                     (meow) => meow.scholarshipId === scholarship?.scholarshipId
                   );
-                  const isNotRenew =
-                    user?.Student.Application.find(
-                      (meow) =>
-                        meow.scholarshipId === scholarship?.scholarshipId
-                    )?.status !== "RENEW";
+                  // const isNotRenew =
+                  //   user?.Student.Application.find(
+                  //     (meow) =>
+                  //       meow.scholarshipId === scholarship?.scholarshipId
+                  //   )?.status !== "RENEW";
                   return (
                     <motion.div
                       key={scholarship.scholarshipId}
@@ -276,7 +277,7 @@ export default function ClientScholarship() {
                         scroll={false}
                         key={scholarship.scholarshipId}
                       >
-                        <div className="relative rounded-lg bg-background ">
+                        <div className="relative rounded-lg bg-background overflow-hidden">
                           <img
                             className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
                               status === "EXPIRED" ? "" : ""
@@ -286,15 +287,15 @@ export default function ClientScholarship() {
                           />
                           <div className="relative z-10">
                             <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
-                              {findMatch && isNotRenew && (
-                                <div className="absolute z-20 inset-0 bg-black/60 flex justify-center items-center">
-                                  <span className="absolute top-3 right-0 bg-black/40 text-center pl-4 pr-6 py-2 rounded-l-lg flex items-center gap-2 text-sm font-medium">
+                              {/* isNotRenew{" "} */}
+                              {findMatch && (
+                                <div className="absolute z-20 inset-0 dark:bg-black/60 bg-black/50  flex justify-center items-center">
+                                  <span className="absolute right-0 top-0 dark:bg-black/40 bg-white/80 text-center pl-5 pr-5 py-2 rounded-bl-lg flex items-center gap-2 text-sm font-medium tracking-wide">
                                     {" "}
-                                    Applied
+                                    Applied <UserRoundCheck size={17} />
                                   </span>
                                 </div>
                               )}
-
                               <img
                                 className={`h-full w-full object-cover ${
                                   status === "EXPIRED" ? "" : ""
@@ -307,7 +308,7 @@ export default function ClientScholarship() {
                               <div className="flex items-start justify-start">
                                 <div className="flex-1 lg:space-y-1">
                                   <div className="flex justify-between items-center">
-                                    <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight">
+                                    <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight line-clamp-1">
                                       {scholarship.title}
                                     </h3>
                                     <Badge
@@ -325,8 +326,7 @@ export default function ClientScholarship() {
 
                               <div className="flex items-center justify-between text-sm text-muted-foreground ">
                                 <div className="space-x-2">
-                                  {(status === "ACTIVE" ||
-                                    status === "RENEW") && (
+                                  {status === "ACTIVE" && (
                                     <Badge className="bg-green-800 tracking-wide text-gray-200">
                                       ACTIVE
                                     </Badge>
@@ -354,8 +354,8 @@ export default function ClientScholarship() {
                                 </Badge>
                               )} */}
                                 <span className="capitalize">
-                                  {scholarship.phase > 1 &&
-                                    `${getPhaseLabel(scholarship.phase)}`}{" "}
+                                  {/* {scholarship.phase > 1 &&
+                                    `${getPhaseLabel(scholarship.phase)}`}{" "} */}
                                   Deadline:{" "}
                                   {format(scholarship.deadline, "MM/dd/yy")}
                                 </span>
