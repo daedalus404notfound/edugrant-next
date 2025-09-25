@@ -8,6 +8,7 @@ import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
+import { getPhaseLabel } from "@/lib/phaseLevel";
 export const columns: ColumnDef<ApplicationFormData>[] = [
   {
     id: "select",
@@ -116,7 +117,7 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
   {
     accessorFn: (row) => ({
       title: row.Scholarship?.title,
-      renew: row.Scholarship?.renew,
+      renew: row.Scholarship?.phase,
     }),
     id: "title",
     header: ({ column }) => (
@@ -125,13 +126,15 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     cell: ({ row }) => {
       const value = row.getValue("title") as {
         title?: string;
-        renew?: string;
+        phase?: number;
       };
       return (
         <div className="flex items-center gap-2">
           <span className="capitalize">{value?.title}</span>
-          {value?.renew && (
-            <Badge className="bg-blue-800 text-gray-200">RENEWAL</Badge>
+          {value?.phase && (
+            <Badge className="bg-blue-800 text-gray-200">
+              {getPhaseLabel(value.phase)}
+            </Badge>
           )}
         </div>
       );
