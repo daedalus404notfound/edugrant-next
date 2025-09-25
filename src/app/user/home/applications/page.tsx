@@ -21,6 +21,7 @@ import TitleReusable from "@/components/ui/title";
 import { Skeleton } from "@/components/ui/skeleton";
 import NoDataFound from "@/components/ui/nodata";
 import Link from "next/link";
+import { getPhaseLabel } from "@/lib/phaseLevel";
 
 export default function ClientScholarship() {
   const [currentPage] = useState(1);
@@ -220,9 +221,9 @@ export default function ClientScholarship() {
                                   ACTIVE
                                 </Badge>
                               )}
-                              {meow.Scholarship.renew === true && (
+                              {meow.Scholarship.phase > 1 && (
                                 <Badge className="bg-blue-800 text-gray-200">
-                                  RENEWAL
+                                  {getPhaseLabel(meow.Scholarship.phase)}
                                 </Badge>
                               )}
                             </div>
@@ -237,7 +238,8 @@ export default function ClientScholarship() {
                                 </Badge>
                               )} */}
                             <span>
-                              {meow.Scholarship.renew === true && "Renewal"}{" "}
+                              {meow.Scholarship.phase > 1 &&
+                                getPhaseLabel(meow.Scholarship.phase)}{" "}
                               Deadline:{" "}
                               {format(meow.Scholarship.deadline, "MM/dd/yy")}
                             </span>
