@@ -1,7 +1,5 @@
 "use client";
 
-import useScholarshipData from "@/hooks/admin/getScholarship";
-import { format } from "date-fns";
 import {
   Dialog,
   DialogContent,
@@ -60,8 +58,8 @@ export default function ExportCsvScholarship({ status }: { status?: string }) {
     institute: meow.Student?.institute,
 
     // Special conditions
-    PWD: meow.Student?.PWD === true ? "Yes" : "No",
-    indigenous: meow.Student?.indigenous === true ? "Yes" : "No",
+    PWD: meow.Student?.PWD ? meow.Student?.PWD : "No",
+    indigenous: meow.Student?.indigenous ? meow.Student?.indigenous : "No",
 
     // Scholarship
     scholarship: meow.Scholarship?.title,
