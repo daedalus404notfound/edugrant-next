@@ -102,7 +102,7 @@ export default function InterceptManageApplicationClient() {
     >
       <DrawerContent
         className={`lg:w-[56%] bg-card w-[98%] mx-auto outline-0 border-0 lg:p-1  ${
-          loading ? " lg:h-[75dvh] h-[68dvh]" : " lg:h-[95dvh] h-[90dvh]"
+          loading ? " lg:h-[75dvh] h-[68dvh]" : "h-auto"
         }`}
       >
         <DrawerHeader className="p-0">
@@ -115,7 +115,7 @@ export default function InterceptManageApplicationClient() {
           HandleCloseDrawer={HandleCloseDrawer}
           scholarship={false}
         />
-        <div className="relative h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md">
+        <div className=" h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md">
           {loading ? (
             <ScholarshipModalLoading />
           ) : edit ? (
@@ -123,10 +123,12 @@ export default function InterceptManageApplicationClient() {
           ) : (
             <div>
               <div className="p-4 space-y-3">
-                <TitleReusable
-                  title={data[0]?.Scholarship.title}
-                  description={`Application Details for ${data[0].Scholarship.title}`}
-                />
+                <div className="p-4 bg-card rounded-md">
+                  <TitleReusable
+                    title={data[0]?.Scholarship.title}
+                    description={`Application Details for ${data[0].Scholarship.title}`}
+                  />
+                </div>
 
                 <div>
                   <Tabs

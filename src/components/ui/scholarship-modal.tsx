@@ -75,7 +75,7 @@ export default function ScholarshipModal({
                   </Badge>
                 )}
                 {data?.phase && data?.phase > 1 && (
-                  <Badge className="bg-blue-800 text-gray-200 uppercase">
+                  <Badge className="bg-blue-800 text-gray-200 uppercase tracking-wide">
                     {getPhaseLabel(data?.phase)}
                   </Badge>
                 )}
@@ -207,7 +207,7 @@ export default function ScholarshipModal({
                           : doc.requirementType === "optional"
                           ? "bg-blue-700/20 text-blue-700"
                           : ""
-                      } capitalize `}
+                      } capitalize tracking-wide `}
                     >
                       {doc.requirementType}
                     </Badge>

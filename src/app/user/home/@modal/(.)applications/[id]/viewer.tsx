@@ -125,7 +125,7 @@ export default function ApplicationViewer({
               )}
             </TransformWrapper>
           </div>
-        ) : (
+        ) : fileFormat === "DOCX" || fileFormat === "PDF" ? (
           <div className="relative h-full w-full">
             {loading && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-20">
@@ -137,8 +137,6 @@ export default function ApplicationViewer({
               key={fileUrl}
               className="h-full w-full"
               src={
-                fileFormat === "JPG" ||
-                fileFormat === "PNG" ||
                 fileFormat === "PDF"
                   ? fileUrl
                   : `https://docs.google.com/viewer?url=${encodeURIComponent(
@@ -156,6 +154,10 @@ export default function ApplicationViewer({
             >
               ✕
             </Button> */}
+          </div>
+        ) : (
+          <div className=" flex justify-center items-center">
+            MISSING DOCUMENT
           </div>
         )}
       </DialogContent>

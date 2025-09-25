@@ -27,7 +27,6 @@ export default function DocsStudent({ data }: DocsStudentProps) {
   };
   return (
     <div className="flex-1 space-y-1">
-     
       <div className="divide-y">
         {lastPhase &&
           lastPhase.map((meow) => {
@@ -47,17 +46,24 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                   />
                   <div className="flex-1 flex flex-col lg:justify-end justify-between gap-5 relative">
                     <div>
-                      <div className="flex gap-3 capitalize">
+                      <div className="flex gap-3 items-center justify-between capitalize">
                         <p className="font-medium lg:text-base text-sm">
                           {meow.document}
                         </p>
-                        <Badge variant="outline" className="hidden lg:block">
-                          {meow.requirementType}
-                        </Badge>
-                      </div>
 
+                        {meow.fileUrl && (
+                          <Badge className="hidden lg:block tracking-wide uppercase bg-blue-800/20 text-blue-600">
+                            SUBMITTED
+                          </Badge>
+                        )}
+                        {!meow.fileUrl && (
+                          <Badge className="hidden lg:block tracking-wide uppercase bg-red-800/20 text-red-600">
+                            MISSING
+                          </Badge>
+                        )}
+                      </div>
                       <p className="uppercase lg:text-sm text-xs text-muted-foreground lg:mt-1">
-                        {meow.fileFormat}
+                        {meow.fileFormat ? meow.fileFormat : "N/A"}
                       </p>
                     </div>
 
