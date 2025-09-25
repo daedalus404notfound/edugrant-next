@@ -30,7 +30,7 @@ export default function ScholarshipModal({
   const lastPhase = data?.documents?.[lastPhaseKey] ?? [];
   const lastPhaseLength = Object.keys(lastPhase).length;
   return (
-    <div className="relative h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md flex flex-col">
+    <div className="relative h-full w-full flex flex-col">
       <div className="absolute top-0 left-0 lg:h-86 h-60 w-full opacity-30   mask-gradient flex">
         <img
           className="w-full h-full object-cover blur-md "

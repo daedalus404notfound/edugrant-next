@@ -75,64 +75,68 @@ export default function InterceptManageScholarship() {
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
         <ModalHeader HandleCloseDrawer={HandleCloseDrawer} />
-
-        {mode === "edit" ? (
-          loading ? (
-            <ScholarshipModalLoading />
-          ) : (
-            data && (
-              <EditScholarship
-                data={data}
-                HandleCloseDrawer={HandleCloseDrawer}
-              />
+        <div className="relative h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md flex flex-col">
+          {mode === "edit" ? (
+            loading ? (
+              <ScholarshipModalLoading />
+            ) : (
+              data && (
+                <EditScholarship
+                  data={data}
+                  HandleCloseDrawer={HandleCloseDrawer}
+                />
+              )
             )
-          )
-        ) : mode === "details" ? (
-          loading ? (
-            <ScholarshipModalLoading />
-          ) : (
-            data && (
-              <>
-                <ScholarshipModal data={data} />
-                <div className="p-4 sticky bottom-0 bg-card border-t">
-                  <div className="flex gap-3">
-                    <Button onClick={() => setMode("edit")} className="flex-1">
-                      <Edit /> Edit
-                    </Button>
+          ) : mode === "details" ? (
+            loading ? (
+              <ScholarshipModalLoading />
+            ) : (
+              data && (
+                <>
+                  <ScholarshipModal data={data} />
+                  <div className="p-4 sticky bottom-0 bg-card border-t">
+                    <div className="flex gap-3">
+                      <Button
+                        onClick={() => setMode("edit")}
+                        className="flex-1"
+                      >
+                        <Edit /> Edit
+                      </Button>
 
-                    <DeleteDialog
-                      open={openAlert}
-                      onOpenChange={setOpenAlert}
-                      onConfirm={onSubmit}
-                      loading={deleteLoading}
-                      title="Delete application?"
-                      description="This will permanently delete application and cannot be undone."
-                      confirmText="Delete All"
-                      cancelText="Keep"
-                      trigger={
-                        <Button
-                          className="flex-1"
-                          variant="destructive"
-                          onClick={() => setOpenAlert(true)}
-                        >
-                          <Trash2 /> Delete
-                        </Button>
-                      }
-                    />
+                      <DeleteDialog
+                        open={openAlert}
+                        onOpenChange={setOpenAlert}
+                        onConfirm={onSubmit}
+                        loading={deleteLoading}
+                        title="Delete application?"
+                        description="This will permanently delete application and cannot be undone."
+                        confirmText="Delete All"
+                        cancelText="Keep"
+                        trigger={
+                          <Button
+                            className="flex-1"
+                            variant="destructive"
+                            onClick={() => setOpenAlert(true)}
+                          >
+                            <Trash2 /> Delete
+                          </Button>
+                        }
+                      />
+                    </div>
                   </div>
-                </div>
-              </>
+                </>
+              )
             )
-          )
-        ) : mode === "renewal" ? (
-          loading ? (
-            <ScholarshipModalLoading />
+          ) : mode === "renewal" ? (
+            loading ? (
+              <ScholarshipModalLoading />
+            ) : (
+              data && <RedeployScholarship data={data} />
+            )
           ) : (
-            data && <RedeployScholarship data={data} />
-          )
-        ) : (
-          ""
-        )}
+            ""
+          )}
+        </div>
       </DrawerContent>
     </Drawer>
   );

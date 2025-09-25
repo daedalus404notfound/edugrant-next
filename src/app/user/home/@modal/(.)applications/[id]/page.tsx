@@ -42,10 +42,9 @@ import { Separator } from "@/components/ui/separator";
 import { useUserStore } from "@/store/useUserStore";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import DocsStudent from "./docs";
-import ScholarDetails from "./scholarship";
 import EditApplication from "./edi-application";
 import { Skeleton } from "@/components/ui/skeleton";
-import DocsStudentRenew from "./doc-renew";
+import ScholarshipModal from "@/components/ui/scholarship-modal";
 
 export default function InterceptManageApplicationClient() {
   const [activeSection, setActiveSection] = useState("documents");
@@ -159,113 +158,6 @@ export default function InterceptManageApplicationClient() {
         ) : (
           <>
             <div className=" flex-1 flex flex-col bg-background overflow-auto rounded-t-lg space-y-2 no-scrollbar">
-              {/* <div className="relative">
-                <div className="absolute top-0 left-0 lg:h-70 h-60 w-full opacity-30   mask-gradient flex">
-                  <img
-                    className="w-full h-full object-cover blur-md "
-                    src={data[0]?.Scholarship.cover}
-                    alt=""
-                  />
-                </div>
-                <div className="relative flex justify-center items-center ">
-                  <div className="absolute inset-0border-b-2 border-black bg-card" />
-                  <div className="absolute left-2 -bottom-18 z-10 lg:px-6  px-2 flex  items-end gap-3 ">
-                    <Avatar className="lg:size-30 size-20 border-background border-2 shadow-md">
-                      <AvatarImage
-                        className="object-cover"
-                        src={data[0]?.Scholarship.logo}
-                      />
-                      <AvatarFallback>
-                        {data[0]?.Scholarship.Scholarship_Provider?.name.slice(
-                          0,
-                          2
-                        )}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="">
-                      <motion.span
-                        className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-                                                 flex items-center gap-1.5 lg:text-2xl text-xl font-semibold tracking-tight
-                                                "
-                        initial={{ backgroundPosition: "200% 0" }}
-                        animate={{ backgroundPosition: "-200% 0" }}
-                        transition={{
-                          repeat: Infinity,
-                          repeatType: "loop",
-                          duration: 7,
-                          ease: "linear",
-                        }}
-                      >
-                        {data[0]?.Scholarship.title}
-                        {data[0]?.Scholarship.deadline &&
-                        new Date(data[0].Scholarship.deadline).getTime() <
-                          Date.now() ? (
-                          <Badge className="bg-red-800 text-gray-200 tracking-wide">
-                            EXPIRED
-                          </Badge>
-                        ) : (
-                          <Badge className="bg-green-800 text-gray-200 tracking-wide">
-                            ACTIVE
-                          </Badge>
-                        )}
-                        {data[0]?.Scholarship.renew === true && (
-                          <Badge className="bg-blue-800 text-gray-200 tracking-wide">
-                            RENEWAL
-                          </Badge>
-                        )}
-                      </motion.span>
-                      <p className="text-muted-foreground text-sm">
-                        by {data[0]?.Scholarship.Scholarship_Provider?.name}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="italic text-sm text-muted-foreground absolute right-2 -bottom-18 z-10 lg:px-6  px-2 ">
-                    Posted on {""}
-                    {data[0]?.Scholarship.dateCreated &&
-                      format(data[0]?.Scholarship.dateCreated, "PPP")}
-                  </p>
-                  {data[0]?.Scholarship.cover && (
-                    <img
-                      className="w-full lg:aspect-[16/3] aspect-[16/9]  object-cover   rounded-lg shadow-md"
-                      src={data[0]?.Scholarship.cover}
-                      alt=""
-                    />
-                  )}
-
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className="absolute z-5  !bg-black/60 !text-gray-200"
-                        size="sm"
-                      >
-                        View <Maximize />
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="lg:w-3/4 w-full p-4">
-                      <img
-                        className="h-full w-full"
-                        src={data[0]?.Scholarship.cover}
-                        alt=""
-                      />
-                      <Link
-                        className="w-full"
-                        href={
-                          (data[0]?.Scholarship.cover &&
-                            data[0]?.Scholarship.cover) ||
-                          ""
-                        }
-                        target="_blank"
-                      >
-                        <Button variant="secondary" className="w-full">
-                          <Download />
-                          Download
-                        </Button>
-                      </Link>
-                    </DialogContent>
-                  </Dialog>
-                </div>
-              </div> */}
               <div className="p-4 space-y-8">
                 <TitleReusable
                   title={data[0]?.Scholarship.title}
@@ -352,8 +244,8 @@ export default function InterceptManageApplicationClient() {
                 {activeSection === "documents" && (
                   <DocsStudent data={data[0]} />
                 )}
-                {activeSection === "scholarship" && (
-                  <ScholarDetails data={data[0]} />
+                {activeSection === "scholarship" && data[0] && (
+                  <ScholarshipModal data={data[0].Scholarship} />
                 )}
               </div>
             </div>
