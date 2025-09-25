@@ -74,6 +74,7 @@ export default function EditApplication({
   const user = useUserStore((state) => state.user);
   const userId = user?.accountId;
   const scholarId = data.scholarshipId;
+  const applicationId = data.applicationId;
   const [completedCount, setCompletedCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [disable, setDisable] = useState(false);
@@ -129,6 +130,7 @@ export default function EditApplication({
       const formData = new FormData();
       formData.append("accountId", String(userId));
       formData.append("scholarshipId", String(scholarId));
+      formData.append("applicationId", String(applicationId));
 
       Object.entries(data).forEach(([label, files]) => {
         // Check if files exists and has length > 0
@@ -174,7 +176,7 @@ export default function EditApplication({
   };
 
   return (
-    <div className="h-full bg-background flex flex-col rounded-t-lg">
+    <div className="h-full flex flex-col">
       <div className="flex-1 lg:p-4 p-2 space-y-10">
         {data.Scholarship.form && (
           <div className="bg-muted px-4 py-3 md:py-2 rounded-md">
@@ -276,24 +278,6 @@ export default function EditApplication({
       <div className="sticky bottom-0 ">
         <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
         <div className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60  lg:p-4 p-2">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="flex-1">
-              <div className="flex items-center justify-between text-sm mb-2">
-                <span className="font-medium">Progress</span>
-                <span className="font-medium">
-                  {completedCount} out of {requiredDocumentsCount}{" "}
-                  <span className="hidden lg:block">
-                    required documents to unlock submit
-                  </span>
-                </span>
-              </div>
-              <Progress
-                value={(completedCount / requiredDocumentsCount) * 100}
-                className="h-2"
-              />
-            </div>
-          </div>
-
           <div className="flex flex-col lg:flex-row gap-3">
             <DeleteDialog
               open={openAlert}
@@ -308,7 +292,7 @@ export default function EditApplication({
               cancelText="Cancel"
               trigger={
                 <Button
-                  disabled={completedCount < requiredDocumentsCount || disable}
+                  // disabled={completedCount < requiredDocumentsCount || disable}
                   className="flex-1"
                 >
                   <Upload className="h-4 w-4 mr-2" />

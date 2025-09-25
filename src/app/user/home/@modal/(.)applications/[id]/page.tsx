@@ -42,9 +42,11 @@ import { Separator } from "@/components/ui/separator";
 import { useUserStore } from "@/store/useUserStore";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import DocsStudent from "./docs";
-import EditApplication from "./edi-application";
+import EditApplication from "./update-application-docs";
 import { Skeleton } from "@/components/ui/skeleton";
 import ScholarshipModal from "@/components/ui/scholarship-modal";
+import ModalHeader from "@/components/ui/modal-header";
+import ScholarshipModalLoading from "@/components/ui/scholarship-modal-loading";
 
 export default function InterceptManageApplicationClient() {
   const [activeSection, setActiveSection] = useState("documents");
@@ -109,76 +111,22 @@ export default function InterceptManageApplicationClient() {
             <DrawerDescription>This action cannot be undone.</DrawerDescription>
           </div>
         </DrawerHeader>
-        <div className="flex items-center justify-between pb-2">
-          <div className="flex items-center gap-3">
-            <Button
-              className="relative justify-start"
-              variant="ghost"
-              size="sm"
-            >
-              <GraduationCap />
-              Application Details
-            </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              className="ghost"
-              variant="ghost"
-              size="sm"
-              onClick={() => HandleCloseDrawer(false)}
-            >
-              <X />
-            </Button>
-          </div>
-        </div>
-        {loading ? (
-          <div className="h-full w-full bg-background">
-            <Skeleton className="flex-1 lg:aspect-[16/5] aspect-[16/9] w-full" />
-            <div className="lg:space-y-15 space-y-10 lg:px-6 px-2 mt-5">
-              <div className="grid lg:grid-cols-2 grid-cols-1 gap-5">
-                <div className="space-y-3">
-                  <Skeleton className="h-11 w-full" />
-                  <Skeleton className="h-20 w-full" />
-                  <Skeleton className="h-20 w-full" />
-                  <Skeleton className="h-20 w-full" />
-                </div>
-                <div className="flex flex-col gap-3">
-                  <Skeleton className="flex-1 w-full" />
-                  <Skeleton className="h-20 w-full" />
-                </div>
-              </div>
-              <div className="space-y-3">
-                <Skeleton className="h-20 w-full" />
-                <Skeleton className="h-20 w-full" />
-              </div>
-            </div>
-          </div>
-        ) : edit ? (
-          <EditApplication data={data[0]} setEdit={setEdit} />
-        ) : (
-          <>
-            <div className=" flex-1 flex flex-col bg-background overflow-auto rounded-t-lg space-y-2 no-scrollbar">
-              <div className="p-4 space-y-8">
+        <ModalHeader
+          HandleCloseDrawer={HandleCloseDrawer}
+          scholarship={false}
+        />
+        <div className="relative h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md">
+          {loading ? (
+            <ScholarshipModalLoading />
+          ) : edit ? (
+            <EditApplication data={data[0]} setEdit={setEdit} />
+          ) : (
+            <div>
+              <div className="p-4 space-y-3">
                 <TitleReusable
                   title={data[0]?.Scholarship.title}
                   description={`Application Details for ${data[0].Scholarship.title}`}
                 />
-                <Stepper defaultValue={2} className="items-start gap-4">
-                  {steps.map(({ step, title, description }) => (
-                    <StepperItem key={step} step={step} className="flex-1">
-                      <StepperTrigger className="w-full flex-col items-start gap-2 rounded">
-                        <StepperIndicator
-                          asChild
-                          className="bg-border h-1 w-full"
-                        >
-                          <span className="sr-only">{step}</span>
-                        </StepperIndicator>
-                        <StepperTitle>{title}</StepperTitle>
-                        <StepperDescription>{description}</StepperDescription>
-                      </StepperTrigger>
-                    </StepperItem>
-                  ))}
-                </Stepper>
 
                 <div>
                   <Tabs
@@ -248,21 +196,22 @@ export default function InterceptManageApplicationClient() {
                   <ScholarshipModal data={data[0].Scholarship} />
                 )}
               </div>
-            </div>
-            <div>
-              <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-              <div className="flex gap-3 bg-background p-4">
-                <Button
-                  className="flex-1"
-                  onClick={() => setEdit(true)}
-                  disabled={data[0]?.status !== "PENDING"}
-                >
-                  <PenLine /> Edit Documents
-                </Button>
+
+              <div className="sticky bottom-0 z-50">
+                <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+                <div className="flex gap-3 bg-background p-4">
+                  <Button
+                    className="flex-1"
+                    onClick={() => setEdit(true)}
+                    disabled={data[0]?.status !== "PENDING"}
+                  >
+                    <PenLine /> Edit Documents
+                  </Button>
+                </div>
               </div>
             </div>
-          </>
-        )}
+          )}
+        </div>
       </DrawerContent>
     </Drawer>
   );

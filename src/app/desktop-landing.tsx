@@ -21,7 +21,7 @@ import {
   Building,
 } from "lucide-react";
 import bascLogo from "@/assets/basclogo.png";
-import osas from "@/assets/osas.jpg";
+import osas from "@/assets/osasa.png";
 import bascImage from "@/assets/BASCjf5989_03 copy.jpg";
 import { AnimatePresence, motion } from "motion/react";
 import {

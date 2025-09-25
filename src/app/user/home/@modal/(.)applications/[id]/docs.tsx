@@ -27,15 +27,15 @@ export default function DocsStudent({ data }: DocsStudentProps) {
   };
   return (
     <div className="flex-1 space-y-1">
-      <div className="flex justify-between items-center py-4"></div>
-      <div className="grid gap-8 grid-cols-1">
+     
+      <div className="divide-y">
         {lastPhase &&
           lastPhase.map((meow) => {
             const rejectMessage =
               data?.Application_Decision?.message?.[meow.document] || null;
 
             return (
-              <div key={meow.document} className="lg:py-10 py-8 space-y-2">
+              <div key={meow.document} className="lg:py-8 py-6 space-y-2">
                 <div className="flex lg:gap-5 gap-3">
                   <ApplicationViewer
                     fileFormat={mimeToLabelMap[meow.fileFormat]}

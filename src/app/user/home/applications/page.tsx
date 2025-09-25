@@ -222,7 +222,7 @@ export default function ClientScholarship() {
                                 </Badge>
                               )}
                               {meow.Scholarship.phase > 1 && (
-                                <Badge className="bg-blue-800 text-gray-200">
+                                <Badge className="bg-blue-800 text-gray-200 uppercase">
                                   {getPhaseLabel(meow.Scholarship.phase)}
                                 </Badge>
                               )}

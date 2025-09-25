@@ -8,7 +8,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { ZoomIn, ZoomOut, RotateCw, RefreshCw, Loader } from "lucide-react";
+import {
+  ZoomIn,
+  ZoomOut,
+  RotateCw,
+  RefreshCw,
+  Loader,
+  PackageOpen,
+  SquareArrowOutUpRight,
+} from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import GlassFolder from "@/components/ui/folder";
 import { Textarea } from "@/components/ui/textarea";
@@ -36,7 +44,7 @@ export default function ApplicationViewer({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
-        <GlassFolder />
+        <GlassFolder icon={<SquareArrowOutUpRight />} />
       </DialogTrigger>
       <DialogContent className="h-full lg:w-3/4 w-full" showCloseButton={true}>
         <DialogHeader className="sr-only">
