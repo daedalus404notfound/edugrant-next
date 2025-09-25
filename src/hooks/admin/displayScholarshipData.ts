@@ -21,7 +21,7 @@ export const displayScholarshipSchema = z.object({
   declined: z.number().optional(),
   pending: z.number().optional(),
   archived: z.boolean().optional(),
-  renew: z.boolean().optional(),
+  phase: z.number(),
   cover: z.any().optional(),
   dateCreated: z.date().optional(),
   deadline: z.date({
