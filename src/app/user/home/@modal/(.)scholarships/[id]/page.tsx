@@ -87,7 +87,9 @@ export default function InterceptManageScholarshipClient() {
                     disabled={
                       (data?.deadline &&
                         new Date(data.deadline).getTime() < Date.now()) ||
-                      findMatch?.status === "PENDING"
+                      findMatch?.status === "APPROVED" ||
+                      findMatch?.status === "PENDING" ||
+                      findMatch?.status === "INTERVIEW"
                     }
                   >
                     <Upload /> Apply Scholarship
