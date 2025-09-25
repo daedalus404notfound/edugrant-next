@@ -90,7 +90,7 @@ export default function UploadDocs({
 
   const allDocuments = Object.values(lastPhase);
 
-  const requiredDocumentsCount = Object.values(lastPhase).filter(
+  const requiredDocumentsCount = lastPhase.filter(
     (doc) => doc.requirementType === "required"
   ).length;
 
@@ -99,7 +99,7 @@ export default function UploadDocs({
 
   // Initialize default values
   const defaultValues: Record<string, File[]> = {};
-  allDocuments.forEach((doc) => {
+  lastPhase.forEach((doc) => {
     defaultValues[doc.label] = [];
   });
 
@@ -113,7 +113,7 @@ export default function UploadDocs({
     form.trigger(label as keyof FormData);
 
     // Count how many REQUIRED document fields are filled (not optional ones)
-    const filledRequired = Object.values(lastPhase).filter((doc) => {
+    const filledRequired = lastPhase.filter((doc) => {
       // Only count required documents
       if (doc.requirementType !== "required") return false;
 
