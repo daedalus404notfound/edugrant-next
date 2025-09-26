@@ -107,7 +107,7 @@ export default function DynamicHeaderAdmin({
   const [openDark, setOpenDark] = useState(false);
   const [loading, setLoading] = useState(false);
   return (
-    <header className="flex w-full z-30 items-center justify-between  backdrop-blur-sm sticky top-0 p-4">
+    <header className="flex w-full z-30 items-center justify-between  backdrop-blur-sm sticky top-0 p-4 rounded-lg">
       <div className="flex  shrink-0 items-center gap-2">
         <SidebarTrigger className="-ml-1 lg:flex hidden" />
         <Separator
