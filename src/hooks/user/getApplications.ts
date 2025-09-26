@@ -2,7 +2,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-import { ApplicationFormData } from "../zod/application";
+import {
+  ApplicationFormData,
+  UpdatedApplicationFormData,
+} from "../zod/application";
 import { MetaTypes } from "../zodMeta";
 import { ApiErrorResponse } from "../admin/postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
@@ -36,7 +39,10 @@ export default function useClientApplications({
   const [data, setData] = useState<ApplicationFormData[]>([]);
   const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
   const [loading, setLoading] = useState(true);
-
+  const [updateDocument, setUpdateDocument] =
+    useState<UpdatedApplicationFormData | null>(null);
+  console.log("data", data[0]?.submittedDocuments);
+  console.log("updated", updateDocument?.submittedDocuments);
   useEffect(
     function () {
       async function fetchApplications() {
@@ -82,5 +88,20 @@ export default function useClientApplications({
     [page, pageSize, sortBy, order, status]
   );
 
-  return { data, loading, meta };
+  useEffect(() => {
+    if (updateDocument && data.length > 0) {
+      setData((prev) =>
+        prev.map((app) =>
+          app.applicationId === updateDocument.applicationId
+            ? {
+                ...app,
+                submittedDocuments: updateDocument.submittedDocuments,
+              }
+            : app
+        )
+      );
+    }
+  }, [updateDocument]);
+
+  return { data, loading, meta, setUpdateDocument };
 }

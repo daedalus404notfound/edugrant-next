@@ -52,5 +52,18 @@ const ApplicationSchema = z.object({
   submittedDocuments: z.record(z.string(), z.array(SubmittedDocumentSchema)),
   supabasePath: z.record(z.string(), supabasePathSchema),
 });
+
+const UpdatedApplicationSchema = z.object({
+  applicationId: z.number(),
+  scholarshipId: z.number(),
+  ownerId: z.number(),
+  status: z.string(),
+  dateCreated: z.string().datetime(),
+  supabasePath: z.array(z.string()),
+
+  submittedDocuments: z.record(z.string(), z.array(SubmittedDocumentSchema)),
+});
+
+export type UpdatedApplicationFormData = z.infer<typeof UpdatedApplicationSchema>;
 export type ApplicationFormData = z.infer<typeof ApplicationSchema>;
 export type SubmittedDocumentFormData = z.infer<typeof SubmittedDocumentSchema>;

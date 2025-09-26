@@ -9,34 +9,13 @@ import {
 } from "@/components/ui/drawer";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "motion/react";
 import { useIsMobile } from "@/hooks/use-mobile";
-
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import useClientApplications from "@/hooks/user/getApplications";
-
 import TitleReusable from "@/components/ui/title";
-import {
-  Ban,
-  CircleAlert,
-  CircleCheck,
-  Clock,
-  GraduationCap,
-  PenLine,
-  X,
-} from "lucide-react";
+import { Ban, CircleAlert, CircleCheck, Clock, PenLine, X } from "lucide-react";
 
-import {
-  Stepper,
-  StepperDescription,
-  StepperIndicator,
-  StepperItem,
-  StepperSeparator,
-  StepperTitle,
-  StepperTrigger,
-} from "@/components/ui/stepper";
-import { format } from "date-fns";
 import { Separator } from "@/components/ui/separator";
 
 import { useUserStore } from "@/store/useUserStore";
@@ -55,7 +34,7 @@ export default function InterceptManageApplicationClient() {
   const params = useParams();
   const [open, setOpen] = useState(true);
   const id = params.id as string;
-  const isMobile = useIsMobile();
+
   const user = useUserStore((state) => state.user);
   const userId = user?.accountId;
   const HandleCloseDrawer = (value: boolean) => {
@@ -66,7 +45,8 @@ export default function InterceptManageApplicationClient() {
       }, 300);
     }
   };
-  const { data, loading } = useClientApplications({
+
+  const { data, loading, setUpdateDocument } = useClientApplications({
     applicationId: id,
     userId: userId?.toString(),
   });
@@ -119,7 +99,11 @@ export default function InterceptManageApplicationClient() {
           {loading ? (
             <ScholarshipModalLoading />
           ) : edit ? (
-            <EditApplication data={data[0]} setEdit={setEdit} />
+            <EditApplication
+              data={data[0]}
+              setEdit={setEdit}
+              setUpdateDocument={setUpdateDocument}
+            />
           ) : (
             <div>
               <div className="lg:p-4 p-2 space-y-3">

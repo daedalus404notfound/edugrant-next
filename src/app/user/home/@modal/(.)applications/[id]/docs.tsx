@@ -18,6 +18,7 @@ export default function DocsStudent({ data }: DocsStudentProps) {
   const documentPhases = Object.keys(data?.submittedDocuments ?? {}).filter(
     (key) => key.startsWith("phase")
   );
+
   const documentPhasesLength = documentPhases.length;
   const lastPhaseKey = documentPhases[documentPhasesLength - 1];
   const lastPhase = data?.submittedDocuments?.[lastPhaseKey] ?? [];
@@ -100,19 +101,20 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                       </div>
                     )}
 
-                    {rejectMessageInterview?.status === "REJECTED" && !isMobile && (
-                      <div className="rounded-md px-4 py-3 bg-card">
-                        <p className="text-sm line-clamp-1 flex items-center">
-                          <TriangleAlert
-                            className="me-3 -mt-0.5 text-red-500"
-                            size={16}
-                            aria-hidden="true"
-                          />
-                          {rejectMessage?.comment ||
-                            "Document has been rejected"}
-                        </p>
-                      </div>
-                    )}
+                    {rejectMessageInterview?.status === "REJECTED" &&
+                      !isMobile && (
+                        <div className="rounded-md px-4 py-3 bg-card">
+                          <p className="text-sm line-clamp-1 flex items-center">
+                            <TriangleAlert
+                              className="me-3 -mt-0.5 text-red-500"
+                              size={16}
+                              aria-hidden="true"
+                            />
+                            {rejectMessage?.comment ||
+                              "Document has been rejected"}
+                          </p>
+                        </div>
+                      )}
 
                     {data?.status === "PENDING" &&
                       meow.fileUrl &&

@@ -30,7 +30,10 @@ import { Separator } from "@/components/ui/separator";
 import TitleReusable from "@/components/ui/title";
 import { ApiErrorResponse } from "@/hooks/admin/postReviewedHandler";
 import { downloadFile } from "@/lib/downloadUtils";
-import { ApplicationFormData } from "@/hooks/zod/application";
+import {
+  ApplicationFormData,
+  UpdatedApplicationFormData,
+} from "@/hooks/zod/application";
 
 export const createFormSchema = (documents: documentFormData[]) => {
   const schemaShape: Record<string, z.ZodType<any>> = {};
@@ -61,10 +64,12 @@ export const createFormSchema = (documents: documentFormData[]) => {
 type EditApplicationTypes = {
   data: ApplicationFormData;
   setEdit: (edit: boolean) => void;
+  setUpdateDocument: (update: UpdatedApplicationFormData | null) => void;
 };
 export default function EditApplication({
   data,
   setEdit,
+  setUpdateDocument,
 }: EditApplicationTypes) {
   const { addApplication } = useUserStore.getState();
   const user = useUserStore((state) => state.user);
@@ -155,7 +160,8 @@ export default function EditApplication({
           title: "Upload successful!",
           description: " Your documents have been submitted successfully.",
         });
-
+        setUpdateDocument(res.data.updatedApplication);
+        setEdit(false);
         setLoading(false);
       }
     } catch (error) {

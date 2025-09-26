@@ -1,20 +1,6 @@
 "use client";
 import { AnimatePresence, motion } from "motion/react";
-import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  Ban,
-  Calendar,
-  CheckCheck,
-  CircleX,
-  MessageSquare,
-  Mic,
-  MoreHorizontal,
-  TextSearch,
-  UserRound,
-  UserRoundMinus,
-  Wallet,
-} from "lucide-react";
+import { TextSearch } from "lucide-react";
 
 import { useState } from "react";
 import { Tabs } from "@/components/ui/vercel-tabs";
