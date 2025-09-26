@@ -7,6 +7,7 @@ import {
   Calendar,
   CheckCheck,
   CircleX,
+  MessageSquare,
   Mic,
   MoreHorizontal,
   TextSearch,
@@ -166,47 +167,67 @@ export default function ClientScholarship() {
                       <div className="relative z-10">
                         <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
                           {meow.status && (
-                            <span
-                              className={`absolute  right-0 text-center pl-5 pr-5 py-2 rounded-bl-lg flex items-center gap-2 text-sm font-medium text-gray-200 tracking-wide ${
-                                meow.status === "BLOCKED"
-                                  ? " bg-black/80"
-                                  : meow.status === "APPROVED"
-                                  ? " bg-green-900/90"
-                                  : meow.status === "PENDING"
-                                  ? "bg-yellow-700/90"
-                                  : meow.status === "INTERVIEW"
-                                  ? "bg-blue-800/90"
-                                  : meow.status === "DECLINED"
-                                  ? "bg-red-800/90"
-                                  : ""
-                              }`}
-                            >
-                              {" "}
-                              {meow.status}
-                              {/* {meow.status === "BLOCKED" ? (
-                                <CircleX size={17} />
-                              ) : meow.status === "APPROVED" ? (
-                                <CheckCheck size={17} />
-                              ) : meow.status === "PENDING" ? (
-                                <UserRoundMinus size={17} />
-                              ) : meow.status === "INTERVIEW" ? (
-                                <Mic size={17} />
-                              ) : meow.status === "DECLINED" ? (
-                                <Ban size={17} />
-                              ) : (
-                                ""
-                              )} */}
-                            </span>
+                            <div className="absolute top-2 -left-2 flex items-center">
+                              {/* Shadow Layer */}
+                              <div
+                                className="absolute"
+                                style={{
+                                  width: "120px",
+                                  height: "40px",
+                                  background:
+                                    meow.status === "BLOCKED"
+                                      ? "rgba(0,0,0,0.5)"
+                                      : meow.status === "APPROVED"
+                                      ? "rgba(0,128,0,0.5)"
+                                      : meow.status === "PENDING"
+                                      ? "rgba(218,165,32,0.5)"
+                                      : meow.status === "INTERVIEW"
+                                      ? "rgba(0,0,255,0.5)"
+                                      : meow.status === "DECLINED"
+                                      ? "rgba(255,0,0,0.5)"
+                                      : "rgba(0,0,0,0.5)",
+                                  clipPath:
+                                    "polygon(0 0, 100% 0, 85% 100%, 0% 100%)",
+                                  transform: "translate(4px, 4px)", // shadow offset
+                                  zIndex: 0,
+                                }}
+                              ></div>
+
+                              {/* Main Layer */}
+                              <div
+                                className="flex items-center justify-center text-gray-200 font-medium text-sm px-6 py-2"
+                                style={{
+                                  width: "120px",
+                                  height: "40px",
+                                  background:
+                                    meow.status === "BLOCKED"
+                                      ? "rgba(0,0,0,0.8)"
+                                      : meow.status === "APPROVED"
+                                      ? "rgba(0,128,0,0.8)"
+                                      : meow.status === "PENDING"
+                                      ? "rgba(218,165,32,0.8)"
+                                      : meow.status === "INTERVIEW"
+                                      ? "rgba(0,0,255,0.8)"
+                                      : meow.status === "DECLINED"
+                                      ? "rgba(255,0,0,0.8)"
+                                      : "rgba(0,0,0,0.8)",
+                                  clipPath:
+                                    "polygon(0 0, 100% 0, 85% 100%, 0% 100%)",
+                                  zIndex: 1,
+                                }}
+                              >
+                                {meow.status}
+                              </div>
+                            </div>
                           )}
 
                           <img
-                            className={`h-full w-full object-cover ${
-                              status === "EXPIRED" ? "" : ""
-                            }`}
+                            className="h-full w-full object-cover"
                             src={meow.Scholarship.cover}
                             alt=""
                           />
                         </div>
+
                         <div className=" lg:p-4 p-2 space-y-5">
                           <div className="flex items-start justify-start">
                             <div className="flex-1 lg:space-y-1">

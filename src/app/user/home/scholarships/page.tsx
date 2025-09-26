@@ -289,10 +289,10 @@ export default function ClientScholarship() {
                             <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
                               {/* isNotRenew{" "} */}
                               {findMatch && (
-                                <div className="absolute z-20 inset-0 dark:bg-black/60 bg-black/50  flex justify-center items-center">
-                                  <span className="absolute right-0 top-0 dark:bg-black/40 bg-white/80 text-center pl-5 pr-5 py-2 rounded-bl-lg flex items-center gap-2 text-sm font-medium tracking-wide">
+                                <div className="absolute z-20 inset-0  bg-black/40 dark:bg-black/60  flex justify-center items-center">
+                                  <span className="uppercase absolute shadow-md backdrop-blur-sm right-0 top-0 dark:bg-black/40 bg-white/80 text-center pl-5 pb-2.5 pr-5 py-2 rounded-bl-lg flex items-center gap-2 text-sm font-medium tracking-wide">
                                     {" "}
-                                    Applied <UserRoundCheck size={17} />
+                                    Submitted
                                   </span>
                                 </div>
                               )}
