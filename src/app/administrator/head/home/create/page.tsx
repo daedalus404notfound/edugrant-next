@@ -83,7 +83,7 @@ export default function Create() {
           description="Fill out the form below to add a new scholarship."
           Icon={PenLine}
         />
-           <div className="flex grow items-center gap-3"></div>
+        <div className="flex grow items-center gap-3"></div>
         <Form {...form}>
           <div className="space-y-5 mt-10">
             <div className="grid grid-cols-3 gap-x-3 gap-y-8">
@@ -92,7 +92,12 @@ export default function Create() {
                 name="type"
                 render={({ field }) => (
                   <FormItem className="col-span-3">
-                    <FormLabel>Scholarship Type</FormLabel>
+                    <FormLabel>
+                      <span>
+                        Scholarship Type
+                        <span className="text-red-800 ml-2">*</span>
+                      </span>
+                    </FormLabel>
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
@@ -137,7 +142,11 @@ export default function Create() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex justify-between items-center">
-                        Scholarship Title <FormMessage />
+                        <span>
+                          Scholarship Title
+                          <span className="text-red-800 ml-2">*</span>
+                        </span>
+                        <FormMessage />
                       </FormLabel>
                       <FormControl>
                         <Input {...field} />
@@ -153,7 +162,12 @@ export default function Create() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex justify-between items-center">
-                        Provider Name <FormMessage />
+                        <span>
+                          {" "}
+                          Provider Name
+                          <span className="text-red-800 ml-2">*</span>
+                        </span>{" "}
+                        <FormMessage />
                       </FormLabel>
                       <FormControl>
                         <Input {...field} />
@@ -170,7 +184,11 @@ export default function Create() {
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
                       <FormLabel className="flex items-center justify-between">
-                        Deadline <FormMessage />
+                        <span>
+                          Deadline
+                          <span className="text-red-800 ml-2">*</span>
+                        </span>
+                        <FormMessage />
                       </FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
@@ -260,7 +278,11 @@ export default function Create() {
                         Required GWA <FormMessage />
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="(Optional)" />
+                        <Input
+                          {...field}
+                          placeholder="(Optional) eg. 2.50"
+                          type="number"
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -274,12 +296,13 @@ export default function Create() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex justify-between items-center">
-                        Scholarship Amount <FormMessage />
+                        Scholarship Amount
+                        <FormMessage />
                       </FormLabel>
                       <FormControl>
                         <Input
                           type="number"
-                          placeholder="(Optional)"
+                          placeholder="(Optional) eg. 7000"
                           {...field}
                         />
                       </FormControl>
@@ -300,7 +323,7 @@ export default function Create() {
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="(Optional)"
+                          placeholder="(Optional) eg. 1000"
                           type="number"
                           {...field}
                         />
@@ -317,7 +340,11 @@ export default function Create() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex justify-between items-center">
-                        Scholarship Description <FormMessage />
+                        <span>
+                          Scholarship Description
+                          <span className="text-red-800 ml-2">*</span>
+                        </span>
+                        <FormMessage />
                       </FormLabel>
                       <FormControl>
                         <Textarea {...field} />
@@ -338,7 +365,11 @@ export default function Create() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex justify-between items-center">
-                        Details Cover
+                        <span>
+                          {" "}
+                          Details Cover
+                          <span className="text-red-800 ml-2">*</span>
+                        </span>
                         <FormMessage />
                       </FormLabel>
                       <FormControl>
@@ -346,7 +377,7 @@ export default function Create() {
                           reset={reset}
                           setReset={setReset}
                           label="backdrop image"
-                          accept={["image/png", "image/jpeg", "image/jpg"]}
+                          accept={["image/png", "image/jpeg"]}
                           onFilesChange={(files) => field.onChange(files[0])} // Single file
                         />
                       </FormControl>
@@ -363,14 +394,19 @@ export default function Create() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex justify-between items-center">
-                        Sponsor Logo/Image <FormMessage />
+                        <span>
+                          {" "}
+                          Sponsor Logo/Image
+                          <span className="text-red-800 ml-2">*</span>
+                        </span>{" "}
+                        <FormMessage />
                       </FormLabel>
                       <FormControl>
                         <DragAndDropArea
                           reset={reset}
                           setReset={setReset}
                           label="sponsor logo"
-                          accept={["image/png", "image/jpeg", "image/jpg"]}
+                          accept={["image/png", "image/jpeg"]}
                           onFilesChange={(files) => field.onChange(files[0])} // Single file
                         />
                       </FormControl>
@@ -386,14 +422,18 @@ export default function Create() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex justify-between items-center">
-                      Scholarship Form <FormMessage />
+                      Scholarship Form (Optional)
+                      <FormMessage />
                     </FormLabel>
                     <FormControl>
                       <DragAndDropArea
                         reset={reset}
                         setReset={setReset}
                         label="scholarship form"
-                        accept={["*/*"]}
+                        accept={[
+                          "application/pdf",
+                          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        ]}
                         onFilesChange={(files) => field.onChange(files[0])} // Single file
                       />
                     </FormControl>
@@ -447,7 +487,10 @@ export default function Create() {
 
           {/* Dynamic Required Documents */}
           <div className="space-y-5 mt-10">
-            <div className="w-full flex items-center justify-end ">
+            <div className="w-full flex items-center justify-between ">
+              <p className="text-sm font-medium text-muted-foreground">
+                Each document label must be unique.
+              </p>
               <Button
                 type="button"
                 size="sm"
@@ -461,7 +504,7 @@ export default function Create() {
                 variant="outline"
               >
                 <Plus className="w-4 h-4 mr-1" />
-                Add requirements
+                Add document
               </Button>
             </div>
 
@@ -479,7 +522,12 @@ export default function Create() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex justify-between items-center">
-                            Document Label {index + 1} <FormMessage />
+                            <span>
+                              {" "}
+                              Document Label {index + 1}
+                              <span className="text-red-800 ml-2">*</span>
+                            </span>{" "}
+                            <FormMessage />
                           </FormLabel>
                           <FormControl>
                             <Input placeholder="e.g. COR" {...field} />
@@ -497,7 +545,11 @@ export default function Create() {
                       render={({ field }) => (
                         <FormItem className="flex-1">
                           <FormLabel className="flex justify-between items-center">
-                            Document Formats
+                            <span>
+                              {" "}
+                              Document Formats
+                              <span className="text-red-800 ml-2">*</span>
+                            </span>
                             <FormMessage />
                           </FormLabel>
                           <FormControl>
@@ -534,6 +586,7 @@ export default function Create() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>
+                            Document Type
                             <FormMessage />
                           </FormLabel>
                           <Select

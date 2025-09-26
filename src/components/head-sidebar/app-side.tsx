@@ -11,6 +11,7 @@ import {
   Bot,
   CheckCheck,
   CircleUserRound,
+  Crown,
   GraduationCap,
   Home,
   LayoutDashboard,
@@ -120,19 +121,14 @@ const sidebarData = [
     icon: LayoutDashboard,
   },
   {
-    title: "Profile Details",
+    title: "Head Profile",
     url: "/administrator/head/home/profile",
-    icon: BookUser,
+    icon: Crown,
   },
   {
     title: "Announcements",
     url: "/administrator/head/home/announcement",
     icon: Megaphone,
-  },
-  {
-    title: "Reports & Statistics",
-    url: "/administrator/head/home/reports",
-    icon: Activity,
   },
 ];
 const sidebarScholar = [

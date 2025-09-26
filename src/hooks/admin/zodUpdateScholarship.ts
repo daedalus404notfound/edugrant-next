@@ -84,7 +84,7 @@ export function useUpdateScholarshipZod(data?: scholarshipFormData) {
       description: data?.description || "",
       form: data?.form,
       interview: data?.interview ?? false,
-      limit: data?.limit || "",
+      limit: data?.limit?.toString() || "",
       logo: data?.logo,
       requiredGWA: data?.requiredGWA || "",
       scholarshipId: data?.scholarshipId || 0,

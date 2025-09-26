@@ -117,13 +117,13 @@ export default function ExportCsvScholarship({ status }: { status?: string }) {
           disabled={data.length === 0}
           variant="outline"
           size="sm"
-          className="bg-background hover:bg-accent transition-colors duration-200"
+          className=" hover:bg-accent transition-colors duration-200"
         >
           <Download className="w-4 h-4 mr-2" />
           Export CSV
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl w-full p-0 border-border bg-background">
+      <DialogContent className="max-w-4xl w-full p-0 border-border !bg-card">
         {/* Header */}
         <DialogHeader className="sr-only">
           <DialogTitle>
@@ -161,7 +161,7 @@ export default function ExportCsvScholarship({ status }: { status?: string }) {
                 placeholder="Search fields..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-background border-input"
+                className="pl-10  border-input"
               />
             </div>
 
@@ -169,7 +169,7 @@ export default function ExportCsvScholarship({ status }: { status?: string }) {
             <Button
               variant="outline"
               onClick={handleSelectAll}
-              className="shrink-0 bg-background hover:bg-accent"
+              className="shrink-0  hover:bg-accent"
             >
               {isAllSelected ? (
                 <>
@@ -185,8 +185,7 @@ export default function ExportCsvScholarship({ status }: { status?: string }) {
             </Button>
           </div>
           <div className="flex items-center justify-between py-4">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Filter className="w-4 h-4" />
+            <div className="flex items-cente justify-end r gap-2 text-sm text-muted-foreground">
               {selectedHeaders.length} of {filteredHeaders.length} fields
               selected
             </div>
@@ -260,7 +259,7 @@ export default function ExportCsvScholarship({ status }: { status?: string }) {
           </div>
 
           {/* Export Section */}
-          <div className="border-border p-4 space-y-4 sticky bottom-0 bg-background">
+          <div className="border-border p-4 space-y-4 sticky bottom-0 ">
             <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
             <div className="space-y-2">
               <div className="flex items-center justify-between">

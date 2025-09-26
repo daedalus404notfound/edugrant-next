@@ -30,7 +30,7 @@ const addScholarshipApi = async (data: scholarshipFormData) => {
   formDataToSend.append("applicationStartDate", today);
   formDataToSend.append("newScholarDeadline", data.deadline.toISOString());
   if (data.amount) {
-    formDataToSend.append("scholarshipAmount", data.amount);
+    formDataToSend.append("scholarshipAmount", data.amount.toString());
   }
   if (data.limit) {
     formDataToSend.append("scholarshipLimit", data.limit);
@@ -75,7 +75,7 @@ export const useAddScholarship = () => {
     onSuccess: () => {
       StyledToast({
         status: "success",
-        title: "Scholarship Created",
+        title: "Scholarship Posted",
         description: "Your scholarship has been successfully posted.",
       });
     },

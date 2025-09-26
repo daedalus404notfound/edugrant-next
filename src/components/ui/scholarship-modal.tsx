@@ -1,10 +1,15 @@
 "use client";
 import {
+  Banknote,
   Building,
   Calendar,
   ExternalLink,
+  HandCoins,
   Inbox,
+  Landmark,
+  MessagesSquare,
   PhilippinePeso,
+  UsersRound,
 } from "lucide-react";
 import { getPhaseLabel } from "@/lib/phaseLevel";
 import { motion } from "motion/react";
@@ -114,33 +119,55 @@ export default function ScholarshipModal({
           <p className="whitespace-pre-line">{data?.description}</p>
         </div>
 
-        <div className="space-y-5">
+        <div className="space-y-8">
           <div className="flex gap-3 items-center">
             <h1 className="font-medium">Scholarship Details</h1>
             <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
           </div>
+
           <div className="grid lg:grid-cols-2 grid-cols-1 gap-3">
+            {data?.interview && (
+              <div className="bg-card p-4 rounded-md lg:col-span-1 col-span-2 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="bg-muted p-3 rounded-full flex items-center justify-center">
+                  <MessagesSquare className="text-xl text-blue-700" />
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-muted-foreground text-sm">
+                    For Interview?
+                  </p>
+                  <h1 className="text-lg font-medium tracking-wider">
+                    {data.interview ? "Yes" : "No"}
+                  </h1>
+                </div>
+              </div>
+            )}
+
             {data?.amount && (
-              <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                <PhilippinePeso />
-                <div>
+              <div className="bg-card p-4 rounded-md lg:col-span-1 col-span-2 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="bg-muted p-3 rounded-full flex items-center justify-center">
+                  <HandCoins className="text-xl text-blue-700" />
+                </div>
+                <div className="flex flex-col">
                   <p className="text-muted-foreground text-sm">
                     Scholarship Amount
                   </p>
-                  <h1 className="text-lg font-medium font-mono">
+                  <h1 className="text-lg font-medium tracking-wider">
                     {formatPHP(Number(data?.amount))}
                   </h1>
                 </div>
               </div>
             )}
+
             {data?.limit && (
-              <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                <Inbox />
-                <div>
+              <div className="bg-card p-4 rounded-md lg:col-span-1 col-span-2 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="bg-muted p-3 rounded-full flex items-center justify-center">
+                  <UsersRound className="text-xl text-blue-700" />
+                </div>
+                <div className="flex flex-col">
                   <p className="text-muted-foreground text-sm">
                     Scholarship Limit
                   </p>
-                  <h1 className="text-lg font-medium font-mono">
+                  <h1 className="text-lg font-medium tracking-wider">
                     {data?.limit}
                   </h1>
                 </div>
@@ -148,19 +175,24 @@ export default function ScholarshipModal({
             )}
 
             {data?.requiredGWA && (
-              <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                <Inbox />
-                <div>
+              <div className="bg-card p-4 rounded-md lg:col-span-1 col-span-2 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+                <div className="bg-muted p-3 rounded-full flex items-center justify-center">
+                  <Inbox className="text-xl text-blue-700" />
+                </div>
+                <div className="flex flex-col">
                   <p className="text-muted-foreground text-sm">Required GWA</p>
-                  <h1 className="text-lg font-medium font-mono">
+                  <h1 className="text-lg font-medium tracking-wider">
                     {data?.requiredGWA}
                   </h1>
                 </div>
               </div>
             )}
-            <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-              <Building />
-              <div>
+
+            <div className="bg-card p-4 rounded-md lg:col-span-1 col-span-2 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+              <div className="bg-muted p-3 rounded-full flex items-center justify-center">
+                <Landmark className="text-xl text-blue-700" />
+              </div>
+              <div className="flex flex-col">
                 <p className="text-muted-foreground text-sm">
                   Scholarship Type
                 </p>
@@ -168,9 +200,11 @@ export default function ScholarshipModal({
               </div>
             </div>
 
-            <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-              <Calendar />
-              <div>
+            <div className="bg-card p-4 rounded-md lg:col-span-1 col-span-2 flex items-center gap-4 shadow-sm hover:shadow-md transition-shadow">
+              <div className="bg-muted p-3 rounded-full flex items-center justify-center">
+                <Calendar className="text-xl text-blue-700" />
+              </div>
+              <div className="flex flex-col">
                 <p className="text-muted-foreground text-sm">
                   Scholarship Deadline
                 </p>
@@ -182,6 +216,7 @@ export default function ScholarshipModal({
               </div>
             </div>
           </div>
+
           <div className="space-y-6">
             <div className="space-y-3">
               <div className="flex justify-between items-center">

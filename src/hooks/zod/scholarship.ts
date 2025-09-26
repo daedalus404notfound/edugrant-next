@@ -43,14 +43,7 @@ export const scholarshipSchema = z.object({
         typeof File !== "undefined" && file instanceof File && file.size > 0,
       { message: "Image is required" }
     ),
-  form: z
-    .any()
-    .refine(
-      (file) =>
-        typeof File !== "undefined" && file instanceof File && file.size > 0,
-      { message: "Form is required" }
-    ),
-
+  form: z.any().optional(),
   documents: z.object({
     documents: z
       .array(documentsSchema)

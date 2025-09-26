@@ -87,6 +87,9 @@ export default function EditScholarship({
   const documentPhasesLength = documentPhases.length;
   const lastPhaseKey = documentPhases[documentPhasesLength - 1];
   console.log(lastPhaseKey);
+  const lastPhase = data?.documents?.[lastPhaseKey] ?? [];
+  const lastPhaseLength = Object.keys(lastPhase).length;
+
   return (
     <div className=" bg-background rounded-t-lg">
       <div className="p-4  space-y-5">
@@ -233,7 +236,11 @@ export default function EditScholarship({
                         Required GWA <FormMessage />
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="(Optional)" />
+                        <Input
+                          {...field}
+                          placeholder="(Optional)"
+                          type="number"
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -317,7 +324,7 @@ export default function EditScholarship({
                       <FormControl>
                         <DragAndDropArea
                           label="backdrop image"
-                          accept={["image/png", "image/jpeg", "image/jpg"]}
+                          accept={["image/png", "image/jpeg"]}
                           onFilesChange={(files) => field.onChange(files[0])} // Single file
                           initialImageUrl={data.cover}
                         />
@@ -340,7 +347,7 @@ export default function EditScholarship({
                       <FormControl>
                         <DragAndDropArea
                           label="sponsor logo"
-                          accept={["image/png", "image/jpeg", "image/jpg"]}
+                          accept={["image/png", "image/jpeg"]}
                           onFilesChange={(files) => field.onChange(files[0])} // Single file
                           initialImageUrl={data.logo}
                         />
@@ -362,7 +369,10 @@ export default function EditScholarship({
                     <FormControl>
                       <DragAndDropArea
                         label="scholarship form"
-                        accept={["*/*"]}
+                        accept={[
+                          "application/pdf",
+                          "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                        ]}
                         onFilesChange={(files) => field.onChange(files[0])} // Single file
                         initialImageUrl={data.form}
                       />
@@ -374,7 +384,10 @@ export default function EditScholarship({
           </div>
 
           <div className="space-y-5 mt-10">
-            <div className="w-full flex items-center justify-end ">
+            <div className="w-full flex items-center justify-between ">
+              <p className="text-sm font-medium text-muted-foreground">
+                Each document label must be unique.
+              </p>
               <Button
                 type="button"
                 size="sm"
@@ -388,10 +401,9 @@ export default function EditScholarship({
                 variant="outline"
               >
                 <Plus className="w-4 h-4 mr-1" />
-                Add New requirements
+                Add documents
               </Button>
             </div>
-
             <div className="space-y-5">
               {documentFields.map((field, index) => (
                 <div
@@ -403,16 +415,27 @@ export default function EditScholarship({
                     <FormField
                       control={form.control}
                       name={`documents.${lastPhaseKey}.${index}.label`}
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex justify-between items-center">
-                            Document Label {index + 1} <FormMessage />
-                          </FormLabel>
-                          <FormControl>
-                            <Input placeholder="e.g. COR" {...field} />
-                          </FormControl>
-                        </FormItem>
-                      )}
+                      render={({ field }) => {
+                        // check if a document with this label exists
+                        const isFilled =
+                          lastPhase.find((doc) => doc.label === field.value) !==
+                          undefined;
+
+                        return (
+                          <FormItem>
+                            <FormLabel className="flex justify-between items-center">
+                              Document Label {index + 1} <FormMessage />
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="e.g. COR"
+                                {...field}
+                                disabled={isFilled} // boolean
+                              />
+                            </FormControl>
+                          </FormItem>
+                        );
+                      }}
                     />
                   </div>
 
@@ -516,12 +539,8 @@ export default function EditScholarship({
             confirmText="Save"
             cancelText="Cancel"
             trigger={
-              <Button
-                className="flex-1"
-                variant="secondary"
-                onClick={handleTriggerClick}
-              >
-                Update Scholarship <Save />
+              <Button className="flex-1" onClick={handleTriggerClick}>
+                <Save /> Update Scholarship
               </Button>
             }
           />
@@ -529,9 +548,10 @@ export default function EditScholarship({
           <Button
             onClick={() => setMode("details")}
             className="flex-1"
-            variant="outline"
+            variant="secondary"
           >
-            Back <ArrowLeftFromLine />
+            <ArrowLeftFromLine />
+            Details
           </Button>
         </div>
       </div>

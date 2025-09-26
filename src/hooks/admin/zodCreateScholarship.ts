@@ -6,7 +6,7 @@ export function useCreateScholarshipZod() {
   const form = useForm<scholarshipFormData>({
     resolver: zodResolver(scholarshipSchema),
     defaultValues: {
-      type: "government",
+      type: undefined,
       title: "",
       providerName: "",
       requiredGWA: "",
@@ -34,4 +34,3 @@ export function useCreateScholarshipZod() {
 
   return { form, formData, fields, append, remove };
 }
-

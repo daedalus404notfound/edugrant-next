@@ -84,6 +84,9 @@ export default function StaffHeader() {
               onConfirm={handleLogout}
               loading={loading}
               title="Logout?"
+              confirmText="Logout"
+              confirmTextLoading="Logging out..."
+              red={false}
               description="Are you sure you want to log out of your account?"
               cancelText="Stay Logged In"
               trigger={

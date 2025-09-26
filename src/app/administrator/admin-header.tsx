@@ -58,6 +58,7 @@ import {
   LogOut,
   Moon,
   UserRound,
+  UserRoundIcon,
 } from "lucide-react";
 import {
   Drawer,
@@ -76,6 +77,9 @@ import { format } from "date-fns";
 import { useAdminStore } from "@/store/adminUserStore";
 import { ModeToggle } from "@/components/ui/dark-mode";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import TitleReusable from "@/components/ui/title";
+import AnnouncementDescription from "@/components/ui/description";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -129,8 +133,17 @@ export default function DynamicHeaderAdmin({
         </Breadcrumb>
       </div>
       <div className="flex items-center gap-2">
-        <Button>
-          <UserRound /> {admin?.ISPSU_Head.fName}
+        <Button variant="ghost">
+          <Avatar>
+            <AvatarFallback>
+              <UserRoundIcon
+                size={16}
+                className="opacity-60"
+                aria-hidden="true"
+              />
+            </AvatarFallback>
+          </Avatar>
+          {admin?.ISPSU_Head.fName}
         </Button>
         <Button
           variant="outline"
@@ -164,8 +177,9 @@ export default function DynamicHeaderAdmin({
             <DrawerTitle>Are you absolutely sure?</DrawerTitle>
             <DrawerDescription>This action cannot be undone.</DrawerDescription>
           </DrawerHeader>
-          <div className="flex flex-col bg-background flex-1 rounded-lg p-4 gap-y-10">
+          <div className="flex flex-col bg-card flex-1 rounded-lg p-4 gap-y-10">
             <div className="flex justify-between items-center">
+              <TitleReusable title="Notification" description="" />
               <Button size="sm">Mark all as read</Button>
             </div>
             <div className="flex-1">
@@ -188,7 +202,9 @@ export default function DynamicHeaderAdmin({
                         <CalendarIcon size={13} /> {format(item.date, "PPP p")}
                       </TimelineDate>
                       <TimelineContent className="text-foreground mt-1 whitespace-pre-line">
-                        <p>item.description</p>
+                        <AnnouncementDescription
+                          description={item.description}
+                        />
                       </TimelineContent>
                     </TimelineItem>
                   ))

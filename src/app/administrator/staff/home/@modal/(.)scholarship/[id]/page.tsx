@@ -43,12 +43,13 @@ export default function InterceptManageScholarship() {
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
         <ModalHeader HandleCloseDrawer={HandleCloseDrawer} />
-
-        {loading ? (
-          <ScholarshipModalLoading />
-        ) : (
-          data && <ScholarshipModal data={data} />
-        )}
+        <div className="relative h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md">
+          {loading ? (
+            <ScholarshipModalLoading />
+          ) : (
+            data && <ScholarshipModal data={data} />
+          )}
+        </div>
       </DrawerContent>
     </Drawer>
   );

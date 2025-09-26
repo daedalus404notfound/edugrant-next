@@ -69,6 +69,7 @@ import {
   Maximize,
   UsersRound,
   Inbox,
+  UserX,
 } from "lucide-react";
 
 import Reviewer from "./reviewer";
@@ -86,6 +87,7 @@ import Link from "next/link";
 import { BGPattern } from "@/components/ui/grid";
 import AnimatedNumberCountdown from "@/components/ui/countdown";
 import { AnimatePresence, motion } from "motion/react";
+import { DeleteDialog } from "@/components/ui/delete-dialog";
 const mimeToLabelMap: Record<string, string> = {
   "application/pdf": "PDF",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
@@ -144,7 +146,9 @@ export default function InterceptReviewApplicants() {
 
     return isRequired && (hasExistingStatus || hasNewReviewStatus);
   }).length;
-
+  const isThereRejected = Object.values(reviewData).find(
+    (meow) => meow.status === "REJECTED"
+  );
   const isButtonDisabled = totalRequiredDocs !== reviewedDocs;
 
   // const progressValue = totalDocs > 0 ? (reviewedDocs / totalDocs) * 100 : 0;
@@ -1211,130 +1215,55 @@ export default function InterceptReviewApplicants() {
               {/* Approve for Interview Button */}
               {data?.status === "PENDING" &&
                 data.Scholarship.interview === true && (
-                  <Dialog open={openInterview} onOpenChange={setOpenInterview}>
-                    <DialogTrigger asChild>
+                  <DeleteDialog
+                    open={openInterview}
+                    onOpenChange={setOpenInterview}
+                    onConfirm={handleInterview}
+                    loading={loading}
+                    title="Approve for Interview"
+                    red={false}
+                    description="This will approve the application for the interview stage and notify the student. This action cannot be undone."
+                    confirmText="Approve"
+                    confirmTextLoading="Approving..."
+                    cancelText="Cancel"
+                    trigger={
                       <Button
-                        className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={totalRequiredDocs !== reviewedDocs}
+                        disabled={
+                          totalRequiredDocs !== reviewedDocs ||
+                          !!isThereRejected
+                        }
                       >
-                        <UserRoundCheck className="w-4 h-4 mr-2" />
-                        Approve for Interview
+                        <UserRoundCheck /> Approve for Interview
                       </Button>
-                    </DialogTrigger>
-                    <DialogContent
-                      className="max-w-lg p-6 rounded-xl"
-                      onInteractOutside={(e) => e.preventDefault()}
-                      onEscapeKeyDown={(e) => e.preventDefault()}
-                      showCloseButton={false}
-                    >
-                      <DialogHeader className="text-center pb-4">
-                        <div className="mx-auto w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mb-4">
-                          <Clock className="w-6 h-6 text-green-600 dark:text-green-400" />
-                        </div>
-                        <DialogTitle className="text-xl font-semibold text-green-700 dark:text-green-300">
-                          Approve for Interview
-                        </DialogTitle>
-                        <DialogDescription className="text-muted-foreground leading-relaxed">
-                          This will approve the application for the interview
-                          stage and notify the student. This action cannot be
-                          undone.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <DialogFooter className="gap-3 pt-4">
-                        <Button
-                          variant="outline"
-                          onClick={() => setOpenInterview(false)}
-                          disabled={loadingInterview}
-                          className="flex-1"
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          onClick={handleInterview}
-                          disabled={loadingInterview}
-                          className="flex-1 bg-green-700 hover:bg-green-800 text-white"
-                        >
-                          {loadingInterview ? (
-                            <>
-                              <Loader className="w-4 h-4 mr-2 animate-spin" />
-                              Processing...
-                            </>
-                          ) : (
-                            <>
-                              <CheckCheck className="w-4 h-4 mr-2" />
-                              Confirm Approval
-                            </>
-                          )}
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+                    }
+                  />
                 )}
 
               {/* Decline Button */}
-              <Dialog open={openReject} onOpenChange={setOpenReject}>
-                <DialogTrigger asChild>
+              <DeleteDialog
+                open={openReject}
+                onOpenChange={setOpenReject}
+                onConfirm={handleReject}
+                loading={loading}
+                title="Reject Application"
+                red={true} // make it visually destructive since this is a rejection
+                description="This will reject the application and notify the student. This action cannot be undone."
+                confirmText="Reject"
+                confirmTextLoading="Rejecting..."
+                cancelText="Cancel"
+                trigger={
                   <Button
                     variant="destructive"
-                    className="flex-1 font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
                     disabled={
                       data?.status === "APPROVED" ||
                       data?.status === "DECLINED" ||
                       isButtonDisabled
                     }
                   >
-                    <UserRoundX className="w-4 h-4 mr-2" />
-                    Decline Application
+                    <UserX /> Reject Application
                   </Button>
-                </DialogTrigger>
-                <DialogContent
-                  className="max-w-lg p-6 rounded-xl"
-                  onInteractOutside={(e) => e.preventDefault()}
-                  onEscapeKeyDown={(e) => e.preventDefault()}
-                  showCloseButton={false}
-                >
-                  <DialogHeader className="text-center pb-4">
-                    <div className="mx-auto w-12 h-12 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
-                      <UserRoundX className="w-6 h-6 text-red-600 dark:text-red-400" />
-                    </div>
-                    <DialogTitle className="text-xl font-semibold text-red-700 dark:text-red-300">
-                      Decline Application
-                    </DialogTitle>
-                    <DialogDescription className="text-muted-foreground leading-relaxed">
-                      This will decline the scholarship application and notify
-                      the student with the review feedback. This action cannot
-                      be undone.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter className="gap-3 pt-4">
-                    <Button
-                      variant="outline"
-                      onClick={() => setOpenReject(false)}
-                      disabled={loadingReject}
-                      className="flex-1"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={handleReject}
-                      disabled={loadingReject}
-                      className="flex-1 bg-red-600 hover:bg-red-700 text-white"
-                    >
-                      {loadingReject ? (
-                        <>
-                          <Loader className="w-4 h-4 mr-2 animate-spin" />
-                          Declining...
-                        </>
-                      ) : (
-                        <>
-                          <UserRoundX className="w-4 h-4 mr-2" />
-                          Confirm Decline
-                        </>
-                      )}
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+                }
+              />
 
               {/* Back Button */}
               <Button
