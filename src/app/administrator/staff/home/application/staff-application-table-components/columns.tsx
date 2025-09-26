@@ -9,6 +9,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
 import { getPhaseLabel } from "@/lib/phaseLevel";
+import { useState } from "react";
+
 export const columns: ColumnDef<ApplicationFormData>[] = [
   {
     id: "select",
@@ -142,6 +144,19 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     enableSorting: true,
     enableHiding: true,
   },
+  {
+    accessorFn: (row) => row.Scholarship.phase,
+    id: "phase",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Phase" />
+    ),
+    cell: ({ row }) => (
+      <span className="capitalize">{row.getValue("phase")}</span>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+
   {
     accessorKey: "status",
     header: ({ column }) => (

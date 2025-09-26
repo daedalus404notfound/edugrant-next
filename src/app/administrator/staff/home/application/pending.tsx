@@ -28,6 +28,12 @@ export default function PendingStaffApplication({
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<
+    Record<string, boolean>
+  >({
+    phase: false,
+  });
+
   const { data, meta, loading } = useFetchApplications({
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
@@ -78,6 +84,8 @@ export default function PendingStaffApplication({
       columnFilters={columnFilters}
       setColumnFilters={setColumnFilters}
       toolbar={DataTableToolbar}
+      columnVisibility={columnVisibility} // <-- pass visibility
+      setColumnVisibility={setColumnVisibility} // <-- pass setter
     />
   );
 }

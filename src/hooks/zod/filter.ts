@@ -11,6 +11,7 @@ export const OptionsApplicationSchema = z.object({
 // Scholarship-specific filters
 export const OptionsScholarshipSchema = z.object({
   provider: z.array(z.string()),
+  phase: z.array(z.string()),
   scholarship: z.array(z.string()),
 });
 

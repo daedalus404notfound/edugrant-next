@@ -56,6 +56,11 @@ export default function DataTableToolbar<
       icon: GraduationCap,
     })
   );
+  const phase = filter?.getScholarshipsFilters.phase.map((meow) => ({
+    label: meow,
+    value: meow,
+    icon: GraduationCap,
+  }));
 
   const selectedRows = table.getSelectedRowModel().rows;
   const applicationIds = selectedRows.map((row) => row.original.applicationId);
@@ -121,6 +126,12 @@ export default function DataTableToolbar<
               column={table.getColumn("year")}
               title="Year"
               options={year ?? []}
+            />
+            <DataTableFacetedFilter
+              disabled={!!search}
+              column={table.getColumn("phase")}
+              title="Phase"
+              options={phase ?? []}
             />
           </div>
         </TourStep>

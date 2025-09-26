@@ -1,14 +1,9 @@
 "use client";
-
-// import { Ring } from "ldrs/react";
-import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -28,44 +23,21 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import useApplicationById from "@/hooks/admin/getApplicantData";
 import { Button } from "@/components/ui/button";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+
 import {
   ArrowLeftFromLine,
   Calendar,
   CheckCheck,
   Download,
-  FolderOpen,
   GraduationCap,
-  IdCard,
-  Loader,
-  Phone,
-  TableOfContents,
   UserCheck2,
   UserRound,
   UserRoundCheck,
   UserRoundX,
-  Mail,
-  UserMinus2,
   UserX2,
   PhilippinePeso,
   Building,
   StickyNote,
-  Briefcase,
-  Library,
-  Locate,
-  VenusAndMars,
-  Building2,
-  Clock,
-  FileText,
-  Users,
-  Info,
-  AlertTriangle,
-  Eye,
   Maximize,
   UsersRound,
   Inbox,
@@ -89,6 +61,9 @@ import { BGPattern } from "@/components/ui/grid";
 import AnimatedNumberCountdown from "@/components/ui/countdown";
 import { AnimatePresence, motion } from "motion/react";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
+import StudentStaff from "./student";
+import FamilyStaff from "./family";
+import ScholarshipModal from "@/components/ui/scholarship-modal";
 const mimeToLabelMap: Record<string, string> = {
   "application/pdf": "PDF",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
@@ -111,6 +86,7 @@ export default function InterceptReviewApplicants() {
   const [activeSection, setActiveSection] = useState("documents");
   const id = Number(params.id);
   const { data, loading } = useApplicationById(id);
+
   const [reviewData, setReviewData] = useState<
     Record<string, { comment: string; status: string }>
   >({});
@@ -127,7 +103,11 @@ export default function InterceptReviewApplicants() {
       },
     }));
   };
-
+  useEffect(() => {
+    if (data?.Interview_Decision?.message) {
+      setReviewData(data.Interview_Decision.message);
+    }
+  }, [data]);
   const documentPhases = Object.keys(data?.submittedDocuments ?? {}).filter(
     (key) => key.startsWith("phase")
   );
@@ -222,184 +202,6 @@ export default function InterceptReviewApplicants() {
       HandleCloseDrawer(false);
     }
   }, [isSuccessReject]);
-
-  const fatherDetails = [
-    {
-      label: "Father Full Name",
-      icon: UserRound,
-      value: data?.Student.familyBackground.fatherFullName,
-    },
-    {
-      label: "Status",
-      icon: UserRound,
-      value: data?.Student.familyBackground.fatherStatus,
-    },
-    {
-      label: "Contact No.",
-      icon: Phone,
-      value: data?.Student.familyBackground.fatherContactNumber,
-    },
-    {
-      label: "Address",
-      icon: Locate,
-      value: data?.Student.familyBackground.fatherAddress,
-    },
-
-    {
-      label: "Occupation",
-      icon: Briefcase,
-      value: data?.Student.familyBackground.fatherOccupation,
-    },
-    {
-      label: "Highest Education Attainment",
-      icon: GraduationCap,
-      value: data?.Student.familyBackground.fatherHighestEducation,
-    },
-    {
-      label: "Total Parents Taxable Income",
-      icon: PhilippinePeso,
-      value: data?.Student.familyBackground.fatherTotalParentsTaxableIncome,
-    },
-  ];
-
-  const motherDetails = [
-    {
-      label: "Mother Full Name",
-      icon: UserRound,
-      value: data?.Student.familyBackground.motherFullName,
-    },
-    {
-      label: "Status",
-      icon: Locate,
-      value: data?.Student.familyBackground.motherStatus,
-    },
-    {
-      label: "Contact No.",
-      icon: Phone,
-      value: data?.Student.familyBackground.motherContactNumber,
-    },
-    {
-      label: "Address",
-      icon: UserRound,
-      value: data?.Student.familyBackground.motherAddress,
-    },
-
-    {
-      label: "Occupation",
-      icon: Briefcase,
-      value: data?.Student.familyBackground.motherOccupation,
-    },
-    {
-      label: "Highest Education Attainment",
-      icon: GraduationCap,
-      value: data?.Student.familyBackground.motherHighestEducation,
-    },
-    {
-      label: "Total Parents Taxable Income",
-      icon: PhilippinePeso,
-      value: data?.Student.familyBackground.motherTotalParentsTaxableIncome,
-    },
-  ];
-
-  const guardianDetails = [
-    {
-      label: "Guardian Full Name",
-      icon: UserRound,
-      value: data?.Student.familyBackground.guardianFullName,
-    },
-    {
-      label: "Contact No.",
-      icon: Phone,
-      value: data?.Student.familyBackground.guardianContactNumber,
-    },
-    {
-      label: "Occupation",
-      icon: Briefcase,
-      value: data?.Student.familyBackground.guardianOccupation,
-    },
-    {
-      label: "Address",
-      icon: Locate,
-      value: data?.Student.familyBackground.guardianAddress,
-    },
-
-    {
-      label: "Highest Education Attainment",
-      icon: GraduationCap,
-      value: data?.Student.familyBackground.guardianHighestEducation,
-    },
-  ];
-
-  const personalInformation = [
-    {
-      label: "First Name",
-      icon: UserRound,
-      value: data?.Student.fName,
-    },
-    {
-      label: "Middle Name",
-      icon: UserRound,
-      value: data?.Student.mName,
-    },
-    {
-      label: "Last Name",
-      icon: UserRound,
-      value: data?.Student.lName,
-    },
-    {
-      label: "Gender",
-      icon: VenusAndMars,
-      value: data?.Student.gender,
-    },
-    {
-      label: "Date of Birth",
-      icon: Calendar,
-      value: data?.Student.gender,
-    },
-    {
-      label: "Address",
-      icon: Locate,
-      value: data?.Student.address,
-    },
-    {
-      label: "Contact No.",
-      icon: Phone,
-      value: data?.Student.contactNumber,
-    },
-
-    {
-      label: "Email",
-      icon: Mail,
-      value: data?.Student.Account.email,
-    },
-  ];
-  const academicInformation = [
-    {
-      label: "Student Id",
-      icon: Building2,
-      value: data?.Student.Account.schoolId,
-    },
-    {
-      label: "Institute",
-      icon: Building2,
-      value: data?.Student.institute,
-    },
-    {
-      label: "Course",
-      icon: Building2,
-      value: data?.Student.course,
-    },
-    {
-      label: "Year",
-      icon: Building2,
-      value: data?.Student.year,
-    },
-    {
-      label: "Section",
-      icon: Building2,
-      value: data?.Student.section,
-    },
-  ];
 
   const navigationTabs = [
     { id: "documents", label: "Documents", indicator: null },
@@ -515,6 +317,8 @@ export default function InterceptReviewApplicants() {
                               reviewData[doc.document]?.comment ||
                               doc.rejectMessage?.comment ||
                               "";
+
+                            console.log("111", currentStatus, currentComment);
 
                             return (
                               <div key={index} className="flex gap-5 py-8">
@@ -656,439 +460,16 @@ export default function InterceptReviewApplicants() {
               )}
 
               {/* Student Information Section */}
-              {activeSection === "student" && (
-                <div className="space-y-10">
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-3">
-                      <h3 className="text-lg font-medium flex gap-2 items-center">
-                        <UserRound className="h-5 w-5" /> Personal Information
-                      </h3>
-                      <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {personalInformation.map((info, index) => (
-                        <div
-                          key={index}
-                          className={` ${
-                            info.label === "Address" || info.label === "Email"
-                              ? "md:col-span-2"
-                              : ""
-                          }`}
-                        >
-                          <div className="flex items-start gap-3">
-                            <div className="min-w-0 flex-1">
-                              <p className="text-sm text-muted-foreground mb-1">
-                                {info.label}
-                              </p>
-                              <div className=" bg-card p-2 rounded-md flex gap-3 items-center">
-                                <info.icon size={16} />
-                                <p className="">{info.value}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-3">
-                      <h3 className="text-lg font-medium flex gap-2 items-center">
-                        <GraduationCap className="h-5 w-5" /> Academic
-                        Information
-                      </h3>
-                      <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {academicInformation.map((info, index) => (
-                        <div
-                          key={index}
-                          className={` ${
-                            info.label === "Address" || info.label === "Email"
-                              ? "md:col-span-2"
-                              : ""
-                          }`}
-                        >
-                          <div className="flex items-start gap-3">
-                            <div className="min-w-0 flex-1">
-                              <p className="text-sm text-muted-foreground mb-1">
-                                {info.label}
-                              </p>
-                              <div className=" bg-card p-2 rounded-md flex gap-3 items-center">
-                                <info.icon size={16} />
-                                <p className="">{info.value}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
+              {activeSection === "student" && data && (
+                <StudentStaff {...data} />
               )}
 
               {/* Family Background Section */}
-              {activeSection === "family" && (
-                <div className="space-y-8">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-lg font-medium flex gap-2 items-center">
-                      <UsersRound className="h-5 w-5" /> Family Composition
-                    </h3>
-                    <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-                  </div>
-
-                  {/* Father Details */}
-                  <div className="space-y-4">
-                    <TitleReusable title="Father" description="" />
-                    <div className="">
-                      <div className="grid grid-cols-3 gap-4">
-                        {fatherDetails.map((detail, index) => (
-                          <div
-                            key={index}
-                            className={` ${
-                              detail.label === "Address" ? "md:col-span-3" : ""
-                            }`}
-                          >
-                            <div className="flex items-start gap-3">
-                              <div className="min-w-0 flex-1">
-                                <p className="text-sm text-muted-foreground mb-1">
-                                  {detail.label}
-                                </p>
-                                <div className=" bg-card p-2 rounded-md flex gap-3 items-center">
-                                  <detail.icon size={16} />
-                                  <p className="">{detail.value}</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-                  {/* Mother Details */}
-                  <div className="space-y-4">
-                    <TitleReusable title="Mother" description="" />
-                    <div className="">
-                      <div className="grid grid-cols-3 gap-4">
-                        {motherDetails.map((detail, index) => (
-                          <div
-                            key={index}
-                            className={` ${
-                              detail.label === "Address" ? "md:col-span-3" : ""
-                            }`}
-                          >
-                            <div className="flex items-start gap-3">
-                              <div className="min-w-0 flex-1">
-                                <p className="text-sm text-muted-foreground mb-1">
-                                  {detail.label}
-                                </p>
-                                <div className=" bg-card p-2 rounded-md flex gap-3 items-center">
-                                  <detail.icon size={16} />
-                                  <p className="">{detail.value}</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-                  {/* Guardian Details */}
-                  <div className="space-y-4 lg:col-span-2">
-                    <TitleReusable title="Guardian" description="" />
-                    <div className="">
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {guardianDetails.map((detail, index) => (
-                          <div
-                            key={index}
-                            className={` ${
-                              detail.label === "Address" ? "md:col-span-2" : ""
-                            }`}
-                          >
-                            <div className="flex items-start gap-3">
-                              <div className="min-w-0 flex-1">
-                                <p className="text-sm text-muted-foreground mb-1">
-                                  {detail.label}
-                                </p>
-                                <div className=" bg-card p-2 rounded-md flex gap-3 items-center">
-                                  <detail.icon size={16} />
-                                  <p className="">{detail.value}</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {activeSection === "family" && data && <FamilyStaff {...data} />}
 
               {/* Scholarship Details Section */}
-              {activeSection === "scholarship" && (
-                <div className="relative h-full w-full overflow-auto  bg-background rounded-t-md flex flex-col no-scrollbar">
-                  <div className="absolute top-0 left-0 lg:h-86 h-60 w-full opacity-30   mask-gradient flex">
-                    <img
-                      className="w-full h-full object-cover blur-md "
-                      src={data?.Scholarship.cover}
-                      alt=""
-                    />
-                  </div>
-
-                  <div className="relative flex justify-center items-center ">
-                    <div className="absolute inset-0border-b-2 border-black bg-card" />
-                    <div className="absolute left-2 -bottom-18 z-10 lg:px-6  px-2 flex  items-end gap-3 ">
-                      <Avatar className="lg:size-30 size-20 border-background border-2 shadow-md">
-                        <AvatarImage
-                          className="object-cover"
-                          src={data?.Scholarship.logo}
-                        />
-                        <AvatarFallback>
-                          {data?.Scholarship.Scholarship_Provider?.name &&
-                            data?.Scholarship.Scholarship_Provider.name.slice(
-                              0,
-                              2
-                            )}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="">
-                        <motion.span
-                          className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-                                                 flex items-center gap-1.5 lg:text-2xl text-xl font-semibold tracking-tight
-                                                "
-                          initial={{ backgroundPosition: "200% 0" }}
-                          animate={{ backgroundPosition: "-200% 0" }}
-                          transition={{
-                            repeat: Infinity,
-                            repeatType: "loop",
-                            duration: 7,
-                            ease: "linear",
-                          }}
-                        >
-                          {data?.Scholarship.title}
-                          {data?.Scholarship.deadline &&
-                          new Date(data.Scholarship.deadline).getTime() <
-                            Date.now() ? (
-                            <Badge className="bg-red-800 text-gray-200 tracking-wide">
-                              EXPIRED
-                            </Badge>
-                          ) : (
-                            <Badge className="bg-green-800 text-gray-200 tracking-wide">
-                              ACTIVE
-                            </Badge>
-                          )}
-                        </motion.span>
-                        <p className="text-muted-foreground text-sm">
-                          by {data?.Scholarship.Scholarship_Provider?.name}
-                        </p>
-                      </div>
-                    </div>
-                    {data?.Scholarship.cover && (
-                      <img
-                        className="w-full lg:aspect-[16/4] aspect-[16/9]  object-cover   rounded-lg shadow-md"
-                        src={data?.Scholarship.cover}
-                        alt=""
-                      />
-                    )}
-
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className="absolute z-5  !bg-black/60 !text-gray-200"
-                          size="sm"
-                        >
-                          View <Maximize />
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="p-4">
-                        <DialogHeader className="sr-only">
-                          <DialogTitle>Are you absolutely sure?</DialogTitle>
-                          <DialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete your account and remove your data from our
-                            servers.
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="w-[300px]">
-                          <img
-                            className="h-full w-full"
-                            src={data?.Scholarship.cover}
-                            alt=""
-                          />
-                        </div>
-                        <Link
-                          className="w-full"
-                          href={
-                            (data?.Scholarship.cover &&
-                              data?.Scholarship.cover) ||
-                            ""
-                          }
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Button variant="secondary" className="w-full">
-                            <Download />
-                            Download
-                          </Button>
-                        </Link>
-                      </DialogContent>
-                    </Dialog>
-                  </div>
-
-                  <div className="flex-1 pt-30 pb-10 px-6 space-y-8">
-                    <div className="space-y-1">
-                      <p className="text-sm text-muted-foreground">About</p>
-                      <p>{data?.Scholarship.description}</p>
-                    </div>
-
-                    <div className="space-y-5">
-                      <div className="flex gap-3 items-center">
-                        <h1 className="font-medium">Scholarship Details</h1>
-                        <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-                      </div>
-                      <div className="grid lg:grid-cols-2 grid-cols-1 gap-3">
-                        {data?.Scholarship.amount && (
-                          <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                            <PhilippinePeso />
-                            <div>
-                              <p className="text-muted-foreground text-sm">
-                                Scholarship Amount
-                              </p>
-                              <h1 className="text-lg font-medium font-mono">
-                                {data?.Scholarship.amount}.00
-                              </h1>
-                            </div>
-                          </div>
-                        )}
-                        {data?.Scholarship.limit && (
-                          <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                            <Inbox />
-                            <div>
-                              <p className="text-muted-foreground text-sm">
-                                Scholarship Limit
-                              </p>
-                              <h1 className="text-lg font-medium font-mono">
-                                {data?.Scholarship.limit}
-                              </h1>
-                            </div>
-                          </div>
-                        )}
-                        {data?.Scholarship.requiredGWA && (
-                          <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                            <Inbox />
-                            <div>
-                              <p className="text-muted-foreground text-sm">
-                                Required GWA
-                              </p>
-                              <h1 className="text-lg font-medium font-mono">
-                                {data?.Scholarship.requiredGWA}
-                              </h1>
-                            </div>
-                          </div>
-                        )}
-                        {data?.Scholarship.requiredGWA && (
-                          <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                            <Inbox />
-                            <div>
-                              <p className="text-muted-foreground text-sm">
-                                Required GWA
-                              </p>
-                              <h1 className="text-lg font-medium font-mono">
-                                {data?.Scholarship.requiredGWA}
-                              </h1>
-                            </div>
-                          </div>
-                        )}
-                        <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                          <Building />
-                          <div>
-                            <p className="text-muted-foreground text-sm">
-                              Scholarship Type
-                            </p>
-                            <h1 className="text-lg font-medium capitalize">
-                              {data?.Scholarship.type}
-                            </h1>
-                          </div>
-                        </div>
-
-                        <div className="bg-card  p-4 space-y-1 rounded-md lg:col-span-1 col-span-2 flex gap-3 items-center">
-                          <Calendar />
-                          <div>
-                            <p className="text-muted-foreground text-sm">
-                              Scholarship Deadline
-                            </p>
-                            <h1 className="text-lg font-medium">
-                              {data?.Scholarship.deadline
-                                ? format(
-                                    new Date(data?.Scholarship.deadline),
-                                    "PPP"
-                                  )
-                                : "No deadline"}
-                            </h1>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="space-y-6">
-                        {" "}
-                        <div className="space-y-3">
-                          <div className="flex justify-between items-center">
-                            <h3 className="text-xs font-medium text-muted-foreground  tracking-wide">
-                              Required Documents
-                            </h3>
-                            <p className="font-medium text-lg">
-                              {
-                                Object.keys(data?.Scholarship.documents || {})
-                                  .length
-                              }
-                            </p>
-                          </div>
-
-                          <div className=" divide-y">
-                            {Object.values(
-                              data?.Scholarship.documents.documents || {}
-                            ).map((doc, index) => (
-                              <div
-                                className="flex justify-between items-center py-5"
-                                key={doc.label}
-                              >
-                                <div>
-                                  <span> {index + 1}. </span>
-                                  {doc.label}
-                                </div>
-                                <Badge
-                                  className={`${
-                                    doc.requirementType === "required"
-                                      ? "bg-red-700/20 text-red-700"
-                                      : doc.requirementType === "optional"
-                                      ? "bg-blue-700/20 text-blue-700"
-                                      : ""
-                                  } capitalize `}
-                                >
-                                  {doc.requirementType}
-                                </Badge>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="p-4 bg-card rounded-md">
-                        <h1 className="text-center text-sm font-medium">
-                          Hurry before it ends
-                        </h1>
-                        <div className="transform scale-85 lg:scale-100">
-                          {data?.Scholarship.deadline && (
-                            <AnimatedNumberCountdown
-                              endDate={new Date(data?.Scholarship.deadline)}
-                            />
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              {activeSection === "scholarship" && data && (
+                <ScholarshipModal data={data?.Scholarship} />
               )}
             </div>
           </div>

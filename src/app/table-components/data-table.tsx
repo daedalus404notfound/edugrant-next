@@ -48,6 +48,8 @@ interface DataTableProps<TData, TValue> {
   columnFilters: ColumnFiltersState;
   setColumnFilters: OnChangeFn<ColumnFiltersState>;
   toolbar?: React.ComponentType<ToolbarProps<TData>>;
+  columnVisibility?: Record<string, boolean>; // <-- added
+  setColumnVisibility?: OnChangeFn<Record<string, boolean>>; // <-- added
 }
 
 export function DataTable<TData, TValue>({
@@ -66,6 +68,8 @@ export function DataTable<TData, TValue>({
   setSorting,
   columnFilters,
   setColumnFilters,
+  columnVisibility,
+  setColumnVisibility,
   toolbar: ToolbarComponent,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
@@ -80,7 +84,8 @@ export function DataTable<TData, TValue>({
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    state: { pagination, sorting, columnFilters },
+    onColumnVisibilityChange: setColumnVisibility,
+    state: { pagination, sorting, columnFilters, columnVisibility },
   });
 
   return (
