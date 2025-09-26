@@ -70,6 +70,7 @@ import {
   UsersRound,
   Inbox,
   UserX,
+  UserCheck,
 } from "lucide-react";
 
 import Reviewer from "./reviewer";
@@ -201,11 +202,26 @@ export default function InterceptReviewApplicants() {
     scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
   });
 
+  // Close drawer when interview is successful
   useEffect(() => {
-    if (isSuccessInterview || isSuccessReject) {
+    if (isSuccessInterview) {
       HandleCloseDrawer(false);
     }
-  }, [isSuccessInterview, isSuccessReject]);
+  }, [isSuccessInterview]);
+
+  // Close drawer when approval is successful
+  useEffect(() => {
+    if (isSuccessApprove) {
+      HandleCloseDrawer(false);
+    }
+  }, [isSuccessApprove]);
+
+  // Close drawer when reject is successful
+  useEffect(() => {
+    if (isSuccessReject) {
+      HandleCloseDrawer(false);
+    }
+  }, [isSuccessReject]);
 
   const fatherDetails = [
     {
@@ -1091,125 +1107,43 @@ export default function InterceptReviewApplicants() {
               {/* Approve Button */}
               {data?.status === "PENDING" &&
                 data.Scholarship.interview === false && (
-                  <Dialog open={openApprove} onOpenChange={setOpenApprove}>
-                    <DialogTrigger asChild>
-                      <Button
-                        className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={isButtonDisabled}
-                      >
-                        <UserRoundCheck className="w-4 h-4 mr-2" />
-                        Approve Application
+                  <DeleteDialog
+                    open={openApprove}
+                    onOpenChange={setOpenApprove}
+                    onConfirm={handleApprove}
+                    loading={loadingApprove}
+                    title="Approve Application"
+                    red={false} // make it visually destructive since this is a rejection
+                    description="This will approve the application and notify the student. This action cannot be undone."
+                    confirmText="Approve"
+                    confirmTextLoading="Approving..."
+                    cancelText="Cancel"
+                    trigger={
+                      <Button disabled={isButtonDisabled || !!isThereRejected}>
+                        <UserCheck /> Approve Application
                       </Button>
-                    </DialogTrigger>
-                    <DialogContent
-                      className="max-w-lg p-6 rounded-xl"
-                      onInteractOutside={(e) => e.preventDefault()}
-                      onEscapeKeyDown={(e) => e.preventDefault()}
-                      showCloseButton={false}
-                    >
-                      <DialogHeader className="text-center pb-4">
-                        <div className="mx-auto w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mb-4">
-                          <UserRoundCheck className="w-6 h-6 text-green-600 dark:text-green-400" />
-                        </div>
-                        <DialogTitle className="text-xl font-semibold text-green-700 dark:text-green-300">
-                          Approve Application
-                        </DialogTitle>
-                        <DialogDescription className="text-muted-foreground leading-relaxed">
-                          This will approve the scholarship application and
-                          notify the student of the positive decision. This
-                          action cannot be undone.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <DialogFooter className="gap-3 pt-4">
-                        <Button
-                          variant="outline"
-                          onClick={() => setOpenApprove(false)}
-                          disabled={loadingApprove}
-                          className="flex-1"
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          onClick={handleApprove}
-                          disabled={loadingApprove}
-                          className="flex-1 bg-green-700 hover:bg-green-800 text-white"
-                        >
-                          {loadingApprove ? (
-                            <>
-                              <Loader className="w-4 h-4 mr-2 animate-spin" />
-                              Approving...
-                            </>
-                          ) : (
-                            <>
-                              <CheckCheck className="w-4 h-4 mr-2" />
-                              Confirm Approval
-                            </>
-                          )}
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+                    }
+                  />
                 )}
               {data?.status === "INTERVIEW" &&
                 data.Scholarship.interview === true && (
-                  <Dialog open={openApprove} onOpenChange={setOpenApprove}>
-                    <DialogTrigger asChild>
-                      <Button
-                        className="flex-1 bg-green-700 hover:bg-green-800 text-white font-medium py-3 shadow-sm hover:shadow-md transition-all duration-200"
-                        disabled={isButtonDisabled}
-                      >
-                        <UserRoundCheck className="w-4 h-4 mr-2" />
-                        Approve Application
+                  <DeleteDialog
+                    open={openApprove}
+                    onOpenChange={setOpenApprove}
+                    onConfirm={handleApprove}
+                    loading={loadingApprove}
+                    title="Approve Application"
+                    red={false} // make it visually destructive since this is a rejection
+                    description="This will approve the application and notify the student. This action cannot be undone."
+                    confirmText="Approve"
+                    confirmTextLoading="Approving..."
+                    cancelText="Cancel"
+                    trigger={
+                      <Button disabled={isButtonDisabled || !!isThereRejected}>
+                        <UserCheck /> Approve Application
                       </Button>
-                    </DialogTrigger>
-                    <DialogContent
-                      className="max-w-lg p-6 rounded-xl"
-                      onInteractOutside={(e) => e.preventDefault()}
-                      onEscapeKeyDown={(e) => e.preventDefault()}
-                      showCloseButton={false}
-                    >
-                      <DialogHeader className="text-center pb-4">
-                        <div className="mx-auto w-12 h-12 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mb-4">
-                          <UserRoundCheck className="w-6 h-6 text-green-600 dark:text-green-400" />
-                        </div>
-                        <DialogTitle className="text-xl font-semibold text-green-700 dark:text-green-300">
-                          Approve Application
-                        </DialogTitle>
-                        <DialogDescription className="text-muted-foreground leading-relaxed">
-                          This will approve the scholarship application and
-                          notify the student of the positive decision. This
-                          action cannot be undone.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <DialogFooter className="gap-3 pt-4">
-                        <Button
-                          variant="outline"
-                          onClick={() => setOpenApprove(false)}
-                          disabled={loadingApprove}
-                          className="flex-1"
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                          onClick={handleApprove}
-                          disabled={loadingApprove}
-                          className="flex-1 bg-green-700 hover:bg-green-800 text-white"
-                        >
-                          {loadingApprove ? (
-                            <>
-                              <Loader className="w-4 h-4 mr-2 animate-spin" />
-                              Approving...
-                            </>
-                          ) : (
-                            <>
-                              <CheckCheck className="w-4 h-4 mr-2" />
-                              Confirm Approval
-                            </>
-                          )}
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+                    }
+                  />
                 )}
 
               {/* Approve for Interview Button */}
@@ -1219,7 +1153,7 @@ export default function InterceptReviewApplicants() {
                     open={openInterview}
                     onOpenChange={setOpenInterview}
                     onConfirm={handleInterview}
-                    loading={loading}
+                    loading={loadingInterview}
                     title="Approve for Interview"
                     red={false}
                     description="This will approve the application for the interview stage and notify the student. This action cannot be undone."
@@ -1244,7 +1178,7 @@ export default function InterceptReviewApplicants() {
                 open={openReject}
                 onOpenChange={setOpenReject}
                 onConfirm={handleReject}
-                loading={loading}
+                loading={loadingReject}
                 title="Reject Application"
                 red={true} // make it visually destructive since this is a rejection
                 description="This will reject the application and notify the student. This action cannot be undone."

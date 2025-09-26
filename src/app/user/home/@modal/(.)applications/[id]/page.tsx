@@ -189,6 +189,18 @@ export default function InterceptManageApplicationClient() {
                     </p>
                   </div>
                 )}
+                {data[0]?.status === "INTERVIEW" && (
+                  <div className="relative z-20 bg-green-700/10 rounded-md  px-4 py-3 text-green-500">
+                    <p className="text-sm">
+                      <CircleCheck
+                        className="me-3 -mt-0.5 inline-flex opacity-60"
+                        size={16}
+                        aria-hidden="true"
+                      />
+                      Your application has been approved for interview
+                    </p>
+                  </div>
+                )}
                 {activeSection === "documents" && (
                   <DocsStudent data={data[0]} />
                 )}

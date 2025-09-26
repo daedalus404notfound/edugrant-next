@@ -37,6 +37,8 @@ export default function DocsStudent({ data }: DocsStudentProps) {
           lastPhase.map((meow) => {
             const rejectMessage =
               data?.Application_Decision?.message?.[meow.document] || null;
+            const rejectMessageInterview =
+              data?.Interview_Decision?.message?.[meow.document] || null;
 
             return (
               <div key={meow.document} className="lg:py-8 py-6 space-y-2">
@@ -66,6 +68,11 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                               {rejectMessage.status}
                             </Badge>
                           )}
+                          {rejectMessageInterview && (
+                            <Badge className="hidden lg:block tracking-wide uppercase bg-green-800/20 text-green-600">
+                              {rejectMessageInterview.status}
+                            </Badge>
+                          )}
                           {!meow.fileUrl && (
                             <Badge className="hidden lg:block tracking-wide uppercase bg-red-800/20 text-red-600">
                               MISSING
@@ -81,9 +88,23 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                     {/* ✅ Show reject message from Application_Decision */}
                     {rejectMessage?.status === "REJECTED" && !isMobile && (
                       <div className="rounded-md px-4 py-3 bg-card">
-                        <p className="text-sm line-clamp-1">
+                        <p className="text-sm line-clamp-1 flex items-center">
                           <TriangleAlert
-                            className="me-3 -mt-0.5 inline-flex text-red-500"
+                            className="me-3 -mt-0.5 text-red-500"
+                            size={16}
+                            aria-hidden="true"
+                          />
+                          {rejectMessage?.comment ||
+                            "Document has been rejected"}
+                        </p>
+                      </div>
+                    )}
+
+                    {rejectMessageInterview?.status === "REJECTED" && !isMobile && (
+                      <div className="rounded-md px-4 py-3 bg-card">
+                        <p className="text-sm line-clamp-1 flex items-center">
+                          <TriangleAlert
+                            className="me-3 -mt-0.5 text-red-500"
                             size={16}
                             aria-hidden="true"
                           />
@@ -133,6 +154,20 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                         </p>
                       </div>
                     )}
+
+                    {rejectMessageInterview?.status === "APPROVED" &&
+                      !isMobile && (
+                        <div className="rounded-md border px-4 py-3 bg-card">
+                          <p className="text-sm">
+                            <CircleCheckIcon
+                              className="me-3 -mt-0.5 inline-flex text-emerald-500"
+                              size={16}
+                              aria-hidden="true"
+                            />
+                            Document has been approved
+                          </p>
+                        </div>
+                      )}
                   </div>
                 </div>
 

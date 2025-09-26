@@ -36,6 +36,13 @@ const ApplicationSchema = z.object({
     status: z.string(),
     message: DecisionMessageSchema.optional(),
   }),
+  Interview_Decision: z.object({
+    dateCreated: z.date(),
+    interviewId: z.number(),
+    staffId: z.number(),
+    status: z.string(),
+    message: DecisionMessageSchema.optional(),
+  }),
   applicationId: z.number(),
 
   interviewId: z.string(),
