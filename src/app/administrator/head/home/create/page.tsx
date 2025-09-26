@@ -149,7 +149,10 @@ export default function Create() {
                         <FormMessage />
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input
+                          {...field}
+                          placeholder="eg. Kuya Wally Scholarship"
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -170,7 +173,7 @@ export default function Create() {
                         <FormMessage />
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} placeholder="eg. Wally" />
                       </FormControl>
                     </FormItem>
                   )}
