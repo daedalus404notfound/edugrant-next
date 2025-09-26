@@ -32,9 +32,10 @@ import { ApiErrorResponse } from "@/hooks/admin/postReviewedHandler";
 import { downloadFile } from "@/lib/downloadUtils";
 import { ApplicationFormData } from "@/hooks/zod/application";
 
-export const createFormSchema = (requiredDocuments: documentFormData[]) => {
-  const schemaShape: Record<string, z.ZodType> = {};
-  Object.entries(requiredDocuments).forEach(([key, doc]) => {
+export const createFormSchema = (documents: documentFormData[]) => {
+  const schemaShape: Record<string, z.ZodType<any>> = {};
+
+  documents.forEach((doc) => {
     const baseValidation = z
       .array(z.instanceof(File))
       .refine(
@@ -48,20 +49,15 @@ export const createFormSchema = (requiredDocuments: documentFormData[]) => {
           files.length === 0 ||
           files.every((file) => file.size <= 2 * 1024 * 1024),
         `File size must be less than 2MB for ${doc.label}`
-      );
-    if (doc.requirementType === "required") {
-      schemaShape[doc.label] = baseValidation.min(
-        1,
-        `${doc.label} is required`
-      );
-    } else {
-      // For optional documents, allow empty array
-      schemaShape[doc.label] = baseValidation.default([]);
-    }
+      )
+      .default([]); // Make all fields optional
+
+    schemaShape[doc.label] = baseValidation;
   });
 
   return z.object(schemaShape);
 };
+
 type EditApplicationTypes = {
   data: ApplicationFormData;
   setEdit: (edit: boolean) => void;

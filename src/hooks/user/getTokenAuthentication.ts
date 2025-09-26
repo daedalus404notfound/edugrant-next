@@ -7,7 +7,7 @@ import { ApiErrorResponse } from "../admin/postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
 
 export default function useAuthenticatedUser() {
-  const { setUser, setLoading, setError } = useUserStore();
+  const { setUser, setLoading, setError, logout } = useUserStore();
   const router = useRouter();
   const pathname = usePathname();
   useEffect(() => {
@@ -39,6 +39,7 @@ export default function useAuthenticatedUser() {
           if (pathname !== "/") {
             router.replace("/");
           }
+          logout();
         }
       } finally {
         setLoading(false);

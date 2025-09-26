@@ -7,7 +7,7 @@ import { ApiErrorResponse } from "../admin/postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
 
 export default function useAuthenticatedUser() {
-  const { setAdmin, setLoading, setError } = useAdminStore();
+  const { setAdmin, setLoading, setError, logout } = useAdminStore();
   const router = useRouter();
   const pathname = usePathname();
   const [success, setSucces] = useState(false);
@@ -52,6 +52,7 @@ export default function useAuthenticatedUser() {
         if (pathname !== "/") {
           router.replace("/administrator");
         }
+        logout();
       } finally {
         setLoading(false);
       }

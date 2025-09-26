@@ -2,7 +2,12 @@ import { ApplicationFormData } from "@/hooks/zod/application";
 import ApplicationViewer from "./viewer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Badge } from "@/components/ui/badge";
-import { CircleCheckIcon, Clock, TriangleAlert } from "lucide-react";
+import {
+  CircleCheckIcon,
+  Clock,
+  TriangleAlert,
+  TriangleAlertIcon,
+} from "lucide-react";
 type DocsStudentProps = {
   data: ApplicationFormData;
 };
@@ -50,17 +55,23 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                         <p className="font-medium lg:text-base text-sm">
                           {meow.document}
                         </p>
-
-                        {meow.fileUrl && (
-                          <Badge className="hidden lg:block tracking-wide uppercase bg-blue-800/20 text-blue-600">
-                            SUBMITTED
-                          </Badge>
-                        )}
-                        {!meow.fileUrl && (
-                          <Badge className="hidden lg:block tracking-wide uppercase bg-red-800/20 text-red-600">
-                            MISSING
-                          </Badge>
-                        )}
+                        <div className="flex gap-1.5 items-center">
+                          {meow.fileUrl && (
+                            <Badge className="hidden lg:block tracking-wide uppercase bg-blue-800/20 text-blue-600">
+                              SUBMITTED
+                            </Badge>
+                          )}
+                          {rejectMessage && (
+                            <Badge className="hidden lg:block tracking-wide uppercase bg-green-800/20 text-green-600">
+                              {rejectMessage.status}
+                            </Badge>
+                          )}
+                          {!meow.fileUrl && (
+                            <Badge className="hidden lg:block tracking-wide uppercase bg-red-800/20 text-red-600">
+                              MISSING
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                       <p className="uppercase lg:text-sm text-xs text-muted-foreground lg:mt-1">
                         {meow.fileFormat ? meow.fileFormat : "N/A"}
@@ -82,15 +93,30 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                       </div>
                     )}
 
-                    {data?.status === "PENDING" && !isMobile && (
+                    {data?.status === "PENDING" &&
+                      meow.fileUrl &&
+                      !isMobile && (
+                        <div className="rounded-md px-4 py-3 bg-card">
+                          <p className="text-sm line-clamp-1">
+                            <Clock
+                              className="me-3 -mt-0.5 inline-flex text-yellow-500"
+                              size={16}
+                              aria-hidden="true"
+                            />
+                            Your document is awaiting verification.
+                          </p>
+                        </div>
+                      )}
+
+                    {!meow.fileUrl && !isMobile && (
                       <div className="rounded-md px-4 py-3 bg-card">
                         <p className="text-sm line-clamp-1">
-                          <Clock
-                            className="me-3 -mt-0.5 inline-flex text-yellow-500"
+                          <TriangleAlertIcon
+                            className="me-3 -mt-0.5 inline-flex text-red-500"
                             size={16}
                             aria-hidden="true"
                           />
-                          Your document is awaiting verification.
+                          Missing Documents
                         </p>
                       </div>
                     )}
