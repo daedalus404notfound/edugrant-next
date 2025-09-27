@@ -1,24 +1,9 @@
+import { EqualApproximatelyIcon, Mail, Map } from "lucide-react";
+
 export default function ContactSection() {
   const contactMethods = [
     {
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          {/* Map Pin */}
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 21c4.97-5.373 9-9.373 9-13.5C21 4.358 16.97 1 12 1S3 4.358 3 7.5C3 11.627 7.03 15.627 12 21z"
-          />
-          <circle cx="12" cy="7.5" r="2.5" />
-        </svg>
-      ),
+      icon: <Map />,
       title: "Our Address",
       desc: "Pinaod, San Ildefonso Bulacan",
       link: {
@@ -27,23 +12,7 @@ export default function ContactSection() {
       },
     },
     {
-      icon: (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6"
-        >
-          {/* Envelope */}
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M3 8l9 6 9-6M4.5 6h15a1.5 1.5 0 011.5 1.5v9a1.5 1.5 0 01-1.5 1.5h-15A1.5 1.5 0 013 16.5v-9A1.5 1.5 0 014.5 6z"
-          />
-        </svg>
-      ),
+      icon: <Mail />,
       title: "Email Us",
       desc: "We usually respond within 365 days.",
       link: {
@@ -54,16 +23,16 @@ export default function ContactSection() {
   ];
   return (
     <section className="py-25">
-      <div className="w-full mx-auto px-4  gap-12 md:px-8 lg:flex">
+      <div className="w-full mx-auto lg:px-4  lg:gap-12 gap-6 md:px-8 lg:flex">
         <div className="max-w-md">
-          <h3 className="text-3xl font-semibold sm:text-4xl">Contact Us</h3>
+          <h3 className="lg:text-4xl font-semibold text-2xl">Contact Us</h3>
           <p className="mt-3">
             We’re here to help and answer any question you might have, We look
             forward to hearing from you .
           </p>
         </div>
         <div>
-          <ul className="mt-12 gap-y-6 gap-x-12 items-center md:flex lg:gap-x-0 lg:mt-0">
+          <ul className="mt-6 gap-y-6 gap-x-12 items-center md:flex lg:gap-x-0 lg:mt-0">
             {contactMethods.map((item, idx) => (
               <li
                 key={idx}

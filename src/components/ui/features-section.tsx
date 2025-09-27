@@ -4,9 +4,9 @@ import imagee from "@/assets/zzzzz.png";
 export function FeaturesSection() {
   return (
     <section className="overflow-hidden py-16 lg:py-20">
-      <div className="mx-auto w-full space-y-8 px-6 md:space-y-12">
+      <div className="mx-auto w-full lg:space-y-8 space-y-4 lg:px-6 md:space-y-12">
         <div className="relative z-10 max-w-2xl">
-          <h2 className="text-4xl font-semibold lg:text-5xl">Features</h2>
+          <h2 className="text-2xl font-semibold lg:text-5xl">Features</h2>
           <p className="mt-6 text-lg">
             Edugrant provides a straightforward and secure way for students to
             submit applications and check their status at any time.

@@ -143,8 +143,11 @@ const HowitworksComponent = () => {
 const FaqsComponent = () => {
   return (
     <div className="space-y-5 w-full py-25 px-6">
-      <h1 id="faqs" className="font-semibold ltext-xl  flex items-center gap-2">
-        Frequently Ask Questions <MessageCircleQuestion />
+      <h1
+        id="faqs"
+        className="font-semibold text-3xl   flex items-center gap-2"
+      >
+        Frequently Ask Questions
       </h1>
       <Accordion type="single" collapsible>
         {faqs.map((faq) => (

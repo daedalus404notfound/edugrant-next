@@ -91,15 +91,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { BGPattern } from "@/components/ui/grid";
+
 import { Footer } from "@/components/ui/footer";
 import SpotlightBorderWrapper from "@/components/ui/border";
+import { FeaturesSection } from "@/components/ui/features-section";
+import ContactSection from "@/components/ui/contact-section";
 
 const FaqsComponent = () => {
   return (
-    <div className="w-full mt-15 space-y-5">
-      <h1 id="faqs" className="font-semibold    flex items-center gap-2">
-        Frequently Ask Questions <MessageCircleQuestion size={18} />
+    <div className="w-full space-y-5 py-15">
+      <h1 id="faqs" className="font-semibold   text-xl flex items-center gap-2">
+        Frequently Ask Question
       </h1>
       <Accordion type="single" collapsible>
         {faqs.map((faq) => (
@@ -114,9 +116,12 @@ const FaqsComponent = () => {
 };
 const HowitworksComponent = () => {
   return (
-    <div className="w-full space-y-5 mt-15">
-      <h1 id="how-it-works" className="font-semibold flex items-center gap-2">
-        How It Works <MonitorCog size={18} />
+    <div className="w-full space-y-5  py-15">
+      <h1
+        id="how-it-works"
+        className="font-semibold flex items-center gap-2 text-center w-full text-xl"
+      >
+        How It Works
       </h1>
       <div className="grid gap-3">
         {howItWorks.map((step, index) => (
@@ -189,44 +194,48 @@ export default function MobileLandingPage() {
           <ModeToggle />
         </motion.header>
         <div className="flex flex-col items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <Badge variant="outline">Bulacan Agricultural State College</Badge>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-center mt-8"
-          >
-            <motion.span
-              className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-500/70
+          <div className="text-center py-10">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <Badge variant="outline">
+                Bulacan Agricultural State College
+              </Badge>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="text-center mt-8"
+            >
+              <motion.span
+                className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-500/70
   text-4xl havelock tracking-[-3px]  font-bold 
   "
-              initial={{ backgroundPosition: "200% 0" }}
-              animate={{ backgroundPosition: "-200% 0" }}
-              transition={{
-                repeat: Infinity,
-                repeatType: "loop",
-                duration: 7,
-                ease: "linear",
-              }}
+                initial={{ backgroundPosition: "200% 0" }}
+                animate={{ backgroundPosition: "-200% 0" }}
+                transition={{
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  duration: 7,
+                  ease: "linear",
+                }}
+              >
+                EDUGRANT
+              </motion.span>
+            </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="mt-4 text-center"
             >
-              EDUGRANT
-            </motion.span>
-          </motion.div>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="mt-4 text-center"
-          >
-            Apply for scholarships, track your progress, and unlock
-            opportunities for your future at BASC.
-          </motion.p>
+              Apply for scholarships, track your progress, and unlock
+              opportunities for your future at BASC.
+            </motion.p>
+          </div>
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -252,7 +261,9 @@ export default function MobileLandingPage() {
             </Link>
           </motion.div>
           <HowitworksComponent />
+          <FeaturesSection />
           <FaqsComponent />
+          <ContactSection />
           <Footer />
         </div>
       </div>
