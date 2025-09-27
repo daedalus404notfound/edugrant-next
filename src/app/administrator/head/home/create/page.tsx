@@ -156,11 +156,14 @@ export default function Create() {
         </Dialog>
 
         <div className="mx-auto  max-w-5xl w-full py-10">
-          <TitleReusable
-            title=" Create Scholarship"
-            description="Fill out the form below to add a new scholarship."
-            Icon={PenLine}
-          />
+          <div className="px-4">
+            {" "}
+            <TitleReusable
+              title=" Create Scholarship"
+              description="Fill out the form below to add a new scholarship."
+              Icon={PenLine}
+            />
+          </div>
           <div className="flex grow items-center gap-3"></div>
           <Form {...form}>
             <div className="space-y-5 mt-10">
@@ -168,7 +171,7 @@ export default function Create() {
                 stepId="details"
                 className="bg-background p-4 rounded-md"
               >
-                <div className="grid grid-cols-3 gap-x-3 gap-y-8">
+                <div className="grid grid-cols-3 gap-x-5 gap-y-10">
                   <FormField
                     control={form.control}
                     name="type"
@@ -477,7 +480,7 @@ export default function Create() {
               stepId="files"
               className="bg-background p-4 rounded-md mt-10 "
             >
-              <div className="space-y-5 ">
+              <div className="space-y-8 ">
                 <div className="w-full flex gap-5">
                   {/* Backdrop Image */}
                   <div className="flex flex-col flex-1 gap-2">
@@ -574,10 +577,10 @@ export default function Create() {
               stepId="documents"
               className="bg-background p-4 rounded-md mt-10"
             >
-              <div className="space-y-5">
+              <div className="space-y-8">
                 <div className="w-full flex items-center justify-between ">
                   <p className="text-sm font-medium text-muted-foreground">
-                    Each document label must be unique.
+                    Note: Each document label must be unique.
                   </p>
                   <Button
                     type="button"
@@ -600,7 +603,7 @@ export default function Create() {
                   {fields.map((field, index) => (
                     <div
                       key={field.id}
-                      className="grid grid-cols-1 gap-3 items-center"
+                      className="grid grid-cols-1 gap-6 items-center"
                     >
                       <FormField
                         control={form.control}
@@ -615,14 +618,24 @@ export default function Create() {
                               </span>{" "}
                               <FormMessage />
                             </FormLabel>
-                            <FormControl>
-                              <Input placeholder="e.g. COR" {...field} />
-                            </FormControl>
+                            <div className="flex gap-3 items-center">
+                              <FormControl>
+                                <Input placeholder="e.g. COR" {...field} />
+                              </FormControl>
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                disabled={fields.length === 1}
+                                onClick={() => remove(index)}
+                              >
+                                <Trash2 />
+                              </Button>
+                            </div>
                           </FormItem>
                         )}
                       />
 
-                      <div className="grid grid-cols-2 gap-5">
+                      <div className="grid grid-cols-2 gap-6">
                         <FormField
                           control={form.control}
                           name={`documents.documents.${index}.formats`}
@@ -697,15 +710,6 @@ export default function Create() {
                           )}
                         />
                       </div>
-
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        disabled={fields.length === 1}
-                        onClick={() => remove(index)}
-                      >
-                        <Trash2 />
-                      </Button>
                     </div>
                   ))}
                 </div>
