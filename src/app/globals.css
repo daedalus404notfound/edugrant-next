@@ -18,16 +18,15 @@
     transparent 80%
   );
 }
-/* Hide native calendar icon in Chrome/Safari */
-input[type="date"]::-webkit-calendar-picker-indicator {
+
+/* input[type="date"]::-webkit-calendar-picker-indicator {
   display: none;
   -webkit-appearance: none;
 }
 
-/* Hide in Firefox */
 input[type="date"]::-moz-calendar-picker-indicator {
   display: none;
-}
+} */
 
 .no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
@@ -59,6 +58,8 @@ input[type="date"]::-moz-calendar-picker-indicator {
   --color-background: var(--background);
   --color-whiteOnly: var(--whiteOnly);
   --color-foreground: var(--foreground);
+  --color-stepper: var(--stepper);
+  --color-stepper-active: var(--stepper-active);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -103,6 +104,8 @@ input[type="date"]::-moz-calendar-picker-indicator {
   --whiteOnly: oklch(0.97 0 286);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(0.92 0 0);
+  --stepper: oklch(83.591% 0.0001 271.152);
+  --stepper-active: oklch(0.53 0.14 150);
   --card-foreground: oklch(0.141 0.005 285.823);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.141 0.005 285.823);
@@ -139,6 +142,8 @@ input[type="date"]::-moz-calendar-picker-indicator {
   --whiteOnly: oklch(0.97 0 286);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
+  --stepper: oklch(64.673% 0.00007 271.152);
+  --stepper-active: oklch(0.53 0.14 150);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.21 0.006 285.885);
   --popover-foreground: oklch(0.985 0 0);

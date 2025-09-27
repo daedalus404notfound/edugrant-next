@@ -3,14 +3,27 @@
 import { Button } from "@/components/ui/button";
 import {
   Accessibility,
+  ArrowLeft,
   ArrowRight,
+  BookMarked,
   Calendar1,
   CheckIcon,
   ChevronDownIcon,
+  CircleUserRound,
   EyeIcon,
   EyeOffIcon,
+  Feather,
+  GraduationCap,
+  IdCard,
+  Landmark,
+  LayoutPanelTop,
   LoaderCircleIcon,
+  MailIcon,
+  MapPinHouse,
+  School,
   UserRound,
+  UserRoundCheck,
+  VenusAndMars,
   XIcon,
 } from "lucide-react";
 
@@ -68,6 +81,7 @@ const steps = [
     title: "Verification",
   },
 ];
+import { AnimatePresence, motion } from "motion/react";
 import {
   Drawer,
   DrawerContent,
@@ -139,7 +153,7 @@ export default function RegisterStudent() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className=" lg:w-1/2 w-[98%] h-auto !max-h-[90dvh]  mx-auto  !border-0 dark:bg-background/70 bg-background ">
+      <DrawerContent className=" lg:w-1/2 w-[98%] h-auto !max-h-[90dvh]  mx-auto  !border-0 bg-background/80 backdrop-blur-lg overflow-hidden p-1 outline-0 lg:min-w-4xl">
         <DrawerHeader className="sr-only">
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>
@@ -147,256 +161,378 @@ export default function RegisterStudent() {
             account and remove your data from our servers.
           </DrawerDescription>
         </DrawerHeader>
-
-        <div className="w-full space-y-10 p-2 lg:p-8 pb-0 overflow-auto">
-          <Stepper
-            defaultValue={1}
-            value={stepper}
-            className="items-start gap-3 "
-          >
-            {steps.map(({ step, title }) => (
-              <StepperItem key={step} step={step} className="flex-1">
-                <StepperTrigger className="w-full flex-col items-start gap-2 rounded">
-                  <StepperIndicator asChild className="bg-border h-1 w-full">
-                    <span className="sr-only">{step}</span>
-                  </StepperIndicator>
-                  <div className="space-y-0.5">
-                    <StepperTitle>{title}</StepperTitle>
-                  </div>
-                </StepperTrigger>
-              </StepperItem>
-            ))}
-          </Stepper>
-
+        <Stepper
+          defaultValue={1}
+          value={stepper}
+          className="items-start gap-3  lg:pt-8 lg:pb-6 lg:px-8 px-2 py-4 bg-card  shadow rounded-md"
+        >
+          {steps.map(({ step, title }) => (
+            <StepperItem key={step} step={step} className="flex-1">
+              <StepperTrigger className="w-full flex-col items-start gap-2 rounded ">
+                <StepperIndicator asChild className=" h-1 w-full">
+                  <span className="sr-only">{step}</span>
+                </StepperIndicator>
+                <div className="space-y-0.5">
+                  <StepperTitle>{title}</StepperTitle>
+                </div>
+              </StepperTrigger>
+            </StepperItem>
+          ))}
+        </Stepper>
+        <div className="w-full space-y-10 pb-0 overflow-auto no-scrollbar">
           {stepper === 1 && (
             <Form {...personalForm}>
               <div className="space-y-6">
-                <div>
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                  className="lg:pt-8 lg:px-8 pt-6 px-2"
+                >
                   <h1 className="text-lg font-semibold">
                     Personal Information
                   </h1>
                   <p className="text-muted-foreground text-sm mt-1">
                     Tell us about yourself.
                   </p>
-                </div>
+                </motion.div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-8 gap-6 lg:p-8 px-2 py-6">
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.3 }}
+                  >
+                    <FormField
+                      control={personalForm.control}
+                      name="firstName"
+                      render={({ field }) => (
+                        <FormItem className="">
+                          <FormLabel className="flex items-center justify-between">
+                            First Name <FormMessage />
+                          </FormLabel>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                  <FormField
-                    control={personalForm.control}
-                    name="firstName"
-                    render={({ field }) => (
-                      <FormItem className="">
-                        <FormLabel className="flex items-center justify-between">
-                          First Name <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter your first name"
-                            {...field}
-                            disabled={sendAuthCode.isLoading}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={personalForm.control}
-                    name="middleName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center justify-between">
-                          Middle Name <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="(Optional)"
-                            {...field}
-                            disabled={sendAuthCode.isLoading}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={personalForm.control}
-                    name="lastName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center justify-between">
-                          Last Name <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter your last name"
-                            {...field}
-                            disabled={sendAuthCode.isLoading}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={personalForm.control}
-                    name="contactNumber"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center justify-between">
-                          Contact number <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter your contact number"
-                            {...field}
-                            disabled={sendAuthCode.isLoading}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={personalForm.control}
-                    name="gender"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center justify-between">
-                          Gender <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select Gender" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Male">Male</SelectItem>
-                              <SelectItem value="Female">Female</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={personalForm.control}
-                    name="dateOfBirth"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center justify-between">
-                          Date of Birth <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <div className="flex gap-2">
-                            <Input
-                              type="date"
-                              value={field.value ? field.value : ""}
-                              onChange={(e) => field.onChange(e.target.value)}
-                              className="flex-1"
-                            />
-                            <Popover
-                              open={openCalendar}
-                              onOpenChange={setOpenCalendar}
-                            >
-                              <PopoverTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  id="date"
-                                  className=" font-normal"
-                                >
-                                  <Calendar1 />
+                          <FormControl>
+                            <div className="flex items-center">
+                              <Input
+                                placeholder=""
+                                className="rounded-r-none"
+                                {...field}
+                                disabled={sendAuthCode.isLoading}
+                              />
+                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                <Button variant="ghost">
+                                  <UserRound />
                                 </Button>
-                              </PopoverTrigger>
-                              <PopoverContent
-                                className="w-auto overflow-hidden p-0 pointer-events-auto"
-                                align="start"
+                              </span>
+                            </div>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                  >
+                    <FormField
+                      control={personalForm.control}
+                      name="middleName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center justify-between">
+                            Middle Name <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <div className="flex items-center">
+                              <Input
+                                placeholder="(Optional)"
+                                {...field}
+                                className="rounded-r-none"
+                                disabled={sendAuthCode.isLoading}
+                              />
+                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                <Button variant="ghost">
+                                  <CircleUserRound />
+                                </Button>
+                              </span>
+                            </div>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                  >
+                    <FormField
+                      control={personalForm.control}
+                      name="lastName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center justify-between">
+                            Last Name <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <div className="flex items-center">
+                              <Input
+                                placeholder=""
+                                className="rounded-r-none"
+                                {...field}
+                                disabled={sendAuthCode.isLoading}
+                              />
+                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                <Button variant="ghost">
+                                  <UserRoundCheck />
+                                </Button>
+                              </span>
+                            </div>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.6 }}
+                  >
+                    <FormField
+                      control={personalForm.control}
+                      name="contactNumber"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center justify-between">
+                            Contact number <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <div className="flex">
+                              {/* Fixed +639 prefix */}
+                              <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
+                                +639
+                              </span>
+                              <Input
+                                type="text"
+                                placeholder=""
+                                maxLength={9}
+                                value={field.value?.replace("+639", "") || ""}
+                                onChange={(e) => {
+                                  const val = e.target.value
+                                    .replace(/\D/g, "")
+                                    .slice(0, 9);
+                                  field.onChange(`+639${val}`);
+                                }}
+                                disabled={sendAuthCode.isLoading}
+                                className="rounded-l-none"
+                              />
+                            </div>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.7 }}
+                  >
+                    <FormField
+                      control={personalForm.control}
+                      name="gender"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center justify-between">
+                            Gender <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <div className="flex items-center">
+                              <Select
+                                onValueChange={field.onChange}
+                                value={field.value}
                               >
-                                <Calendar
-                                  mode="single"
-                                  selected={
-                                    field.value
-                                      ? new Date(field.value)
-                                      : undefined
-                                  }
-                                  captionLayout="dropdown"
-                                  onSelect={(date) => {
-                                    field.onChange(
-                                      date ? format(date, "yyyy-MM-dd") : ""
-                                    );
-                                    setOpenCalendar(false);
-                                  }}
-                                />
-                              </PopoverContent>
-                            </Popover>
-                          </div>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+                                <SelectTrigger className="rounded-r-none w-full">
+                                  <SelectValue placeholder="Select" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Male">Male</SelectItem>
+                                  <SelectItem value="Female">Female</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                <Button variant="ghost">
+                                  <VenusAndMars />
+                                </Button>
+                              </span>
+                            </div>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
 
-                  <FormField
-                    control={personalForm.control}
-                    name="address"
-                    render={({ field }) => (
-                      <FormItem className="lg:col-span-2">
-                        <FormLabel className="flex items-center justify-between line-clamp-1">
-                          Address (Street, Barangay, City/Municipality,
-                          Province) <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Enter your complete address"
-                            {...field}
-                            disabled={sendAuthCode.isLoading}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.8 }}
+                  >
+                    <FormField
+                      control={personalForm.control}
+                      name="dateOfBirth"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center justify-between">
+                            Date of Birth <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <div className="flex items-center">
+                              <span className="flex items-center  border border-input border-r-0 rounded-l-md text-sm">
+                                <Popover
+                                  open={openCalendar}
+                                  onOpenChange={setOpenCalendar}
+                                >
+                                  <PopoverTrigger asChild>
+                                    <Button variant="ghost" id="date">
+                                      <Calendar1 />
+                                    </Button>
+                                  </PopoverTrigger>
+                                  <PopoverContent
+                                    className="w-auto overflow-hidden p-0 pointer-events-auto"
+                                    align="start"
+                                  >
+                                    <Calendar
+                                      mode="single"
+                                      selected={
+                                        field.value
+                                          ? new Date(field.value)
+                                          : undefined
+                                      }
+                                      captionLayout="dropdown"
+                                      onSelect={(date) => {
+                                        field.onChange(
+                                          date ? format(date, "yyyy-MM-dd") : ""
+                                        );
+                                        setOpenCalendar(false);
+                                      }}
+                                    />
+                                  </PopoverContent>
+                                </Popover>
+                              </span>
+                              <Input
+                                value={field.value ? field.value : ""}
+                                onChange={(e) => field.onChange(e.target.value)}
+                                className="rounded-l-none"
+                                placeholder="YYYY-MM-DD"
+                              />
+                            </div>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
 
-                  <FormField
-                    control={personalForm.control}
-                    name="indigenous"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center justify-between line-clamp-1">
-                          Indigenous Group <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Please specify your Indigenous group (if applicable)"
-                            {...field}
-                            disabled={sendAuthCode.isLoading}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.9 }}
+                    className="lg:col-span-2"
+                  >
+                    <FormField
+                      control={personalForm.control}
+                      name="address"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center justify-between line-clamp-1">
+                            Address (Street, Barangay, City/Municipality,
+                            Province) <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <div className="flex items-center">
+                              <Input
+                                placeholder=""
+                                className="rounded-r-none"
+                                {...field}
+                                disabled={sendAuthCode.isLoading}
+                              />
+                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                <Button variant="ghost">
+                                  <MapPinHouse />
+                                </Button>
+                              </span>
+                            </div>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
 
-                  <FormField
-                    control={personalForm.control}
-                    name="pwd"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center justify-between line-clamp-1">
-                          Person with Disability (PWD) <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder="Please specify your disability (if applicable)"
-                            {...field}
-                            disabled={sendAuthCode.isLoading}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 1 }}
+                  >
+                    <FormField
+                      control={personalForm.control}
+                      name="indigenous"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center justify-between line-clamp-1">
+                            Indigenous Group (IG) <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <div className="flex items-center">
+                              <Input
+                                className="rounded-r-none"
+                                placeholder="Please specify your Indigenous group (if applicable)"
+                                {...field}
+                                disabled={sendAuthCode.isLoading}
+                              />
+                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                <Button variant="ghost">
+                                  <Feather />
+                                </Button>
+                              </span>
+                            </div>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 1.1 }}
+                  >
+                    <FormField
+                      control={personalForm.control}
+                      name="pwd"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex items-center justify-between line-clamp-1">
+                            Person with Disability (PWD) <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <div className="flex items-center">
+                              <Input
+                                placeholder="Please specify your disability (if applicable)"
+                                {...field}
+                                className="rounded-r-none"
+                                disabled={sendAuthCode.isLoading}
+                              />
+                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                <Button variant="ghost">
+                                  <Accessibility />
+                                </Button>
+                              </span>
+                            </div>
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </motion.div>
                   {/* <FormField
                     control={personalForm.control}
                     name="indigenous"
@@ -465,14 +601,20 @@ export default function RegisterStudent() {
                     )}
                   /> */}
                 </div>
-                <div className="w-full sticky bottom-0 py-2 bg-background">
+
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                  className="w-full sticky bottom-0 lg:px-8 lg:py-6 py-4 px-2 border-t bg-background "
+                >
                   <Button
                     onClick={personalForm.handleSubmit(handlePersonalSubmit)}
-                    className="w-full"
+                    className="w-full dark:bg-green-800 bg-green-700"
                   >
                     Next <ArrowRight />
                   </Button>
-                </div>
+                </motion.div>
               </div>
             </Form>
           )}
@@ -487,14 +629,14 @@ export default function RegisterStudent() {
               className="space-y-6"
             >
               <Form {...accountForm}>
-                <div>
+                <div className="lg:pt-8 lg:px-8 pt-6 px-2">
                   <h1 className="text-lg font-semibold">Account Information</h1>
                   <p className="text-muted-foreground text-sm mt-1">
                     Fill out all required fields to start scholarship
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-8 gap-6 lg:p-8 px-2 py-6">
                   <FormField
                     control={accountForm.control}
                     name="studentId"
@@ -504,11 +646,21 @@ export default function RegisterStudent() {
                           Student ID <FormMessage />
                         </FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="Enter your student ID"
-                            {...field}
-                            disabled={sendAuthCode.isLoading}
-                          />
+                          <div className="flex items-center">
+                            {" "}
+                            <Input
+                              placeholder=""
+                              className="rounded-r-none"
+                              type="number"
+                              {...field}
+                              disabled={sendAuthCode.isLoading}
+                            />
+                            <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                              <Button variant="ghost">
+                                <IdCard />
+                              </Button>
+                            </span>
+                          </div>
                         </FormControl>
                       </FormItem>
                     )}
@@ -523,12 +675,20 @@ export default function RegisterStudent() {
                           Email <FormMessage />
                         </FormLabel>
                         <FormControl>
-                          <Input
-                            type="email"
-                            placeholder="Enter your email"
-                            {...field}
-                            disabled={sendAuthCode.isLoading}
-                          />
+                          <div className="flex items-center">
+                            <Input
+                              type="email"
+                              placeholder=""
+                              className="rounded-r-none"
+                              {...field}
+                              disabled={sendAuthCode.isLoading}
+                            />
+                            <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                              <Button variant="ghost">
+                                <MailIcon />
+                              </Button>
+                            </span>
+                          </div>
                         </FormControl>
                       </FormItem>
                     )}
@@ -543,39 +703,46 @@ export default function RegisterStudent() {
                           Institute <FormMessage />
                         </FormLabel>
                         <FormControl>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <SelectTrigger
-                              className="w-full"
-                              disabled={sendAuthCode.isLoading}
+                          <div className="flex items-center">
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
                             >
-                              <SelectValue placeholder="Select Institute" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="ICS">
-                                ICS - Institute Computer Studies
-                              </SelectItem>
-                              <SelectItem value="IAS">
-                                IAS - Institute of Arts and Sciences
-                              </SelectItem>
-                              <SelectItem value="IED">
-                                IED - Institute of Education
-                              </SelectItem>
-                              <SelectItem value="IEAT">
-                                IEAT - Institute of Engineering and Applied
-                                Technology
-                              </SelectItem>
-                              <SelectItem value="IM">
-                                IM - Institute of Management
-                              </SelectItem>
-                              <SelectItem value="CAVM">
-                                CAVM - College of Agriculture and Veterinary
-                                Medicine
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
+                              <SelectTrigger
+                                className="rounded-r-none w-full"
+                                disabled={sendAuthCode.isLoading}
+                              >
+                                <SelectValue placeholder="Select Institute" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="ICS">
+                                  ICS - Institute Computer Studies
+                                </SelectItem>
+                                <SelectItem value="IAS">
+                                  IAS - Institute of Arts and Sciences
+                                </SelectItem>
+                                <SelectItem value="IED">
+                                  IED - Institute of Education
+                                </SelectItem>
+                                <SelectItem value="IEAT">
+                                  IEAT - Institute of Engineering and Applied
+                                  Technology
+                                </SelectItem>
+                                <SelectItem value="IM">
+                                  IM - Institute of Management
+                                </SelectItem>
+                                <SelectItem value="CAVM">
+                                  CAVM - College of Agriculture and Veterinary
+                                  Medicine
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                              <Button variant="ghost">
+                                <School />
+                              </Button>
+                            </span>
+                          </div>
                         </FormControl>
                       </FormItem>
                     )}
@@ -590,11 +757,47 @@ export default function RegisterStudent() {
                           Course <FormMessage />
                         </FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="Enter your course"
-                            {...field}
-                            disabled={sendAuthCode.isLoading}
-                          />
+                          <div className="flex items-center">
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <SelectTrigger
+                                className="rounded-r-none w-full"
+                                disabled={sendAuthCode.isLoading}
+                              >
+                                <SelectValue placeholder="Select Course" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="BSIT">
+                                  BSIT - Information Technology
+                                </SelectItem>
+                                <SelectItem value="BSCS">
+                                  BSCS - Computer Science
+                                </SelectItem>
+                                <SelectItem value="BSGE">
+                                  BSGE - Geodetic Engineering
+                                </SelectItem>
+                                <SelectItem value="BSFT">
+                                  BSFT - Food Technology
+                                </SelectItem>
+                                <SelectItem value="BSABEN">
+                                  BSABEN - Agricultural Engineering
+                                </SelectItem>
+                                <SelectItem value="BSED">
+                                  BSED - Secondary Education
+                                </SelectItem>
+                                <SelectItem value="BSBA">
+                                  BSBA - Business Administration
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                              <Button variant="ghost">
+                                <GraduationCap />
+                              </Button>
+                            </span>
+                          </div>
                         </FormControl>
                       </FormItem>
                     )}
@@ -609,21 +812,37 @@ export default function RegisterStudent() {
                           Year Level <FormMessage />
                         </FormLabel>
                         <FormControl>
-                          <Select
-                            disabled={sendAuthCode.isLoading}
-                            onValueChange={field.onChange}
-                            value={field.value}
-                          >
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select Year Level" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="1st Year">1st Year</SelectItem>
-                              <SelectItem value="2nd Year">2nd Year</SelectItem>
-                              <SelectItem value="3rd Year">3rd Year</SelectItem>
-                              <SelectItem value="4th Year">4th Year</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <div className="flex items-center">
+                            <Select
+                              disabled={sendAuthCode.isLoading}
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <SelectTrigger className="rounded-r-none w-full">
+                                <SelectValue placeholder="Select Year Level" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="1st Year">
+                                  1st Year
+                                </SelectItem>
+                                <SelectItem value="2nd Year">
+                                  2nd Year
+                                </SelectItem>
+                                <SelectItem value="3rd Year">
+                                  3rd Year
+                                </SelectItem>
+                                <SelectItem value="4th Year">
+                                  4th Year
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+
+                            <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                              <Button variant="ghost">
+                                <BookMarked />
+                              </Button>
+                            </span>
+                          </div>
                         </FormControl>
                       </FormItem>
                     )}
@@ -638,11 +857,31 @@ export default function RegisterStudent() {
                           Section <FormMessage />
                         </FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="Enter your section"
-                            {...field}
-                            disabled={sendAuthCode.isLoading}
-                          />
+                          <div className="flex items-center">
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <SelectTrigger
+                                className="rounded-r-none w-full"
+                                disabled={sendAuthCode.isLoading}
+                              >
+                                <SelectValue placeholder="Select Section" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="A">A</SelectItem>
+                                <SelectItem value="B">B</SelectItem>
+                                <SelectItem value="C">C</SelectItem>
+                                <SelectItem value="D">D</SelectItem>
+                                <SelectItem value="E">E</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                              <Button variant="ghost">
+                                <LayoutPanelTop />
+                              </Button>
+                            </span>
+                          </div>
                         </FormControl>
                       </FormItem>
                     )}
@@ -706,7 +945,7 @@ export default function RegisterStudent() {
                             <div className="relative">
                               <Input
                                 type={isVisible ? "text" : "password"}
-                                placeholder="Enter your password"
+                                placeholder=""
                                 {...field}
                                 disabled={sendAuthCode.isLoading}
                                 className="pe-9"
@@ -781,7 +1020,7 @@ export default function RegisterStudent() {
                   />
                 </div>
 
-                <div className="flex gap-3 items-center sticky bottom-0 bg-background z-10 py-2">
+                <div className="w-full sticky bottom-0 lg:px-8 p-2 lg:py-6 border-t bg-background flex flex-col-reverse lg:flex-row gap-3">
                   <Button
                     type="button"
                     onClick={handlePrevStepper}
@@ -789,11 +1028,11 @@ export default function RegisterStudent() {
                     className="flex-1"
                     disabled={sendAuthCode.isLoading}
                   >
-                    Previous
+                    <ArrowLeft /> Previous
                   </Button>
                   <Button
                     disabled={sendAuthCode.isLoading}
-                    className="flex-1"
+                    className="flex-1 !dark:bg-green-800 bg-green-700 "
                     type="submit"
                   >
                     {sendAuthCode.isLoading ? (
@@ -820,11 +1059,11 @@ export default function RegisterStudent() {
           {stepper === 3 && (
             <form
               onSubmit={otpForm.handleSubmit(HandleOtpVerification)}
-              className="space-y-6 flex justify-center items-center flex-col"
+              className="space-y-6 flex justify-center items-center flex-col "
             >
               <Form {...otpForm}>
                 <div className="w-full  space-y-5">
-                  <div className="">
+                  <div className="lg:pt-8 lg:px-8 pt-6 px-2">
                     <h1 className="text-lg font-semibold">Code Verifcation</h1>
                     <p className="text-sm mt-1 text-muted-foreground">
                       Enter the code we sent to your gmail.
@@ -835,9 +1074,9 @@ export default function RegisterStudent() {
                     control={otpForm.control}
                     name="otp"
                     render={({ field }) => (
-                      <FormItem className="lg: max-w-lg w-full mx-auto">
+                      <FormItem className="lg: max-w-lg w-full mx-auto lg:p-10 p-2 py-6">
                         <FormLabel className="flex justify-between items-center">
-                          Enter 6-digit code
+                          Enter 6-character code
                           <FormMessage />
                         </FormLabel>
                         <FormControl>
@@ -863,9 +1102,9 @@ export default function RegisterStudent() {
                     )}
                   />
 
-                  <div className="flex gap-3 py-2 bg-background">
+                  <div className="w-full sticky bottom-0 lg:px-8 lg:py-6 py-4 px-2 flex-col-reverse lg:flex-row border-t bg-background flex gap-3">
                     <Button variant="outline" className="flex-1" disabled>
-                      Resend (0s)
+                      Resend Code (Coming Soon)
                     </Button>
                     <Button
                       type="submit"

@@ -1,12 +1,89 @@
-import { AnimatePresence, motion } from "motion/react";
-import { Button } from "./button";
-import { Facebook, FacebookIcon } from "lucide-react";
+import { Facebook, Github } from "lucide-react";
+import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="w-full mt-10 py-5 flex justify-center items-center flex-col gap-2">
-      <p>2025 BASC Edugrant </p>
-      <p className="text-muted-foreground text-sm">All rights reserved.</p>
+    <footer className=" border-t lg:py-8 py-4 lg:mt-20 mt-10">
+      <div className="w-full  mx-auto lg:px-6 ">
+        <div className="flex items-center justify-between  ">
+          {/* Left side - Company info */}
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-black rounded-full flex items-center justify-center">
+              <div className="w-3 h-3 bg-white rounded-full"></div>
+            </div>
+            <span className="text-lg font-semibold text-foreground">
+              Edugrant
+            </span>
+          </div>
+
+          {/* Right side - Social icons */}
+          <div className="flex items-center space-x-4">
+            <Link href="#" className=" hover:text-foreground transition-colors">
+              <Facebook size={20} />
+            </Link>
+            <Link href="#" className=" hover:text-foreground transition-colors">
+              <Github size={20} />
+            </Link>
+          </div>
+        </div>
+
+        {/* Bottom section */}
+        <div className="lg:space-y-8 space-y-6">
+          <div className="mt-8 flex flex-col lg:flex-row items-center justify-between text-sm ">
+            {/* Copyright */}
+            <div className="space-y-1 hidden  lg:block">
+              <p>© 2024 BASC Edugrant</p>
+            </div>
+
+            {/* Navigation links */}
+            <div className="flex items-center space-x-8">
+              <Link
+                href="#"
+                className="hover:text-foreground transition-colors"
+              >
+                Features
+              </Link>
+              <Link
+                href="#"
+                className="hover:text-foreground transition-colors"
+              >
+                How it works
+              </Link>
+              <Link
+                href="#"
+                className="hover:text-foreground transition-colors"
+              >
+                Contact
+              </Link>
+              <Link
+                href="#"
+                className="hover:text-foreground transition-colors"
+              >
+                Credits
+              </Link>
+            </div>
+
+            {/* Legal links */}
+            <div className="flex items-center space-x-6">
+              <Link
+                href="#"
+                className="hover:text-foreground transition-colors"
+              >
+                Privacy
+              </Link>
+              <Link
+                href="#"
+                className="hover:text-foreground transition-colors"
+              >
+                Terms
+              </Link>
+            </div>
+          </div>
+          <p className="text-center  text-sm havelock tracking-[-2px]">
+            All rights reserved.
+          </p>
+        </div>
+      </div>
     </footer>
   );
 }

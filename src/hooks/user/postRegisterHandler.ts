@@ -95,23 +95,20 @@ export const useSendAuthCode = () => {
         status: "success",
         title: "Verification Code Sent!",
         description:
-          "Please check your email for the 6-digit code to continue.",
+          "Please check your email for the 6-character code to continue.",
       });
     },
     onError: (error: ApiError) => {
-      console.error("Profile update error:", error);
+      console.error("Registration error:", error);
       if (error.response?.data.message) {
         StyledToast({
           status: "error",
           title: error.response.data.message,
           duration: 10000,
-          description: "Cannot process your profile update request.",
+          description: "Cannot process your registration request.",
         });
       }
     },
-
-    retry: 2,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 };
 
@@ -121,18 +118,18 @@ export const useVerifyRegister = () => {
     onSuccess: () => {
       StyledToast({
         status: "success",
-        title: "Registration Complete!",
+        title: "Registration Completed!",
         description: "Redirecting to login...",
       });
     },
     onError: (error: ApiError) => {
-      console.error("Profile update error:", error);
+      console.error("Registration error:", error);
       if (error.response?.data.message) {
         StyledToast({
           status: "error",
           title: error.response.data.message,
           duration: 10000,
-          description: "Cannot process your profile update request.",
+          description: "Cannot process your registration request.",
         });
       }
     },
@@ -164,7 +161,7 @@ export const useRegisterHandler = () => {
       }
     } catch (error) {
       // Error toast is already handled in useSendAuthCode onError
-      console.error("Login error:", error);
+      console.error("Registration error:", error);
     }
   };
   const HandleOtpVerification = async (otpData: otpFormData) => {
@@ -174,11 +171,12 @@ export const useRegisterHandler = () => {
         accountData,
         data: otpData,
       });
-      if (result?.user) {
-        router.push("/user/home");
+      console.log("OTP verification result:", result);
+      if (result.success === true) {
+        router.replace("/user/login");
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("Registration error:", error);
     }
   };
 
