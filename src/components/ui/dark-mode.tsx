@@ -25,7 +25,7 @@ export function ModeToggle() {
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className=" p-2 grid items-center grid-cols-3 justify-center gap-4 w-md"
+        className=" p-2 grid items-center grid-cols-3 justify-center gap-4 lg:w-md"
         align="end"
       >
         <div className="flex flex-col" onClick={() => setTheme("light")}>

@@ -119,7 +119,7 @@ const HowitworksComponent = () => {
         {howItWorks.map((step, index) => (
           <SpotlightBorderWrapper key={index}>
             <div className="flex  border flex-col sm:flex-row items-start gap-6 p-4 shadow-black/10   dark:bg-white/5  rounded-lg ">
-              <div className="w-3/4 aspect-[16/8.5] overflow-hidden rounded-md dark:bg-transparent">
+              <div className="w-3/4 aspect-[16/8.5] min-h-40 overflow-hidden rounded-md dark:bg-transparent">
                 <img
                   src={step.image}
                   alt={step.title}
@@ -267,9 +267,10 @@ export default function DesktopLandingPage() {
           </motion.div>
         </AnimatePresence>
 
-        <div className="mx-auto w-3/4 mt-15">
+        <div className="mx-auto w-3/4 ">
           <FeaturesSection />
           <HowitworksComponent />
+
           <FaqsComponent />
           <ContactSection />
           <Footer />

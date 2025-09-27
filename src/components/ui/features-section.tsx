@@ -1,5 +1,6 @@
 import { Cpu, Lock, Sparkles, Zap } from "lucide-react";
 import imagee from "@/assets/zzzzz.png";
+
 export function FeaturesSection() {
   return (
     <section className="overflow-hidden py-16 lg:py-20">
@@ -7,8 +8,8 @@ export function FeaturesSection() {
         <div className="relative z-10 max-w-2xl">
           <h2 className="text-4xl font-semibold lg:text-5xl">Features</h2>
           <p className="mt-6 text-lg">
-            Empower your team with workflows that adapt to your needs, whether
-            you prefer git synchronization or a AI Agents interface.
+            Edugrant provides a straightforward and secure way for students to
+            submit applications and check their status at any time.
           </p>
         </div>
         <div className="relative -mx-4 rounded-3xl p-3 md:-mx-12 lg:col-span-3"></div>
@@ -16,38 +17,40 @@ export function FeaturesSection() {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Zap className="size-4" />
-              <h3 className="text-sm font-medium">Faaast</h3>
+              <h3 className="text-sm font-medium">Fast Application</h3>
             </div>
             <p className="text-muted-foreground text-sm">
-              It supports an entire helping developers and innovate.
+              Submit your scholarship application online in just a few minutes
+              without paperwork.
             </p>
           </div>
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Cpu className="size-4" />
-              <h3 className="text-sm font-medium">Powerful</h3>
+              <h3 className="text-sm font-medium">Smart Tracking</h3>
             </div>
             <p className="text-muted-foreground text-sm">
-              It supports an entire helping developers and businesses.
+              Monitor your application status and receive real-time updates on
+              your progress.
             </p>
           </div>
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Lock className="size-4" />
-              <h3 className="text-sm font-medium">Security</h3>
+              <h3 className="text-sm font-medium">Secure Data</h3>
             </div>
             <p className="text-muted-foreground text-sm">
-              It supports an helping developers businesses innovate.
+              All your personal information is safely encrypted and kept
+              private.
             </p>
           </div>
           <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Sparkles className="size-4" />
-
-              <h3 className="text-sm font-medium">AI Powered</h3>
+              <h3 className="text-sm font-medium">Student Friendly</h3>
             </div>
             <p className="text-muted-foreground text-sm">
-              It supports an helping developers businesses innovate.
+              Designed with students in mind — simple, clear, and easy to use.
             </p>
           </div>
         </div>

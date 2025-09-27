@@ -184,9 +184,7 @@ export default function MobileLandingPage() {
               width={30}
               height={30}
             />
-            <h1 className="text-xl havelock uppercase font-extrabold tracking-[-3px]">
-              Edugrant
-            </h1>
+            <h1 className="text-xl  uppercase font-extrabold">BASC</h1>
           </div>
           <ModeToggle />
         </motion.header>
@@ -206,7 +204,7 @@ export default function MobileLandingPage() {
           >
             <motion.span
               className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-500/70
-  text-3xl   font-bold 
+  text-4xl havelock tracking-[-3px]  font-bold 
   "
               initial={{ backgroundPosition: "200% 0" }}
               animate={{ backgroundPosition: "-200% 0" }}
@@ -217,7 +215,7 @@ export default function MobileLandingPage() {
                 ease: "linear",
               }}
             >
-              Your Path to Educational Excellence
+              EDUGRANT
             </motion.span>
           </motion.div>
           <motion.p
