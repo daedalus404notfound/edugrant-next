@@ -105,29 +105,6 @@ import { SummaryCard, SummaryCardProps } from "@/components/ui/summary";
 import { useUserStore } from "@/store/useUserStore";
 import Link from "next/link";
 
-const summaryCards: SummaryCardProps[] = [
-  {
-    label: "Total Applcations",
-    data: 1,
-    icon: <TrendingUp />,
-    color: "blue",
-    todayIncrement: 100,
-  },
-  {
-    label: "Approved Applications",
-    data: 2,
-    icon: <CheckCheck />,
-    color: "green",
-    todayIncrement: 50,
-  },
-  {
-    label: "Active Scholarships",
-    data: 3,
-    icon: <GraduationCap />,
-    color: "yellow",
-    todayIncrement: 25,
-  },
-];
 const announcements = [
   {
     id: 1,
@@ -164,6 +141,36 @@ export default function AdminDashboard() {
   const { user } = useUserStore();
   const { percentage, completed } = getFamilyBackgroundProgress(user?.Student);
   const [isClient, setIsClient] = useState(false);
+
+  const summaryCards: SummaryCardProps[] = [
+    {
+      label: "Total Applcations",
+      data: user?.Student.Application ? user?.Student.Application.length : 0,
+      icon: <TrendingUp />,
+      color: "blue",
+      todayIncrement: 0,
+    },
+    {
+      label: "Approved Application",
+      data: user?.Student.Application
+        ? user?.Student.Application.filter((meow) => meow.status === "APPROVED")
+            .length
+        : 0,
+      icon: <CheckCheck />,
+      color: "green",
+      todayIncrement: 0,
+    },
+    {
+      label: "Pending Application",
+      data: user?.Student.Application
+        ? user?.Student.Application.filter((meow) => meow.status === "PENDING")
+            .length
+        : 0,
+      icon: <GraduationCap />,
+      color: "yellow",
+      todayIncrement: 0,
+    },
+  ];
   useEffect(() => {
     setIsClient(true);
     setNow(new Date().toISOString());

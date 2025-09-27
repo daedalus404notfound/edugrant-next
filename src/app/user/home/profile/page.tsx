@@ -396,7 +396,7 @@ export default function Profile() {
                       type <span className="font-medium">N/A.</span>
                     </p> */}
                     <div className="lg:col-span-2 col-span-1 space-y-4">
-                      <div className="flex items-center gap-3 flex-col">
+                      <div className="flex items-center gap-3 flex-col lg:flex-row">
                         <h3 className="text-lg font-medium flex gap-2 items-center">
                           Father Information
                         </h3>
@@ -567,7 +567,7 @@ export default function Profile() {
                   <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
                   <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 py-10">
                     <div className="lg:col-span-2 col-span-1 space-y-4">
-                      <div className="flex items-center gap-3 flex-col">
+                      <div className="flex items-center gap-3 flex-col lg:flex-row">
                         <h3 className="text-lg font-medium flex gap-2 items-center">
                           Mother Information
                         </h3>
@@ -731,7 +731,7 @@ export default function Profile() {
                   <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
                   <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-3 gap-y-6 py-10">
                     <div className="lg:col-span-2 col-span-1 space-y-4">
-                      <div className="flex items-center gap-3 flex-col">
+                      <div className="flex items-center gap-3 flex-col lg:flex-row">
                         <h3 className="text-lg font-medium flex gap-2 items-center">
                           Guardian Information
                         </h3>
@@ -927,6 +927,7 @@ export default function Profile() {
                                       <Input
                                         {...field}
                                         className="w-full bg-card"
+                                        type="number"
                                       />
                                     </FormControl>
                                     <FormMessage />
@@ -991,6 +992,7 @@ export default function Profile() {
                               <Input
                                 {...field}
                                 className="bg-card w-full capitalize border-0 h-11"
+                                type="password"
                               />
                               <Button
                                 variant="ghost"
@@ -1017,6 +1019,7 @@ export default function Profile() {
                               <Input
                                 {...field}
                                 className="bg-card w-full capitalize border-0 h-11"
+                                type="password"
                               />
                               <Button>
                                 <UserRound className="opacity-80" />

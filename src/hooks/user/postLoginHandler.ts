@@ -63,7 +63,7 @@ export const useSendAuthCode = () => {
         status: "success",
         title: "Verification Code Sent!",
         description:
-          "Please check your email for the 6-digit code to continue.",
+          "Please check your email for the 6-character code to continue.",
       });
     },
     onError: (error: ApiError) => {
@@ -88,19 +88,19 @@ export const useVerifyLogin = () => {
     onSuccess: () => {
       StyledToast({
         status: "success",
-        title: "Welcome Back!",
-        description: "Login successful. Redirecting to your dashboard...",
+        title: "Logged In successfully",
+        description: "Redirecting to your dashboard...",
       });
       // console.log("login:", data);
     },
     onError: (error: ApiError) => {
-      console.error("Profile update error:", error);
+      console.error("Login error:", error);
       if (error.response?.data.message) {
         StyledToast({
           status: "error",
           title: error.response.data.message,
           duration: 10000,
-          description: "Cannot process your profile update request.",
+          description: "Cannot process your login request.",
         });
       }
     },
@@ -131,7 +131,7 @@ export const useLoginHandler = () => {
         // If remember me is not checked, clear any saved studentId
         clearStudentId();
       }
-      if (result) {
+      if (result.success === true) {
         setStep("otp");
       }
     } catch (error) {
@@ -147,7 +147,7 @@ export const useLoginHandler = () => {
         loginData: LoginData,
         otpData,
       });
-      if (result) {
+      if (result.success === true) {
         setOpen(false);
         router.replace("/user/home");
       }

@@ -105,7 +105,7 @@ export default function LoginClientModal() {
             account and remove your data from our servers.
           </DrawerDescription>
         </DrawerHeader>
-        <div className="relative z-10 flex justify-center items-center w-full  h-full lg:p-4 pt-4 rounded-2xl bg-background/70 backdrop-blur-md">
+        <div className="relative z-10 flex justify-center items-center w-full  h-full lg:p-4 pt-4 rounded-2xl bg-background/80 backdrop-blur-md">
           {step === "login" && (
             <div className="overflow-hidden w-full flex justify-center items-center flex-col p-4">
               <div className="  max-w-md w-full">

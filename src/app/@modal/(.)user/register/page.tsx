@@ -164,7 +164,7 @@ export default function RegisterStudent() {
         <Stepper
           defaultValue={1}
           value={stepper}
-          className="items-start gap-3  lg:pt-8 lg:pb-6 lg:px-8 px-2 py-4 bg-card  shadow rounded-md"
+          className="items-start gap-3  lg:pt-8 lg:pb-6 lg:px-8 px-2 py-4 bg-card/50  shadow rounded-md"
         >
           {steps.map(({ step, title }) => (
             <StepperItem key={step} step={step} className="flex-1">
@@ -606,7 +606,7 @@ export default function RegisterStudent() {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.6 }}
-                  className="w-full sticky bottom-0 lg:px-8 lg:py-6 py-4 px-2 border-t bg-background "
+                  className="w-full sticky bottom-0 lg:px-8 lg:py-6 py-4 px-2 border-t bg-background/50 "
                 >
                   <Button
                     onClick={personalForm.handleSubmit(handlePersonalSubmit)}
