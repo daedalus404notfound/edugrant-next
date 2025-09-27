@@ -155,7 +155,7 @@ export default function Create() {
           </DialogContent>
         </Dialog>
 
-        <div className="mx-auto  max-w-4xl w-full py-10">
+        <div className="mx-auto  max-w-5xl w-full py-10">
           <TitleReusable
             title=" Create Scholarship"
             description="Fill out the form below to add a new scholarship."
@@ -164,7 +164,10 @@ export default function Create() {
           <div className="flex grow items-center gap-3"></div>
           <Form {...form}>
             <div className="space-y-5 mt-10">
-              <TourStep stepId="details">
+              <TourStep
+                stepId="details"
+                className="bg-background p-4 rounded-md"
+              >
                 <div className="grid grid-cols-3 gap-x-3 gap-y-8">
                   <FormField
                     control={form.control}
@@ -470,8 +473,11 @@ export default function Create() {
                 </div>
               </TourStep>
             </div>
-            <TourStep stepId="files">
-              <div className="space-y-5 mt-10 ">
+            <TourStep
+              stepId="files"
+              className="bg-background p-4 rounded-md mt-10 "
+            >
+              <div className="space-y-5 ">
                 <div className="w-full flex gap-5">
                   {/* Backdrop Image */}
                   <div className="flex flex-col flex-1 gap-2">
@@ -564,8 +570,11 @@ export default function Create() {
               </div>
             </TourStep>
             {/* Dynamic Required Documents */}
-            <TourStep stepId="documents">
-              <div className="space-y-5 mt-10">
+            <TourStep
+              stepId="documents"
+              className="bg-background p-4 rounded-md mt-10"
+            >
+              <div className="space-y-5">
                 <div className="w-full flex items-center justify-between ">
                   <p className="text-sm font-medium text-muted-foreground">
                     Each document label must be unique.
