@@ -19,7 +19,7 @@ export function useCreateScholarshipZod() {
       logo: undefined,
       form: undefined,
       documents: {
-        documents: [{ label: "", formats: [], requirementType: "required" }],
+        documents: [{ label: "", formats: [], requirementType: undefined }],
       },
     },
     mode: "onChange",

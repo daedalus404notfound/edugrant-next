@@ -231,14 +231,16 @@ export default function UploadDocs({
     <div className="h-full bg-background flex flex-col rounded-t-lg">
       <div className="flex-1 lg:p-4 p-2 space-y-10">
         {data.form && (
-          <div className="lg:bg-muted lg:px-4 py-3 md:py-2 rounded-md">
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-              <p className="text-sm">{data.title} Form</p>
+          <div className="bg-muted lg:px-4 border  px-2 py-3 md:py-2 rounded-md sticky top-0">
+            <div className="flex  items-center justify-center gap-x-4 gap-y-2">
+              <p className="lg:text-lg font-semibold flex-1">
+                {data.title} Form
+              </p>
 
               <Button
                 size="sm"
                 variant="outline"
-                className="min-w-24 w-full"
+                className=""
                 onClick={() =>
                   downloadFile(data.form, `${data.title} Scholarship Form.pdf`)
                 }
@@ -253,7 +255,7 @@ export default function UploadDocs({
             </div>
           </div>
         )}
-        <div>
+        <div className="lg:px-4">
           <h2 className="text-lg font-semibold mb-4">Before you start</h2>
           <div className="grid gap-3 text-sm text-muted-foreground">
             <p>• Ensure all documents are clear, readable, and valid</p>
@@ -339,9 +341,6 @@ export default function UploadDocs({
                 <span className="font-medium">Progress</span>
                 <span className="font-medium">
                   {completedCount} out of {requiredDocumentsCount}{" "}
-                  <span className="hidden lg:block">
-                    required documents to unlock submit
-                  </span>
                 </span>
               </div>
               <Progress

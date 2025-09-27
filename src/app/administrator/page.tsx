@@ -266,13 +266,13 @@ text-5xl  havelock tracking-[-8px]
                     transition={{ duration: 0.6, delay: 0.6 }}
                     className="flex flex-col  gap-2"
                   >
-                    <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
+                    {/* <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                       <span className="bg-card text-muted-foreground relative z-10 px-2">
                         Don&apos;t have an account?{" "}
                       </span>
-                    </div>
+                    </div> */}
                   </motion.div>
-                  <motion.div
+                  {/* <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.7 }}
@@ -286,7 +286,7 @@ text-5xl  havelock tracking-[-8px]
                       <UserRoundPlus />
                       Register
                     </Button>
-                  </motion.div>
+                  </motion.div> */}
                 </div>
               </form>
             </div>

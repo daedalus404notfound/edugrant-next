@@ -55,7 +55,7 @@ export default function InterceptManageScholarshipClient() {
       }}
     >
       <DrawerContent
-        className={`lg:w-[56%] w-[98%] mx-auto outline-0 border-0 lg:p-1 bg-background ${
+        className={`lg:w-[56%] w-[98%] mx-auto outline-0 border-0 lg:p-1 bg-card ${
           loading ? " lg:h-[75dvh] h-[68dvh]" : " lg:h-[95dvh] h-[90dvh]"
         }`}
       >
