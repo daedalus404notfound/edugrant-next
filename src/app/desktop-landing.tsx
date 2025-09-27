@@ -35,6 +35,8 @@ import { Separator } from "@/components/ui/separator";
 import { Footer } from "@/components/ui/footer";
 import SpotlightBorderWrapper from "@/components/ui/border";
 import { Badge } from "@/components/ui/badge";
+import ContactSection from "@/components/ui/contact-section";
+import { FeaturesSection } from "@/components/ui/features-section";
 const navItems = [
   { label: "Home", icon: Home },
   { label: "Features", icon: Zap },
@@ -109,18 +111,15 @@ const howItWorks = [
 ];
 const HowitworksComponent = () => {
   return (
-    <div className="w-full space-y-5 mt-20">
-      <h1
-        id="how-it-works"
-        className="font-semibold text-xl flex items-center gap-2"
-      >
-        How It Works <MonitorCog />
-      </h1>
+    <div className="w-full space-y-12 py-20 px-6">
+      <div className="relative z-10  text-center">
+        <h2 className="text-4xl font-semibold lg:text-4xl">How it works</h2>
+      </div>
       <div className="grid md:grid-cols-2 gap-8 ">
         {howItWorks.map((step, index) => (
           <SpotlightBorderWrapper key={index}>
-            <div className="flex  border flex-col sm:flex-row items-start gap-6 p-4 shadow-black/10   dark:bg-primary/5 bg-card rounded-lg ">
-              <div className="w-3/4 aspect-[16/8.5] overflow-hidden rounded-md bg-background dark:bg-transparent">
+            <div className="flex  border flex-col sm:flex-row items-start gap-6 p-4 shadow-black/10   dark:bg-white/5  rounded-lg ">
+              <div className="w-3/4 aspect-[16/8.5] overflow-hidden rounded-md dark:bg-transparent">
                 <img
                   src={step.image}
                   alt={step.title}
@@ -143,7 +142,7 @@ const HowitworksComponent = () => {
 
 const FaqsComponent = () => {
   return (
-    <div className="space-y-5 w-full mt-20">
+    <div className="space-y-5 w-full py-25 px-6">
       <h1 id="faqs" className="font-semibold ltext-xl  flex items-center gap-2">
         Frequently Ask Questions <MessageCircleQuestion />
       </h1>
@@ -171,7 +170,7 @@ export default function DesktopLandingPage() {
           <span className="flex items-center gap-2">
             <img className="h-10 w-10" src={bascLogo.src} alt="" />
             <img className="h-10 w-10" src={osas.src} alt="" />
-            <p className="font-semibold text-xl ">BASC Edugrant</p>
+            <p className="font-semibold text-xl ">BASC</p>
           </span>
           <Separator orientation="vertical" />
           <ul className="flex gap-2">
@@ -211,7 +210,7 @@ export default function DesktopLandingPage() {
 
   return (
     <>
-      <div className="gradient fixed inset-0 z-10 hidden dark:block"></div>
+      <div className="gradient absolute inset-0 z-10 hidden dark:block h-[88dvh]"></div>
       <div className="relative w-full z-10 ">
         <HeaderComponent />
         <AnimatePresence mode="wait">
@@ -237,12 +236,9 @@ export default function DesktopLandingPage() {
             </div>
 
             <div className="absolute z-10 left-10 h-full w-full flex flex-col justify-center">
-              <Badge className="bg-yellow-500/15 text-yellow-500">
-                <Building /> Office of Student Affairs and Services
-              </Badge>
               <motion.span
                 className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  dark:text-primary/70 text-gray-200
-  text-6xl  havelock tracking-[-8px] -translate-x-2 mt-1.5
+  text-6xl  havelock tracking-[-8px] py-5 -translate-x-2 
   "
                 initial={{ backgroundPosition: "200% 0" }}
                 animate={{ backgroundPosition: "-200% 0" }}
@@ -260,7 +256,7 @@ export default function DesktopLandingPage() {
                 delay={150}
                 animateBy="words"
                 direction="top"
-                className="text-2xl mt-3 text-white"
+                className="text-2xl  text-white"
               />
               <Link href={"/user/register"} prefetch={true} className="mt-8">
                 <Button variant="outline">
@@ -272,8 +268,10 @@ export default function DesktopLandingPage() {
         </AnimatePresence>
 
         <div className="mx-auto w-3/4 mt-15">
+          <FeaturesSection />
           <HowitworksComponent />
           <FaqsComponent />
+          <ContactSection />
           <Footer />
         </div>
       </div>

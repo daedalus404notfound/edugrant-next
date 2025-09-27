@@ -25,7 +25,7 @@ export function ModeToggle() {
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className=" p-2 grid items-center grid-cols-2 justify-center gap-4"
+        className=" p-2 grid items-center grid-cols-3 justify-center gap-4 w-md"
         align="end"
       >
         <div className="flex flex-col" onClick={() => setTheme("light")}>
@@ -67,26 +67,7 @@ export function ModeToggle() {
             </p>
           </div>
         </div>
-        <div className="flex flex-col" onClick={() => setTheme("red")}>
-          <span
-            className={`rounded-sm overflow-hidden border border-transparent ${
-              theme === "red" ? "shadow border border-ring" : ""
-            }`}
-          >
-            <img src={dark.src} alt="" />
-          </span>
 
-          <div className="flex gap-2">
-            {theme === "red" ? <Check size={15} /> : <Minus size={15} />}
-            <p
-              className={`text-muted-foreground text-xs ${
-                theme === "red" ? "text-primary" : ""
-              }`}
-            >
-              Red
-            </p>
-          </div>
-        </div>
         <div className="flex flex-col" onClick={() => setTheme("system")}>
           <span
             className={`rounded-sm overflow-hidden border border-transparent ${

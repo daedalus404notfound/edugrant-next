@@ -38,7 +38,7 @@ export default function RootLayout({
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
-            themes={["light", "dark", "red"]}
+            themes={["light", "dark"]}
           >
             {children}
             {modal}
