@@ -164,7 +164,9 @@ export default function ClientScholarship() {
 
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      {!completed && <div className="absolute inset-0 z-20 bg-black/80 "></div>}
+      {!completed && (
+        <div className="absolute inset-0 z-20 bg-background/70 rounded-lg "></div>
+      )}
       <div className="mx-auto w-[95%] lg:pt-10  pt-3">
         <motion.div
           className="flex justify-between items-end"

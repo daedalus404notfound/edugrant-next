@@ -86,6 +86,8 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import TitleReusable from "@/components/ui/title";
 import { useIsMobile } from "@/hooks/use-mobile";
+import bascLogo from "@/assets/basclogo.png";
+import osas from "@/assets/osasa.png";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -112,6 +114,9 @@ export default function DynamicHeaderUser({
   return (
     <header className="flex w-full z-30 items-center justify-between  backdrop-blur-sm rounded-lg">
       <div className="flex h-16 shrink-0 items-center gap-2 lg:px-5 px-3">
+        {/* <div className="flex gap-2 items-center">
+          <img src={bascLogo.src} alt="" className="size-9" />
+        </div> */}
         <SidebarTrigger className="-ml-1 lg:flex hidden" />
         <Separator
           orientation="vertical"
@@ -176,12 +181,11 @@ export default function DynamicHeaderUser({
               <Hamburger toggled={open} toggle={setOpen} size={28} rounded />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="lg:mr-5 mr-3 w-[200px]">
+          <DropdownMenuContent className="lg:mr-5 mr-3 w-[200px] space-y-2">
             <DropdownMenuItem>
               <UserRound />
               My Account
             </DropdownMenuItem>{" "}
-            <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
                 setOpenNotif(true);
@@ -191,7 +195,6 @@ export default function DynamicHeaderUser({
               <Bell />
               Notification
             </DropdownMenuItem>{" "}
-            <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
                 setOpenOut(true);
@@ -201,7 +204,6 @@ export default function DynamicHeaderUser({
               <LogOut />
               Log out
             </DropdownMenuItem>{" "}
-            <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
                 setOpenDark(true);
@@ -282,10 +284,10 @@ export default function DynamicHeaderUser({
               onClick={() => setOpenOut(false)}
               variant="outline"
             >
-              Cancel
+              Stay logged in
             </Button>
-            <Button variant="secondary" className="flex-1 lg:flex-none">
-              Logout
+            <Button className="flex-1 lg:flex-none">
+              Logout <ArrowRight />
             </Button>
           </div>
         </DialogContent>

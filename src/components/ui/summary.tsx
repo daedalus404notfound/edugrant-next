@@ -79,7 +79,7 @@ export function SummaryCard({
   loading = false,
 }: SummaryCardProps) {
   return (
-    <div className=" bg-card z-10 flex flex-col justify-between rounded-lg  p-4 lg:gap-2 border ">
+    <div className=" bg-background shadow z-10 flex flex-col justify-between rounded-lg  p-4 lg:gap-2 border ">
       <div className="flex justify-between items-start">
         <Button variant="secondary" className={colorStyles[color].text}>
           {icon}
@@ -93,7 +93,7 @@ export function SummaryCard({
       </div>
 
       <div className="flex justify-between items-end">
-        <p className="lg:text-sm text-xs">{label}</p>
+        <p className="lg:text-sm text-xs line-clamp-1">{label}</p>
         <span className="text-3xl font-semibold font-mono">
           {loading ? (
             <Ring size={25} stroke={4} speed={2} bgOpacity={0} color="green" />
