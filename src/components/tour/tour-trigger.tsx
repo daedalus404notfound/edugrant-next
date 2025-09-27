@@ -3,7 +3,7 @@
 import type React from "react";
 
 import { Button } from "@/components/ui/button";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, Milestone } from "lucide-react";
 import { useTourContext } from "./tour-provider";
 
 interface TourTriggerProps {
@@ -25,7 +25,7 @@ export function TourTrigger({ children, className }: TourTriggerProps) {
     >
       {children || (
         <>
-          <HelpCircle className="w-4 h-4 mr-2" />
+          <Milestone className="w-4 h-4 mr-2" />
           Take Tour
         </>
       )}

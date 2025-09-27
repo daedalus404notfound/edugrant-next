@@ -118,15 +118,29 @@ export default function Create() {
     <TourProvider steps={postScholarshipTourSteps}>
       <div className="relative lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
         <Dialog open={openGuide} onOpenChange={setOpenGuide}>
-          <DialogContent className="!bg-card w-md p-6">
+          <DialogContent
+            className="!bg-card w-lg p-6"
+            onInteractOutside={(e) => {
+              e.preventDefault();
+            }}
+            onEscapeKeyDown={(e) => {
+              e.preventDefault();
+            }}
+            showCloseButton={false}
+          >
             <DialogHeader>
-              <DialogTitle>Welcome to Scholarship Creation</DialogTitle>
-              <DialogDescription>
-                Start setting up your scholarship program. You can take a quick
-                tour to learn the process, or skip and begin right away.
+              <DialogTitle>
+                <TitleReusable
+                  title="Welcome to Post Scholarship"
+                  description=""
+                />
+              </DialogTitle>
+              <DialogDescription className="mt-3">
+                Start posting scholarship program. You can take a quick tour to
+                learn the process, or skip and begin right away.
               </DialogDescription>
             </DialogHeader>
-            <div className="flex gap-3">
+            <div className="flex gap-3 mt-3">
               <Button
                 className="flex-1"
                 variant="secondary"
