@@ -60,6 +60,7 @@ import {
   CalendarIcon,
   ChevronsUpDown,
   ExternalLink,
+  Loader,
   LogOut,
   Menu,
   Moon,
@@ -89,6 +90,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import bascLogo from "@/assets/basclogo.png";
 import osas from "@/assets/osasa.png";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useUserLogout } from "@/hooks/user/postUserLogout";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -105,7 +107,8 @@ export default function DynamicHeaderUser({
   const { user } = useUserStore();
   // console.log(admin);
   const isMobile = useIsMobile();
-  const { handleLogout } = useAdminLogout();
+  const { handleLogout, loading: loadingLogout } = useUserLogout();
+
   const [open, setOpen] = useState(false);
   const [openNotif, setOpenNotif] = useState(false);
   const [openOut, setOpenOut] = useState(false);
@@ -199,10 +202,21 @@ export default function DynamicHeaderUser({
               onClick={() => {
                 setOpenOut(true);
                 setOpen(false);
+                handleLogout;
               }}
+              disabled={loadingLogout}
             >
-              <LogOut />
-              Log out
+              {loadingLogout ? (
+                <>
+                  Logging out...
+                  <Loader className="animate-spin" />
+                </>
+              ) : (
+                <>
+                  <LogOut />
+                  Log out
+                </>
+              )}
             </DropdownMenuItem>{" "}
             <DropdownMenuItem
               onClick={() => {
