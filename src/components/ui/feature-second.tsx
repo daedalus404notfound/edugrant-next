@@ -24,13 +24,11 @@ const AppSection = () => {
   ];
 
   return (
-    <section className="w-full py-20 px-6 space-y-12">
+    <section className="w-full py-25 px-6 space-y-12">
       {/* Header */}
       <div className="flex flex-col items-center text-center">
-        <h2 className="text-3xl font-semibold mt-4 text-slate-900 dark:text-white">
-          Features
-        </h2>
-        <p className="mt-2 text-slate-600 dark:text-slate-300 max-w-3xl ">
+        <h2 className="lg:text-3xl text-2xl font-semibold">Features</h2>
+        <p className="mt-2 lg:text-base text-sm text-muted-foreground max-w-3xl ">
           Edugrant provides a straightforward and secure way for students to
           submit applications and check their status at any time.
         </p>
@@ -50,15 +48,17 @@ const AppSection = () => {
               }`}
             >
               <div
-                className="p-8 rounded-lg space-y-4
+                className="lg:p-8 p-4 rounded-lg space-y-4
                             border shadow-sm dark:border-green-800/20
                             dark:bg-green-950/20
                          
                             w-full max-w-sm"
               >
-                <Icon size={32} />
+                <Icon className="h-4 w-4 lg:h-8 lg:w-8" />
                 <h3 className="text-base font-medium">{feature.title}</h3>
-                <p className="line-clamp-2 pb-4">{feature.description}</p>
+                <p className="lg:line-clamp-2 pb-4 text-sm lg:text-base">
+                  {feature.description}
+                </p>
               </div>
             </div>
           );

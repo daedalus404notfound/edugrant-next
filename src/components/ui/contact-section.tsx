@@ -8,7 +8,7 @@ export default function ContactSection() {
       desc: "Pinaod, San Ildefonso Bulacan",
       link: {
         name: "View on Google Maps",
-        href: "https://maps.google.com/?q=123+Main+Street,+Quezon+City,+Philippines",
+        href: "hhttps://maps.app.goo.gl/yA6hXRFM1ECfnpdFA",
       },
     },
     {

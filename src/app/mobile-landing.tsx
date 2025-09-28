@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/dark-mode";
+import osas from "@/assets/osasa.png";
 import create from "@/assets/create.svg";
 import browse from "@/assets/browse.svg";
 import BlurText from "@/components/ui/blur";
@@ -96,6 +97,7 @@ import { Footer } from "@/components/ui/footer";
 import SpotlightBorderWrapper from "@/components/ui/border";
 import { FeaturesSection } from "@/components/ui/features-section";
 import ContactSection from "@/components/ui/contact-section";
+import AppSection from "@/components/ui/feature-second";
 
 const FaqsComponent = () => {
   return (
@@ -189,7 +191,13 @@ export default function MobileLandingPage() {
               width={30}
               height={30}
             />
-            <h1 className="text-xl  uppercase font-extrabold">BASC</h1>
+            <Image
+              src={osas.src}
+              alt="bascLogo"
+              unoptimized
+              width={30}
+              height={30}
+            />
           </div>
           <ModeToggle />
         </motion.header>
@@ -261,7 +269,7 @@ export default function MobileLandingPage() {
             </Link>
           </motion.div>
           <HowitworksComponent />
-          <FeaturesSection />
+          <AppSection />
           <FaqsComponent />
           <ContactSection />
           <Footer />
