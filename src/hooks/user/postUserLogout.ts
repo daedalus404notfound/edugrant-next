@@ -14,7 +14,7 @@ export function useUserLogout() {
     try {
       setLoading(true);
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/logout`,
+        `${process.env.NEXT_PUBLIC_USER_URL}/logout`,
         {},
         { withCredentials: true }
       );
@@ -28,7 +28,7 @@ export function useUserLogout() {
           description: "You have been redirected to the login page.",
         });
 
-        router.replace("/administrator");
+        router.replace("/");
       } else {
         StyledToast({
           status: "error",
