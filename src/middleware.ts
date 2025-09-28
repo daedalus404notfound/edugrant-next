@@ -1,45 +1,3 @@
-// import { NextResponse } from "next/server";
-// import type { NextRequest } from "next/server";
-
-// export function middleware(req: NextRequest) {
-//   const { pathname } = req.nextUrl;
-
-//   const userToken = req.cookies.get("token")?.value;
-//   const adminToken = req.cookies.get("adminToken")?.value;
-
-//   console.log("🔍 Path:", pathname);
-//   console.log("👉 userToken:", userToken);
-//   console.log("👉 adminToken:", adminToken);
-
-//   // Protect user routes
-//   if (pathname.startsWith("/user")) {
-//     if (!userToken) {
-//       console.log("🚨 No user token, redirecting to login");
-//       return NextResponse.redirect(new URL("/", req.url));
-//     }
-//   }
-
-//   // Protect administrator routes
-//   if (pathname.startsWith("/administrator")) {
-//     if (!adminToken) {
-//       console.log("🚨 No admin token, redirecting to login");
-//       return NextResponse.redirect(new URL("/", req.url));
-//     }
-//   }
-
-//   return NextResponse.next();
-// }
-
-// export const config = {
-//   matcher: [
-//     "/user/home",
-//     "/user/home/:path*",
-//     "/administrator/head",
-//     "/administrator/head/home:path*",
-//     "/administrator/staff",
-//     "/administrator/staff/home:path*",
-//   ],
-// };
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import * as jose from "jose";
@@ -68,15 +26,24 @@ export async function middleware(req: NextRequest) {
     if (adminToken) {
       try {
         const { payload } = await jose.jwtVerify(adminToken, SECRET);
-        console.log(payload);
-      } catch (error) {}
+        console.log("Decoded payload:", payload);
 
-      // console.log("✅ Admin already logged in, redirecting to admin dashboard");
-      // return NextResponse.redirect(
-      //   new URL("/administrator/head/home", req.url)
-      // );
+        const role = payload.role as string;
+
+        if (role === "ISPSU_Head") {
+          return NextResponse.redirect(
+            new URL("/administrator/head/home", req.url)
+          );
+        } else if (role === "ISPSU_Staff") {
+          return NextResponse.redirect(
+            new URL("/administrator/staff/home", req.url)
+          );
+        }
+      } catch (error) {
+        console.error("❌ Invalid token:", error);
+        return NextResponse.redirect(new URL("/administrator", req.url));
+      }
     }
-    // ❗ If no adminToken, allow access to `/administrator` (login page)
     return NextResponse.next();
   }
 
