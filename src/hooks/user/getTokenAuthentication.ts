@@ -23,11 +23,11 @@ export default function useAuthenticatedUser() {
 
         if (res.status === 200) {
           setUser(res.data.userData);
-          if (pathname === "/") {
-            router.replace("/user/home");
-          }
+          // if (pathname === "/") {
+          //   router.replace("/user/home");
+          // }
 
-          console.log("authapi:", res.data);
+          // console.log("authapi:", res.data);
         }
       } catch (error) {
         if (axios.isAxiosError<ApiErrorResponse>(error)) {
@@ -36,9 +36,9 @@ export default function useAuthenticatedUser() {
             title: error?.response?.data.message ?? "An error occurred.",
             description: "Cannot process your request.",
           });
-          if (pathname !== "/") {
-            router.replace("/");
-          }
+          // if (pathname !== "/") {
+          //   router.replace("/");
+          // }
           logout();
         }
       } finally {

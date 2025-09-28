@@ -26,17 +26,17 @@ export default function useAuthenticatedUser() {
         if (res.status === 200) {
           setAdmin(res.data.safeData);
 
-          if (
-            res.data.safeData.role === "ISPSU_Staff" &&
-            pathname !== "/administrator/staff/home"
-          ) {
-            router.push("/administrator/staff/home");
-          } else if (
-            res.data.safeData.role === "ISPSU_Head" &&
-            pathname !== "/administrator/head/home"
-          ) {
-            router.push("/administrator/head/home");
-          }
+          // if (
+          //   res.data.safeData.role === "ISPSU_Staff" &&
+          //   pathname !== "/administrator/staff/home"
+          // ) {
+          //   router.push("/administrator/staff/home");
+          // } else if (
+          //   res.data.safeData.role === "ISPSU_Head" &&
+          //   pathname !== "/administrator/head/home"
+          // ) {
+          //   router.push("/administrator/head/home");
+          // }
 
           setSucces(true);
         }
@@ -49,9 +49,9 @@ export default function useAuthenticatedUser() {
           });
         }
         setSucces(false);
-        if (pathname !== "/") {
-          router.replace("/administrator");
-        }
+        // if (pathname !== "/") {
+        //   router.replace("/administrator");
+        // }
         logout();
       } finally {
         setLoading(false);

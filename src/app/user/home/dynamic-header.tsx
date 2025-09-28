@@ -91,6 +91,7 @@ import bascLogo from "@/assets/basclogo.png";
 import osas from "@/assets/osasa.png";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useUserLogout } from "@/hooks/user/postUserLogout";
+import usefetchNotifications from "@/hooks/user/getNotfications";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -114,6 +115,21 @@ export default function DynamicHeaderUser({
   const [openOut, setOpenOut] = useState(false);
   const [openDark, setOpenDark] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const {
+    data,
+    loading: loadiingNotif,
+    meta,
+  } = usefetchNotifications({
+    page: 1,
+    pageSize: 10,
+    sortBy: "",
+    order: "",
+    status: "",
+
+    accountId: user?.accountId ? user?.accountId : 5, // empty string is okay
+  });
+
   return (
     <header className="flex w-full z-30 items-center justify-between  backdrop-blur-sm rounded-lg">
       <div className="flex h-16 shrink-0 items-center gap-2 lg:px-5 px-3">
@@ -233,33 +249,34 @@ export default function DynamicHeaderUser({
               <Button size="sm">Mark all as read</Button>
             </div>
             <div className="flex-1">
-              <Timeline className="space-y-5">
+              {/* <Timeline className="space-y-5">
                 {loading ? (
                   <></>
                 ) : (
-                  announcements.map((item) => (
-                    <TimelineItem
-                      key={item.id}
-                      step={item.id}
-                      className="!m-0  bg-card  p-4! rounded-md border !mb-2 "
-                    >
-                      <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
-                        <TimelineTitle className="font-medium text-base">
-                          {item.title ?? "Win scholarship is now open."}
-                        </TimelineTitle>
-                      </div>
-                      <TimelineDate className="lg:text-sm text-xs text-muted-foreground flex items-center gap-1.5">
-                        <CalendarIcon size={13} /> {format(item.date, "PPP p")}
-                      </TimelineDate>
-                      <TimelineContent className="text-foreground mt-1 whitespace-pre-line">
-                        <AnnouncementDescription
-                          description={item.description}
-                        />
-                      </TimelineContent>
-                    </TimelineItem>
+                  data.map((item) => (
+                    // <TimelineItem
+                    //   key={item.id}
+                    //   step={item.id}
+                    //   className="!m-0  bg-card  p-4! rounded-md border !mb-2 "
+                    // >
+                    //   <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
+                    //     <TimelineTitle className="font-medium text-base">
+                    //       {item.title ?? "Win scholarship is now open."}
+                    //     </TimelineTitle>
+                    //   </div>
+                    //   <TimelineDate className="lg:text-sm text-xs text-muted-foreground flex items-center gap-1.5">
+                    //     <CalendarIcon size={13} /> {format(item.date, "PPP p")}
+                    //   </TimelineDate>
+                    //   <TimelineContent className="text-foreground mt-1 whitespace-pre-line">
+                    //     <AnnouncementDescription
+                    //       description={item.description}
+                    //     />
+                    //   </TimelineContent>
+                    // </TimelineItem>
+                    <div>1</div>
                   ))
                 )}
-              </Timeline>
+              </Timeline> */}
               <div className=" justify-center items-center hidden">
                 <Button variant="link" size="lg" className="!p-0">
                   Load More <ArrowRight />
