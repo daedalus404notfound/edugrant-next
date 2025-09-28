@@ -19,6 +19,7 @@ import {
   HelpCircle,
   Zap,
   Building,
+  Milestone,
 } from "lucide-react";
 import bascLogo from "@/assets/basclogo.png";
 import osas from "@/assets/osasa.png";
@@ -38,6 +39,7 @@ import { Badge } from "@/components/ui/badge";
 import ContactSection from "@/components/ui/contact-section";
 import { FeaturesSection } from "@/components/ui/features-section";
 import AppSection from "@/components/ui/feature-second";
+import TitleReusable from "@/components/ui/title";
 const navItems = [
   { label: "Home", icon: Home },
   { label: "Features", icon: Zap },
@@ -114,7 +116,11 @@ const HowitworksComponent = () => {
   return (
     <div className="w-full space-y-12 py-20 px-6">
       <div className="relative z-10 ">
-        <h2 className="text-3xl font-semibold">How it works</h2>
+        <TitleReusable
+          description="Follow these four simple steps to apply for scholarships seamlessly."
+          title=" How it works"
+          Icon={Milestone}
+        />
       </div>
       <div className="grid md:grid-cols-2 gap-8 ">
         {howItWorks.map((step, index) => (
@@ -273,8 +279,11 @@ export default function DesktopLandingPage() {
 
         <div className="mx-auto w-3/4 ">
           <AppSection />
+          <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
           <HowitworksComponent />
+          <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
           <ContactSection />
+          <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
           <FaqsComponent />
 
           <Footer />

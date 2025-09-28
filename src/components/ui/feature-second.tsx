@@ -1,5 +1,5 @@
-import { GlobeLock, Zap, Map } from "lucide-react";
-import { Badge } from "./badge";
+import { GlobeLock, Zap, Map, Sparkles } from "lucide-react";
+import SpotlightBorderWrapper from "./border";
 
 const AppSection = () => {
   const featuresData = [
@@ -27,7 +27,9 @@ const AppSection = () => {
     <section className="w-full py-25 px-6 space-y-12">
       {/* Header */}
       <div className="flex flex-col items-center text-center">
-        <h2 className="lg:text-3xl text-2xl font-semibold">Features</h2>
+        <h2 className="lg:text-3xl text-2xl font-semibold flex gap-3 items-center">
+          Features <Sparkles />
+        </h2>
         <p className="mt-2 lg:text-base text-sm text-muted-foreground max-w-3xl ">
           Edugrant provides a straightforward and secure way for students to
           submit applications and check their status at any time.
@@ -39,28 +41,29 @@ const AppSection = () => {
         {featuresData.map((feature, index) => {
           const Icon = feature.icon;
           return (
-            <div
-              key={index}
-              className={`hover:-translate-y-0.5 transition duration-300 ${
-                index === 1
-                  ? "p-px rounded-[11px] dark:bg-gradient-to-br dark:from-[#2e5e367b] dark:to-[#1a2f1b8c]"
-                  : ""
-              }`}
-            >
+            <SpotlightBorderWrapper key={index}>
               <div
-                className="lg:p-8 p-4 rounded-lg space-y-4
+                className={`hover:-translate-y-0.5 transition duration-300 ${
+                  index === 1
+                    ? "p-px rounded-[11px] dark:bg-gradient-to-br dark:from-[#2e5e367b] dark:to-[#1a2f1b8c]"
+                    : ""
+                }`}
+              >
+                <div
+                  className="lg:p-8 p-4 rounded-lg space-y-4
                             border shadow-sm dark:border-green-800/20
                             dark:bg-green-950/20
                          
                             w-full max-w-sm"
-              >
-                <Icon className="h-4 w-4 lg:h-8 lg:w-8" />
-                <h3 className="text-base font-medium">{feature.title}</h3>
-                <p className="lg:line-clamp-2 pb-4 text-sm lg:text-base">
-                  {feature.description}
-                </p>
+                >
+                  <Icon className="h-4 w-4 lg:h-8 lg:w-8" />
+                  <h3 className="text-base font-medium">{feature.title}</h3>
+                  <p className="lg:line-clamp-2 pb-4 text-sm lg:text-base">
+                    {feature.description}
+                  </p>
+                </div>
               </div>
-            </div>
+            </SpotlightBorderWrapper>
           );
         })}
       </div>
