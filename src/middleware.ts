@@ -22,29 +22,62 @@ export async function middleware(req: NextRequest) {
   }
 
   // Auto redirect if admin is already logged in and tries to access `/administrator` (login page)
+  // if (pathname === "/administrator") {
+  //   if (adminToken) {
+  //     try {
+  //       const { payload } = await jose.jwtVerify(adminToken, SECRET);
+  //       console.log("Decoded payload:", payload);
+
+  //       const role = payload.role as string;
+
+  //       if (role === "ISPSU_Head") {
+  //         return NextResponse.redirect(
+  //           new URL("/administrator/home/head", req.url)
+  //         );
+  //       } else if (role === "ISPSU_Staff") {
+  //         return NextResponse.redirect(
+  //           new URL("/administrator/home/staff", req.url)
+  //         );
+  //       }
+  //     } catch (error) {
+  //       console.error("❌ Invalid token:", error);
+  //       return NextResponse.redirect(new URL("/administrator/", req.url));
+  //     }
+  //   }
+  //   return NextResponse.next();
+  // }
   if (pathname === "/administrator") {
     if (adminToken) {
       try {
         const { payload } = await jose.jwtVerify(adminToken, SECRET);
-        console.log("Decoded payload:", payload);
-
         const role = payload.role as string;
 
         if (role === "ISPSU_Head") {
           return NextResponse.redirect(
-            new URL("/administrator/home/head", req.url)
+            new URL("/administrator/head/home", req.url)
           );
         } else if (role === "ISPSU_Staff") {
           return NextResponse.redirect(
-            new URL("/administrator/home/staff", req.url)
+            new URL("/administrator/staff/home", req.url)
           );
         }
       } catch (error) {
         console.error("❌ Invalid token:", error);
-        return NextResponse.redirect(new URL("/administrator/", req.url));
+        return NextResponse.next(); // let them stay on login if token is bad
       }
     }
-    return NextResponse.next();
+    return NextResponse.next(); // allow access to login page if no token
+  }
+
+  // Protect administrator dashboard routes (not login)
+  if (
+    pathname.startsWith("/administrator/head") ||
+    pathname.startsWith("/administrator/staff")
+  ) {
+    if (!adminToken) {
+      console.log("🚨 No admin token, redirecting to login");
+      return NextResponse.redirect(new URL("/administrator", req.url));
+    }
   }
 
   // Protect user routes
@@ -71,13 +104,18 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
+    // "/",
+    // "/administrator",
+    // "/user/home",
+    // "/user/home/:path*",
+    // "/administrator/head",
+    // "/administrator/head/home:path*",
+    // "/administrator/staff",
+    // "/administrator/staff/home:path*",
     "/",
-    "/administrator",
-    "/user/home",
+    "/administrator", // login page only
     "/user/home/:path*",
-    "/administrator/head",
-    "/administrator/head/home:path*",
-    "/administrator/staff",
-    "/administrator/staff/home:path*",
+    "/administrator/head/:path*",
+    "/administrator/staff/:path*",
   ],
 };

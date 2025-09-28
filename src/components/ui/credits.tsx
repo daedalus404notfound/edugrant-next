@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Twitter, Linkedin } from "lucide-react";
 import tecson from "@/assets/tecson.jpg";
 import ramos from "@/assets/ramos.jpg";
-import ferraren from "@/assets/ferraren.png";
+import ferraren from "@/assets/omar.jpg";
 import sants from "@/assets/sants.jpg";
-import pena from "@/assets/pena.jpg";
+import pena from "@/assets/mikku.png";
 // Define props type
 interface TeamMemberProps {
   name: string;
@@ -25,7 +25,7 @@ const TeamMember = ({
   image,
   socialLinks,
 }: TeamMemberProps) => (
-  <Card className=" border-green-800/10 bg-green-900/10 p-0 overflow-hidden">
+  <Card className=" dark:border-green-800/10 dark:bg-green-900/10 p-0 overflow-hidden">
     <div className="flex flex-col md:flex-row">
       <div className="relative md:w-48 h-64 md:h-auto flex-shrink-0">
         <Image

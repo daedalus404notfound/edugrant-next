@@ -76,8 +76,9 @@ const faqs = [
     value: "item-5",
     question: "Can I edit my application after submitting?",
     answer:
-      "No, once an application is submitted, it cannot be edited. Please review all your information carefully before finalizing.",
+      "Yes, you can still edit your application after submitting. Make sure to save changes properly before the deadline.",
   },
+
   {
     value: "item-6",
     question:

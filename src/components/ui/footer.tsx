@@ -1,5 +1,6 @@
 import { Facebook, Github } from "lucide-react";
 import Link from "next/link";
+import next from "../../../public/next.svg";
 
 export function Footer() {
   return (
@@ -79,9 +80,10 @@ export function Footer() {
               </Link>
             </div>
           </div>
-          <p className="text-center  text-sm havelock tracking-[-2px]">
-            All rights reserved.
-          </p>
+          <div className="flex gap-4 bg-card p-4 justify-center items-center">
+            <p className="  text-xs tracking-[2px] font-semibold">Powered by</p>
+            <img className="object-contain w-20" src={next.src} alt="" />
+          </div>
         </div>
       </div>
     </footer>
