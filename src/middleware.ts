@@ -23,34 +23,27 @@ export async function middleware(req: NextRequest) {
 
   // Auto redirect if admin is already logged in and tries to access `/administrator` (login page)
   if (pathname === "/administrator") {
-    if (!adminToken) {
-      // ✅ No token → just show login page (don't redirect)
-      return NextResponse.next();
-    }
+    if (adminToken) {
+      try {
+        const { payload } = await jose.jwtVerify(adminToken, SECRET);
+        console.log("Decoded payload:", payload);
 
-    try {
-      const { payload } = await jose.jwtVerify(adminToken, SECRET);
-      console.log("Decoded payload:", payload);
+        const role = payload.role as string;
 
-      const role = payload.role as string;
-
-      if (role === "ISPSU_Head") {
-        return NextResponse.redirect(
-          new URL("/administrator/head/home", req.url)
-        );
-      } else if (role === "ISPSU_Staff") {
-        return NextResponse.redirect(
-          new URL("/administrator/staff/home", req.url)
-        );
+        if (role === "ISPSU_Head") {
+          return NextResponse.redirect(
+            new URL("/administrator/home/head", req.url)
+          );
+        } else if (role === "ISPSU_Staff") {
+          return NextResponse.redirect(
+            new URL("/administrator/home/staff", req.url)
+          );
+        }
+      } catch (error) {
+        console.error("❌ Invalid token:", error);
+        return NextResponse.redirect(new URL("/administrator/", req.url));
       }
-    } catch (error) {
-      console.error("❌ Invalid token:", error);
-      // Clear invalid token and allow login page
-      const res = NextResponse.next();
-      res.cookies.delete("AdminToken");
-      return res;
     }
-
     return NextResponse.next();
   }
 
@@ -58,7 +51,7 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith("/user")) {
     if (!userToken) {
       console.log("🚨 No user token, redirecting to login");
-      return NextResponse.next();
+      return NextResponse.redirect(new URL("/", req.url));
     }
   }
 
