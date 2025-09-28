@@ -23,8 +23,8 @@ export default function useAuthenticatedUser() {
 
         if (res.status === 200) {
           setUser(res.data.userData);
-          if (pathname === "/") {
-            router.push("/user/home");
+          if (pathname === "/" || pathname === "/administator") {
+            router.replace("/user/home");
           }
 
           console.log("authapi:", res.data);
