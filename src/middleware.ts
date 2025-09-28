@@ -89,15 +89,15 @@ export async function middleware(req: NextRequest) {
   }
 
   // Protect administrator dashboard routes (not login)
-  if (
-    pathname.startsWith("/administrator/head") ||
-    pathname.startsWith("/administrator/staff")
-  ) {
-    if (!adminToken) {
-      console.log("🚨 No admin token, redirecting to login");
-      return NextResponse.redirect(new URL("/administrator", req.url));
-    }
-  }
+  // if (
+  //   pathname.startsWith("/administrator/head") ||
+  //   pathname.startsWith("/administrator/staff")
+  // ) {
+  //   if (!adminToken) {
+  //     console.log("🚨 No admin token, redirecting to login");
+  //     return NextResponse.redirect(new URL("/administrator", req.url));
+  //   }
+  // }
 
   return NextResponse.next();
 }
