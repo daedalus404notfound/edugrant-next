@@ -47,7 +47,7 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const userToken = req.cookies.get("token")?.value;
-  const adminToken = req.cookies.get("adminToken")?.value;
+  const adminToken = req.cookies.get("AdminToken")?.value;
 
   console.log("🔍 Path:", pathname);
   console.log("👉 userToken:", userToken);
