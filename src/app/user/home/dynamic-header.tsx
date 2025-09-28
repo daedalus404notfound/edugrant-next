@@ -206,17 +206,8 @@ export default function DynamicHeaderUser({
               }}
               disabled={loadingLogout}
             >
-              {loadingLogout ? (
-                <>
-                  Logging out...
-                  <Loader className="animate-spin" />
-                </>
-              ) : (
-                <>
-                  <LogOut />
-                  Log out
-                </>
-              )}
+              <LogOut />
+              Log out
             </DropdownMenuItem>{" "}
             <DropdownMenuItem
               onClick={() => {
@@ -300,8 +291,18 @@ export default function DynamicHeaderUser({
             >
               Stay logged in
             </Button>
-            <Button className="flex-1 lg:flex-none">
-              Logout <ArrowRight />
+            <Button className="flex-1 lg:flex-none" onClick={handleLogout}>
+              {loadingLogout ? (
+                <>
+                  Logging out...
+                  <Loader className="animate-spin" />
+                </>
+              ) : (
+                <>
+                  <LogOut />
+                  Log out
+                </>
+              )}
             </Button>
           </div>
         </DialogContent>
