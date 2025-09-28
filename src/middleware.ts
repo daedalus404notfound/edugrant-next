@@ -59,6 +59,8 @@ export function middleware(req: NextRequest) {
       console.log("✅ User already logged in, redirecting to user dashboard");
       return NextResponse.redirect(new URL("/user/home", req.url));
     }
+  }
+  if (pathname === "/administrator") {
     if (adminToken) {
       console.log("✅ Admin already logged in, redirecting to admin dashboard");
       return NextResponse.redirect(
