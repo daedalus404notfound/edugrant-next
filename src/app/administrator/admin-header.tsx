@@ -143,7 +143,7 @@ export default function DynamicHeaderAdmin({
               />
             </AvatarFallback>
           </Avatar>
-          {admin?.ISPSU_Head.fName}
+          {admin?.ISPSU_Head?.fName ? admin?.ISPSU_Head?.fName : "Head"}
         </Button>
         <Button
           variant="outline"
