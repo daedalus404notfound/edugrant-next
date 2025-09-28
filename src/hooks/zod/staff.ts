@@ -1,5 +1,5 @@
 import z from "zod";
-const StaffSchema = z.object({
+export const StaffSchema = z.object({
   dateCreated: z.date(),
   fName: z.string(),
   mName: z.string().optional(),

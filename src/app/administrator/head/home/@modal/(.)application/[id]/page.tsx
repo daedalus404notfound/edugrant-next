@@ -288,14 +288,16 @@ export default function InterceptReviewApplicants() {
   ];
   const applicationDetails = [
     {
-      label: "Date Created",
+      label: "Reviewed Date",
       icon: Building2,
-      value: data?.Application_Decision.dateCreated,
-    },
+      value: data?.Application_Decision.dateCreated
+        ? new Date(data.Application_Decision.dateCreated).toLocaleString()
+        : "",
+    }, 
     {
-      label: "Staff ID",
+      label: "Reviewed by",
       icon: Building2,
-      value: data?.Application_Decision.staffId,
+      value: `${data?.Application_Decision.ISPSU_Staff.fName} ${data?.Application_Decision.ISPSU_Staff.fName}`,
     },
     {
       label: "Status",
@@ -305,7 +307,7 @@ export default function InterceptReviewApplicants() {
   ];
   const navigationTabs = [
     { id: "documents", label: "Documents", indicator: null },
-    { id: "details", label: "Review Details", indicator: null },
+
     { id: "student", label: "Student Info", indicator: null },
     { id: "family", label: "Family Background", indicator: null },
     { id: "scholarship", label: "Scholarship Details", indicator: null },
@@ -333,36 +335,29 @@ export default function InterceptReviewApplicants() {
                 size={40}
               />
               <div className="relative flex items-start justify-between z-20">
-                <div className="flex items-center justify-center gap-3">
-                  <Avatar className="size-18 border-2 border-border ">
-                    <AvatarFallback className="text-2xl font-semibold">
-                      JT
-                    </AvatarFallback>
-                  </Avatar>
-
-                  <div className="">
-                    <div className="flex items-center gap-3">
-                      <h1 className="text-xl font-medium text-foreground">
-                        {data?.Student.lName}, {data?.Student.fName}{" "}
-                        {data?.Student.mName}
-                      </h1>
-                      <Badge
-                        className={` ${
-                          data?.status === "PENDING"
-                            ? statusColors.PENDING
-                            : data?.status === "APPROVED"
-                            ? statusColors.APPROVED
-                            : statusColors.REJECTED
-                        }`}
-                      >
-                        {data?.status || "PENDING"}
-                      </Badge>
-                    </div>
-                    <p className="text-muted-foreground font-mono text-sm">
-                      ID: {data?.Student.Account.schoolId}
-                    </p>
+                <div className="">
+                  <div className="flex items-center gap-3">
+                    <h1 className="text-xl font-medium text-foreground">
+                      {data?.Student.lName}, {data?.Student.fName}{" "}
+                      {data?.Student.mName}
+                    </h1>
+                    <Badge
+                      className={` ${
+                        data?.status === "PENDING"
+                          ? statusColors.PENDING
+                          : data?.status === "APPROVED"
+                          ? statusColors.APPROVED
+                          : statusColors.REJECTED
+                      }`}
+                    >
+                      {data?.status || "PENDING"}
+                    </Badge>
                   </div>
+                  <p className="text-muted-foreground font-mono text-sm">
+                    ID: {data?.Student.Account.schoolId}
+                  </p>
                 </div>
+
                 <div className="text-right">
                   <h2 className="text-xl font-semibold text-foreground">
                     {data?.Scholarship.title}
@@ -391,14 +386,100 @@ export default function InterceptReviewApplicants() {
                 <div className="space-y-6">
                   <div className="flex items-center gap-3">
                     <h3 className="text-lg font-medium flex gap-2 items-center">
+                      <StickyNote className="h-5 w-5" /> Review Details
+                    </h3>
+                    <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                  </div>
+                  <div className="space-y-10">
+                    <div className="space-y-6">
+                      {/* <div className="flex items-center gap-3">
+                      <h3 className="text-lg font-medium flex gap-2 items-center">
+                        <UserRound className="h-5 w-5" /> Personal Information
+                      </h3>
+                      <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                    </div> */}
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        {applicationDetails.map((info, index) => (
+                          <div
+                            key={index}
+                            className={` ${
+                              info.label === "Address" || info.label === "Email"
+                                ? "md:col-span-2"
+                                : ""
+                            }`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <div className="min-w-0 flex-1">
+                                <p className="text-sm text-muted-foreground mb-1">
+                                  {info.label}
+                                </p>
+                                <div className=" bg-card p-2 rounded-md flex gap-3 items-center">
+                                  <info.icon size={16} />
+                                  <p>{info.value}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-lg font-medium flex gap-2 items-center">
                       <StickyNote className="h-5 w-5" /> Submitted Documents
                     </h3>
                     <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                   </div>
                   {loading ? (
-                    <div className="grid grid-cols-1 gap-6">
-                      <Skeleton className="h-40 w-full" />
-                      <Skeleton className="h-40 w-full" />
+                    <div className="grid grid-cols-1 divide-y">
+                      <div className="flex gap-5 py-6">
+                        <Skeleton className="h-35 w-70" />
+                        <div className="flex-1 space-y-3 flex flex-col justify-between">
+                          <div className="space-y-3">
+                            <div className="flex gap-3">
+                              <Skeleton className="h-10 flex-1" />
+                              <Skeleton className="h-10 w-10" />
+                            </div>
+                            <Skeleton className="h-10 w-40" />
+                          </div>
+                          <div className="flex gap-3">
+                            <Skeleton className="h-10 flex-1" />
+                            <Skeleton className="h-10 w-30" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex gap-5 py-3">
+                        <Skeleton className="h-35 w-70" />
+                        <div className="flex-1 space-y-3 flex flex-col justify-between">
+                          <div className="space-y-3">
+                            <div className="flex gap-3">
+                              <Skeleton className="h-10 flex-1" />
+                              <Skeleton className="h-10 w-10" />
+                            </div>
+                            <Skeleton className="h-10 w-40" />
+                          </div>
+                          <div className="flex gap-3">
+                            <Skeleton className="h-10 flex-1" />
+                            <Skeleton className="h-10 w-30" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex gap-5 py-3">
+                        <Skeleton className="h-35 w-70" />
+                        <div className="flex-1 space-y-3 flex flex-col justify-between">
+                          <div className="space-y-3">
+                            <div className="flex gap-3">
+                              <Skeleton className="h-10 flex-1" />
+                              <Skeleton className="h-10 w-10" />
+                            </div>
+                            <Skeleton className="h-10 w-40" />
+                          </div>
+                          <div className="flex gap-3">
+                            <Skeleton className="h-10 flex-1" />
+                            <Skeleton className="h-10 w-30" />
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 divide-y">
@@ -461,49 +542,7 @@ export default function InterceptReviewApplicants() {
                   )}
                 </div>
               )}
-              {activeSection === "details" && (
-                <div className="space-y-10">
-                  <div className="space-y-6">
-                    {/* <div className="flex items-center gap-3">
-                      <h3 className="text-lg font-medium flex gap-2 items-center">
-                        <UserRound className="h-5 w-5" /> Personal Information
-                      </h3>
-                      <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-                    </div> */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {applicationDetails.map((info, index) => (
-                        <div
-                          key={index}
-                          className={` ${
-                            info.label === "Address" || info.label === "Email"
-                              ? "md:col-span-2"
-                              : ""
-                          }`}
-                        >
-                          <div className="flex items-start gap-3">
-                            <div className="min-w-0 flex-1">
-                              <p className="text-sm text-muted-foreground mb-1">
-                                {info.label}
-                              </p>
-                              <div className=" bg-card p-2 rounded-md flex gap-3 items-center">
-                                <info.icon size={16} />
-                                <p>
-                                  {info.label === "Date Created"
-                                    ? format(
-                                        new Date(info.value as string),
-                                        "PPP"
-                                      )
-                                    : String(info.value ?? "")}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
+
               {/* Student Information Section */}
               {activeSection === "student" && (
                 <div className="space-y-10">

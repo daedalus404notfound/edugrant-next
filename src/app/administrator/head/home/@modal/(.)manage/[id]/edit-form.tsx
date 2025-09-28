@@ -404,13 +404,13 @@ export default function EditScholarship({
                 Add documents
               </Button>
             </div>
-            <div className="space-y-5">
+            {/* <div className="space-y-5">
               {documentFields.map((field, index) => (
                 <div
                   key={field.id}
                   className="grid grid-cols-3 gap-3 items-center"
                 >
-                  {/* Label */}
+                
                   <div className="lg:col-span-1 col-span-3">
                     <FormField
                       control={form.control}
@@ -439,7 +439,7 @@ export default function EditScholarship({
                     />
                   </div>
 
-                  {/* Formats */}
+                
                   <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
                     <FormField
                       control={form.control}
@@ -521,6 +521,130 @@ export default function EditScholarship({
                   </div>
                 </div>
               ))}
+            </div> */}
+            <div className="space-y-5">
+              {documentFields.map((field, index) => {
+                // Determine if this document is already filled in lastPhase
+                const currentLabel = form.getValues(
+                  `documents.${lastPhaseKey}.${index}.label`
+                );
+                const isFilled = lastPhase.some(
+                  (doc) => doc.label === currentLabel
+                );
+
+                return (
+                  <div
+                    key={field.id}
+                    className="grid grid-cols-3 gap-3 items-center"
+                  >
+                    {/* Label */}
+                    <div className="lg:col-span-1 col-span-3">
+                      <FormField
+                        control={form.control}
+                        name={`documents.${lastPhaseKey}.${index}.label`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex justify-between items-center">
+                              Document Label {index + 1} <FormMessage />
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="e.g. COR"
+                                {...field}
+                                disabled={isFilled}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    {/* Formats */}
+                    <div className="lg:col-span-2 col-span-3 flex gap-3 items-end">
+                      <FormField
+                        control={form.control}
+                        name={`documents.${lastPhaseKey}.${index}.formats`}
+                        render={({ field }) => (
+                          <FormItem className="flex-1">
+                            <FormLabel className="flex justify-between items-center">
+                              Document Formats
+                              <FormMessage />
+                            </FormLabel>
+                            <FormControl>
+                              <MultipleSelector
+                                className="bg-white/5"
+                                commandProps={{
+                                  label: "Select document formats",
+                                }}
+                                value={options.filter((option) =>
+                                  field.value?.includes(option.value)
+                                )}
+                                defaultOptions={options}
+                                placeholder="Choose formats"
+                                hideClearAllButton
+                                hidePlaceholderWhenSelected
+                                emptyIndicator={
+                                  <p className="text-center text-sm">
+                                    No results found
+                                  </p>
+                                }
+                                onChange={(selected) => {
+                                  field.onChange(
+                                    selected.map((option) => option.value)
+                                  );
+                                }}
+                                disabled={isFilled} // <-- disable formats too
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name={`documents.${lastPhaseKey}.${index}.requirementType`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              <FormMessage />
+                            </FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                              disabled={isFilled} // <-- disable requirement type
+                            >
+                              <FormControl>
+                                <SelectTrigger className="w-[180px]">
+                                  <SelectValue placeholder="Requirement type" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectGroup>
+                                  <SelectItem value="required">
+                                    Required
+                                  </SelectItem>
+                                  <SelectItem value="optional">
+                                    Optional
+                                  </SelectItem>
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                          </FormItem>
+                        )}
+                      />
+
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        disabled={documentFields.length === 1 || isFilled} // optionally disable delete too
+                        onClick={() => removeDocument(index)}
+                      >
+                        <Trash2 />
+                      </Button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </Form>

@@ -74,8 +74,10 @@ const options: Option[] = [
 ];
 export default function RedeployScholarship({
   data,
+  HandleCloseDrawer,
 }: {
   data: scholarshipFormData;
+  HandleCloseDrawer: (drawer: boolean) => void;
 }) {
   const { admin } = useAdminStore();
   const {
@@ -91,6 +93,7 @@ export default function RedeployScholarship({
   } = useRedeployScholarship({
     scholarshipId: data.scholarshipId,
     accountId: admin?.accountId,
+    HandleCloseDrawer: HandleCloseDrawer,
   });
   const { setMode } = useModeStore();
   return (
@@ -420,7 +423,7 @@ export default function RedeployScholarship({
                               <SelectContent>
                                 <SelectGroup>
                                   <SelectItem value="required">
-                                    Mandatory
+                                    Required
                                   </SelectItem>
                                   <SelectItem value="optional">
                                     Optional
@@ -462,23 +465,19 @@ export default function RedeployScholarship({
             confirmText="Save Renewal"
             cancelText="Cancel"
             trigger={
-              <Button
-                className="flex-1"
-                variant="secondary"
-                onClick={handleTriggerClick}
-              >
+              <Button className="flex-1" onClick={handleTriggerClick}>
                 Post Renewal <Save />
               </Button>
             }
           />
 
-          <Button
+          {/* <Button
             onClick={() => setMode("details")}
             className="flex-1"
             variant="outline"
           >
             Back to Scholarship Details <ArrowLeftFromLine />
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>

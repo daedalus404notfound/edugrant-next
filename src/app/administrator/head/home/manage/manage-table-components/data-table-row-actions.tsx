@@ -77,7 +77,7 @@ export function DataTableRowActions<TData>({
           </Button>
         </Link>
         <Separator />
-        {status === "ACTIVE" ? (
+        {status === "ACTIVE" || status === "RENEW" ? (
           <Link
             href={`/administrator/head/home/manage/${rowData.scholarshipId}`}
             scroll={false}

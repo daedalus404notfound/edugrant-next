@@ -99,6 +99,10 @@ export default function InterceptManageScholarship() {
                       <Button
                         onClick={() => setMode("edit")}
                         className="flex-1"
+                        disabled={
+                          data?.deadline &&
+                          new Date(data.deadline).getTime() < Date.now()
+                        }
                       >
                         <Edit /> Edit
                       </Button>
@@ -131,7 +135,12 @@ export default function InterceptManageScholarship() {
             loading ? (
               <ScholarshipModalLoading />
             ) : (
-              data && <RedeployScholarship data={data} />
+              data && (
+                <RedeployScholarship
+                  data={data}
+                  HandleCloseDrawer={HandleCloseDrawer}
+                />
+              )
             )
           ) : (
             ""

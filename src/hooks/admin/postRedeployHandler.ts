@@ -64,9 +64,11 @@ export const useAddScholarship = () => {
 export const useRedeployScholarship = ({
   scholarshipId,
   accountId,
+  HandleCloseDrawer,
 }: {
   scholarshipId: number;
   accountId?: number;
+  HandleCloseDrawer: (drawer: boolean) => void;
 }) => {
   const { form, formData, fields, append, remove } = useRedeployScholarshipZod({
     scholarshipId,
@@ -83,6 +85,7 @@ export const useRedeployScholarship = ({
         setOpen(false);
         addScholarship.reset();
         form.reset();
+        HandleCloseDrawer(false);
       }
     } catch (error) {
       // Error toast is already handled in useSendAuthCode onError

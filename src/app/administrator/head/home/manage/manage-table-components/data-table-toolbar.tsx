@@ -120,6 +120,11 @@ export default function DataTableToolbar<TData>({
       label: String(meow),
     })) || [];
 
+  const scholarshipOption =
+    filter?.getScholarshipsFilters.scholarship?.map((meow: string) => ({
+      value: String(meow),
+      label: String(meow),
+    })) || [];
   const selectedRows = table.getSelectedRowModel().rows;
   const [openAlert, setOpenAlert] = useState(false);
 
@@ -154,7 +159,7 @@ export default function DataTableToolbar<TData>({
               disabled={!!search}
               column={table.getColumn("title")}
               title="Scholarship Title"
-              options={providerOption ?? []}
+              options={scholarshipOption ?? []}
             />
             <DataTableFacetedFilter
               disabled={!!search}
