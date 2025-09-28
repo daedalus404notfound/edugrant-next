@@ -19,7 +19,7 @@ import { getPhaseLabel } from "@/lib/phaseLevel";
 export default function ClientScholarship() {
   const [currentPage] = useState(1);
   const [rowsPerPage] = useState(20);
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("PENDING");
   const user = useUserStore((state) => state.user);
   const userId = user?.accountId;
   const { data, loading } = useClientApplications({
