@@ -42,9 +42,7 @@ const TeamMember = ({
             <h3 className="text-xl font-semibold ">{name}</h3>
             <p className="text-muted-foreground text-sm">{role}</p>
           </div>
-          <p className="text-slate-300 leading-relaxed text-sm">
-            {description}
-          </p>
+          <p className=" leading-relaxed text-sm">{description}</p>
           <div className="flex gap-2">
             {socialLinks.twitter && (
               <Button

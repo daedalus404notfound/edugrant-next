@@ -8,7 +8,7 @@ export default function ContactSection() {
       desc: "Pinaod, San Ildefonso Bulacan",
       link: {
         name: "View on Google Maps",
-        href: "hhttps://maps.app.goo.gl/yA6hXRFM1ECfnpdFA",
+        href: "https://maps.app.goo.gl/yA6hXRFM1ECfnpdFA",
       },
     },
     {

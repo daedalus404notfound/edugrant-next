@@ -8,6 +8,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
+  ArrowLeft,
   ArrowRight,
   Eye,
   EyeClosed,
@@ -89,6 +90,7 @@ export default function LoginClientModal() {
   const { remember, setRemember } = useRememberStore();
   const [hidden, setHidden] = useState(true);
   const isMobile = useIsMobile();
+
   return (
     <Drawer
       direction={isMobile ? "bottom" : "right"}
@@ -97,7 +99,15 @@ export default function LoginClientModal() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="w-full !bg-transparent   lg:p-2 p-1 !border-0">
+      <DrawerContent
+        onInteractOutside={(e) => {
+          if (verifyLoading || authLoading) e.preventDefault();
+        }}
+        onEscapeKeyDown={(e) => {
+          if (verifyLoading || authLoading) e.preventDefault();
+        }}
+        className="w-full !bg-transparent lg:p-2 p-1 !border-0"
+      >
         <DrawerHeader className="sr-only">
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>
@@ -106,6 +116,13 @@ export default function LoginClientModal() {
           </DrawerDescription>
         </DrawerHeader>
         <div className="relative z-10 flex justify-center items-center w-full  h-full lg:p-4 pt-4 rounded-2xl bg-background/80 backdrop-blur-md">
+          <Button
+            className="absolute top-6 left-6"
+            onClick={() => setOpen(false)}
+          >
+            <ArrowLeft />
+          </Button>
+
           {step === "login" && (
             <div className="overflow-hidden w-full flex justify-center items-center flex-col p-4">
               <div className="  max-w-md w-full">
