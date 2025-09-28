@@ -21,28 +21,32 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Handle admin login page
-  // Handle admin login page
+  // Auto redirect if admin is already logged in and tries to access `/administrator` (login page)
   if (pathname === "/administrator") {
-    if (adminToken) {
-      try {
-        const { payload } = await jose.jwtVerify(adminToken, SECRET);
-        const role = payload.role as string;
-
-        if (role === "ISPSU_Head") {
-          return NextResponse.redirect(
-            new URL("/administrator/head/home", req.url)
-          );
-        } else if (role === "ISPSU_Staff") {
-          return NextResponse.redirect(
-            new URL("/administrator/staff/home", req.url)
-          );
-        }
-      } catch (error) {
-        console.error("❌ Invalid token:", error);
-        return NextResponse.next(); // let them see login
-      }
+    if (!adminToken) {
+      // 🚨 No token, force stay on login page
+      return NextResponse.redirect(new URL("/administrator", req.url));
     }
+    try {
+      const { payload } = await jose.jwtVerify(adminToken, SECRET);
+      console.log("Decoded payload:", payload);
+
+      const role = payload.role as string;
+
+      if (role === "ISPSU_Head") {
+        return NextResponse.redirect(
+          new URL("/administrator/head/home", req.url)
+        );
+      } else if (role === "ISPSU_Staff") {
+        return NextResponse.redirect(
+          new URL("/administrator/staff/home", req.url)
+        );
+      }
+    } catch (error) {
+      console.error("❌ Invalid token:", error);
+      return NextResponse.redirect(new URL("/administrator", req.url));
+    }
+
     return NextResponse.next();
   }
 
@@ -54,32 +58,13 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Protect head dashboard
-  if (pathname.startsWith("/administrator/head")) {
+  // Protect administrator dashboard routes (not login)
+  if (
+    pathname.startsWith("/administrator/head") ||
+    pathname.startsWith("/administrator/staff")
+  ) {
     if (!adminToken) {
-      return NextResponse.redirect(new URL("/administrator", req.url));
-    }
-    try {
-      const { payload } = await jose.jwtVerify(adminToken, SECRET);
-      if (payload.role !== "ISPSU_Head") {
-        return NextResponse.redirect(new URL("/administrator", req.url));
-      }
-    } catch {
-      return NextResponse.redirect(new URL("/administrator", req.url));
-    }
-  }
-
-  // Protect staff dashboard
-  if (pathname.startsWith("/administrator/staff")) {
-    if (!adminToken) {
-      return NextResponse.redirect(new URL("/administrator", req.url));
-    }
-    try {
-      const { payload } = await jose.jwtVerify(adminToken, SECRET);
-      if (payload.role !== "ISPSU_Staff") {
-        return NextResponse.redirect(new URL("/administrator", req.url));
-      }
-    } catch {
+      console.log("🚨 No admin token, redirecting to login");
       return NextResponse.redirect(new URL("/administrator", req.url));
     }
   }
