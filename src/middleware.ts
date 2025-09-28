@@ -22,23 +22,18 @@ export async function middleware(req: NextRequest) {
   }
 
   // Handle admin login page
+  // Handle admin login page
   if (pathname === "/administrator") {
     if (adminToken) {
       try {
         const { payload } = await jose.jwtVerify(adminToken, SECRET);
         const role = payload.role as string;
 
-        if (
-          role === "ISPSU_Head" &&
-          !pathname.startsWith("/administrator/head")
-        ) {
+        if (role === "ISPSU_Head") {
           return NextResponse.redirect(
             new URL("/administrator/head/home", req.url)
           );
-        } else if (
-          role === "ISPSU_Staff" &&
-          !pathname.startsWith("/administrator/staff")
-        ) {
+        } else if (role === "ISPSU_Staff") {
           return NextResponse.redirect(
             new URL("/administrator/staff/home", req.url)
           );
