@@ -1,13 +1,13 @@
 "use client";
-import create from "@/assets/create.svg";
-import browse from "@/assets/browse.svg";
+import create from "@/assets/create-2.svg";
+import browse from "@/assets/browse-2.svg";
 import BlurText from "@/components/ui/blur";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import apply from "@/assets/apply.svg";
+import apply from "@/assets/upload-2.svg";
 import { ModeToggle } from "@/components/ui/dark-mode";
 
-import track from "@/assets/track.svg";
+import track from "@/assets/track-2.svg";
 import {
   ArrowRight,
   LogInIcon,
@@ -37,6 +37,7 @@ import SpotlightBorderWrapper from "@/components/ui/border";
 import { Badge } from "@/components/ui/badge";
 import ContactSection from "@/components/ui/contact-section";
 import { FeaturesSection } from "@/components/ui/features-section";
+import AppSection from "@/components/ui/feature-second";
 const navItems = [
   { label: "Home", icon: Home },
   { label: "Features", icon: Zap },
@@ -112,13 +113,13 @@ const howItWorks = [
 const HowitworksComponent = () => {
   return (
     <div className="w-full space-y-12 py-20 px-6">
-      <div className="relative z-10  text-center">
-        <h2 className="text-4xl font-semibold lg:text-4xl">How it works</h2>
+      <div className="relative z-10 ">
+        <h2 className="text-3xl font-semibold">How it works</h2>
       </div>
       <div className="grid md:grid-cols-2 gap-8 ">
         {howItWorks.map((step, index) => (
           <SpotlightBorderWrapper key={index}>
-            <div className="flex  border flex-col sm:flex-row items-start gap-6 p-4 shadow-black/10   dark:bg-white/5  rounded-lg ">
+            <div className="flex  border dark:border-green-900/30 flex-col sm:flex-row items-start gap-6 p-6 shadow-sm  dark:bg-green-950/20  rounded-lg ">
               <div className="w-3/4 aspect-[16/8.5] min-h-40 overflow-hidden rounded-md dark:bg-transparent">
                 <img
                   src={step.image}
@@ -238,7 +239,7 @@ export default function DesktopLandingPage() {
               />
             </div>
 
-            <div className="absolute z-10 left-10 h-full w-full flex flex-col justify-center">
+            <div className="absolute z-10 left-15 h-full w-full flex flex-col justify-center">
               <motion.span
                 className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  dark:text-primary/70 text-gray-200
   text-6xl  havelock tracking-[-8px] py-5 -translate-x-2 
@@ -271,11 +272,11 @@ export default function DesktopLandingPage() {
         </AnimatePresence>
 
         <div className="mx-auto w-3/4 ">
-          <FeaturesSection />
+          <AppSection />
           <HowitworksComponent />
-
-          <FaqsComponent />
           <ContactSection />
+          <FaqsComponent />
+
           <Footer />
         </div>
       </div>
