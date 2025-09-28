@@ -24,9 +24,10 @@ export async function middleware(req: NextRequest) {
   // Auto redirect if admin is already logged in and tries to access `/administrator` (login page)
   if (pathname === "/administrator") {
     if (!adminToken) {
-      // 🚨 No token, force stay on login page
-      return NextResponse.redirect(new URL("/administrator", req.url));
+      // ✅ No token → just show login page (don't redirect)
+      return NextResponse.next();
     }
+
     try {
       const { payload } = await jose.jwtVerify(adminToken, SECRET);
       console.log("Decoded payload:", payload);
@@ -44,7 +45,10 @@ export async function middleware(req: NextRequest) {
       }
     } catch (error) {
       console.error("❌ Invalid token:", error);
-      return NextResponse.redirect(new URL("/administrator", req.url));
+      // Clear invalid token and allow login page
+      const res = NextResponse.next();
+      res.cookies.delete("AdminToken");
+      return res;
     }
 
     return NextResponse.next();
@@ -54,7 +58,7 @@ export async function middleware(req: NextRequest) {
   if (pathname.startsWith("/user")) {
     if (!userToken) {
       console.log("🚨 No user token, redirecting to login");
-      return NextResponse.redirect(new URL("/", req.url));
+      return NextResponse.next();
     }
   }
 
