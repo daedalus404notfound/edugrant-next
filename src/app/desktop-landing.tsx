@@ -40,6 +40,7 @@ import ContactSection from "@/components/ui/contact-section";
 import { FeaturesSection } from "@/components/ui/features-section";
 import AppSection from "@/components/ui/feature-second";
 import TitleReusable from "@/components/ui/title";
+import AboutTheTeam from "@/components/ui/credits";
 const navItems = [
   { label: "Home", icon: Home },
   { label: "Features", icon: Zap },
@@ -285,7 +286,7 @@ export default function DesktopLandingPage() {
           <ContactSection />
           <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
           <FaqsComponent />
-
+          <AboutTheTeam />
           <Footer />
         </div>
       </div>

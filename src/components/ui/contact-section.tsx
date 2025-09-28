@@ -47,7 +47,7 @@ export default function ContactSection() {
                 <p>{item.desc}</p>
                 <a
                   href={item.link.href}
-                  className="flex items-center gap-1 text-sm text-green-600 duration-150 hover:text-green-400 font-medium"
+                  className="flex items-center gap-1 text-sm text-green-800 duration-150 hover:text-green-700 font-medium"
                 >
                   {item.link.name}
                   <svg
