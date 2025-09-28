@@ -32,11 +32,11 @@ export async function middleware(req: NextRequest) {
 
         if (role === "ISPSU_Head") {
           return NextResponse.redirect(
-            new URL("/administrator/home/head", req.url)
+            new URL("/administrator/head/home", req.url)
           );
         } else if (role === "ISPSU_Staff") {
           return NextResponse.redirect(
-            new URL("/administrator/home/staff", req.url)
+            new URL("/administrator/staff/home", req.url)
           );
         }
       } catch (error) {
