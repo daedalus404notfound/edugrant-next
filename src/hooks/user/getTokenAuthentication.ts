@@ -23,13 +23,8 @@ export default function useAuthenticatedUser() {
 
         if (res.status === 200) {
           setUser(res.data.userData);
-          if (pathname === "/" || pathname === "/administator") {
+          if (pathname === "/") {
             router.replace("/user/home");
-            StyledToast({
-              status: "error",
-              title: "Token Found.",
-              description: "Redirecting to dashboard.",
-            });
           }
 
           console.log("authapi:", res.data);
@@ -41,7 +36,9 @@ export default function useAuthenticatedUser() {
             title: error?.response?.data.message ?? "An error occurred.",
             description: "Cannot process your request.",
           });
-          router.replace("/");
+          if (pathname !== "/") {
+            router.replace("/");
+          }
           logout();
         }
       } finally {

@@ -4,7 +4,6 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import QueryProvider from "./queryProvider";
 import { Toaster } from "sonner";
-import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,7 +27,6 @@ export default function RootLayout({
   children: React.ReactNode;
   modal: React.ReactNode;
 }>) {
-  useAuthenticatedUser();
   return (
     <html lang="en" suppressHydrationWarning>
       <body
