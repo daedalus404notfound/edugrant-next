@@ -64,6 +64,7 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+
 export default function LoginClientModal() {
   const router = useRouter();
 
@@ -78,6 +79,9 @@ export default function LoginClientModal() {
     authLoading,
     verifyLoading,
     requestNewCode,
+
+    resendTimer,
+    expiresAt,
   } = useLoginHandler();
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
@@ -485,14 +489,31 @@ export default function LoginClientModal() {
                       className="relative flex justify-center items-center gap-3 mt-7"
                     >
                       <div className=" border-b flex-1"></div>
-                      <Label>
+                      {/* <Label>
                         Didn&apos;t get the code?
                         <span className="underline" onClick={requestNewCode}>
                           Resend Now
                         </span>
-                      </Label>
+                      </Label> */}
+                      <Button
+                        variant="link"
+                        size="sm"
+                        type="button"
+                        onClick={requestNewCode}
+                        disabled={resendTimer > 0 || authLoading}
+                      >
+                        {resendTimer > 0
+                          ? `Resend in ${resendTimer}s`
+                          : "Resend Code"}
+                      </Button>
+
                       <div className=" border-b flex-1"></div>
                     </motion.div>
+                    {/* {expiresAt && Date.now() > expiresAt && (
+                      <p className="text-red-500 text-sm text-center">
+                        OTP expired. Please request a new code.
+                      </p>
+                    )} */}
                   </form>
                 </Form>
               </div>

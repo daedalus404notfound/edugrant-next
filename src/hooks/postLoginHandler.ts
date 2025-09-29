@@ -3,7 +3,8 @@ import { LoginFormData, otpFormData, useLoginAdmin } from "./zodLogin";
 import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useRememberAdminStore from "@/store/rememberMe-admin";
 // Type definitions for API responses
 interface ApiErrorResponse {
   message?: string;
@@ -11,9 +12,17 @@ interface ApiErrorResponse {
   statusCode?: number;
 }
 
+type AuthCodeTypes = {
+  expiresAt: string;
+  message: string;
+  resendAvailableIn: number;
+  success: true;
+  ttl: number;
+};
+
 type ApiError = AxiosError<ApiErrorResponse>;
 const sendAuthCodeApi = async (meow: LoginFormData) => {
-  const response = await axios.post(
+  const response = await axios.post<AuthCodeTypes>(
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/adminLogin`,
     {
       adminEmail: meow.email,
@@ -100,7 +109,10 @@ export const useVerifyLogin = () => {
 export const useLoginHandler = () => {
   const router = useRouter();
   const [step, setStep] = useState<"login" | "otp">("login");
+  const [resendTimer, setResendTimer] = useState<number>(0);
+  const [expiresAt, setExpiresAt] = useState<number | null>(null);
   const { LoginForm, LoginData, otpForm } = useLoginAdmin();
+  const { remember, setadminEmail, clearadminEmail } = useRememberAdminStore();
   // TanStack Query mutations
   const sendAuthCode = useSendAuthCode();
   const verifyLogin = useVerifyLogin();
@@ -108,19 +120,35 @@ export const useLoginHandler = () => {
   // Handle first login (username + password)
   const handleLogin = async (data: LoginFormData) => {
     // Show loading toast while processing
-
+    if (remember) {
+      setadminEmail(data.email);
+    } else {
+      // If remember me is not checked, clear any saved studentId
+      clearadminEmail();
+    }
     try {
       const result = await sendAuthCode.mutateAsync(data);
 
       if (result) {
         setStep("otp");
+        setResendTimer(result.resendAvailableIn);
+        // Store OTP expiry (convert to ms timestamp)
+        setExpiresAt(new Date(result.expiresAt).getTime());
       }
     } catch (error) {
       // Error toast is already handled in useSendAuthCode onError
       console.error("Login error:", error);
     }
   };
+  useEffect(() => {
+    if (resendTimer <= 0) return; // stop when timer hits 0
 
+    const interval = setInterval(() => {
+      setResendTimer((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(interval); // cleanup
+  }, [resendTimer]);
   // Handle OTP verification
   const handleOtpVerification = async (otpData: otpFormData) => {
     try {
@@ -182,7 +210,16 @@ export const useLoginHandler = () => {
       });
 
       try {
-        await sendAuthCode.mutateAsync(LoginData);
+        const result = await sendAuthCode.mutateAsync(LoginData);
+
+        if (result.success) {
+          // ✅ Restart countdown using the new server value
+          setResendTimer(result.resendAvailableIn);
+
+          // (optional) also reset OTP expiry
+          setExpiresAt(new Date(result.expiresAt).getTime());
+        }
+        // await sendAuthCode.mutateAsync(LoginData);
       } catch (error) {
         console.error("Resend code error:", error);
       }
@@ -224,5 +261,7 @@ export const useLoginHandler = () => {
     // Raw mutation objects (if you need more control)
     sendAuthCodeMutation: sendAuthCode,
     verifyLoginMutation: verifyLogin,
+    resendTimer,
+    expiresAt,
   };
 };

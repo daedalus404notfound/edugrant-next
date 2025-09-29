@@ -44,6 +44,19 @@ import {
 import { ModeToggle } from "@/components/ui/dark-mode";
 
 import { useCreateAdmin } from "@/hooks/postCreateAdminHandler";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import useRememberAdminStore from "@/store/rememberMe-admin";
 
 export default function LoginAdmin() {
   const router = useRouter();
@@ -65,6 +78,8 @@ export default function LoginAdmin() {
     // verifyError,
     // verifySuccess,
     requestNewCode,
+    resendTimer,
+    expiresAt,
   } = useLoginHandler();
   const {
     reset,
@@ -77,6 +92,8 @@ export default function LoginAdmin() {
     form,
     handleTriggerClick,
   } = useCreateAdmin();
+
+  const { remember, setRemember } = useRememberAdminStore();
   return (
     <div className="relative min-h-[100dvh] grid grid-cols-2  overflow-hidden">
       <div className="absolute top-3 right-3">
@@ -210,32 +227,57 @@ text-5xl  havelock tracking-[-8px]
                                   </button>
                                 </div>
                               </FormControl>
-                              <Dialog>
-                                <DialogTrigger className="ml-auto text-sm underline-offset-4 hover:underline">
-                                  Forgot password?
-                                </DialogTrigger>
-                                <DialogContent className="w-lg p-4">
-                                  <DialogHeader>
-                                    <DialogTitle>
-                                      Reset your password
-                                    </DialogTitle>
-                                    <DialogDescription className="text-sm text-muted-foreground">
-                                      Enter your email address and we’ll send
-                                      you a link to reset your password.
-                                    </DialogDescription>
-                                  </DialogHeader>
-                                  <div className="flex-1 w-full">
-                                    <Input placeholder="Enter your email" />
-                                  </div>
-                                  <Button className="mt-4 w-full">
-                                    Send reset link
-                                  </Button>
-                                </DialogContent>
-                              </Dialog>
                             </FormItem>
                           );
                         }}
                       />
+                      <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.4, delay: 0.6 }}
+                        className="flex justify-between items-center mt-3"
+                      >
+                        <span className="flex gap-1.5 items-center ">
+                          <Checkbox
+                            id="remember-admin"
+                            disabled={authLoading}
+                            checked={remember}
+                            onCheckedChange={(checked: boolean) =>
+                              setRemember(checked)
+                            }
+                          />
+                          <Label htmlFor="remember-admin">Remember me</Label>
+                        </span>
+
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Label className="hover:underline cursor-pointer">
+                              Forgot password?
+                            </Label>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>
+                                Reset your password
+                              </AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Enter your email address below and we&apos;ll
+                                send you a link to reset your password.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <Input
+                              type="email"
+                              placeholder="Enter your email"
+                            />
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction>
+                                Send Reset Link <ArrowRight />
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </motion.div>
                     </motion.div>
                   </Form>
 
@@ -382,18 +424,30 @@ text-5xl  havelock tracking-[-8px]
                 </motion.div>
 
                 <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.6 }}
-                  className="relative flex justify-center items-center gap-3 mt-5"
+                  className="relative flex justify-center items-center gap-3 mt-7"
                 >
                   <div className=" border-b flex-1"></div>
-                  <Label>
-                    Didn&apos;t get the code?{" "}
-                    <span onClick={requestNewCode} className="underline">
-                      Resend Now
-                    </span>
-                  </Label>
+                  {/* <Label>
+                        Didn&apos;t get the code?
+                        <span className="underline" onClick={requestNewCode}>
+                          Resend Now
+                        </span>
+                      </Label> */}
+                  <Button
+                    variant="link"
+                    size="sm"
+                    type="button"
+                    onClick={requestNewCode}
+                    disabled={resendTimer > 0 || authLoading}
+                  >
+                    {resendTimer > 0
+                      ? `Resend in ${resendTimer}s`
+                      : "Resend Code"}
+                  </Button>
+
                   <div className=" border-b flex-1"></div>
                 </motion.div>
               </Form>

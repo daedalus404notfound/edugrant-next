@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
@@ -17,11 +17,19 @@ interface ApiErrorResponse {
   statusCode?: number;
 }
 
+type AuthCodeTypes = {
+  expiresAt: string;
+  message: string;
+  resendAvailableIn: number;
+  success: true;
+  ttl: number;
+};
+
 type ApiError = AxiosError<ApiErrorResponse>;
 
 // API Functions
 const sendAuthCodeApi = async (data: loginFormData) => {
-  const response = await axios.post(
+  const response = await axios.post<AuthCodeTypes>(
     `${process.env.NEXT_PUBLIC_USER_URL}/sendAuthCodeLogin`,
     {
       studentId: data.studentId,
@@ -77,8 +85,6 @@ export const useSendAuthCode = () => {
         });
       }
     },
-    retry: 2,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 };
 
@@ -117,6 +123,8 @@ export const useLoginHandler = () => {
   const [open, setOpen] = useState(true);
   const { LoginForm, LoginData, loginOtpForm } = useLoginUser();
   const { remember, setStudentId, clearStudentId } = useRememberStore();
+  const [resendTimer, setResendTimer] = useState<number>(0);
+  const [expiresAt, setExpiresAt] = useState<number | null>(null);
   // TanStack Query mutations
   const sendAuthCode = useSendAuthCode();
   const verifyLogin = useVerifyLogin();
@@ -133,13 +141,24 @@ export const useLoginHandler = () => {
       }
       if (result.success === true) {
         setStep("otp");
+        setResendTimer(result.resendAvailableIn);
+        // Store OTP expiry (convert to ms timestamp)
+        setExpiresAt(new Date(result.expiresAt).getTime());
       }
     } catch (error) {
       // Error toast is already handled in useSendAuthCode onError
       console.error("Login error:", error);
     }
   };
+  useEffect(() => {
+    if (resendTimer <= 0) return; // stop when timer hits 0
 
+    const interval = setInterval(() => {
+      setResendTimer((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(interval); // cleanup
+  }, [resendTimer]);
   // Handle OTP verification
   const handleOtpVerification = async (otpData: loginOtpFormData) => {
     try {
@@ -189,7 +208,15 @@ export const useLoginHandler = () => {
       });
 
       try {
-        await sendAuthCode.mutateAsync(LoginData);
+        const result = await sendAuthCode.mutateAsync(LoginData);
+
+        if (result.success) {
+          // ✅ Restart countdown using the new server value
+          setResendTimer(result.resendAvailableIn);
+
+          // (optional) also reset OTP expiry
+          setExpiresAt(new Date(result.expiresAt).getTime());
+        }
       } catch (error) {
         console.error("Resend code error:", error);
       }
@@ -234,5 +261,8 @@ export const useLoginHandler = () => {
     // Raw mutation objects (if you need more control)
     sendAuthCodeMutation: sendAuthCode,
     verifyLoginMutation: verifyLogin,
+
+    resendTimer,
+    expiresAt,
   };
 };
