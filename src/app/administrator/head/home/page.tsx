@@ -107,13 +107,55 @@ export default function AdminDashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  const { data, loading } = useScholarshipData({
-    page: 1,
-    pageSize: 10,
-    status: "ACTIVE",
-    accountId: admin?.accountId,
-  });
-  const sliced = data.slice(0, 4);
+  // const { data, loading } = useScholarshipData({
+  //   page: 1,
+  //   pageSize: 10,
+  //   status: "ACTIVE",
+  //   accountId: admin?.accountId,
+  // });
+
+  // mockData.ts
+  const mockScholarships = [
+    {
+      scholarshipId: 1,
+      title: "Academic Excellence Scholarship",
+      Scholarship_Provider: { name: "Global Education Fund" },
+      type: "Merit-based",
+      status: "ACTIVE",
+    },
+    {
+      scholarshipId: 2,
+      title: "Community Service Award",
+      Scholarship_Provider: { name: "National Volunteer Association" },
+      type: "Service-based",
+      status: "ACTIVE",
+    },
+    {
+      scholarshipId: 3,
+      title: "STEM Innovators Grant",
+      Scholarship_Provider: { name: "Tech Future Foundation" },
+      type: "Research-based",
+      status: "ACTIVE",
+    },
+    {
+      scholarshipId: 4,
+      title: "Arts & Culture Scholarship",
+      Scholarship_Provider: { name: "Creative Minds Org" },
+      type: "Merit-based",
+      status: "ACTIVE",
+    },
+    {
+      scholarshipId: 5,
+      title: "Leadership Development Program",
+      Scholarship_Provider: { name: "Youth Leaders Initiative" },
+      type: "Leadership-based",
+      status: "ACTIVE",
+    },
+  ];
+  const sliced = mockScholarships.slice(0, 4);
+  // Example usage in your component
+  // const sliced = mockScholarships;
+
   return (
     <div className="relative min-h-screen z-10">
       <div className="lg:p-5 p-3 space-y-5 ">
@@ -123,7 +165,8 @@ export default function AdminDashboard() {
               <div className="flex justify-between lg:flex-row flex-col gap-5 ">
                 <div className="lg:space-y-2 ">
                   <h1 className="lg:text-2xl text-lg font-medium">
-                    Hello, {admin?.ISPSU_Head.fName} {admin?.ISPSU_Head.lName}!
+                    Hello, {admin?.ISPSU_Head?.fName ?? "Admin"}{" "}
+                    {admin?.ISPSU_Head?.lName ?? ""}!
                   </h1>
                   <p className="text-sm text-muted-foreground font-mono">
                     {isClient ? format(now, "PPP p") : "Loading..."}
