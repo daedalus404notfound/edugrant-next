@@ -126,7 +126,7 @@ const AboutTheTeam = () => {
     },
     {
       name: "Jerome Tecson",
-      role: "Frontend / Design",
+      role: "Frontend Developer / Design",
       description:
         "Aliquet adipiscing lectus praesent cras sed quis lectus egestas erat. Bibendum curabitur eget habitant feugiat nec faucibus eu lorem suscipit. Vitae vitae tempor enim eget lacus nulla leo.",
       image: tecson.src,
@@ -138,9 +138,9 @@ const AboutTheTeam = () => {
   ];
 
   return (
-    <div className="py-25  px-6 flex">
+    <div className="py-25  lg:px-6 flex flex-col lg:flex-row">
       <div className="mb-16">
-        <h2 className="text-4xl md:text-5xl font-bold  mb-6">About the team</h2>
+        <h2 className="text-2xl md:text-5xl font-bold  mb-6">About the team</h2>
         <p className="text-lg max-w-md leading-relaxed">
           We're a dynamic group of individuals who are passionate about what we
           do and dedicated to delivering the best results for our clients.

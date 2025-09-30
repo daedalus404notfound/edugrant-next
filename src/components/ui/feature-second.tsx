@@ -24,11 +24,11 @@ const AppSection = () => {
   ];
 
   return (
-    <section className="w-full py-25 px-6 space-y-12">
+    <section className="w-full py-25 lg:px-6 space-y-12">
       {/* Header */}
       <div className="flex flex-col items-center text-center">
-        <h2 className="lg:text-3xl text-2xl font-semibold flex gap-3 items-center">
-          Features <Sparkles />
+        <h2 className="lg:text-3xl text-xl font-semibold flex gap-3 items-center">
+          Features <Sparkles className="h-4 w-4 lg:h-6 lg:w-6" />
         </h2>
         <p className="mt-2 lg:text-base text-sm text-muted-foreground max-w-3xl ">
           Edugrant provides a straightforward and secure way for students to
@@ -37,7 +37,7 @@ const AppSection = () => {
       </div>
 
       {/* Cards */}
-      <div className="flex items-center justify-between ">
+      <div className="flex items-center flex-col lg:flex-row gap-3 justify-between ">
         {featuresData.map((feature, index) => {
           const Icon = feature.icon;
           return (

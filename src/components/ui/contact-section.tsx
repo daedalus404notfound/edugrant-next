@@ -25,8 +25,8 @@ export default function ContactSection() {
     <section className="py-25">
       <div className="w-full mx-auto lg:px-4  lg:gap-12 gap-6 md:px-8 lg:flex">
         <div className="max-w-md">
-          <h3 className="lg:text-4xl font-semibold text-2xl">Contact Us</h3>
-          <p className="mt-3">
+          <h3 className="lg:text-4xl font-semibold text-xl">Contact Us</h3>
+          <p className="mt-3 lg:text-base text-sm text-muted-foreground">
             We’re here to help and answer any question you might have, We look
             forward to hearing from you .
           </p>
