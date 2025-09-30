@@ -555,6 +555,7 @@ export default function Profile() {
                           </FormLabel>
                           <FormControl>
                             <Input
+                              type="number"
                               {...field}
                               className="w-full bg-card capitalize border-0 h-11"
                             />
@@ -719,6 +720,7 @@ export default function Profile() {
                           </FormLabel>
                           <FormControl>
                             <Input
+                              type="number"
                               {...field}
                               className="w-full bg-card capitalize border-0 h-11"
                             />
@@ -926,7 +928,7 @@ export default function Profile() {
                                     <FormControl>
                                       <Input
                                         {...field}
-                                        className="w-full bg-card"
+                                        className="w-full bg-card h-11"
                                         type="number"
                                       />
                                     </FormControl>
