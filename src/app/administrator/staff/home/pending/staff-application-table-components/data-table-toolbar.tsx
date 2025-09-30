@@ -110,7 +110,7 @@ export default function DataTableToolbar<
             />
             <DataTableFacetedFilter
               disabled={!!search}
-              column={table.getColumn("Institute")}
+              column={table.getColumn("institute")}
               title="Institute"
               options={institute ?? []}
             />

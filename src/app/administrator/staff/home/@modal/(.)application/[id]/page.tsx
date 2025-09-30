@@ -43,6 +43,11 @@ import {
   Inbox,
   UserX,
   UserCheck,
+  Check,
+  TriangleAlert,
+  ArrowRightIcon,
+  CheckCircle2,
+  CloudUpload,
 } from "lucide-react";
 
 import Reviewer from "./reviewer";
@@ -207,7 +212,6 @@ export default function InterceptReviewApplicants() {
     { id: "documents", label: "Documents", indicator: null },
     { id: "student", label: "Student Info", indicator: null },
     { id: "family", label: "Family Background", indicator: null },
-    { id: "scholarship", label: "Scholarship Details", indicator: null },
   ];
 
   return (
@@ -224,7 +228,7 @@ export default function InterceptReviewApplicants() {
         </DrawerHeader>
         <div className="bg-background rounded-lg flex-1 overflow-auto flex flex-col ">
           {/* Enhanced Header */}
-          <div className="  bg-gradient-to-r from-background to-card">
+          <div className="  bg-gradient-to-r from-background to-card hidden">
             <div className="relative p-4 ">
               <BGPattern
                 variant="grid"
@@ -290,7 +294,7 @@ export default function InterceptReviewApplicants() {
                 <div className="space-y-6">
                   <div className="flex items-center gap-3">
                     <h3 className="text-lg font-medium flex gap-2 items-center">
-                      <StickyNote className="h-5 w-5" /> Submitted Documents
+                      <CloudUpload /> Submitted Documents
                     </h3>
                     <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                   </div>
@@ -300,7 +304,7 @@ export default function InterceptReviewApplicants() {
                       <Skeleton className="h-40 w-full" />
                     </div>
                   ) : (
-                    <div className="grid grid-cols-1 divide-y">
+                    <div className="grid grid-cols-2 gap-8 ">
                       {lastPhase &&
                         lastPhase
                           .filter(
@@ -318,138 +322,183 @@ export default function InterceptReviewApplicants() {
                               doc.rejectMessage?.comment ||
                               "";
 
-                            console.log("111", currentStatus, currentComment);
-
                             return (
-                              <div key={index} className="flex gap-5 py-8">
-                                <Reviewer
-                                  fileFormat={mimeToLabelMap[doc.fileFormat]}
-                                  resourceType={doc.resourceType}
-                                  fileUrl={doc.fileUrl}
-                                  document={doc.document}
-                                  supabasePath={doc.supabasePath}
-                                  docStatus={currentStatus}
-                                  requirementType={doc.requirementType}
-                                  docComment={currentComment}
-                                  onUpdate={(field, value) =>
-                                    updateReviewData(doc.document, field, value)
-                                  }
-                                />
-
-                                <div className="flex-1 flex flex-col justify-between">
-                                  <div className="flex items-start justify-between">
-                                    <div className="flex-1">
-                                      <h4 className="text-lg font-semibold mb-1">
-                                        {doc.document}
-                                      </h4>
-                                      <div className="flex items-center gap-2">
-                                        <Badge
-                                          variant="secondary"
-                                          className="uppercase bg-red-800/20 text-red-700"
-                                        >
-                                          {doc.requirementType}
-                                        </Badge>
-                                        {/* Show current status badge */}
-                                        {currentStatus && (
-                                          <Badge
-                                            className={`text-xs ${
-                                              currentStatus === "APPROVED"
-                                                ? statusColors.APPROVED
-                                                : statusColors.REJECTED
-                                            }`}
-                                          >
-                                            {currentStatus}
-                                          </Badge>
-                                        )}
+                              <div
+                                key={index}
+                                className="bg-card p-6 rounded-lg space-y-6"
+                              >
+                                {doc.fileFormat ? (
+                                  <div className="flex gap-3 items-center">
+                                    <div className="rounded-md flex-1 bg-green-600/10 text-green-600 px-4 py-3 ">
+                                      <div className="flex gap-3">
+                                        <CheckCircle2
+                                          className="mt-0.5 shrink-0 opacity-60"
+                                          size={16}
+                                          aria-hidden="true"
+                                        />
+                                        <div className="flex grow justify-between gap-3">
+                                          <p className="text-sm">
+                                            Document provided
+                                          </p>
+                                        </div>
                                       </div>
                                     </div>
-                                    <Button size="sm" variant="outline">
+                                    <Button variant="outline">
                                       <Download className="w-4 h-4" />
                                     </Button>
                                   </div>
-                                  <div className="flex gap-3">
-                                    <div className="flex-1">
-                                      <Textarea
-                                        placeholder="Add review comment..."
-                                        value={currentComment}
-                                        disabled={!!doc.rejectMessage?.status}
-                                        onChange={(e) =>
-                                          updateReviewData(
-                                            doc.document,
-                                            "comment",
-                                            e.target.value
-                                          )
-                                        }
-                                        className="min-h-9"
+                                ) : (
+                                  <div className="rounded-md  bg-red-600/10 text-red-600 px-4 py-3 ">
+                                    <div className="flex gap-3">
+                                      <TriangleAlert
+                                        className="mt-0.5 shrink-0 opacity-60"
+                                        size={16}
+                                        aria-hidden="true"
                                       />
-                                    </div>
-                                    <div className="flex gap-2">
-                                      <Button
-                                        variant={
-                                          currentStatus === "APPROVED"
-                                            ? "default"
-                                            : "outline"
-                                        }
-                                        className={`font-medium transition-all ${
-                                          currentStatus === "APPROVED"
-                                            ? ""
-                                            : "hover:bg-green-50 hover:border-green-200 hover:text-green-700"
-                                        }`}
-                                        onClick={() =>
-                                          updateReviewData(
-                                            doc.document,
-                                            "status",
-                                            "APPROVED"
-                                          )
-                                        }
-                                        disabled={!!doc.rejectMessage?.status}
-                                      >
-                                        {currentStatus === "APPROVED" ? (
-                                          <>
-                                            <CheckCheck className="w-4 h-4 mr-2" />
-                                            Accepted
-                                          </>
-                                        ) : (
-                                          <>
-                                            <UserCheck2 className="w-4 h-4 mr-2" />
-                                            Accept
-                                          </>
-                                        )}
-                                      </Button>
-                                      <Button
-                                        variant={
-                                          currentStatus === "REJECTED"
-                                            ? "destructive"
-                                            : "outline"
-                                        }
-                                        className={`font-medium transition-all ${
-                                          currentStatus !== "REJECTED"
-                                            ? "hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-                                            : ""
-                                        }`}
-                                        onClick={() =>
-                                          updateReviewData(
-                                            doc.document,
-                                            "status",
-                                            "REJECTED"
-                                          )
-                                        }
-                                        disabled={!!doc.rejectMessage?.status}
-                                      >
-                                        {currentStatus === "REJECTED" ? (
-                                          <>
-                                            <UserRoundX className="w-4 h-4 mr-2" />
-                                            Rejected
-                                          </>
-                                        ) : (
-                                          <>
-                                            <UserX2 className="w-4 h-4 mr-2" />
-                                            Reject
-                                          </>
-                                        )}
-                                      </Button>
+                                      <div className="flex grow justify-between gap-3">
+                                        <p className="text-sm">
+                                          Failed to submit
+                                        </p>
+                                      </div>
                                     </div>
                                   </div>
+                                )}
+                                <div className="pt-8 pb-6">
+                                  <div className="flex gap-5">
+                                    <Reviewer
+                                      fileFormat={
+                                        mimeToLabelMap[doc.fileFormat]
+                                      }
+                                      resourceType={doc.resourceType}
+                                      fileUrl={doc.fileUrl}
+                                      document={doc.document}
+                                      supabasePath={doc.supabasePath}
+                                      docStatus={currentStatus}
+                                      requirementType={doc.requirementType}
+                                      docComment={currentComment}
+                                      onUpdate={(field, value) =>
+                                        updateReviewData(
+                                          doc.document,
+                                          field,
+                                          value
+                                        )
+                                      }
+                                    />
+                                    <div className="flex items-start justify-between w-full">
+                                      <div className="flex-1">
+                                        <h4 className="text-lg font-semibold mb-1">
+                                          {doc.document}
+                                        </h4>
+                                        {/* <div className=" items-center gap-2 capitalize mt-2">
+                                          <div className="flex items-center gap-1.5">
+                                            <p className="text-sm text-muted-foreground">
+                                              Document Type:
+                                            </p>
+                                            <p className="uppercase tracking-wide">
+                                              {doc.requirementType}
+                                            </p>
+                                          </div>
+                                          <div className="flex items-center gap-1.5">
+                                            <p className="text-sm text-muted-foreground">
+                                              Document Format:
+                                            </p>
+                                            <p className="uppercase tracking-wide">
+                                              {doc.fileFormat || "N/A"}
+                                            </p>
+                                          </div>
+                                        </div> */}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="flex-1 grid grid-cols-2 gap-3">
+                                  <Button
+                                    variant={
+                                      currentStatus === "APPROVED"
+                                        ? "default"
+                                        : "outline"
+                                    }
+                                    className={`font-medium transition-all flex-1  !border-0 ${
+                                      currentStatus === "APPROVED"
+                                        ? ""
+                                        : "hover:bg-green-50 hover:border-green-200 hover:text-green-700"
+                                    }`}
+                                    onClick={() =>
+                                      updateReviewData(
+                                        doc.document,
+                                        "status",
+                                        "APPROVED"
+                                      )
+                                    }
+                                    disabled={
+                                      !!doc.rejectMessage?.status ||
+                                      !doc.fileFormat
+                                    }
+                                  >
+                                    {currentStatus === "APPROVED" ? (
+                                      <>
+                                        <Check className="w-4 h-4 mr-2" />
+                                        Accepted
+                                      </>
+                                    ) : (
+                                      <>
+                                        <UserCheck2 className="w-4 h-4 mr-2" />
+                                        Accept
+                                      </>
+                                    )}
+                                  </Button>
+                                  <Button
+                                    variant={
+                                      currentStatus === "REJECTED"
+                                        ? "destructive"
+                                        : "outline"
+                                    }
+                                    className={`font-medium transition-all flex-1  !border-0 ${
+                                      currentStatus !== "REJECTED"
+                                        ? "hover:bg-red-50 hover:border-red-200 hover:text-red-700"
+                                        : ""
+                                    }`}
+                                    onClick={() =>
+                                      updateReviewData(
+                                        doc.document,
+                                        "status",
+                                        "REJECTED"
+                                      )
+                                    }
+                                    disabled={
+                                      !!doc.rejectMessage?.status ||
+                                      !doc.fileFormat
+                                    }
+                                  >
+                                    {currentStatus === "REJECTED" ? (
+                                      <>
+                                        <UserRoundX className="w-4 h-4 mr-2" />
+                                        Rejected
+                                      </>
+                                    ) : (
+                                      <>
+                                        <UserX2 className="w-4 h-4 mr-2" />
+                                        Reject
+                                      </>
+                                    )}
+                                  </Button>
+                                  <Textarea
+                                    placeholder="Add review comment..."
+                                    value={currentComment}
+                                    disabled={
+                                      !!doc.rejectMessage?.status ||
+                                      !doc.fileFormat
+                                    }
+                                    onChange={(e) =>
+                                      updateReviewData(
+                                        doc.document,
+                                        "comment",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="min-h-11 col-span-2 bg-background border-0"
+                                  />
                                 </div>
                               </div>
                             );
@@ -466,11 +515,6 @@ export default function InterceptReviewApplicants() {
 
               {/* Family Background Section */}
               {activeSection === "family" && data && <FamilyStaff {...data} />}
-
-              {/* Scholarship Details Section */}
-              {activeSection === "scholarship" && data && (
-                <ScholarshipModal data={data?.Scholarship} />
-              )}
             </div>
           </div>
         </div>

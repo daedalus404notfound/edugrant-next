@@ -45,7 +45,7 @@ const ApplicationSchema = z.object({
     message: DecisionMessageSchema.optional(),
   }),
   applicationId: z.number(),
-
+  dateCreated: z.string(),
   interviewId: z.string(),
   ownerId: z.number(),
   scholarshipId: z.number(),
@@ -61,7 +61,6 @@ const UpdatedApplicationSchema = z.object({
   status: z.string(),
   dateCreated: z.string().datetime(),
   supabasePath: z.array(z.string()),
-
   submittedDocuments: z.record(z.string(), z.array(SubmittedDocumentSchema)),
 });
 

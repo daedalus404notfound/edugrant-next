@@ -2,13 +2,13 @@
 import "ldrs/react/Ring.css";
 import { useEffect, useState } from "react";
 import { DataTable } from "@/app/table-components/data-table";
-import { columns } from "../application/staff-application-table-components/columns";
+import { columns } from "../pending/staff-application-table-components/columns";
 import {
   ColumnFiltersState,
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
-import DataTableToolbar from "../application/staff-application-table-components/data-table-toolbar";
+import DataTableToolbar from "../pending/staff-application-table-components/data-table-toolbar";
 import { ApplicationFormData } from "@/hooks/zod/application";
 import useApplicantsSearch from "@/hooks/admin/getApplicantSearch";
 import useFetchApplications from "@/hooks/admin/getApplicant";
@@ -36,6 +36,14 @@ export default function ForInterviewApplication({
     filters:
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
     status: status,
+  });
+  const [columnVisibility, setColumnVisibility] = useState<
+    Record<string, boolean>
+  >({
+    phase: false,
+    section: false,
+    year: false,
+    institute: false,
   });
   console.log("dataa", data);
   const { searchData, searchLoading, searchMeta } = useApplicantsSearch({
@@ -79,6 +87,8 @@ export default function ForInterviewApplication({
       columnFilters={columnFilters}
       setColumnFilters={setColumnFilters}
       toolbar={DataTableToolbar}
+      columnVisibility={columnVisibility} // <-- pass visibility
+      setColumnVisibility={setColumnVisibility} // <-- pass setter
     />
   );
 }

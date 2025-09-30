@@ -37,7 +37,7 @@ const sidebarData = [
 const sidebarScholar = [
   {
     title: "Active Scholarship",
-    url: "/administrator/staff/home/manage",
+    url: "/administrator/staff/home/scholarship",
     icon: GraduationCap,
   },
 ];

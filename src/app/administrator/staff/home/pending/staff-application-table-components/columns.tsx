@@ -10,46 +10,19 @@ import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
 import { getPhaseLabel } from "@/lib/phaseLevel";
 import { useState } from "react";
+import { format } from "date-fns";
 
 export const columns: ColumnDef<ApplicationFormData>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <div className="pl-4">
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-          className="translate-y-[2px]"
-        />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="pl-4">
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-          className="translate-y-[2px]"
-        />
-      </div>
-    ),
-    enableSorting: true,
-    enableHiding: false,
-  },
-
-  {
-    accessorKey: "firstName",
+    accessorFn: (row) => row.Student.fName,
+    id: "fName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
+      <DataTableColumnHeader column={column} title="Student" className="pl-4" />
     ),
     cell: ({ row }) => {
       const student = row.original.Student;
       return (
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center pl-4">
           <Avatar>
             <AvatarImage src={`/avatars/${student.studentId}.jpg`} />
             <AvatarFallback className="uppercase">
@@ -61,12 +34,17 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
             <div className="font-medium capitalize">
               {student.fName} {student.mName} {student.lName}
             </div>
-            {/* <p className="text-xs text-muted-foreground">{student?.email}</p> */}
+            <p className="text-xs text-muted-foreground">
+              {student.Account.email}
+            </p>
           </div>
         </div>
       );
     },
+    enableSorting: true,
+    enableHiding: true,
   },
+
   {
     accessorFn: (row) => row.Student.Account.schoolId,
     id: "Student_Account_studentId",
@@ -79,14 +57,15 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     enableSorting: true,
     enableHiding: true,
   },
+
   {
     accessorFn: (row) => row.Student.institute,
-    id: "Institute",
+    id: "institute",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Institute" />
     ),
     cell: ({ row }) => (
-      <span className="capitalize">{row.getValue("Institute")}</span>
+      <span className="capitalize">{row.getValue("institute")}</span>
     ),
     enableSorting: true,
     enableHiding: true,
@@ -95,11 +74,21 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     accessorFn: (row) => row.Student.course,
     id: "course",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Course" />
+      <DataTableColumnHeader column={column} title="Course, Year & Section" />
     ),
-    cell: ({ row }) => (
-      <span className="capitalize">{row.getValue("course")}</span>
-    ),
+    cell: ({ row }) => {
+      const course = row.original.Student.course;
+      const year = row.original.Student.year;
+      const section = row.original.Student.section;
+      return (
+        <div className="flex gap-2 items-center">
+          <div className="font-medium capitalize">
+            {course} - {year.slice(0, 1)}
+            {section}
+          </div>
+        </div>
+      );
+    },
     enableSorting: true,
     enableHiding: true,
   },
@@ -111,6 +100,18 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     ),
     cell: ({ row }) => (
       <span className="capitalize">{row.getValue("year")}</span>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorFn: (row) => row.Student.section,
+    id: "section",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Section" />
+    ),
+    cell: ({ row }) => (
+      <span className="capitalize">{row.getValue("section")}</span>
     ),
     enableSorting: true,
     enableHiding: true,
@@ -152,6 +153,21 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     ),
     cell: ({ row }) => (
       <span className="capitalize">{row.getValue("phase")}</span>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+
+  {
+    accessorFn: (row) => row.dateCreated,
+    id: "applicationDate",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Application Date" />
+    ),
+    cell: ({ row }) => (
+      <span className="">
+        {format(row.getValue("applicationDate"), "PPP p")}
+      </span>
     ),
     enableSorting: true,
     enableHiding: true,

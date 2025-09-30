@@ -32,6 +32,9 @@ export default function PendingStaffApplication({
     Record<string, boolean>
   >({
     phase: false,
+    section: false,
+    year: false,
+    institute: false,
   });
 
   const { data, meta, loading } = useFetchApplications({

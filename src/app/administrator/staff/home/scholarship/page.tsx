@@ -65,25 +65,27 @@ export default function Manage() {
 
   return (
     <TourProvider steps={scholarshipTourSteps}>
-      <div className="w-full">
-        <TitleReusable
-          title="Scholarship Management"
-          description="View and manage scholarships. Switch between active scholarships and renewals using the tabs below."
-          Icon={GraduationCap}
-        />
+      <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+        <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
+          <TitleReusable
+            title="Scholarship Management"
+            description="View and manage scholarships. Switch between active scholarships and renewals using the tabs below."
+            Icon={GraduationCap}
+          />
 
-        <div className="py-8 space-y-5">
-          <div className="flex">
-            <TourStep stepId="tabs">
-              <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
-            </TourStep>
+          <div className="py-8 space-y-5">
+            <div className="flex">
+              <TourStep stepId="tabs">
+                <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
+              </TourStep>
+            </div>
+            {status === "ACTIVE" && (
+              <ManageActiveScholarship setActive={setActive} />
+            )}
+            {status === "RENEW" && (
+              <ManageRenewScholarship setRenewal={setRenewal} />
+            )}
           </div>
-          {status === "ACTIVE" && (
-            <ManageActiveScholarship setActive={setActive} />
-          )}
-          {status === "RENEW" && (
-            <ManageRenewScholarship setRenewal={setRenewal} />
-          )}
         </div>
       </div>
     </TourProvider>

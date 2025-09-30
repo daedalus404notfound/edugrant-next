@@ -66,14 +66,16 @@ export default function PendingApplication() {
   ];
   return (
     <TourProvider steps={applicationTourSteps}>
-      <div className="w-full">
-        <TitleReusable
-          title="For Interview Application"
-          description="Applicants currently waiting for review."
-        />
+      <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+        <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
+          <TitleReusable
+            title="For Interview Application"
+            description="Applicants currently waiting for review."
+          />
 
-        <div className="py-8 space-y-5">
-          <ForInterviewApplication setInterview={setInterview} />
+          <div className="py-8 space-y-5">
+            <ForInterviewApplication setInterview={setInterview} />
+          </div>
         </div>
       </div>
     </TourProvider>
