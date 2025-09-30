@@ -277,6 +277,21 @@ export default function DesktopLandingPage() {
   return (
     <>
       <div className="gradient absolute inset-0 z-10 hidden dark:block h-[88dvh]"></div>
+      <div
+        className="absolute inset-0 z-0 dark:hidden lg:hidden h-100"
+        style={{
+          backgroundImage: `
+        linear-gradient(to right, #d1d5db 1px, transparent 1px),
+        linear-gradient(to bottom, #d1d5db 1px, transparent 1px)
+      `,
+          backgroundSize: "32px 32px",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 80% 80% at 0% 0%, #000 50%, transparent 90%)",
+          maskImage:
+            "radial-gradient(ellipse 80% 80% at 0% 0%, #000 50%, transparent 90%)",
+          opacity: 0.4,
+        }}
+      />
       <div className="relative w-full z-10 ">
         <HeaderComponent />
         <AnimatePresence mode="wait">
@@ -406,7 +421,7 @@ export default function DesktopLandingPage() {
             className="grid grid-cols-2 gap-3 mt-10 w-full"
           >
             <Link className="col-span-2" href={`/user/login`}>
-              <Button variant="outline" size="lg" className="w-full">
+              <Button size="lg" className="w-full">
                 <GraduationCap />
                 Apply for Scholarship <ChevronRight />
               </Button>
