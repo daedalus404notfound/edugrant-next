@@ -51,11 +51,11 @@ export default function InterceptManageApplicationClient() {
     userId: userId?.toString(),
   });
 
-  const navigationTabs = [
-    { id: "documents", label: "Submitted Documents", indicator: null },
+  // const navigationTabs = [
+  //   { id: "documents", label: "Submitted Documents", indicator: null },
 
-    { id: "scholarship", label: "Scholarship Details", indicator: null },
-  ];
+  //   { id: "scholarship", label: "Scholarship Details", indicator: null },
+  // ];
   const steps = [
     {
       step: 1,
@@ -95,7 +95,7 @@ export default function InterceptManageApplicationClient() {
           HandleCloseDrawer={HandleCloseDrawer}
           scholarship={false}
         />
-        <div className=" h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md">
+        <div className=" h-full w-full overflow-auto  bg-background rounded-t-md">
           {loading ? (
             <ScholarshipModalLoading />
           ) : edit ? (
@@ -106,22 +106,7 @@ export default function InterceptManageApplicationClient() {
             />
           ) : (
             <div>
-              <div className="lg:p-4 p-2 space-y-3">
-                <TitleReusable
-                  title={data[0]?.Scholarship.title}
-                  description={`Application Details for ${data[0].Scholarship.title}`}
-                />
-
-                <div>
-                  <Tabs
-                    tabs={navigationTabs}
-                    onTabChange={(tabId) => setActiveSection(tabId)}
-                    className="py-4"
-                  />
-
-                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-                </div>
-
+              <div className="lg:p-6 p-4 space-y-6">
                 {data[0]?.status === "DECLINED" && (
                   <div className="relative z-20 bg-red-700/10 rounded-md  px-4 py-3 text-red-500">
                     <p className="text-sm">
@@ -185,12 +170,8 @@ export default function InterceptManageApplicationClient() {
                     </p>
                   </div>
                 )}
-                {activeSection === "documents" && (
-                  <DocsStudent data={data[0]} />
-                )}
-                {activeSection === "scholarship" && data[0] && (
-                  <ScholarshipModal data={data[0].Scholarship} />
-                )}
+
+                <DocsStudent data={data[0]} />
               </div>
 
               <div className="sticky bottom-0 z-50">

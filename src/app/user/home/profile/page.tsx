@@ -91,7 +91,7 @@ export default function Profile() {
                                 <div className="relative w-full">
                                   <Input
                                     {...field}
-                                    className="bg-card w-full capitalize border-0 h-11"
+                                    className="bg-card w-full capitalize border-0 "
                                   />
                                   <Button
                                     variant="ghost"
@@ -118,7 +118,7 @@ export default function Profile() {
                                 <div className="relative w-full">
                                   <Input
                                     {...field}
-                                    className="bg-card w-full capitalize border-0 h-11"
+                                    className="bg-card w-full capitalize border-0 "
                                   />
                                   <Button
                                     variant="ghost"
@@ -144,7 +144,7 @@ export default function Profile() {
                                 <div className="relative w-full">
                                   <Input
                                     {...field}
-                                    className="bg-card w-full capitalize border-0 h-11"
+                                    className="bg-card w-full capitalize border-0 "
                                   />
                                   <Button
                                     variant="ghost"
@@ -173,7 +173,7 @@ export default function Profile() {
                                 <div className="relative w-full">
                                   <Input
                                     {...field}
-                                    className="bg-card w-full capitalize border-0 h-11"
+                                    className="bg-card w-full capitalize border-0 "
                                   />
                                   <Button
                                     variant="ghost"
@@ -199,7 +199,7 @@ export default function Profile() {
                                 <div className="relative w-full">
                                   <Input
                                     {...field}
-                                    className="bg-card w-full capitalize border-0 h-11"
+                                    className="bg-card w-full capitalize border-0 "
                                   />
                                   <Button
                                     variant="ghost"
@@ -228,7 +228,7 @@ export default function Profile() {
                                 <div className="relative w-full">
                                   <Input
                                     {...field}
-                                    className="bg-card w-full capitalize border-0 h-11"
+                                    className="bg-card w-full capitalize border-0 "
                                   />
                                   <Button
                                     variant="ghost"
@@ -255,7 +255,7 @@ export default function Profile() {
                                 <div className="relative w-full">
                                   <Input
                                     {...field}
-                                    className="bg-card w-full capitalize border-0 h-11"
+                                    className="bg-card w-full capitalize border-0 "
                                   />
                                   <Button
                                     variant="ghost"
@@ -293,7 +293,7 @@ export default function Profile() {
                               <div className="w-full">
                                 <Input
                                   {...field}
-                                  className="bg-card w-full capitalize border-0 h-11"
+                                  className="bg-card w-full capitalize border-0 "
                                   disabled
                                 />
                               </div>
@@ -314,7 +314,7 @@ export default function Profile() {
                               <div className="relative w-full">
                                 <Input
                                   {...field}
-                                  className="bg-card w-full capitalize border-0 h-11"
+                                  className="bg-card w-full capitalize border-0 "
                                 />
                                 <Button
                                   variant="ghost"
@@ -343,7 +343,7 @@ export default function Profile() {
                               <div className="relative w-full">
                                 <Input
                                   {...field}
-                                  className="bg-card w-full capitalize border-0 h-11"
+                                  className="bg-card w-full capitalize border-0 "
                                 />
                                 <Button
                                   variant="ghost"
@@ -369,7 +369,7 @@ export default function Profile() {
                               <div className="relative w-full">
                                 <Input
                                   {...field}
-                                  className="bg-card w-full capitalize border-0 h-11"
+                                  className="bg-card w-full capitalize border-0 "
                                 />
                                 <Button
                                   variant="ghost"
@@ -456,7 +456,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -476,7 +476,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -496,7 +496,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -516,7 +516,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -536,7 +536,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -557,7 +557,7 @@ export default function Profile() {
                             <Input
                               type="number"
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -626,7 +626,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -645,7 +645,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -664,7 +664,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -683,7 +683,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -702,7 +702,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -722,7 +722,7 @@ export default function Profile() {
                             <Input
                               type="number"
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -753,7 +753,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -773,7 +773,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -793,7 +793,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -813,7 +813,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -833,7 +833,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -853,7 +853,7 @@ export default function Profile() {
                           <FormControl>
                             <Input
                               {...field}
-                              className="w-full bg-card capitalize border-0 h-11"
+                              className="w-full bg-card capitalize border-0 "
                             />
                           </FormControl>
                           <FormMessage />
@@ -908,7 +908,7 @@ export default function Profile() {
                                       <div className="flex-1">
                                         <Input
                                           {...field}
-                                          className="w-full bg-card capitalize border-0 h-11"
+                                          className="w-full bg-card capitalize border-0 "
                                         />
                                       </div>
                                     </FormControl>
@@ -928,7 +928,7 @@ export default function Profile() {
                                     <FormControl>
                                       <Input
                                         {...field}
-                                        className="w-full bg-card h-11"
+                                        className="w-full bg-card "
                                         type="number"
                                       />
                                     </FormControl>
@@ -949,7 +949,7 @@ export default function Profile() {
                                       <div className="w-full">
                                         <Input
                                           {...field}
-                                          className="w-full bg-card capitalize border-0 h-11"
+                                          className="w-full bg-card capitalize border-0 "
                                         />
                                       </div>
                                     </FormControl>
@@ -993,7 +993,7 @@ export default function Profile() {
                             <div className="relative w-full">
                               <Input
                                 {...field}
-                                className="bg-card w-full capitalize border-0 h-11"
+                                className="bg-card w-full capitalize border-0 "
                                 type="password"
                               />
                               <Button
@@ -1020,7 +1020,7 @@ export default function Profile() {
                             <div className="relative w-full flex items-center gap-3">
                               <Input
                                 {...field}
-                                className="bg-card w-full capitalize border-0 h-11"
+                                className="bg-card w-full capitalize border-0 "
                                 type="password"
                               />
                               <Button>

@@ -52,10 +52,11 @@ export default function useScholarshipSearch({
         if (pageSize) params.append("dataPerPage", pageSize.toString());
         if (sortBy) params.append("sortBy", sortBy);
         if (order) params.append("order", order);
+        if (query) params.append("search", query);
         if (accountId) params.append("accountId", accountId.toString());
         const endpoint = `${
           process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
-        }/getScholarship?${params.toString()}`;
+        }/searchScholarship?${params.toString()}`;
         console.log("Fetching:", endpoint);
 
         const res = await axios.get(endpoint, { withCredentials: true });
