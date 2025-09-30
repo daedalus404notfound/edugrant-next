@@ -110,7 +110,7 @@ export default function LoginClientModal() {
         onEscapeKeyDown={(e) => {
           if (verifyLoading || authLoading) e.preventDefault();
         }}
-        className="w-full !bg-transparent lg:p-2 p-1 !border-0"
+        className="w-full !bg-transparent lg:p-2 p-1 !border-0 !outline-0"
       >
         <DrawerHeader className="sr-only">
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
