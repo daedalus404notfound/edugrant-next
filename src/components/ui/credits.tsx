@@ -36,7 +36,7 @@ const TeamMember = ({
           sizes="(max-width: 768px) 100vw, 192px"
         />
       </div>
-      <div className="p-6 flex-1">
+      <div className="lg:p-6 p-4 flex-1">
         <div className="space-y-4">
           <div>
             <h3 className="text-xl font-semibold ">{name}</h3>
@@ -81,10 +81,10 @@ const TeamMember = ({
 const AboutTheTeam = () => {
   const teamMembers = [
     {
-      name: "Reynal Darry Santos",
+      name: "Reynald Darry Santos",
       role: "Project Manager",
       description:
-        "Ultricies massa malesuada viverra cras lobortis. Tempor orci hac ligula dapibus mauris sit ut eu. Eget turpis urna maecenas cras. Nisl dictum.",
+        "Reynald keeps the team focused and on track. He’s responsible for planning, organizing, and ensuring every milestone is delivered with quality. With strong leadership and communication skills, he makes collaboration seamless.",
       image: sants.src,
       socialLinks: {
         twitter: "#",
@@ -93,9 +93,9 @@ const AboutTheTeam = () => {
     },
     {
       name: "Mikko Dela Pena",
-      role: "Full Stack Dota Player",
+      role: "Full Stack Developer",
       description:
-        "Turpis lectus et amet elementum. Mi duis integer sed in vitae consequat. Nam vitae, in felis mi dui tempus. Porta at turpis eu odio. Et, sed duis in blandit bibendum accumsan. Purus viverra facilisi suspendisse quis est.",
+        "Mikko is a problem-solver who thrives in both frontend and backend development. He loves building scalable solutions, tackling tough challenges, and making sure the product works flawlessly end to end.",
       image: pena.src,
       socialLinks: {
         twitter: "#",
@@ -104,9 +104,9 @@ const AboutTheTeam = () => {
     },
     {
       name: "Joemar Ferraren",
-      role: "Paperist",
+      role: "Documentation Specialist",
       description:
-        "Aliquet adipiscing lectus praesent cras sed quis lectus egestas erat. Bibendum curabitur eget habitant feugiat nec faucibus eu lorem suscipit. Vitae vitae tempor enim eget lacus nulla leo.",
+        "Joemar ensures that every detail of the project is well-documented and easy to understand. His eye for clarity and structure helps the team maintain consistency and accuracy throughout the workflow.",
       image: ferraren.src,
       socialLinks: {
         twitter: "#",
@@ -115,9 +115,9 @@ const AboutTheTeam = () => {
     },
     {
       name: "Neal Eleazar Ramos",
-      role: "Backend Developer / Database",
+      role: "Backend Developer / Database Engineer",
       description:
-        "Aliquet adipiscing lectus praesent cras sed quis lectus egestas erat. Bibendum curabitur eget habitant feugiat nec faucibus eu lorem suscipit. Vitae vitae tempor enim eget lacus nulla leo.",
+        "Neal is the backbone of the system. He designs and maintains databases, optimizes server performance, and ensures everything runs smoothly behind the scenes to support the team’s applications.",
       image: ramos.src,
       socialLinks: {
         twitter: "#",
@@ -126,9 +126,9 @@ const AboutTheTeam = () => {
     },
     {
       name: "Jerome Tecson",
-      role: "Frontend Developer / Design",
+      role: "Frontend Developer / UI Designer",
       description:
-        "Aliquet adipiscing lectus praesent cras sed quis lectus egestas erat. Bibendum curabitur eget habitant feugiat nec faucibus eu lorem suscipit. Vitae vitae tempor enim eget lacus nulla leo.",
+        "Jerome focuses on creating clean, responsive, and user-friendly interfaces. With an eye for design and detail, he brings concepts to life and ensures users enjoy a seamless digital experience.",
       image: tecson.src,
       socialLinks: {
         twitter: "#",

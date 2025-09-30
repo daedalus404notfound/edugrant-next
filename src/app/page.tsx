@@ -274,102 +274,10 @@ export default function DesktopLandingPage() {
     );
   };
 
-  const MobileComponent = () => {
-    return (
-      <div className="p-4">
-        <motion.header
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-          className=" flex justify-between items-center"
-        >
-          <div className="flex items-center gap-2">
-            <Image
-              src={bascLogo.src}
-              alt="bascLogo"
-              unoptimized
-              width={35}
-              height={35}
-            />
-            <Image
-              src={osas.src}
-              alt="bascLogo"
-              unoptimized
-              width={35}
-              height={35}
-            />
-          </div>
-          <ModeToggle />
-        </motion.header>
-        <div className="text-center py-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <Badge variant="outline">Bulacan Agricultural State College</Badge>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-center mt-8"
-          >
-            <motion.span
-              className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-500/70
-  text-4xl havelock tracking-[-3px]  font-bold 
-  "
-              initial={{ backgroundPosition: "200% 0" }}
-              animate={{ backgroundPosition: "-200% 0" }}
-              transition={{
-                repeat: Infinity,
-                repeatType: "loop",
-                duration: 7,
-                ease: "linear",
-              }}
-            >
-              EDUGRANT
-            </motion.span>
-          </motion.div>
-          <motion.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="mt-4 text-center"
-          >
-            Apply for scholarships, track your progress, and unlock
-            opportunities for your future at BASC.
-          </motion.p>
-        </div>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="grid grid-cols-2 gap-3 mt-10 w-full"
-        >
-          <Link className="col-span-2" href={`/user/login`}>
-            <Button variant="outline" size="lg" className="w-full">
-              <GraduationCap />
-              Apply for Scholarship <ChevronRight />
-            </Button>
-          </Link>
-          <Link className="" href={`/user/login`}>
-            <Button className="w-full" size="lg" variant="outline">
-              Login
-            </Button>
-          </Link>
-          <Link className="" href={`/user/register`}>
-            <Button className="w-full" size="lg" variant="outline">
-              Register
-            </Button>
-          </Link>
-        </motion.div>
-      </div>
-    );
-  };
-  const DesktopComponent = () => {
-    return (
-      <>
+  return (
+    <>
+      <div className="gradient absolute inset-0 z-10 hidden dark:block h-[88dvh]"></div>
+      <div className="relative w-full z-10 ">
         <HeaderComponent />
         <AnimatePresence mode="wait">
           <motion.div
@@ -378,7 +286,7 @@ export default function DesktopLandingPage() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
-            className="relative min-h-[75vh]  mx-auto w-[95%]   rounded-3xl overflow-hidden  flex items-center dark:bg-primary-second/50  bg-green-800 shadow "
+            className="relative min-h-[75vh]  mx-auto w-[95%]   rounded-3xl overflow-hidden hidden lg:flex items-center dark:bg-primary-second/50  bg-green-800 shadow "
           >
             <div className="absolute inset-0 h-full w-full flex items-center rounded-3xl x">
               <img
@@ -424,18 +332,96 @@ export default function DesktopLandingPage() {
             </div>
           </motion.div>
         </AnimatePresence>
-      </>
-    );
-  };
-  return (
-    <>
-      <div className="gradient absolute inset-0 z-10 hidden dark:block h-[88dvh]"></div>
-      <div className="relative w-full z-10 ">
-        <div className="hidden lg:block">
-          <DesktopComponent />
-        </div>
-        <div className="block lg:hidden">
-          <MobileComponent />
+        <div className="p-4 lg:hidden">
+          <motion.header
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className=" flex justify-between items-center"
+          >
+            <div className="flex items-center gap-2">
+              <Image
+                src={bascLogo.src}
+                alt="bascLogo"
+                unoptimized
+                width={35}
+                height={35}
+              />
+              <Image
+                src={osas.src}
+                alt="bascLogo"
+                unoptimized
+                width={35}
+                height={35}
+              />
+            </div>
+            <ModeToggle />
+          </motion.header>
+          <div className="text-center py-10">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <Badge variant="outline">
+                Bulacan Agricultural State College
+              </Badge>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="text-center mt-8"
+            >
+              <motion.span
+                className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-500/70
+  text-4xl havelock tracking-[-3px]  font-bold 
+  "
+                initial={{ backgroundPosition: "200% 0" }}
+                animate={{ backgroundPosition: "-200% 0" }}
+                transition={{
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  duration: 7,
+                  ease: "linear",
+                }}
+              >
+                EDUGRANT
+              </motion.span>
+            </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="mt-4 text-center"
+            >
+              Apply for scholarships, track your progress, and unlock
+              opportunities for your future at BASC.
+            </motion.p>
+          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="grid grid-cols-2 gap-3 mt-10 w-full"
+          >
+            <Link className="col-span-2" href={`/user/login`}>
+              <Button variant="outline" size="lg" className="w-full">
+                <GraduationCap />
+                Apply for Scholarship <ChevronRight />
+              </Button>
+            </Link>
+            <Link className="" href={`/user/login`}>
+              <Button className="w-full" size="lg" variant="outline">
+                Login
+              </Button>
+            </Link>
+            <Link className="" href={`/user/register`}>
+              <Button className="w-full" size="lg" variant="outline">
+                Register
+              </Button>
+            </Link>
+          </motion.div>
         </div>
         <div className="mx-auto xl:w-3/4 p-4">
           <AppSection />
