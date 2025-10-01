@@ -44,8 +44,8 @@ export function NavUser() {
                 <AvatarImage
                   src={``}
                   alt={
-                    admin?.ISPSU_Head
-                      ? `${admin.ISPSU_Head.fName} ${admin.ISPSU_Head.lName}`
+                    admin?.ISPSU_Staff
+                      ? `${admin.ISPSU_Staff.fName} ${admin.ISPSU_Staff.lName}`
                       : "Admin"
                   }
                 />
@@ -53,8 +53,8 @@ export function NavUser() {
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
-                  {admin?.ISPSU_Head
-                    ? `${admin.ISPSU_Head.fName} ${admin.ISPSU_Head.lName}`
+                  {admin?.ISPSU_Staff
+                    ? `${admin.ISPSU_Staff.fName} ${admin.ISPSU_Staff.lName}`
                     : "Admin"}
                 </span>
 
@@ -75,8 +75,8 @@ export function NavUser() {
                   <AvatarImage
                     src={``}
                     alt={
-                      admin?.ISPSU_Head
-                        ? `${admin.ISPSU_Head.fName} ${admin.ISPSU_Head.lName}`
+                      admin?.ISPSU_Staff
+                        ? `${admin.ISPSU_Staff.fName} ${admin.ISPSU_Staff.lName}`
                         : "Admin"
                     }
                   />
@@ -84,8 +84,8 @@ export function NavUser() {
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
-                    {admin?.ISPSU_Head
-                      ? `${admin.ISPSU_Head.fName} ${admin.ISPSU_Head.lName}`
+                    {admin?.ISPSU_Staff
+                      ? `${admin.ISPSU_Staff.fName} ${admin.ISPSU_Staff.lName}`
                       : "Admin"}
                   </span>
                   <span className="truncate text-xs">{admin?.email}</span>

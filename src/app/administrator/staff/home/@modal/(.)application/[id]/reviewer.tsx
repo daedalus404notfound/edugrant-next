@@ -339,7 +339,7 @@ export default function ApplicationViewer({
         >
           {({ zoomIn, zoomOut, resetTransform }) => (
             <div className=" rounded-md  flex flex-col gap-3 bg-background  lg:p-4 p-2">
-              <div className="flex justify-between rounded-md ">
+              <div className="grid grid-cols-3 rounded-md ">
                 <div className="  flex gap-2  rounded-lg">
                   <Button
                     variant="secondary"
@@ -375,12 +375,17 @@ export default function ApplicationViewer({
                     <RefreshCw />
                   </Button>
                 </div>
-
-                <span className="flex gap-3 items-center">
+                <div className="flex gap-2 justify-center items-center">
+                  <p className="uppercase tracking-wide font-medium">
+                    {document}
+                  </p>
+                  <p className="text-xs tracking-wide">{fileFormat}</p>
+                </div>
+                <span className="flex gap-3 items-center justify-end">
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button className="">
-                        Approved <Check />
+                      <Button className="" disabled={!fileUrl || !fileFormat}>
+                        Approve <Check />
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>
@@ -406,7 +411,11 @@ export default function ApplicationViewer({
                   </AlertDialog>
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button className="" variant="destructive">
+                      <Button
+                        className=""
+                        variant="destructive"
+                        disabled={!fileUrl || !fileFormat}
+                      >
                         Reject <X />
                       </Button>
                     </AlertDialogTrigger>
@@ -451,17 +460,25 @@ export default function ApplicationViewer({
                 >
                   <div className="lg:h-[calc(100dvh-80px)] h-[calc(100dvh-64px)] lg:w-[calc(100dvw-32px)] w-[calc(100dvw-16px)] ">
                     {fileFormat === "JPG" || fileFormat === "PNG" ? (
-                      <img
-                        src={fileUrl}
-                        alt={document}
-                        className="h-full w-full object-contain rounded-md"
-                        style={{
-                          transform: `rotate(${rotation}deg)`,
-                          maxHeight: "100vh",
-                          maxWidth: "100vw",
-                        }}
-                        draggable={false}
-                      />
+                      <div className="w-full h-full">
+                        {loading && (
+                          <div className="absolute inset-0 flex items-center justify-center  z-20">
+                            <Loader className="h-8 w-8 animate-spin " />
+                          </div>
+                        )}
+                        <img
+                          src={fileUrl}
+                          alt={document}
+                          className="h-full w-full object-contain rounded-md"
+                          onLoad={() => setIsLoading(false)}
+                          style={{
+                            transform: `rotate(${rotation}deg)`,
+                            maxHeight: "100vh",
+                            maxWidth: "100vw",
+                          }}
+                          draggable={false}
+                        />
+                      </div>
                     ) : fileFormat === "DOCX" || fileFormat === "PDF" ? (
                       <div className="w-full h-full">
                         {loading && (
@@ -485,7 +502,7 @@ export default function ApplicationViewer({
                       </div>
                     ) : (
                       <div className=" flex justify-center h-full w-full items-center">
-                        MISSING DOCUMENT
+                        FAILED TO SUBMIT
                       </div>
                     )}
                   </div>

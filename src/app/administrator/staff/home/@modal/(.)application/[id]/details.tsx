@@ -1,9 +1,10 @@
 import { UserFormData } from "@/hooks/user/register";
 import { ApplicationFormData } from "@/hooks/zod/application";
+import { format } from "date-fns";
 import {
   UserRound,
   Phone,
-  Locate,
+  Map,
   Briefcase,
   GraduationCap,
   PhilippinePeso,
@@ -32,7 +33,7 @@ export const getFatherDetails = (data: ApplicationFormData | null) => [
   },
   {
     label: "Address",
-    icon: Locate,
+    icon: Map,
     value: data?.Student.familyBackground.fatherAddress ?? "",
   },
   {
@@ -60,7 +61,7 @@ export const getMotherDetails = (data: ApplicationFormData | null) => [
   },
   {
     label: "Status",
-    icon: Locate,
+    icon: Map,
     value: data?.Student.familyBackground.motherStatus ?? "",
   },
   {
@@ -108,7 +109,7 @@ export const getGuardianDetails = (data: ApplicationFormData | null) => [
   },
   {
     label: "Address",
-    icon: Locate,
+    icon: Map,
     value: data?.Student.familyBackground.guardianAddress ?? "",
   },
   {
@@ -142,18 +143,21 @@ export const getPersonalInformation = (data: ApplicationFormData | null) => [
   {
     label: "Date of Birth",
     icon: Calendar,
-    value: data?.Student.dateOfBirth ?? "",
-  },
-  {
-    label: "Address",
-    icon: Locate,
-    value: data?.Student.address ?? "",
+    value: data?.Student?.dateOfBirth
+      ? format(data.Student.dateOfBirth, "PPP")
+      : "",
   },
   {
     label: "Contact No.",
     icon: Phone,
     value: data?.Student.contactNumber ?? "",
   },
+  {
+    label: "Address",
+    icon: Map,
+    value: data?.Student.address ?? "",
+  },
+
   {
     label: "Email",
     icon: Mail,

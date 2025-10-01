@@ -25,29 +25,21 @@ import useApplicationById from "@/hooks/admin/getApplicantData";
 import { Button } from "@/components/ui/button";
 
 import {
-  ArrowLeftFromLine,
-  Calendar,
-  CheckCheck,
   Download,
-  GraduationCap,
   UserCheck2,
-  UserRound,
   UserRoundCheck,
   UserRoundX,
   UserX2,
-  PhilippinePeso,
-  Building,
-  StickyNote,
-  Maximize,
-  UsersRound,
-  Inbox,
   UserX,
   UserCheck,
   Check,
   TriangleAlert,
-  ArrowRightIcon,
   CheckCircle2,
   CloudUpload,
+  RefreshCcw,
+  X,
+  Mail,
+  IdCard,
 } from "lucide-react";
 
 import Reviewer from "./reviewer";
@@ -69,6 +61,7 @@ import { DeleteDialog } from "@/components/ui/delete-dialog";
 import StudentStaff from "./student";
 import FamilyStaff from "./family";
 import ScholarshipModal from "@/components/ui/scholarship-modal";
+import { ar } from "date-fns/locale";
 const mimeToLabelMap: Record<string, string> = {
   "application/pdf": "PDF",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
@@ -119,6 +112,7 @@ export default function InterceptReviewApplicants() {
   const documentPhasesLength = documentPhases.length;
   const lastPhaseKey = documentPhases[documentPhasesLength - 1];
   const lastPhase = data?.submittedDocuments?.[lastPhaseKey] ?? [];
+  const totalSubmitted = lastPhase.filter((meow) => meow.fileUrl).length;
   const lastPhaseLength = Object.keys(lastPhase).length;
 
   const totalRequiredDocs = lastPhase.filter(
@@ -221,14 +215,14 @@ export default function InterceptReviewApplicants() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="max-w-[1200px] w-full mx-auto h-[95vh] outline-0 border-0 p-0.5">
+      <DrawerContent className="max-w-[1500px] w-full mx-auto h-[95vh] outline-0 border-0 ">
         <DrawerHeader className="sr-only">
           <DrawerTitle></DrawerTitle>
           <DrawerDescription></DrawerDescription>
         </DrawerHeader>
-        <div className="bg-background rounded-lg flex-1 overflow-auto flex flex-col ">
+        <div className="bg-background rounded-lg flex-1 overflow-auto  flex gap-5 p-2">
           {/* Enhanced Header */}
-          <div className="  bg-gradient-to-r from-background to-card hidden">
+          {/* <div className="  bg-gradient-to-r from-background to-card ">
             <div className="relative p-4 ">
               <BGPattern
                 variant="grid"
@@ -237,12 +231,6 @@ export default function InterceptReviewApplicants() {
               />
               <div className="relative flex items-start justify-between z-20">
                 <div className="flex items-center justify-center gap-3">
-                  <Avatar className="size-18 border-2 border-border ">
-                    <AvatarFallback className="text-2xl font-semibold">
-                      JT
-                    </AvatarFallback>
-                  </Avatar>
-
                   <div className="">
                     <div className="flex items-center gap-3">
                       <h1 className="text-xl font-medium text-foreground">
@@ -276,36 +264,143 @@ export default function InterceptReviewApplicants() {
                 </div>
               </div>
             </div>
-          </div>
-          <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-          <div className="p-4  bg-card/70 backdrop-blur-sm sticky top-0">
-            <Tabs
-              tabs={navigationTabs}
-              onTabChange={(tabId) => setActiveSection(tabId)}
-            />
-          </div>
-          <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+          </div> */}
+          <div className="w-120 space-y-8 p-8 gap-8 sticky top-0">
+            <div className="space-y-3">
+              <Avatar className=" size-30 p-1 border-2">
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  className="rounded-full"
+                />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <div>
+                <h1 className="text-xl font-medium text-foreground">
+                  {data?.Student.lName}, {data?.Student.fName}{" "}
+                  {data?.Student.mName}
+                </h1>
+                <p className=" font-mono text-sm tracking-wide mt-1 flex gap-2 items-center">
+                  <IdCard className="w-5 h-5" />{" "}
+                  {data?.Student.Account.schoolId}
+                </p>
+                <div className="mt-3 space-x-2">
+                  <Badge variant="outline">
+                    {data?.Student.course}-{data?.Student.year.slice(0, 1)}
+                    {data?.Student.section}
+                  </Badge>
+                  <Badge variant="outline">{data?.Student.institute}</Badge>
+                </div>
+              </div>
+            </div>
+            <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+            <h1>Quick Stats</h1>
+            <div className="flex-1">
+              <div className="py-4">
+                <h1 className="text-sm text-muted-foreground">Scholarship</h1>
+                <p className="font-medium tracking-wide">
+                  {data?.Scholarship.title}
+                </p>
+              </div>
+              <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+              <div className="py-4">
+                <h1 className="text-sm text-muted-foreground">Phase</h1>
+                <p className="font-medium tracking-wide">
+                  Phase {data?.Scholarship.phase}
+                </p>
+              </div>
+              <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+              <div className="py-4">
+                <h1 className="text-sm text-muted-foreground">
+                  Application Date
+                </h1>
+                <p className="font-medium tracking-wide">
+                  {data?.dateCreated && format(data?.dateCreated, "PPP p")}
+                </p>
+              </div>
 
-          {/* Content Area */}
+              <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+              <div className="py-4">
+                <h1 className="text-sm text-muted-foreground">
+                  Total Submitted Documents
+                </h1>
+                <p className="font-medium tracking-wide">{totalSubmitted}</p>
+              </div>
+              {data?.Student.indigenous && (
+                <div className="py-4">
+                  <h1 className="text-sm text-muted-foreground">
+                    Indigenous Group
+                  </h1>
+                  <p className="font-medium tracking-wide">
+                    {data.Student.indigenous}
+                  </p>
+                </div>
+              )}
+              {data?.Student.PWD && (
+                <div className="py-4">
+                  <h1 className="text-sm text-muted-foreground">PWD</h1>
+                  <p className="font-medium tracking-wide">
+                    {data.Student.PWD}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
           <div className="flex-1">
-            <div className="p-6">
-              {/* Documents Section */}
-              {activeSection === "documents" && (
-                <div className="space-y-6">
-                  <div className="flex items-center gap-3">
-                    <h3 className="text-lg font-medium flex gap-2 items-center">
-                      <CloudUpload /> Submitted Documents
-                    </h3>
-                    <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-                  </div>
-                  {loading ? (
-                    <div className="grid grid-cols-1 gap-6">
-                      <Skeleton className="h-40 w-full" />
-                      <Skeleton className="h-40 w-full" />
+            <div className="p-4  bg-card backdrop-blur-sm sticky top-0 z-60 flex rounded-md">
+              <Tabs
+                tabs={navigationTabs}
+                onTabChange={(tabId) => setActiveSection(tabId)}
+                className="flex-1"
+              />
+              <Button onClick={() => HandleCloseDrawer(false)}>
+                <X />
+              </Button>
+            </div>
+
+            <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+
+            <div className="flex-1">
+              {/* <div className="space-y-6 p-6">
+              <div className="flex items-center gap-3">
+                <h3 className="text-lg font-medium flex gap-2 items-center">
+                  <CloudUpload /> Review Overview
+                </h3>
+                <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+              </div>
+              <div className=" grid grid-cols-3">
+                <div className="flex flex-col">
+                  <p className="text-sm text-muted-foreground">Reviewed By</p>
+                  <p>Jerome</p>
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-sm text-muted-foreground">Reviewed Date</p>
+                  <p>August 10, 2025 11:00 am</p>
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-sm text-muted-foreground">
+                    Reviewed Decision
+                  </p>
+                  <p>APPROVED</p>
+                </div>
+              </div>
+            </div> */}
+              <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+              <div className="py-6">
+                {/* Documents Section */}
+                {activeSection === "documents" && (
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-base font-medium flex gap-2 items-center">
+                        <CloudUpload /> Submitted Documents
+                      </h3>
+                      <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                     </div>
-                  ) : (
                     <div className="grid grid-cols-2 gap-8 ">
-                      {lastPhase &&
+                      {loading ? (
+                        <>loading</>
+                      ) : (
+                        lastPhase &&
                         lastPhase
                           .filter(
                             (doc) =>
@@ -329,7 +424,7 @@ export default function InterceptReviewApplicants() {
                               >
                                 {doc.fileFormat ? (
                                   <div className="flex gap-3 items-center">
-                                    <div className="rounded-md flex-1 bg-green-600/10 text-green-600 px-4 py-3 ">
+                                    <div className="rounded-md flex-1 bg-green-600/10 text-green-600 px-4 py-2.5 ">
                                       <div className="flex gap-3">
                                         <CheckCircle2
                                           className="mt-0.5 shrink-0 opacity-60"
@@ -343,12 +438,12 @@ export default function InterceptReviewApplicants() {
                                         </div>
                                       </div>
                                     </div>
-                                    <Button variant="outline">
-                                      <Download className="w-4 h-4" />
+                                    <Button size="lg" variant="secondary">
+                                      <Download />
                                     </Button>
                                   </div>
                                 ) : (
-                                  <div className="rounded-md  bg-red-600/10 text-red-600 px-4 py-3 ">
+                                  <div className="rounded-md  bg-red-600/10 text-red-600 px-4 py-2.5 ">
                                     <div className="flex gap-3">
                                       <TriangleAlert
                                         className="mt-0.5 shrink-0 opacity-60"
@@ -364,7 +459,7 @@ export default function InterceptReviewApplicants() {
                                   </div>
                                 )}
                                 <div className="pt-8 pb-6">
-                                  <div className="flex gap-5">
+                                  <div className="flex flex-col justify-center items-center gap-5">
                                     <Reviewer
                                       fileFormat={
                                         mimeToLabelMap[doc.fileFormat]
@@ -386,9 +481,17 @@ export default function InterceptReviewApplicants() {
                                     />
                                     <div className="flex items-start justify-between w-full">
                                       <div className="flex-1">
-                                        <h4 className="text-lg font-semibold mb-1">
-                                          {doc.document}
-                                        </h4>
+                                        <div className="flex gap-2 items-center justify-center">
+                                          <h4 className="text-lg font-semibold mb-1 ">
+                                            {doc.document}
+                                          </h4>
+                                          <Badge
+                                            variant="outline"
+                                            className="uppercase tracking-wide"
+                                          >
+                                            {doc.requirementType}
+                                          </Badge>
+                                        </div>
                                         {/* <div className=" items-center gap-2 capitalize mt-2">
                                           <div className="flex items-center gap-1.5">
                                             <p className="text-sm text-muted-foreground">
@@ -497,24 +600,29 @@ export default function InterceptReviewApplicants() {
                                         e.target.value
                                       )
                                     }
-                                    className="min-h-11 col-span-2 bg-background border-0"
+                                    className="min-h-20 col-span-2 bg-background border-0"
                                   />
                                 </div>
                               </div>
                             );
-                          })}
+                          })
+                      )}
                     </div>
-                  )}
-                </div>
-              )}
+                  </div>
+                )}
 
-              {/* Student Information Section */}
-              {activeSection === "student" && data && (
-                <StudentStaff {...data} />
-              )}
+                {/* Student Information Section */}
+                {activeSection === "student" &&
+                  (loading ? (
+                    <>loading.</>
+                  ) : (
+                    data && <StudentStaff {...data} />
+                  ))}
 
-              {/* Family Background Section */}
-              {activeSection === "family" && data && <FamilyStaff {...data} />}
+                {/* Family Background Section */}
+                {activeSection === "family" &&
+                  (loading ? <>loa</> : data && <FamilyStaff {...data} />)}
+              </div>
             </div>
           </div>
         </div>
@@ -628,10 +736,9 @@ export default function InterceptReviewApplicants() {
               <Button
                 variant="outline"
                 className="flex-1 font-medium py-3 border-2 hover:bg-muted/50 transition-all duration-200"
-                onClick={() => HandleCloseDrawer(false)}
               >
-                <ArrowLeftFromLine className="w-4 h-4 mr-2" />
-                Back to Applications
+                <RefreshCcw className="w-4 h-4 mr-2" />
+                Reset Review
               </Button>
             </div>
           )}
