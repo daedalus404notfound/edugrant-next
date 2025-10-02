@@ -290,13 +290,6 @@ import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import GlassFolder from "@/components/ui/folder";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-const mimeToLabelMap: Record<string, string> = {
-  "application/pdf": "PDF",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-    "DOCX",
-  "image/jpeg": "JPG",
-  "image/png": "PNG",
-};
 
 interface UserDocument {
   document: string;
@@ -329,7 +322,7 @@ export default function ApplicationViewer({
       <DialogTrigger className="relative">
         <GlassFolder color="amber" />
         <Badge className="absolute bottom-0 z-60 uppercase" variant="secondary">
-          {mimeToLabelMap[requirementType]}
+          {requirementType}
         </Badge>
       </DialogTrigger>
       <DialogContent

@@ -460,7 +460,7 @@ export default function InterceptReviewApplicants() {
                                   <h4 className=" font-semibold  flex gap-2 items-start ">
                                     {doc.document}{" "}
                                     <span className="text-xs text-muted-foreground">
-                                      {doc.fileFormat}
+                                      {mimeToLabelMap[doc.fileFormat]}
                                     </span>
                                   </h4>
                                 </div>
