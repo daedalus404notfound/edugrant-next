@@ -275,6 +275,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+const mimeToLabelMap: Record<string, string> = {
+  "application/pdf": "PDF",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+    "DOCX",
+  "image/jpeg": "JPG",
+  "image/png": "PNG",
+};
 import {
   ZoomIn,
   ZoomOut,
@@ -322,7 +329,7 @@ export default function ApplicationViewer({
       <DialogTrigger className="relative">
         <GlassFolder color="amber" />
         <Badge className="absolute bottom-0 z-60 uppercase" variant="secondary">
-          {requirementType}
+          {mimeToLabelMap[requirementType]}
         </Badge>
       </DialogTrigger>
       <DialogContent
