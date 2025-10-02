@@ -37,9 +37,10 @@ import {
   CheckCircle2,
   CloudUpload,
   RefreshCcw,
-  X,
   Mail,
   IdCard,
+  TableOfContents,
+  NotebookPen,
 } from "lucide-react";
 
 import Reviewer from "./reviewer";
@@ -62,6 +63,8 @@ import StudentStaff from "./student";
 import FamilyStaff from "./family";
 import ScholarshipModal from "@/components/ui/scholarship-modal";
 import { ar } from "date-fns/locale";
+import GlassFolder from "@/components/ui/folder";
+import ModalHeader from "@/components/ui/modal-header";
 const mimeToLabelMap: Record<string, string> = {
   "application/pdf": "PDF",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
@@ -130,6 +133,20 @@ export default function InterceptReviewApplicants() {
     (meow) => meow.status === "REJECTED"
   );
   const isButtonDisabled = totalRequiredDocs !== reviewedDocs;
+
+  const matchedDoc = lastPhase.find(
+    (doc) => !!data?.Application_Decision?.message?.[doc.document]
+  );
+
+  const matchedStatus =
+    matchedDoc && data?.Application_Decision?.message
+      ? data.Application_Decision.message[matchedDoc.document]?.status ?? ""
+      : "";
+
+  const matchedComment =
+    matchedDoc && data?.Application_Decision?.message
+      ? data.Application_Decision.message[matchedDoc.document]?.comment ?? ""
+      : "";
 
   // const progressValue = totalDocs > 0 ? (reviewedDocs / totalDocs) * 100 : 0;
 
@@ -215,58 +232,15 @@ export default function InterceptReviewApplicants() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="max-w-[1500px] w-full mx-auto h-[95vh] outline-0 border-0 ">
+      <DrawerContent className="max-w-[1600px]  w-full mx-auto h-screen outline-0 border-0 ">
         <DrawerHeader className="sr-only">
           <DrawerTitle></DrawerTitle>
           <DrawerDescription></DrawerDescription>
         </DrawerHeader>
-        <div className="bg-background rounded-lg flex-1 overflow-auto  flex gap-5 p-2">
-          {/* Enhanced Header */}
-          {/* <div className="  bg-gradient-to-r from-background to-card ">
-            <div className="relative p-4 ">
-              <BGPattern
-                variant="grid"
-                className="top-0  z-1 opacity-30 hidden dark:block mask-gradient"
-                size={40}
-              />
-              <div className="relative flex items-start justify-between z-20">
-                <div className="flex items-center justify-center gap-3">
-                  <div className="">
-                    <div className="flex items-center gap-3">
-                      <h1 className="text-xl font-medium text-foreground">
-                        {data?.Student.lName}, {data?.Student.fName}{" "}
-                        {data?.Student.mName}
-                      </h1>
-                      <Badge
-                        className={` ${
-                          data?.status === "PENDING"
-                            ? statusColors.PENDING
-                            : data?.status === "APPROVED"
-                            ? statusColors.APPROVED
-                            : statusColors.REJECTED
-                        }`}
-                      >
-                        {data?.status || "PENDING"}
-                      </Badge>
-                    </div>
-                    <p className="text-muted-foreground font-mono text-sm">
-                      ID: {data?.Student.Account.schoolId}
-                    </p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <h2 className="text-xl font-semibold text-foreground">
-                    {data?.Scholarship.title}
-                  </h2>
-                  <p className="text-muted-foreground">
-                    {data?.Scholarship.Scholarship_Provider.name}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div> */}
-          <div className="w-120 space-y-8 p-8 gap-8 sticky top-0">
-            <div className="space-y-3">
+        <ModalHeader HandleCloseDrawer={HandleCloseDrawer} />
+        <div className="bg-background rounded-lg flex-1 overflow-auto  flex gap-5 p-4">
+          <div className="w-100 rounded-md bg-card space-y-8 p-6 gap-8 sticky top-0">
+            <div className="space-y-3 flex flex-col items-center ">
               <Avatar className=" size-30 p-1 border-2">
                 <AvatarImage
                   src="https://github.com/shadcn.png"
@@ -274,26 +248,18 @@ export default function InterceptReviewApplicants() {
                 />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
-              <div>
+              <div className="text-center">
                 <h1 className="text-xl font-medium text-foreground">
                   {data?.Student.lName}, {data?.Student.fName}{" "}
                   {data?.Student.mName}
                 </h1>
-                <p className=" font-mono text-sm tracking-wide mt-1 flex gap-2 items-center">
-                  <IdCard className="w-5 h-5" />{" "}
+                <p className=" font-mono text-sm tracking-wide mt-1 ">
                   {data?.Student.Account.schoolId}
                 </p>
-                <div className="mt-3 space-x-2">
-                  <Badge variant="outline">
-                    {data?.Student.course}-{data?.Student.year.slice(0, 1)}
-                    {data?.Student.section}
-                  </Badge>
-                  <Badge variant="outline">{data?.Student.institute}</Badge>
-                </div>
               </div>
             </div>
             <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-            <h1>Quick Stats</h1>
+
             <div className="flex-1">
               <div className="py-4">
                 <h1 className="text-sm text-muted-foreground">Scholarship</h1>
@@ -347,24 +313,11 @@ export default function InterceptReviewApplicants() {
           </div>
 
           <div className="flex-1">
-            <div className="p-4  bg-card backdrop-blur-sm sticky top-0 z-60 flex rounded-md">
-              <Tabs
-                tabs={navigationTabs}
-                onTabChange={(tabId) => setActiveSection(tabId)}
-                className="flex-1"
-              />
-              <Button onClick={() => HandleCloseDrawer(false)}>
-                <X />
-              </Button>
-            </div>
-
-            <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-
-            <div className="flex-1">
-              {/* <div className="space-y-6 p-6">
+            {/* <div className="space-y-6 p-4 bg-card rounded-md">
               <div className="flex items-center gap-3">
-                <h3 className="text-lg font-medium flex gap-2 items-center">
-                  <CloudUpload /> Review Overview
+                <h3 className=" font-medium flex gap-2 items-center">
+                  <NotebookPen className="w-4 h-4" />
+                  Review Overview
                 </h3>
                 <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
               </div>
@@ -385,244 +338,237 @@ export default function InterceptReviewApplicants() {
                 </div>
               </div>
             </div> */}
-              <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-              <div className="py-6">
-                {/* Documents Section */}
-                {activeSection === "documents" && (
-                  <div className="space-y-6">
-                    <div className="flex items-center gap-3">
-                      <h3 className="text-base font-medium flex gap-2 items-center">
-                        <CloudUpload /> Submitted Documents
-                      </h3>
-                      <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-                    </div>
-                    <div className="grid grid-cols-2 gap-8 ">
-                      {loading ? (
-                        <>loading</>
-                      ) : (
-                        lastPhase &&
-                        lastPhase
-                          .filter(
-                            (doc) =>
-                              doc.requirementType &&
-                              doc.requirementType.trim() !== ""
-                          )
-                          .map((doc, index) => {
-                            // Get the current status from either existing data or new review data
-                            const currentStatus =
-                              reviewData[doc.document]?.status ||
-                              doc.rejectMessage?.status;
-                            const currentComment =
-                              reviewData[doc.document]?.comment ||
-                              doc.rejectMessage?.comment ||
-                              "";
 
-                            return (
-                              <div
-                                key={index}
-                                className="bg-card p-6 rounded-lg space-y-6"
-                              >
-                                {doc.fileFormat ? (
-                                  <div className="flex gap-3 items-center">
-                                    <div className="rounded-md flex-1 bg-green-600/10 text-green-600 px-4 py-2.5 ">
-                                      <div className="flex gap-3">
-                                        <CheckCircle2
-                                          className="mt-0.5 shrink-0 opacity-60"
-                                          size={16}
-                                          aria-hidden="true"
-                                        />
-                                        <div className="flex grow justify-between gap-3">
-                                          <p className="text-sm">
-                                            Document provided
-                                          </p>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <Button size="lg" variant="secondary">
-                                      <Download />
-                                    </Button>
-                                  </div>
-                                ) : (
-                                  <div className="rounded-md  bg-red-600/10 text-red-600 px-4 py-2.5 ">
+            <Tabs
+              tabs={navigationTabs}
+              onTabChange={(tabId) => setActiveSection(tabId)}
+              className="pb-6"
+            />
+
+            <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+            <div className="py-6">
+              {/* Documents Section */}
+              {activeSection === "documents" && (
+                <div className="space-y-6">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-base font-medium flex gap-2 items-center">
+                      <CloudUpload /> Submitted Documents
+                    </h3>
+                    <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                  </div>
+                  <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-6 ">
+                    {loading ? (
+                      <div className="col-span-3 grid grid-cols-3 gap-6 w-full">
+                        {Array.from({ length: 3 }).map((_, i) => (
+                          <div
+                            key={i}
+                            className="border w-full rounded-md p-4 flex flex-col space-y-4"
+                          >
+                            <div className="flex gap-3 items-center">
+                              <Skeleton className="h-9 flex-1" />
+                              <Skeleton className="h-9 w-9" />
+                            </div>
+
+                            <Skeleton className="h-30 w-full" />
+
+                            <div className="flex-1 grid grid-cols-2 gap-3">
+                              <Skeleton className="h-9 flex-1" />
+                              <Skeleton className="h-9 flex-1" />
+                              <Skeleton className="min-h-10 col-span-2" />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      lastPhase &&
+                      lastPhase
+                        .filter(
+                          (doc) =>
+                            doc.requirementType &&
+                            doc.requirementType.trim() !== ""
+                        )
+                        .map((doc, index) => {
+                          // Get the current status from either existing data or new review data
+                          const currentStatus =
+                            reviewData[doc.document]?.status ||
+                            doc.rejectMessage?.status;
+                          const currentComment =
+                            reviewData[doc.document]?.comment ||
+                            doc.rejectMessage?.comment ||
+                            "";
+
+                          return (
+                            <div
+                              key={index}
+                              className="bg-card p-4 rounded-lg space-y-6"
+                            >
+                              {doc.fileFormat ? (
+                                <div className="flex gap-3 items-center">
+                                  <div className="rounded-md flex-1 bg-green-600/10 text-green-600 p-2 ">
                                     <div className="flex gap-3">
-                                      <TriangleAlert
+                                      <CheckCircle2
                                         className="mt-0.5 shrink-0 opacity-60"
                                         size={16}
                                         aria-hidden="true"
                                       />
                                       <div className="flex grow justify-between gap-3">
                                         <p className="text-sm">
-                                          Failed to submit
+                                          Document provided
                                         </p>
                                       </div>
                                     </div>
                                   </div>
-                                )}
-                                <div className="pt-8 pb-6">
-                                  <div className="flex flex-col justify-center items-center gap-5">
-                                    <Reviewer
-                                      fileFormat={
-                                        mimeToLabelMap[doc.fileFormat]
-                                      }
-                                      resourceType={doc.resourceType}
-                                      fileUrl={doc.fileUrl}
-                                      document={doc.document}
-                                      supabasePath={doc.supabasePath}
-                                      docStatus={currentStatus}
-                                      requirementType={doc.requirementType}
-                                      docComment={currentComment}
-                                      onUpdate={(field, value) =>
-                                        updateReviewData(
-                                          doc.document,
-                                          field,
-                                          value
-                                        )
-                                      }
+                                  <Button variant="secondary">
+                                    <Download />
+                                  </Button>
+                                </div>
+                              ) : (
+                                <div className="rounded-md  bg-red-600/10 text-red-600 px-4 py-2.5 ">
+                                  <div className="flex gap-3">
+                                    <TriangleAlert
+                                      className="mt-0.5 shrink-0 opacity-60"
+                                      size={16}
+                                      aria-hidden="true"
                                     />
-                                    <div className="flex items-start justify-between w-full">
-                                      <div className="flex-1">
-                                        <div className="flex gap-2 items-center justify-center">
-                                          <h4 className="text-lg font-semibold mb-1 ">
-                                            {doc.document}
-                                          </h4>
-                                          <Badge
-                                            variant="outline"
-                                            className="uppercase tracking-wide"
-                                          >
-                                            {doc.requirementType}
-                                          </Badge>
-                                        </div>
-                                        {/* <div className=" items-center gap-2 capitalize mt-2">
-                                          <div className="flex items-center gap-1.5">
-                                            <p className="text-sm text-muted-foreground">
-                                              Document Type:
-                                            </p>
-                                            <p className="uppercase tracking-wide">
-                                              {doc.requirementType}
-                                            </p>
-                                          </div>
-                                          <div className="flex items-center gap-1.5">
-                                            <p className="text-sm text-muted-foreground">
-                                              Document Format:
-                                            </p>
-                                            <p className="uppercase tracking-wide">
-                                              {doc.fileFormat || "N/A"}
-                                            </p>
-                                          </div>
-                                        </div> */}
-                                      </div>
+                                    <div className="flex grow justify-between gap-3">
+                                      <p className="text-sm">
+                                        Failed to submit
+                                      </p>
                                     </div>
                                   </div>
                                 </div>
-
-                                <div className="flex-1 grid grid-cols-2 gap-3">
-                                  <Button
-                                    variant={
-                                      currentStatus === "APPROVED"
-                                        ? "default"
-                                        : "outline"
-                                    }
-                                    className={`font-medium transition-all flex-1  !border-0 ${
-                                      currentStatus === "APPROVED"
-                                        ? ""
-                                        : "hover:bg-green-50 hover:border-green-200 hover:text-green-700"
-                                    }`}
-                                    onClick={() =>
+                              )}
+                              <div className="pt-2 pb-1">
+                                <div className="flex flex-col justify-center items-center gap-5">
+                                  <Reviewer
+                                    fileFormat={mimeToLabelMap[doc.fileFormat]}
+                                    resourceType={doc.resourceType}
+                                    fileUrl={doc.fileUrl}
+                                    document={doc.document}
+                                    supabasePath={doc.supabasePath}
+                                    docStatus={currentStatus}
+                                    requirementType={doc.requirementType}
+                                    docComment={currentComment}
+                                    onUpdate={(field, value) =>
                                       updateReviewData(
                                         doc.document,
-                                        "status",
-                                        "APPROVED"
+                                        field,
+                                        value
                                       )
                                     }
-                                    disabled={
-                                      !!doc.rejectMessage?.status ||
-                                      !doc.fileFormat
-                                    }
-                                  >
-                                    {currentStatus === "APPROVED" ? (
-                                      <>
-                                        <Check className="w-4 h-4 mr-2" />
-                                        Accepted
-                                      </>
-                                    ) : (
-                                      <>
-                                        <UserCheck2 className="w-4 h-4 mr-2" />
-                                        Accept
-                                      </>
-                                    )}
-                                  </Button>
-                                  <Button
-                                    variant={
-                                      currentStatus === "REJECTED"
-                                        ? "destructive"
-                                        : "outline"
-                                    }
-                                    className={`font-medium transition-all flex-1  !border-0 ${
-                                      currentStatus !== "REJECTED"
-                                        ? "hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-                                        : ""
-                                    }`}
-                                    onClick={() =>
-                                      updateReviewData(
-                                        doc.document,
-                                        "status",
-                                        "REJECTED"
-                                      )
-                                    }
-                                    disabled={
-                                      !!doc.rejectMessage?.status ||
-                                      !doc.fileFormat
-                                    }
-                                  >
-                                    {currentStatus === "REJECTED" ? (
-                                      <>
-                                        <UserRoundX className="w-4 h-4 mr-2" />
-                                        Rejected
-                                      </>
-                                    ) : (
-                                      <>
-                                        <UserX2 className="w-4 h-4 mr-2" />
-                                        Reject
-                                      </>
-                                    )}
-                                  </Button>
-                                  <Textarea
-                                    placeholder="Add review comment..."
-                                    value={currentComment}
-                                    disabled={
-                                      !!doc.rejectMessage?.status ||
-                                      !doc.fileFormat
-                                    }
-                                    onChange={(e) =>
-                                      updateReviewData(
-                                        doc.document,
-                                        "comment",
-                                        e.target.value
-                                      )
-                                    }
-                                    className="min-h-20 col-span-2 bg-background border-0"
                                   />
+                                  <h4 className=" font-semibold  flex gap-2 items-start ">
+                                    {doc.document}{" "}
+                                    <span className="text-xs text-muted-foreground">
+                                      {doc.fileFormat}
+                                    </span>
+                                  </h4>
                                 </div>
                               </div>
-                            );
-                          })
-                      )}
-                    </div>
+
+                              <div className="flex-1 grid grid-cols-2 gap-3">
+                                <Button
+                                  variant={
+                                    currentStatus === "APPROVED"
+                                      ? "default"
+                                      : "outline"
+                                  }
+                                  className={`font-medium transition-all flex-1  !border-0 ${
+                                    currentStatus === "APPROVED"
+                                      ? ""
+                                      : "hover:bg-green-50 hover:border-green-200 hover:text-green-700"
+                                  }`}
+                                  onClick={() =>
+                                    updateReviewData(
+                                      doc.document,
+                                      "status",
+                                      "APPROVED"
+                                    )
+                                  }
+                                  disabled={
+                                    !!doc.rejectMessage?.status ||
+                                    !doc.fileFormat
+                                  }
+                                >
+                                  {currentStatus === "APPROVED" ? (
+                                    <>
+                                      <Check />
+                                      Accepted
+                                    </>
+                                  ) : (
+                                    <>
+                                      <UserCheck2 />
+                                      Accept
+                                    </>
+                                  )}
+                                </Button>
+                                <Button
+                                  variant={
+                                    currentStatus === "REJECTED"
+                                      ? "destructive"
+                                      : "outline"
+                                  }
+                                  className={`font-medium transition-all flex-1  !border-0 ${
+                                    currentStatus !== "REJECTED"
+                                      ? "hover:bg-red-50 hover:border-red-200 hover:text-red-700"
+                                      : ""
+                                  }`}
+                                  onClick={() =>
+                                    updateReviewData(
+                                      doc.document,
+                                      "status",
+                                      "REJECTED"
+                                    )
+                                  }
+                                  disabled={
+                                    !!doc.rejectMessage?.status ||
+                                    !doc.fileFormat
+                                  }
+                                >
+                                  {currentStatus === "REJECTED" ? (
+                                    <>
+                                      <UserRoundX />
+                                      Rejected
+                                    </>
+                                  ) : (
+                                    <>
+                                      <UserX2 />
+                                      Reject
+                                    </>
+                                  )}
+                                </Button>
+                                <Textarea
+                                  placeholder="Add review comment..."
+                                  value={currentComment}
+                                  disabled={
+                                    !!doc.rejectMessage?.status ||
+                                    !doc.fileFormat
+                                  }
+                                  onChange={(e) =>
+                                    updateReviewData(
+                                      doc.document,
+                                      "comment",
+                                      e.target.value
+                                    )
+                                  }
+                                  className="min-h-11 col-span-2 bg-background border-0"
+                                />
+                              </div>
+                            </div>
+                          );
+                        })
+                    )}
                   </div>
-                )}
+                </div>
+              )}
 
-                {/* Student Information Section */}
-                {activeSection === "student" &&
-                  (loading ? (
-                    <>loading.</>
-                  ) : (
-                    data && <StudentStaff {...data} />
-                  ))}
+              {/* Student Information Section */}
+              {activeSection === "student" &&
+                (loading ? <>loading.</> : data && <StudentStaff {...data} />)}
 
-                {/* Family Background Section */}
-                {activeSection === "family" &&
-                  (loading ? <>loa</> : data && <FamilyStaff {...data} />)}
-              </div>
+              {/* Family Background Section */}
+              {activeSection === "family" &&
+                (loading ? <>loa</> : data && <FamilyStaff {...data} />)}
             </div>
           </div>
         </div>
@@ -737,7 +683,7 @@ export default function InterceptReviewApplicants() {
                 variant="outline"
                 className="flex-1 font-medium py-3 border-2 hover:bg-muted/50 transition-all duration-200"
               >
-                <RefreshCcw className="w-4 h-4 mr-2" />
+                <RefreshCcw />
                 Reset Review
               </Button>
             </div>

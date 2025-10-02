@@ -66,7 +66,7 @@ const GlassFolder: React.FC<GlassFolderProps> = ({
   return (
     <section
       className={cn(
-        "relative group flex flex-col items-center justify-center [zoom:0.55] lg:[zoom:0.8]",
+        "relative group flex flex-col items-center justify-center [zoom:0.55] lg:[zoom:0.6]",
         className
       )}
     >

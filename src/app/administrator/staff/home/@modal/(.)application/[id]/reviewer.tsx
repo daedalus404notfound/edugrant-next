@@ -289,6 +289,7 @@ import {
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import GlassFolder from "@/components/ui/folder";
 import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
 
 interface UserDocument {
   document: string;
@@ -307,6 +308,7 @@ export default function ApplicationViewer({
   fileUrl,
   document,
   docStatus,
+  requirementType,
   onUpdate,
 }: UserDocument) {
   const [rotation, setRotation] = useState(0);
@@ -317,8 +319,11 @@ export default function ApplicationViewer({
   console.log("status", status);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger className="relative">
         <GlassFolder color="amber" />
+        <Badge className="absolute bottom-0 z-60 uppercase" variant="secondary">
+          {requirementType}
+        </Badge>
       </DialogTrigger>
       <DialogContent
         className="!top-0 !left-0  absolute border-0 outline-0 bg-transparent"
