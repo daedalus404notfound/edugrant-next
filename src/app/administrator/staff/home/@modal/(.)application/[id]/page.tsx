@@ -239,7 +239,7 @@ export default function InterceptReviewApplicants() {
         </DrawerHeader>
         <ModalHeader HandleCloseDrawer={HandleCloseDrawer} />
         <div className="bg-background rounded-lg flex-1 overflow-auto  flex gap-5 p-4">
-          <div className="w-100 rounded-md bg-card space-y-8 p-6 gap-8 sticky top-0">
+          <div className="w-100 rounded-md bg-card space-y-8 h-full p-6 gap-8">
             <div className="space-y-3 flex flex-col items-center ">
               <Avatar className=" size-30 p-1 border-2">
                 <AvatarImage

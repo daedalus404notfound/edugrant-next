@@ -38,12 +38,14 @@ const ApplicationSchema = z.object({
     message: DecisionMessageSchema.optional(),
   }),
   Interview_Decision: z.object({
+    ISPSU_Staff: StaffSchema,
     dateCreated: z.date(),
     interviewId: z.number(),
     staffId: z.number(),
     status: z.string(),
     message: DecisionMessageSchema.optional(),
   }),
+
   applicationId: z.number(),
   dateCreated: z.string(),
   interviewId: z.string(),

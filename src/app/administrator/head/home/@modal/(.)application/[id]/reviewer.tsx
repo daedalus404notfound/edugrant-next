@@ -388,7 +388,7 @@ export default function ApplicationViewer({
                   <p className="text-xs tracking-wide">{fileFormat}</p>
                 </div>
                 <span className="flex gap-3 items-center justify-end">
-                  <AlertDialog>
+                  {/* <AlertDialog>
                     <AlertDialogTrigger asChild>
                       <Button className="" disabled={!fileUrl || !fileFormat}>
                         Approve <Check />
@@ -448,7 +448,7 @@ export default function ApplicationViewer({
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
-                  </AlertDialog>
+                  </AlertDialog> */}
                   <Button
                     className=""
                     variant="secondary"

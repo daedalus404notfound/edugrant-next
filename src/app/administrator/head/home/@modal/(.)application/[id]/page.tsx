@@ -41,6 +41,8 @@ import {
   IdCard,
   TableOfContents,
   NotebookPen,
+  Ban,
+  X,
 } from "lucide-react";
 
 import Reviewer from "./reviewer";
@@ -148,6 +150,7 @@ export default function InterceptReviewApplicants() {
       ? data.Application_Decision.message[matchedDoc.document]?.comment ?? ""
       : "";
 
+  const reviewDetails = data?.Interview_Decision || data?.Application_Decision;
   // const progressValue = totalDocs > 0 ? (reviewedDocs / totalDocs) * 100 : 0;
 
   const HandleCloseDrawer = (value: boolean) => {
@@ -232,349 +235,477 @@ export default function InterceptReviewApplicants() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="max-w-[1600px]  w-full mx-auto h-screen outline-0 border-0 ">
+      <DrawerContent className="max-w-[1600px]  w-full mx-auto  outline-0 border-0 ">
         <DrawerHeader className="sr-only">
           <DrawerTitle></DrawerTitle>
           <DrawerDescription></DrawerDescription>
         </DrawerHeader>
-        <ModalHeader HandleCloseDrawer={HandleCloseDrawer} />
-        <div className="bg-background rounded-lg flex-1 overflow-auto  flex gap-5 p-4">
-          <div className="w-100 rounded-md bg-card space-y-8 p-6 gap-8 sticky top-0">
-            <div className="space-y-3 flex flex-col items-center ">
-              <Avatar className=" size-30 p-1 border-2">
-                <AvatarImage
-                  src="https://github.com/shadcn.png"
-                  className="rounded-full"
-                />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
-              <div className="text-center">
-                <h1 className="text-xl font-medium text-foreground">
-                  {data?.Student.lName}, {data?.Student.fName}{" "}
-                  {data?.Student.mName}
-                </h1>
-                <p className=" font-mono text-sm tracking-wide mt-1 ">
-                  {data?.Student.Account.schoolId}
-                </p>
+        <ModalHeader
+          scholarship={false}
+          HandleCloseDrawer={HandleCloseDrawer}
+        />
+        <div className="overflow-auto h-full">
+          <div className="bg-background rounded-lg  overflow-auto  flex gap-5 p-4">
+            <div className="w-100 rounded-md bg-card space-y-8 p-6 gap-8 ">
+              <div className="space-y-3 flex flex-col items-center ">
+                <Avatar className=" size-30 p-1 border-2">
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    className="rounded-full"
+                  />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+                {loading ? (
+                  <div className=" w-full flex justify-center items-center flex-col gap-1.5">
+                    <Skeleton className="h-8 w-3/4" />
+                    <Skeleton className="h-6 w-1/2" />
+                  </div>
+                ) : (
+                  <div className="text-center">
+                    <h1 className="text-xl font-medium text-foreground">
+                      {data?.Student.lName}, {data?.Student.fName}{" "}
+                      {data?.Student.mName}
+                    </h1>
+                    <p className=" font-mono text-sm tracking-wide mt-1 ">
+                      {data?.Student.Account.schoolId}
+                    </p>
+                  </div>
+                )}
               </div>
-            </div>
-            <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+              <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
 
-            <div className="flex-1">
-              <div className="py-4">
-                <h1 className="text-sm text-muted-foreground">Scholarship</h1>
-                <p className="font-medium tracking-wide">
-                  {data?.Scholarship.title}
-                </p>
-              </div>
-              <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-              <div className="py-4">
-                <h1 className="text-sm text-muted-foreground">Phase</h1>
-                <p className="font-medium tracking-wide">
-                  Phase {data?.Scholarship.phase}
-                </p>
-              </div>
-              <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-              <div className="py-4">
-                <h1 className="text-sm text-muted-foreground">
-                  Application Date
-                </h1>
-                <p className="font-medium tracking-wide">
-                  {data?.dateCreated && format(data?.dateCreated, "PPP p")}
-                </p>
-              </div>
-
-              <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-              <div className="py-4">
-                <h1 className="text-sm text-muted-foreground">
-                  Total Submitted Documents
-                </h1>
-                <p className="font-medium tracking-wide">{totalSubmitted}</p>
-              </div>
-              {data?.Student.indigenous && (
+              <div className="flex-1">
+                <div className="py-4">
+                  <h1 className="text-sm text-muted-foreground">Scholarship</h1>
+                  {loading ? (
+                    <Skeleton className="h-7 w-full" />
+                  ) : (
+                    <p className="font-medium tracking-wide">
+                      {data?.Scholarship.title}
+                    </p>
+                  )}
+                </div>
+                <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                 <div className="py-4">
                   <h1 className="text-sm text-muted-foreground">
-                    Indigenous Group
+                    For Interview
                   </h1>
-                  <p className="font-medium tracking-wide">
-                    {data.Student.indigenous}
-                  </p>
+                  {loading ? (
+                    <Skeleton className="h-7 w-full" />
+                  ) : (
+                    <p className="font-medium tracking-wide">
+                      {data?.Scholarship.interview === true ? "YES" : "NO"}
+                    </p>
+                  )}
                 </div>
-              )}
-              {data?.Student.PWD && (
-                <div className="py-4">
-                  <h1 className="text-sm text-muted-foreground">PWD</h1>
-                  <p className="font-medium tracking-wide">
-                    {data.Student.PWD}
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="flex-1">
-            {/* <div className="space-y-6 p-4 bg-card rounded-md">
-              <div className="flex items-center gap-3">
-                <h3 className=" font-medium flex gap-2 items-center">
-                  <NotebookPen className="w-4 h-4" />
-                  Review Overview
-                </h3>
                 <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-              </div>
-              <div className=" grid grid-cols-3">
-                <div className="flex flex-col">
-                  <p className="text-sm text-muted-foreground">Reviewed By</p>
-                  <p>Jerome</p>
+                <div className="py-4">
+                  <h1 className="text-sm text-muted-foreground">Phase</h1>
+                  {loading ? (
+                    <Skeleton className="h-7 w-full" />
+                  ) : (
+                    <p className="font-medium tracking-wide">
+                      Phase {data?.Scholarship.phase}
+                    </p>
+                  )}
                 </div>
-                <div className="flex flex-col">
-                  <p className="text-sm text-muted-foreground">Reviewed Date</p>
-                  <p>August 10, 2025 11:00 am</p>
+                <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                <div className="py-4">
+                  <h1 className="text-sm text-muted-foreground">
+                    Application Date
+                  </h1>
+                  {loading ? (
+                    <Skeleton className="h-7 w-full" />
+                  ) : (
+                    <p className="font-medium tracking-wide">
+                      {data?.dateCreated && format(data?.dateCreated, "PPP p")}
+                    </p>
+                  )}
                 </div>
-                <div className="flex flex-col">
-                  <p className="text-sm text-muted-foreground">
-                    Reviewed Decision
-                  </p>
-                  <p>APPROVED</p>
-                </div>
-              </div>
-            </div> */}
 
-            <Tabs
-              tabs={navigationTabs}
-              onTabChange={(tabId) => setActiveSection(tabId)}
-              className="pb-6"
-            />
+                {data?.Student.indigenous && (
+                  <div className="py-4">
+                    <h1 className="text-sm text-muted-foreground">
+                      Indigenous Group
+                    </h1>
+                    <p className="font-medium tracking-wide">
+                      {data.Student.indigenous}
+                    </p>
+                  </div>
+                )}
+                {data?.Student.PWD && (
+                  <div className="py-4">
+                    <h1 className="text-sm text-muted-foreground">PWD</h1>
+                    <p className="font-medium tracking-wide">
+                      {data.Student.PWD}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
 
-            <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-            <div className="py-6">
-              {/* Documents Section */}
-              {activeSection === "documents" && (
-                <div className="space-y-6">
+            <div className="flex-1">
+              {data?.status === "APPROVED" && (
+                <div className="dark bg-card text-foreground px-4 py-3 rounded-md mb-6">
+                  <div className="flex grow gap-3 md:items-center">
+                    <div
+                      className="bg-green-900 flex size-9 shrink-0 items-center justify-center rounded-full max-md:mt-0.5"
+                      aria-hidden="true"
+                    >
+                      <Check className="opacity-80" size={16} />
+                    </div>
+                    <div className="flex grow flex-col justify-between gap-3 md:flex-row md:items-center">
+                      <div className="space-y-0.5">
+                        <p className="text-sm font-medium">
+                          Application Approved
+                        </p>
+                        <p className="text-muted-foreground text-sm">
+                          The applicant has successfully met all eligibility
+                          requirements for this scholarship.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              {data?.status === "DECLINED" && (
+                <div className="dark bg-card text-foreground px-4 py-3 rounded-md mb-6">
+                  <div className="flex grow gap-3 md:items-center">
+                    <div
+                      className="bg-red-900 flex size-9 shrink-0 items-center justify-center rounded-full max-md:mt-0.5"
+                      aria-hidden="true"
+                    >
+                      <X className="opacity-80" size={16} />
+                    </div>
+                    <div className="flex grow flex-col justify-between gap-3 md:flex-row md:items-center">
+                      <div className="space-y-0.5">
+                        <p className="text-sm font-medium">
+                          Application Declined
+                        </p>
+                        <p className="text-muted-foreground text-sm">
+                          The applicant did not meet the eligibility
+                          requirements for this scholarship.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {data?.status === "BLOCKED" && (
+                <div className="dark bg-card text-foreground px-4 py-3 rounded-md mb-6">
+                  <div className="flex grow gap-3 md:items-center">
+                    <div
+                      className="bg-primary/15 flex size-9 shrink-0 items-center justify-center rounded-full max-md:mt-0.5"
+                      aria-hidden="true"
+                    >
+                      <Ban className="opacity-80" size={16} />
+                    </div>
+                    <div className="flex grow flex-col justify-between gap-3 md:flex-row md:items-center">
+                      <div className="space-y-0.5">
+                        <p className="text-sm font-medium">
+                          Application Blocked
+                        </p>
+                        <p className="text-muted-foreground text-sm">
+                          This is automated because the user has an approved
+                          government scholarship
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {reviewDetails && (
+                <div className="space-y-6 mb-6 ">
                   <div className="flex items-center gap-3">
-                    <h3 className="text-base font-medium flex gap-2 items-center">
-                      <CloudUpload /> Submitted Documents
+                    <h3 className=" font-medium flex gap-2 items-center">
+                      <NotebookPen className="w-4 h-4" />
+                      Review Overview
                     </h3>
                     <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                   </div>
-                  <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-6 ">
-                    {loading ? (
-                      <div className="col-span-3 grid grid-cols-3 gap-6 w-full">
-                        {Array.from({ length: 3 }).map((_, i) => (
-                          <div
-                            key={i}
-                            className="border w-full rounded-md p-4 flex flex-col space-y-4"
-                          >
-                            <div className="flex gap-3 items-center">
-                              <Skeleton className="h-9 flex-1" />
-                              <Skeleton className="h-9 w-9" />
-                            </div>
+                  <div className=" grid grid-cols-2 gap-4">
+                    <div className="flex flex-col bg-card rounded-md p-4">
+                      <p className="text-sm text-muted-foreground">
+                        Reviewed By
+                      </p>
+                      <p>
+                        {reviewDetails.ISPSU_Staff.fName}{" "}
+                        {reviewDetails.ISPSU_Staff.lName}
+                      </p>
+                    </div>
+                    <div className="flex flex-col bg-card rounded-md p-4">
+                      <p className="text-sm text-muted-foreground">
+                        Review Date
+                      </p>
+                      <p>{format(reviewDetails.dateCreated, "PPP p")}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              <Tabs
+                tabs={navigationTabs}
+                onTabChange={(tabId) => setActiveSection(tabId)}
+                className="pb-6"
+              />
 
-                            <Skeleton className="h-30 w-full" />
-
-                            <div className="flex-1 grid grid-cols-2 gap-3">
-                              <Skeleton className="h-9 flex-1" />
-                              <Skeleton className="h-9 flex-1" />
-                              <Skeleton className="min-h-10 col-span-2" />
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      lastPhase &&
-                      lastPhase
-                        .filter(
-                          (doc) =>
-                            doc.requirementType &&
-                            doc.requirementType.trim() !== ""
-                        )
-                        .map((doc, index) => {
-                          // Get the current status from either existing data or new review data
-                          const currentStatus =
-                            reviewData[doc.document]?.status ||
-                            doc.rejectMessage?.status;
-                          const currentComment =
-                            reviewData[doc.document]?.comment ||
-                            doc.rejectMessage?.comment ||
-                            "";
-
-                          return (
+              <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+              <div className="py-6">
+                {/* Documents Section */}
+                {activeSection === "documents" && (
+                  <div className="space-y-6">
+                    <div className="flex items-center gap-3">
+                      <h3 className="text-base font-medium flex gap-2 items-center">
+                        <CloudUpload /> Submitted Documents
+                      </h3>
+                      <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                    </div>
+                    <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-6 ">
+                      {loading ? (
+                        <div className="col-span-3 grid grid-cols-3 gap-6 w-full">
+                          {Array.from({ length: 3 }).map((_, i) => (
                             <div
-                              key={index}
-                              className="bg-card p-4 rounded-lg space-y-6"
+                              key={i}
+                              className="border w-full rounded-md p-4 flex flex-col space-y-4"
                             >
-                              {doc.fileFormat ? (
-                                <div className="flex gap-3 items-center">
-                                  <div className="rounded-md flex-1 bg-green-600/10 text-green-600 p-2 ">
+                              <div className="flex gap-3 items-center">
+                                <Skeleton className="h-9 flex-1" />
+                                <Skeleton className="h-9 w-9" />
+                              </div>
+
+                              <Skeleton className="h-30 w-full" />
+
+                              <div className="flex-1 grid grid-cols-2 gap-3">
+                                <Skeleton className="h-9 flex-1" />
+                                <Skeleton className="h-9 flex-1" />
+                                <Skeleton className="min-h-10 col-span-2" />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        lastPhase &&
+                        lastPhase
+                          .filter(
+                            (doc) =>
+                              doc.requirementType &&
+                              doc.requirementType.trim() !== ""
+                          )
+                          .map((doc, index) => {
+                            const decisionMessage =
+                              data?.Interview_Decision?.message?.[
+                                doc.document
+                              ] ||
+                              data?.Application_Decision?.message?.[
+                                doc.document
+                              ] ||
+                              null;
+                            // Get the current status from either existing data or new review data
+
+                            const currentStatus =
+                              reviewData[doc.document]?.status ||
+                              doc.rejectMessage?.status ||
+                              decisionMessage?.status ||
+                              "";
+                            const currentComment =
+                              reviewData[doc.document]?.comment ||
+                              doc.rejectMessage?.comment ||
+                              decisionMessage?.comment ||
+                              "";
+
+                            console.log("232", decisionMessage);
+
+                            return (
+                              <div
+                                key={index}
+                                className="bg-card p-4 rounded-lg space-y-6"
+                              >
+                                {doc.fileFormat ? (
+                                  <div className="flex gap-3 items-center">
+                                    <div className="rounded-md flex-1 bg-green-600/10 text-green-600 p-2 ">
+                                      <div className="flex gap-3">
+                                        <CheckCircle2
+                                          className="mt-0.5 shrink-0 opacity-60"
+                                          size={16}
+                                          aria-hidden="true"
+                                        />
+                                        <div className="flex grow justify-between gap-3">
+                                          <p className="text-sm">
+                                            Document provided
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <Button variant="secondary">
+                                      <Download />
+                                    </Button>
+                                  </div>
+                                ) : (
+                                  <div className="rounded-md  bg-red-600/10 text-red-600 px-4 py-2.5 ">
                                     <div className="flex gap-3">
-                                      <CheckCircle2
+                                      <TriangleAlert
                                         className="mt-0.5 shrink-0 opacity-60"
                                         size={16}
                                         aria-hidden="true"
                                       />
                                       <div className="flex grow justify-between gap-3">
                                         <p className="text-sm">
-                                          Document provided
+                                          Failed to submit
                                         </p>
                                       </div>
                                     </div>
                                   </div>
-                                  <Button variant="secondary">
-                                    <Download />
-                                  </Button>
-                                </div>
-                              ) : (
-                                <div className="rounded-md  bg-red-600/10 text-red-600 px-4 py-2.5 ">
-                                  <div className="flex gap-3">
-                                    <TriangleAlert
-                                      className="mt-0.5 shrink-0 opacity-60"
-                                      size={16}
-                                      aria-hidden="true"
+                                )}
+                                <div className="pt-2 pb-1">
+                                  <div className="flex flex-col justify-center items-center gap-5">
+                                    <Reviewer
+                                      fileFormat={
+                                        mimeToLabelMap[doc.fileFormat]
+                                      }
+                                      resourceType={doc.resourceType}
+                                      fileUrl={doc.fileUrl}
+                                      document={doc.document}
+                                      supabasePath={doc.supabasePath}
+                                      docStatus={currentStatus}
+                                      requirementType={doc.requirementType}
+                                      docComment={currentComment}
+                                      onUpdate={(field, value) =>
+                                        updateReviewData(
+                                          doc.document,
+                                          field,
+                                          value
+                                        )
+                                      }
                                     />
-                                    <div className="flex grow justify-between gap-3">
-                                      <p className="text-sm">
-                                        Failed to submit
-                                      </p>
-                                    </div>
+                                    <h4 className=" font-semibold  flex gap-2 items-start ">
+                                      {doc.document}{" "}
+                                      <span className="text-xs text-muted-foreground">
+                                        {mimeToLabelMap[doc.fileFormat]}
+                                      </span>
+                                    </h4>
                                   </div>
                                 </div>
-                              )}
-                              <div className="pt-2 pb-1">
-                                <div className="flex flex-col justify-center items-center gap-5">
-                                  <Reviewer
-                                    fileFormat={mimeToLabelMap[doc.fileFormat]}
-                                    resourceType={doc.resourceType}
-                                    fileUrl={doc.fileUrl}
-                                    document={doc.document}
-                                    supabasePath={doc.supabasePath}
-                                    docStatus={currentStatus}
-                                    requirementType={doc.requirementType}
-                                    docComment={currentComment}
-                                    onUpdate={(field, value) =>
+
+                                <div className="flex-1 grid grid-cols-2 gap-3">
+                                  <Button
+                                    variant={
+                                      currentStatus === "APPROVED"
+                                        ? "default"
+                                        : "outline"
+                                    }
+                                    className={`font-medium transition-all flex-1  !border-0 ${
+                                      currentStatus === "APPROVED"
+                                        ? ""
+                                        : "hover:bg-green-50 hover:border-green-200 hover:text-green-700"
+                                    }`}
+                                    onClick={() =>
                                       updateReviewData(
                                         doc.document,
-                                        field,
-                                        value
+                                        "status",
+                                        "APPROVED"
                                       )
                                     }
+                                    disabled={
+                                      !!doc.rejectMessage?.status ||
+                                      !doc.fileFormat ||
+                                      !!decisionMessage ||
+                                      data?.status === "BLOCKED"
+                                    }
+                                  >
+                                    {currentStatus === "APPROVED" ? (
+                                      <>
+                                        <Check />
+                                        Accepted
+                                      </>
+                                    ) : (
+                                      <>
+                                        <UserCheck2 />
+                                        Accept
+                                      </>
+                                    )}
+                                  </Button>
+                                  <Button
+                                    variant={
+                                      currentStatus === "REJECTED"
+                                        ? "destructive"
+                                        : "outline"
+                                    }
+                                    className={`font-medium transition-all flex-1  !border-0 ${
+                                      currentStatus !== "REJECTED"
+                                        ? "hover:bg-red-50 hover:border-red-200 hover:text-red-700"
+                                        : ""
+                                    }`}
+                                    onClick={() =>
+                                      updateReviewData(
+                                        doc.document,
+                                        "status",
+                                        "REJECTED"
+                                      )
+                                    }
+                                    disabled={
+                                      !!doc.rejectMessage?.status ||
+                                      !doc.fileFormat ||
+                                      !!decisionMessage ||
+                                      data?.status === "BLOCKED"
+                                    }
+                                  >
+                                    {currentStatus === "REJECTED" ? (
+                                      <>
+                                        <UserRoundX />
+                                        Rejected
+                                      </>
+                                    ) : (
+                                      <>
+                                        <UserX2 />
+                                        Reject
+                                      </>
+                                    )}
+                                  </Button>
+                                  <Textarea
+                                    placeholder="No comment found."
+                                    readOnly
+                                    value={currentComment}
+                                    disabled={
+                                      !!doc.rejectMessage?.status ||
+                                      !doc.fileFormat ||
+                                      data?.status === "BLOCKED"
+                                    }
+                                    onChange={(e) =>
+                                      updateReviewData(
+                                        doc.document,
+                                        "comment",
+                                        e.target.value
+                                      )
+                                    }
+                                    className="min-h-11 col-span-2 bg-background border-0"
                                   />
-                                  <h4 className=" font-semibold  flex gap-2 items-start ">
-                                    {doc.document}{" "}
-                                    <span className="text-xs text-muted-foreground">
-                                      {mimeToLabelMap[doc.fileFormat]}
-                                    </span>
-                                  </h4>
                                 </div>
                               </div>
-
-                              <div className="flex-1 grid grid-cols-2 gap-3">
-                                <Button
-                                  variant={
-                                    currentStatus === "APPROVED"
-                                      ? "default"
-                                      : "outline"
-                                  }
-                                  className={`font-medium transition-all flex-1  !border-0 ${
-                                    currentStatus === "APPROVED"
-                                      ? ""
-                                      : "hover:bg-green-50 hover:border-green-200 hover:text-green-700"
-                                  }`}
-                                  onClick={() =>
-                                    updateReviewData(
-                                      doc.document,
-                                      "status",
-                                      "APPROVED"
-                                    )
-                                  }
-                                  disabled={
-                                    !!doc.rejectMessage?.status ||
-                                    !doc.fileFormat
-                                  }
-                                >
-                                  {currentStatus === "APPROVED" ? (
-                                    <>
-                                      <Check />
-                                      Accepted
-                                    </>
-                                  ) : (
-                                    <>
-                                      <UserCheck2 />
-                                      Accept
-                                    </>
-                                  )}
-                                </Button>
-                                <Button
-                                  variant={
-                                    currentStatus === "REJECTED"
-                                      ? "destructive"
-                                      : "outline"
-                                  }
-                                  className={`font-medium transition-all flex-1  !border-0 ${
-                                    currentStatus !== "REJECTED"
-                                      ? "hover:bg-red-50 hover:border-red-200 hover:text-red-700"
-                                      : ""
-                                  }`}
-                                  onClick={() =>
-                                    updateReviewData(
-                                      doc.document,
-                                      "status",
-                                      "REJECTED"
-                                    )
-                                  }
-                                  disabled={
-                                    !!doc.rejectMessage?.status ||
-                                    !doc.fileFormat
-                                  }
-                                >
-                                  {currentStatus === "REJECTED" ? (
-                                    <>
-                                      <UserRoundX />
-                                      Rejected
-                                    </>
-                                  ) : (
-                                    <>
-                                      <UserX2 />
-                                      Reject
-                                    </>
-                                  )}
-                                </Button>
-                                <Textarea
-                                  placeholder="Add review comment..."
-                                  value={currentComment}
-                                  disabled={
-                                    !!doc.rejectMessage?.status ||
-                                    !doc.fileFormat
-                                  }
-                                  onChange={(e) =>
-                                    updateReviewData(
-                                      doc.document,
-                                      "comment",
-                                      e.target.value
-                                    )
-                                  }
-                                  className="min-h-11 col-span-2 bg-background border-0"
-                                />
-                              </div>
-                            </div>
-                          );
-                        })
-                    )}
+                            );
+                          })
+                      )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Student Information Section */}
-              {activeSection === "student" &&
-                (loading ? <>loading.</> : data && <StudentStaff {...data} />)}
+                {/* Student Information Section */}
+                {activeSection === "student" &&
+                  (loading ? (
+                    <>loading.</>
+                  ) : (
+                    data && <StudentStaff {...data} />
+                  ))}
 
-              {/* Family Background Section */}
-              {activeSection === "family" &&
-                (loading ? <>loa</> : data && <FamilyStaff {...data} />)}
+                {/* Family Background Section */}
+                {activeSection === "family" &&
+                  (loading ? <>loa</> : data && <FamilyStaff {...data} />)}
+              </div>
             </div>
           </div>
         </div>
-
         {/* Enhanced Footer */}
-        <DrawerFooter className="bg-gradient-to-r from-card/50 to-card border-t p-6">
+        <DrawerFooter className="bg-gradient-to-r from-card/50 to-card border-t p-6 hidden">
           {loading ? (
             <div className="grid grid-cols-3 gap-3">
               <Skeleton className="h-11 flex-1 rounded-lg" />
