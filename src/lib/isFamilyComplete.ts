@@ -122,7 +122,6 @@ export function getFamilyBackgroundProgress(
     fb.guardianContactNumber,
     fb.guardianOccupation,
     fb.guardianHighestEducation,
-    fb.guardianStatus,
   ];
 
   const total = requiredFields.length;
