@@ -1,3 +1,4 @@
+"use client";
 import { SummaryCard, SummaryCardProps } from "@/components/ui/summary";
 import {
   ArrowRight,
@@ -22,6 +23,13 @@ import {
   TimelineTitle,
 } from "@/components/ui/timeline";
 import { Badge } from "@/components/ui/badge";
+import { ActiveScholarships } from "./active-scholarship";
+import { Calendar } from "@/components/ui/calendar";
+import { useState } from "react";
+import { RecentApplications } from "./recent-application";
+import TitleReusable from "@/components/ui/title";
+import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
 const announcements = [
   {
     id: 1,
@@ -71,26 +79,6 @@ const scholarshipApplications = [
     scholarshipType: "Private",
     status: "Pending",
   },
-  {
-    id: "4",
-    fullName: "Ana Cruz",
-    age: 21,
-    course: "BS Nursing",
-    yearLevel: "3rd Year",
-
-    scholarshipType: "Private",
-    status: "Approved",
-  },
-  {
-    id: "5",
-    fullName: "Mark Villanueva",
-    age: 22,
-    course: "BS Accountancy",
-    yearLevel: "4th Year",
-
-    scholarshipType: "Government",
-    status: "Rejected",
-  },
 ];
 const scholarships = [
   {
@@ -111,20 +99,6 @@ const scholarships = [
     id: "3",
     name: "STEM Achievers Grant",
     provider: "XYZ Corporation",
-    type: "Private",
-    status: "Active",
-  },
-  {
-    id: "4",
-    name: "Healthcare Scholars Program",
-    provider: "National Health Fund",
-    type: "Government",
-    status: "Active",
-  },
-  {
-    id: "5",
-    name: "Leadership Excellence Scholarship",
-    provider: "Global Leaders Org",
     type: "Private",
     status: "Active",
   },
@@ -161,123 +135,68 @@ export default function StaffDashboard() {
       todayIncrement: 10,
     },
   ];
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [isClient, setIsClient] = useState(false);
+  const [now, setNow] = useState<string>("");
   return (
-    <div className="space-y-8">
-      <div className="space-y-8">
-        <div className="grid  grid-cols-4 lg:gap-3 gap-3">
+    <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+      <div className="lg:py-8 py-4 lg:px-5 px-2 space-y-12">
+        <div className="grid  grid-cols-4  gap-4">
           {summaryCards.map((card, index) => (
             <SummaryCard key={index} {...card} />
           ))}
         </div>
-        <div className="space-y-2">
-          <h1 className="font-medium text-lg">Announcements</h1>
 
-          <Timeline className="space-y-5">
-            {announcements.map((item) => (
-              <TimelineItem
-                key={item.id}
-                step={item.id}
-                className="!m-0  bg-card dark:bg-background/80  p-6! rounded-md border !mb-3"
-              >
-                <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
-                  <TimelineTitle className="font-medium text-lg">
-                    {item.title ?? "Win scholarship is now open."}
-                  </TimelineTitle>
-                  <TimelineDate className="lg:text-sm text-xs t flex items-center gap-1.5">
-                    <CalendarIcon size={13} /> {item.date}
-                  </TimelineDate>
+        <div className="grid grid-cols-2 gap-12">
+          <div className="space-y-12">
+            <ActiveScholarships />
+            <RecentApplications />
+          </div>
+
+          <div className="space-y-12">
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-base font-semibold text-foreground">
+                      Announcements
+                    </h2>
+                  </div>
+                  <Button variant="outline" size="sm">
+                    View All
+                  </Button>
                 </div>
 
-                <TimelineContent className=" mt-1 ">
-                  {item.description}
-                </TimelineContent>
+                <Timeline className="space-y-5">
+                  {announcements.map((item) => (
+                    <TimelineItem
+                      key={item.id}
+                      step={item.id}
+                      className="!m-0  bg-card   p-4! rounded-md border !mb-4"
+                    >
+                      <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
+                        <TimelineTitle className="font-medium text-base">
+                          {item.title ?? "Win scholarship is now open."}
+                        </TimelineTitle>
+                        <TimelineDate className="lg:text-sm text-xs t flex items-center gap-1.5">
+                          <CalendarIcon size={13} /> {item.date}
+                        </TimelineDate>
+                      </div>
 
-                <div className="mt-5 flex gap-3 items-center">
-                  <p className="text-xs">Tags:</p>{" "}
-                  <Badge variant="secondary">Win Gatchalian</Badge>
-                </div>
-              </TimelineItem>
-            ))}
-          </Timeline>
-          <p className="text-center text-sm underline flex gap-1.5 items-center justify-center font-medium">
-            View All <ArrowRight size={15} />
-          </p>
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-8">
-        <div className="space-y-2">
-          <h1 className="font-medium text-lg">Recent Application</h1>
+                      <TimelineContent className=" mt-1 ">
+                        {item.description}
+                      </TimelineContent>
 
-          <Table>
-            <TableHeader className="">
-              <TableRow className="bg-card">
-                <TableHead className="h-9 p-3">Name</TableHead>
-                <TableHead className="h-9 p-3">Provider</TableHead>
-                <TableHead className="h-9 p-3">Type</TableHead>
-                <TableHead className="h-9 p-3">Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="">
-              {scholarships.map((scholarship) => (
-                <TableRow key={scholarship.id}>
-                  <TableCell className="py-6 px-3 font-medium">
-                    {scholarship.name}
-                  </TableCell>
-                  <TableCell className="py-6 px-3">
-                    {scholarship.provider}
-                  </TableCell>
-                  <TableCell className="py-6 px-3">
-                    {scholarship.type}
-                  </TableCell>
-                  <TableCell className="py-6 px-3">
-                    <Badge className="bg-green-50 dark:bg-green-600/20 text-green-700">
-                      {scholarship.status}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <p className="text-center text-sm underline flex gap-1.5 items-center justify-center font-medium">
-            View All <ArrowRight size={15} />
-          </p>
-        </div>
-        <div className="space-y-2">
-          <h1 className="font-medium text-lg">Active Scholarships</h1>
-
-          <Table>
-            <TableHeader className="">
-              <TableRow className="bg-card">
-                <TableHead className="h-9 p-3">Name</TableHead>
-                <TableHead className="h-9 p-3">Provider</TableHead>
-                <TableHead className="h-9 p-3">Type</TableHead>
-                <TableHead className="h-9 p-3">Status</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="">
-              {scholarships.map((scholarship) => (
-                <TableRow key={scholarship.id}>
-                  <TableCell className="py-6 px-3 font-medium">
-                    {scholarship.name}
-                  </TableCell>
-                  <TableCell className="py-6 px-3">
-                    {scholarship.provider}
-                  </TableCell>
-                  <TableCell className="py-6 px-3">
-                    {scholarship.type}
-                  </TableCell>
-                  <TableCell className="py-6 px-3">
-                    <Badge className="bg-green-50 dark:bg-green-600/20 text-green-700">
-                      {scholarship.status}
-                    </Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <p className="text-center text-sm underline flex gap-1.5 items-center justify-center font-medium">
-            View All <ArrowRight size={15} />
-          </p>
+                      <div className="mt-5 flex gap-3 items-center">
+                        <p className="text-xs">Tags:</p>{" "}
+                        <Badge variant="secondary">Win Gatchalian</Badge>
+                      </div>
+                    </TimelineItem>
+                  ))}
+                </Timeline>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

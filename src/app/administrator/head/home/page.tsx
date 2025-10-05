@@ -43,11 +43,16 @@ import { type DateRange } from "react-day-picker";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
-import { ChartBarMultiple } from "./dashboard/bar";
+import { ChartBarMultiple } from "./bar-chart";
 import ChartAreaInteractive from "./dashboard/area-chart";
 import { SummaryCard, SummaryCardProps } from "./dashboard/summary";
 import { useAdminStore } from "@/store/adminUserStore";
 import useAnnouncementFetch from "@/hooks/admin/getAnnouncement";
+import { UpcomingDeadlines } from "./upcoming-deadline";
+import { DonutPieDonut } from "./donut-chart";
+import { ActiveScholarships } from "./active-scholarship";
+import { RecentApplications } from "./recent-application";
+import { ChartBarMixed } from "./institute";
 const summaryCards: SummaryCardProps[] = [
   {
     label: "Total Applicants",
@@ -157,163 +162,76 @@ export default function AdminDashboard() {
   // const sliced = mockScholarships;
 
   return (
-    <div className="relative min-h-screen z-10">
-      <div className="lg:p-5 p-3 space-y-5 ">
-        <div className=" grid lg:grid-cols-2 grid-cols-1 gap-5 ">
-          <div className="  space-y-5 ">
-            <div className="">
-              <div className="flex justify-between lg:flex-row flex-col gap-5 ">
-                <div className="lg:space-y-2 ">
-                  <h1 className="lg:text-2xl text-lg font-medium">
-                    Hello, {admin?.ISPSU_Head?.fName ?? "Admin"}{" "}
-                    {admin?.ISPSU_Head?.lName ?? ""}!
-                  </h1>
-                  <p className="text-sm text-muted-foreground font-mono">
-                    {isClient ? format(now, "PPP p") : "Loading..."}
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="grid lg:grid-cols-2 grid-cols-1 lg:gap-3 gap-2">
-              {summaryCards.map((card, index) => (
-                <SummaryCard key={index} {...card} />
-              ))}
-            </div>
+    <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+      <div className="lg:py-8 py-4 lg:px-5 px-2 space-y-8">
+        <div className="grid grid-cols-4  gap-6">
+          {summaryCards.map((card, index) => (
+            <SummaryCard key={index} {...card} />
+          ))}
+        </div>
+        <div className="grid grid-cols-3  gap-6">
+          <ChartBarMultiple />
+          <DonutPieDonut />
+          <ChartBarMixed />
+        </div>
 
-            <ChartAreaInteractive />
-
-            <div className="space-y-2">
-              <h1 className="font-medium text-lg">Active Scholarship</h1>
-
-              <Table>
-                <TableHeader className="">
-                  <TableRow className="bg-card">
-                    <TableHead className="h-9 p-3">Name</TableHead>
-                    <TableHead className="h-9 p-3">Provider</TableHead>
-                    <TableHead className="h-9 p-3">Type</TableHead>
-                    <TableHead className="h-9 p-3">Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody className="">
-                  {sliced.map((scholarship) => (
-                    <TableRow key={scholarship.scholarshipId}>
-                      <TableCell className="py-4 px-2 font-medium">
-                        {scholarship.title}
-                      </TableCell>
-                      <TableCell className="py-4 px-2">
-                        {scholarship.Scholarship_Provider.name}
-                      </TableCell>
-                      <TableCell className="py-4 px-2">
-                        {scholarship.type}
-                      </TableCell>
-                      <TableCell className="py-4 px-2">
-                        <Badge className="bg-green-50 dark:bg-green-600/20 text-green-700">
-                          ACTIVE
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <p className="text-center text-sm underline flex gap-1.5 items-center justify-center font-medium">
-                View All <ArrowRight size={15} />
-              </p>
-            </div>
-          </div>
-          <div className=" space-y-7">
-            <div>
-              <Button
-                variant="ghost"
-                className="pointer-events-auto !p-0 text-base"
-              >
-                <Megaphone /> Announcements
-              </Button>
-
-              <Timeline className="space-y-5">
-                {dataAnnouncement.slice(0, 2).map((item, index) => (
-                  <TimelineItem
-                    key={item.announcementId}
-                    step={index}
-                    className="!m-0  bg-card  p-4! rounded-md border !mb-3"
-                  >
-                    <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
-                      <TimelineTitle className="font-medium text-base">
-                        {item.title ?? "Win scholarship is now open."}
-                      </TimelineTitle>
-                      <TimelineDate className="lg:text-sm text-xs text-muted-foreground flex items-center gap-1.5">
-                        <CalendarIcon size={13} />{" "}
-                        {item.startDate && format(item.startDate, "PPP p")}
-                      </TimelineDate>
-                    </div>
-
-                    <TimelineContent className="text-foreground mt-1 font-light">
-                      {item.description}
-                    </TimelineContent>
-
-                    <div className="mt-5 flex gap-3 items-center">
-                      <p className="text-xs">Tags:</p>{" "}
-                      <Badge variant="secondary">Win Gatchalian</Badge>
-                    </div>
-                  </TimelineItem>
-                ))}
-              </Timeline>
-              <div className="flex justify-center items-center">
-                <Button variant="link" size="lg" className="!p-0">
-                  View all <ArrowRight />
-                </Button>
-              </div>
-            </div>
-            <div>
-              <Calendar
-                mode="range"
-                defaultMonth={dateRange?.from}
-                selected={dateRange}
-                onSelect={setDateRange}
-                numberOfMonths={2}
-                className="rounded-lg border shadow-sm w-full"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <h1 className="font-medium text-lg">Recent Application</h1>
-
-              <Table>
-                <TableHeader className="">
-                  <TableRow className="bg-card">
-                    <TableHead className="h-9 p-3">Name</TableHead>
-                    <TableHead className="h-9 p-3">Provider</TableHead>
-                    <TableHead className="h-9 p-3">Type</TableHead>
-                    <TableHead className="h-9 p-3">Status</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody className="">
-                  {sliced.map((scholarship) => (
-                    <TableRow key={scholarship.scholarshipId}>
-                      <TableCell className="py-4 px-2 font-medium">
-                        {scholarship.title}
-                      </TableCell>
-                      <TableCell className="py-4 px-2">
-                        {scholarship.Scholarship_Provider.name}
-                      </TableCell>
-                      <TableCell className="py-4 px-2">
-                        {scholarship.type}
-                      </TableCell>
-                      <TableCell className="py-4 px-2">
-                        <Badge className="bg-green-50 dark:bg-green-600/20 text-green-700">
-                          ACTIVE
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-              <p className="text-center text-sm underline flex gap-1.5 items-center justify-center font-medium">
-                View All <ArrowRight size={15} />
-              </p>
-            </div>
-          </div>
+        <div className="grid grid-cols-2 gap-6">
+          <ActiveScholarships />
+          <RecentApplications />
         </div>
       </div>
     </div>
   );
 }
+
+// <Timeline className="space-y-5">
+//   {dataAnnouncement.slice(0, 2).map((item, index) => (
+//     <TimelineItem
+//       key={item.announcementId}
+//       step={index}
+//       className="!m-0  bg-card  p-4! rounded-md border !mb-3"
+//     >
+//       <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
+//         <TimelineTitle className="font-medium text-base">
+//           {item.title ?? "Win scholarship is now open."}
+//         </TimelineTitle>
+//         <TimelineDate className="lg:text-sm text-xs text-muted-foreground flex items-center gap-1.5">
+//           <CalendarIcon size={13} />{" "}
+//           {item.startDate && format(item.startDate, "PPP p")}
+//         </TimelineDate>
+//       </div>
+
+//       <TimelineContent className="line-clamp-2 whitespace-pre-wrap">
+//         {item.description}
+//       </TimelineContent>
+
+//       <div className="mt-5 flex gap-3 items-center">
+//         <p className="text-xs">Tags:</p>{" "}
+//         <Badge variant="secondary">Win Gatchalian</Badge>
+//       </div>
+//     </TimelineItem>
+//   ))}
+// </Timeline>;
+
+//  <div className="  space-y-5 ">
+//    <div className="">
+//      <div className="flex justify-between lg:flex-row flex-col gap-5 ">
+//        <div className="lg:space-y-2 ">
+//          <h1 className="lg:text-2xl text-lg font-medium">
+//            Hello, {admin?.ISPSU_Head?.fName ?? "Admin"}{" "}
+//            {admin?.ISPSU_Head?.lName ?? ""}!
+//          </h1>
+//          <p className="text-sm text-muted-foreground font-mono">
+//            {isClient ? format(now, "PPP p") : "Loading..."}
+//          </p>
+//        </div>
+//      </div>
+//    </div>
+//    <div className="grid lg:grid-cols-2 grid-cols-1 lg:gap-3 gap-2">
+//      {summaryCards.map((card, index) => (
+//        <SummaryCard key={index} {...card} />
+//      ))}
+//    </div>
+
+//    <ChartAreaInteractive />
+//  </div>;

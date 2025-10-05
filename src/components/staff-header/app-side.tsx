@@ -5,6 +5,7 @@ import logo from "@/assets/basclogo.png";
 import {
   Crown,
   GraduationCap,
+  Home,
   Megaphone,
   UserRoundCog,
   UserRoundX,
@@ -31,7 +32,12 @@ import { usePathname } from "next/navigation";
 
 const sidebarData = [
   {
-    title: " Profile",
+    title: "Home",
+    url: "/administrator/staff/home",
+    icon: Home,
+  },
+  {
+    title: "Profile",
     url: "/administrator/staff/home/profile",
     icon: UserRoundCog,
   },
@@ -99,6 +105,31 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
+          <SidebarGroupLabel>Home</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {sidebarData.map((meow) => {
+                const isActive = pathname === meow.url;
+                return (
+                  <SidebarMenuItem key={meow.title}>
+                    <SidebarMenuButton isActive={isActive} asChild>
+                      <Link
+                        prefetch
+                        scroll={false}
+                        className="flex items-center gap-2 cursor-pointer"
+                        href={meow.url}
+                      >
+                        <meow.icon className="w-4 h-4" />
+                        {meow.title}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -149,31 +180,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>Others</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {sidebarData.map((meow) => {
-                const isActive = pathname === meow.url;
-                return (
-                  <SidebarMenuItem key={meow.title}>
-                    <SidebarMenuButton isActive={isActive} asChild>
-                      <Link
-                        prefetch
-                        scroll={false}
-                        className="flex items-center gap-2 cursor-pointer"
-                        href={meow.url}
-                      >
-                        <meow.icon className="w-4 h-4" />
-                        {meow.title}
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+
         {/* <SidebarGroup>
           <SidebarGroupLabel>Manage Staff</SidebarGroupLabel>
           <SidebarGroupContent>

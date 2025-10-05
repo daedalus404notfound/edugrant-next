@@ -11,6 +11,7 @@ import {
 import { ZoomIn, ZoomOut, RotateCw, RefreshCw, Loader, X } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import GlassFolder from "@/components/ui/folder";
+import { Badge } from "@/components/ui/badge";
 
 interface UserDocument {
   document: string;
@@ -27,6 +28,7 @@ export default function ApplicationViewer({
   fileUrl,
   document,
   status,
+  requirementType,
 }: UserDocument) {
   const [rotation, setRotation] = useState(0);
   console.log(fileFormat);
@@ -36,8 +38,14 @@ export default function ApplicationViewer({
   console.log("status", status);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
+      <DialogTrigger className="relative">
         <GlassFolder color="amber" />
+        <Badge
+          variant="secondary"
+          className="absolute bottom-0 z-50 uppercase tracking-wide"
+        >
+          {requirementType}
+        </Badge>
       </DialogTrigger>
       <DialogContent
         className="!top-0 !left-0  absolute border-0 outline-0 bg-transparent"

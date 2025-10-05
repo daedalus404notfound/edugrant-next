@@ -134,7 +134,10 @@ export default function RegisterStudent() {
     // resetAuthState,
     // resetVerifyState,
     // resetAllStates,
-    // requestNewCode,
+    requestNewCode,
+
+    resendTimer,
+    expiresAt,
   } = useRegisterHandler();
 
   const handlePrevStepper = () => {
@@ -312,18 +315,18 @@ export default function RegisterStudent() {
                             <div className="flex">
                               {/* Fixed +639 prefix */}
                               <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
-                                +639
+                                +63
                               </span>
                               <Input
                                 type="text"
                                 placeholder=""
-                                maxLength={9}
-                                value={field.value?.replace("+639", "") || ""}
+                                maxLength={10}
+                                value={field.value?.replace("+63", "") || ""}
                                 onChange={(e) => {
                                   const val = e.target.value
                                     .replace(/\D/g, "")
-                                    .slice(0, 9);
-                                  field.onChange(`+639${val}`);
+                                    .slice(0, 10);
+                                  field.onChange(`+63${val}`);
                                 }}
                                 disabled={sendAuthCode.isLoading}
                                 className="rounded-l-none"
@@ -1018,6 +1021,55 @@ export default function RegisterStudent() {
                       );
                     }}
                   />
+                  <FormField
+                    control={accountForm.control}
+                    name="confirmPassword"
+                    render={({ field }) => {
+                      const [isVisible, setIsVisible] = useState(false);
+                      const toggleVisibility = () =>
+                        setIsVisible((prev) => !prev);
+
+                      return (
+                        <FormItem className="lg:col-span-2">
+                          <FormLabel className="flex items-center justify-between">
+                            Confirm Password <FormMessage />
+                          </FormLabel>
+
+                          <FormControl>
+                            <div className="relative">
+                              <Input
+                                type={isVisible ? "text" : "password"}
+                                placeholder=""
+                                {...field}
+                                disabled={sendAuthCode.isLoading}
+                                className="pe-9"
+                              />
+                              <button
+                                type="button"
+                                onClick={toggleVisibility}
+                                className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground/80 hover:text-foreground focus:outline-none"
+                              >
+                                {isVisible ? (
+                                  <EyeOffIcon size={16} />
+                                ) : (
+                                  <EyeIcon size={16} />
+                                )}
+                              </button>
+                            </div>
+                          </FormControl>
+
+                          {/* Optional Live Mismatch Warning */}
+                          {/* {accountForm.watch("confirmPassword") &&
+                            accountForm.watch("password") !==
+                              accountForm.watch("confirmPassword") && (
+                              <p className="text-xs text-red-500 mt-2">
+                                Passwords do not match.
+                              </p>
+                            )} */}
+                        </FormItem>
+                      );
+                    }}
+                  />
                 </div>
 
                 <div className="w-full sticky bottom-0 lg:px-8 p-2 lg:py-6 border-t bg-background flex flex-col-reverse lg:flex-row gap-3">
@@ -1103,8 +1155,19 @@ export default function RegisterStudent() {
                   />
 
                   <div className="w-full sticky bottom-0 lg:px-8 lg:py-6 py-4 px-2 flex-col-reverse lg:flex-row border-t bg-background flex gap-3">
-                    <Button variant="outline" className="flex-1" disabled>
-                      Resend Code (Coming Soon)
+                    <Button
+                      variant="outline"
+                      className="flex-1"
+                      onClick={requestNewCode}
+                      disabled={
+                        resendTimer > 0 ||
+                        verifyRegister.isLoading ||
+                        sendAuthCode.isLoading
+                      }
+                    >
+                      {resendTimer > 0
+                        ? `Resend in ${resendTimer}s`
+                        : "Resend Code"}
                     </Button>
                     <Button
                       type="submit"

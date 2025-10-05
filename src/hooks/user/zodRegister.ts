@@ -8,7 +8,7 @@ const personalDetailsSchema = z.object({
   lastName: z.string().min(1, "Required"),
   contactNumber: z
     .string()
-    .regex(/^\+639\d{9}$/, "Must be a valid phone number"),
+    .regex(/^\+63\d{10}$/, "Must be a valid phone number"),
 
   gender: z.string().min(1, "Required"),
   indigenous: z.string().optional(),
@@ -23,16 +23,24 @@ const personalDetailsSchema = z.object({
 
   address: z.string().min(1, "Required"),
 });
-const accountDetailsSchema = z.object({
-  studentId: z.string().min(10, "Required, Min of 10"),
-  email: z.string().min(1, "Required").email("Invalid email address"),
+const accountDetailsSchema = z
+  .object({
+    studentId: z.string().min(10, "Required, Min of 10"),
+    email: z.string().min(1, "Required").email("Invalid email address"),
 
-  password: z.string().min(8, "At least 8 characters"),
-  course: z.string().min(1, "Required"),
-  yearLevel: z.string().min(1, "Required"),
-  institute: z.string().min(1, "Required"),
-  section: z.string().min(1, "Required"),
-});
+    password: z.string().min(8, "At least 8 characters"),
+    confirmPassword: z.string().min(1, "Please confirm your password"),
+
+    course: z.string().min(1, "Required"),
+    yearLevel: z.string().min(1, "Required"),
+    institute: z.string().min(1, "Required"),
+    section: z.string().min(1, "Required"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
 const otpSchema = z.object({
   otp: z.string().min(6, "Required").max(6, "Required"),
 });
@@ -68,6 +76,7 @@ export function useRegisterUser() {
       yearLevel: "",
       institute: "",
       section: "",
+      confirmPassword: "",
     },
   });
   const otpForm = useForm<otpFormData>({

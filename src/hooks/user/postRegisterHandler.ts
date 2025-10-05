@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   otpFormData,
@@ -22,8 +22,15 @@ interface sendAuthData {
   accountData: accountFormData;
 }
 
+type AuthCodeTypes = {
+  expiresAt: string;
+  message: string;
+  resendAvailableIn: number;
+  success: true;
+  ttl: number;
+};
 const sendAuthApi = async ({ personalData, accountData }: sendAuthData) => {
-  const response = await axios.post(
+  const response = await axios.post<AuthCodeTypes>(
     `${process.env.NEXT_PUBLIC_USER_URL}/sendAuthCodeRegister`,
     {
       studentFirstName: personalData.firstName,
@@ -143,7 +150,8 @@ export const useRegisterHandler = () => {
   const [stepper, setStepper] = useState(1);
   const { personalForm, accountForm, otpForm, personalData, accountData } =
     useRegisterUser();
-
+  const [resendTimer, setResendTimer] = useState<number>(0);
+  const [expiresAt, setExpiresAt] = useState<number | null>(null);
   const sendAuthCode = useSendAuthCode();
   const verifyRegister = useVerifyRegister();
 
@@ -158,12 +166,24 @@ export const useRegisterHandler = () => {
       });
       if (result) {
         setStepper(3);
+        setResendTimer(result.resendAvailableIn);
+        setExpiresAt(new Date(result.expiresAt).getTime());
       }
     } catch (error) {
       // Error toast is already handled in useSendAuthCode onError
       console.error("Registration error:", error);
     }
   };
+
+  useEffect(() => {
+    if (resendTimer <= 0) return; // stop when timer hits 0
+
+    const interval = setInterval(() => {
+      setResendTimer((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+
+    return () => clearInterval(interval); // cleanup
+  }, [resendTimer]);
   const HandleOtpVerification = async (otpData: otpFormData) => {
     try {
       const result = await verifyRegister.mutateAsync({
@@ -202,6 +222,7 @@ export const useRegisterHandler = () => {
   };
 
   // Function to request new code (you can add this to your UI)
+
   const requestNewCode = async () => {
     if (personalData && accountData) {
       StyledToast({
@@ -212,7 +233,18 @@ export const useRegisterHandler = () => {
       });
 
       try {
-        await sendAuthCode.mutateAsync({ personalData, accountData });
+        const result = await sendAuthCode.mutateAsync({
+          personalData,
+          accountData,
+        });
+
+        if (result.success) {
+          // ✅ Restart countdown using the new server value
+          setResendTimer(result.resendAvailableIn);
+
+          // (optional) also reset OTP expiry
+          setExpiresAt(new Date(result.expiresAt).getTime());
+        }
       } catch (error) {
         console.error("Resend code error:", error);
       }
@@ -254,5 +286,8 @@ export const useRegisterHandler = () => {
     resetVerifyState,
     resetAllStates,
     requestNewCode,
+
+    resendTimer,
+    expiresAt,
   };
 };

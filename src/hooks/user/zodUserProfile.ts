@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import deepEqual from "fast-deep-equal";
 
 import z from "zod";
+import { format } from "date-fns";
 
 export const displayDocumentsSchema = z.object({
   label: z.string().min(1, "Requireds"),
@@ -32,13 +33,17 @@ export const StudentSchema = z.object({
   PWD: z.string(),
   studentId: z.number(),
   address: z.string(),
-  contactNumber: z.string(),
+  contactNumber: z
+    .string()
+    .regex(/^\+63\d{10}$/, "Must be a valid phone number"),
   course: z.string(),
   dateCreated: z.string(),
   dateOfBirth: z.string(),
+  indigenous: z.string().optional(),
+  pwd: z.string().optional(),
   fName: z.string(),
   gender: z.string(),
-  indigenous: z.string(),
+
   institute: z.string(),
   lName: z.string(),
   mName: z.string(),
@@ -47,7 +52,9 @@ export const StudentSchema = z.object({
   familyBackground: z.object({
     fatherFullName: z.string().optional(),
     fatherAddress: z.string().optional(),
-    fatherContactNumber: z.string().optional(),
+    fatherContactNumber: z
+      .string()
+      .regex(/^\+63\d{10}$/, "Must be a valid phone number"),
     fatherOccupation: z.string().optional(),
     fatherHighestEducation: z.string().optional(),
     fatherStatus: z.string().optional(),
@@ -55,7 +62,9 @@ export const StudentSchema = z.object({
 
     motherFullName: z.string().optional(),
     motherAddress: z.string().optional(),
-    motherContactNumber: z.string().optional(),
+    motherContactNumber: z
+      .string()
+      .regex(/^\+63\d{10}$/, "Must be a valid phone number"),
     motherOccupation: z.string().optional(),
     motherHighestEducation: z.string().optional(),
     motherStatus: z.string().optional(),
@@ -63,10 +72,11 @@ export const StudentSchema = z.object({
 
     guardianFullName: z.string().optional(),
     guardianAddress: z.string().optional(),
-    guardianContactNumber: z.string().optional(),
+    guardianContactNumber: z
+      .string()
+      .regex(/^\+63\d{10}$/, "Must be a valid phone number"),
     guardianOccupation: z.string().optional(),
     guardianHighestEducation: z.string().optional(),
-    guardianStatus: z.string().optional(),
 
     siblings: z
       .array(
@@ -119,7 +129,9 @@ export function useProfileForm(data?: UserFormData) {
       contactNumber: data?.Student?.contactNumber || "",
       course: data?.Student?.course || "",
       dateCreated: data?.Student?.dateCreated || "",
-      dateOfBirth: data?.Student?.dateOfBirth || "",
+      dateOfBirth: data?.Student
+        ? format(data?.Student?.dateOfBirth, "yyyy-MM-dd")
+        : "",
       fName: data?.Student?.fName || "",
       mName: data?.Student?.mName || "",
       lName: data?.Student?.lName || "",
@@ -162,7 +174,6 @@ export function useProfileForm(data?: UserFormData) {
           data?.Student?.familyBackground?.guardianOccupation || "",
         guardianHighestEducation:
           data?.Student?.familyBackground?.guardianHighestEducation || "",
-        guardianStatus: data?.Student?.familyBackground?.guardianStatus || "",
         siblings: data?.Student?.familyBackground?.siblings || [],
       },
       Account: {

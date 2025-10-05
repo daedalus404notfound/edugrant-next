@@ -20,7 +20,7 @@ export const profileSchema = z.object({
     dateCreated: z.string(),
     fName: z.string(),
     lName: z.string(),
-    mName: z.string(),
+    mName: z.string().nullable(),
   }),
 });
 
@@ -45,7 +45,7 @@ export function useProfileForm(initialData?: ProfileFormData) {
       dateCreated: "",
       fName: "",
       lName: "",
-      mName: "",
+      mName: null,
     },
   };
 

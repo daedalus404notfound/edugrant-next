@@ -9,7 +9,7 @@ interface DashboardLayoutProps {
 }
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
-import DynamicHeaderAdmin from "../../admin-header";
+import DynamicHeaderAdmin from "./staff-header2";
 
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
