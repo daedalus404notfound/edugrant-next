@@ -111,6 +111,7 @@ import { SummaryCard, SummaryCardProps } from "@/components/ui/summary";
 import { useUserStore } from "@/store/useUserStore";
 import Link from "next/link";
 import TitleReusable from "@/components/ui/title";
+import usefetchUserDashboard from "@/hooks/user/getUserDashboard";
 
 const announcements = [
   {
@@ -146,6 +147,8 @@ export default function AdminDashboard() {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [now, setNow] = useState<string>("");
   const { user } = useUserStore();
+  const accountId = user?.accountId;
+  const schoolId = user?.schoolId;
   const { percentage, completed } = getFamilyBackgroundProgress(user?.Student);
   const [isClient, setIsClient] = useState(false);
 
@@ -225,7 +228,7 @@ export default function AdminDashboard() {
     };
 
     return (
-      <div className=" backdrop-blur-sm border  rounded-lg lg:p-6 p-4  ">
+      <div className="bg-card backdrop-blur-sm border  rounded-lg lg:p-6 p-4  ">
         <div className="flex justify-between items-start mb-4">
           <div>
             <h3 className="font-semibold ">{application.scholarshipName}</h3>
@@ -259,6 +262,8 @@ export default function AdminDashboard() {
       </div>
     );
   }
+
+  const { data } = usefetchUserDashboard(accountId, schoolId);
   return (
     <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="lg:py-8 py-4 lg:px-5 px-2 space-y-5">
@@ -292,7 +297,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
-        <div className="lg:space-y-2 space-y-8 flex flex-col lg:flex-row lg:items-center justify-between">
+        {/* <div className="lg:space-y-2 space-y-8 flex flex-col lg:flex-row lg:items-center justify-between">
           <div>
             <p className="text-sm text-muted-foreground tracking-wide"></p>
             <h1 className="lg:text-2xl text-2xl  font-semibold"></h1>
@@ -357,9 +362,9 @@ export default function AdminDashboard() {
               </div>
             </div>
           </div>
-        </div>
-        <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 ">
-          <div className="space-y-10">
+        </div> */}
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-12 ">
+          <div className="space-y-12">
             <div className="grid  lg:grid-cols-2 grid-cols-1 lg:gap-4 gap-3">
               {summaryCards.map((card, index) => (
                 <SummaryCard key={index} {...card} />
@@ -468,18 +473,19 @@ export default function AdminDashboard() {
                 </Link>
               </div>
               <Timeline className="space-y-5">
-                {announcements.map((item) => (
+                {data?.announcements.slice(0, 3).map((item, index) => (
                   <TimelineItem
-                    key={item.id}
-                    step={item.id}
-                    className="!m-0  bg-background shadow border  p-4! rounded-md  !mb-5"
+                    key={item.announcementId}
+                    step={index}
+                    className="!m-0  bg-card shadow border  p-4! rounded-md  !mb-5"
                   >
                     <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
                       <TimelineTitle className="font-medium text-base">
                         {item.title ?? "Win scholarship is now open."}
                       </TimelineTitle>
                       <TimelineDate className="lg:text-sm text-xs text-muted-foreground flex items-center gap-1.5">
-                        <CalendarIcon size={13} /> {item.date}
+                        <CalendarIcon size={13} />{" "}
+                        {item.dateCreated && format(item.dateCreated, "PPP")}
                       </TimelineDate>
                     </div>
 

@@ -36,7 +36,14 @@ export default function PendingApplication() {
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
     status: status,
   });
-
+  const [columnVisibility, setColumnVisibility] = useState<
+    Record<string, boolean>
+  >({
+    phase: false,
+    section: false,
+    year: false,
+    institute: false,
+  });
   const { searchData, searchLoading, searchMeta } = useApplicantsSearch({
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
@@ -118,6 +125,8 @@ export default function PendingApplication() {
               columnFilters={columnFilters}
               setColumnFilters={setColumnFilters}
               toolbar={DataTableToolbar}
+              columnVisibility={columnVisibility} // <-- pass visibility
+              setColumnVisibility={setColumnVisibility} // <-- pass setter
             />
           </div>
         </div>

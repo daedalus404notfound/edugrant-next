@@ -51,6 +51,14 @@ export default function RejectedApplication({
     query: search,
     status: status,
   });
+  const [columnVisibility, setColumnVisibility] = useState<
+    Record<string, boolean>
+  >({
+    phase: false,
+    section: false,
+    year: false,
+    institute: false,
+  });
   const { rejectedIds } = useApplicationUIStore();
   const { approvedIds } = useApplicationUIStore();
   const { ForInterviewIds } = useApplicationUIStore();
@@ -78,6 +86,8 @@ export default function RejectedApplication({
       columnFilters={columnFilters}
       setColumnFilters={setColumnFilters}
       toolbar={DataTableToolbar}
+      columnVisibility={columnVisibility} // <-- pass visibility
+      setColumnVisibility={setColumnVisibility} // <-- pass setter
     />
   );
 }

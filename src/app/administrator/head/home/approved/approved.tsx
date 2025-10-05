@@ -38,6 +38,14 @@ export default function ApprovedApplication({
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
     status: status,
   });
+  const [columnVisibility, setColumnVisibility] = useState<
+    Record<string, boolean>
+  >({
+    phase: false,
+    section: false,
+    year: false,
+    institute: false,
+  });
   useEffect(() => {
     if (meta?.totalRows !== undefined) {
       setApproved(meta.totalRows);
@@ -78,6 +86,8 @@ export default function ApprovedApplication({
       columnFilters={columnFilters}
       setColumnFilters={setColumnFilters}
       toolbar={DataTableToolbar}
+      columnVisibility={columnVisibility} // <-- pass visibility
+      setColumnVisibility={setColumnVisibility} // <-- pass setter
     />
   );
 }
