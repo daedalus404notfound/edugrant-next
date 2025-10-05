@@ -1,32 +1,12 @@
-// import { create } from "zustand";
-// import { ProfileFormData } from "@/hooks/head/zodHeadProfile";
-
-// type UserStore = {
-//   admin: ProfileFormData | null;
-//   loading: boolean;
-//   error: string | null;
-//   setAdmin: (user: ProfileFormData) => void;
-//   setLoading: (loading: boolean) => void;
-//   setError: (error: string | null) => void;
-// };
-
-// export const useAdminStore = create<UserStore>((set) => ({
-//   admin: null,
-//   loading: false,
-//   error: null,
-//   setAdmin: (admin) => set({ admin }),
-//   setLoading: (loading) => set({ loading }),
-//   setError: (error) => set({ error }),
-// }));
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { ProfileFormData } from "@/hooks/head/zodHeadProfile";
+import { AdminProfileFormData } from "@/hooks/head-profile-edit";
 
 type AdminStore = {
-  admin: ProfileFormData | null;
+  admin: AdminProfileFormData | null;
   loading: boolean;
   error: string | null;
-  setAdmin: (admin: ProfileFormData) => void;
+  setAdmin: (admin: AdminProfileFormData) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   logout: () => void;

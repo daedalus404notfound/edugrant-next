@@ -121,9 +121,9 @@ const sidebarData = [
     icon: LayoutDashboard,
   },
   {
-    title: "Head Profile",
+    title: "View Profile",
     url: "/administrator/head/home/profile",
-    icon: Crown,
+    icon: UserRoundCheck,
   },
   {
     title: "Announcements",

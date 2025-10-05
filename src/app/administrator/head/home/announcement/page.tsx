@@ -81,8 +81,8 @@ export default function ClientScholarship() {
   ];
 
   return (
-    <div className="  bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className="mx-auto w-full max-w-4xl lg:pt-10  pt-3">
+    <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+      <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <div className="flex justify-between items-end">
           <TitleReusable
             title="Announcements"
