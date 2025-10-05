@@ -79,7 +79,6 @@ export default function ExportCsvScholarship({ status }: { status?: string }) {
     guardianOccupation: meow.Student?.familyBackground?.guardianOccupation,
     guardianContactNumber:
       meow.Student?.familyBackground?.guardianContactNumber,
-    guardianStatus: meow.Student?.familyBackground?.guardianStatus,
 
     siblings:
       meow.Student?.familyBackground?.siblings?.map((s) => ({
