@@ -80,9 +80,6 @@ const updateUserApi = async (data: UserFormData) => {
       guardianHighestEducation:
         data.Student.familyBackground.guardianHighestEducation,
     }),
-    ...(data.Student.familyBackground.guardianStatus && {
-      guardianStatus: data.Student.familyBackground.guardianStatus,
-    }),
 
     ...(data.Student.familyBackground.siblings &&
       data.Student.familyBackground.siblings.length > 0 && {
