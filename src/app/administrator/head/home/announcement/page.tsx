@@ -1,88 +1,46 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  CalendarIcon,
-  Loader,
-  Megaphone,
-  PenLine,
-  RefreshCcw,
-  X,
-} from "lucide-react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+import { Megaphone } from "lucide-react";
+
 import { useState } from "react";
-import { Tabs } from "@/components/ui/vercel-tabs";
 import { Badge } from "@/components/ui/badge";
-import {
-  Timeline,
-  TimelineContent,
-  TimelineDate,
-  TimelineItem,
-  TimelineTitle,
-} from "@/components/ui/timeline";
+
 import { format } from "date-fns";
-import { Input } from "@/components/ui/input";
+
 import TitleReusable from "@/components/ui/title";
 import useAnnouncementFetch from "@/hooks/admin/getAnnouncement";
-import AnnouncementDescription from "@/components/ui/description";
-import { useCreateAnnouncement } from "@/hooks/admin/postCreateAnnouncement";
-import { DeleteDialog } from "@/components/ui/delete-dialog";
+
 import NoDataFound from "@/components/ui/nodata";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
+
+import { useAdminStore } from "@/store/adminUserStore";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export default function ClientScholarship() {
-  const [page] = useState(1);
-  const [pageSize] = useState(50);
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(10);
   const [sortBy] = useState("");
   const [order] = useState("");
-  const [tab, setTabs] = useState("1");
-  const [inputValue, setInputValue] = useState("");
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setInputValue(e.target.value);
-  };
-
-  const { data, loading } = useAnnouncementFetch({
+  const { data, meta, loading } = useAnnouncementFetch({
     page,
     pageSize,
     sortBy,
     order,
   });
-  const {
-    open,
-    setOpen,
-    loading: createLoading,
-    handleSubmit,
-    handleTriggerClick,
-    resetCreateState,
-    form,
-    formWatch,
-  } = useCreateAnnouncement();
-  const tabs = [
-    { id: "1", label: "Announcement", indicator: null },
-    { id: "2", label: "Post Announcement", indicator: null },
-  ];
+
+  const handleLoadMore = () => {
+    if (meta && page < meta.totalPage) {
+      setPage((prev) => prev + 1);
+    }
+  };
+  // const { onSubmit, isSuccess, deleteLoading, openDelete, setOpenDelete } =
+  //   useDeleteAnnouncement(accountId);
 
   return (
     <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
+      <div className="mx-auto lg:w-[95%]  w-[95%] py-10 space-y-12">
         <div className="flex justify-between items-end">
           <TitleReusable
             title="Announcements"
@@ -91,190 +49,78 @@ export default function ClientScholarship() {
           />
         </div>
 
-        <div className="overflow-y-hidden overflow-x-auto py-8 no-scrollbar">
-          <Tabs tabs={tabs} onTabChange={(tabId) => setTabs(tabId)} />
-        </div>
-
-        <div className="space-y-10">
-          {tab === "1" && (
-            <div>
-              <Timeline className="space-y-5">
-                {loading ? (
-                  <div className="space-y-3">
-                    <Skeleton className="h-35 w-full" />
-                    <Skeleton className="h-35 w-full" />
-                    <Skeleton className="h-35 w-full" />
-                  </div>
-                ) : data.length === 0 ? (
-                  <NoDataFound />
-                ) : (
-                  data.map((item, index) => (
-                    <TimelineItem
-                      key={index}
-                      step={index}
-                      className="!m-0  bg-card  p-4! rounded-lg border !mb-3"
-                    >
-                      <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
-                        <TimelineTitle className="font-medium text-base">
-                          {item.title ?? "Win scholarship is now open."}
-                        </TimelineTitle>
-                        <TimelineDate className="lg:text-sm text-xs text-muted-foreground flex items-center gap-1.5">
-                          <CalendarIcon size={13} />{" "}
-                          {item.startDate && format(item.startDate, "PPP p")}
-                        </TimelineDate>
-                      </div>
-
-                      <TimelineContent className="text-foreground mt-1 whitespace-pre-line">
-                        <AnnouncementDescription
-                          description={item.description}
-                        />
-                      </TimelineContent>
-
-                      <div className="mt-5 flex gap-3 items-center">
-                        <p className="text-xs">Tags:</p>{" "}
-                        <Badge variant="secondary">Win Gatchalian</Badge>
-                      </div>
-                    </TimelineItem>
-                  ))
-                )}
-              </Timeline>
+        <div className=" divide-y">
+          {loading ? (
+            <div className="space-y-3">
+              <Skeleton className="h-35 w-full" />
+              <Skeleton className="h-35 w-full" />
+              <Skeleton className="h-35 w-full" />
             </div>
-          )}
+          ) : data.length === 0 ? (
+            <NoDataFound />
+          ) : data.length === 0 ? (
+            <NoDataFound />
+          ) : (
+            data.map((item, index) => (
+              <Link
+                className="relative flex  py-6"
+                key={index}
+                href={`/administrator/head/home/announcement/${item.announcementId}`}
+              >
+                <div className="flex flex-col items-center justify-center gap-1 w-32 ">
+                  <p
+                    className="text-lg font-medium
+                    "
+                  >
+                    {item.dateCreated && format(item.dateCreated, "MMM dd")}
+                  </p>
 
-          {tab === "2" && (
-            <div className="">
-              <div className="flex items-center gap-3">
-                <h3 className="text-lg font-medium flex gap-2 items-center">
-                  <PenLine className="h-5 w-5" /> Post Announcement
-                </h3>
-                <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-              </div>
-              <Form {...form}>
-                <div className="space-y-5 mt-10">
-                  <div className="grid grid-cols-3 gap-x-3 gap-y-6">
-                    <FormField
-                      control={form.control}
-                      name="title"
-                      render={({ field }) => (
-                        <FormItem className="col-span-3">
-                          <FormLabel className="flex justify-between items-center">
-                            Title <FormMessage />
-                          </FormLabel>
-                          <FormControl>
-                            <Input {...field} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="tags"
-                      render={({ field }) => (
-                        <FormItem className="col-span-3">
-                          <FormLabel className="flex justify-between items-center">
-                            Tags
-                            <span className="flex items-center gap-2">
-                              {(!field.value || field.value.length === 0) && (
-                                <p className="text-sm text-muted-foreground">
-                                  No tags added yet. Type in the input below and
-                                  press Enter.
-                                </p>
-                              )}
-                              {(field.value || []).map(
-                                (tag: string, index: number) => (
-                                  <Badge
-                                    key={index}
-                                    variant="secondary"
-                                    className="cursor-pointer"
-                                    onClick={() => {
-                                      const newTags = (
-                                        field.value || []
-                                      ).filter(
-                                        (_: string, i: number) => i !== index
-                                      );
-                                      field.onChange(newTags);
-                                    }}
-                                  >
-                                    {tag} ×
-                                  </Badge>
-                                )
-                              )}
-                              <FormMessage />
-                            </span>
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              id="tag-input"
-                              type="text"
-                              value={inputValue}
-                              onChange={handleInputChange}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter" && inputValue.trim()) {
-                                  e.preventDefault();
-                                  const newTags = [
-                                    ...(field.value || []),
-                                    inputValue.trim(),
-                                  ];
-                                  field.onChange(newTags);
-                                  setInputValue("");
-                                }
-                              }}
-                              className="w-full"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="description"
-                      render={({ field }) => (
-                        <FormItem className="col-span-3">
-                          <FormLabel className="flex justify-between items-center">
-                            Body <FormMessage />
-                          </FormLabel>
-                          <FormControl>
-                            <Textarea {...field} />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    {item.dateCreated && format(item.dateCreated, "p")}
+                  </p>
                 </div>
 
-                <div className="flex justify-end items-center gap-3 mt-10">
-                  <div className="h-px flex-1 bg-gradient-to-r from-transparent to-border" />
-                  <Button variant="secondary" onClick={resetCreateState}>
-                    <RefreshCcw />
-                    Clear Form
-                  </Button>
-                  <DeleteDialog
-                    open={open}
-                    red={false}
-                    onOpenChange={setOpen}
-                    onConfirm={form.handleSubmit(handleSubmit)}
-                    loading={createLoading}
-                    title="Post Announcement?"
-                    confirmTextLoading="Posting..."
-                    description="Are you sure you want to post this announcement?"
-                    cancelText="Cancel"
-                    trigger={
-                      <Button
-                        size="lg"
-                        variant="ghost"
-                        className="justify-start bg-green-700/20 text-green-700 hover:text-green-600"
-                      >
-                        Post Announcement <ArrowRight />
-                      </Button>
-                    }
-                  />
+                <Separator orientation="vertical" className="h-32" />
+                <div className="flex-1 border-l-2 border-primary-second px-6 py-4 hover:bg-card rounded-r-lg">
+                  <div className="flex items-center gap-3">
+                    <h1 className="font-medium text-base text-green-800">
+                      {item.title}
+                    </h1>
+
+                    <div className="space-x-3">
+                      {item.tags.data.map((meow, index) => (
+                        <Badge key={index} variant="secondary">
+                          {meow}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="whitespace-pre-line  line-clamp-3 mt-5 text-sm">
+                    {item.description}
+                  </div>
                 </div>
-              </Form>
-            </div>
+              </Link>
+            ))
           )}
         </div>
+
+        {meta?.totalPage > 1 && (
+          <div className="flex justify-center items-center mt-6">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleLoadMore}
+              disabled={loading || page >= meta.totalPage}
+            >
+              {loading
+                ? "Loading..."
+                : page < meta.totalPage
+                ? "Load More"
+                : "No More Data"}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

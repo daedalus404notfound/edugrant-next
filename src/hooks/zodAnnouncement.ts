@@ -9,7 +9,7 @@ export function useCreateAnnouncementZod() {
       announcementId: undefined,
       title: "",
       description: "",
-      tags: [],
+      tags: { data: [] },
     },
   });
   const formWatch = form.watch();

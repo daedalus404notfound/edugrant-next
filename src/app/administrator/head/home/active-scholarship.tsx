@@ -7,6 +7,10 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DollarSign, Calendar, ArrowRight } from "lucide-react";
+import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
+import { DashboardData } from "@/hooks/admin/getHeadDashboard";
+import { format } from "date-fns";
+import Link from "next/link";
 
 const scholarships = [
   {
@@ -25,7 +29,13 @@ const scholarships = [
   },
 ];
 
-export function ActiveScholarships() {
+export function ActiveScholarships({
+  data,
+  loading,
+}: {
+  data: DashboardData | null;
+  loading: boolean;
+}) {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -42,16 +52,18 @@ export function ActiveScholarships() {
 
       {/* Cards grid */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-2">
-        {scholarships.map((scholarship) => (
+        {data?.scholarship.slice(0, 2).map((scholarship) => (
           <Card
-            key={scholarship.id}
+            key={scholarship.scholarshipId}
             className="hover:shadow-md transition-shadow"
           >
             <CardHeader>
               <CardTitle className="text-base font-semibold">
-                {scholarship.name}
+                {scholarship.title}
               </CardTitle>
-              <CardDescription>{scholarship.status}</CardDescription>
+              <CardDescription>
+                {scholarship.Scholarship_Provider?.name}
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -60,12 +72,16 @@ export function ActiveScholarships() {
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Calendar className="h-4 w-4" />
-                {scholarship.deadline}
+                {scholarship.deadline && format(scholarship.deadline, "PPP")}
               </div>
-              <Button size="sm" className="mt-2 w-full">
-                View
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <Link
+                href={`/administrator/head/home/scholarship/${scholarship.scholarshipId}`}
+              >
+                <Button size="sm" className="mt-2 w-full">
+                  View
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         ))}

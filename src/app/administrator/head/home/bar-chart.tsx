@@ -23,30 +23,29 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { DashboardData } from "@/hooks/admin/getHeadDashboard";
 
 export const description =
   "Scholarship applications vs approvals by scholarship name";
 
-const chartData = [
-  { scholarship: "EduGrant", applications: 320, approved: 210 },
-  { scholarship: "Bright Future", applications: 250, approved: 180 },
-  { scholarship: "STEM Scholars", applications: 280, approved: 200 },
-  { scholarship: "Arts Excellence", applications: 150, approved: 95 },
-  { scholarship: "Global Leaders", applications: 300, approved: 220 },
-];
+export function ChartBarMultiple({ data }: { data: DashboardData | null }) {
+  const chartData =
+    data?.scholarship?.map((s) => ({
+      scholarship: s.title,
+      applications: (s.approved || 0) + (s.pending || 0) + (s.declined || 0),
+      approved: s.approved || 0,
+    })) || [];
 
-const chartConfig = {
-  applications: {
-    label: "Applications",
-    color: "var(--chart-1)",
-  },
-  approved: {
-    label: "Approved",
-    color: "var(--chart-2)",
-  },
-} satisfies ChartConfig;
-
-export function ChartBarMultiple() {
+  const chartConfig = {
+    applications: {
+      label: "Applications",
+      color: "var(--chart-1)",
+    },
+    approved: {
+      label: "Approved",
+      color: "var(--chart-2)",
+    },
+  } satisfies ChartConfig;
   return (
     <Card className="flex flex-col">
       <CardHeader className="text-center">

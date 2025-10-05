@@ -125,11 +125,6 @@ const sidebarData = [
     url: "/administrator/head/home/profile",
     icon: UserRoundCheck,
   },
-  {
-    title: "Announcements",
-    url: "/administrator/head/home/announcement",
-    icon: Megaphone,
-  },
 ];
 const sidebarScholar = [
   {
@@ -179,24 +174,14 @@ const sidebarApplication = [
 ];
 const sidebarAnnouncements = [
   {
-    title: "Reviewed Application",
-    url: "/administrator/head/home",
-    icon: UserRoundSearch,
+    title: "Post announcement",
+    url: "/administrator/head/home/post-announcement",
+    icon: PenLine,
   },
   {
-    title: "For Interview Application",
-    url: "/administrator/head/home/profile",
-    icon: CheckCheck,
-  },
-  {
-    title: "Approved Application",
-    url: "/administrator/head/home/profile",
-    icon: CheckCheck,
-  },
-  {
-    title: "Archive Scholarship",
-    url: "/administrator/head/home/profile",
-    icon: Archive,
+    title: "Announcements",
+    url: "/administrator/head/home/announcement",
+    icon: Megaphone,
   },
 ];
 
@@ -292,6 +277,31 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarApplication.map((meow) => {
+                const isActive = pathname === meow.url;
+                return (
+                  <SidebarMenuItem key={meow.title}>
+                    <SidebarMenuButton isActive={isActive} asChild>
+                      <Link
+                        prefetch
+                        scroll={false}
+                        className="flex items-center gap-2 cursor-pointer"
+                        href={meow.url}
+                      >
+                        <meow.icon className="w-4 h-4" />
+                        {meow.title}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Announcement</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {sidebarAnnouncements.map((meow) => {
                 const isActive = pathname === meow.url;
                 return (
                   <SidebarMenuItem key={meow.title}>

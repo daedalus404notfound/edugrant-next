@@ -17,21 +17,15 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { DashboardData } from "@/hooks/admin/getHeadDashboard";
 
 export const description = "A mixed bar chart";
 
 // Data linked to chartConfig keys
-const chartData = [
-  { institute: "IEAT", visitors: 320, fill: "var(--chart-1)" },
-  { institute: "ICS", visitors: 280, fill: "var(--chart-2)" },
-  { institute: "COE", visitors: 240, fill: "var(--chart-3)" },
-  { institute: "CAS", visitors: 190, fill: "var(--chart-4)" },
-  { institute: "CBA", visitors: 150, fill: "var(--chart-5)" },
-];
 
 const chartConfig = {
   visitors: {
-    label: "Visitors",
+    label: "Applicants",
   },
   IEAT: {
     label: "IEAT",
@@ -55,7 +49,14 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ChartBarMixed() {
+export function ChartBarMixed({ data }: { data: DashboardData | null }) {
+  const chartData =
+    data?.applicationCountPerInsti?.map((item) => ({
+      institute: item.institute,
+      visitors: item.applicationCount,
+      fill: "var(--chart-1)",
+    })) || [];
+
   return (
     <Card className="flex flex-col">
       <CardHeader className="text-center">

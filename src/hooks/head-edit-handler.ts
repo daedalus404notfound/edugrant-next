@@ -22,6 +22,7 @@ const updateUserApi = async (data: AdminProfileFormData) => {
       gender: data.ISPSU_Head.gender,
       lastName: data.ISPSU_Head.lName,
       middleName: data.ISPSU_Head.mName,
+      accountId: data.accountId,
     },
     { withCredentials: true }
   );

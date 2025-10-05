@@ -30,7 +30,7 @@ export default function TitleReusable({
             ease: "linear",
           }}
         >
-          {Icon && <Icon strokeWidth={2} />}
+          {Icon && <Icon strokeWidth={2} className="h-5 w-6" />}
           {title}
         </motion.span>
         <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />

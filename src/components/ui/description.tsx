@@ -13,11 +13,7 @@ export default function AnnouncementDescription({
 
   return (
     <div>
-      <p
-        className={`text-sm text-muted-foreground leading-relaxed mt-2 ${
-          expanded ? "" : "line-clamp-2"
-        }`}
-      >
+      <p className={` leading-relaxed mt-2 ${expanded ? "" : "line-clamp-2"}`}>
         {description}
       </p>
 
