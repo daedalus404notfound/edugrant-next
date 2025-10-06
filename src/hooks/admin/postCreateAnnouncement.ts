@@ -17,7 +17,7 @@ const addAnnouncementApi = async (data: AnnouncementFormData) => {
   const payload = {
     announcementTitle: data.title,
     announcementDescription: data.description,
-    announcementTags: JSON.stringify({ data: data.tags || [] }),
+    announcementTags: JSON.stringify(data.tags),
     adminId: admin?.accountId,
   };
   const res = await axios.post(

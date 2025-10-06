@@ -5,9 +5,11 @@ import { useUserStore } from "../../store/useUserStore";
 import { usePathname, useRouter } from "next/navigation";
 import { ApiErrorResponse } from "../admin/postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
+import { useNotificationStore } from "@/store/userNotificationStore";
 
 export default function useAuthenticatedUser() {
   const { setUser, setLoading, setError, logout } = useUserStore();
+  const { setUnreadNotifications } = useNotificationStore();
   const router = useRouter();
   const pathname = usePathname();
   useEffect(() => {
@@ -23,6 +25,7 @@ export default function useAuthenticatedUser() {
 
         if (res.status === 200) {
           setUser(res.data.userData);
+          setUnreadNotifications(res.data.unreadNotifications);
           // if (pathname === "/") {
           //   router.replace("/user/home");
           // }

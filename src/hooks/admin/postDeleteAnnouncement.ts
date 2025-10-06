@@ -5,14 +5,11 @@ import { useState } from "react";
 import { ApiErrorResponse } from "./postReviewedHandler";
 
 type DeleteTypes = {
-  announcementId: number;
+  id: string;
   accountId?: number;
 };
 
-export default function useDeleteAnnouncement({
-  announcementId,
-  accountId,
-}: DeleteTypes) {
+export default function useDeleteAnnouncement({ id, accountId }: DeleteTypes) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [deleteLoading, setLoading] = useState(false);
@@ -23,7 +20,7 @@ export default function useDeleteAnnouncement({
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/deleteAnnouncement`,
         {
-          announcementId: announcementId,
+          announcementId: id,
           accountId: accountId,
         },
         { withCredentials: true }

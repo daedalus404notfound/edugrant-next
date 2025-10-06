@@ -99,10 +99,11 @@ export default function useAnnouncementFetch({
   const [data, setData] = useState<AnnouncementFormData[]>([]);
   const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
   const [loading, setLoading] = useState(false);
-
+  const [isFetchingMore, setIsFetchingMore] = useState(false); // for pagination loading
   useEffect(() => {
     async function fetchAnnouncement() {
-      setLoading(true);
+      if (page === 1) setLoading(true);
+      else setIsFetchingMore(true);
 
       try {
         const res = await axios.get(
@@ -134,6 +135,7 @@ export default function useAnnouncementFetch({
         }
       } finally {
         setLoading(false);
+        setIsFetchingMore(false);
       }
     }
 
@@ -143,5 +145,5 @@ export default function useAnnouncementFetch({
     // Reset data when sorting or ordering changes
     setData([]);
   }, [sortBy, order]);
-  return { data, meta, loading };
+  return { data, meta, loading, isFetchingMore };
 }

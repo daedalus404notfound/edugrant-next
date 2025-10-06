@@ -92,6 +92,7 @@ import osas from "@/assets/osasa.png";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useUserLogout } from "@/hooks/user/postUserLogout";
 import usefetchNotifications from "@/hooks/user/getNotfications";
+import { useNotificationStore } from "@/store/userNotificationStore";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -115,7 +116,7 @@ export default function DynamicHeaderUser({
   const [openOut, setOpenOut] = useState(false);
   const [openDark, setOpenDark] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const { unreadNotifications } = useNotificationStore();
   const {
     data,
     loading: loadiingNotif,
@@ -173,14 +174,19 @@ export default function DynamicHeaderUser({
             </Avatar>
             {user?.Student.fName} {user?.Student.lName}
           </Button>
-          <Button
-            variant="outline"
-            onClick={() => {
-              setOpenNotif(true);
-            }}
-          >
-            <Bell />
-          </Button>
+          <div className="relative">
+            <span className="absolute -top-1 -right-1 bg-red-700 px-1 py-0.5 rounded-full text-xs pointer-events-none aspect-square">
+              {unreadNotifications}
+            </span>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setOpenNotif(true);
+              }}
+            >
+              <Bell />
+            </Button>
+          </div>
 
           <ModeToggle />
           <Button
