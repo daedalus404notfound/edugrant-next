@@ -23,7 +23,7 @@ const updateAnnouncementApi = async (data: AnnouncementFormData) => {
     adminId: admin?.accountId,
   };
 
-  const res = await axios.put(
+  const res = await axios.post(
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/editAnnouncement`,
     payload,
     {

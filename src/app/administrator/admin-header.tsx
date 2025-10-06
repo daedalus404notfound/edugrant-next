@@ -161,6 +161,7 @@ export default function DynamicHeaderAdmin({
           confirmTextLoading="Please wait..."
           loading={loadingLogout}
           title="Logout?"
+          red={false}
           description="Are you sure you want to log out of your account?"
           cancelText="Stay Logged In"
           trigger={

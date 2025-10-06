@@ -1,4 +1,7 @@
 "use client";
+
+import type React from "react";
+
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,16 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-
 import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  CalendarIcon,
-  Loader,
-  PenLine,
-  Plus,
-  RefreshCcw,
-} from "lucide-react";
 import {
   Form,
   FormControl,
@@ -29,25 +23,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-
-import { Tabs } from "@/components/ui/vercel-tabs";
-
-import {
-  Timeline,
-  TimelineContent,
-  TimelineDate,
-  TimelineItem,
-  TimelineTitle,
-} from "@/components/ui/timeline";
-
 import { Input } from "@/components/ui/input";
-import TitleReusable from "@/components/ui/title";
-import useAnnouncementFetch from "@/hooks/admin/getAnnouncement";
-import AnnouncementDescription from "@/components/ui/description";
-import { useCreateAnnouncement } from "@/hooks/admin/postCreateAnnouncement";
-import { DeleteDialog } from "@/components/ui/delete-dialog";
-import NoDataFound from "@/components/ui/nodata";
-
 import {
   Dialog,
   DialogContent,
@@ -58,10 +34,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
-import useGetAnnouncementById from "@/hooks/admin/getAnnouncementById";
-import useDeleteAnnouncement from "@/hooks/admin/postDeleteAnnouncement";
-import { useAdminStore } from "@/store/adminUserStore";
-import { format } from "date-fns";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
@@ -73,9 +45,16 @@ import {
   Megaphone,
   X,
   Save,
+  Plus,
+  Sparkles,
+  FileText,
+  Tag,
 } from "lucide-react";
-import ModalHeader from "@/components/ui/modal-header";
+import { format } from "date-fns";
+import useGetAnnouncementById from "@/hooks/admin/getAnnouncementById";
+import useDeleteAnnouncement from "@/hooks/admin/postDeleteAnnouncement";
 import { useUpdateAnnouncement } from "@/hooks/admin/postEditAnnouncement";
+import { useAdminStore } from "@/store/adminUserStore";
 
 export default function GetAnnouncementById() {
   const params = useParams();
@@ -88,9 +67,11 @@ export default function GetAnnouncementById() {
   const { data, loading } = useGetAnnouncementById(id, accountId);
   const [edit, setEdit] = useState(false);
   const [inputValue, setInputValue] = useState("");
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setInputValue(e.target.value);
   };
+
   const { onSubmit, isSuccess, deleteLoading, openDelete, setOpenDelete } =
     useDeleteAnnouncement({ accountId, id });
 
@@ -120,268 +101,212 @@ export default function GetAnnouncementById() {
         HandleCloseDrawer(value);
       }}
     >
-      <DialogContent className=" max-w-4xl max-h-[90vh] flex flex-col overflow-auto ">
+      <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col overflow-hidden p-0 gap-0 border-border/40">
         <DialogHeader className="sr-only">
-          <DialogTitle className="text-2xl font-semibold leading-tight pr-8">
-            1
-          </DialogTitle>
-          <DialogDescription className="flex items-center gap-2 text-sm">
-            11
-          </DialogDescription>
+          <DialogTitle>Announcement Details</DialogTitle>
+          <DialogDescription>View and manage announcement</DialogDescription>
         </DialogHeader>
-
-        <div className="">
-          <div className="flex items-center justify-between pb-2">
-            <div className="flex items-center gap-3">
-              <Button
-                className="relative justify-start"
-                variant="ghost"
-                size="sm"
-              >
-                <Megaphone />
-                Announcement Details
-              </Button>
-            </div>
-            <div className="flex items-center gap-2">
-              <Button
-                className="ghost"
-                variant="ghost"
-                size="sm"
-                onClick={() => HandleCloseDrawer(false)}
-              >
-                <X />
-              </Button>
-            </div>
+        <div className="flex items-center justify-between pb-2 sticky top bg-background">
+          <div className="flex items-center gap-3">
+            <Button
+              className="relative justify-start"
+              variant="ghost"
+              size="sm"
+            >
+              <Megaphone />
+              Announcement {edit ? "Edit" : "Details"}
+            </Button>
           </div>
+          <div className="flex items-center gap-2">
+            <Button
+              className="ghost"
+              variant="ghost"
+              size="sm"
+              onClick={() => HandleCloseDrawer(false)}
+            >
+              <X />
+            </Button>
+          </div>
+        </div>
 
+        <div className="flex-1 overflow-y-auto">
           {loading ? (
-            // Loading State
-            <div className="bg-background rounded-t-md ">
-              <div className="p-4 pb-4 space-y-4">
-                <div className="space-y-3">
-                  <Skeleton className="h-8 w-3/4" />
-                  <div className="flex items-center gap-2">
-                    <Skeleton className="h-4 w-4 rounded" />
-                    <Skeleton className="h-4 w-48" />
-                  </div>
+            <div className="p-6 space-y-6">
+              <div className="space-y-4">
+                <Skeleton className="h-10 w-3/4 rounded-lg" />
+                <div className="flex items-center gap-4">
+                  <Skeleton className="h-5 w-5 rounded" />
+                  <Skeleton className="h-5 w-48 rounded-lg" />
+                  <Skeleton className="h-5 w-5 rounded" />
+                  <Skeleton className="h-5 w-32 rounded-lg" />
                 </div>
               </div>
 
-              <Separator />
+              <Separator className="bg-border/40" />
 
-              <div className="p-4 space-y-4 flex-1">
-                {/* Tags Skeleton */}
+              <div className="space-y-4">
                 <div className="flex gap-2">
-                  <Skeleton className="h-6 w-20 rounded-full" />
-                  <Skeleton className="h-6 w-24 rounded-full" />
-                  <Skeleton className="h-6 w-16 rounded-full" />
+                  <Skeleton className="h-7 w-24 rounded-full" />
+                  <Skeleton className="h-7 w-28 rounded-full" />
+                  <Skeleton className="h-7 w-20 rounded-full" />
                 </div>
 
-                {/* Content Skeleton */}
                 <div className="space-y-3 pt-2">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-5/6" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-4/5" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-full rounded" />
+                  <Skeleton className="h-4 w-full rounded" />
+                  <Skeleton className="h-4 w-5/6 rounded" />
+                  <Skeleton className="h-4 w-full rounded" />
+                  <Skeleton className="h-4 w-4/5 rounded" />
                 </div>
-              </div>
-
-              <Separator />
-
-              <div className="p-6 pt-4 flex justify-end gap-2 bg-card">
-                <Skeleton className="h-10 w-20" />
-                <Skeleton className="h-10 w-24" />
               </div>
             </div>
           ) : edit ? (
-            <div className="bg-background rounded-t-md ">
-              <div className="p-4 pb-4 space-y-4">
-                <Form {...form}>
-                  <div className="space-y-5 mt-10">
-                    <div className="grid grid-cols-3 gap-x-3 gap-y-6">
-                      <FormField
-                        control={form.control}
-                        name="title"
-                        render={({ field }) => (
-                          <FormItem className="col-span-3">
-                            <FormLabel className="flex justify-between items-center">
-                              Title <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <Input {...field} />
-                            </FormControl>
-                          </FormItem>
+            <div className="p-6">
+              <Form {...form}>
+                <div className="space-y-6">
+                  <FormField
+                    control={form.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                          <FileText className="w-4 h-4 text-muted-foreground" />
+                          Title
+                          <FormMessage className="ml-auto" />
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            className="h-11 text-base border-border/40 focus-visible:ring-primary/20"
+                            placeholder="Enter announcement title"
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="tags.data"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                          <Tag className="w-4 h-4 text-muted-foreground" />
+                          Tags
+                          <FormMessage className="ml-auto" />
+                        </FormLabel>
+
+                        {field.value && field.value.length > 0 && (
+                          <div className="flex flex-wrap gap-2 p-3 rounded-lg bg-muted/30 border border-border/40">
+                            {field.value.map((tag: string, index: number) => (
+                              <Badge
+                                key={index}
+                                variant="secondary"
+                                className="px-3 py-1.5 text-xs font-medium bg-background hover:bg-muted border border-border/40 cursor-pointer transition-all hover:scale-105"
+                                onClick={() => {
+                                  const newTags = (field.value || []).filter(
+                                    (_: string, i: number) => i !== index
+                                  );
+                                  field.onChange(newTags);
+                                }}
+                              >
+                                {tag}
+                                <X className="w-3 h-3 ml-1.5" />
+                              </Badge>
+                            ))}
+                          </div>
                         )}
-                      />
 
-                      <FormField
-                        control={form.control}
-                        name="tags.data"
-                        render={({ field }) => (
-                          <FormItem className="col-span-3">
-                            <FormLabel className="flex justify-between items-center">
-                              Tags
-                              <span className="flex items-center gap-2">
-                                {(!field.value || field.value.length === 0) && (
-                                  <p className="text-sm text-muted-foreground">
-                                    No tags added yet. Type below and press
-                                    Enter or click “Add”.
-                                  </p>
-                                )}
-                                {(field.value || []).map(
-                                  (tag: string, index: number) => (
-                                    <Badge
-                                      key={index}
-                                      variant="secondary"
-                                      className="cursor-pointer"
-                                      onClick={() => {
-                                        const newTags = (
-                                          field.value || []
-                                        ).filter(
-                                          (_: string, i: number) => i !== index
-                                        );
-                                        field.onChange(newTags);
-                                      }}
-                                    >
-                                      {tag} ×
-                                    </Badge>
-                                  )
-                                )}
-                                <FormMessage />
-                              </span>
-                            </FormLabel>
+                        <FormControl>
+                          <div className="flex gap-2">
+                            <Input
+                              id="tag-input"
+                              type="text"
+                              value={inputValue}
+                              onChange={handleInputChange}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter" && inputValue.trim()) {
+                                  e.preventDefault();
+                                  const newTags = [
+                                    ...(field.value || []),
+                                    inputValue.trim(),
+                                  ];
+                                  field.onChange(newTags);
+                                  setInputValue("");
+                                }
+                              }}
+                              className="flex-1 h-11 border-border/40 focus-visible:ring-primary/20"
+                              placeholder="Type a tag and press Enter"
+                            />
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              className="h-11 px-4 border border-border/40"
+                              onClick={() => {
+                                if (inputValue.trim()) {
+                                  const newTags = [
+                                    ...(field.value || []),
+                                    inputValue.trim(),
+                                  ];
+                                  field.onChange(newTags);
+                                  setInputValue("");
+                                }
+                              }}
+                            >
+                              <Plus className="w-4 h-4 mr-2" />
+                              Add
+                            </Button>
+                          </div>
+                        </FormControl>
 
-                            <FormControl>
-                              <div className="flex gap-2">
-                                <Input
-                                  id="tag-input"
-                                  type="text"
-                                  value={inputValue}
-                                  onChange={handleInputChange}
-                                  onKeyDown={(e) => {
-                                    if (
-                                      e.key === "Enter" &&
-                                      inputValue.trim()
-                                    ) {
-                                      e.preventDefault();
-                                      const newTags = [
-                                        ...(field.value || []),
-                                        inputValue.trim(),
-                                      ];
-                                      field.onChange(newTags);
-                                      setInputValue("");
-                                    }
-                                  }}
-                                  className="flex-1"
-                                  placeholder="Enter a tag"
-                                />
-                                <Button
-                                  type="button"
-                                  variant="secondary"
-                                  onClick={() => {
-                                    if (inputValue.trim()) {
-                                      const newTags = [
-                                        ...(field.value || []),
-                                        inputValue.trim(),
-                                      ];
-                                      field.onChange(newTags);
-                                      setInputValue("");
-                                    }
-                                  }}
-                                >
-                                  <Plus /> Add
-                                </Button>
-                              </div>
-                            </FormControl>
-                          </FormItem>
+                        {(!field.value || field.value.length === 0) && (
+                          <p className="text-xs text-muted-foreground mt-2">
+                            No tags added yet. Type above and press Enter or
+                            click Add.
+                          </p>
                         )}
-                      />
+                      </FormItem>
+                    )}
+                  />
 
-                      <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                          <FormItem className="col-span-3">
-                            <FormLabel className="flex justify-between items-center">
-                              Body <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <Textarea {...field} className="min-h-50" />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
-                </Form>
-                <div className="p-4 pt-4 flex justify-end gap-2 items-center bg-card sticky bottom-0">
-                  <Button
-                    variant="outline"
-                    disabled={updateLoading}
-                    onClick={() => setEdit(false)}
-                  >
-                    <Pencil />
-                    Back
-                  </Button>
-
-                  <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
-                    <AlertDialogTrigger asChild>
-                      <Button disabled={updateLoading}>
-                        <Save />
-                        Save
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This will update the announcement
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel disabled={updateLoading}>
-                          Cancel
-                        </AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={form.handleSubmit(handleSubmit)}
-                          disabled={updateLoading}
-                          className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                        >
-                          {updateLoading ? (
-                            <>
-                              <Loader2 className=" mr-2 animate-spin" />
-                              Saving...
-                            </>
-                          ) : (
-                            "Update Announcement"
-                          )}
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex items-center gap-2 text-sm font-medium">
+                          <Sparkles className="w-4 h-4 text-muted-foreground" />
+                          Description
+                          <FormMessage className="ml-auto" />
+                        </FormLabel>
+                        <FormControl>
+                          <Textarea
+                            {...field}
+                            className="min-h-[200px] text-base border-border/40 focus-visible:ring-primary/20 resize-none"
+                            placeholder="Write your announcement description..."
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
                 </div>
-              </div>
+              </Form>
             </div>
           ) : (
-            <div className="bg-background rounded-t-md ">
-              <div className="p-4 pb-4 space-y-4">
-                <div className="space-y-3">
-                  <div className="text-xl font-semibold leading-tight pr-8">
-                    {data?.title}
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="p-6 space-y-6">
+              <div className="space-y-4">
+                <h1 className="text-xl font-bold tracking-tight leading-tight text-balance">
+                  {data?.title}
+                </h1>
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
                     <span>
-                      Posted on{" "}
                       {data?.dateCreated && format(data.dateCreated, "PPP")}
                     </span>
-                    <Clock className="w-4 h-4 ml-2" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4" />
                     <span>
                       {data?.dateCreated && format(data.dateCreated, "p")}
                     </span>
@@ -389,50 +314,114 @@ export default function GetAnnouncementById() {
                 </div>
               </div>
 
-              <Separator />
+              <Separator className="bg-border/40" />
 
-              <div className="p-4 space-y-4 ">
-                {/* Tags */}
-                {data?.tags?.data && data.tags.data.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {data.tags.data.map((tag, i) => (
-                      <Badge
-                        key={i}
-                        variant="secondary"
-                        className="text-xs font-medium px-3 py-1 bg-primary/10 text-primary"
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-
-                {/* Description */}
-                <div className="whitespace-pre-line text-base leading-relaxed text-foreground/90 pt-2">
-                  {data?.description}
+              {data?.tags?.data && data.tags.data.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {data.tags.data.map((tag, i) => (
+                    <Badge
+                      key={i}
+                      variant="secondary"
+                      className=" bg-primary/10 text-primary"
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
                 </div>
+              )}
+
+              <div className="prose prose-sm max-w-none">
+                <p className="whitespace-pre-line text-base leading-relaxed text-foreground/90">
+                  {data?.description}
+                </p>
               </div>
+            </div>
+          )}
+        </div>
+        <div className="sticky bottom-0 z-10 bg-background/95 backdrop-blur-xl border-t border-border/40">
+          <div className="flex justify-end gap-3 px-6 py-4">
+            {edit ? (
+              <>
+                <Button
+                  variant="outline"
+                  disabled={updateLoading}
+                  onClick={() => setEdit(false)}
+                  className="h-10 px-4 border-border/40"
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  Cancel
+                </Button>
 
-              <Separator />
-
-              <div className="p-4 pt-4 flex justify-end gap-2 items-center bg-card sticky bottom-0">
+                <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      disabled={updateLoading}
+                      className="h-10 px-4 bg-primary hover:bg-primary/90"
+                    >
+                      <Save className="w-4 h-4 mr-2" />
+                      Save Changes
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="border-border/40">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Confirm Update</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Are you sure you want to update this announcement? This
+                        will save all your changes.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel
+                        disabled={updateLoading}
+                        className="border-border/40"
+                      >
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={form.handleSubmit(handleSubmit)}
+                        disabled={updateLoading}
+                        className="bg-primary hover:bg-primary/90"
+                      >
+                        {updateLoading ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Saving...
+                          </>
+                        ) : (
+                          <>
+                            <Save className="w-4 h-4 mr-2" />
+                            Update Announcement
+                          </>
+                        )}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </>
+            ) : (
+              <>
                 <Button
                   variant="outline"
                   disabled={deleteLoading}
                   onClick={() => setEdit(true)}
+                  className="h-10 px-4 border-border/40"
                 >
-                  <Pencil />
+                  <Pencil className="w-4 h-4 mr-2" />
                   Edit
                 </Button>
 
                 <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
                   <AlertDialogTrigger asChild>
-                    <Button variant="destructive" disabled={deleteLoading}>
-                      <Trash2 />
+                    <Button
+                      variant="destructive"
+                      disabled={deleteLoading}
+                      className="h-10 px-4"
+                    >
+                      <Trash2 className="w-4 h-4 mr-2" />
                       Delete
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent>
+                  <AlertDialogContent className="border-border/40">
                     <AlertDialogHeader>
                       <AlertDialogTitle>
                         Are you absolutely sure?
@@ -443,7 +432,10 @@ export default function GetAnnouncementById() {
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel disabled={deleteLoading}>
+                      <AlertDialogCancel
+                        disabled={deleteLoading}
+                        className="border-border/40"
+                      >
                         Cancel
                       </AlertDialogCancel>
                       <AlertDialogAction
@@ -456,19 +448,22 @@ export default function GetAnnouncementById() {
                       >
                         {deleteLoading ? (
                           <>
-                            <Loader2 className=" mr-2 animate-spin" />
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                             Deleting...
                           </>
                         ) : (
-                          "Delete Announcement"
+                          <>
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete Announcement
+                          </>
                         )}
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
-              </div>
-            </div>
-          )}
+              </>
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>

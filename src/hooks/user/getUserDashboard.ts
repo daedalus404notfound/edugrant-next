@@ -10,7 +10,7 @@ import { AnnouncementFormData } from "../zod/announcement";
 
 export type DashboardData = {
   applications: ApplicationFormData[];
-  scholarship: scholarshipFormData[];
+  scholarships: scholarshipFormData[];
   announcements: AnnouncementFormData[];
 };
 

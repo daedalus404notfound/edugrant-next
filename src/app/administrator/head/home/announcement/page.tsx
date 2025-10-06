@@ -1,20 +1,12 @@
 "use client";
 
-import { Calendar, Loader, Megaphone, X } from "lucide-react";
-
+import { Loader, Megaphone, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-
 import { format } from "date-fns";
-
-import TitleReusable from "@/components/ui/title";
 import useAnnouncementFetch from "@/hooks/admin/getAnnouncement";
-
 import NoDataFound from "@/components/ui/nodata";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Separator } from "@/components/ui/separator";
-
-import { useAdminStore } from "@/store/adminUserStore";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -37,44 +29,51 @@ export default function ClientScholarship() {
   };
 
   return (
-    <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className="mx-auto   w-3/4 py-10 space-y-12">
-        <div className="flex justify-between items-end">
-          <TitleReusable
-            title="Announcements"
-            description="Stay updated with the latest announcements and important updates"
-            Icon={Megaphone}
-          />
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto max-w-5xl px-6 py-10 lg:py-15">
+        <div className="mb-16 space-y-2">
+          <div className="flex items-center gap-3 text-muted-foreground">
+            <Megaphone className="h-4 w-4" />
+            <span className="text-xs font-medium tracking-wide uppercase">
+              Latest Updates
+            </span>
+          </div>
+          <h1 className="text-5xl font-bold tracking-tight text-foreground lg:text-3xl text-balance">
+            Announcements
+          </h1>
+          <p className="text-base text-muted-foreground max-w-2xl text-pretty">
+            Stay updated with the latest announcements and important updates
+            from our team.
+          </p>
         </div>
 
-        <div className=" ">
+        <div className="space-y-4">
           {loading ? (
-            <div className="space-y-4">
-              {[...Array(3)].map((_, i) => (
-                <div
-                  key={i}
-                  className="flex items-stretch p-6 rounded-md bg-card"
-                >
-                  {/* Content Skeleton */}
-                  <div className="flex-1 ">
-                    <div className="flex items-center gap-3">
-                      <Skeleton className="h-7 w-64" />
-                      <div className="flex gap-2">
-                        <Skeleton className="h-5 w-16 rounded-full" />
-                        <Skeleton className="h-5 w-20 rounded-full" />
-                      </div>
+            [...Array(3)].map((_, i) => (
+              <div
+                key={i}
+                className="group relative overflow-hidden rounded-xl border border-border bg-card p-8 transition-all"
+              >
+                <div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
+                  <div className="flex flex-col gap-1 lg:w-32 shrink-0">
+                    <Skeleton className="h-6 w-20" />
+                    <Skeleton className="h-4 w-16" />
+                  </div>
+                  <div className="flex-1 space-y-4">
+                    <Skeleton className="h-8 w-3/4" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-2/3" />
                     </div>
-                    <div className="space-y-2 mt-5">
-                      <Skeleton className="h-4 w-full" />
-                      <Skeleton className="h-4 w-full" />
-                      <Skeleton className="h-4 w-3/4" />
+                    <div className="flex gap-2">
+                      <Skeleton className="h-6 w-20 rounded-full" />
+                      <Skeleton className="h-6 w-24 rounded-full" />
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          ) : data.length === 0 ? (
-            <NoDataFound />
+              </div>
+            ))
           ) : data.length === 0 ? (
             <NoDataFound />
           ) : (
@@ -83,67 +82,70 @@ export default function ClientScholarship() {
                 key={index}
                 href={`/administrator/head/home/announcement/${item.announcementId}`}
                 scroll={false}
-                className="relative flex items-stretch mb-3 rounded-lg bg-card border-transparent transition-all duration-200"
+                className="group relative block overflow-hidden rounded-lg  bg-card transition-all hover:border-foreground/20 hover:shadow-lg"
               >
-                {/* Date Section */}
-                {/* <div className="flex flex-col items-center justify-center gap-1 w-32  rounded-l-md  ">
-                  <p className="text-lg font-medium">
-                    
-                  </p>
-                  <p className="text-sm text-muted-foreground">
-                    
-                  </p>
-                </div> */}
+                <div className="flex flex-col p-6 lg:flex-row ">
+                  <div className="flex flex-col gap-1 text-muted-foreground lg:w-32 shrink-0">
+                    <time className="text-xl font-semibold text-foreground">
+                      {item.dateCreated && format(item.dateCreated, "MMM dd")}
+                    </time>
+                    <time className="text-sm">
+                      {item.dateCreated && format(item.dateCreated, "p")}
+                    </time>
+                  </div>
 
-                {/* Main Content */}
-                <div className="flex-1 p-6 rounded-r-md">
-                  <div className="flex items-center gap-3">
-                    <h1 className="font-medium text-lg">{item.title}</h1>
-                    <div className="space-x-3">
-                      {item.tags.data.map((meow, i) => (
-                        <Badge
-                          key={i}
-                          className="bg-green-800/20 text-green-600"
-                        >
-                          {meow}
-                        </Badge>
-                      ))}
+                  <div className="flex-1 space-y-4">
+                    <div className="flex items-start justify-between gap-4">
+                      <h2 className="text-xl font-semibold tracking-tight text-foreground group-hover:text-foreground/80 transition-colors text-balance">
+                        {item.title}
+                      </h2>
+                      <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-1" />
                     </div>
-                  </div>
-                  <div className="text-sm flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5" />
-                    {item.dateCreated &&
-                      format(item.dateCreated, "MMM dd")} at{" "}
-                    {item.dateCreated && format(item.dateCreated, "p")}
-                  </div>
 
-                  <div className=" line-clamp-2 mt-5 text-sm text-muted-foreground">
-                    {item.description}
+                    <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground text-pretty">
+                      {item.description}
+                    </p>
+
+                    {item.tags.data.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {item.tags.data.map((tag, i) => (
+                          <Badge key={i} variant="secondary">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
+
+                <div className="absolute inset-0 -z-10 bg-gradient-to-r from-transparent via-foreground/[0.02] to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
               </Link>
             ))
           )}
+
           {isFetchingMore && (
             <div className="space-y-4">
-              {[...Array(3)].map((_, i) => (
+              {[...Array(2)].map((_, i) => (
                 <div
                   key={i}
-                  className="flex items-stretch p-6 rounded-md bg-card"
+                  className="group relative overflow-hidden rounded-xl border border-border bg-card p-8 transition-all"
                 >
-                  {/* Content Skeleton */}
-                  <div className="flex-1 ">
-                    <div className="flex items-center gap-3">
-                      <Skeleton className="h-7 w-64" />
-                      <div className="flex gap-2">
-                        <Skeleton className="h-5 w-16 rounded-full" />
-                        <Skeleton className="h-5 w-20 rounded-full" />
-                      </div>
+                  <div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
+                    <div className="flex flex-col gap-1 lg:w-32 shrink-0">
+                      <Skeleton className="h-6 w-20" />
+                      <Skeleton className="h-4 w-16" />
                     </div>
-                    <div className="space-y-2 mt-5">
-                      <Skeleton className="h-4 w-full" />
-                      <Skeleton className="h-4 w-full" />
-                      <Skeleton className="h-4 w-3/4" />
+                    <div className="flex-1 space-y-4">
+                      <Skeleton className="h-8 w-3/4" />
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-2/3" />
+                      </div>
+                      <div className="flex gap-2">
+                        <Skeleton className="h-6 w-20 rounded-full" />
+                        <Skeleton className="h-6 w-24 rounded-full" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -153,27 +155,25 @@ export default function ClientScholarship() {
         </div>
 
         {meta?.totalPage > 1 && (
-          <div className="flex justify-center items-center mt-6">
+          <div className="mt-12 flex justify-center">
             <Button
-              variant="link"
-              size="sm"
+              variant="outline"
+              size="lg"
               onClick={handleLoadMore}
               disabled={loading || page >= meta.totalPage || isFetchingMore}
             >
-              {loading ? (
+              {loading || isFetchingMore ? (
                 <>
+                  <Loader className="mr-2 h-4 w-4 animate-spin" />
                   Loading...
-                  <Loader className="animate-spin" />
-                </>
-              ) : isFetchingMore ? (
-                <>
-                  Loading...
-                  <Loader className="animate-spin" />
                 </>
               ) : page < meta.totalPage ? (
-                "Load More"
+                <>
+                  Load More
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </>
               ) : (
-                <>You're all caught up!.</>
+                "You're all caught up!"
               )}
             </Button>
           </div>
