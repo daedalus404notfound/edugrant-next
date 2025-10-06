@@ -2,6 +2,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import z from "zod";
 
+export const StaffSchema = z.object({
+  staffId: z.number(),
+  dateCreated: z.string(),
+  fName: z.string(),
+  lName: z.string(),
+  mName: z.string().nullable(),
+});
 export const profileSchema = z.object({
   accountId: z.number(),
   email: z.string(),
@@ -15,16 +22,11 @@ export const profileSchema = z.object({
     lName: z.string(),
     mName: z.string(),
   }),
-  ISPSU_Staff: z.object({
-    headId: z.string(),
-    dateCreated: z.string(),
-    fName: z.string(),
-    lName: z.string(),
-    mName: z.string().nullable(),
-  }),
+  ISPSU_Staff: StaffSchema,
 });
 
 export type ProfileFormData = z.infer<typeof profileSchema>;
+export type StaffFormData = z.infer<typeof StaffSchema>;
 
 export function useProfileForm(initialData?: ProfileFormData) {
   const defaultValues: ProfileFormData = {
@@ -41,7 +43,7 @@ export function useProfileForm(initialData?: ProfileFormData) {
       mName: "",
     },
     ISPSU_Staff: {
-      headId: "",
+      staffId: 0,
       dateCreated: "",
       fName: "",
       lName: "",

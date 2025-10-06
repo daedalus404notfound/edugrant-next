@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
-import { ProfileFormData } from "@/hooks/head/zodHeadProfile";
+import { ProfileFormData, StaffFormData } from "@/hooks/head/zodHeadProfile";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import useDeleteAdmin from "@/hooks/admin/postDeleteAdmin";
@@ -38,12 +38,12 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const rowData = row.original as ProfileFormData;
+  const rowData = row.original as StaffFormData;
   const [openAlert, setOpenAlert] = useState(false);
   const { onSubmit, isSuccess, loading } = useDeleteAdmin({
-    adminId: [rowData.accountId],
+    adminId: [rowData.staffId],
   });
-
+  console.log("row", rowData);
   useEffect(() => {
     if (isSuccess) {
       setOpenAlert(false);
@@ -59,7 +59,7 @@ export function DataTableRowActions<TData>({
       </PopoverTrigger>
       <PopoverContent align="end" className="grid grid-cols-1 w-[180px] !p-0">
         <Link
-          href={`/administrator/home/admins/manage/${rowData.accountId}`}
+          href={`/administrator/head/home/manage-staff/${rowData.staffId}`}
           scroll={false}
           prefetch
           className="w-full"
