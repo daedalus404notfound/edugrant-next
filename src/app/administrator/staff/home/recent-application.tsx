@@ -7,7 +7,9 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
+import { ArrowRight, MoreHorizontal } from "lucide-react";
+import { ApplicationFormData } from "@/hooks/zod/application";
+import { format } from "date-fns";
 
 const applications = [
   {
@@ -33,7 +35,13 @@ const applications = [
   },
 ];
 
-export function RecentApplications() {
+export function RecentApplications({
+  data,
+  loading,
+}: {
+  data?: ApplicationFormData[];
+  loading: boolean;
+}) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -42,8 +50,8 @@ export function RecentApplications() {
             Recent Applications
           </h2>
         </div>
-        <Button variant="outline" size="sm">
-          View All
+        <Button variant="ghost" size="sm">
+          View All <ArrowRight />
         </Button>
       </div>
       <CardContent className="bg-card rounded-md py-4">
@@ -66,24 +74,25 @@ export function RecentApplications() {
               </tr>
             </thead>
             <tbody>
-              {applications.map((app) => (
+              {data?.slice(0, 3).map((app) => (
                 <tr
-                  key={app.id}
+                  key={app.applicationId}
                   className="border-b border-border last:border-0 hover:bg-secondary/30 transition-colors"
                 >
                   <td className="py-4 px-4">
                     <span className="text-sm font-medium text-foreground">
-                      {app.student}
+                      {app.Student?.lName}, {app.Student?.fName}{" "}
+                      {app.Student?.mName}
                     </span>
                   </td>
                   <td className="py-4 px-4">
                     <span className="text-sm text-foreground">
-                      {app.course}
+                      {app.Student?.course}
                     </span>
                   </td>
                   <td className="py-4 px-4">
                     <span className="text-sm text-muted-foreground">
-                      {app.submitted}
+                      {app.dateCreated && format(app.dateCreated, "PPP p")}
                     </span>
                   </td>
                   <td className="py-4 px-4">

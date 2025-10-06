@@ -30,6 +30,8 @@ import { RecentApplications } from "./recent-application";
 import TitleReusable from "@/components/ui/title";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import usefetchStaffDashboard from "@/hooks/getStaffDashboard";
+import { useAdminStore } from "@/store/adminUserStore";
 const announcements = [
   {
     id: 1,
@@ -105,6 +107,9 @@ const scholarships = [
 ];
 
 export default function StaffDashboard() {
+  const { admin } = useAdminStore();
+  const accountId = admin?.accountId;
+  const { data, loading } = usefetchStaffDashboard(accountId);
   const summaryCards: SummaryCardProps[] = [
     {
       label: "Total Applicants",
@@ -149,8 +154,9 @@ export default function StaffDashboard() {
 
         <div className="grid grid-cols-2 gap-12">
           <div className="space-y-12">
-            <ActiveScholarships />
-            <RecentApplications />
+            <ActiveScholarships data={data?.scholarships} loading={loading} />
+
+            <RecentApplications data={data?.applications} loading={loading} />
           </div>
 
           <div className="space-y-12">
@@ -168,27 +174,28 @@ export default function StaffDashboard() {
                 </div>
 
                 <Timeline className="space-y-5">
-                  {announcements.map((item) => (
+                  {data?.announcements.slice(0, 3).map((item, index) => (
                     <TimelineItem
-                      key={item.id}
-                      step={item.id}
-                      className="!m-0  bg-card   p-4! rounded-md border !mb-4"
+                      key={item.announcementId}
+                      step={index}
+                      className="!m-0  bg-card   p-6! rounded-md !mb-4"
                     >
                       <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
                         <TimelineTitle className="font-medium text-base">
                           {item.title ?? "Win scholarship is now open."}
                         </TimelineTitle>
                         <TimelineDate className="lg:text-sm text-xs t flex items-center gap-1.5">
-                          <CalendarIcon size={13} /> {item.date}
+                          <CalendarIcon size={13} />{" "}
+                          {item.dateCreated &&
+                            format(item.dateCreated, "PPP p")}
                         </TimelineDate>
                       </div>
 
-                      <TimelineContent className=" mt-1 ">
+                      <TimelineContent className=" mt-1 line-clamp-2">
                         {item.description}
                       </TimelineContent>
 
                       <div className="mt-5 flex gap-3 items-center">
-                        <p className="text-xs">Tags:</p>{" "}
                         <Badge variant="secondary">Win Gatchalian</Badge>
                       </div>
                     </TimelineItem>

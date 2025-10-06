@@ -2,40 +2,35 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-import { ApiErrorResponse } from "./postReviewedHandler";
+import { ApiErrorResponse } from "./admin/postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
-import { scholarshipFormData } from "./zodUpdateScholarship";
-import { ApplicationFormData } from "../zod/application";
+import { scholarshipFormData } from "./admin/zodUpdateScholarship";
+import { ApplicationFormData } from "./zod/application";
+import { AnnouncementFormData } from "./zod/announcement";
 
 export type DashboardData = {
   GeneralCount: number;
-  indiginousApplicationCount: number;
   PWDApplicationCount: number;
   activeScholarshipCount: number;
   applcationCount: number;
+  applicationCountPerInsti: number;
   approvedApplcationCount: number;
-  pendingApplcationCount: number;
-  applicationCountPerInsti: InstitteCountTypes[];
   applications: ApplicationFormData[];
-  scholarship: scholarshipFormData[];
+  scholarships: scholarshipFormData[];
+  announcements: AnnouncementFormData[];
 };
 
-type InstitteCountTypes = {
-  institute: string;
-  applicationCount: number;
-};
-
-export default function usefetchHeadDashboard(accountId?: number) {
+export default function usefetchStaffDashboard(accountId?: number) {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   console.log("zz", data);
   useEffect(function () {
-    async function fetchHeadDashboard() {
+    async function fetchStaffDashboard() {
       setLoading(true);
       try {
         const res = await axios.get<DashboardData>(
-          `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/headDashboard${
+          `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/getDashboard${
             accountId ? `?accountId=${accountId}` : ""
           }`,
 
@@ -57,7 +52,7 @@ export default function usefetchHeadDashboard(accountId?: number) {
       }
     }
 
-    fetchHeadDashboard();
+    fetchStaffDashboard();
   }, []);
 
   return { data, loading, error };

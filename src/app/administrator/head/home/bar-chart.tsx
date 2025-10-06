@@ -1,6 +1,6 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
+import { Download, TrendingUp } from "lucide-react";
 import {
   Bar,
   BarChart,
@@ -8,9 +8,17 @@ import {
   XAxis,
   ResponsiveContainer,
 } from "recharts";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -24,6 +32,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { DashboardData } from "@/hooks/admin/getHeadDashboard";
+import { Button } from "@/components/ui/button";
 
 export const description =
   "Scholarship applications vs approvals by scholarship name";
@@ -47,10 +56,88 @@ export function ChartBarMultiple({ data }: { data: DashboardData | null }) {
     },
   } satisfies ChartConfig;
   return (
-    <Card className="flex flex-col">
+    <Card className="flex flex-col border-0">
       <CardHeader className="text-center">
         <CardTitle>Scholarship - Applications vs Approved</CardTitle>
         <CardDescription>By Scholarship Name</CardDescription>
+        <CardAction>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button>
+                <Download />
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="w-2xl p-6">
+              <DialogHeader className="sr-only">
+                <DialogTitle>Download Data</DialogTitle>
+                <DialogDescription></DialogDescription>
+              </DialogHeader>
+              <div className="space-y-8">
+                {/* Header */}
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h1 className="text-base font-semibold tracking-tight text-foreground">
+                    Scholarship Applications Overview
+                  </h1>
+                  <Button className="flex items-center gap-2 text-sm hover:bg-muted transition-colors">
+                    <Download />
+                    Download
+                  </Button>
+                </div>
+
+                {/* Content */}
+                <div className="space-y-3">
+                  {data?.scholarship.map((item) => (
+                    <div
+                      key={item.scholarshipId}
+                      className="flex items-center justify-between rounded-xl bg-muted/40 px-5 py-4 hover:bg-muted transition-all duration-200"
+                    >
+                      {/* Left Section */}
+                      <div className="flex flex-col">
+                        <h2 className="text-base font-medium truncate">
+                          {item.title}
+                        </h2>
+                        <p className="text-sm text-muted-foreground">
+                          {item.Scholarship_Provider?.name ??
+                            "Unknown Provider"}
+                        </p>
+                      </div>
+
+                      {/* Right Section */}
+                      <div className="flex items-center gap-6">
+                        <div className="text-center">
+                          <p className="text-xs text-muted-foreground mb-1">
+                            Total
+                          </p>
+                          <p className="text-lg font-semibold">
+                            {(item.approved || 0) +
+                              (item.pending || 0) +
+                              (item.declined || 0)}
+                          </p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-xs text-muted-foreground mb-1">
+                            Approved
+                          </p>
+                          <p className="text-lg font-semibold text-green-600">
+                            {item.approved ?? 0}
+                          </p>
+                        </div>
+                        <div className="text-center">
+                          <p className="text-xs text-muted-foreground mb-1">
+                            Pending
+                          </p>
+                          <p className="text-lg font-semibold text-yellow-600">
+                            {item.pending ?? 0}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+        </CardAction>
       </CardHeader>
 
       <CardContent className="flex-1">

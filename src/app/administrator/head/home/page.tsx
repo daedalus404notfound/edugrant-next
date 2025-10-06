@@ -7,7 +7,7 @@ import { ChartBarMultiple } from "./bar-chart";
 import { SummaryCard, SummaryCardProps } from "./dashboard/summary";
 
 import { DonutPieDonut } from "./donut-chart";
-import { ActiveScholarships } from "./active-scholarship";
+import { ActiveScholarships } from "../../staff/home/active-scholarship";
 import { RecentApplications } from "./recent-application";
 import { ChartBarMixed } from "./institute";
 import usefetchHeadDashboard from "@/hooks/admin/getHeadDashboard";
@@ -68,7 +68,7 @@ export default function AdminDashboard() {
         </div>
         <div className="grid grid-cols-3  gap-6">
           <ChartBarMultiple data={data} />
-          <DonutPieDonut />
+          <DonutPieDonut data={data} />
           <ChartBarMixed data={data} />
         </div>
 
@@ -86,7 +86,7 @@ export default function AdminDashboard() {
               </div>
             </div>
           ) : (
-            <ActiveScholarships data={data} loading={loading} />
+            <ActiveScholarships data={data?.scholarship} loading={loading} />
           )}
           {loading ? (
             <div className="p-4 border rounded-lg space-y-6">

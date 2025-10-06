@@ -1,73 +1,101 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { DollarSign, Calendar, ArrowRight } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
+import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
+import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
+import { format } from "date-fns";
 
-const scholarships = [
-  {
-    id: 1,
-    name: "Merit Excellence Scholarship",
-    amount: "$5,000",
-    deadline: "Dec 15, 2024",
-    sponsor: "Kuya Win Gatchalian",
-  },
-  {
-    id: 2,
-    name: "STEM Innovation Grant",
-    amount: "$10,000",
-    deadline: "Jan 30, 2025",
-    sponsor: "Lorna Silverio",
-  },
-];
-
-export function ActiveScholarships() {
+export function ActiveScholarships({
+  data,
+  loading,
+}: {
+  data?: scholarshipFormData[];
+  loading: boolean;
+}) {
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-base font-semibold text-foreground">
-            Active Scholarships
-          </h2>
-        </div>
-        <Button variant="outline" size="sm">
-          View All
-        </Button>
-      </div>
+    <div className="space-y-2">
+      <div className="flex justify-between items-center mt-8">
+        <h1 className="text-base font-medium">Ongoing Scholarship</h1>
 
-      {/* Cards grid */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2">
-        {scholarships.map((scholarship) => (
-          <Card
-            key={scholarship.id}
-            className="hover:shadow-md transition-shadow"
-          >
-            <CardHeader>
-              <CardTitle className="text-base font-semibold">
-                {scholarship.name}
-              </CardTitle>
-              <CardDescription>{scholarship.sponsor}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <DollarSign className="h-4 w-4" />
-                {scholarship.amount}
+        <Link href={"/user/home/scholarships"}>
+          <Button size="sm" variant="ghost">
+            View All <ArrowRight />
+          </Button>
+        </Link>
+      </div>
+      <div className="grid lg:grid-cols-2 gap-4 ">
+        {loading ? (
+          [...Array(2)].map((_, index) => (
+            <motion.div
+              key={index}
+              initial={{ y: 50, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{
+                duration: 0.3,
+                delay: index * 0.1,
+                ease: "easeOut",
+              }}
+              className="bg-background/40 relative rounded-md space-y-3"
+            >
+              <Skeleton className="h-50" />
+            </motion.div>
+          ))
+        ) : data?.length === 0 ? (
+          <>No scholarship found.</>
+        ) : (
+          data?.slice(0, 2).map((meow) => (
+            <div
+              key={meow.scholarshipId}
+              className="group relative flex flex-col justify-between bg-card rounded-md p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 gap-6"
+            >
+              {/* Logo + Provider */}
+              <div className="flex items-center gap-3">
+                {meow.logo ? (
+                  <img
+                    src={meow.logo}
+                    alt={meow.title}
+                    className="w-10 h-10 rounded-full object-cover border"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
+                    No Logo
+                  </div>
+                )}
+                <div>
+                  <h3 className="font-semibold text-sm line-clamp-1">
+                    {meow.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground">
+                    {meow.Scholarship_Provider?.name || "Unknown Provider"}
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Calendar className="h-4 w-4" />
-                {scholarship.deadline}
+
+              {/* Details */}
+              <div className="flex flex-col gap-1 text-sm text-muted-foreground">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs">Deadline:</span>
+                  <span className="font-medium text-foreground">
+                    {meow.deadline ? format(meow.deadline, "PPP") : "—"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs">Required GWA:</span>
+                  <span className="font-medium text-foreground">
+                    {meow.requiredGWA || "N/A"}
+                  </span>
+                </div>
               </div>
-              <Button size="sm" className="mt-2 w-full">
-                View
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
+
+              <Link href={`/user/home/scholarships/${meow.scholarshipId}`}>
+                <Button className="w-full">
+                  View Details <ArrowRight />
+                </Button>
+              </Link>
+            </div>
+          ))
+        )}
       </div>
     </div>
   );

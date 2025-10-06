@@ -114,7 +114,7 @@ export default function GetAnnouncementByIdUser() {
               variant="ghost"
               size="sm"
             >
-              <Megaphone />
+              <Megaphone /> 
               Announcement Details
             </Button>
           </div>
