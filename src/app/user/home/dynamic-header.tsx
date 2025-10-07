@@ -93,6 +93,9 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useUserLogout } from "@/hooks/user/postUserLogout";
 import usefetchNotifications from "@/hooks/user/getNotfications";
 import { useNotificationStore } from "@/store/userNotificationStore";
+import { Skeleton } from "@/components/ui/skeleton";
+import useMarkAllAsRead from "@/hooks/admin/postMarkAllAsRead";
+import useMarkAsReadNotification from "@/hooks/admin/patchReadNotification";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -107,6 +110,7 @@ export default function DynamicHeaderUser({
   third,
 }: HeaderTypes) {
   const { user } = useUserStore();
+  const accountId = user?.accountId;
   // console.log(admin);
   const isMobile = useIsMobile();
   const { handleLogout, loading: loadingLogout } = useUserLogout();
@@ -115,21 +119,30 @@ export default function DynamicHeaderUser({
   const [openNotif, setOpenNotif] = useState(false);
   const [openOut, setOpenOut] = useState(false);
   const [openDark, setOpenDark] = useState(false);
-  const [loading, setLoading] = useState(false);
   const { unreadNotifications } = useNotificationStore();
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+  const { onSubmit, markLoading } = useMarkAllAsRead({ accountId });
+  const { onSubmitPatch, patchMarkLoading } = useMarkAsReadNotification({
+    accountId,
+  });
   const {
     data,
-    loading: loadiingNotif,
+    loading: loadingNotif,
     meta,
+    setData,
+    isFetchingMore,
   } = usefetchNotifications({
-    page: 1,
-    pageSize: 10,
-    sortBy: "",
-    order: "",
-    status: "",
-
-    accountId: user?.accountId ? user?.accountId : 5, // empty string is okay
+    page,
+    pageSize,
+    accountId: user?.accountId,
   });
+
+  const handleLoadMore = () => {
+    if (meta && page < meta.totalPage) {
+      setPage((prev) => prev + 1);
+    }
+  };
 
   return (
     <header className="flex w-full z-30 items-center justify-between  backdrop-blur-sm rounded-lg">
@@ -244,57 +257,146 @@ export default function DynamicHeaderUser({
         </DropdownMenu>
       )}
       <Drawer direction="right" open={openNotif} onOpenChange={setOpenNotif}>
-        <DrawerContent className="bg-transparent !border-0 p-4">
+        <DrawerContent className="p-4 space-y-4">
           <DrawerHeader className="sr-only">
             <DrawerTitle>Are you absolutely sure?</DrawerTitle>
             <DrawerDescription>This action cannot be undone.</DrawerDescription>
           </DrawerHeader>
-          <div className="flex flex-col bg-card flex-1 rounded-lg p-4 gap-y-10">
-            <div className="flex justify-between items-center">
-              <TitleReusable title="Notification" description="" />
-              <Button size="sm">Mark all as read</Button>
-            </div>
-            <div className="flex-1">
-              {/* <Timeline className="space-y-5">
-                {loading ? (
-                  <></>
-                ) : (
-                  data.map((item) => (
-                    // <TimelineItem
-                    //   key={item.id}
-                    //   step={item.id}
-                    //   className="!m-0  bg-card  p-4! rounded-md border !mb-2 "
-                    // >
-                    //   <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
-                    //     <TimelineTitle className="font-medium text-base">
-                    //       {item.title ?? "Win scholarship is now open."}
-                    //     </TimelineTitle>
-                    //   </div>
-                    //   <TimelineDate className="lg:text-sm text-xs text-muted-foreground flex items-center gap-1.5">
-                    //     <CalendarIcon size={13} /> {format(item.date, "PPP p")}
-                    //   </TimelineDate>
-                    //   <TimelineContent className="text-foreground mt-1 whitespace-pre-line">
-                    //     <AnnouncementDescription
-                    //       description={item.description}
-                    //     />
-                    //   </TimelineContent>
-                    // </TimelineItem>
-                    <div>1</div>
-                  ))
-                )}
-              </Timeline> */}
-              <div className=" justify-center items-center hidden">
-                <Button variant="link" size="lg" className="!p-0">
-                  Load More <ArrowRight />
+
+          <TitleReusable title="Notification" description="" />
+
+          <div className="flex flex-col  flex-1 overflow-auto ">
+            {loadingNotif ? (
+              <>loading</>
+            ) : (
+              <Timeline className="space-y-3">
+                {data.map((item, index) => (
+                  <Dialog key={item.notificationId}>
+                    <DialogTrigger
+                      asChild
+                      onClick={() => {
+                        // Run API only if unread
+                        if (!item.read) {
+                          onSubmitPatch(item.notificationId);
+                          setData((prev) =>
+                            prev.map((notif) =>
+                              notif.notificationId === item.notificationId
+                                ? { ...notif, read: true } // update the clicked one
+                                : notif
+                            )
+                          );
+                        }
+                      }}
+                    >
+                      <div
+                        className={`p-4 rounded-lg transition-all border hover:bg-accent hover:shadow-sm cursor-pointer ${
+                          item.read ? "bg-card" : "bg-accent/30 border-accent"
+                        }`}
+                      >
+                        <div className="space-y-1">
+                          <div className="flex justify-between items-center">
+                            <TimelineTitle className="font-medium text-sm sm:text-base">
+                              {item.title}
+                            </TimelineTitle>
+                            {!item.read && (
+                              <span className="size-2.5 rounded-full bg-primary" />
+                            )}
+                          </div>
+                          <TimelineContent className="text-sm text-muted-foreground line-clamp-2">
+                            {item.description}
+                          </TimelineContent>
+                        </div>
+
+                        <TimelineDate className="text-xs text-muted-foreground mt-2 flex items-center gap-1.5">
+                          <CalendarIcon size={13} />
+                          {format(item.dateCreated, "PPP p")}
+                        </TimelineDate>
+                      </div>
+                    </DialogTrigger>
+
+                    <DialogContent className="max-w-lg p-6 rounded-xl">
+                      <DialogHeader>
+                        <DialogTitle>{item.title}</DialogTitle>
+                        <DialogDescription>
+                          {format(item.dateCreated, "PPP p")}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <p className="text-sm mt-4 leading-relaxed text-foreground">
+                        {item.description}
+                      </p>
+                    </DialogContent>
+                  </Dialog>
+                ))}
+              </Timeline>
+            )}
+            {isFetchingMore && (
+              <div className="space-y-4">
+                {[...Array(2)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="group relative overflow-hidden py-8 transition-all"
+                  >
+                    <div className="flex flex-col gap-6 lg:flex-row lg:gap-8">
+                      <div className="flex flex-col gap-1 lg:w-32 shrink-0">
+                        <Skeleton className="h-6 w-20" />
+                        <Skeleton className="h-4 w-16" />
+                      </div>
+                      <div className="flex-1 space-y-4">
+                        <Skeleton className="h-8 w-3/4" />
+                        <div className="space-y-2">
+                          <Skeleton className="h-4 w-full" />
+
+                          <Skeleton className="h-4 w-2/3" />
+                        </div>
+                        <div className="flex gap-2">
+                          <Skeleton className="h-6 w-20 rounded-full" />
+                          <Skeleton className="h-6 w-24 rounded-full" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {meta?.totalPage > 1 && (
+              <div className="mt-12 flex justify-center">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={handleLoadMore}
+                  disabled={
+                    loadingNotif || page >= meta.totalPage || isFetchingMore
+                  }
+                >
+                  {loadingNotif || isFetchingMore ? (
+                    <>
+                      <Loader className="mr-2 h-4 w-4 animate-spin" />
+                      Loading...
+                    </>
+                  ) : page < meta.totalPage ? (
+                    <>
+                      Load More
+                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </>
+                  ) : (
+                    "You're all caught up!"
+                  )}
                 </Button>
               </div>
-            </div>
-            <DrawerFooter>
-              <DrawerClose asChild className="!bg-transparent">
-                <Button variant="outline">Close</Button>
-              </DrawerClose>
-            </DrawerFooter>
+            )}
           </div>
+          <DrawerFooter>
+            <Button
+              onClick={onSubmit}
+              disabled={markLoading || data.every((notif) => notif.read)}
+            >
+              Mark all as read
+            </Button>
+            <DrawerClose asChild className="!bg-transparent">
+              <Button variant="outline">Close</Button>
+            </DrawerClose>
+          </DrawerFooter>
         </DrawerContent>
       </Drawer>
       <Dialog open={openOut} onOpenChange={setOpenOut}>

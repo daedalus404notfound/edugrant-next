@@ -8,6 +8,7 @@ import {
   Home,
   Megaphone,
   UserRound,
+  UserRoundCog,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { NavUser } from "./nav-user";
@@ -34,9 +35,9 @@ const userSidebarData = [
     icon: Home,
   },
   {
-    title: "My Profile",
+    title: "Profile Settings",
     url: "/user/home/profile",
-    icon: UserRound,
+    icon: UserRoundCog,
   },
 
   {

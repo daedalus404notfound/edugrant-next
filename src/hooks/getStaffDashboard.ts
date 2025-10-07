@@ -6,25 +6,33 @@ import { ApiErrorResponse } from "./admin/postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
 import { scholarshipFormData } from "./admin/zodUpdateScholarship";
 import { ApplicationFormData } from "./zod/application";
-import { AnnouncementFormData } from "./zod/announcement";
 
 export type DashboardData = {
   GeneralCount: number;
+  indiginousApplicationCount: number;
   PWDApplicationCount: number;
   activeScholarshipCount: number;
   applcationCount: number;
-  applicationCountPerInsti: number;
   approvedApplcationCount: number;
+  pendingApplcationCount: number;
+  applicationCountPerInsti: InstitteCountTypes[];
   applications: ApplicationFormData[];
-  scholarships: scholarshipFormData[];
-  announcements: AnnouncementFormData[];
+  scholarship: scholarshipFormData[];
+  applicationApprovedToday: number;
+  scholarshipCountToday: number;
+  applicationCountToday: number;
+  applicationPendingToday: number;
+};
+
+type InstitteCountTypes = {
+  institute: string;
+  applicationCount: number;
 };
 
 export default function usefetchStaffDashboard(accountId?: number) {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  console.log("zz", data);
   useEffect(function () {
     async function fetchStaffDashboard() {
       setLoading(true);

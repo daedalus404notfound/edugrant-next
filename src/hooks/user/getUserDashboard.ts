@@ -9,9 +9,16 @@ import { ApplicationFormData } from "../zod/application";
 import { AnnouncementFormData } from "../zod/announcement";
 
 export type DashboardData = {
-  applications: ApplicationFormData[];
-  scholarships: scholarshipFormData[];
+  recentApplications: ApplicationFormData[];
+  onGoingScholarships: scholarshipFormData[];
   announcements: AnnouncementFormData[];
+  interviewApplicationCount: number;
+  approvedApplicationsCount: number;
+
+  pendingApplicationCount: number;
+
+  scholarshipActivity: string;
+  totalApplicationsCount: number;
 };
 
 export default function usefetchUserDashboard(

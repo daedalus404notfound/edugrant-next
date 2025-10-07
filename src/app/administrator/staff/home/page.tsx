@@ -1,209 +1,109 @@
 "use client";
+
+import { CheckCheck, GraduationCap, TrendingUp } from "lucide-react";
+
+import { ChartBarMultiple } from "./dashboard-ui/bar-chart";
+
 import { SummaryCard, SummaryCardProps } from "@/components/ui/summary";
-import {
-  ArrowRight,
-  CalendarIcon,
-  CheckCheck,
-  GraduationCap,
-  TrendingUp,
-} from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Timeline,
-  TimelineContent,
-  TimelineDate,
-  TimelineItem,
-  TimelineTitle,
-} from "@/components/ui/timeline";
-import { Badge } from "@/components/ui/badge";
-import { ActiveScholarships } from "./active-scholarship";
-import { Calendar } from "@/components/ui/calendar";
-import { useState } from "react";
-import { RecentApplications } from "./recent-application";
-import TitleReusable from "@/components/ui/title";
-import { format } from "date-fns";
-import { Button } from "@/components/ui/button";
-import usefetchStaffDashboard from "@/hooks/getStaffDashboard";
+
+import { DonutPieDonut } from "./dashboard-ui/donut-chart";
+import { ActiveScholarships } from "./dashboard-ui/active-scholarship";
+import { RecentApplications } from "./dashboard-ui/recent-application";
+import { ChartBarMixed } from "./dashboard-ui/institute";
 import { useAdminStore } from "@/store/adminUserStore";
-const announcements = [
-  {
-    id: 1,
-    title: "Scholarship Application Deadline Extended",
-    description:
-      "The deadline for scholarship applications has been extended to June 30, 2025.",
-    date: "Dec 12, 2024",
-    priority: "high",
-  },
-  {
-    id: 2,
-    title: "Scholarship Application Deadline Extended",
-    description:
-      "The deadline for scholarship applications has been extended to June 30, 2025.",
-    date: "Dec 12, 2024",
-    priority: "high",
-  },
-];
-const scholarshipApplications = [
-  {
-    id: "1",
-    fullName: "Juan Dela Cruz",
-    age: 18,
-    course: "BS Information Technology",
-    yearLevel: "1st Year",
+import { Skeleton } from "@/components/ui/skeleton";
+import usefetchStaffDashboard from "@/hooks/getStaffDashboard";
 
-    scholarshipType: "Government",
-    status: "Pending",
-  },
-  {
-    id: "2",
-    fullName: "Maria Santos",
-    age: 20,
-    course: "BS Civil Engineering",
-    yearLevel: "2nd Year",
-
-    scholarshipType: "Private",
-    status: "Approved",
-  },
-  {
-    id: "3",
-    fullName: "Pedro Ramirez",
-    age: 19,
-    course: "BS Computer Science",
-    yearLevel: "1st Year",
-
-    scholarshipType: "Private",
-    status: "Pending",
-  },
-];
-const scholarships = [
-  {
-    id: "1",
-    name: "Government Academic Excellence Scholarship",
-    provider: "Department of Education",
-    type: "Government",
-    status: "Active",
-  },
-  {
-    id: "2",
-    name: "Private Engineering Scholarship",
-    provider: "ABC Foundation",
-    type: "Private",
-    status: "Active",
-  },
-  {
-    id: "3",
-    name: "STEM Achievers Grant",
-    provider: "XYZ Corporation",
-    type: "Private",
-    status: "Active",
-  },
-];
-
-export default function StaffDashboard() {
+export default function AdminDashboard() {
   const { admin } = useAdminStore();
   const accountId = admin?.accountId;
   const { data, loading } = usefetchStaffDashboard(accountId);
+
   const summaryCards: SummaryCardProps[] = [
     {
       label: "Total Applicants",
-      data: 1,
+      data: data?.applcationCount || 0,
       icon: <TrendingUp />,
       color: "blue",
-      todayIncrement: 100,
+      todayIncrement: data?.applicationCountToday,
     },
     {
       label: "Approved Applicants",
-      data: 2,
+      data: data?.approvedApplcationCount || 0,
       icon: <CheckCheck />,
       color: "green",
-      todayIncrement: 50,
+      todayIncrement: data?.applicationApprovedToday,
     },
     {
       label: "Active Scholarships",
-      data: 3,
+      data: data?.activeScholarshipCount || 0,
       icon: <GraduationCap />,
       color: "yellow",
-      todayIncrement: 25,
+      todayIncrement: data?.scholarshipCountToday,
     },
     {
       label: "Pending Applications",
-      data: 4,
+      data: data?.pendingApplcationCount || 0,
       icon: <GraduationCap />,
       color: "white",
-      todayIncrement: 10,
+      todayIncrement: data?.applicationPendingToday,
     },
   ];
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [isClient, setIsClient] = useState(false);
-  const [now, setNow] = useState<string>("");
   return (
     <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className="lg:py-8 py-4 lg:px-5 px-2 space-y-12">
-        <div className="grid  grid-cols-4  gap-4">
-          {summaryCards.map((card, index) => (
-            <SummaryCard key={index} {...card} />
-          ))}
+      <div className="lg:py-8 py-4 lg:px-5 px-2 space-y-8">
+        <div className="grid grid-cols-4  gap-6">
+          {loading ? (
+            <>
+              <Skeleton className="h-30 w-full" />
+              <Skeleton className="h-30 w-full" />
+              <Skeleton className="h-30 w-full" />
+              <Skeleton className="h-30 w-full" />
+            </>
+          ) : (
+            summaryCards.map((card, index) => (
+              <SummaryCard key={index} {...card} />
+            ))
+          )}
+        </div>
+        <div className="grid grid-cols-3  gap-6">
+          <ChartBarMultiple data={data} />
+          <DonutPieDonut data={data} />
+          <ChartBarMixed data={data} />
         </div>
 
-        <div className="grid grid-cols-2 gap-12">
-          <div className="space-y-12">
-            <ActiveScholarships data={data?.scholarships} loading={loading} />
+        <div className="grid grid-cols-2 gap-6">
+          {loading ? (
+            <div className="p-4 border rounded-lg space-y-6">
+              <div>
+                <Skeleton className="h-9 w-full" />
+                <Skeleton className="h-6 w-full mt-2" />
+              </div>
 
-            <RecentApplications data={data?.applications} loading={loading} />
-          </div>
-
-          <div className="space-y-12">
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-base font-semibold text-foreground">
-                      Announcements
-                    </h2>
-                  </div>
-                  <Button variant="outline" size="sm">
-                    View All
-                  </Button>
-                </div>
-
-                <Timeline className="space-y-5">
-                  {data?.announcements.slice(0, 3).map((item, index) => (
-                    <TimelineItem
-                      key={item.announcementId}
-                      step={index}
-                      className="!m-0  bg-card   p-6! rounded-md !mb-4"
-                    >
-                      <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
-                        <TimelineTitle className="font-medium text-base">
-                          {item.title ?? "Win scholarship is now open."}
-                        </TimelineTitle>
-                        <TimelineDate className="lg:text-sm text-xs t flex items-center gap-1.5">
-                          <CalendarIcon size={13} />{" "}
-                          {item.dateCreated &&
-                            format(item.dateCreated, "PPP p")}
-                        </TimelineDate>
-                      </div>
-
-                      <TimelineContent className=" mt-1 line-clamp-2">
-                        {item.description}
-                      </TimelineContent>
-
-                      <div className="mt-5 flex gap-3 items-center">
-                        <Badge variant="secondary">Win Gatchalian</Badge>
-                      </div>
-                    </TimelineItem>
-                  ))}
-                </Timeline>
+              <div className="grid grid-cols-2 gap-3">
+                <Skeleton className="aspect-[16/7] w-full h-full" />
+                <Skeleton className="aspect-[16/7] w-full h-full" />
               </div>
             </div>
-          </div>
+          ) : (
+            <ActiveScholarships data={data?.scholarship} loading={loading} />
+          )}
+          {loading ? (
+            <div className="p-4 border rounded-lg space-y-6">
+              <div>
+                <Skeleton className="h-9 w-full" />
+                <Skeleton className="h-6 w-full mt-2" />
+              </div>
+
+              <div className="grid grid-cols-1 gap-3">
+                <Skeleton className=" w-full h-11" />
+                <Skeleton className=" w-full h-11" />
+                <Skeleton className=" w-full h-11" />
+              </div>
+            </div>
+          ) : (
+            <RecentApplications data={data} loading={loading} />
+          )}
         </div>
       </div>
     </div>

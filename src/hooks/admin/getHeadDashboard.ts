@@ -18,6 +18,10 @@ export type DashboardData = {
   applicationCountPerInsti: InstitteCountTypes[];
   applications: ApplicationFormData[];
   scholarship: scholarshipFormData[];
+  applicationApprovedToday: number;
+  scholarshipCountToday: number;
+  applicationCountToday: number;
+  applicationPendingToday: number;
 };
 
 type InstitteCountTypes = {

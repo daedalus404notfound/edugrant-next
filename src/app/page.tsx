@@ -18,6 +18,7 @@
 "use client";
 import create from "@/assets/create-2.svg";
 import browse from "@/assets/browse-2.svg";
+import edugrant from "@/assets/edugrant-logo.png";
 import BlurText from "@/components/ui/blur";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -236,6 +237,7 @@ export default function DesktopLandingPage() {
           <span className="flex items-center gap-2">
             <img className="h-10 w-10" src={bascLogo.src} alt="" />
             <img className="h-10 w-10" src={osas.src} alt="" />
+            <img className="h-10 w-10" src={edugrant.src} alt="" />
             <p className="font-semibold text-xl ">BASC</p>
           </span>
           <Separator orientation="vertical" />
@@ -317,6 +319,11 @@ export default function DesktopLandingPage() {
             </div>
 
             <div className="absolute z-10 left-15 h-full w-full flex flex-col justify-center">
+              <Link href={`https://basc.edu.ph/`} target="_blank">
+                <Badge variant="secondary">
+                  Bulacan Agricultural State College <ArrowRight />
+                </Badge>
+              </Link>
               <motion.span
                 className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  dark:text-primary/70 text-gray-200
   text-6xl  havelock tracking-[-8px] py-5 -translate-x-2 
@@ -332,6 +339,7 @@ export default function DesktopLandingPage() {
               >
                 Edugrant
               </motion.span>
+
               <BlurText
                 text="Online scholarship application portal for BASC students."
                 delay={150}

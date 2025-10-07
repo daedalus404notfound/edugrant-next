@@ -441,10 +441,10 @@ export default function AdminDashboard() {
                       <Skeleton className="h-50" />
                     </motion.div>
                   ))
-                ) : data?.scholarships.length === 0 ? (
+                ) : data?.onGoingScholarships.length === 0 ? (
                   <>No scholarship found.</>
                 ) : (
-                  data?.scholarships.slice(0, 2).map((meow) => (
+                  data?.onGoingScholarships.slice(0, 2).map((meow) => (
                     <div
                       key={meow.scholarshipId}
                       className="group relative flex flex-col justify-between bg-card rounded-md p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 gap-6"
@@ -528,10 +528,10 @@ export default function AdminDashboard() {
                       <Skeleton className="h-40" />
                     </motion.div>
                   ))
-                ) : data?.applications.length === 0 ? (
+                ) : data?.recentApplications.length === 0 ? (
                   <>No application found.</>
                 ) : (
-                  data?.scholarships.slice(0, 2).map((meow) => (
+                  data?.onGoingScholarships.slice(0, 2).map((meow) => (
                     <div
                       key={meow.scholarshipId}
                       className="group relative flex flex-col justify-between bg-card rounded-md p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 gap-6"
@@ -564,26 +564,26 @@ export default function AdminDashboard() {
                           href={`/user/home/scholarships/${meow.scholarshipId}`}
                         >
                           <Button className="w-full" size="sm">
-                            View Documents <ArrowRight />
+                            View <ArrowRight />
                           </Button>
                         </Link>
                       </div>
 
                       {/* Details */}
                       <div className="grid grid-cols-3 gap-1 text-sm text-muted-foreground">
-                        <div className="flex flex-col gap-2 items-center justify-between">
+                        <div className="flex flex-col border-l px-4">
                           <span className="text-xs">Deadline:</span>
                           <span className="font-medium text-foreground text-base">
                             {meow.deadline ? format(meow.deadline, "PPP") : "—"}
                           </span>
                         </div>
-                        <div className="flex flex-col gap-2 items-center justify-between">
+                        <div className="flex flex-col border-l px-4">
                           <span className="text-xs">Required GWA:</span>
                           <span className="font-medium text-foreground text-base">
                             {meow.requiredGWA || "N/A"}
                           </span>
                         </div>
-                        <div className="flex flex-col gap-2 items-center justify-between">
+                        <div className="flex flex-col border-l px-4">
                           <span className="text-xs">Submitted Documents:</span>
                           <span className="font-medium text-foreground text-base">
                             3 / 3

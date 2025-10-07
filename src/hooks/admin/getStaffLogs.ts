@@ -3,6 +3,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { ApiErrorResponse } from "./postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
+import { UserFormData } from "../user/zodUserProfile";
+import { ApplicationFormData } from "../zod/application";
+import { scholarshipFormData } from "./zodUpdateScholarship";
 
 type StaffLogs = {
   action: string;
@@ -12,6 +15,8 @@ type StaffLogs = {
   logsId: number;
   scholarshipId: number;
   staffId: number;
+  application: ApplicationFormData;
+  scholarship: scholarshipFormData
 };
 export default function useGetStaffLogs(id: string, accountId?: number) {
   const [data, setData] = useState<StaffLogs[]>([]);

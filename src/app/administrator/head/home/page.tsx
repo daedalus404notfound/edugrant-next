@@ -7,7 +7,7 @@ import { ChartBarMultiple } from "./dashboard-ui/bar-chart";
 import { SummaryCard, SummaryCardProps } from "@/components/ui/summary";
 
 import { DonutPieDonut } from "./dashboard-ui/donut-chart";
-import { ActiveScholarships } from "../../staff/home/active-scholarship";
+import { ActiveScholarships } from "../../staff/home/dashboard-ui/active-scholarship";
 import { RecentApplications } from "./dashboard-ui/recent-application";
 import { ChartBarMixed } from "./dashboard-ui/institute";
 import usefetchHeadDashboard from "@/hooks/admin/getHeadDashboard";
@@ -25,28 +25,28 @@ export default function AdminDashboard() {
       data: data?.applcationCount || 0,
       icon: <TrendingUp />,
       color: "blue",
-      todayIncrement: 100,
+      todayIncrement: data?.applicationCountToday,
     },
     {
       label: "Approved Applicants",
       data: data?.approvedApplcationCount || 0,
       icon: <CheckCheck />,
       color: "green",
-      todayIncrement: 50,
+      todayIncrement: data?.applicationApprovedToday,
     },
     {
       label: "Active Scholarships",
       data: data?.activeScholarshipCount || 0,
       icon: <GraduationCap />,
       color: "yellow",
-      todayIncrement: 25,
+      todayIncrement: data?.scholarshipCountToday,
     },
     {
       label: "Pending Applications",
       data: data?.pendingApplcationCount || 0,
       icon: <GraduationCap />,
       color: "white",
-      todayIncrement: 10,
+      todayIncrement: data?.applicationPendingToday,
     },
   ];
   return (

@@ -2,29 +2,27 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-import { scholarshipFormData } from "../admin/zodUpdateScholarship";
 import { MetaTypes } from "../zodMeta";
 import StyledToast from "@/components/ui/toast-styled";
 import { ApiErrorResponse } from "../admin/postReviewedHandler";
-
+type NotificationTypes = {
+  notificationId: number;
+  ownerId: number;
+  title: string;
+  description: string;
+  read: boolean;
+  dateCreated: string;
+};
 export default function usefetchNotifications({
   page,
   pageSize,
-  sortBy,
-  order,
-  status,
-  filters,
   accountId,
 }: {
-  page?: number;
+  page: number;
   pageSize?: number;
-  sortBy?: string;
-  order?: string;
-  status?: string;
-  filters?: string;
   accountId?: number;
 }) {
-  const [data, setData] = useState<scholarshipFormData[]>([]);
+  const [data, setData] = useState<NotificationTypes[]>([]);
   const [meta, setMeta] = useState<MetaTypes>({
     page: 1,
     pageSize: 10,
@@ -35,32 +33,39 @@ export default function usefetchNotifications({
     filters: "",
     search: "",
   });
-
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchNotifications() {
-      setLoading(true);
+      if (page === 1) setLoading(true);
+      else setIsFetchingMore(true);
       try {
         const params = new URLSearchParams();
 
         if (status) params.append("status", status);
         if (page) params.append("page", page.toString());
         if (pageSize) params.append("dataPerPage", pageSize.toString());
-        if (sortBy) params.append("sortBy", sortBy);
-        if (order) params.append("order", order);
-        if (filters) params.append("filters", filters);
+
         if (accountId) params.append("accountId", accountId.toString());
 
         const endpoint = `${
           process.env.NEXT_PUBLIC_USER_URL
         }/getNotifications?${params.toString()}`;
-        console.log("Fetching:", endpoint);
 
-        const res = await axios.get(endpoint, { withCredentials: true });
+        const res = await axios.get<{
+          notification: NotificationTypes[];
+          meta: MetaTypes;
+        }>(endpoint, {
+          withCredentials: true,
+        });
 
         if (res.status === 200) {
-          setData(res.data.data);
+          setData((prevData) =>
+            page > 1
+              ? [...prevData, ...res.data.notification]
+              : res.data.notification
+          );
           setMeta(res.data.meta);
         }
       } catch (error) {
@@ -73,11 +78,12 @@ export default function usefetchNotifications({
         }
       } finally {
         setLoading(false);
+        setIsFetchingMore(false);
       }
     }
 
     fetchNotifications();
-  }, [page, pageSize, sortBy, order, filters, status]);
+  }, [page, pageSize]);
 
-  return { data, loading, meta };
+  return { data, loading, meta, isFetchingMore, setData };
 }

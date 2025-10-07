@@ -116,7 +116,7 @@ export default function useAnnouncementFetch({
         );
 
         if (res.status === 200) {
-          // ✅ Append data if page > 1, else replace
+        
           setData((prevData) =>
             page > 1
               ? [...prevData, ...res.data.announcements]
