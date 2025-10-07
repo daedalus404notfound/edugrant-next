@@ -2,14 +2,14 @@
 
 import { CheckCheck, GraduationCap, TrendingUp } from "lucide-react";
 
-import { ChartBarMultiple } from "./bar-chart";
+import { ChartBarMultiple } from "./dashboard-ui/bar-chart";
 
-import { SummaryCard, SummaryCardProps } from "./dashboard/summary";
+import { SummaryCard, SummaryCardProps } from "@/components/ui/summary";
 
-import { DonutPieDonut } from "./donut-chart";
+import { DonutPieDonut } from "./dashboard-ui/donut-chart";
 import { ActiveScholarships } from "../../staff/home/active-scholarship";
-import { RecentApplications } from "./recent-application";
-import { ChartBarMixed } from "./institute";
+import { RecentApplications } from "./dashboard-ui/recent-application";
+import { ChartBarMixed } from "./dashboard-ui/institute";
 import usefetchHeadDashboard from "@/hooks/admin/getHeadDashboard";
 import { useAdminStore } from "@/store/adminUserStore";
 import { Skeleton } from "@/components/ui/skeleton";

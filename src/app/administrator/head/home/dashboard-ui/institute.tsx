@@ -68,14 +68,14 @@ export function ChartBarMixed({ data }: { data: DashboardData | null }) {
     })) || [];
 
   return (
-    <Card className="flex flex-col border-0">
+    <Card className="flex flex-col border-0  shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
       <CardHeader className="text-center">
-        <CardTitle>Applicants Institute</CardTitle>
-        <CardDescription>June 19, 2024</CardDescription>
+        <CardTitle>Application by Institute</CardTitle>
+        <CardDescription>Number of Application per Institute</CardDescription>
         <CardAction>
           <Dialog>
             <DialogTrigger asChild>
-              <Button>
+              <Button variant="secondary">
                 <Download />
               </Button>
             </DialogTrigger>

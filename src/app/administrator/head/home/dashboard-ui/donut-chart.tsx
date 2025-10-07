@@ -69,14 +69,14 @@ export function DonutPieDonut({ data }: { data: DashboardData | null }) {
     },
   ];
   return (
-    <Card className="flex flex-col border-0">
+    <Card className="flex flex-col border-0  shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
       <CardHeader className="items-center pb-0 text-center">
         <CardTitle>Scholarship Applicants</CardTitle>
         <CardDescription>By Group (PWD, Indigenous, General)</CardDescription>
         <CardAction>
           <Dialog>
             <DialogTrigger asChild>
-              <Button>
+              <Button variant="secondary">
                 <Download />
               </Button>
             </DialogTrigger>

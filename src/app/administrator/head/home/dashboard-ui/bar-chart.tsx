@@ -56,14 +56,14 @@ export function ChartBarMultiple({ data }: { data: DashboardData | null }) {
     },
   } satisfies ChartConfig;
   return (
-    <Card className="flex flex-col border-0">
+    <Card className="flex flex-col border-0  shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
       <CardHeader className="text-center">
         <CardTitle>Scholarship - Applications vs Approved</CardTitle>
         <CardDescription>By Scholarship Name</CardDescription>
         <CardAction>
           <Dialog>
             <DialogTrigger asChild>
-              <Button>
+              <Button variant="secondary">
                 <Download />
               </Button>
             </DialogTrigger>
