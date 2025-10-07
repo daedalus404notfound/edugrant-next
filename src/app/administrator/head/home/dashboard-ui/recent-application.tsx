@@ -59,7 +59,9 @@ export function RecentApplications({
                   </div>
                   <div>
                     <h3 className="font-semibold text-sm line-clamp-1">
-                      {meow.Student?.fName}
+                      {meow.Student?.lName}, {meow.Student?.fName}{" "}
+                      {meow.Student?.mName &&
+                        `${meow.Student?.mName.slice(0, 1)}.`}
                     </h3>
                     <p className="text-sm text-muted-foreground">
                       {meow.Scholarship?.title || "Unknown Scholarship"}
