@@ -1,0 +1,154 @@
+"use client";
+
+import { ColumnDef } from "@tanstack/react-table";
+import { Checkbox } from "@/components/ui/checkbox";
+import { ApplicationFormData } from "@/hooks/zod/application";
+import { DataTableColumnHeader } from "@/app/table-components/data-table-column-header";
+import { DataTableRowActions } from "./data-table-row-actions";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Clock } from "lucide-react";
+import { getPhaseLabel } from "@/lib/phaseLevel";
+import { useState } from "react";
+import { format } from "date-fns";
+
+export const columns: ColumnDef<ApplicationFormData>[] = [
+  {
+    accessorFn: (row) => row.Student.fName,
+    id: "fName",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Student" className="pl-4" />
+    ),
+    cell: ({ row }) => {
+      const student = row.original.Student;
+      return (
+        <div className="flex gap-2 items-center pl-4">
+          <Avatar>
+            <AvatarImage src={`/avatars/${student.studentId}.jpg`} />
+            <AvatarFallback className="uppercase">
+              {student.fName.charAt(0)}
+              {student.lName.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+          <div>
+            <div className="font-medium capitalize">
+              {student.fName} {student.mName} {student.lName}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {student.Account.email}
+            </p>
+          </div>
+        </div>
+      );
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
+
+  {
+    accessorFn: (row) => row.Student.Account.schoolId,
+    id: "Student_Account_studentId",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Student ID" />
+    ),
+    cell: ({ row }) => (
+      <span className="">{row.getValue("Student_Account_studentId")}</span>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+
+  {
+    accessorFn: (row) => row.Student.institute,
+    id: "institute",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Institute" />
+    ),
+    cell: ({ row }) => (
+      <span className="capitalize">{row.getValue("institute")}</span>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorFn: (row) => row.Student.course,
+    id: "course",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Course, Year & Section" />
+    ),
+    cell: ({ row }) => {
+      const course = row.original.Student.course;
+      const year = row.original.Student.year;
+      const section = row.original.Student.section;
+      return (
+        <div className="flex gap-2 items-center">
+          <div className="font-medium capitalize">
+            {course} - {year.slice(0, 1)}
+            {section}
+          </div>
+        </div>
+      );
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorFn: (row) => row.Student.year,
+    id: "year",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Year Level" />
+    ),
+    cell: ({ row }) => (
+      <span className="capitalize">{row.getValue("year")}</span>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorFn: (row) => row.Student.section,
+    id: "section",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Section" />
+    ),
+    cell: ({ row }) => (
+      <span className="capitalize">{row.getValue("section")}</span>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+
+  {
+    accessorFn: (row) => row.Scholarship.phase,
+    id: "phase",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Phase" />
+    ),
+    cell: ({ row }) => (
+      <span className="capitalize">{row.getValue("phase")}</span>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+
+  {
+    accessorFn: (row) => row.Student.dateCreated,
+    id: "accountCreated",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Account Created" />
+    ),
+    cell: ({ row }) => (
+      <span className="">
+        {row.original.Student.dateCreated
+          ? format(row.getValue("accountCreated"), "PPP p")
+          : "N/A"}
+      </span>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+
+  {
+    id: "actions",
+    cell: ({ row }) => <DataTableRowActions row={row} />,
+  },
+];

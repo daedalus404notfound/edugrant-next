@@ -101,6 +101,8 @@ export default function RegisterStudent() {
   const router = useRouter();
   const [open, setOpen] = useState(true);
   const [openCalendar, setOpenCalendar] = useState(false);
+  const [isIndigenousChecked, setIsIndigenousChecked] = useState(false);
+  const [isPWDChecked, setIsPWDChecked] = useState(false);
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
@@ -483,7 +485,17 @@ export default function RegisterStudent() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex items-center justify-between line-clamp-1">
-                            Indigenous Group (IG) <FormMessage />
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="checkbox"
+                                checked={isIndigenousChecked}
+                                onChange={(e) =>
+                                  setIsIndigenousChecked(e.target.checked)
+                                }
+                              />
+                              Indigenous Group (IG)
+                            </div>
+                            <FormMessage />
                           </FormLabel>
                           <FormControl>
                             <div className="flex items-center">
@@ -491,9 +503,11 @@ export default function RegisterStudent() {
                                 className="rounded-r-none"
                                 placeholder="Please specify your Indigenous group (if applicable)"
                                 {...field}
-                                disabled={sendAuthCode.isLoading}
+                                disabled={
+                                  !isIndigenousChecked || sendAuthCode.isLoading
+                                }
                               />
-                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                              <span className="flex items-center border border-input border-l-0 rounded-r-md text-sm">
                                 <Button variant="ghost">
                                   <Feather />
                                 </Button>
@@ -504,6 +518,8 @@ export default function RegisterStudent() {
                       )}
                     />
                   </motion.div>
+
+                  {/* PWD Field */}
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -515,7 +531,17 @@ export default function RegisterStudent() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex items-center justify-between line-clamp-1">
-                            Person with Disability (PWD) <FormMessage />
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="checkbox"
+                                checked={isPWDChecked}
+                                onChange={(e) =>
+                                  setIsPWDChecked(e.target.checked)
+                                }
+                              />
+                              Person with Disability (PWD)
+                            </div>
+                            <FormMessage />
                           </FormLabel>
                           <FormControl>
                             <div className="flex items-center">
@@ -523,9 +549,11 @@ export default function RegisterStudent() {
                                 placeholder="Please specify your disability (if applicable)"
                                 {...field}
                                 className="rounded-r-none"
-                                disabled={sendAuthCode.isLoading}
+                                disabled={
+                                  !isPWDChecked || sendAuthCode.isLoading
+                                }
                               />
-                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                              <span className="flex items-center border border-input border-l-0 rounded-r-md text-sm">
                                 <Button variant="ghost">
                                   <Accessibility />
                                 </Button>

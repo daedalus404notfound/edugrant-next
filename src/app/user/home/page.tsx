@@ -309,12 +309,6 @@ export default function AdminDashboard() {
                   ))}
             </div>
 
-            {loading ? (
-              <Skeleton className="h-70" />
-            ) : (
-              <ScholarshipApplicationActivity />
-            )}
-
             <div className="space-y-2">
               <div className="flex justify-between items-center">
                 <h1 className="text-base font-medium">Announcements</h1>

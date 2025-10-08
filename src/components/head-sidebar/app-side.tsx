@@ -185,6 +185,14 @@ const sidebarAnnouncements = [
   },
 ];
 
+const manageStudent = [
+  {
+    title: "All Student",
+    url: "/administrator/head/home/all-application",
+    icon: UsersRound,
+  },
+];
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   return (
@@ -271,7 +279,31 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-
+        <SidebarGroup>
+          <SidebarGroupLabel>Manage Student</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {manageStudent.map((meow) => {
+                const isActive = pathname === meow.url;
+                return (
+                  <SidebarMenuItem key={meow.title}>
+                    <SidebarMenuButton isActive={isActive} asChild>
+                      <Link
+                        prefetch
+                        scroll={false}
+                        className="flex items-center gap-2 cursor-pointer"
+                        href={meow.url}
+                      >
+                        <meow.icon className="w-4 h-4" />
+                        {meow.title}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
         <SidebarGroup>
           <SidebarGroupLabel>Manage Application</SidebarGroupLabel>
           <SidebarGroupContent>

@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 
-import { ApplicationFormData } from "../zod/application";
+import { UserFormData } from "../user/zodUserProfile";
 import { MetaTypes } from "../zodMeta";
 import { ApiErrorResponse } from "./postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
@@ -16,47 +16,46 @@ const defaultMeta: MetaTypes = {
   filters: "",
   search: "",
 };
-export default function useFetchApplications({
+export default function useFetchStudents({
   page,
   pageSize,
   sortBy,
   order,
-  status,
   filters,
+  accountId,
 }: {
   page?: number;
   pageSize?: number;
   sortBy?: string;
   order?: string;
-  status?: string;
   filters?: string;
+  accountId?: string;
 }) {
-  const [data, setData] = useState<ApplicationFormData[]>([]);
+  const [data, setData] = useState<UserFormData[]>([]);
   const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
   const [loading, setLoading] = useState(true);
-  console.log("2323", data);
   useEffect(
     function () {
-      async function fetchApplications() {
+      async function fetchStudents() {
         setLoading(true);
         try {
           const params = new URLSearchParams();
 
-          if (status) params.append("status", status);
           if (page) params.append("page", String(page));
           if (pageSize) params.append("dataPerPage", String(pageSize));
           if (sortBy) params.append("sortBy", sortBy);
           if (order) params.append("order", order);
+          if (accountId) params.append("accountId", accountId);
           if (filters) params.append("filters", filters);
 
           const endpoint = `${
             process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
-          }/getApplication?${params.toString()}`;
+          }/getStudents?${params.toString()}`;
 
           const res = await axios.get(endpoint, { withCredentials: true });
           console.log(endpoint);
           if (res.status === 200) {
-            setData(res.data.data);
+            setData(res.data.students);
             setMeta(res.data.meta);
           }
         } catch (error) {
@@ -72,7 +71,7 @@ export default function useFetchApplications({
         }
       }
 
-      fetchApplications();
+      fetchStudents();
     },
     [page, pageSize, sortBy, order, filters]
   );

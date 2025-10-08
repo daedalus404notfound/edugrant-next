@@ -694,12 +694,16 @@ export default function InterceptReviewApplicants() {
                   (loading ? (
                     <>loading.</>
                   ) : (
-                    data && <StudentStaff {...data} />
+                    data && <StudentStaff data={data} loading={loading} />
                   ))}
 
                 {/* Family Background Section */}
                 {activeSection === "family" &&
-                  (loading ? <>loa</> : data && <FamilyStaff {...data} />)}
+                  (loading ? (
+                    <>loa</>
+                  ) : (
+                    data && <FamilyStaff data={data} loading={loading} />
+                  ))}
               </div>
             </div>
           </div>

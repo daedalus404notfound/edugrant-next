@@ -60,9 +60,8 @@ export default function Profile() {
   const { user } = useUserStore();
   const [openCalendar, setOpenCalendar] = useState(false);
 
-  const { form, siblings, handleSubmit, loading, isChanged } = useUpdateProfile(
-    user ?? undefined
-  );
+  const { form, siblings, handleSubmit, loading, isChanged } =
+    useUpdateProfile(user);
   const [tab, setTab] = useState("personal");
 
   const tabs = [

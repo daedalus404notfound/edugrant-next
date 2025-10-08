@@ -27,7 +27,7 @@ export default function useApplicantsSearch({
   pageSize: number;
   sortBy?: string;
   order?: string;
-  status: string;
+  status?: string;
   query: string;
 }) {
   const [searchData, setSearchData] = useState<ApplicationFormData[]>([]);

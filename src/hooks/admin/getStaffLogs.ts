@@ -16,7 +16,7 @@ type StaffLogs = {
   scholarshipId: number;
   staffId: number;
   application: ApplicationFormData;
-  scholarship: scholarshipFormData
+  scholarship: scholarshipFormData;
 };
 export default function useGetStaffLogs(id: string, accountId?: number) {
   const [data, setData] = useState<StaffLogs[]>([]);
@@ -31,7 +31,7 @@ export default function useGetStaffLogs(id: string, accountId?: number) {
           const res = await axios.get<{ Staff_Logs: StaffLogs[] }>(
             `${
               process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
-            }/getStaffLogs?staffId=${id}${
+            }/getStaffById?staffId=${id}${
               accountId ? `&accountId=${accountId}` : ""
             }`,
 

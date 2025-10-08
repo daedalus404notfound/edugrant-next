@@ -3,6 +3,7 @@
 import { Row } from "@tanstack/react-table";
 import {
   Copy,
+  Edit,
   Maximize,
   MoreHorizontal,
   SquareArrowOutUpRight,
@@ -43,6 +44,11 @@ export function DataTableRowActions<TData>({
     }
   }, [isSuccess]);
 
+  // ✅ Copy full row data to clipboard
+  const handleCopyRow = () => {
+    navigator.clipboard.writeText(JSON.stringify(rowData, null, 2));
+  };
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -55,17 +61,28 @@ export function DataTableRowActions<TData>({
         className="grid grid-cols-1 w-[180px] !p-0 border"
       >
         <Link
-          href={`/administrator/head/home/application/${rowData.applicationId}`}
-          scroll={false}
-          prefetch
-          className="w-full"
+          href={`/administrator/head/home/application-info/${rowData.applicationId}`}
         >
-          <Button variant="ghost" size="lg" className="justify-start w-full">
-            <SquareArrowOutUpRight />
-            Review
+          <Button
+            variant="ghost"
+            size="lg"
+            className="justify-start w-full"
+            onClick={handleCopyRow}
+          >
+            <Maximize />
+            View
           </Button>
         </Link>
-
+        <Separator />
+        <Button
+          variant="ghost"
+          size="lg"
+          className="justify-start w-full"
+          onClick={handleCopyRow}
+        >
+          <Edit />
+          Edit
+        </Button>
         <Separator />
 
         <DeleteDialog
@@ -73,10 +90,10 @@ export function DataTableRowActions<TData>({
           onOpenChange={setOpenAlert}
           onConfirm={onSubmit}
           loading={loading}
-          title="Delete application?"
+          title="Delete Account?"
           description="This will permanently delete application and cannot be undone."
-          confirmText="Delete All"
-          cancelText="Keep Items"
+          confirmText="Delete"
+          cancelText="Keep Account"
           trigger={
             <Button
               size="lg"

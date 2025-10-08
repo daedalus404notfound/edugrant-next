@@ -106,8 +106,8 @@ export const UserSchema = z.object({
 });
 
 export type UserFormData = z.infer<typeof UserSchema>;
-
-export function useProfileForm(data?: UserFormData) {
+export type StudentUserFormData = z.infer<typeof StudentSchema>;
+export function useProfileForm(data?: UserFormData | null) {
   const defaultValues: UserFormData = {
     Student: {
       Application: [

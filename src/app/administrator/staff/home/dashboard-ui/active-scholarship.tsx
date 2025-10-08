@@ -44,7 +44,7 @@ export function ActiveScholarships({
         ) : data?.length === 0 ? (
           <>No scholarship found.</>
         ) : (
-          data?.slice(0).map((meow) => (
+          data?.slice(0, 4).map((meow) => (
             <div
               key={meow.scholarshipId}
               className="group relative flex flex-col justify-between bg-card rounded-md p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 gap-6"
