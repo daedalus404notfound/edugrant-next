@@ -2,7 +2,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import deepEqual from "fast-deep-equal";
-
+import { useMemo } from "react";
 import z from "zod";
 import { format } from "date-fns";
 
@@ -108,87 +108,91 @@ export const UserSchema = z.object({
 export type UserFormData = z.infer<typeof UserSchema>;
 export type StudentUserFormData = z.infer<typeof StudentSchema>;
 export function useProfileForm(data?: UserFormData | null) {
-  const defaultValues: UserFormData = {
-    Student: {
-      Application: [
-        {
-          applicationId: 0,
-          dateCreated: "",
-          decisionId: null,
-          interviewId: null,
-          ownerId: 0,
-          scholarshipId: 0,
-          status: "",
-          submitteDocuments: {},
-          supabasePath: [],
+  const defaultValues = useMemo<UserFormData>(
+    () => ({
+      Student: {
+        Application: [
+          {
+            applicationId: 0,
+            dateCreated: "",
+            decisionId: null,
+            interviewId: null,
+            ownerId: 0,
+            scholarshipId: 0,
+            status: "",
+            submitteDocuments: {},
+            supabasePath: [],
+          },
+        ],
+        PWD: data?.Student?.PWD || "",
+        studentId: data?.Student?.studentId || 0,
+        address: data?.Student?.address || "",
+        contactNumber: data?.Student?.contactNumber || "",
+        course: data?.Student?.course || "",
+        dateCreated: data?.Student?.dateCreated || "",
+        dateOfBirth: data?.Student
+          ? format(data?.Student?.dateOfBirth, "yyyy-MM-dd")
+          : "",
+        fName: data?.Student?.fName || "",
+        mName: data?.Student?.mName || "",
+        lName: data?.Student?.lName || "",
+        gender: data?.Student?.gender || "",
+        indigenous: data?.Student?.indigenous || "",
+        institute: data?.Student?.institute || "",
+        section: data?.Student?.section || "",
+        year: data?.Student?.year || "",
+        familyBackground: {
+          fatherFullName: data?.Student?.familyBackground?.fatherFullName || "",
+          fatherAddress: data?.Student?.familyBackground?.fatherAddress || "",
+          fatherContactNumber:
+            data?.Student?.familyBackground?.fatherContactNumber || "",
+          fatherOccupation:
+            data?.Student?.familyBackground?.fatherOccupation || "",
+          fatherHighestEducation:
+            data?.Student?.familyBackground?.fatherHighestEducation || "",
+          fatherStatus: data?.Student?.familyBackground?.fatherStatus || "",
+          fatherTotalParentsTaxableIncome:
+            data?.Student?.familyBackground?.fatherTotalParentsTaxableIncome ||
+            "",
+          motherFullName: data?.Student?.familyBackground?.motherFullName || "",
+          motherAddress: data?.Student?.familyBackground?.motherAddress || "",
+          motherContactNumber:
+            data?.Student?.familyBackground?.motherContactNumber || "",
+          motherOccupation:
+            data?.Student?.familyBackground?.motherOccupation || "",
+          motherHighestEducation:
+            data?.Student?.familyBackground?.motherHighestEducation || "",
+          motherStatus: data?.Student?.familyBackground?.motherStatus || "",
+          motherTotalParentsTaxableIncome:
+            data?.Student?.familyBackground?.motherTotalParentsTaxableIncome ||
+            "",
+          guardianFullName:
+            data?.Student?.familyBackground?.guardianFullName || "",
+          guardianAddress:
+            data?.Student?.familyBackground?.guardianAddress || "",
+          guardianContactNumber:
+            data?.Student?.familyBackground?.guardianContactNumber || "",
+          guardianOccupation:
+            data?.Student?.familyBackground?.guardianOccupation || "",
+          guardianHighestEducation:
+            data?.Student?.familyBackground?.guardianHighestEducation || "",
+          siblings: data?.Student?.familyBackground?.siblings || [],
         },
-      ],
-      PWD: data?.Student?.PWD || "",
-      studentId: data?.Student?.studentId || 0,
-      address: data?.Student?.address || "",
-      contactNumber: data?.Student?.contactNumber || "",
-      course: data?.Student?.course || "",
-      dateCreated: data?.Student?.dateCreated || "",
-      dateOfBirth: data?.Student
-        ? format(data?.Student?.dateOfBirth, "yyyy-MM-dd")
-        : "",
-      fName: data?.Student?.fName || "",
-      mName: data?.Student?.mName || "",
-      lName: data?.Student?.lName || "",
-      gender: data?.Student?.gender || "",
-      indigenous: data?.Student?.indigenous || "",
-      institute: data?.Student?.institute || "",
-      section: data?.Student?.section || "",
-      year: data?.Student?.year || "",
-      familyBackground: {
-        fatherFullName: data?.Student?.familyBackground?.fatherFullName || "",
-        fatherAddress: data?.Student?.familyBackground?.fatherAddress || "",
-        fatherContactNumber:
-          data?.Student?.familyBackground?.fatherContactNumber || "",
-        fatherOccupation:
-          data?.Student?.familyBackground?.fatherOccupation || "",
-        fatherHighestEducation:
-          data?.Student?.familyBackground?.fatherHighestEducation || "",
-        fatherStatus: data?.Student?.familyBackground?.fatherStatus || "",
-        fatherTotalParentsTaxableIncome:
-          data?.Student?.familyBackground?.fatherTotalParentsTaxableIncome ||
-          "",
-        motherFullName: data?.Student?.familyBackground?.motherFullName || "",
-        motherAddress: data?.Student?.familyBackground?.motherAddress || "",
-        motherContactNumber:
-          data?.Student?.familyBackground?.motherContactNumber || "",
-        motherOccupation:
-          data?.Student?.familyBackground?.motherOccupation || "",
-        motherHighestEducation:
-          data?.Student?.familyBackground?.motherHighestEducation || "",
-        motherStatus: data?.Student?.familyBackground?.motherStatus || "",
-        motherTotalParentsTaxableIncome:
-          data?.Student?.familyBackground?.motherTotalParentsTaxableIncome ||
-          "",
-        guardianFullName:
-          data?.Student?.familyBackground?.guardianFullName || "",
-        guardianAddress: data?.Student?.familyBackground?.guardianAddress || "",
-        guardianContactNumber:
-          data?.Student?.familyBackground?.guardianContactNumber || "",
-        guardianOccupation:
-          data?.Student?.familyBackground?.guardianOccupation || "",
-        guardianHighestEducation:
-          data?.Student?.familyBackground?.guardianHighestEducation || "",
-        siblings: data?.Student?.familyBackground?.siblings || [],
+        Account: {
+          schoolId: data?.Student?.Account?.schoolId || "",
+          email: data?.Student?.Account?.email || "",
+          role: data?.Student?.Account?.role || "Student",
+        },
       },
-      Account: {
-        schoolId: data?.Student?.Account?.schoolId || "",
-        email: data?.Student?.Account?.email || "",
-        role: data?.Student?.Account?.role || "Student",
-      },
-    },
-    accountId: data?.accountId || 0,
-    dateCreated: data?.dateCreated || "",
-    email: data?.email || "",
-    hashedPassword: data?.hashedPassword || "",
-    role: data?.role || "Student",
-    schoolId: data?.schoolId || "",
-  };
+      accountId: data?.accountId || 0,
+      dateCreated: data?.dateCreated || "",
+      email: data?.email || "",
+      hashedPassword: data?.hashedPassword || "",
+      role: data?.role || "Student",
+      schoolId: data?.schoolId || "",
+    }),
+    [data]
+  );
 
   const form = useForm<UserFormData>({
     resolver: zodResolver(UserSchema),
