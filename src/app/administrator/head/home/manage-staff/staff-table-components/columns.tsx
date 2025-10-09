@@ -37,21 +37,7 @@ export const columns: ColumnDef<StaffFormData>[] = [
     enableSorting: true,
     enableHiding: false,
   },
-  {
-    accessorKey: "staffId",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Staff ID" />
-    ),
-    cell: ({ row }) => {
-      return (
-        <span className="max-w-[500px] truncate">
-          {row.getValue("staffId")}
-        </span>
-      );
-    },
-    enableSorting: true,
-    enableHiding: true,
-  },
+
   {
     accessorKey: "fName",
     header: ({ column }) => (

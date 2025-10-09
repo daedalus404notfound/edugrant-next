@@ -61,7 +61,7 @@ export function DataTableRowActions<TData>({
         className="grid grid-cols-1 w-[180px] !p-0 border"
       >
         <Link
-          href={`/administrator/head/home/application-info/${rowData.applicationId}`}
+          href={`/administrator/head/home/all-application/${rowData.applicationId}`}
         >
           <Button
             variant="ghost"
@@ -73,17 +73,6 @@ export function DataTableRowActions<TData>({
             View
           </Button>
         </Link>
-        <Separator />
-        <Button
-          variant="ghost"
-          size="lg"
-          className="justify-start w-full"
-          onClick={handleCopyRow}
-        >
-          <Edit />
-          Edit
-        </Button>
-        <Separator />
 
         <DeleteDialog
           open={openAlert}

@@ -71,12 +71,7 @@ export function DeleteDialog({
             {cancelText}
           </Button>
           <Button
-            variant="outline"
-            className={
-              red
-                ? "!bg-red-800 hover:!bg-red-700"
-                : "!bg-green-800 hover:!bg-green-700"
-            }
+            variant={red ? "destructive" : "default"}
             disabled={loading}
             onClick={handleConfirm}
           >

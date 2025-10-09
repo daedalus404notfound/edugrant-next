@@ -8,6 +8,7 @@ import {
   MoreHorizontal,
   PencilLine,
   Trash2,
+  View,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -65,7 +66,7 @@ export function DataTableRowActions<TData>({
           className="w-full"
         >
           <Button variant="outline" className="justify-start w-full">
-            <Logs /> View Logs
+            <View /> View Staff
           </Button>
         </Link>
       </PopoverContent>

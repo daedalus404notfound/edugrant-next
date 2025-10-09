@@ -85,7 +85,7 @@ export default function InterceptManageStaff() {
     isChanged,
   } = useUpdateProfileStaff(admin ?? undefined);
   const { data, loading } = useGetStaffLogs(staffId, accountId);
-
+  console.log("Data", data?.Staff_Logs);
   // export const getPersonalInformation = (data: ApplicationFormData | null) => [
   //   {
   //     label: "First Name",
@@ -441,9 +441,9 @@ export default function InterceptManageStaff() {
                 <p className="text-sm text-muted-foreground">
                   Loading staff activity...
                 </p>
-              ) : data?.length ? (
+              ) : data?.Staff_Logs.length ? (
                 <Timeline className="">
-                  {data.map((item, index) => (
+                  {data.Staff_Logs.map((item, index) => (
                     <div key={index} className="p-4">
                       <TimelineHeader>
                         <TimelineTitle className="mt-0.5 font-medium text-foreground">
@@ -451,7 +451,7 @@ export default function InterceptManageStaff() {
                         </TimelineTitle>
                       </TimelineHeader>
                       <TimelineContent className="text-foreground mt-2 rounded-md px-4 py-3 bg-card">
-                        <p>
+                        {/* <p>
                           You approved the scholarship application of{" "}
                           <strong>
                             {item.application.Student.lName},{" "}
@@ -460,7 +460,7 @@ export default function InterceptManageStaff() {
                           </strong>{" "}
                           for the program{" "}
                           <strong>{item.scholarship.title}</strong>.
-                        </p>
+                        </p> */}
                         <TimelineDate className="mt-2 text-xs text-muted-foreground">
                           {format(item.dateCreated, "PPP p")}
                         </TimelineDate>

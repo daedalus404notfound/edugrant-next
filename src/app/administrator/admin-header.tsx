@@ -145,14 +145,7 @@ export default function DynamicHeaderAdmin({
           </Avatar>
           {admin?.ISPSU_Head?.fName ? admin?.ISPSU_Head?.fName : "Head"}
         </Button>
-        <Button
-          variant="outline"
-          onClick={() => {
-            setOpenNotif(true);
-          }}
-        >
-          <Bell />
-        </Button>
+
         <DeleteDialog
           open={openLogout}
           onOpenChange={setOpenLogout}

@@ -1,10 +1,8 @@
 import axios, { AxiosError } from "axios";
-import { useAdminProfileForm } from "./head-profile-edit";
-import { AdminProfileFormData } from "./head-profile-edit";
+import { getStaffFormData, useUpdateStaffByHead } from "./zod/head/getStaffZod";
 import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
-import { useAdminStore } from "@/store/adminUserStore";
 
 interface ApiErrorResponse {
   message?: string;
@@ -13,16 +11,13 @@ interface ApiErrorResponse {
 }
 
 type ApiError = AxiosError<ApiErrorResponse>;
-const updateUserApi = async (data: AdminProfileFormData) => {
+const updateUserApi = async (data: getStaffFormData) => {
   const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/editHead`,
+    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/updateStaffByHead`,
     {
-      address: data.ISPSU_Head.address,
-      firstName: data.ISPSU_Head.fName,
-      gender: data.ISPSU_Head.gender,
-      lastName: data.ISPSU_Head.lName,
-      middleName: data.ISPSU_Head.mName,
-      accountId: data.accountId,
+      firstName: data.fName,
+      lastName: data.lName,
+      middleName: data.mName,
     },
     { withCredentials: true }
   );
@@ -36,8 +31,8 @@ export const useProfile = () => {
     onSuccess: () => {
       StyledToast({
         status: "success",
-        title: "Profile Updated",
-        description: "Your profile information has been successfully saved.",
+        title: "Staff Profile Updated",
+        description: "Staff information has been successfully saved.",
       });
     },
     onError: (error: ApiError) => {
@@ -47,37 +42,31 @@ export const useProfile = () => {
           status: "error",
           title: error.response.data.message,
           duration: 10000,
-          description: "Cannot process your profile update request.",
+          description: "Cannot process your staff profile update request.",
         });
       }
     },
-    retry: 1,
-    retryDelay: 1000,
   });
 };
 
-export const useUpdateProfileStaff = (data?: AdminProfileFormData) => {
-  const { form, isChanged } = useAdminProfileForm(data);
+export const useUpdateProfileStaff = (data?: getStaffFormData | null) => {
+  const { form, isChanged } = useUpdateStaffByHead(data);
   const profileUpdate = useProfile();
   const [open, setOpen] = useState(false);
   const [reset, setReset] = useState(false);
 
-  const { setAdmin } = useAdminStore();
-  const handleSubmit = async (data: AdminProfileFormData) => {
-    console.log("111", data);
+  const handleSubmit = async (data: getStaffFormData) => {
     try {
       const result = await profileUpdate.mutateAsync(data);
 
       if (result) {
-        setAdmin(data);
         setOpen(false);
         setReset(true);
         profileUpdate.reset();
         form.reset();
       }
     } catch (error) {
-      // Error toast is already handled in useSendAuthCode onError
-      console.error("Login error:", error);
+      console.error("Update Error:", error);
     }
   };
 

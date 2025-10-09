@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { useProfileForm } from "./zodUserProfile";
-import { StudentUserFormData } from "./zodUserProfile";
+import { StudentUserFormData } from "./zodUpdateUserByHead";
 import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
@@ -15,80 +15,11 @@ interface ApiErrorResponse {
 
 type ApiError = AxiosError<ApiErrorResponse>;
 const updateUserApi = async (data: StudentUserFormData) => {
-  const familyBackground = {
-    ...(data.familyBackground.fatherFullName && {
-      fatherFullName: data.familyBackground.fatherFullName,
-    }),
-    ...(data.familyBackground.fatherAddress && {
-      fatherAddress: data.familyBackground.fatherAddress,
-    }),
-    ...(data.familyBackground.fatherContactNumber && {
-      fatherContactNumber: data.familyBackground.fatherContactNumber,
-    }),
-    ...(data.familyBackground.fatherOccupation && {
-      fatherOccupation: data.familyBackground.fatherOccupation,
-    }),
-    ...(data.familyBackground.fatherHighestEducation && {
-      fatherHighestEducation: data.familyBackground.fatherHighestEducation,
-    }),
-    ...(data.familyBackground.fatherStatus && {
-      fatherStatus: data.familyBackground.fatherStatus,
-    }),
-    ...(data.familyBackground.fatherTotalParentsTaxableIncome && {
-      fatherTotalParentsTaxableIncome:
-        data.familyBackground.fatherTotalParentsTaxableIncome,
-    }),
-
-    ...(data.familyBackground.motherFullName && {
-      motherFullName: data.familyBackground.motherFullName,
-    }),
-    ...(data.familyBackground.motherAddress && {
-      motherAddress: data.familyBackground.motherAddress,
-    }),
-    ...(data.familyBackground.motherContactNumber && {
-      motherContactNumber: data.familyBackground.motherContactNumber,
-    }),
-    ...(data.familyBackground.motherOccupation && {
-      motherOccupation: data.familyBackground.motherOccupation,
-    }),
-    ...(data.familyBackground.motherHighestEducation && {
-      motherHighestEducation: data.familyBackground.motherHighestEducation,
-    }),
-    ...(data.familyBackground.motherStatus && {
-      motherStatus: data.familyBackground.motherStatus,
-    }),
-    ...(data.familyBackground.motherTotalParentsTaxableIncome && {
-      motherTotalParentsTaxableIncome:
-        data.familyBackground.motherTotalParentsTaxableIncome,
-    }),
-
-    ...(data.familyBackground.guardianFullName && {
-      guardianFullName: data.familyBackground.guardianFullName,
-    }),
-    ...(data.familyBackground.guardianAddress && {
-      guardianAddress: data.familyBackground.guardianAddress,
-    }),
-    ...(data.familyBackground.guardianContactNumber && {
-      guardianContactNumber: data.familyBackground.guardianContactNumber,
-    }),
-    ...(data.familyBackground.guardianOccupation && {
-      guardianOccupation: data.familyBackground.guardianOccupation,
-    }),
-    ...(data.familyBackground.guardianHighestEducation && {
-      guardianHighestEducation: data.familyBackground.guardianHighestEducation,
-    }),
-
-    ...(data.familyBackground.siblings &&
-      data.familyBackground.siblings.length > 0 && {
-        siblings: data.familyBackground.siblings,
-      }),
-  };
-  const hasFamilyBackground = Object.keys(familyBackground).length > 0;
-
   const res = await axios.post(
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/updateStudentAccount`,
     {
       address: data.address,
+      ownerId: data.studentId,
       contactNumber: data.contactNumber,
       course: data.course,
       dateOfBirth: data.dateOfBirth,
@@ -97,12 +28,9 @@ const updateUserApi = async (data: StudentUserFormData) => {
       lastName: data.lName,
       middleName: data.mName,
       section: data.section,
-      studentId: data.studentId,
-      accountId: data.studentId,
+      schoolId: data.Account.schoolId,
+      email: data.Account.email,
       year: data.year,
-      familyBackground: hasFamilyBackground
-        ? JSON.stringify(familyBackground)
-        : JSON.stringify({}),
     },
     { withCredentials: true }
   );
@@ -137,7 +65,7 @@ export const useProfile = () => {
 };
 
 export const useUpdateUserByHead = (data?: StudentUserFormData | null) => {
-  const { form, siblings } = zodUpdateUserByHead(data);
+  const { form, isChanged } = zodUpdateUserByHead(data);
   const profileUpdate = useProfile();
   const [open, setOpen] = useState(false);
   const [reset, setReset] = useState(false);
@@ -196,6 +124,7 @@ export const useUpdateUserByHead = (data?: StudentUserFormData | null) => {
     reset,
     setReset,
     form,
-    siblings,
+
+    isChanged,
   };
 };

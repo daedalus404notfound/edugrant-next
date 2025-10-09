@@ -38,7 +38,13 @@ export const StudentSchema = z.object({
     .regex(/^\+63\d{10}$/, "Must be a valid phone number"),
   course: z.string(),
   dateCreated: z.string(),
-  dateOfBirth: z.string(),
+  dateOfBirth: z
+    .string()
+    .min(1, "Required")
+    .regex(
+      /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
+      "Invalid format, use YYYY-MM-DD"
+    ),
   indigenous: z.string().optional(),
   pwd: z.string().optional(),
   fName: z.string(),
@@ -49,45 +55,7 @@ export const StudentSchema = z.object({
   mName: z.string(),
   section: z.string(),
   year: z.string(),
-  familyBackground: z.object({
-    fatherFullName: z.string().optional(),
-    fatherAddress: z.string().optional(),
-    fatherContactNumber: z
-      .string()
-      .regex(/^\+63\d{10}$/, "Must be a valid phone number"),
-    fatherOccupation: z.string().optional(),
-    fatherHighestEducation: z.string().optional(),
-    fatherStatus: z.string().optional(),
-    fatherTotalParentsTaxableIncome: z.string().optional(),
 
-    motherFullName: z.string().optional(),
-    motherAddress: z.string().optional(),
-    motherContactNumber: z
-      .string()
-      .regex(/^\+63\d{10}$/, "Must be a valid phone number"),
-    motherOccupation: z.string().optional(),
-    motherHighestEducation: z.string().optional(),
-    motherStatus: z.string().optional(),
-    motherTotalParentsTaxableIncome: z.string().optional(),
-
-    guardianFullName: z.string().optional(),
-    guardianAddress: z.string().optional(),
-    guardianContactNumber: z
-      .string()
-      .regex(/^\+63\d{10}$/, "Must be a valid phone number"),
-    guardianOccupation: z.string().optional(),
-    guardianHighestEducation: z.string().optional(),
-
-    siblings: z
-      .array(
-        z.object({
-          fullName: z.string(),
-          age: z.string(),
-          occupation: z.string(),
-        })
-      )
-      .optional(),
-  }),
   Account: z.object({
     schoolId: z.string(),
     email: z.string(),
@@ -95,19 +63,14 @@ export const StudentSchema = z.object({
   }),
 });
 
-export const UserSchema = z.object({
-  Student: StudentSchema,
-  accountId: z.number(),
-  dateCreated: z.string(),
-  email: z.string(),
-  hashedPassword: z.string(),
-  role: z.string(),
-  schoolId: z.string(),
-});
-
 export type StudentUserFormData = z.infer<typeof StudentSchema>;
 export function zodUpdateUserByHead(data?: StudentUserFormData | null) {
   const defaultValues: StudentUserFormData = {
+    Account: {
+      schoolId: data?.Account?.schoolId || "",
+      email: data?.Account?.email || "",
+      role: data?.Account?.role || "Student",
+    },
     Application: [
       {
         applicationId: 0,
@@ -138,60 +101,29 @@ export function zodUpdateUserByHead(data?: StudentUserFormData | null) {
     institute: data?.institute || "",
     section: data?.section || "",
     year: data?.year || "",
-    familyBackground: {
-      fatherFullName: data?.familyBackground?.fatherFullName || "",
-      fatherAddress: data?.familyBackground?.fatherAddress || "",
-      fatherContactNumber: data?.familyBackground?.fatherContactNumber || "",
-      fatherOccupation: data?.familyBackground?.fatherOccupation || "",
-      fatherHighestEducation:
-        data?.familyBackground?.fatherHighestEducation || "",
-      fatherStatus: data?.familyBackground?.fatherStatus || "",
-      fatherTotalParentsTaxableIncome:
-        data?.familyBackground?.fatherTotalParentsTaxableIncome || "",
-      motherFullName: data?.familyBackground?.motherFullName || "",
-      motherAddress: data?.familyBackground?.motherAddress || "",
-      motherContactNumber: data?.familyBackground?.motherContactNumber || "",
-      motherOccupation: data?.familyBackground?.motherOccupation || "",
-      motherHighestEducation:
-        data?.familyBackground?.motherHighestEducation || "",
-      motherStatus: data?.familyBackground?.motherStatus || "",
-      motherTotalParentsTaxableIncome:
-        data?.familyBackground?.motherTotalParentsTaxableIncome || "",
-      guardianFullName: data?.familyBackground?.guardianFullName || "",
-      guardianAddress: data?.familyBackground?.guardianAddress || "",
-      guardianContactNumber:
-        data?.familyBackground?.guardianContactNumber || "",
-      guardianOccupation: data?.familyBackground?.guardianOccupation || "",
-      guardianHighestEducation:
-        data?.familyBackground?.guardianHighestEducation || "",
-      siblings: data?.familyBackground?.siblings || [],
-    },
-    Account: {
-      schoolId: data?.Account?.schoolId || "",
-      email: data?.Account?.email || "",
-      role: data?.Account?.role || "Student",
-    },
   };
 
   const form = useForm<StudentUserFormData>({
     resolver: zodResolver(StudentSchema),
+    mode: "onChange",
     defaultValues, // pass here
   });
 
-  const siblings = useFieldArray({
-    control: form.control,
-    name: "familyBackground.siblings",
-  });
-
+  const [isChanged, setIsChanged] = useState(false);
   useEffect(() => {
     if (data) {
       form.reset(defaultValues);
     }
   }, [data, form]);
-
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+      const hasChanged = !deepEqual(defaultValues, values); // ✅ compare against saved defaultValues
+      setIsChanged(hasChanged);
+    });
+    return () => subscription.unsubscribe();
+  }, [form, defaultValues]);
   return {
     form,
-
-    siblings,
+    isChanged,
   };
 }
