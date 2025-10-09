@@ -252,13 +252,13 @@ export default function LoginClientModal() {
                         />
                         <Label htmlFor="remember">Remember me</Label>
                       </span>
-
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Label className="hover:underline cursor-pointer">
-                            Forgot password?
-                          </Label>
-                        </AlertDialogTrigger>
+                      <Link href={`/user/change-password`}>
+                        <Label className="hover:underline cursor-pointer">
+                          Forgot password?
+                        </Label>
+                      </Link>
+                      {/* <AlertDialog>
+                        <AlertDialogTrigger asChild></AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
                             <AlertDialogTitle>
@@ -277,7 +277,7 @@ export default function LoginClientModal() {
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
-                      </AlertDialog>
+                      </AlertDialog> */}
                     </motion.div>
 
                     <motion.div
