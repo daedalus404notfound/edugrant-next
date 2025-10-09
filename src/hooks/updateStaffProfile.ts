@@ -15,9 +15,10 @@ const updateUserApi = async (data: getStaffFormData) => {
   const res = await axios.post(
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/updateStaffByHead`,
     {
-      firstName: data.fName,
-      lastName: data.lName,
-      middleName: data.mName,
+      fName: data.fName,
+      lName: data.lName,
+      mName: data.mName,
+      email: data.Account.email,
     },
     { withCredentials: true }
   );

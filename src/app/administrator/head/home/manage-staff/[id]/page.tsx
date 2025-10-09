@@ -58,20 +58,13 @@ export default function InterceptManageStaff() {
   const router = useRouter();
   const params = useParams();
   const { admin } = useAdminStore();
-  const [open, setOpen] = useState(true);
+
 
   const accountId = admin?.accountId;
   const staffId = params.id as string;
   const [status, setStatus] = useState("info");
-  const [edit, setEdit] = useState(false);
-  const handleCloseDrawer = (value: boolean) => {
-    setOpen(value);
-    if (!value) {
-      setTimeout(() => {
-        router.back();
-      }, 250);
-    }
-  };
+
+
   const tabs = [
     { id: "info", label: "Staff Information", indicator: null },
     { id: "log", label: "Activity Logs", indicator: null },
