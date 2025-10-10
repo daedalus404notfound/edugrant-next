@@ -121,9 +121,9 @@ const sidebarData = [
     icon: LayoutDashboard,
   },
   {
-    title: "View Profile",
+    title: "Profile Settings",
     url: "/administrator/head/home/profile",
-    icon: UserRoundCheck,
+    icon: UserRoundCog,
   },
 ];
 const sidebarScholar = [

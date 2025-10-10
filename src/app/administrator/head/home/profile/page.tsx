@@ -124,7 +124,7 @@ export default function Profile() {
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className=" lg:pt-10  pt-3 lg:w-3/4 w-full p-2 lg:p-0 mx-auto">
-        <motion.div
+        {/* <motion.div
           className="flex justify-between items-end"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -135,9 +135,23 @@ export default function Profile() {
             description="Manage and update your personal information and account preferences."
             Icon={UserRoundCog}
           />
-        </motion.div>
+        </motion.div> */}
 
-        <div className="py-8 space-y-8">
+        <div className="h-50 w-full rounded-md relative bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 dark:from-emerald-600 dark:via-teal-600 dark:to-cyan-600 shadow-md">
+          <div className="absolute -bottom-20 left-4 flex items-end">
+            <div className="size-30 bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 dark:from-emerald-500 dark:via-teal-500 dark:to-cyan-500 rounded-full flex justify-center items-center text-2xl font-bold tracking-wide text-white shadow-lg">
+              JT
+            </div>
+            <div className="p-3">
+              <h1 className="text-xl font-medium text-foreground">
+                Tecson, Jerome Laguyo
+              </h1>
+              <p className="text-muted-foreground text-sm">2022000493</p>
+            </div>
+          </div>
+        </div>
+
+        <div className="py-8 px-4 space-y-8 mt-20">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
