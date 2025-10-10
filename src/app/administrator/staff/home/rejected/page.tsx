@@ -1,19 +1,27 @@
 "use client";
 import "ldrs/react/Ring.css";
+import { UserRoundMinus } from "lucide-react";
 import { useState } from "react";
 import { TourProvider } from "@/components/tour/tour-provider";
 import { TourStep } from "@/components/tour/tour-step";
 import type { TourStep as TourStepType } from "@/lib/use-tour";
-
 import TitleReusable from "@/components/ui/title";
 import { Tabs } from "@/components/ui/vercel-tabs";
-import PendingStaffApplication from "./pending";
+import ApprovedApplication from "./rejected";
+import ApprovedRenewApplication from "./renew-rejected";
 
-export default function PendingApplication() {
-  const [status, setStatus] = useState("PENDING");
-  const [pending, setPending] = useState(0);
-  const [pendingRenewal, setRenewPending] = useState(0);
-
+export default function RejectedApplication() {
+  const [status, setStatus] = useState("REJECTED");
+  const [rejected, setRejected] = useState(0);
+  const [rejectedRenewal, setRenewRejected] = useState(0);
+  const tabs = [
+    { id: "REJECTED", label: "Rejected Application", indicator: rejected },
+    {
+      id: "RENEWREJECTED",
+      label: "Rejected Renewals",
+      indicator: rejectedRenewal,
+    },
+  ];
   const applicationTourSteps: TourStepType[] = [
     {
       id: "search",
@@ -28,10 +36,17 @@ export default function PendingApplication() {
         "Apply filters to narrow down scholarships based on specific criteria.",
     },
     {
+      id: "export",
+      title: "Export CSV",
+      description:
+        "Download the list of scholarships as a CSV file for easy access.",
+    },
+    {
       id: "view",
       title: "Table View Options",
       description: "Show or hide table columns to customize your view.",
     },
+
     {
       id: "table",
       title: "Scholarship Table",
@@ -56,13 +71,14 @@ export default function PendingApplication() {
       <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
         <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
           <TitleReusable
-            title="Pending Applications"
-            textColor="text-yellow-700/70"
-            description="Applicants currently waiting for review."
+            title="Rejected Applications"
+            textColor="text-red-600/70"
+            description="View and manage applications and renewals that were not approved."
+            Icon={UserRoundMinus}
           />
 
           <div className="py-8 space-y-5">
-            <PendingStaffApplication setPending={setPending} />
+            <ApprovedApplication setRejected={setRejected} />
           </div>
         </div>
       </div>

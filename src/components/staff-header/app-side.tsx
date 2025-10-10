@@ -3,12 +3,17 @@
 import * as React from "react";
 import logo from "@/assets/basclogo.png";
 import {
+  CheckCheck,
+  CircleUserRound,
   Crown,
   GraduationCap,
   Home,
+  LayoutDashboard,
   Megaphone,
+  MessagesSquare,
   UserRoundCog,
   UserRoundX,
+  UsersRound,
   X,
 } from "lucide-react";
 import { motion } from "motion/react";
@@ -32,14 +37,14 @@ import { usePathname } from "next/navigation";
 
 const sidebarData = [
   {
-    title: "Home",
+    title: "Dashboard",
     url: "/administrator/staff/home",
-    icon: Home,
+    icon: LayoutDashboard,
   },
   {
-    title: "Profile",
+    title: "Profile Settings",
     url: "/administrator/staff/home/profile",
-    icon: UserRoundCog,
+    icon: CircleUserRound,
   },
   {
     title: "Announcements",
@@ -57,17 +62,28 @@ const sidebarScholar = [
 
 const sidebarApplication = [
   {
-    title: "Pending",
+    title: "Pending Application",
     url: "/administrator/staff/home/pending",
-    icon: UserRoundX,
+    icon: UsersRound,
   },
   {
     title: "For Interview",
     url: "/administrator/staff/home/for-interview",
+    icon: MessagesSquare,
+  },
+];
+const sidebarApplicationProcessed = [
+  {
+    title: "Approved Application",
+    url: "/administrator/staff/home/approved",
+    icon: CheckCheck,
+  },
+  {
+    title: "Declined Application",
+    url: "/administrator/staff/home/rejected",
     icon: X,
   },
 ];
-
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   return (
@@ -130,7 +146,32 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroupContent>
         </SidebarGroup>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Scholarships</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {sidebarScholar.map((meow) => {
+                const isActive = pathname === meow.url;
+                return (
+                  <SidebarMenuItem key={meow.title}>
+                    <SidebarMenuButton isActive={isActive} asChild>
+                      <Link
+                        prefetch
+                        scroll={false}
+                        className="flex items-center gap-2 cursor-pointer"
+                        href={meow.url}
+                      >
+                        <meow.icon className="w-4 h-4" />
+                        {meow.title}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Application Processing</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarApplication.map((meow) => {
@@ -156,10 +197,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Manage Scholarship</SidebarGroupLabel>
+          <SidebarGroupLabel>Processed Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {sidebarScholar.map((meow) => {
+              {sidebarApplicationProcessed.map((meow) => {
                 const isActive = pathname === meow.url;
                 return (
                   <SidebarMenuItem key={meow.title}>

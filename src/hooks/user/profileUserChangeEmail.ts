@@ -119,7 +119,7 @@ export const useVerifyLogin = () => {
 // Main Login Handler Hook
 export const useProfileUserChangeEmail = () => {
   const router = useRouter();
-  const [step, setStep] = useState<"email" | "otp">("otp");
+  const [step, setStep] = useState<"email" | "otp">("email");
   const [open, setOpen] = useState(true);
   const { changeEmailForm, LoginData, changeEmailOtpForm } =
     useChangeEmailProfileUser();

@@ -81,6 +81,7 @@ export default function Manage() {
             title="Inactive Scholarships"
             description="Manage inactive scholarships here. Switch between expired and archived scholarships using the tabs below."
             Icon={Archive}
+            textColor="text-red-700/70"
           />
 
           <div className="py-8 space-y-5">

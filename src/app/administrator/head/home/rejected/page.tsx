@@ -74,6 +74,7 @@ export default function RejectedApplication() {
             title="Rejected Applications"
             description="View and manage applications and renewals that were not approved."
             Icon={UserRoundMinus}
+            textColor="text-red-700/70"
           />
 
           <div className="py-8 space-y-5">

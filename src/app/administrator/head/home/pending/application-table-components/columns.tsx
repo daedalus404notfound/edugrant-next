@@ -7,7 +7,15 @@ import { DataTableColumnHeader } from "@/app/table-components/data-table-column-
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Clock } from "lucide-react";
+import {
+  Ban,
+  Calendar,
+  Check,
+  CheckCircle2,
+  Clock,
+  MessagesSquare,
+  X,
+} from "lucide-react";
 import { getPhaseLabel } from "@/lib/phaseLevel";
 import { useState } from "react";
 import { format } from "date-fns";
@@ -206,13 +214,26 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
               : row.getValue("status") === "INTERVIEW"
               ? "bg-blue-500/10 text-blue-500"
               : row.getValue("status") === "APPROVED"
-              ? "bg-green-500/10 text-green-500"
+              ? "bg-emerald-500/10 text-emerald-600"
               : row.getValue("status") === "BLOCKED"
               ? "bg-gray-500/10 text-gray-500"
               : ""
           }
         >
-          <Clock />
+          {row.getValue("status") === "PENDING" ? (
+            <Calendar />
+          ) : row.getValue("status") === "DECLINED" ? (
+            <X />
+          ) : row.getValue("status") === "INTERVIEW" ? (
+            <MessagesSquare />
+          ) : row.getValue("status") === "APPROVED" ? (
+            <Check />
+          ) : row.getValue("status") === "BLOCKED" ? (
+            <Ban />
+          ) : (
+            ""
+          )}
+
           {row.getValue("status")}
         </Badge>
       );

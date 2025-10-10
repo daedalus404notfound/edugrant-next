@@ -1,6 +1,6 @@
 "use client";
 import "ldrs/react/Ring.css";
-import { UserRoundSearch } from "lucide-react";
+import { Ban, UserRoundSearch } from "lucide-react";
 import { useState } from "react";
 import { DataTable } from "@/app/table-components/data-table";
 import { columns } from "../pending/application-table-components/columns";
@@ -102,9 +102,10 @@ export default function PendingApplication() {
       <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
         <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
           <TitleReusable
-            title="Reviewed Applications"
-            description="Staff-reviewed applications awaiting final authorization."
-            Icon={UserRoundSearch}
+            title="Blocked Applications"
+            description="Automatically moved when a student has an approved government scholarship."
+            Icon={Ban}
+            textColor="text-gray-700/70"
           />
 
           <div className="py-8">

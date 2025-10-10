@@ -70,6 +70,7 @@ export default function PendingApplication() {
         <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
           <TitleReusable
             title="For Interview Application"
+            textColor="text-indigo-700/70"
             description="Applicants currently waiting for review."
           />
 

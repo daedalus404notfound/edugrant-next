@@ -104,25 +104,25 @@ export function DataTable<TData, TValue>({
         <div className="overflow-hidden rounded-md border">
           <Table>
             <TableHeader
-              className={` ${
+              className={`${
                 status === "ACTIVE"
-                  ? "dark:bg-green-900 bg-green-100"
+                  ? "bg-green-100 text-green-800 dark:bg-green-900/60 dark:text-green-300"
                   : status === "ARCHIVED"
-                  ? "dark:bg-gray-900 bg-gray-100"
+                  ? "bg-gray-100 text-gray-800 dark:bg-gray-900/60 dark:text-gray-300"
                   : status === "PENDING"
-                  ? "dark:bg-yellow-900 bg-yellow-100"
+                  ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/60 dark:text-yellow-300"
                   : status === "DECLINED"
-                  ? "dark:bg-red-900 bg-red-100"
+                  ? "bg-red-100 text-red-700 dark:bg-red-800/60 dark:text-red-300"
                   : status === "APPROVED"
-                  ? "dark:bg-green-900 bg-green-100"
+                  ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-800/60 dark:text-emerald-300"
                   : status === "RENEW"
-                  ? "dark:bg-blue-900 bg-blue-100"
-                  : status === "REVIEWED"
-                  ? "dark:bg-blue-900 bg-blue-100"
+                  ? "bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300"
+                  : status === "INTERVIEW"
+                  ? "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/60 dark:text-indigo-300"
                   : status === "EXPIRED"
-                  ? "dark:bg-red-900 bg-orange-100"
-                  : "bg-card"
-              }`}
+                  ? "bg-orange-100 text-red-800 dark:bg-red-900/60 dark:text-red-300"
+                  : "bg-neutral-100 text-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-300"
+              } text-sm font-medium px-3 py-1 rounded-full transition-colors duration-200`}
             >
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>

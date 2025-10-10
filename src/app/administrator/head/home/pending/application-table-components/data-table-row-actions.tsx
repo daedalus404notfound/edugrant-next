@@ -62,13 +62,13 @@ export function DataTableRowActions<TData>({
         >
           <Button variant="ghost" size="lg" className="justify-start w-full">
             <SquareArrowOutUpRight />
-            Review
+            Open
           </Button>
         </Link>
 
         <Separator />
 
-        <DeleteDialog
+        {/* <DeleteDialog
           open={openAlert}
           onOpenChange={setOpenAlert}
           onConfirm={onSubmit}
@@ -86,7 +86,7 @@ export function DataTableRowActions<TData>({
               <Trash2 /> Delete
             </Button>
           }
-        />
+        /> */}
       </PopoverContent>
     </Popover>
   );
