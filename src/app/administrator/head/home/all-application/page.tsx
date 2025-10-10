@@ -1,6 +1,6 @@
 "use client";
 import "ldrs/react/Ring.css";
-import { UserRoundMinus } from "lucide-react";
+import { UserRoundMinus, UsersRound } from "lucide-react";
 import { useState } from "react";
 import { TourProvider } from "@/components/tour/tour-provider";
 import { TourStep } from "@/components/tour/tour-step";
@@ -70,9 +70,9 @@ export default function PendingApplication() {
       <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
         <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
           <TitleReusable
-            title="All Applications"
-            description="Applications that have been approved and finalized."
-            Icon={UserRoundMinus}
+            title="All Students"
+            description="List of all registered users."
+            Icon={UsersRound}
           />
 
           <div className="py-8 space-y-5">

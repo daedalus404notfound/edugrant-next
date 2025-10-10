@@ -1,240 +1,863 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import image from "@/assets/basclogo.png";
+import React, { useState } from "react";
+import { AnimatePresence, easeIn, easeInOut, motion } from "motion/react";
+import {
+  ArrowRight,
+  Calendar1,
+  Check,
+  CheckIcon,
+  CircleUserRound,
+  Crown,
+  EyeIcon,
+  EyeOffIcon,
+  Loader,
+  Mail,
+  Map,
+  UserRound,
+  UserRoundCheck,
+  UserRoundCog,
+  VenusAndMars,
+  XIcon,
+} from "lucide-react";
+import logo from "@/assets/edugrant-logo.png";
 import {
   Timeline,
   TimelineContent,
   TimelineDate,
   TimelineItem,
-  TimelineTitle,
 } from "@/components/ui/timeline";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+import { Tabs } from "@/components/ui/vercel-tabs";
+
+import { Separator } from "@/components/ui/separator";
 import TitleReusable from "@/components/ui/title";
-import { CalendarIcon, Megaphone } from "lucide-react";
-const announcements = [
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+const items = [
   {
     id: 1,
-    title: "Scholarship Application Deadline Extended",
-    description:
-      "The deadline for scholarship applications has been extended to June 30, 2025.",
-    date: "Dec 12, 2024",
-    priority: "high",
+    date: new Date("2024-01-09T10:55:00"),
+    description: "System backup completed successfully.",
   },
   {
     id: 2,
-    title: "Scholarship Application Deadline Extended",
+    date: new Date("2024-01-09T10:50:00"),
     description:
-      "The deadline for scholarship applications has been extended to June 30, 2025.",
-    date: "Dec 12, 2024",
-    priority: "high",
+      "User authentication service restarted due to configuration update.",
+  },
+  {
+    id: 3,
+    date: new Date("2024-01-09T10:45:00"),
+    description: "Warning: High CPU usage detected on worker node-03.",
+  },
+  {
+    id: 4,
+    date: new Date("2024-01-09T10:40:00"),
+    description: "New deployment initiated for api-service v2.1.0.",
   },
 ];
-import {
-  Calendar,
-  Crown,
-  Edit,
-  Mail,
-  MapPin,
-  PencilLine,
-  Phone,
-  User,
-  UserRound,
-} from "lucide-react";
-import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
 import { useAdminStore } from "@/store/adminUserStore";
-import { format } from "date-fns";
-
+import { useUpdateProfileAdmin } from "@/hooks/head-edit-handler";
+import { useProfileUserChangePassword } from "@/hooks/user/profileUserChangePassword";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+import { Skeleton } from "@/components/ui/skeleton";
 export default function Profile() {
-  const [isEditing, setIsEditing] = useState(false);
-  const { admin } = useAdminStore();
+  const { admin, loading: loadingAdmin } = useAdminStore();
+  const [openCalendar, setOpenCalendar] = useState(false);
+
+  const { form, handleSubmit, loading, isChanged } = useUpdateProfileAdmin(
+    admin ?? undefined
+  );
+  const [tab, setTab] = useState("personal");
+
+  const {
+    open,
+    setOpen,
+    step,
+    setStep,
+    changePasswordForm,
+    changePasswordOtpForm,
+    handleSendCode,
+    handleOtpVerification,
+    authLoading,
+    verifyLoading,
+    requestNewCode,
+    resendTimer,
+  } = useProfileUserChangePassword();
+  console.log(form);
+  const tabs = [
+    { id: "personal", label: "Head Information", indicator: null },
+    { id: "security", label: "Account Security", indicator: null },
+  ];
+
   return (
-    <div className="w-3/4 mx-auto py-10 gap-8 space-y-4">
-      {/* Header */}
-      <div className=" rounded-lg p-6 border py-10">
-        {/* Profile Header */}
-        <div className="flex items-center space-x-4">
-          <div className="relative">
-            <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary rounded-full flex items-center justify-center  font-bold text-2xl">
-              JT
-            </div>
-            <div className="absolute bottom-1 right-1 size-4 bg-green-500 rounded-full border"></div>
+    <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+      <div className=" lg:pb-10   w-full p-2 lg:p-0 mx-auto">
+        {/* <motion.div
+          className="flex justify-between items-end"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.4 }}
+        >
+          <TitleReusable
+            title="Profile Settings"
+            description="Manage and update your personal information and account preferences."
+            Icon={UserRoundCog}
+          />
+        </motion.div> */}
+
+        <div className="h-50 w-full rounded-md relative bg-gradient-to-br from-background via-card to-card/50  shadow-md flex justify-center items-center ">
+          <div className="absolute top-0 right-0 h-full overflow-hidden">
+            <img src={logo.src} className="opacity-40 -translate-y-7" alt="" />
           </div>
+          <div className="absolute -bottom-20 w-[60%] flex items-end">
+            {loadingAdmin ? (
+              <>
+                {/* Avatar Skeleton */}
+                <Skeleton className="size-25 rounded-full flex-shrink-0" />
 
-          <div className="flex-1">
-            <div className="flex items-center space-x-2">
-              <h2 className="text-xl font-semibold ">
-                {admin?.ISPSU_Staff.fName} {admin?.ISPSU_Staff.mName}{" "}
-                {admin?.ISPSU_Staff.lName}
-              </h2>
-              <Crown className="w-5 h-5 text-primary" />
-            </div>
-            <div className="flex items-center space-x-1 text-primary font-medium">
-              <UserRound className="w-4 h-4" />
-              <span>{admin?.role}</span>
-            </div>
-            <div className="flex items-center space-x-1 text-gray-400 text-sm mt-1">
-              <Mail className="w-4 h-4" />
-              <span>{admin?.email}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Personal Information */}
-      <div className="grid grid-cols-2 gap-6 mt-8">
-        <div className=" rounded-lg p-6 border ">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold ">Personal Information</h3>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
-            {/* First Name */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">
-                First Name
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  defaultValue="Natashia"
-                  className="w-full bg-card border  rounded-lg px-3 py-2  focus:outline-none focus:border-primary"
-                />
-              ) : (
-                <p className=" bg-card rounded-lg px-3 py-2">
-                  {admin?.ISPSU_Staff.fName}{" "}
-                </p>
-              )}
-            </div>
-
-            {/* Last Name */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">
-                Last Name
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  defaultValue="Khaleira"
-                  className="w-full bg-card border  rounded-lg px-3 py-2  focus:outline-none focus:border-primary"
-                />
-              ) : (
-                <p className=" bg-card rounded-lg px-3 py-2">
-                  {admin?.ISPSU_Staff.lName}{" "}
-                </p>
-              )}
-            </div>
-
-            {/* Date of Birth */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">
-                Date Created
-              </label>
-              <div className="flex items-center space-x-2 bg-card rounded-lg px-3 py-2">
-                <Calendar className="w-4 h-4 text-gray-400" />
-                {isEditing ? (
-                  <input
-                    type="date"
-                    defaultValue="1990-10-12"
-                    className="bg-transparent  focus:outline-none flex-1"
-                  />
-                ) : (
-                  <span className="">
-                    {admin?.dateCreated && format(admin?.dateCreated, "PPP p")}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            {/* Email */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">
-                Email Address
-              </label>
-              <div className="flex items-center space-x-2 bg-card rounded-lg px-3 py-2">
-                <Mail className="w-4 h-4 text-gray-400" />
-                {isEditing ? (
-                  <input
-                    type="email"
-                    defaultValue="info@binary-fusion.com"
-                    className="bg-transparent  focus:outline-none flex-1"
-                  />
-                ) : (
-                  <span className="">{admin?.email}</span>
-                )}
-              </div>
-            </div>
-
-            {/* User Role */}
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">
-                User Role
-              </label>
-              <div className="flex items-center space-x-2 bg-card rounded-lg px-3 py-2">
-                <Crown className="w-4 h-4 text-primary" />
-                {isEditing ? (
-                  <select className="bg-transparent  focus:outline-none flex-1">
-                    <option value="admin" selected>
-                      Admin
-                    </option>
-                    <option value="user">User</option>
-                    <option value="moderator">Moderator</option>
-                  </select>
-                ) : (
-                  <span className="text-primary font-medium">
-                    {admin?.role}
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className=" rounded-lg p-6 border">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold ">Activity Logs</h3>
-          </div>
-          <Timeline className="space-y-5">
-            {announcements.map((item) => (
-              <TimelineItem
-                key={item.id}
-                step={item.id}
-                className="!m-0  bg-background/70  p-6! rounded-md border !mb-3"
-              >
-                <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
-                  <TimelineTitle className="font-medium text-base">
-                    {item.title ?? "Win scholarship is now open."}
-                  </TimelineTitle>
-                  <TimelineDate className="lg:text-sm text-xs text-muted-foreground flex items-center gap-1.5">
-                    <CalendarIcon size={13} /> {item.date}
-                  </TimelineDate>
+                {/* Text Content Skeleton */}
+                <div className="p-3 flex-1">
+                  <Skeleton className="h-7 w-48 mb-2" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Avatar */}
+                <div className="size-25 bg-emerald-900 rounded-full flex justify-center items-center text-2xl font-bold tracking-wide text-white shadow-lg flex-shrink-0">
+                  JT
                 </div>
 
-                <TimelineContent className="text-foreground mt-1 font-light">
-                  {item.description}
-                </TimelineContent>
-              </TimelineItem>
-            ))}
-          </Timeline>
+                {/* Text Content */}
+                <div className="p-3">
+                  <h1 className="text-xl font-medium text-foreground">
+                    {admin?.ISPSU_Staff.lName}, {admin?.ISPSU_Staff.fName}{" "}
+                    {admin?.ISPSU_Staff.mName}
+                  </h1>
+                  <p className="text-muted-foreground text-sm">{admin?.role}</p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+        <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
+        <div className="py-8 w-[60%] mx-auto space-y-8 mt-20">
+          <div className="overflow-y-hidden overflow-x-auto py-3 no-scrollbar ">
+            <Tabs tabs={tabs} onTabChange={(tabId) => setTab(tabId)} />
+          </div>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmit)}>
+              {tab === "personal" && (
+                <div className=" w-full space-y-5">
+                  <div className="flex items-center gap-3 border-b py-4">
+                    <h1 className="font-medium ">Personal Details</h1>
+                  </div>
+                  <div className="grid grid-cols-2  gap-8 py-4">
+                    <FormField
+                      control={form.control}
+                      name="ISPSU_Staff.fName"
+                      render={({ field }) => (
+                        <FormItem className="">
+                          <FormLabel className="text-muted-foreground">
+                            First Name
+                          </FormLabel>
+                          <FormControl>
+                            <div className="flex items-center">
+                              <Input {...field} className="rounded-r-none" />
+                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                <Button variant="ghost">
+                                  <UserRound />
+                                </Button>
+                              </span>
+                            </div>
+                          </FormControl>
+
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="ISPSU_Staff.mName"
+                      render={({ field }) => (
+                        <FormItem className="">
+                          <FormLabel className="text-muted-foreground">
+                            Middle Name
+                          </FormLabel>
+                          <FormControl className="">
+                            <div className="flex items-center">
+                              <Input
+                                placeholder="(Optional)"
+                                {...field}
+                                className="rounded-r-none"
+                              />
+                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                <Button variant="ghost">
+                                  <CircleUserRound />
+                                </Button>
+                              </span>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="ISPSU_Staff.lName"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          <FormLabel className="text-muted-foreground">
+                            Last Name
+                          </FormLabel>
+                          <FormControl className="">
+                            <div className="flex items-center">
+                              <Input
+                                placeholder=""
+                                className="rounded-r-none"
+                                {...field}
+                              />
+                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                <Button variant="ghost">
+                                  <UserRoundCheck />
+                                </Button>
+                              </span>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem className="">
+                          <FormLabel className="text-muted-foreground">
+                            Email
+                          </FormLabel>
+                          <FormControl className="">
+                            <div className="flex items-center">
+                              <Input
+                                placeholder=""
+                                className="rounded-r-none"
+                                {...field}
+                                readOnly
+                                disabled
+                              />
+                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                <Button variant="ghost">
+                                  <Mail />
+                                </Button>
+                              </span>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="ISPSU_Staff.gender"
+                      render={({ field }) => (
+                        <FormItem className="">
+                          <FormLabel className="text-muted-foreground">
+                            Gender
+                          </FormLabel>
+                          <FormControl>
+                            <div className="flex items-center">
+                              <Select
+                                onValueChange={field.onChange}
+                                value={field.value}
+                              >
+                                <SelectTrigger className="rounded-r-none w-full">
+                                  <SelectValue placeholder="Select" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Male">Male</SelectItem>
+                                  <SelectItem value="Female">Female</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                <Button variant="ghost">
+                                  <VenusAndMars />
+                                </Button>
+                              </span>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="ISPSU_Staff.address"
+                      render={({ field }) => (
+                        <FormItem className="col-span-2">
+                          <FormLabel className="text-muted-foreground">
+                            Address
+                          </FormLabel>
+                          <FormControl className="">
+                            <div className="flex items-center">
+                              <Input
+                                placeholder=""
+                                className="rounded-r-none"
+                                {...field}
+                              />
+                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                <Button variant="ghost">
+                                  <Map />
+                                </Button>
+                              </span>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
+                  <div className="flex items-center gap-3 border-b py-4">
+                    <h1 className="font-medium ">Account Details</h1>
+                  </div>
+                  <div className="grid grid-cols-2 gap-8 py-4">
+                    <FormField
+                      control={form.control}
+                      name="role"
+                      render={({ field }) => (
+                        <FormItem className="">
+                          <FormLabel className="text-muted-foreground">
+                            Role
+                          </FormLabel>
+                          <FormControl className="">
+                            <div className="flex items-center">
+                              <Input
+                                placeholder=""
+                                disabled
+                                className="rounded-r-none"
+                                {...field}
+                              />
+                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                <Button variant="ghost">
+                                  <Crown />
+                                </Button>
+                              </span>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="dateCreated"
+                      render={({ field }) => (
+                        <FormItem className="">
+                          <FormLabel className="text-muted-foreground">
+                            Member Since
+                          </FormLabel>
+                          <FormControl className="">
+                            <div className="flex items-center">
+                              <Input
+                                placeholder=""
+                                disabled
+                                className="rounded-r-none"
+                                {...field}
+                              />
+                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                <Button variant="ghost">
+                                  <Calendar1 />
+                                </Button>
+                              </span>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {/* <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" /> */}
+                  </div>
+
+                  <AnimatePresence>
+                    {isChanged && (
+                      <div className="sticky bottom-16 lg:bottom-0 ">
+                        <motion.div
+                          className="bg-gradient-to-t from-background via-background/50 to-transparent w-full flex justify-center items-center py-8"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 30 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <Button
+                              size="lg"
+                              type="submit"
+                              className="cursor-pointer"
+                              disabled={loading}
+                            >
+                              <Check />
+                              {loading ? "Saving..." : "Save Changes"}
+                              {loading && <Loader className="animate-spin" />}
+                            </Button>
+                          </motion.div>
+                        </motion.div>
+                      </div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              )}
+            </form>
+          </Form>
+
+          {tab === "security" && (
+            <div className=" w-full space-y-8">
+              <div className="flex items-center justify-between bg-card p-4 rounded-md gap-3">
+                <h3 className=" font-medium text-sm flex gap-2 items-center">
+                  Change Password
+                </h3>
+
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button>Change</Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Change Password</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        Update your password to keep your account secure. This
+                        action will replace your current password.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+
+                    {step === "email" && (
+                      <Form {...changePasswordForm}>
+                        <form
+                          className="space-y-6"
+                          onSubmit={changePasswordForm.handleSubmit(
+                            handleSendCode
+                          )}
+                        >
+                          <FormField
+                            control={changePasswordForm.control}
+                            name="oldPassword"
+                            render={({ field }) => {
+                              const [isVisible, setIsVisible] = useState(false);
+                              const toggleVisibility = () =>
+                                setIsVisible((prev) => !prev);
+
+                              return (
+                                <FormItem>
+                                  <FormLabel className="text-muted-foreground">
+                                    Old Password
+                                  </FormLabel>
+                                  <FormControl>
+                                    <div className="relative">
+                                      <Input
+                                        type={isVisible ? "text" : "password"}
+                                        placeholder=""
+                                        {...field}
+                                        className="pe-9"
+                                        disabled={authLoading}
+                                      />
+                                      <button
+                                        type="button"
+                                        onClick={toggleVisibility}
+                                        className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground/80 hover:text-foreground focus:outline-none"
+                                      >
+                                        {isVisible ? (
+                                          <EyeOffIcon size={16} />
+                                        ) : (
+                                          <EyeIcon size={16} />
+                                        )}
+                                      </button>
+                                    </div>
+                                  </FormControl>
+
+                                  <FormMessage />
+                                </FormItem>
+                              );
+                            }}
+                          />
+                          <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                          <FormField
+                            control={changePasswordForm.control}
+                            name="newPassword"
+                            render={({ field }) => {
+                              const [isVisible, setIsVisible] = useState(false);
+                              const toggleVisibility = () =>
+                                setIsVisible((prev) => !prev);
+
+                              const checkStrength = (pass: string) => {
+                                const requirements = [
+                                  {
+                                    regex: /.{8,}/,
+                                    text: "At least 8 characters",
+                                  },
+                                  {
+                                    regex: /[0-9]/,
+                                    text: "At least 1 number",
+                                  },
+                                  {
+                                    regex: /[a-z]/,
+                                    text: "At least 1 lowercase letter",
+                                  },
+                                  {
+                                    regex: /[A-Z]/,
+                                    text: "At least 1 uppercase letter",
+                                  },
+                                ];
+                                return requirements.map((req) => ({
+                                  met: req.regex.test(pass),
+                                  text: req.text,
+                                }));
+                              };
+
+                              const strength = checkStrength(field.value || "");
+                              const strengthScore = strength.filter(
+                                (req) => req.met
+                              ).length;
+
+                              const getStrengthColor = (score: number) => {
+                                if (score === 0) return "bg-border";
+                                if (score <= 1) return "bg-red-500";
+                                if (score <= 2) return "bg-orange-500";
+                                if (score === 3) return "bg-amber-500";
+                                return "bg-emerald-500";
+                              };
+
+                              const getStrengthText = (score: number) => {
+                                if (score === 0) return "Enter a password";
+                                if (score <= 2) return "Weak password";
+                                if (score === 3) return "Medium password";
+                                return "Strong password";
+                              };
+
+                              return (
+                                <FormItem className="lg:col-span-2">
+                                  <FormLabel className="flex items-center justify-between">
+                                    Password <FormMessage />
+                                  </FormLabel>
+
+                                  {/* Password Input + Toggle */}
+                                  <FormControl>
+                                    <div className="relative">
+                                      <Input
+                                        type={isVisible ? "text" : "password"}
+                                        placeholder=""
+                                        {...field}
+                                        className="pe-9"
+                                        disabled={authLoading}
+                                      />
+                                      <button
+                                        type="button"
+                                        onClick={toggleVisibility}
+                                        className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground/80 hover:text-foreground focus:outline-none"
+                                      >
+                                        {isVisible ? (
+                                          <EyeOffIcon size={16} />
+                                        ) : (
+                                          <EyeIcon size={16} />
+                                        )}
+                                      </button>
+                                    </div>
+                                  </FormControl>
+
+                                  {/* Strength Bar */}
+                                  <div
+                                    className="bg-border mt-3 mb-2 h-1 w-full overflow-hidden rounded-full"
+                                    role="progressbar"
+                                    aria-valuenow={strengthScore}
+                                    aria-valuemin={0}
+                                    aria-valuemax={4}
+                                  >
+                                    <div
+                                      className={`h-full ${getStrengthColor(
+                                        strengthScore
+                                      )} transition-all duration-500`}
+                                      style={{
+                                        width: `${(strengthScore / 4) * 100}%`,
+                                      }}
+                                    />
+                                  </div>
+
+                                  {/* Strength Text */}
+                                  <p className="text-sm font-medium mb-2">
+                                    {getStrengthText(strengthScore)}. Must
+                                    contain:
+                                  </p>
+
+                                  {/* Requirements */}
+                                  <ul className="space-y-1.5">
+                                    {strength.map((req, idx) => (
+                                      <li
+                                        key={idx}
+                                        className="flex items-center gap-2"
+                                      >
+                                        {req.met ? (
+                                          <CheckIcon
+                                            size={16}
+                                            className="text-emerald-500"
+                                          />
+                                        ) : (
+                                          <XIcon
+                                            size={16}
+                                            className="text-muted-foreground/80"
+                                          />
+                                        )}
+                                        <span
+                                          className={`text-xs ${
+                                            req.met
+                                              ? "text-emerald-600"
+                                              : "text-muted-foreground"
+                                          }`}
+                                        >
+                                          {req.text}
+                                        </span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </FormItem>
+                              );
+                            }}
+                          />
+
+                          <FormField
+                            control={changePasswordForm.control}
+                            name="confirmNewPassword"
+                            render={({ field }) => {
+                              const [isVisible, setIsVisible] = useState(false);
+                              const toggleVisibility = () =>
+                                setIsVisible((prev) => !prev);
+
+                              return (
+                                <FormItem className="lg:col-span-2">
+                                  <FormLabel className="flex items-center justify-between">
+                                    Confirm Password <FormMessage />
+                                  </FormLabel>
+
+                                  <FormControl>
+                                    <div className="relative">
+                                      <Input
+                                        type={isVisible ? "text" : "password"}
+                                        placeholder=""
+                                        {...field}
+                                        className="pe-9"
+                                        disabled={authLoading}
+                                      />
+                                      <button
+                                        type="button"
+                                        onClick={toggleVisibility}
+                                        className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground/80 hover:text-foreground focus:outline-none"
+                                      >
+                                        {isVisible ? (
+                                          <EyeOffIcon size={16} />
+                                        ) : (
+                                          <EyeIcon size={16} />
+                                        )}
+                                      </button>
+                                    </div>
+                                  </FormControl>
+                                </FormItem>
+                              );
+                            }}
+                          />
+
+                          <AlertDialogFooter>
+                            <AlertDialogCancel disabled={authLoading}>
+                              Cancel
+                            </AlertDialogCancel>
+                            <Button type="submit" disabled={authLoading}>
+                              {authLoading ? (
+                                <>
+                                  Please wait...
+                                  <Loader className=" animate-spin" />
+                                </>
+                              ) : (
+                                <>
+                                  Continue
+                                  <ArrowRight />
+                                </>
+                              )}
+                            </Button>
+                          </AlertDialogFooter>
+                        </form>
+                      </Form>
+                    )}
+
+                    {step === "otp" && (
+                      <Form {...changePasswordOtpForm}>
+                        <form
+                          onSubmit={changePasswordOtpForm.handleSubmit(
+                            handleOtpVerification
+                          )}
+                          className="space-y-6"
+                        >
+                          <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.6 }}
+                          >
+                            <FormField
+                              control={changePasswordOtpForm.control}
+                              name="otp"
+                              render={({ field }) => (
+                                <FormItem className="">
+                                  <FormLabel className="flex justify-between items-center">
+                                    <FormMessage />
+                                  </FormLabel>
+                                  <FormControl>
+                                    <div className="flex items-center justify-center">
+                                      <InputOTP
+                                        maxLength={6}
+                                        value={field.value}
+                                        onChange={(value) => {
+                                          field.onChange(value);
+                                        }}
+                                        disabled={verifyLoading}
+                                      >
+                                        <InputOTPGroup>
+                                          <InputOTPSlot index={0} />
+                                          <InputOTPSlot index={1} />
+                                          <InputOTPSlot index={2} />
+                                          <InputOTPSlot index={3} />
+                                          <InputOTPSlot index={4} />
+                                          <InputOTPSlot index={5} />
+                                        </InputOTPGroup>
+                                      </InputOTP>
+                                    </div>
+                                  </FormControl>
+                                </FormItem>
+                              )}
+                            />
+                          </motion.div>
+                          <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.7 }}
+                            className="flex gap-3"
+                          >
+                            <Button
+                              type="button"
+                              className="flex-1 "
+                              disabled={verifyLoading}
+                              variant="outline"
+                              onClick={() => setStep("email")}
+                            >
+                              Back
+                            </Button>
+                            <Button
+                              type="submit"
+                              className="flex-1 "
+                              disabled={verifyLoading}
+                              variant={verifyLoading ? "outline" : "default"}
+                            >
+                              {verifyLoading ? (
+                                <>
+                                  Verifying...
+                                  <Loader
+                                    className="-ms-1 animate-spin"
+                                    size={16}
+                                    aria-hidden="true"
+                                  />
+                                </>
+                              ) : (
+                                <>
+                                  Change Password
+                                  <ArrowRight />
+                                </>
+                              )}
+                            </Button>
+                          </motion.div>
+                          <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.8 }}
+                            className="relative flex justify-center items-center gap-3 mt-7"
+                          >
+                            <div className=" border-b flex-1"></div>
+                            {/* <Label>
+                                                              Didn&apos;t get the code?
+                                                              <span className="underline" onClick={requestNewCode}>
+                                                                Resend Now
+                                                              </span>
+                                                            </Label> */}
+                            <Button
+                              variant="link"
+                              size="sm"
+                              type="button"
+                              onClick={requestNewCode}
+                              disabled={
+                                resendTimer > 0 || authLoading || verifyLoading
+                              }
+                            >
+                              {resendTimer > 0
+                                ? `Resend in ${resendTimer}s`
+                                : "Resend Code"}
+                            </Button>
+
+                            <div className=" border-b flex-1"></div>
+                          </motion.div>
+                          {/* {expiresAt && Date.now() > expiresAt && (
+                                                            <p className="text-red-500 text-sm text-center">
+                                                              OTP expired. Please request a new code.
+                                                            </p>
+                                                          )} */}
+                        </form>
+                      </Form>
+                    )}
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            </div>
+          )}
         </div>
       </div>
-
-      {/* Save Button (only visible when editing) */}
-      {isEditing && (
-        <div className="flex justify-end space-x-4">
-          <button
-            onClick={() => setIsEditing(false)}
-            className="px-6 py-2 border  text-gray-300 rounded-lg hover:bg-card transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => setIsEditing(false)}
-            className="px-6 py-2 bg-primary hover:bg-primary  rounded-lg transition-colors"
-          >
-            Save Changes
-          </button>
-        </div>
-      )}
     </div>
   );
 }

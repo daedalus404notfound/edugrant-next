@@ -39,25 +39,25 @@ export function useAdminProfileForm(data?: AdminProfileFormData) {
   const defaultValues: AdminProfileFormData = {
     ISPSU_Head: {
       fName: data?.ISPSU_Head?.fName || "",
-      headId: data?.ISPSU_Head.headId || 0,
+      headId: data?.ISPSU_Head?.headId || 0,
       mName: data?.ISPSU_Head?.mName || "",
       lName: data?.ISPSU_Head?.lName || "",
       gender: data?.ISPSU_Head?.gender || "",
       dateCreated: data?.ISPSU_Head
         ? format(data?.ISPSU_Head?.dateCreated, "yyyy-MM-dd")
         : "",
-      address: data?.ISPSU_Head.address || "",
+      address: data?.ISPSU_Head?.address || "",
     },
     ISPSU_Staff: {
-      fName: data?.ISPSU_Head?.fName || "",
-      headId: data?.ISPSU_Head.headId || 0,
-      mName: data?.ISPSU_Head?.mName || "",
-      lName: data?.ISPSU_Head?.lName || "",
-      gender: data?.ISPSU_Head?.gender || "",
-      dateCreated: data?.ISPSU_Head
-        ? format(data?.ISPSU_Head?.dateCreated, "yyyy-MM-dd")
+      fName: data?.ISPSU_Staff?.fName || "",
+      headId: data?.ISPSU_Staff?.headId || 0,
+      mName: data?.ISPSU_Staff?.mName || "",
+      lName: data?.ISPSU_Staff?.lName || "",
+      gender: data?.ISPSU_Staff?.gender || "",
+      dateCreated: data?.ISPSU_Staff
+        ? format(data?.ISPSU_Staff?.dateCreated, "yyyy-MM-dd")
         : "",
-      address: data?.ISPSU_Head.address || "",
+      address: data?.ISPSU_Staff?.address || "",
     },
     accountId: data?.accountId || 0,
     dateCreated: data?.dateCreated

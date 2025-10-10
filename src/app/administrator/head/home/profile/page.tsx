@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, easeIn, easeInOut, motion } from "motion/react";
 import {
   ArrowRight,
   Calendar1,
@@ -19,6 +19,7 @@ import {
   VenusAndMars,
   XIcon,
 } from "lucide-react";
+import logo from "@/assets/edugrant-logo.png";
 import {
   Timeline,
   TimelineContent,
@@ -94,8 +95,9 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { Skeleton } from "@/components/ui/skeleton";
 export default function Profile() {
-  const { admin } = useAdminStore();
+  const { admin, loading: loadingAdmin } = useAdminStore();
   const [openCalendar, setOpenCalendar] = useState(false);
 
   const { form, handleSubmit, loading, isChanged } = useUpdateProfileAdmin(
@@ -117,13 +119,15 @@ export default function Profile() {
     requestNewCode,
     resendTimer,
   } = useProfileUserChangePassword();
+
   const tabs = [
     { id: "personal", label: "Head Information", indicator: null },
     { id: "security", label: "Account Security", indicator: null },
   ];
+
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className=" lg:pt-10  pt-3 lg:w-3/4 w-full p-2 lg:p-0 mx-auto">
+      <div className=" lg:pb-10   w-full p-2 lg:p-0 mx-auto">
         {/* <motion.div
           className="flex justify-between items-end"
           initial={{ opacity: 0, x: -20 }}
@@ -137,35 +141,54 @@ export default function Profile() {
           />
         </motion.div> */}
 
-        <div className="h-50 w-full rounded-md relative bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 dark:from-emerald-600 dark:via-teal-600 dark:to-cyan-600 shadow-md">
-          <div className="absolute -bottom-20 left-4 flex items-end">
-            <div className="size-30 bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-600 dark:from-emerald-500 dark:via-teal-500 dark:to-cyan-500 rounded-full flex justify-center items-center text-2xl font-bold tracking-wide text-white shadow-lg">
-              JT
-            </div>
-            <div className="p-3">
-              <h1 className="text-xl font-medium text-foreground">
-                Tecson, Jerome Laguyo
-              </h1>
-              <p className="text-muted-foreground text-sm">2022000493</p>
-            </div>
+        <div className="h-50 w-full rounded-md relative bg-gradient-to-br from-background via-card to-card/50  shadow-md flex justify-center items-center ">
+          <div className="absolute top-0 right-0 h-full overflow-hidden">
+            <img src={logo.src} className="opacity-40 -translate-y-7" alt="" />
+          </div>
+          <div className="absolute -bottom-20 w-[60%] flex items-end">
+            {loadingAdmin ? (
+              <>
+                {/* Avatar Skeleton */}
+                <Skeleton className="size-25 rounded-full flex-shrink-0" />
+
+                {/* Text Content Skeleton */}
+                <div className="p-3 flex-1">
+                  <Skeleton className="h-7 w-48 mb-2" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Avatar */}
+                <div className="size-25 bg-emerald-900 rounded-full flex justify-center items-center text-2xl font-bold tracking-wide text-white shadow-lg flex-shrink-0">
+                  JT
+                </div>
+
+                {/* Text Content */}
+                <div className="p-3">
+                  <h1 className="text-xl font-medium text-foreground">
+                    {admin?.ISPSU_Head.lName}, {admin?.ISPSU_Head.fName}{" "}
+                    {admin?.ISPSU_Head.mName}
+                  </h1>
+                  <p className="text-muted-foreground text-sm">{admin?.role}</p>
+                </div>
+              </>
+            )}
           </div>
         </div>
-
-        <div className="py-8 px-4 space-y-8 mt-20">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-            className="overflow-y-hidden overflow-x-auto py-3 no-scrollbar "
-          >
+        <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
+        <div className="py-8 w-[60%] mx-auto space-y-8 mt-20">
+          <div className="overflow-y-hidden overflow-x-auto py-3 no-scrollbar ">
             <Tabs tabs={tabs} onTabChange={(tabId) => setTab(tabId)} />
-          </motion.div>
+          </div>
           <Form {...form}>
-            <div className="">
+            <form onSubmit={form.handleSubmit(handleSubmit)}>
               {tab === "personal" && (
                 <div className=" w-full space-y-5">
-                  <h1>Personal Details</h1>
-                  <div className="grid grid-cols-2  gap-8">
+                  <div className="flex items-center gap-3 border-b py-4">
+                    <h1 className="font-medium ">Personal Details</h1>
+                  </div>
+                  <div className="grid grid-cols-2  gap-8 py-4">
                     <FormField
                       control={form.control}
                       name="ISPSU_Head.fName"
@@ -257,6 +280,8 @@ export default function Profile() {
                                 placeholder=""
                                 className="rounded-r-none"
                                 {...field}
+                                readOnly
+                                disabled
                               />
                               <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
                                 <Button variant="ghost">
@@ -331,8 +356,10 @@ export default function Profile() {
                     />
                   </div>
                   <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
-                  <h1>Account Details</h1>
-                  <div className="grid grid-cols-2 gap-8">
+                  <div className="flex items-center gap-3 border-b py-4">
+                    <h1 className="font-medium ">Account Details</h1>
+                  </div>
+                  <div className="grid grid-cols-2 gap-8 py-4">
                     <FormField
                       control={form.control}
                       name="role"
@@ -367,7 +394,7 @@ export default function Profile() {
                       render={({ field }) => (
                         <FormItem className="">
                           <FormLabel className="text-muted-foreground">
-                            Date Created
+                            Member Since
                           </FormLabel>
                           <FormControl className="">
                             <div className="flex items-center">
@@ -391,18 +418,50 @@ export default function Profile() {
 
                     {/* <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" /> */}
                   </div>
+
+                  <AnimatePresence>
+                    {isChanged && (
+                      <div className="sticky bottom-16 lg:bottom-0 ">
+                        <motion.div
+                          className="bg-gradient-to-t from-background via-background/50 to-transparent w-full flex justify-center items-center py-8"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <motion.div
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: 30 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <Button
+                              size="lg"
+                              type="submit"
+                              className="cursor-pointer"
+                              disabled={loading}
+                            >
+                              <Check />
+                              {loading ? "Saving..." : "Save Changes"}
+                              {loading && <Loader className="animate-spin" />}
+                            </Button>
+                          </motion.div>
+                        </motion.div>
+                      </div>
+                    )}
+                  </AnimatePresence>
                 </div>
               )}
-            </div>
+            </form>
           </Form>
 
           {tab === "security" && (
             <div className=" w-full space-y-8">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center justify-between bg-card p-4 rounded-md gap-3">
                 <h3 className=" font-medium text-sm flex gap-2 items-center">
                   Change Password
                 </h3>
-                <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button>Change</Button>
@@ -795,41 +854,8 @@ export default function Profile() {
                   </AlertDialogContent>
                 </AlertDialog>
               </div>
-
-              <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
             </div>
           )}
-          <AnimatePresence>
-            {isChanged && (
-              <div className="sticky bottom-16 lg:bottom-0 ">
-                <motion.div
-                  className="bg-gradient-to-t from-background via-background/50 to-transparent w-full flex justify-center items-center py-8"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 30 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Button
-                      size="lg"
-                      className="cursor-pointer"
-                      onClick={form.handleSubmit(handleSubmit)}
-                      disabled={loading}
-                    >
-                      <Check />
-                      {loading ? "Saving..." : "Save Changes"}
-                      {loading && <Loader className="animate-spin" />}
-                    </Button>
-                  </motion.div>
-                </motion.div>
-              </div>
-            )}
-          </AnimatePresence>
         </div>
       </div>
     </div>

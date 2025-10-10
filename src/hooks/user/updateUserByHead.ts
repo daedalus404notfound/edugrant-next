@@ -1,11 +1,11 @@
 import axios, { AxiosError } from "axios";
-import { useProfileForm } from "./zodUserProfile";
 import { StudentUserFormData } from "./zodUpdateUserByHead";
 import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
 import { useUserStore } from "@/store/useUserStore";
 import { zodUpdateUserByHead } from "./zodUpdateUserByHead";
+import { useAdminStore } from "@/store/adminUserStore";
 
 interface ApiErrorResponse {
   message?: string;
@@ -15,6 +15,7 @@ interface ApiErrorResponse {
 
 type ApiError = AxiosError<ApiErrorResponse>;
 const updateUserApi = async (data: StudentUserFormData) => {
+  const admin = useAdminStore.getState().admin;
   const res = await axios.post(
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/updateStudentAccount`,
     {
@@ -31,6 +32,7 @@ const updateUserApi = async (data: StudentUserFormData) => {
       schoolId: data.Account.schoolId,
       email: data.Account.email,
       year: data.year,
+      accountId: admin?.accountId,
     },
     { withCredentials: true }
   );
@@ -59,8 +61,6 @@ export const useProfile = () => {
         });
       }
     },
-    retry: 1,
-    retryDelay: 1000,
   });
 };
 

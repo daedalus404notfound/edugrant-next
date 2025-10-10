@@ -17,11 +17,21 @@ const updateUserApi = async (data: AdminProfileFormData) => {
   const res = await axios.post(
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/editHead`,
     {
-      address: data.ISPSU_Head.address,
-      firstName: data.ISPSU_Head.fName,
-      gender: data.ISPSU_Head.gender,
-      lastName: data.ISPSU_Head.lName,
-      middleName: data.ISPSU_Head.mName,
+      address: data.ISPSU_Head.address
+        ? data.ISPSU_Head.address
+        : data.ISPSU_Staff.address,
+      firstName: data.ISPSU_Head.fName
+        ? data.ISPSU_Head.fName
+        : data.ISPSU_Staff.fName,
+      gender: data.ISPSU_Head.gender
+        ? data.ISPSU_Head.gender
+        : data.ISPSU_Staff.gender,
+      lastName: data.ISPSU_Head.lName
+        ? data.ISPSU_Head.lName
+        : data.ISPSU_Staff.lName,
+      middleName: data.ISPSU_Head.mName
+        ? data.ISPSU_Head.mName
+        : data.ISPSU_Staff.mName,
       accountId: data.accountId,
     },
     { withCredentials: true }
