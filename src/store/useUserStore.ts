@@ -4,7 +4,7 @@ import { UserFormData } from "@/hooks/user/zodUserProfile";
 
 type UserStore = {
   user: UserFormData | null;
-  loading: boolean;
+  loadingUser: boolean;
   error: string | null;
   setUser: (user: UserFormData) => void;
   addApplication: (scholarshipId: number, status: string) => void;
@@ -17,7 +17,7 @@ export const useUserStore = create<UserStore>()(
   persist(
     (set) => ({
       user: null,
-      loading: false,
+      loadingUser: false,
       error: null,
       setUser: (user) => set({ user }),
       // addApplication: (scholarshipId, status) =>
@@ -71,7 +71,7 @@ export const useUserStore = create<UserStore>()(
           };
         }),
 
-      setLoading: (loading) => set({ loading }),
+      setLoading: (loadingUser) => set({ loadingUser }),
       setError: (error) => set({ error }),
       logout: () => set({ user: null }),
     }),

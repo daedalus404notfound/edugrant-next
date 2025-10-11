@@ -131,10 +131,7 @@ export default function DynamicHeaderUser({
 
   return (
     <header className="flex w-full z-30 items-center justify-between  backdrop-blur-sm rounded-lg">
-      <div className="flex h-16 shrink-0 items-center gap-2 lg:px-5 px-3">
-        {/* <div className="flex gap-2 items-center">
-          <img src={bascLogo.src} alt="" className="size-9" />
-        </div> */}
+      <div className="flex h-16 shrink-0 items-center gap-2 lg:px-10 px-3">
         <SidebarTrigger className="-ml-1 lg:flex hidden" />
         <Separator
           orientation="vertical"

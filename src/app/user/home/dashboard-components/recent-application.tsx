@@ -25,19 +25,38 @@ export default function RecentApplicationDashboard({
       <div className="grid grid-cols-1  gap-4">
         {loading ? (
           [...Array(2)].map((_, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{
-                duration: 0.3,
-                delay: index * 0.1,
-                ease: "easeOut",
-              }}
-              className="bg-background/40 relative rounded-md space-y-3"
+              className="bg-card relative rounded-md p-6 shadow-sm space-y-6"
             >
-              <Skeleton className="h-40" />
-            </motion.div>
+              {/* Logo + Provider Skeleton */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="w-10 h-10 rounded-full" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-3 w-24" />
+                  </div>
+                </div>
+                <Skeleton className="h-9 w-20" />
+              </div>
+
+              {/* Details Skeleton */}
+              <div className="grid grid-cols-3 gap-1">
+                <div className="flex flex-col border-l px-4 space-y-2">
+                  <Skeleton className="h-3 w-24" />
+                  <Skeleton className="h-5 w-20" />
+                </div>
+                <div className="flex flex-col border-l px-4 space-y-2">
+                  <Skeleton className="h-3 w-16" />
+                  <Skeleton className="h-5 w-16" />
+                </div>
+                <div className="flex flex-col border-l px-4 space-y-2">
+                  <Skeleton className="h-3 w-28" />
+                  <Skeleton className="h-5 w-20" />
+                </div>
+              </div>
+            </div>
           ))
         ) : application.length === 0 ? (
           <>No application found.</>

@@ -123,6 +123,7 @@ import OngoingScholarshipDashboard from "./dashboard-components/ongoing-scholars
 import RecentApplicationDashboard from "./dashboard-components/recent-application";
 import CompleteChecker from "./dashboard-components/complete-check";
 import { ProfileCompletion } from "./dashboard-components/profile-progress-2";
+import { ApplicationStats } from "./dashboard-components/stats";
 
 export default function AdminDashboard() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -185,38 +186,37 @@ export default function AdminDashboard() {
   const { data, loading } = usefetchUserDashboard(accountId, schoolId);
   return (
     <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className="lg:py-8 py-4 lg:px-5 px-2 space-y-5">
-        {/* {!completed && <CompleteChecker />} */}
-        <CompleteChecker />
+      <div className="lg:py-6 py-4 lg:px-5 px-2 space-y-5">
+        {!completed && <CompleteChecker />}
+
         <div className="grid lg:grid-cols-3 grid-cols-1 gap-8 ">
+          <div className="grid  col-span-3 lg:grid-cols-4 grid-cols-1 lg:gap-5 gap-3">
+            {summaryCards.map((card, index) => (
+              <SummaryCard key={index} {...card} loading={loading} />
+            ))}
+          </div>
           <div className="space-y-10 col-span-2">
-            <WelcomeCard />
-            <OngoingScholarshipDashboard
-              scholarship={data?.onGoingScholarships ?? []}
-              loading={loading}
-            />
+            <WelcomeCard loading={loading} />
             <RecentApplicationDashboard
               application={data?.recentApplications ?? []}
               loading={loading}
             />
-
             <Announcements
               announcement={data?.announcements ?? []}
               loading={loading}
             />
-            <RecentApplicationDashboard
-              application={data?.recentApplications ?? []}
-              loading={loading}
-            />
           </div>
           <div className="space-y-12">
-            <ProfileCompletion />
+            <ProfileCompletion loading={loading} />
+            <OngoingScholarshipDashboard
+              scholarship={data?.onGoingScholarships ?? []}
+              loading={loading}
+            />
             <Calendar
               mode="single"
               selected={date}
               onSelect={setDate}
-              className="rounded-md border shadow-sm w-full bg-card"
-              captionLayout="dropdown"
+              className="rounded-md p-6 shadow-sm w-full bg-card"
             />
           </div>
         </div>

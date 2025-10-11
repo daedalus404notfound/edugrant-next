@@ -49,12 +49,6 @@ const frameworks = [
   },
 ];
 import Link from "next/link";
-const tabs = [
-  { id: "ACTIVE", label: "Ongoing", indicator: null },
-  { id: "RENEW", label: "For Renewal", indicator: null },
-  { id: "EXPIRED", label: "Closed", indicator: null },
-  { id: "BLOCKED", label: "Restricted", indicator: null },
-];
 
 const scholarshipTypes = [
   { label: "Government", value: "government", icon: Building2 },
@@ -115,7 +109,7 @@ export default function ClientScholarship() {
     return filterArray.length > 0 ? JSON.stringify(filterArray) : "";
   };
 
-  const { data, loading } = useScholarshipData({
+  const { data, loading, meta } = useScholarshipData({
     page: currentPage,
     pageSize: rowsPerPage,
     sortBy: "scholarshipTitle",
@@ -125,7 +119,11 @@ export default function ClientScholarship() {
     filters: formatFilters(),
     accountId: user?.accountId.toString(),
   });
-
+  const tabs = [
+    { id: "ACTIVE", label: "Ongoing", indicator: meta.counts.countActive },
+    { id: "RENEW", label: "For Renewal", indicator: meta.counts.countRenew },
+    { id: "EXPIRED", label: "Closed", indicator: meta.counts.countExpired },
+  ];
   const { percentage, completed } = getFamilyBackgroundProgress(user?.Student);
   const familyLength = Object.keys(user?.Student.familyBackground || {}).length;
   console.log("dsds", familyLength);

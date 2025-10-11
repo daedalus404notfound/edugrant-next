@@ -24,22 +24,37 @@ export default function OngoingScholarshipDashboard({
           </Button>
         </Link>
       </div>
-      <div className="grid lg:grid-cols-2 gap-4 ">
+      <div className="grid lg:grid-cols-1 gap-4 ">
         {loading ? (
           [...Array(2)].map((_, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{
-                duration: 0.3,
-                delay: index * 0.1,
-                ease: "easeOut",
-              }}
-              className="bg-background/40 relative rounded-md space-y-3"
+              className="bg-card rounded-md p-6 shadow-sm space-y-6"
             >
-              <Skeleton className="h-50" />
-            </motion.div>
+              {/* Logo + Provider skeleton */}
+              <div className="flex items-center gap-3">
+                <Skeleton className="w-10 h-10 rounded-full" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/2" />
+                </div>
+              </div>
+
+              {/* Details skeleton */}
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-3 w-16" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+                <div className="flex items-center justify-between">
+                  <Skeleton className="h-3 w-24" />
+                  <Skeleton className="h-4 w-16" />
+                </div>
+              </div>
+
+              {/* Button skeleton */}
+              <Skeleton className="h-10 w-full rounded-md" />
+            </div>
           ))
         ) : scholarship.length === 0 ? (
           <>No scholarship found.</>

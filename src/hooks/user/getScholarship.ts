@@ -54,7 +54,15 @@ import { scholarshipFormData } from "../admin/zodUpdateScholarship";
 import { MetaTypes } from "../zodMeta";
 import { ApiErrorResponse } from "../admin/postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
+interface ScholarshipCounts {
+  countActive: number;
+  countRenew: number;
+  countExpired: number;
+}
 
+interface MetaWithCounts extends MetaTypes {
+  counts: ScholarshipCounts;
+}
 export default function useScholarshipData({
   page,
   pageSize,
@@ -75,7 +83,7 @@ export default function useScholarshipData({
   accountId?: string;
 }) {
   const [data, setData] = useState<scholarshipFormData[]>([]);
-  const [meta, setMeta] = useState<MetaTypes>({
+  const [meta, setMeta] = useState<MetaWithCounts>({
     page: 1,
     pageSize: 10,
     totalRows: 0,
@@ -84,9 +92,14 @@ export default function useScholarshipData({
     order: "",
     filters: "",
     search: "",
+    counts: {
+      countActive: 0,
+      countRenew: 0,
+      countExpired: 0,
+    },
   });
   const [loading, setLoading] = useState(true);
-  console.log(filters);
+
   useEffect(
     function () {
       async function fetchScholarships() {
