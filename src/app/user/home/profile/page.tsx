@@ -85,7 +85,7 @@ import {
 import { useProfileUserChangeEmail } from "@/hooks/user/profileUserChangeEmail";
 import { Skeleton } from "@/components/ui/skeleton";
 export default function Profile() {
-  const { user, loading: useLoading } = useUserStore();
+  const { user, loadingUser: useLoading } = useUserStore();
   const [openCalendar, setOpenCalendar] = useState(false);
 
   const { form, siblings, handleSubmit, loading, isChanged } =
@@ -131,11 +131,8 @@ export default function Profile() {
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className=" lg:pb-10   w-full p-2 lg:p-0 mx-auto">
-        <div className="h-50 w-full rounded-md relative bg-gradient-to-br from-background via-card to-card/50  shadow-md flex justify-center items-center ">
-          <div className="absolute top-0 right-0 h-full overflow-hidden">
-            <img src={logo.src} className="opacity-40 -translate-y-7" alt="" />
-          </div>
-          <div className="absolute -bottom-20 lg:w-[60%] w-full flex items-end">
+        <div className="py-8 space-y-8  mt-20 lg:w-[60%] w-full mx-auto">
+          <div className=" lg:w-[60%] w-full flex items-end">
             {useLoading ? (
               <>
                 {/* Avatar Skeleton */}
@@ -150,7 +147,7 @@ export default function Profile() {
             ) : (
               <>
                 {/* Avatar */}
-                <div className="size-25 bg-emerald-900 rounded-full flex justify-center items-center text-2xl font-bold tracking-wide text-white shadow-lg flex-shrink-0">
+                <div className="size-20 bg-emerald-900 rounded-full flex justify-center items-center text-2xl font-bold tracking-wide text-white shadow-lg flex-shrink-0">
                   JT
                 </div>
 
@@ -165,17 +162,9 @@ export default function Profile() {
               </>
             )}
           </div>
-        </div>
-
-        <div className="py-8 space-y-8  mt-20 lg:w-[60%] w-full mx-auto">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-            className="overflow-y-hidden overflow-x-auto py-3 no-scrollbar "
-          >
+          <div className="overflow-y-hidden overflow-x-auto py-3 no-scrollbar ">
             <Tabs tabs={tabs} onTabChange={(tabId) => setTab(tabId)} />
-          </motion.div>
+          </div>
           <div className="">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(handleSubmit)}>
