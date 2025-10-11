@@ -1,12 +1,20 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, LayoutTemplate, Sparkles } from "lucide-react";
+import { ArrowRight, LayoutTemplate, Map, Sparkles } from "lucide-react";
 import logo from "@/assets/edugrant-logo.png";
 import { Skeleton } from "@/components/ui/skeleton";
-export default function WelcomeCard({ loading }: { loading: boolean }) {
+export default function WelcomeCard({
+  loading,
+  pending,
+  application,
+}: {
+  loading: boolean;
+  pending: number;
+  application: number;
+}) {
   return (
     <div className="relative overflow-hidden flex flex-col justify-between gap-4 h-70 bg-gradient-to-br to-card from-card/50 p-6 rounded-lg">
       <img
-        className="absolute object-contain shadow -right-8 h-full -bottom-15 opacity-20"
+        className="absolute object-contain shadow lg:-right-8 -right-20 lg:h-full h-3/4 lg:-bottom-15 -bottom-0 opacity-20"
         src={logo.src || "/placeholder.svg"}
         alt=""
       />
@@ -42,22 +50,26 @@ export default function WelcomeCard({ loading }: { loading: boolean }) {
               </span>
             </div>
 
-            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2 text-balance jakarta">
+            <h2 className="text-xl md:text-3xl font-bold text-foreground mb-2 text-balance jakarta">
               Ready to find a scholarship?
             </h2>
 
-            <p className="text-muted-foreground text-balance ">
-              You currently have <strong>0</strong> applications in progress and{" "}
-              <strong>2</strong> pending applications awaiting review.
+            <p className="text-muted-foreground text-balance text-sm lg:text-base">
+              You currently have <strong>{application}</strong> applications in
+              progress and <strong>{pending}</strong> pending applications
+              awaiting review.
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-3">
-            <Button>
+          <div className="flex flex-wrap gap-3 z-10">
+            <Button className="flex-1 md:flex-0">
               Browse Scholarships
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <ArrowRight />
             </Button>
-            <Button variant="outline">Continue Applications</Button>
+            <Button className="flex-1 md:flex-0" variant="secondary">
+              {" "}
+              Track Applications <Map />
+            </Button>
           </div>
         </>
       )}

@@ -59,12 +59,14 @@ export default function RecentApplicationDashboard({
             </div>
           ))
         ) : application.length === 0 ? (
-          <>No application found.</>
+          <div className="text-center py-12 text-muted-foreground">
+            No application found.
+          </div>
         ) : (
           application.slice(0, 2).map((meow) => (
             <div
               key={meow.applicationId}
-              className="group relative flex flex-col justify-between bg-card rounded-md p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 gap-6"
+              className="group relative flex flex-col justify-between bg-gradient-to-br to-card from-card/50 rounded-md p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 gap-6"
             >
               {/* Logo + Provider */}
               <div className="flex items-center justify-between">
@@ -90,7 +92,7 @@ export default function RecentApplicationDashboard({
                     </p>
                   </div>
                 </div>
-                <Link href={`/user/home/scholarships/${meow.scholarshipId}`}>
+                <Link href={`/user/home/applications/${meow.applicationId}`}>
                   <Button className="w-full" size="sm">
                     View <ArrowRight />
                   </Button>

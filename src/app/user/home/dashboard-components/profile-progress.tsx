@@ -6,6 +6,7 @@ import Link from "next/link";
 
 export default function ProfileProgress() {
   const { user } = useUserStore();
+
   const { percentage, completed } = getFamilyBackgroundProgress(user?.Student);
   const getProgressBarColor = (percentage: number) => {
     if (percentage < 30) return "bg-red-500";

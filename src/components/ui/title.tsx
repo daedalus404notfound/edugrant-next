@@ -35,7 +35,7 @@ export default function TitleReusable({
           {Icon && <Icon strokeWidth={2} className="h-5 w-6" />}
           {title}
         </motion.span>
-        <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+        {/* <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" /> */}
       </div>
 
       <p className={`${descriptionSize} text-gray-500 mt-1`}>{description}</p>

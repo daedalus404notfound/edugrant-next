@@ -359,14 +359,14 @@ export default function Notification() {
       </PopoverTrigger>
 
       <PopoverContent
-        className="w-[420px] p-0 overflow-hidden mr-8"
+        className="w-[420px] p-0 overflow-hidden"
         align="end"
         sideOffset={8}
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 bg-muted/30 border-b">
           <div className="flex items-center gap-2">
-            <h2 className="text-lg font-semibold">Notifications</h2>
+            <h2 className="text-base font-semibold">Notifications</h2>
             {(unreadNotifications ?? 0) > 0 && (
               <Badge variant="secondary" className="rounded-full px-2 py-0">
                 {unreadNotifications}

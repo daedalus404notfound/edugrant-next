@@ -230,16 +230,39 @@ export default function UploadDocs({
   return (
     <div className="h-full bg-background flex flex-col rounded-t-lg">
       <div className="flex-1 lg:p-4 p-2 space-y-10">
-        {data.form && (
-          <div className="bg-muted lg:px-4 border  px-2 py-3 md:py-2 rounded-md sticky top-0">
-            <div className="flex  items-center justify-center gap-x-4 gap-y-2">
-              <p className="lg:text-lg font-semibold flex-1">
-                {data.title} Form
+        <div className="space-y-8">
+          <div>
+            <div className=" pb-4">
+              <TitleReusable
+                title={`Upload Documents for Phase ${documentPhasesLength}`}
+                description={` Complete your application for ${data.title}`}
+              />
+            </div>
+            <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+          </div>
+          <div className="">
+            <h2 className="text-lg font-semibold mb-4">Before you start</h2>
+            <div className="grid gap-3 text-sm text-muted-foreground">
+              <p>• Ensure all documents are clear, readable, and valid</p>
+              <p>
+                • Only upload files in accepted formats (PDF, DOCX, JPG, PNG)
               </p>
+              <p>• Each file must not exceed 2MB in size</p>
+
+              <p>
+                • Optional documents aren't required but may strengthen your
+                application.
+              </p>
+            </div>
+          </div>
+          <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+          {/* {data.form && ( */}
+          <div className="bg-card lg:px-4   px-2 py-3 md:py-2 rounded-md ">
+            <div className="flex  items-center justify-center gap-x-4 gap-y-2">
+              <p className="text-sm font-semibold flex-1">{data.title} Form</p>
 
               <Button
                 size="sm"
-                variant="outline"
                 className=""
                 onClick={() =>
                   downloadFile(data.form, `${data.title} Scholarship Form.pdf`)
@@ -254,27 +277,7 @@ export default function UploadDocs({
               </Button>
             </div>
           </div>
-        )}
-        <div className="lg:px-4">
-          <h2 className="text-lg font-semibold mb-4">Before you start</h2>
-          <div className="grid gap-3 text-sm text-muted-foreground">
-            <p>• Ensure all documents are clear, readable, and valid</p>
-            <p>• Only upload files in accepted formats (PDF, DOCX, JPG, PNG)</p>
-            <p>• Each file must not exceed 2MB in size</p>
-
-            <p>
-              • Optional documents aren't required but may strengthen your
-              application.
-            </p>
-          </div>
-        </div>
-        <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-        <div className="space-y-8">
-          <TitleReusable
-            title={`Upload Documents for Phase ${documentPhasesLength}`}
-            description={` Complete your application for ${data.title}`}
-          />
-
+          {/* )} */}
           <Form {...form}>
             <div className=" grid lg:grid-cols-2 grid-cols-1 gap-8">
               {Object.values(lastPhase).map((doc, index) => (

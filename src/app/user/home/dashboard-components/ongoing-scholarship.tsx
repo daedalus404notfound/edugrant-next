@@ -57,12 +57,14 @@ export default function OngoingScholarshipDashboard({
             </div>
           ))
         ) : scholarship.length === 0 ? (
-          <>No scholarship found.</>
+          <div className="text-center py-12 text-muted-foreground">
+            No scholarship found.
+          </div>
         ) : (
           scholarship.slice(0, 2).map((meow) => (
             <div
               key={meow.scholarshipId}
-              className="group relative flex flex-col justify-between bg-card rounded-md p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 gap-6"
+              className="group relative flex flex-col justify-between bg-gradient-to-br to-card from-card/50 rounded-md p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 gap-6"
             >
               {/* Logo + Provider */}
               <div className="flex items-center gap-3">

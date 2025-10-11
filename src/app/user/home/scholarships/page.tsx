@@ -72,6 +72,7 @@ import NoDataFound from "@/components/ui/nodata";
 import { useUserStore } from "@/store/useUserStore";
 import { getFamilyBackgroundProgress } from "@/lib/isFamilyComplete";
 import { getPhaseLabel } from "@/lib/phaseLevel";
+import CompleteChecker from "../dashboard-components/complete-check";
 export default function ClientScholarship() {
   const [currentPage] = useState(1);
   const [rowsPerPage] = useState(20);
@@ -180,38 +181,7 @@ export default function ClientScholarship() {
         </motion.div>
 
         <div className="py-8 space-y-8">
-          {!completed && (
-            <div className=" z-20 dark bg-muted rounded-md text-foreground px-4 py-3 sticky top-20">
-              <div className="flex flex-col justify-between gap-2 md:flex-row">
-                <div className="flex grow gap-3">
-                  <Lock
-                    className="mt-0.5 shrink-0 opacity-60"
-                    size={16}
-                    aria-hidden="true"
-                  />
-                  <div className="flex grow flex-col justify-between gap-2 md:flex-row md:items-center">
-                    <p className="text-sm">
-                      Please complete your profile details to unlock the
-                      scholarship and apply.
-                    </p>
-                    <Link
-                      href="/user/home/profile"
-                      prefetch={true}
-                      scroll={false}
-                      className="group text-sm font-medium whitespace-nowrap underline"
-                    >
-                      View Profile
-                      <ArrowRightIcon
-                        className="ms-2 -mt-0.5 inline-flex opacity-60 transition-transform group-hover:translate-x-0.5"
-                        size={16}
-                        aria-hidden="true"
-                      />
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          {!completed && <CompleteChecker />}
 
           <motion.div
             initial={{ opacity: 0, x: -30 }}

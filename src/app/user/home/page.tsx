@@ -32,6 +32,7 @@ import {
   Grid2X2,
   Lock,
   Map,
+  MessageSquare,
   Settings,
   Sparkles,
   SquareUser,
@@ -132,11 +133,10 @@ export default function AdminDashboard() {
   const accountId = user?.accountId;
   const schoolId = user?.schoolId;
   const { percentage, completed } = getFamilyBackgroundProgress(user?.Student);
-  const [isClient, setIsClient] = useState(false);
 
   const summaryCards: SummaryCardProps[] = [
     {
-      label: "Total Applcations",
+      label: "Total Application",
       data: user?.Student.Application ? user?.Student.Application.length : 0,
       icon: <TrendingUp />,
       color: "blue",
@@ -159,8 +159,8 @@ export default function AdminDashboard() {
             (meow) => meow.status === "INTERVIEW"
           ).length
         : 0,
-      icon: <GraduationCap />,
-      color: "white",
+      icon: <MessageSquare />,
+      color: "red",
       todayIncrement: 0,
     },
     {
@@ -174,14 +174,6 @@ export default function AdminDashboard() {
       todayIncrement: 0,
     },
   ];
-  useEffect(() => {
-    setIsClient(true);
-    setNow(new Date().toISOString());
-    const interval = setInterval(() => {
-      setNow(new Date().toISOString());
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   const { data, loading } = usefetchUserDashboard(accountId, schoolId);
   return (
@@ -190,13 +182,17 @@ export default function AdminDashboard() {
         {!completed && <CompleteChecker />}
 
         <div className="grid lg:grid-cols-3 grid-cols-1 gap-8 ">
-          <div className="grid  col-span-3 lg:grid-cols-4 grid-cols-1 lg:gap-5 gap-3">
+          <div className="  col-span-3 lg:grid-cols-4 grid-cols-1 lg:gap-5 gap-3 hidden lg:grid">
             {summaryCards.map((card, index) => (
               <SummaryCard key={index} {...card} loading={loading} />
             ))}
           </div>
           <div className="space-y-10 col-span-2">
-            <WelcomeCard loading={loading} />
+            <WelcomeCard
+              pending={data?.pendingApplicationCount ?? 0}
+              application={data?.totalApplicationsCount ?? 0}
+              loading={loading}
+            />
             <RecentApplicationDashboard
               application={data?.recentApplications ?? []}
               loading={loading}
@@ -208,10 +204,13 @@ export default function AdminDashboard() {
           </div>
           <div className="space-y-12">
             <ProfileCompletion loading={loading} />
-            <OngoingScholarshipDashboard
-              scholarship={data?.onGoingScholarships ?? []}
-              loading={loading}
-            />
+            {completed && (
+              <OngoingScholarshipDashboard
+                scholarship={data?.onGoingScholarships ?? []}
+                loading={loading}
+              />
+            )}
+
             <Calendar
               mode="single"
               selected={date}

@@ -157,20 +157,19 @@ export default function DynamicHeaderUser({
       </div>
 
       {!isMobile && (
-        <div className="flex items-center gap-8 lg:px-5 px-3">
-          <ProfileCard />
-          <div className="space-x-3">
-            <Notification />
-            <ModeToggle />
-          </div>
-          {/* <Button
-            variant="outline"
+        <div className="flex items-center gap-3 lg:px-5 px-3">
+          <Notification />
+          <ModeToggle />
+
+          <Button
+            variant="secondary"
+            className="rounded-full"
             onClick={() => {
               setOpenOut(true);
             }}
           >
             <LogOut />
-          </Button> */}
+          </Button>
         </div>
       )}
       {isMobile && (

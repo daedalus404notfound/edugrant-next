@@ -93,7 +93,7 @@ export function SummaryCard({
       </div>
 
       <div className="flex justify-between items-end">
-        <p className="lg:text-sm text-xs line-clamp-1">{label}</p>
+        <p className="lg:text-sm text-xs line-clamp-1 jakarta">{label}</p>
 
         {loading ? (
           <Ring size={35} stroke={6} speed={2} bgOpacity={0} color="yellow" />

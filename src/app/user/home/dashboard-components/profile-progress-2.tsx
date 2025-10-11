@@ -1,14 +1,38 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Circle } from "lucide-react";
+import { ArrowRight, CheckCircle2, Circle } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getFamilyBackgroundProgress } from "@/lib/isFamilyComplete";
+import { useUserStore } from "@/store/useUserStore";
 
 export function ProfileCompletion({ loading }: { loading: boolean }) {
+  const { user } = useUserStore();
+
+  const { percentage, completed } = getFamilyBackgroundProgress(user?.Student);
+  const getProgressBarColor = (percentage: number) => {
+    if (percentage < 30) return "bg-red-500";
+    if (percentage < 70) return "bg-yellow-500";
+    return "bg-green-800";
+  };
+
+  const getProgressContainerColor = (percentage: number) => {
+    if (percentage < 30) return "bg-red-500/20";
+    if (percentage < 70) return "bg-yellow-500/20";
+    return "bg-green-800/20";
+  };
+
+  const getProgressText = (percentage: number) => {
+    if (percentage < 30) return "Just getting started!";
+    if (percentage < 70) return "You're making great progress!";
+    if (percentage < 100) return "Almost there!";
+    return "Completed!";
+  };
+
   const completionPercentage = 75;
   const tasks = [
     { label: "Basic Information", completed: true },
-    { label: "Academic Records", completed: true },
-    { label: "Family Composition", completed: false },
+    { label: "Academic Details", completed: true },
+    { label: "Family Composition", completed: completed },
   ];
 
   return loading ? (
@@ -44,22 +68,30 @@ export function ProfileCompletion({ loading }: { loading: boolean }) {
           Profile Completion
         </h3>
         <p className="text-sm text-muted-foreground">
-          Complete your profile to unlock more opportunities
+          Complete your profile to unlock scholarship application.
         </p>
       </div>
 
       <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
           <span className="text-2xl font-bold text-foreground">
-            {completionPercentage}%
+            {percentage}%
           </span>
-          <span className="text-xs text-muted-foreground">Almost there!</span>
+          <span className="text-xs text-muted-foreground">
+            {getProgressText(percentage)}
+          </span>
         </div>
-        <div className="h-2 bg-secondary rounded-full overflow-hidden">
+        <div
+          className={`w-full ${getProgressContainerColor(
+            percentage
+          )} rounded-full h-2`}
+        >
           <div
-            className="h-full bg-accent transition-all duration-500"
-            style={{ width: `${completionPercentage}%` }}
-          />
+            className={`h-2 rounded-full transition-all duration-300 ${getProgressBarColor(
+              percentage
+            )}`}
+            style={{ width: `${percentage}%` }}
+          ></div>
         </div>
       </div>
 
@@ -85,7 +117,7 @@ export function ProfileCompletion({ loading }: { loading: boolean }) {
       </div>
 
       <Button variant="outline" className="w-full bg-transparent">
-        Complete Profile
+        Complete Profile <ArrowRight />
       </Button>
     </div>
   );
