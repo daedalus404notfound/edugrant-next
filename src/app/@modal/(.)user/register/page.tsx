@@ -484,11 +484,15 @@ export default function RegisterStudent() {
                       name="indigenous"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="flex items-center justify-between line-clamp-1">
+                          <FormLabel
+                            htmlFor="ind"
+                            className="flex items-center justify-between line-clamp-1"
+                          >
                             <div className="flex items-center gap-2">
                               <input
                                 type="checkbox"
                                 checked={isIndigenousChecked}
+                                id="ind"
                                 onChange={(e) =>
                                   setIsIndigenousChecked(e.target.checked)
                                 }
@@ -530,11 +534,15 @@ export default function RegisterStudent() {
                       name="pwd"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="flex items-center justify-between line-clamp-1">
+                          <FormLabel
+                            htmlFor="pwdd"
+                            className="flex items-center justify-between line-clamp-1"
+                          >
                             <div className="flex items-center gap-2">
                               <input
                                 type="checkbox"
                                 checked={isPWDChecked}
+                                id="pwdd"
                                 onChange={(e) =>
                                   setIsPWDChecked(e.target.checked)
                                 }

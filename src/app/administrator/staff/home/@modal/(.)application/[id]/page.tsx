@@ -14,7 +14,13 @@ import { useEffect, useState } from "react";
 import useApplicationById from "@/hooks/admin/getApplicantData";
 import { Button } from "@/components/ui/button";
 
-import { UserRoundCheck, UserX, UserCheck, RefreshCcw } from "lucide-react";
+import {
+  UserRoundCheck,
+  UserX,
+  UserCheck,
+  RefreshCcw,
+  UserRoundX,
+} from "lucide-react";
 
 import { useRecjectHandler } from "@/hooks/admin/postDeclineHandler";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -195,7 +201,7 @@ export default function InterceptReviewApplicants() {
           loading={loading}
         />
 
-        <DrawerFooter className="bg-gradient-to-r from-card/50 to-card p-4">
+        <DrawerFooter className="bg-card px-0 py-4">
           {loading ? (
             <div className="grid grid-cols-2 gap-3">
               <Skeleton className="h-11 flex-1 rounded-lg" />
@@ -219,7 +225,7 @@ export default function InterceptReviewApplicants() {
                     cancelText="Cancel"
                     trigger={
                       <Button disabled={isButtonDisabled || !!isThereRejected}>
-                        <UserCheck /> Approve Application
+                        <UserRoundCheck /> Approve Application
                       </Button>
                     }
                   />
@@ -239,7 +245,7 @@ export default function InterceptReviewApplicants() {
                     cancelText="Cancel"
                     trigger={
                       <Button disabled={isButtonDisabled || !!isThereRejected}>
-                        <UserCheck /> Approve Application
+                        <UserRoundCheck /> Approve Application
                       </Button>
                     }
                   />
@@ -293,7 +299,7 @@ export default function InterceptReviewApplicants() {
                       isButtonDisabled
                     }
                   >
-                    <UserX /> Reject Application
+                    <UserRoundX /> Reject Application
                   </Button>
                 }
               />

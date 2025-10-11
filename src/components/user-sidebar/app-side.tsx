@@ -88,7 +88,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 Edugrant
               </motion.span>
               <p className="text-xs mt-1 tracking-wider uppercase font-medium text-muted-foreground">
-                BSAC
+                BASC
               </p>
             </span>
           </div>

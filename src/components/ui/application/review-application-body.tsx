@@ -2,6 +2,7 @@
 import { ApplicationFormData } from "@/hooks/zod/application";
 import { StatusAlertIndicator } from "../../../app/administrator/head/home/@modal/(.)application/[id]/status-indicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import logo from "@/assets/edugrant-logo.png";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Calendar, GraduationCap, UserRoundCheck } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -71,36 +72,70 @@ export default function ReviewBody({
             />
           )}
           {/* Header Section */}
-          <div className="flex items-center gap-6 p-4 border-b">
-            <Avatar className="size-24">
-              <AvatarImage
-                src="https://github.com/shadcn.png"
-                className="rounded-full"
-              />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+          <div className="relative flex items-end  py-8 px-4">
+            <img
+              className=" w-70 absolute right-0 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-20 "
+              src={logo.src}
+              alt=""
+            />
+            <div className=" flex items-end justify-center">
+              <Avatar className="size-25">
+                <AvatarImage src="" className="rounded-full" />
+                <AvatarFallback
+                  className="rounded-full text-white font-semibold flex items-center justify-center 
+               bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 
+               dark:from-emerald-900 dark:via-teal-900 dark:to-cyan-900"
+                >
+                  {data?.Student.lName.slice(0, 1)}
+                  {data?.Student.fName.slice(0, 1)}
+                </AvatarFallback>
+              </Avatar>
+              <div className="absolute   flex items-center justify-center flex-col">
+                {data?.Student.PWD && <Badge variant="secondary">PWD</Badge>}
+                {data?.Student.indigenous && (
+                  <Badge variant="secondary">INDIGENOUS</Badge>
+                )}
+              </div>
+            </div>
 
             {loading ? (
-              <div className="flex flex-col gap-2 flex-1">
+              <div className="flex flex-col gap-2 flex-1 px-4">
                 <Skeleton className="h-6 w-64" />
                 <Skeleton className="h-4 w-32" />
               </div>
             ) : (
-              <div className="flex-1">
-                <h1 className="text-xl font-medium text-foreground">
-                  {data?.Student.lName}, {data?.Student.fName}{" "}
-                  {data?.Student.mName}
-                </h1>
-                <p className="font-mono text-sm text-muted-foreground tracking-wider mt-1">
+              <div className="flex-1 px-4 py-2 z-10">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-xl font-medium text-foreground">
+                    {data?.Student.lName}, {data?.Student.fName}{" "}
+                    {data?.Student.mName}
+                  </h1>
+                  <div className="space-x-1.5">
+                    <Badge variant="outline" className="mt-2 uppercase">
+                      {data?.Student.institute}
+                    </Badge>
+                    <Badge variant="outline" className="mt-2 uppercase">
+                      {data?.Student.course}-{data?.Student.year.slice(0, 1)}
+                      {data?.Student.section}
+                    </Badge>
+                    <Badge variant="outline" className="mt-2 uppercase">
+                      {data?.Student.gender}
+                    </Badge>
+                  </div>
+                </div>
+                <p className="font-medium font-mono text-base tracking-wide">
                   {data?.Student.Account.schoolId}
+                </p>{" "}
+                <p className="text-muted-foreground text-sm">
+                  {data?.Student.Account.email}
                 </p>
               </div>
             )}
           </div>
-
+          <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
           {/* Info Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-6 px-4">
-            <div className="space-y-1.5">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-6 px-4 bg-card relative z-10">
+            <div className="space-y-1.5  border-l-2 pl-4">
               <div className="flex items-center gap-2">
                 <GraduationCap className="w-3.5 h-3.5 text-muted-foreground" />
                 <h1 className="text-xs text-muted-foreground">Scholarship</h1>
@@ -110,13 +145,13 @@ export default function ReviewBody({
               ) : (
                 <span className="font-medium text-foreground">
                   {data?.Scholarship.title}{" "}
-                  <Badge variant="outline">
+                  <Badge className="bg-blue-800 text-gray-200">
                     PHASE {data?.Scholarship.phase}
                   </Badge>
                 </span>
               )}
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 border-l-2 pl-4">
               <div className="flex items-center gap-2">
                 <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
                 <h1 className="text-xs text-muted-foreground">
@@ -131,7 +166,7 @@ export default function ReviewBody({
                 </p>
               )}
             </div>
-            <div className="space-y-1.5">
+            <div className="space-y-1.5  border-l-2 pl-4">
               <div className="flex items-center gap-2">
                 <UserRoundCheck className="w-3.5 h-3.5 text-muted-foreground" />
                 <h1 className="text-xs text-muted-foreground">Processed By</h1>
@@ -146,7 +181,7 @@ export default function ReviewBody({
               )}
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-1.5  border-l-2 pl-4">
               <div className="flex items-center gap-2">
                 <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
                 <h1 className="text-xs text-muted-foreground">
@@ -169,7 +204,6 @@ export default function ReviewBody({
           className="pb-6 mt-8"
         />
 
-        <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
         <div className="py-6">
           {/* Documents Section */}
           {activeSection === "documents" && (

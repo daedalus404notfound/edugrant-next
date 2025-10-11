@@ -54,7 +54,10 @@ export const StudentSchema = z.object({
     fatherAddress: z.string().optional(),
     fatherContactNumber: z
       .string()
-      .regex(/^\+63\d{10}$/, "Must be a valid phone number"),
+      .refine(
+        (val) => !val || val === "" || /^\+63\d{10}$/.test(val),
+        "Must be a valid phone number"
+      ),
     fatherOccupation: z.string().optional(),
     fatherHighestEducation: z.string().optional(),
     fatherStatus: z.string().optional(),
@@ -64,7 +67,10 @@ export const StudentSchema = z.object({
     motherAddress: z.string().optional(),
     motherContactNumber: z
       .string()
-      .regex(/^\+63\d{10}$/, "Must be a valid phone number"),
+      .refine(
+        (val) => !val || val === "" || /^\+63\d{10}$/.test(val),
+        "Must be a valid phone number"
+      ),
     motherOccupation: z.string().optional(),
     motherHighestEducation: z.string().optional(),
     motherStatus: z.string().optional(),
@@ -74,7 +80,10 @@ export const StudentSchema = z.object({
     guardianAddress: z.string().optional(),
     guardianContactNumber: z
       .string()
-      .regex(/^\+63\d{10}$/, "Must be a valid phone number"),
+      .refine(
+        (val) => !val || val === "" || /^\+63\d{10}$/.test(val),
+        "Must be a valid phone number"
+      ),
     guardianOccupation: z.string().optional(),
     guardianHighestEducation: z.string().optional(),
 

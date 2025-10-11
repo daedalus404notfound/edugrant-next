@@ -53,6 +53,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import logo from "@/assets/edugrant-logo.png";
 import { useUserStore } from "@/store/useUserStore";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import { Label } from "@/components/ui/label";
@@ -82,8 +83,9 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useProfileUserChangeEmail } from "@/hooks/user/profileUserChangeEmail";
+import { Skeleton } from "@/components/ui/skeleton";
 export default function Profile() {
-  const { user } = useUserStore();
+  const { user, loading: useLoading } = useUserStore();
   const [openCalendar, setOpenCalendar] = useState(false);
 
   const { form, siblings, handleSubmit, loading, isChanged } =
@@ -128,21 +130,44 @@ export default function Profile() {
   ];
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className=" lg:pt-10  pt-3 lg:w-3/4 w-full p-2 lg:p-0 mx-auto">
-        <motion.div
-          className="flex justify-between items-end"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3, delay: 0.4 }}
-        >
-          <TitleReusable
-            title="Profile Settings"
-            description="Manage and update your personal information and account preferences."
-            Icon={UserRoundCog}
-          />
-        </motion.div>
+      <div className=" lg:pb-10   w-full p-2 lg:p-0 mx-auto">
+        <div className="h-50 w-full rounded-md relative bg-gradient-to-br from-background via-card to-card/50  shadow-md flex justify-center items-center ">
+          <div className="absolute top-0 right-0 h-full overflow-hidden">
+            <img src={logo.src} className="opacity-40 -translate-y-7" alt="" />
+          </div>
+          <div className="absolute -bottom-20 lg:w-[60%] w-full flex items-end">
+            {useLoading ? (
+              <>
+                {/* Avatar Skeleton */}
+                <Skeleton className="size-25 rounded-full flex-shrink-0" />
 
-        <div className="py-8 space-y-8">
+                {/* Text Content Skeleton */}
+                <div className="p-3 flex-1">
+                  <Skeleton className="h-7 w-48 mb-2" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Avatar */}
+                <div className="size-25 bg-emerald-900 rounded-full flex justify-center items-center text-2xl font-bold tracking-wide text-white shadow-lg flex-shrink-0">
+                  JT
+                </div>
+
+                {/* Text Content */}
+                <div className="p-3">
+                  <h1 className="text-xl font-medium text-foreground">
+                    {user?.Student?.lName}, {user?.Student?.fName}{" "}
+                    {user?.Student?.mName}
+                  </h1>
+                  <p className="text-muted-foreground text-sm">{user?.role}</p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        <div className="py-8 space-y-8  mt-20 lg:w-[60%] w-full mx-auto">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
@@ -155,275 +180,264 @@ export default function Profile() {
             <Form {...form}>
               <form onSubmit={form.handleSubmit(handleSubmit)}>
                 {tab === "personal" && (
-                  <div className=" w-full space-y-5">
-                    <div>
-                      <div className="flex items-center gap-3">
-                        <h3 className="text-base font-medium flex gap-2 items-center">
-                          <Mail className="h-4.5 w-4.5" /> Personal Information
-                        </h3>
-                        <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-                      </div>
+                  <div className=" w-full space-y-12">
+                    <div className="space-y-6">
                       <div className="">
-                        <div className="grid lg:grid-cols-3 lg:gap-5">
-                          <FormField
-                            control={form.control}
-                            name="Student.fName"
-                            render={({ field }) => (
-                              <FormItem className="lg:py-8 py-4">
-                                <FormLabel className="text-muted-foreground">
-                                  First Name
-                                </FormLabel>
-                                <FormControl>
-                                  <div className="flex items-center">
-                                    <Input
-                                      {...field}
-                                      className="rounded-r-none"
-                                    />
-                                    <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                                      <Button variant="ghost">
-                                        <UserRound />
-                                      </Button>
-                                    </span>
-                                  </div>
-                                </FormControl>
+                        <h3 className="text-base font-medium flex gap-2 items-center py-3">
+                          <UserRoundCog className="h-4.5 w-4.5" /> Personal
+                          Information
+                        </h3>
+                        <div className="w-full h-[2px] flex-1 bg-gradient-to-r from-border to-transparent" />
+                      </div>
+                      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8">
+                        <FormField
+                          control={form.control}
+                          name="Student.fName"
+                          render={({ field }) => (
+                            <FormItem className="">
+                              <FormLabel className="text-muted-foreground">
+                                First Name
+                              </FormLabel>
+                              <FormControl>
+                                <div className="flex items-center">
+                                  <Input
+                                    {...field}
+                                    className="rounded-r-none"
+                                  />
+                                  <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                    <Button variant="ghost">
+                                      <UserRound />
+                                    </Button>
+                                  </span>
+                                </div>
+                              </FormControl>
 
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="Student.mName"
-                            render={({ field }) => (
-                              <FormItem className="lg:py-8 py-4">
-                                <FormLabel className="text-muted-foreground">
-                                  Middle Name
-                                </FormLabel>
-                                <FormControl className="">
-                                  <div className="flex items-center">
-                                    <Input
-                                      placeholder="(Optional)"
-                                      {...field}
-                                      className="rounded-r-none"
-                                    />
-                                    <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                                      <Button variant="ghost">
-                                        <CircleUserRound />
-                                      </Button>
-                                    </span>
-                                  </div>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="Student.lName"
-                            render={({ field }) => (
-                              <FormItem className="lg:py-8 py-4">
-                                <FormLabel className="text-muted-foreground">
-                                  Last Name
-                                </FormLabel>
-                                <FormControl className="">
-                                  <div className="flex items-center">
-                                    <Input
-                                      placeholder=""
-                                      className="rounded-r-none"
-                                      {...field}
-                                    />
-                                    <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                                      <Button variant="ghost">
-                                        <UserRoundCheck />
-                                      </Button>
-                                    </span>
-                                  </div>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
-                        <div className="grid lg:grid-cols-2 lg:gap-5">
-                          <FormField
-                            control={form.control}
-                            name="Student.gender"
-                            render={({ field }) => (
-                              <FormItem className="lg:py-8 py-4">
-                                <FormLabel className="text-muted-foreground">
-                                  Gender
-                                </FormLabel>
-                                <FormControl>
-                                  <div className="flex items-center">
-                                    <Select
-                                      onValueChange={field.onChange}
-                                      value={field.value}
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="Student.mName"
+                          render={({ field }) => (
+                            <FormItem className="">
+                              <FormLabel className="text-muted-foreground">
+                                Middle Name
+                              </FormLabel>
+                              <FormControl className="">
+                                <div className="flex items-center">
+                                  <Input
+                                    placeholder="(Optional)"
+                                    {...field}
+                                    className="rounded-r-none"
+                                  />
+                                  <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                    <Button variant="ghost">
+                                      <CircleUserRound />
+                                    </Button>
+                                  </span>
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="Student.lName"
+                          render={({ field }) => (
+                            <FormItem className="">
+                              <FormLabel className="text-muted-foreground">
+                                Last Name
+                              </FormLabel>
+                              <FormControl className="">
+                                <div className="flex items-center">
+                                  <Input
+                                    placeholder=""
+                                    className="rounded-r-none"
+                                    {...field}
+                                  />
+                                  <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                    <Button variant="ghost">
+                                      <UserRoundCheck />
+                                    </Button>
+                                  </span>
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />{" "}
+                        <FormField
+                          control={form.control}
+                          name="Student.gender"
+                          render={({ field }) => (
+                            <FormItem className="">
+                              <FormLabel className="text-muted-foreground">
+                                Gender
+                              </FormLabel>
+                              <FormControl>
+                                <div className="flex items-center">
+                                  <Select
+                                    onValueChange={field.onChange}
+                                    value={field.value}
+                                  >
+                                    <SelectTrigger className="rounded-r-none w-full">
+                                      <SelectValue placeholder="Select" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="Male">Male</SelectItem>
+                                      <SelectItem value="Female">
+                                        Female
+                                      </SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                  <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                    <Button variant="ghost">
+                                      <VenusAndMars />
+                                    </Button>
+                                  </span>
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="Student.address"
+                          render={({ field }) => (
+                            <FormItem className="lg:col-span-2">
+                              <FormLabel className="text-muted-foreground">
+                                Address
+                              </FormLabel>
+                              <FormControl className="">
+                                <div className="flex items-center">
+                                  <Input
+                                    placeholder=""
+                                    className="rounded-r-none"
+                                    {...field}
+                                  />
+                                  <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                    <Button variant="ghost">
+                                      <Map />
+                                    </Button>
+                                  </span>
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="Student.dateOfBirth"
+                          render={({ field }) => (
+                            <FormItem className="">
+                              <FormLabel className="text-muted-foreground">
+                                Date of Birth
+                              </FormLabel>
+                              <FormControl>
+                                <div className="flex items-center">
+                                  <span className="flex items-center  border border-input border-r-0 rounded-l-md text-sm">
+                                    <Popover
+                                      open={openCalendar}
+                                      onOpenChange={setOpenCalendar}
                                     >
-                                      <SelectTrigger className="rounded-r-none w-full">
-                                        <SelectValue placeholder="Select" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="Male">
-                                          Male
-                                        </SelectItem>
-                                        <SelectItem value="Female">
-                                          Female
-                                        </SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                    <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                                      <Button variant="ghost">
-                                        <VenusAndMars />
-                                      </Button>
-                                    </span>
-                                  </div>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="Student.dateOfBirth"
-                            render={({ field }) => (
-                              <FormItem className="lg:py-8 py-4">
-                                <FormLabel className="text-muted-foreground">
-                                  Date of Birth
-                                </FormLabel>
-                                <FormControl>
-                                  <div className="flex items-center">
-                                    <span className="flex items-center  border border-input border-r-0 rounded-l-md text-sm">
-                                      <Popover
-                                        open={openCalendar}
-                                        onOpenChange={setOpenCalendar}
+                                      <PopoverTrigger asChild>
+                                        <Button variant="ghost" id="date">
+                                          <Calendar1 />
+                                        </Button>
+                                      </PopoverTrigger>
+                                      <PopoverContent
+                                        className="w-auto overflow-hidden p-0 pointer-events-auto"
+                                        align="start"
                                       >
-                                        <PopoverTrigger asChild>
-                                          <Button variant="ghost" id="date">
-                                            <Calendar1 />
-                                          </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent
-                                          className="w-auto overflow-hidden p-0 pointer-events-auto"
-                                          align="start"
-                                        >
-                                          <Calendar
-                                            mode="single"
-                                            selected={
-                                              field.value
-                                                ? new Date(field.value)
-                                                : undefined
-                                            }
-                                            captionLayout="dropdown"
-                                            onSelect={(date) => {
-                                              field.onChange(
-                                                date
-                                                  ? format(date, "yyyy-MM-dd")
-                                                  : ""
-                                              );
-                                              setOpenCalendar(false);
-                                            }}
-                                          />
-                                        </PopoverContent>
-                                      </Popover>
-                                    </span>
-                                    <Input
-                                      value={field.value ? field.value : ""}
-                                      onChange={(e) =>
-                                        field.onChange(e.target.value)
-                                      }
-                                      className="rounded-l-none"
-                                      placeholder="YYYY-MM-DD"
-                                    />
-                                  </div>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
-                        <div className="grid lg:grid-cols-2 lg:gap-5">
-                          <FormField
-                            control={form.control}
-                            name="Student.address"
-                            render={({ field }) => (
-                              <FormItem className="lg:py-8 py-4">
-                                <FormLabel className="text-muted-foreground">
-                                  Address
-                                </FormLabel>
-                                <FormControl className="">
-                                  <div className="flex items-center">
-                                    <Input
-                                      placeholder=""
-                                      className="rounded-r-none"
-                                      {...field}
-                                    />
-                                    <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                                      <Button variant="ghost">
-                                        <Map />
-                                      </Button>
-                                    </span>
-                                  </div>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
-                          <FormField
-                            control={form.control}
-                            name="Student.contactNumber"
-                            render={({ field }) => (
-                              <FormItem className="lg:py-8 py-4">
-                                <FormLabel className="text-muted-foreground">
-                                  Contact Number
-                                </FormLabel>
-                                <FormControl className="">
-                                  <div className="flex">
-                                    {/* Fixed +639 prefix */}
-                                    <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
-                                      +63
-                                    </span>
-                                    <Input
-                                      type="text"
-                                      placeholder=""
-                                      maxLength={10}
-                                      value={
-                                        field.value?.replace("+63", "") || ""
-                                      }
-                                      onChange={(e) => {
-                                        const val = e.target.value
-                                          .replace(/\D/g, "")
-                                          .slice(0, 10);
-                                        field.onChange(`+63${val}`);
-                                      }}
-                                      className="rounded-l-none"
-                                    />
-                                  </div>
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                        <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
+                                        <Calendar
+                                          mode="single"
+                                          selected={
+                                            field.value
+                                              ? new Date(field.value)
+                                              : undefined
+                                          }
+                                          captionLayout="dropdown"
+                                          onSelect={(date) => {
+                                            field.onChange(
+                                              date
+                                                ? format(date, "yyyy-MM-dd")
+                                                : ""
+                                            );
+                                            setOpenCalendar(false);
+                                          }}
+                                        />
+                                      </PopoverContent>
+                                    </Popover>
+                                  </span>
+                                  <Input
+                                    value={field.value ? field.value : ""}
+                                    onChange={(e) =>
+                                      field.onChange(e.target.value)
+                                    }
+                                    className="rounded-l-none"
+                                    placeholder="YYYY-MM-DD"
+                                  />
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="Student.contactNumber"
+                          render={({ field }) => (
+                            <FormItem className="">
+                              <FormLabel className="text-muted-foreground">
+                                Contact Number
+                              </FormLabel>
+                              <FormControl className="">
+                                <div className="flex">
+                                  {/* Fixed +639 prefix */}
+                                  <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
+                                    +63
+                                  </span>
+                                  <Input
+                                    type="text"
+                                    placeholder=""
+                                    maxLength={10}
+                                    value={
+                                      field.value?.replace("+63", "") || ""
+                                    }
+                                    onChange={(e) => {
+                                      const val = e.target.value
+                                        .replace(/\D/g, "")
+                                        .slice(0, 10);
+                                      field.onChange(`+63${val}`);
+                                    }}
+                                    className="rounded-l-none"
+                                  />
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                       </div>
                     </div>
 
-                    <div>
-                      <div className="flex items-center gap-3">
-                        <h3 className="text-base font-medium flex gap-2 items-center">
+                    <div className="space-y-6">
+                      <div className="">
+                        <h3 className="text-base font-medium flex gap-2 items-center py-3">
                           <Mail className="h-4.5 w-4.5" /> Account Information
                         </h3>
-                        <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                        <div className="w-full h-[2px] flex-1 bg-gradient-to-r from-border to-transparent" />
                       </div>
-                      <div className="grid lg:grid-cols-2 lg:gap-5">
+                      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8">
                         <FormField
                           control={form.control}
                           name="schoolId"
                           render={({ field }) => (
-                            <FormItem className="lg:py-8 py-4">
+                            <FormItem className="">
                               <FormLabel className="text-muted-foreground">
                                 Student ID
                               </FormLabel>
@@ -452,7 +466,7 @@ export default function Profile() {
                           control={form.control}
                           name="Student.course"
                           render={({ field }) => (
-                            <FormItem className="lg:py-8 py-4">
+                            <FormItem className="">
                               <FormLabel className="text-muted-foreground">
                                 Course
                               </FormLabel>
@@ -500,14 +514,12 @@ export default function Profile() {
                             </FormItem>
                           )}
                         />
-                      </div>
-                      <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
-                      <div className="grid lg:grid-cols-2 lg:gap-5">
+
                         <FormField
                           control={form.control}
                           name="Student.year"
                           render={({ field }) => (
-                            <FormItem className="lg:py-8 py-4">
+                            <FormItem className="">
                               <FormLabel className="text-muted-foreground">
                                 Year Level
                               </FormLabel>
@@ -551,7 +563,7 @@ export default function Profile() {
                           control={form.control}
                           name="Student.section"
                           render={({ field }) => (
-                            <FormItem className="lg:py-8 py-4">
+                            <FormItem className="">
                               <FormLabel className="text-muted-foreground">
                                 Section
                               </FormLabel>
@@ -583,14 +595,12 @@ export default function Profile() {
                             </FormItem>
                           )}
                         />
-                      </div>
 
-                      <div className="grid lg:grid-cols-2 lg:gap-5">
                         <FormField
                           control={form.control}
                           name="Student.indigenous"
                           render={({ field }) => (
-                            <FormItem className="lg:py-8 py-4">
+                            <FormItem className="">
                               <FormLabel className="flex items-center justify-between line-clamp-1">
                                 Indigenous Group (IG) <FormMessage />
                               </FormLabel>
@@ -615,7 +625,7 @@ export default function Profile() {
                         <FormField
                           name="Student.PWD"
                           render={({ field }) => (
-                            <FormItem className="lg:py-8 py-4">
+                            <FormItem className="">
                               <FormLabel className="flex items-center justify-between line-clamp-1">
                                 Person with Disability (PWD) <FormMessage />
                               </FormLabel>
@@ -828,14 +838,14 @@ export default function Profile() {
                         )}
                       />
 
-                      {/* Father Total Parents Taxable Income */}
+                      {/* Father Taxable Income */}
                       <FormField
                         control={form.control}
                         name="Student.familyBackground.fatherTotalParentsTaxableIncome"
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="text-muted-foreground">
-                              Total Parents Taxable Income
+                              Taxable Income
                             </FormLabel>
                             <FormControl>
                               <div className="flex items-center">
@@ -1038,7 +1048,7 @@ export default function Profile() {
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="text-muted-foreground">
-                              Total Parents Taxable Income
+                              Taxable Income
                             </FormLabel>
                             <FormControl>
                               <div className="flex items-center">
@@ -1188,14 +1198,10 @@ export default function Profile() {
                             </FormLabel>
                             <FormControl>
                               <div className="flex items-center">
-                                <Input
-                                  {...field}
-                                  className="rounded-r-none"
-                                  type="number"
-                                />
+                                <Input {...field} className="rounded-r-none" />
                                 <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
                                   <Button variant="ghost">
-                                    <PhilippinePeso />
+                                    <GraduationCap />
                                   </Button>
                                 </span>
                               </div>
