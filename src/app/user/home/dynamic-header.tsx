@@ -98,6 +98,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import useMarkAllAsRead from "@/hooks/admin/postMarkAllAsRead";
 import useMarkAsReadNotification from "@/hooks/admin/patchReadNotification";
 import Notification from "./notification";
+import ProfileCard from "./profile-card";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -159,14 +160,12 @@ export default function DynamicHeaderUser({
       </div>
 
       {!isMobile && (
-        <div className="flex items-center gap-2 lg:px-5 px-3">
-          <Button variant="secondary">
-            {user?.Student.fName} {user?.Student.lName} <ChevronDown />
-          </Button>
-
-          <Notification />
-
-          <ModeToggle />
+        <div className="flex items-center gap-8 lg:px-5 px-3">
+          <ProfileCard />
+          <div className="space-x-3">
+            <Notification />
+            <ModeToggle />
+          </div>
           {/* <Button
             variant="outline"
             onClick={() => {
@@ -267,16 +266,3 @@ export default function DynamicHeaderUser({
     </header>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

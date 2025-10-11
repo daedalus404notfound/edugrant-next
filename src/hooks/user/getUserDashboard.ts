@@ -14,9 +14,7 @@ export type DashboardData = {
   announcements: AnnouncementFormData[];
   interviewApplicationCount: number;
   approvedApplicationsCount: number;
-
   pendingApplicationCount: number;
-
   scholarshipActivity: string;
   totalApplicationsCount: number;
 };

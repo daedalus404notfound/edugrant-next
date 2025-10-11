@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { MetaTypes } from "../zodMeta";
 import StyledToast from "@/components/ui/toast-styled";
 import { ApiErrorResponse } from "../admin/postReviewedHandler";
-type NotificationTypes = {
+export type NotificationTypes = {
   notificationId: number;
   ownerId: number;
   title: string;

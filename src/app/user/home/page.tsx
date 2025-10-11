@@ -33,6 +33,7 @@ import {
   Lock,
   Map,
   Settings,
+  Sparkles,
   SquareUser,
   SquareUserRound,
   TrendingUp,
@@ -114,6 +115,12 @@ import Link from "next/link";
 import TitleReusable from "@/components/ui/title";
 import usefetchUserDashboard from "@/hooks/user/getUserDashboard";
 import ScholarshipApplicationActivity from "./application-activity";
+import { Card } from "@/components/ui/card";
+import WelcomeCard from "./dashboard-components/welcome-card";
+import ProfileProgress from "./dashboard-components/profile-progress";
+import Announcements from "./dashboard-components/announcement";
+import OngoingScholarshipDashboard from "./dashboard-components/ongoing-scholarship";
+import RecentApplicationDashboard from "./dashboard-components/recent-application";
 
 export default function AdminDashboard() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -173,18 +180,6 @@ export default function AdminDashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  const getProgressBarColor = (percentage: number) => {
-    if (percentage < 30) return "bg-red-500";
-    if (percentage < 70) return "bg-yellow-500";
-    return "bg-green-800";
-  };
-
-  const getProgressContainerColor = (percentage: number) => {
-    if (percentage < 30) return "bg-red-500/20";
-    if (percentage < 70) return "bg-yellow-500/20";
-    return "bg-green-800/20";
-  };
-
   const { data, loading } = usefetchUserDashboard(accountId, schoolId);
   return (
     <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
@@ -219,376 +214,33 @@ export default function AdminDashboard() {
             </div>
           </div>
         )}
-        {/* <div className="lg:space-y-2 space-y-8 flex flex-col lg:flex-row lg:items-center justify-between">
-          <div>
-            <p className="text-sm text-muted-foreground tracking-wide"></p>
-            <h1 className="lg:text-2xl text-2xl  font-semibold"></h1>
-            <TitleReusable
-              title={` Hi, ${user?.Student.fName} ${user?.Student.lName}!`}
-              description={isClient ? format(now, "PPP p") : "Loading..."}
-            />
-          </div>
 
-          <div className="space-y-3">
-            <div className=" flex gap-3">
-              <Link href={"/user/home/scholarships"} className="flex-1">
-                <Button size="lg" className="w-full">
-                  <GraduationCap />
-                  Apply <ArrowRight />
-                </Button>
-              </Link>
-              <Link href={"/user/home/applications"} className="flex-1">
-                <Button size="lg" className="w-full " variant="secondary">
-                  <Map />
-                  Track
-                  <ArrowRight />
-                </Button>
-              </Link>
-            </div>
-            <div className="bg-background shadow backdrop-blur-sm border  rounded-lg lg:p-6 p-4 lg:hidden block  ">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <h3 className="font-semibold flex gap-2 items-center">
-                    <Settings size={18} /> Setup your profile
-                  </h3>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Add your personal details and preferences to complete your
-                    profile.
-                  </p>
-                </div>
-                <Link href={"/user/home/profile"}>
-                  <Button variant="secondary">
-                    <ArrowRight />
-                  </Button>
-                </Link>
-              </div>
-
-              <div className="mb-3">
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm">Progress</span>
-                  <span className="text-sm">{percentage}%</span>
-                </div>
-
-                <div
-                  className={`w-full ${getProgressContainerColor(
-                    percentage
-                  )} rounded-full h-2`}
-                >
-                  <div
-                    className={`h-2 rounded-full transition-all duration-300 ${getProgressBarColor(
-                      percentage
-                    )}`}
-                    style={{ width: `${percentage}%` }}
-                  ></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> */}
         <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 ">
           <div className="space-y-10">
+            <WelcomeCard />
+
+            <ProfileProgress />
             <div className="grid  lg:grid-cols-2 grid-cols-1 lg:gap-5 gap-3">
-              {loading
-                ? [...Array(4)].map((_, index) => (
-                    <div
-                      key={index}
-                      // initial={{ y: 50, opacity: 0 }}
-                      // animate={{ y: 0, opacity: 1 }}
-                      // transition={{
-                      //   duration: 0.3,
-                      //   delay: index * 0.1,
-                      //   ease: "easeOut",
-                      // }}
-                      className="bg-background/40 relative rounded-md space-y-3"
-                    >
-                      <Skeleton className="h-32" />
-                    </div>
-                  ))
-                : summaryCards.map((card, index) => (
-                    <SummaryCard key={index} {...card} />
-                  ))}
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <h1 className="text-base font-medium">Announcements</h1>
-                <Link href={"/user/home/announcements"}>
-                  <Button size="sm" variant="link">
-                    See All <ExternalLink />
-                  </Button>
-                </Link>
-              </div>
-              <Timeline className="space-y-5">
-                {loading ? (
-                  [...Array(3)].map((_, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ y: 50, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{
-                        duration: 0.3,
-                        delay: index * 0.1,
-                        ease: "easeOut",
-                      }}
-                      className="bg-background/40 relative rounded-md space-y-3"
-                    >
-                      <Skeleton className="h-30" />
-                    </motion.div>
-                  ))
-                ) : data?.announcements.length === 0 ? (
-                  <>No announcement found.</>
-                ) : (
-                  data?.announcements.slice(0, 3).map((item, index) => (
-                    <TimelineItem
-                      key={item.announcementId}
-                      step={index}
-                      className="!m-0  bg-card shadow  p-6! rounded-md  !mb-5"
-                    >
-                      <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
-                        <TimelineTitle className="font-medium text-base">
-                          {item.title ?? "Win scholarship is now open."}
-                        </TimelineTitle>
-                        <TimelineDate className="lg:text-sm text-xs text-muted-foreground flex items-center gap-1.5">
-                          <CalendarIcon size={13} />{" "}
-                          {item.dateCreated && format(item.dateCreated, "PPP")}
-                        </TimelineDate>
-                      </div>
-
-                      <TimelineContent className="text-foreground mt-3 line-clamp-1">
-                        {item.description}
-                      </TimelineContent>
-
-                      <div className="mt-5 flex gap-3 items-center">
-                        <Badge variant="secondary">Win Gatchalian</Badge>
-                      </div>
-                    </TimelineItem>
-                  ))
-                )}
-              </Timeline>
+              {summaryCards.map((card, index) => (
+                <SummaryCard key={index} {...card} />
+              ))}
             </div>
           </div>
 
           <div className="space-y-10">
-            {loading ? (
-              <Skeleton className="h-40" />
-            ) : (
-              <div className="hidden lg:block rounded-xl p-6 bg-gradient-to-br from-card/90 to-background/70 backdrop-blur-md shadow-md  transition-all duration-300 hover:shadow-lg hover:-translate-y-[2px]">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="font-semibold flex gap-2 items-center">
-                      <UserRoundCog size={18} /> Complete your profile
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      Complete your profile to unlock scholarships.
-                    </p>
-                  </div>
-                  <Link href={"/user/home/profile"}>
-                    <Button variant="secondary">View Details</Button>
-                  </Link>
-                </div>
+            <Announcements
+              announcement={data?.announcements ?? []}
+              loading={loading}
+            />
+            <OngoingScholarshipDashboard
+              scholarship={data?.onGoingScholarships ?? []}
+              loading={loading}
+            />
 
-                <div className="mb-3">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm">Progress</span>
-                    <span className="text-sm">{percentage}%</span>
-                  </div>
-
-                  <div
-                    className={`w-full ${getProgressContainerColor(
-                      percentage
-                    )} rounded-full h-2`}
-                  >
-                    <div
-                      className={`h-2 rounded-full transition-all duration-300 ${getProgressBarColor(
-                        percentage
-                      )}`}
-                      style={{ width: `${percentage}%` }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            )}
-            <div className="space-y-2">
-              <div className="flex justify-between items-center mt-8">
-                <h1 className="text-base font-medium">Ongoing Scholarship</h1>
-
-                <Link href={"/user/home/scholarships"}>
-                  <Button size="sm" variant="link">
-                    Browse All <ExternalLink />
-                  </Button>
-                </Link>
-              </div>
-              <div className="grid lg:grid-cols-2 gap-4 ">
-                {loading ? (
-                  [...Array(2)].map((_, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ y: 50, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{
-                        duration: 0.3,
-                        delay: index * 0.1,
-                        ease: "easeOut",
-                      }}
-                      className="bg-background/40 relative rounded-md space-y-3"
-                    >
-                      <Skeleton className="h-50" />
-                    </motion.div>
-                  ))
-                ) : data?.onGoingScholarships.length === 0 ? (
-                  <>No scholarship found.</>
-                ) : (
-                  data?.onGoingScholarships.slice(0, 2).map((meow) => (
-                    <div
-                      key={meow.scholarshipId}
-                      className="group relative flex flex-col justify-between bg-card rounded-md p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 gap-6"
-                    >
-                      {/* Logo + Provider */}
-                      <div className="flex items-center gap-3">
-                        {meow.logo ? (
-                          <img
-                            src={meow.logo}
-                            alt={meow.title}
-                            className="w-10 h-10 rounded-full object-cover border"
-                          />
-                        ) : (
-                          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
-                            No Logo
-                          </div>
-                        )}
-                        <div>
-                          <h3 className="font-semibold text-sm line-clamp-1">
-                            {meow.title}
-                          </h3>
-                          <p className="text-sm text-muted-foreground">
-                            {meow.Scholarship_Provider?.name ||
-                              "Unknown Provider"}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Details */}
-                      <div className="flex flex-col gap-1 text-sm text-muted-foreground">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs">Deadline:</span>
-                          <span className="font-medium text-foreground">
-                            {meow.deadline ? format(meow.deadline, "PPP") : "—"}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs">Required GWA:</span>
-                          <span className="font-medium text-foreground">
-                            {meow.requiredGWA || "N/A"}
-                          </span>
-                        </div>
-                      </div>
-
-                      <Link
-                        href={`/user/home/scholarships/${meow.scholarshipId}`}
-                      >
-                        <Button className="w-full">
-                          View Details <ArrowRight />
-                        </Button>
-                      </Link>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <h1 className="text-base font-medium">Recent Application</h1>
-                <Link href={"/user/home/applications"}>
-                  <Button size="sm" variant="link">
-                    See All <ExternalLink />
-                  </Button>
-                </Link>
-              </div>
-              <div className="grid grid-cols-1  gap-4">
-                {loading ? (
-                  [...Array(2)].map((_, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ y: 50, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      transition={{
-                        duration: 0.3,
-                        delay: index * 0.1,
-                        ease: "easeOut",
-                      }}
-                      className="bg-background/40 relative rounded-md space-y-3"
-                    >
-                      <Skeleton className="h-40" />
-                    </motion.div>
-                  ))
-                ) : data?.recentApplications.length === 0 ? (
-                  <>No application found.</>
-                ) : (
-                  data?.onGoingScholarships.slice(0, 2).map((meow) => (
-                    <div
-                      key={meow.scholarshipId}
-                      className="group relative flex flex-col justify-between bg-card rounded-md p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 gap-6"
-                    >
-                      {/* Logo + Provider */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          {meow.logo ? (
-                            <img
-                              src={meow.logo}
-                              alt={meow.title}
-                              className="w-10 h-10 rounded-full object-cover border"
-                            />
-                          ) : (
-                            <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
-                              No Logo
-                            </div>
-                          )}
-                          <div>
-                            <h3 className="font-semibold text-sm line-clamp-1">
-                              {meow.title}
-                            </h3>
-                            <p className="text-sm text-muted-foreground">
-                              {meow.Scholarship_Provider?.name ||
-                                "Unknown Provider"}
-                            </p>
-                          </div>
-                        </div>
-                        <Link
-                          href={`/user/home/scholarships/${meow.scholarshipId}`}
-                        >
-                          <Button className="w-full" size="sm">
-                            View <ArrowRight />
-                          </Button>
-                        </Link>
-                      </div>
-
-                      {/* Details */}
-                      <div className="grid grid-cols-3 gap-1 text-sm text-muted-foreground">
-                        <div className="flex flex-col border-l px-4">
-                          <span className="text-xs">Deadline:</span>
-                          <span className="font-medium text-foreground text-base">
-                            {meow.deadline ? format(meow.deadline, "PPP") : "—"}
-                          </span>
-                        </div>
-                        <div className="flex flex-col border-l px-4">
-                          <span className="text-xs">Required GWA:</span>
-                          <span className="font-medium text-foreground text-base">
-                            {meow.requiredGWA || "N/A"}
-                          </span>
-                        </div>
-                        <div className="flex flex-col border-l px-4">
-                          <span className="text-xs">Submitted Documents:</span>
-                          <span className="font-medium text-foreground text-base">
-                            3 / 3
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
+            <RecentApplicationDashboard
+              application={data?.recentApplications ?? []}
+              loading={loading}
+            />
           </div>
         </div>
       </div>
