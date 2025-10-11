@@ -11,31 +11,31 @@ import { Clock } from "lucide-react";
 import { getPhaseLabel } from "@/lib/phaseLevel";
 import { useState } from "react";
 import { format } from "date-fns";
+import { StudentUserFormData } from "@/hooks/user/zodUserProfile";
 
-export const columns: ColumnDef<ApplicationFormData>[] = [
+export const columns: ColumnDef<StudentUserFormData>[] = [
   {
-    accessorFn: (row) => row.Student.fName,
+    accessorFn: (row) => row.fName,
     id: "fName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Student" className="pl-4" />
     ),
     cell: ({ row }) => {
-      const student = row.original.Student;
       return (
         <div className="flex gap-2 items-center pl-4">
           <Avatar>
-            <AvatarImage src={`/avatars/${student.studentId}.jpg`} />
+            <AvatarImage src={`/avatars/${row.original.studentId}.jpg`} />
             <AvatarFallback className="uppercase">
-              {student.fName.charAt(0)}
-              {student.lName.charAt(0)}
+              {row.original.fName.charAt(0)}
+              {row.original.lName.charAt(0)}
             </AvatarFallback>
           </Avatar>
           <div>
             <div className="font-medium capitalize">
-              {student.fName} {student.mName} {student.lName}
+              {row.original.fName} {row.original.mName} {row.original.lName}
             </div>
             <p className="text-xs text-muted-foreground">
-              {student.Account.email}
+              {row.original.Account?.email}
             </p>
           </div>
         </div>
@@ -46,20 +46,29 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
   },
 
   {
-    accessorFn: (row) => row.Student.Account.schoolId,
-    id: "Student_Account_studentId",
+    accessorFn: (row) => row.Account?.schoolId,
+    id: "schoolId",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Student ID" />
     ),
+    cell: ({ row }) => <span className="">{row.getValue("schoolId")}</span>,
+    enableSorting: true,
+    enableHiding: true,
+  },
+  {
+    accessorFn: (row) => row.gender,
+    id: "gender",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Gender" />
+    ),
     cell: ({ row }) => (
-      <span className="">{row.getValue("Student_Account_studentId")}</span>
+      <span className="capitalize">{row.getValue("gender")}</span>
     ),
     enableSorting: true,
     enableHiding: true,
   },
-
   {
-    accessorFn: (row) => row.Student.institute,
+    accessorFn: (row) => row.institute,
     id: "institute",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Institute" />
@@ -70,16 +79,17 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     enableSorting: true,
     enableHiding: true,
   },
+
   {
-    accessorFn: (row) => row.Student.course,
+    accessorFn: (row) => row.course,
     id: "course",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Course, Year & Section" />
     ),
     cell: ({ row }) => {
-      const course = row.original.Student.course;
-      const year = row.original.Student.year;
-      const section = row.original.Student.section;
+      const course = row.original.course;
+      const year = row.original.year;
+      const section = row.original.section;
       return (
         <div className="flex gap-2 items-center">
           <div className="font-medium capitalize">
@@ -93,7 +103,7 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     enableHiding: true,
   },
   {
-    accessorFn: (row) => row.Student.year,
+    accessorFn: (row) => row.year,
     id: "year",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Year Level" />
@@ -105,7 +115,7 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     enableHiding: true,
   },
   {
-    accessorFn: (row) => row.Student.section,
+    accessorFn: (row) => row.section,
     id: "section",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Section" />
@@ -118,27 +128,14 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
   },
 
   {
-    accessorFn: (row) => row.Scholarship.phase,
-    id: "phase",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Phase" />
-    ),
-    cell: ({ row }) => (
-      <span className="capitalize">{row.getValue("phase")}</span>
-    ),
-    enableSorting: true,
-    enableHiding: true,
-  },
-
-  {
-    accessorFn: (row) => row.Student.dateCreated,
+    accessorFn: (row) => row.dateCreated,
     id: "accountCreated",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Account Created" />
     ),
     cell: ({ row }) => (
       <span className="">
-        {row.original.Student.dateCreated
+        {row.original.dateCreated
           ? format(row.getValue("accountCreated"), "PPP p")
           : "N/A"}
       </span>

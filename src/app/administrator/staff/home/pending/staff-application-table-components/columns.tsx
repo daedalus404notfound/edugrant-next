@@ -187,7 +187,7 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
               : row.getValue("status") === "DECLINED"
               ? "bg-red-500/10 text-red-500"
               : row.getValue("status") === "INTERVIEW"
-              ? "bg-blue-500/10 text-blue-500"
+              ? "bg-blue-indigo-700/10 text-indigo-500"
               : row.getValue("status") === "APPROVED"
               ? "bg-green-500/10 text-green-500"
               : ""

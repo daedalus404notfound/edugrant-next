@@ -1,6 +1,5 @@
 "use client";
 import "ldrs/react/Ring.css";
-import { UserRoundMinus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DataTable } from "@/app/table-components/data-table";
 import { columns } from "./application-data-table/columns";
@@ -10,11 +9,11 @@ import {
   SortingState,
 } from "@tanstack/react-table";
 import DataTableToolbar from "./application-data-table/data-table-toolbar";
-import { ApplicationFormData } from "@/hooks/zod/application";
 import useApplicantsSearch from "@/hooks/admin/getApplicantSearch";
-import useFetchApplications from "@/hooks/admin/getApplicant";
-import TitleReusable from "@/components/ui/title";
-import { useApplicationUIStore } from "@/store/updateUIStore";
+import useFetchStudents from "@/hooks/admin/getStudents";
+import { useAdminStore } from "@/store/adminUserStore";
+import { StudentUserFormData } from "@/hooks/user/zodUserProfile";
+import useFetchApplicationCSV from "@/hooks/admin/getApplicationCSV";
 
 export default function ApprovedApplication({
   setApproved,
@@ -24,25 +23,33 @@ export default function ApprovedApplication({
   const [search, setSearch] = useState("");
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 20,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { data, meta, loading } = useFetchApplications({
+  const { admin } = useAdminStore();
+  const accountId = admin?.accountId;
+
+  const { data: exportCsv } = useFetchApplicationCSV({
+    filters:
+      columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
+    accountId: accountId ? accountId : 3,
+  });
+  console.log(exportCsv);
+  const { data, meta, loading } = useFetchStudents({
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
     sortBy: sorting[0]?.id ?? "",
-    order: sorting[0]?.desc ? "desc" : "asc",
+    order: sorting[0]?.desc ? "desc" : undefined,
     filters:
       columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
+    accountId: accountId ? accountId : 3,
   });
   const [columnVisibility, setColumnVisibility] = useState<
     Record<string, boolean>
   >({
-    phase: false,
     section: false,
     year: false,
-    institute: false,
   });
   useEffect(() => {
     if (meta?.totalRows !== undefined) {
@@ -56,23 +63,15 @@ export default function ApprovedApplication({
     order: sorting[0]?.desc ? "desc" : "asc",
     query: search,
   });
-  const { rejectedIds } = useApplicationUIStore();
-  const { approvedIds } = useApplicationUIStore();
-  const { ForInterviewIds } = useApplicationUIStore();
-  const filteredData = (search.trim().length > 0 ? searchData : data)?.filter(
-    (item) =>
-      !rejectedIds.includes(item.applicationId) &&
-      !approvedIds.includes(item.applicationId) &&
-      !ForInterviewIds.includes(item.applicationId)
-  );
+
   return (
-    <DataTable<ApplicationFormData, unknown>
-      data={filteredData}
+    <DataTable<StudentUserFormData, unknown>
+      data={data}
       columns={columns}
       meta={search.trim().length > 0 ? searchMeta : meta}
       pagination={pagination}
       setPagination={setPagination}
-      getRowId={(row) => row.scholarshipId}
+      getRowId={(row) => row.studentId}
       loading={search ? searchLoading : loading}
       search={search}
       setSearch={setSearch}

@@ -101,8 +101,6 @@ export const useVerifyLogin = () => {
         });
       }
     },
-    retry: 1,
-    retryDelay: 1000,
   });
 };
 

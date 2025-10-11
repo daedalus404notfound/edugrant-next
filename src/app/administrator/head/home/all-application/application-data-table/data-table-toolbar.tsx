@@ -23,9 +23,12 @@ import ExportCsvScholarship from "./export";
 import { TourTrigger } from "@/components/tour/tour-trigger";
 import { TourStep } from "@/components/tour/tour-step";
 
-export default function DataTableToolbar<
-  TData extends { applicationId: number }
->({ table, search, setSearch, status }: ToolbarProps<TData>) {
+export default function DataTableToolbar<TData extends { studentId: number }>({
+  table,
+  search,
+  setSearch,
+  status,
+}: ToolbarProps<TData>) {
   const { filter } = useGetFilter({
     applicationStatus: "PENDING",
     scholarshipStatus: "ACTIVE",
@@ -59,7 +62,7 @@ export default function DataTableToolbar<
   );
 
   const selectedRows = table.getSelectedRowModel().rows;
-  const applicationIds = selectedRows.map((row) => row.original.applicationId);
+  const applicationIds = selectedRows.map((row) => row.original.studentId);
 
   console.log("applicationId", applicationIds);
 

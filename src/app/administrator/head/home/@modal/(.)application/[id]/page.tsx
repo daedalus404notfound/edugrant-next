@@ -25,7 +25,7 @@ import { DeleteDialog } from "@/components/ui/delete-dialog";
 
 import ModalHeader from "@/components/ui/modal-header";
 
-import ReviewBody from "../../../../../../../components/ui/application/review-application-body";
+import ReviewBody from "@/components/ui/application/review-application-body";
 
 export default function InterceptReviewApplicants() {
   const router = useRouter();

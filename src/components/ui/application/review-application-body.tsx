@@ -38,31 +38,38 @@ export default function ReviewBody({
   return (
     <div className="overflow-auto h-full no-scrollbar p-4 bg-background rounded-lg">
       <div className="flex-1">
-        {data?.status === "APPROVED" && (
-          <StatusAlertIndicator
-            status="APPROVED"
-            title="Application Approved"
-            description="The applicant has successfully met all eligibility requirements for this scholarship."
-          />
-        )}
+        <div className="bg-card rounded-md overflow-hidden">
+          {data?.status === "APPROVED" && (
+            <StatusAlertIndicator
+              status="APPROVED"
+              title="Application Approved"
+              description="The applicant has successfully met all eligibility requirements for this scholarship."
+            />
+          )}
 
-        {data?.status === "DECLINED" && (
-          <StatusAlertIndicator
-            status="DECLINED"
-            title="Application Declined"
-            description="The applicant did not meet the eligibility requirements for this scholarship."
-          />
-        )}
+          {data?.status === "DECLINED" && (
+            <StatusAlertIndicator
+              status="DECLINED"
+              title="Application Declined"
+              description="The applicant did not meet the eligibility requirements for this scholarship."
+            />
+          )}
 
-        {data?.status === "BLOCKED" && (
-          <StatusAlertIndicator
-            status="BLOCKED"
-            title="Application Blocked"
-            description="This is automated because the user has an approved government scholarship."
-          />
-        )}
+          {data?.status === "INTERVIEW" && (
+            <StatusAlertIndicator
+              status="INTERVIEW"
+              title="Application For Interview"
+              description="The applicant has successfully met all eligibility requirements proceeding to interview."
+            />
+          )}
 
-        <div className="bg-card rounded-md overflow-hidden mt-3">
+          {data?.status === "BLOCKED" && (
+            <StatusAlertIndicator
+              status="BLOCKED"
+              title="Application Blocked"
+              description="This is automated because the user has an approved government scholarship."
+            />
+          )}
           {/* Header Section */}
           <div className="flex items-center gap-6 p-4 border-b">
             <Avatar className="size-24">
