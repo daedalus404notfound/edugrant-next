@@ -1,20 +1,30 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles } from "lucide-react";
-
+import { ArrowRight, LayoutTemplate, Sparkles } from "lucide-react";
+import logo from "@/assets/edugrant-logo.png";
 export default function WelcomeCard() {
   return (
-    <div className="flex flex-col justify-between gap-4 h-70 bg-gradient-to-br to-card from-background p-6 rounded-md">
+    <div className="relative overflow-hidden flex flex-col justify-between gap-4 h-70 bg-gradient-to-br to-card from-card/50 p-6 rounded-lg">
+      <img
+        className="absolute object-contain shadow -right-8 h-full -bottom-15 opacity-20"
+        src={logo.src}
+        alt=""
+      />
+
       <div>
         <div className="flex items-center gap-2 mb-2">
-          <Sparkles className="h-5 w-5 text-primary" />
-          <span className="text-sm font-medium text-primary">Welcome back</span>
+          <LayoutTemplate className="h-4 w-4 text-primary" />
+          <span className="text-sm font-bold text-primary jakarta">
+            Welcome back
+          </span>
         </div>
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2 text-balance">
-          Ready to find your perfect scholarship?
+
+        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2 text-balance jakarta">
+          Ready to find a scholarship?
         </h2>
-        <p className="text-muted-foreground text-balance">
-          You have 3 applications in progress and 12 new scholarships matching
-          your profile.
+
+        <p className="text-muted-foreground text-balance ">
+          You currently have <strong>0</strong> applications in progress and{" "}
+          <strong>2</strong> pending applications awaiting review.
         </p>
       </div>
 

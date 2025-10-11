@@ -4,6 +4,13 @@
 @font-face {
   font-family: "CustomFont";
   src: url("/havelock-bold.otf") format("opentype");
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Jakarta";
+  src: url("/PlusJakartaSans-VariableFont_wght.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -18,7 +25,9 @@
     transparent 80%
   );
 }
-
+.jakarta {
+  font-family: "Jakarta";
+}
 /* input[type="date"]::-webkit-calendar-picker-indicator {
   display: none;
   -webkit-appearance: none;

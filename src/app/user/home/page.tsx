@@ -121,6 +121,8 @@ import ProfileProgress from "./dashboard-components/profile-progress";
 import Announcements from "./dashboard-components/announcement";
 import OngoingScholarshipDashboard from "./dashboard-components/ongoing-scholarship";
 import RecentApplicationDashboard from "./dashboard-components/recent-application";
+import CompleteChecker from "./dashboard-components/complete-check";
+import { ProfileCompletion } from "./dashboard-components/profile-progress-2";
 
 export default function AdminDashboard() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -184,62 +186,37 @@ export default function AdminDashboard() {
   return (
     <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="lg:py-8 py-4 lg:px-5 px-2 space-y-5">
-        {!completed && (
-          <div className=" text-foreground px-4 py-3 rounded-md bg-card lg:dark">
-            <div className="flex flex-col justify-between gap-2 md:flex-row ">
-              <div className="flex grow gap-3">
-                <Lock
-                  className="mt-0.5 shrink-0 opacity-60"
-                  size={16}
-                  aria-hidden="true"
-                />
-                <div className="flex grow flex-col justify-between gap-2 md:flex-row md:items-center">
-                  <p className="text-sm">
-                    Complete profile details first to access apply scholarship
-                    feature
-                  </p>
-                  <Link
-                    className="group text-sm font-medium whitespace-nowrap"
-                    href={"/user/home/profile"}
-                  >
-                    View Profile
-                    <ArrowRightIcon
-                      className="ms-1 -mt-0.5 inline-flex opacity-60 transition-transform group-hover:translate-x-0.5"
-                      size={16}
-                      aria-hidden="true"
-                    />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 ">
-          <div className="space-y-10">
+        {/* {!completed && <CompleteChecker />} */}
+        <CompleteChecker />
+        <div className="grid lg:grid-cols-3 grid-cols-1 gap-8 ">
+          <div className="space-y-10 col-span-2">
             <WelcomeCard />
-
-            <ProfileProgress />
-            <div className="grid  lg:grid-cols-2 grid-cols-1 lg:gap-5 gap-3">
-              {summaryCards.map((card, index) => (
-                <SummaryCard key={index} {...card} />
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-10">
-            <Announcements
-              announcement={data?.announcements ?? []}
-              loading={loading}
-            />
             <OngoingScholarshipDashboard
               scholarship={data?.onGoingScholarships ?? []}
               loading={loading}
             />
-
             <RecentApplicationDashboard
               application={data?.recentApplications ?? []}
               loading={loading}
+            />
+
+            <Announcements
+              announcement={data?.announcements ?? []}
+              loading={loading}
+            />
+            <RecentApplicationDashboard
+              application={data?.recentApplications ?? []}
+              loading={loading}
+            />
+          </div>
+          <div className="space-y-12">
+            <ProfileCompletion />
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              className="rounded-md border shadow-sm w-full bg-card"
+              captionLayout="dropdown"
             />
           </div>
         </div>
@@ -247,3 +224,36 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+//  <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+//    <div className="lg:py-8 py-4 lg:px-5 px-2 space-y-5">
+//      {/* {!completed && <CompleteChecker />} */}
+//      <CompleteChecker />
+//      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 ">
+//        <div className="space-y-10">
+//          <WelcomeCard />
+//          <Announcements
+//            announcement={data?.announcements ?? []}
+//            loading={loading}
+//          />
+//          <RecentApplicationDashboard
+//            application={data?.recentApplications ?? []}
+//            loading={loading}
+//          />
+//        </div>
+
+//        <div className="space-y-10">
+//          <div className="grid  lg:grid-cols-2 grid-cols-1 lg:gap-5 gap-3">
+//            {summaryCards.map((card, index) => (
+//              <SummaryCard key={index} {...card} />
+//            ))}
+//          </div>
+
+//          <OngoingScholarshipDashboard
+//            scholarship={data?.onGoingScholarships ?? []}
+//            loading={loading}
+//          />
+//        </div>
+//      </div>
+//    </div>
+//  </div>;
