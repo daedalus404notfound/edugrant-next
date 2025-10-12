@@ -56,14 +56,14 @@ export default function PersonalProfile({
 
   return (
     <div className=" w-full space-y-12">
-      <div className="space-y-6">
+      <div className="space-y-6 bg-card px-6 pb-8 pt-4 rounded-lg">
         <div className="">
           <h3 className="text-base font-medium flex gap-2 items-center py-3">
             <UserRoundCog className="h-4.5 w-4.5" /> Personal Information
           </h3>
           <div className="w-full h-[2px] flex-1 bg-gradient-to-r from-border to-transparent" />
         </div>
-        <div className="grid lg:grid-cols-2 grid-cols-1 gap-8">
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-10">
           <FormField
             control={form.control}
             name="Student.fName"
@@ -367,14 +367,14 @@ export default function PersonalProfile({
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-6 bg-card px-6 pb-8 pt-4 rounded-lg">
         <div className="">
           <h3 className="text-base font-medium flex gap-2 items-center py-3">
             <Mail className="h-4.5 w-4.5" /> Account Information
           </h3>
           <div className="w-full h-[2px] flex-1 bg-gradient-to-r from-border to-transparent" />
         </div>
-        <div className="grid lg:grid-cols-2 grid-cols-1 gap-8">
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-10">
           <FormField
             control={form.control}
             name="schoolId"

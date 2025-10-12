@@ -48,15 +48,16 @@ export default function FamilyForm({
   >;
 }) {
   return (
-    <div className=" w-full ">
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 pb-10">
-        <p className="text-sm  p-4 dark:bg-blue-900 bg-blue-200 col-span-2 rounded-md flex gap-2 items-center">
-          <AlertCircle size={15} /> If no information available, type{" "}
-          <span className="font-medium">N/A.</span>
-        </p>
+    <div className=" w-full space-y-6">
+      {" "}
+      <p className="text-sm  p-4 dark:bg-blue-900 bg-blue-200 col-span-2 rounded-md flex gap-2 items-center">
+        <AlertCircle size={15} /> If no information available, type{" "}
+        <span className="font-medium">N/A.</span>
+      </p>
+      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-card px-6 pb-8 pt-4 rounded-lg">
         <div className="lg:col-span-2 col-span-1 space-y-4">
           <div className="flex items-center gap-3 flex-col lg:flex-row">
-            <h3 className="text-lg font-medium flex gap-2 items-center">
+            <h3 className="text-base font-medium flex gap-2 items-center">
               Father Information
             </h3>
             <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
@@ -287,11 +288,10 @@ export default function FamilyForm({
           )}
         />
       </div>
-      <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 py-10">
+      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-card px-6 pb-8 pt-4 rounded-lg">
         <div className="lg:col-span-2 col-span-1 space-y-4">
           <div className="flex items-center gap-3 flex-col lg:flex-row">
-            <h3 className="text-lg font-medium flex gap-2 items-center">
+            <h3 className="text-base font-medium flex gap-2 items-center">
               Mother Information
             </h3>
             <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
@@ -513,11 +513,10 @@ export default function FamilyForm({
           )}
         />
       </div>
-      <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-3 gap-y-6 py-10">
+      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-card px-6 pb-8 pt-4 rounded-lg">
         <div className="lg:col-span-2 col-span-1 space-y-4">
           <div className="flex items-center gap-3 flex-col lg:flex-row">
-            <h3 className="text-lg font-medium flex gap-2 items-center">
+            <h3 className="text-base font-medium flex gap-2 items-center">
               Guardian Information
             </h3>
             <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
@@ -674,10 +673,10 @@ export default function FamilyForm({
           )}
         />
       </div>
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-x-3 gap-y-6 py-10">
+      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-card px-6 pb-8 pt-4 rounded-lg">
         <div className="lg:col-span-2 col-span-1 space-y-4">
           <div className="flex items-center gap-3">
-            <h3 className="text-lg font-medium flex gap-2 items-center">
+            <h3 className="text-base font-medium flex gap-2 items-center">
               Siblings Information
             </h3>
             <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
