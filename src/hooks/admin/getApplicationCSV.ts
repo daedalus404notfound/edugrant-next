@@ -1,73 +1,128 @@
 "use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
-
-import { ApplicationFormData } from "../zod/application";
-import { MetaTypes } from "../zodMeta";
+import { useState } from "react";
 import { ApiErrorResponse } from "./postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
-import { StudentUserFormData } from "../user/zodUserProfile";
-const defaultMeta: MetaTypes = {
-  page: 1,
-  pageSize: 10,
-  totalRows: 0,
-  totalPage: 0,
-  sortBy: "",
-  order: "",
-  filters: "",
-  search: "",
+
+export const downloadBlob = (blob: Blob, filename: string) => {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
 };
+
 export default function useFetchApplicationCSV({
-  status,
+  dataSelections,
   filters,
   accountId,
 }: {
-  status?: string;
+  dataSelections: string;
   filters?: string;
   accountId?: number;
 }) {
-  const [data, setData] = useState<StudentUserFormData[]>([]);
-  const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
-  const [loading, setLoading] = useState(true);
-  useEffect(
-    function () {
-      async function fetchApplicationCSV() {
-        setLoading(true);
-        try {
-          const params = new URLSearchParams();
+  const [loading, setLoading] = useState(false);
+  const [filename, setFilename] = useState("");
+  const onSubmit = async () => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (dataSelections) params.append("dataSelections", dataSelections);
+      if (accountId) params.append("accountId", String(accountId));
+      if (filters) params.append("filters", filters);
 
-          if (status) params.append("status", status);
-          if (accountId) params.append("accountId", String(accountId));
-          if (filters) params.append("filters", filters);
+      const endpoint = `${
+        process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
+      }/downloadApplicationCSV?${params.toString()}`;
 
-          const endpoint = `${
-            process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
-          }/downloadApplicationCSV?${params.toString()}`;
+      const res = await axios.get(endpoint, {
+        withCredentials: true,
+        responseType: "blob",
+      });
+      console.log("Content-Type:", res.headers["content-type"]);
+      console.log("Content-Disposition:", res.headers["content-disposition"]);
+      downloadBlob(
+        res.data,
+        `${filename} ${new Date().toISOString().split("T")[0]}.xlsx`
+      );
 
-          const res = await axios.get(endpoint, { withCredentials: true });
-          console.log(endpoint);
-          if (res.status === 200) {
-            setData(res.data.students);
-            setMeta(res.data.meta);
-          }
-        } catch (error) {
-          if (axios.isAxiosError<ApiErrorResponse>(error)) {
-            StyledToast({
-              status: "error",
-              title:
-                error?.response?.data.message ?? "Export CSV error occurred.",
-              description: "Cannot process your request.",
-            });
-          }
-        } finally {
-          setLoading(false);
-        }
+      StyledToast({
+        status: "success",
+        title: "Excel file exported successfully", // Updated message
+        description: "",
+      });
+    } catch (error) {
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        StyledToast({
+          status: "error",
+          title: error?.response?.data?.message ?? "Export CSV error occurred.",
+          description: "Cannot process your request.",
+        });
       }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      fetchApplicationCSV();
-    },
-    [filters]
-  );
-
-  return { data, loading, meta };
+  return { loading, onSubmit, setFilename };
 }
+// "use client";
+// import axios from "axios";
+// import { useState } from "react";
+// import { ApiErrorResponse } from "./postReviewedHandler";
+// import StyledToast from "@/components/ui/toast-styled";
+
+// export default function useFetchApplicationCSV({
+//   dataSelections,
+//   filters,
+//   accountId,
+// }: {
+//   dataSelections: string;
+//   filters?: string;
+//   accountId?: number;
+// }) {
+//   const [loading, setLoading] = useState(false);
+
+//   const onSubmit = async () => {
+//     setLoading(true);
+//     try {
+//       const params = new URLSearchParams();
+
+//       if (dataSelections) params.append("dataSelections", dataSelections);
+//       if (accountId) params.append("accountId", String(accountId));
+//       if (filters) params.append("filters", filters);
+
+//       const endpoint = `${
+//         process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
+//       }/downloadApplicationCSV?${params.toString()}`;
+
+//       const res = await axios.get(endpoint, {
+//         withCredentials: true,
+//         responseType: "blob", // ✅ binary data for file
+//       });
+
+//       if (res.status === 200) {
+//         const blob = new Blob([res.data], { type: "text/csv;charset=utf-8" }); // ✅ CSV MIME type
+//         const url = window.URL.createObjectURL(blob);
+//         const link = document.createElement("a");
+//         link.href = url;
+//         link.download = "applications.csv"; // ✅ file name
+//         link.click();
+//         window.URL.revokeObjectURL(url);
+//       }
+//     } catch (error) {
+//       if (axios.isAxiosError<ApiErrorResponse>(error)) {
+//         StyledToast({
+//           status: "error",
+//           title: error?.response?.data.message ?? "Export CSV error occurred.",
+//           description: "Cannot process your request.",
+//         });
+//       }
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return { loading, onSubmit };
+// }

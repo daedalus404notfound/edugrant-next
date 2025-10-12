@@ -14,6 +14,7 @@ import useFetchStudents from "@/hooks/admin/getStudents";
 import { useAdminStore } from "@/store/adminUserStore";
 import { StudentUserFormData } from "@/hooks/user/zodUserProfile";
 import useFetchApplicationCSV from "@/hooks/admin/getApplicationCSV";
+import useFetchApplicationCSVShit from "@/hooks/admin/getShit";
 
 export default function ApprovedApplication({
   setApproved,
@@ -30,12 +31,15 @@ export default function ApprovedApplication({
   const { admin } = useAdminStore();
   const accountId = admin?.accountId;
 
-  const { data: exportCsv } = useFetchApplicationCSV({
-    filters:
-      columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
+  // const { data: exportCsv } = useFetchApplicationCSV({
+  //   filters:
+  //     columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
+  //   accountId: accountId ? accountId : 3,
+  // });
+
+  const {} = useFetchApplicationCSVShit({
     accountId: accountId ? accountId : 3,
   });
-  console.log(exportCsv);
   const { data, meta, loading } = useFetchStudents({
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
