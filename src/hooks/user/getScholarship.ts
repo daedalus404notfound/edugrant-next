@@ -126,7 +126,7 @@ export default function useScholarshipData({
             StyledToast({
               status: "error",
               title: error?.response?.data.message ?? "An error occurred.",
-              description: "Cannot process your request.",
+              description: "Cannot process get scholarship request.",
             });
           }
         } finally {

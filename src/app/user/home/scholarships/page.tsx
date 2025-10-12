@@ -1,59 +1,10 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowRightIcon,
-  Building,
-  Building2,
-  CheckCheck,
-  CheckCircle,
-  Ellipsis,
-  Ghost,
-  Landmark,
-  Lock,
-  PhilippinePeso,
-  TextSearch,
-  UserRoundCheck,
-} from "lucide-react";
-import { TourProvider } from "@/components/tour/tour-provider";
-import { TourStep } from "@/components/tour/tour-step";
-import { TourTrigger } from "@/components/tour/tour-trigger";
+import { Landmark, PhilippinePeso, TextSearch } from "lucide-react";
 import type { TourStep as TourStepType } from "@/lib/use-tour";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-const frameworks = [
-  {
-    value: "",
-    label: "Default",
-  },
-  {
-    value: "asc",
-    label: "Ascending",
-  },
-  {
-    value: "desc",
-    label: "Descending",
-  },
-];
 import Link from "next/link";
 
-const scholarshipTypes = [
-  { label: "Government", value: "government", icon: Building2 },
-  { label: "Private", value: "private", icon: Building },
-];
 type Filter = {
   id: string;
   value: string[];
@@ -63,9 +14,7 @@ import { Tabs } from "@/components/ui/vercel-tabs";
 import { Badge } from "@/components/ui/badge";
 import useScholarshipData from "@/hooks/user/getScholarship";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Input } from "@/components/ui/input";
 import useGetFilter from "@/hooks/admin/getDynamicFilter";
-import { DataTableFacetedFilterClient } from "./faceted";
 import TitleReusable from "@/components/ui/title";
 import { format } from "date-fns";
 import NoDataFound from "@/components/ui/nodata";
@@ -76,36 +25,11 @@ import CompleteChecker from "../dashboard-components/complete-check";
 export default function ClientScholarship() {
   const [currentPage] = useState(1);
   const [rowsPerPage] = useState(20);
-  const [open, setOpen] = useState(false);
-  const [hide, setHide] = useState(false);
-  const [value, setValue] = useState("");
-  const [search, setSearch] = useState("");
-  const [selectedProviders, setSelectedProviders] = useState<string[]>([]);
-  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+
   const [status, setStatus] = useState("ACTIVE");
-  const { filter } = useGetFilter({ scholarshipStatus: status });
-  const provider =
-    filter?.getScholarshipsFilters?.provider?.map((meow: string) => ({
-      label: meow,
-      value: meow,
-      icon: PhilippinePeso,
-    })) ?? [];
-  const { user } = useUserStore();
+  const { user, loadingUser } = useUserStore();
   const formatFilters = () => {
     const filterArray: Filter[] = [];
-
-    if (selectedProviders.length > 0) {
-      filterArray.push({
-        id: "scholarshipProvider",
-        value: selectedProviders,
-      });
-    }
-    if (selectedTypes.length > 0) {
-      filterArray.push({
-        id: "scholarshipType",
-        value: selectedTypes,
-      });
-    }
 
     return filterArray.length > 0 ? JSON.stringify(filterArray) : "";
   };
@@ -114,8 +38,8 @@ export default function ClientScholarship() {
     page: currentPage,
     pageSize: rowsPerPage,
     sortBy: "scholarshipTitle",
-    order: value,
-    search: search,
+    order: "",
+    search: "",
     status: status,
     filters: formatFilters(),
     accountId: user?.accountId.toString(),
@@ -125,46 +49,14 @@ export default function ClientScholarship() {
     { id: "RENEW", label: "For Renewal", indicator: meta.counts.countRenew },
     { id: "EXPIRED", label: "Closed", indicator: meta.counts.countExpired },
   ];
-  const { percentage, completed } = getFamilyBackgroundProgress(user?.Student);
-  const familyLength = Object.keys(user?.Student.familyBackground || {}).length;
-  console.log("dsds", familyLength);
-  const scholarshipTourSteps: TourStepType[] = [
-    {
-      id: "search",
-      title: "Search Scholarships",
-      description:
-        "Use this search bar to find scholarships by name, keyword, or criteria.",
-    },
-    {
-      id: "filters",
-      title: "Filter Options",
-      description:
-        "Apply filters to narrow down scholarships based on your preferences.",
-    },
-    {
-      id: "sort",
-      title: "Sort Options",
-      description:
-        "Apply sort to narrow down scholarships based on your preferences.",
-    },
-    {
-      id: "tabs",
-      title: "Active vs Expired",
-      description:
-        "Switch between active scholarships you can apply for and expired ones.",
-    },
-    {
-      id: "cards",
-      title: "Scholarship Cards",
-      description:
-        "Browse through available scholarships. Click on any card to view details.",
-    },
-  ];
+  const { completed } = getFamilyBackgroundProgress(user?.Student);
+
+  const loadingState = loading || loadingUser;
 
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       {!completed && (
-        <div className="absolute inset-0 z-20 bg-background/70 rounded-lg "></div>
+        <div className="absolute inset-0 z-20 bg-background/70 rounded-lg " />
       )}
       <div className="mx-auto w-[95%] lg:pt-10  pt-3">
         <motion.div
@@ -194,7 +86,7 @@ export default function ClientScholarship() {
 
           <div className=" grid lg:grid-cols-3 grid-cols-1 gap-6">
             <AnimatePresence mode="wait">
-              {loading ? (
+              {loadingState ? (
                 [...Array(3)].map((_, index) => (
                   <motion.div
                     key={index}

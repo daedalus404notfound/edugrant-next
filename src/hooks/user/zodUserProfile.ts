@@ -7,7 +7,7 @@ import z from "zod";
 import { format } from "date-fns";
 
 export const displayDocumentsSchema = z.object({
-  label: z.string().min(1, "Requireds"),
+  label: z.string().min(1, "Required"),
   formats: z.array(z.string()).min(1, "Required"),
   requirementType: z.enum(["required", "optional"], {
     message: "Required",
@@ -38,19 +38,37 @@ export const StudentSchema = z.object({
     .regex(/^\+63\d{10}$/, "Must be a valid phone number"),
   course: z.string(),
   dateCreated: z.string(),
-  dateOfBirth: z.string(),
+  dateOfBirth: z
+    .string()
+    .min(1, "Required")
+    .regex(
+      /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
+      "Invalid format, use YYYY-MM-DD"
+    ),
   indigenous: z.string().optional(),
   pwd: z.string().optional(),
-  fName: z.string(),
+  fName: z
+    .string()
+    .min(1, "Required")
+    .regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "Only letters"),
   gender: z.string(),
 
   institute: z.string(),
-  lName: z.string(),
-  mName: z.string(),
+  lName: z
+    .string()
+    .min(1, "Required")
+    .regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "Only letters"),
+  mName: z
+    .string()
+    .min(1, "Required")
+    .regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "Only letters"),
   section: z.string(),
   year: z.string(),
   familyBackground: z.object({
-    fatherFullName: z.string().optional(),
+    fatherFullName: z
+      .string()
+      .regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "Only letters")
+      .optional(),
     fatherAddress: z.string().optional(),
     fatherContactNumber: z
       .string()
@@ -63,7 +81,10 @@ export const StudentSchema = z.object({
     fatherStatus: z.string().optional(),
     fatherTotalParentsTaxableIncome: z.string().optional(),
 
-    motherFullName: z.string().optional(),
+    motherFullName: z
+      .string()
+      .regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "Only letters")
+      .optional(),
     motherAddress: z.string().optional(),
     motherContactNumber: z
       .string()
@@ -76,7 +97,10 @@ export const StudentSchema = z.object({
     motherStatus: z.string().optional(),
     motherTotalParentsTaxableIncome: z.string().optional(),
 
-    guardianFullName: z.string().optional(),
+    guardianFullName: z
+      .string()
+      .regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "Only letters")
+      .optional(),
     guardianAddress: z.string().optional(),
     guardianContactNumber: z
       .string()
@@ -90,9 +114,12 @@ export const StudentSchema = z.object({
     siblings: z
       .array(
         z.object({
-          fullName: z.string(),
-          age: z.string(),
-          occupation: z.string(),
+          fullName: z
+            .string()
+            .min(1, "Required")
+            .regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "Only letters"),
+          age: z.string().min(1, "Required").regex(/^\d+$/, "Only numbers"),
+          occupation: z.string().min(1, "Required"),
         })
       )
       .optional(),

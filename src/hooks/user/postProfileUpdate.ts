@@ -101,7 +101,7 @@ const updateUserApi = async (data: UserFormData) => {
       middleName: data.Student.mName,
       section: data.Student.section,
       studentId: data.Student.studentId,
-      accountId: data.Student.studentId,
+      accountId: data.accountId,
       year: data.Student.year,
       familyBackground: hasFamilyBackground
         ? JSON.stringify(familyBackground)

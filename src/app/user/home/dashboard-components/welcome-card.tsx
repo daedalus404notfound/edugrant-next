@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, LayoutTemplate, Map, Sparkles } from "lucide-react";
 import logo from "@/assets/edugrant-logo.png";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 export default function WelcomeCard({
   loading,
   pending,
@@ -62,14 +63,17 @@ export default function WelcomeCard({
           </div>
 
           <div className="flex flex-wrap gap-3 z-10">
-            <Button className="flex-1 md:flex-0">
-              Browse Scholarships
-              <ArrowRight />
-            </Button>
-            <Button className="flex-1 md:flex-0" variant="secondary">
-              {" "}
-              Track Applications <Map />
-            </Button>
+            <Link href={`/user/home/scholarships`} className="flex-1 md:flex-0">
+              <Button className="w-full">
+                Browse Scholarships
+                <ArrowRight />
+              </Button>
+            </Link>
+            <Link href={`/user/home/applications`} className="flex-1 md:flex-0">
+              <Button className="w-full" variant="secondary">
+                Track Applications <Map />
+              </Button>
+            </Link>
           </div>
         </>
       )}
