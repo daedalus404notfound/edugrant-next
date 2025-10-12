@@ -50,8 +50,8 @@ export default function useAnnouncementFetchUser({
         if (res.status === 200) {
           setData((prevData) =>
             page > 1
-              ? [...prevData, ...res.data.announcements]
-              : res.data.announcements
+              ? [...prevData, ...res.data.annoucements]
+              : res.data.annoucements
           );
 
           setMeta(res.data.meta);

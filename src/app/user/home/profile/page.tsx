@@ -30,7 +30,7 @@ export default function Profile() {
           description="Manage your personal information, account details."
           Icon={Settings}
         />
-        <div className="overflow-y-hidden overflow-x-auto pb-1.5 pt-4 no-scrollbar border-b">
+        <div className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b">
           <Tabs tabs={tabs} onTabChange={(tabId) => setTab(tabId)} />
         </div>
         <div className="mt-15 lg:w-[60%] min-w-4xl w-full mx-auto">

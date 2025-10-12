@@ -316,7 +316,6 @@ export default function Notification() {
       pageSize: 5,
       accountId: 5,
     });
-
   const { unreadNotifications } = useNotificationStore.getState();
   const [openDialog, setOpenDialog] = useState(false);
   const { onSubmit, markLoading } = useMarkAllAsRead({ accountId: 5 });
@@ -327,13 +326,13 @@ export default function Notification() {
   // Get notification icon based on type or priority
   const getNotificationIcon = (notification: NotificationTypes) => {
     // You can customize this based on your notification types
-    if (notification.title?.toLowerCase().includes("success")) {
+    if (notification.title?.toLowerCase().includes("APPROVED")) {
       return <CheckCircle className="w-5 h-5 text-green-500" />;
     }
-    if (notification.title?.toLowerCase().includes("error")) {
+    if (notification.title?.toLowerCase().includes("DECLINED")) {
       return <XCircle className="w-5 h-5 text-red-500" />;
     }
-    if (notification.title?.toLowerCase().includes("warning")) {
+    if (notification.title?.toLowerCase().includes("INTERVIEW")) {
       return <AlertCircle className="w-5 h-5 text-yellow-500" />;
     }
     return <Info className="w-5 h-5 text-blue-500" />;
@@ -403,7 +402,7 @@ export default function Notification() {
             <div className="divide-y">
               {data.map((notification, index) => (
                 <Link
-                  href={`/user/administrator/walaPangId`}
+                  href={`/user/home/applications${`?status=${notification.title}`}`}
                   key={notification.notificationId}
                   className={cn(
                     "flex gap-3 p-4 transition-colors relative group",

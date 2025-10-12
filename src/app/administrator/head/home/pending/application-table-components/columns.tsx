@@ -126,27 +126,32 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
   },
 
   {
-    accessorFn: (row) => ({
-      title: row.Scholarship?.title,
-      renew: row.Scholarship?.phase,
-    }),
+    accessorFn: (row) => row.Scholarship.title,
     id: "title",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Scholarship" />
+      <DataTableColumnHeader column={column} title="Scholarship" className="" />
     ),
     cell: ({ row }) => {
-      const value = row.getValue("title") as {
-        title?: string;
-        phase?: number;
-      };
+      const scholarship = row.original.Scholarship;
       return (
-        <div className="flex items-center gap-2">
-          <span className="capitalize">{value?.title}</span>
-          {value?.phase && (
-            <Badge className="bg-blue-800 text-gray-200">
-              {getPhaseLabel(value.phase)}
+        <div className="flex gap-2 items-center">
+          <Avatar>
+            <AvatarImage src={scholarship.logo} />
+            <AvatarFallback className="uppercase">
+              {scholarship.Scholarship_Provider.name.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex items-center gap-2">
+            <div>
+              <div className="font-medium capitalize">{scholarship.title}</div>
+              <p className="text-xs text-muted-foreground">
+                {scholarship.Scholarship_Provider.name}
+              </p>
+            </div>
+            <Badge className="uppercase" variant="secondary">
+              {getPhaseLabel(scholarship.phase)}
             </Badge>
-          )}
+          </div>
         </div>
       );
     },
@@ -198,49 +203,49 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     enableHiding: true,
   },
 
-  {
-    accessorKey: "status",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
-    ),
-    cell: ({ row }) => {
-      return (
-        <Badge
-          className={
-            row.getValue("status") === "PENDING"
-              ? "bg-yellow-500/10 text-yellow-500"
-              : row.getValue("status") === "DECLINED"
-              ? "bg-red-500/10 text-red-500"
-              : row.getValue("status") === "INTERVIEW"
-              ? "bg-blue-500/10 text-blue-500"
-              : row.getValue("status") === "APPROVED"
-              ? "bg-emerald-500/10 text-emerald-600"
-              : row.getValue("status") === "BLOCKED"
-              ? "bg-gray-500/10 text-gray-500"
-              : ""
-          }
-        >
-          {row.getValue("status") === "PENDING" ? (
-            <Calendar />
-          ) : row.getValue("status") === "DECLINED" ? (
-            <X />
-          ) : row.getValue("status") === "INTERVIEW" ? (
-            <MessagesSquare />
-          ) : row.getValue("status") === "APPROVED" ? (
-            <Check />
-          ) : row.getValue("status") === "BLOCKED" ? (
-            <Ban />
-          ) : (
-            ""
-          )}
+  // {
+  //   accessorKey: "status",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Status" />
+  //   ),
+  //   cell: ({ row }) => {
+  //     return (
+  //       <Badge
+  //         className={
+  //           row.getValue("status") === "PENDING"
+  //             ? "bg-yellow-500/10 text-yellow-500"
+  //             : row.getValue("status") === "DECLINED"
+  //             ? "bg-red-500/10 text-red-500"
+  //             : row.getValue("status") === "INTERVIEW"
+  //             ? "bg-blue-500/10 text-blue-500"
+  //             : row.getValue("status") === "APPROVED"
+  //             ? "bg-emerald-500/10 text-emerald-600"
+  //             : row.getValue("status") === "BLOCKED"
+  //             ? "bg-gray-500/10 text-gray-500"
+  //             : ""
+  //         }
+  //       >
+  //         {row.getValue("status") === "PENDING" ? (
+  //           <Calendar />
+  //         ) : row.getValue("status") === "DECLINED" ? (
+  //           <X />
+  //         ) : row.getValue("status") === "INTERVIEW" ? (
+  //           <MessagesSquare />
+  //         ) : row.getValue("status") === "APPROVED" ? (
+  //           <Check />
+  //         ) : row.getValue("status") === "BLOCKED" ? (
+  //           <Ban />
+  //         ) : (
+  //           ""
+  //         )}
 
-          {row.getValue("status")}
-        </Badge>
-      );
-    },
-    enableSorting: true,
-    enableHiding: true,
-  },
+  //         {row.getValue("status")}
+  //       </Badge>
+  //     );
+  //   },
+  //   enableSorting: true,
+  //   enableHiding: true,
+  // },
 
   {
     id: "actions",

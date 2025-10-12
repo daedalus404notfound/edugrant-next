@@ -132,27 +132,8 @@ export default function DynamicHeaderAdmin({
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className="flex items-center gap-2">
-        <Button variant="ghost">
-          <Avatar>
-            <AvatarFallback>
-              <UserRoundIcon
-                size={16}
-                className="opacity-60"
-                aria-hidden="true"
-              />
-            </AvatarFallback>
-          </Avatar>
-          {admin?.ISPSU_Staff?.fName ? admin?.ISPSU_Staff?.fName : "Staff"}
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => {
-            setOpenNotif(true);
-          }}
-        >
-          <Bell />
-        </Button>
+      <div className="flex items-center gap-3">
+        <ModeToggle />{" "}
         <DeleteDialog
           open={openLogout}
           onOpenChange={setOpenLogout}
@@ -164,66 +145,16 @@ export default function DynamicHeaderAdmin({
           description="Are you sure you want to log out of your account?"
           cancelText="Stay Logged In"
           trigger={
-            <Button onClick={() => setOpenLogout(true)} variant="outline">
+            <Button
+              onClick={() => setOpenLogout(true)}
+              variant="secondary"
+              className="rounded-full"
+            >
               <LogOut />
             </Button>
           }
         />
-        <ModeToggle />
       </div>
-      <Drawer direction="right" open={openNotif} onOpenChange={setOpenNotif}>
-        <DrawerContent className="bg-transparent !border-0 p-4">
-          <DrawerHeader className="sr-only">
-            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-            <DrawerDescription>This action cannot be undone.</DrawerDescription>
-          </DrawerHeader>
-          <div className="flex flex-col bg-card flex-1 rounded-lg p-4 gap-y-10">
-            <div className="flex justify-between items-center">
-              <TitleReusable title="Notification" description="" />
-              <Button size="sm">Mark all as read</Button>
-            </div>
-            <div className="flex-1">
-              <Timeline className="space-y-5">
-                {loading ? (
-                  <></>
-                ) : (
-                  announcements.map((item) => (
-                    <TimelineItem
-                      key={item.id}
-                      step={item.id}
-                      className="!m-0  bg-card  p-4! rounded-md border !mb-2 "
-                    >
-                      <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
-                        <TimelineTitle className="font-medium text-base">
-                          {item.title ?? "Win scholarship is now open."}
-                        </TimelineTitle>
-                      </div>
-                      <TimelineDate className="lg:text-sm text-xs text-muted-foreground flex items-center gap-1.5">
-                        <CalendarIcon size={13} /> {format(item.date, "PPP p")}
-                      </TimelineDate>
-                      <TimelineContent className="text-foreground mt-1 whitespace-pre-line">
-                        <AnnouncementDescription
-                          description={item.description}
-                        />
-                      </TimelineContent>
-                    </TimelineItem>
-                  ))
-                )}
-              </Timeline>
-              <div className=" justify-center items-center hidden">
-                <Button variant="link" size="lg" className="!p-0">
-                  Load More <ArrowRight />
-                </Button>
-              </div>
-            </div>
-            <DrawerFooter>
-              <DrawerClose asChild className="!bg-transparent">
-                <Button variant="outline">Close</Button>
-              </DrawerClose>
-            </DrawerFooter>
-          </div>
-        </DrawerContent>
-      </Drawer>
 
       <Dialog open={openDark} onOpenChange={setOpenDark}>
         <DialogContent showCloseButton={false} className="max-w-lg p-4">

@@ -41,14 +41,16 @@ const updateUserApi = async (data: AdminProfileFormData) => {
 };
 
 export const useProfile = () => {
+  const { setAdmin } = useAdminStore();
   return useMutation({
     mutationFn: updateUserApi,
-    onSuccess: () => {
+    onSuccess: (resData) => {
       StyledToast({
         status: "success",
         title: "Profile Updated",
         description: "Your profile information has been successfully saved.",
       });
+      setAdmin(resData.updatedHead);
     },
     onError: (error: ApiError) => {
       console.error("Profile update error:", error);
@@ -72,18 +74,15 @@ export const useUpdateProfileAdmin = (data?: AdminProfileFormData) => {
   const [open, setOpen] = useState(false);
   const [reset, setReset] = useState(false);
 
-  const { setAdmin } = useAdminStore();
   const handleSubmit = async (data: AdminProfileFormData) => {
-    console.log("111", data);
     try {
       const result = await profileUpdate.mutateAsync(data);
 
       if (result) {
-        setAdmin(data);
         setOpen(false);
         setReset(true);
         profileUpdate.reset();
-        form.reset();
+        // form.reset();
       }
     } catch (error) {
       // Error toast is already handled in useSendAuthCode onError

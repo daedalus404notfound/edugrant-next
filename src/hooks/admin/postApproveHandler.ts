@@ -38,7 +38,7 @@ export function useApprovedHandler({
         { withCredentials: true }
       );
       if (res.status === 200) {
-        addApprovedId(id);
+        addApprovedId(res.data.approvedApplication.applicationId);
         StyledToast({
           status: "success",
           title: "Application Approved",

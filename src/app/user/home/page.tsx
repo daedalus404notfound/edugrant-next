@@ -109,13 +109,12 @@ export default function AdminDashboard() {
                 loading={loadingState}
               />
             )}
-
             <Calendar
               mode="single"
               selected={date}
               onSelect={setDate}
-              className="rounded-md p-6 shadow-sm w-full bg-card"
-            />
+              className="rounded-md p-6 shadow-sm w-full bg-gradient-to-br to-card from-card/50"
+            />{" "}
           </div>
         </div>
       </div>

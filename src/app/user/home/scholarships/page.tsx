@@ -45,9 +45,21 @@ export default function ClientScholarship() {
     accountId: user?.accountId.toString(),
   });
   const tabs = [
-    { id: "ACTIVE", label: "Ongoing", indicator: meta.counts.countActive },
-    { id: "RENEW", label: "For Renewal", indicator: meta.counts.countRenew },
-    { id: "EXPIRED", label: "Closed", indicator: meta.counts.countExpired },
+    {
+      id: "ACTIVE",
+      label: "Ongoing",
+      indicator: meta.counts.countActive ? meta.counts.countActive : null,
+    },
+    {
+      id: "RENEW",
+      label: "For Renewal",
+      indicator: meta.counts.countRenew ? meta.counts.countRenew : null,
+    },
+    {
+      id: "EXPIRED",
+      label: "Closed",
+      indicator: meta.counts.countExpired ? meta.counts.countExpired : null,
+    },
   ];
   const { completed } = getFamilyBackgroundProgress(user?.Student);
 

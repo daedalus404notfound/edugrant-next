@@ -26,8 +26,18 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
       left: "0px",
       width: "0px",
     });
+
     const tabRefs = useRef<(HTMLDivElement | null)[]>([]);
-    console.log(activeTab);
+
+    // 🔹 Sync with activeTab prop whenever it changes
+    useEffect(() => {
+      if (activeTab) {
+        const index = tabs.findIndex((t) => t.id === activeTab);
+        if (index !== -1) setActiveIndex(index);
+      }
+    }, [activeTab, tabs]);
+
+    // 🔹 Handle hover effect
     useEffect(() => {
       if (hoveredIndex !== null) {
         const hoveredElement = tabRefs.current[hoveredIndex];
@@ -41,6 +51,7 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
       }
     }, [hoveredIndex]);
 
+    // 🔹 Update active indicator when activeIndex changes
     useEffect(() => {
       const activeElement = tabRefs.current[activeIndex];
       if (activeElement) {
@@ -50,13 +61,14 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
           width: `${offsetWidth}px`,
         });
       }
-    }, [activeIndex]);
+    }, [activeIndex, tabs]);
 
+    // 🔹 Initialize position after mount
     useEffect(() => {
       requestAnimationFrame(() => {
-        const firstElement = tabRefs.current[0];
-        if (firstElement) {
-          const { offsetLeft, offsetWidth } = firstElement;
+        const activeElement = tabRefs.current[activeIndex];
+        if (activeElement) {
+          const { offsetLeft, offsetWidth } = activeElement;
           setActiveStyle({
             left: `${offsetLeft}px`,
             width: `${offsetWidth}px`,
@@ -89,7 +101,7 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
               <div
                 key={tab.id}
                 ref={(el) => {
-                  tabRefs.current[index] = el;
+                  tabRefs.current[index] = el; // ✅ fixed
                 }}
                 className={cn(
                   "px-3 py-2 cursor-pointer transition-colors duration-300 h-[30px]",
@@ -118,6 +130,7 @@ const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
     );
   }
 );
+
 Tabs.displayName = "Tabs";
 
 export { Tabs };

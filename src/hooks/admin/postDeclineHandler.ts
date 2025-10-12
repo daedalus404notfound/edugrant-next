@@ -83,9 +83,7 @@ export function useRecjectHandler({
   const [loadingReject, setLoadingReject] = useState(false);
   const [openReject, setOpenReject] = useState(false);
   const [isSuccessReject, setIsSuccessReject] = useState(false);
-  const { addRejectedId, rejectedIds } = useApplicationUIStore();
-  console.log("app id", id);
-  console.log("rejectedIds", rejectedIds);
+  const { addRejectedId } = useApplicationUIStore();
   const handleReject = async () => {
     try {
       setOpenReject(true);
@@ -106,7 +104,7 @@ export function useRecjectHandler({
           title: "Application Rejected",
           description: "The applicant has been notified of the rejection.",
         });
-        addRejectedId(id);
+        addRejectedId(res.data.declinedApplication.applicationId);
         setLoadingReject(false);
         setOpenReject(false);
         setIsSuccessReject(true);

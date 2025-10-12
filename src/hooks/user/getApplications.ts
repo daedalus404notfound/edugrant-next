@@ -14,6 +14,8 @@ interface ScholarshipCounts {
   APPROVED: number;
   BLOCKED: number;
   DECLINED: number;
+  PENDING: number;
+  INTERVIEW: number;
 }
 interface MetaWithCounts extends MetaTypes {
   counts: ScholarshipCounts;
@@ -31,6 +33,8 @@ const defaultMeta: MetaWithCounts = {
     APPROVED: 0,
     BLOCKED: 0,
     DECLINED: 0,
+    PENDING: 0,
+    INTERVIEW: 0,
   },
 };
 

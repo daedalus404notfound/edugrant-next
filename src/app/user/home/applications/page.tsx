@@ -1,7 +1,7 @@
 "use client";
 import { AnimatePresence, motion } from "motion/react";
 import { TextSearch } from "lucide-react";
-
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import useClientApplications from "@/hooks/user/getApplications";
@@ -17,9 +17,12 @@ import Link from "next/link";
 import { getPhaseLabel } from "@/lib/phaseLevel";
 
 export default function ClientScholarship() {
+  const searchParams = useSearchParams();
+  const notificationStatus = searchParams.get("status");
+  console.log("qwqw", notificationStatus);
   const [currentPage] = useState(1);
   const [rowsPerPage] = useState(20);
-  const [status, setStatus] = useState("PENDING");
+  const [status, setStatus] = useState(notificationStatus ?? "PENDING");
   const user = useUserStore((state) => state.user);
   const userId = user?.accountId;
   const { data, loading, meta } = useClientApplications({
@@ -30,15 +33,31 @@ export default function ClientScholarship() {
   });
 
   const tabs = [
-    { id: "PENDING", label: "Pending", indicator: meta.counts.APPROVED },
+    {
+      id: "PENDING",
+      label: "Pending",
+      indicator: meta.counts.PENDING ? meta.counts.PENDING : null,
+    },
     {
       id: "INTERVIEW",
       label: "For Interview",
-      indicator: null,
+      indicator: meta.counts.INTERVIEW ? meta.counts.INTERVIEW : null,
     },
-    { id: "APPROVED", label: "Approved", indicator: null },
-    { id: "DECLINED", label: "Declined", indicator: meta.counts.DECLINED },
-    { id: "BLOCKED", label: "Restricted", indicator: meta.counts.BLOCKED },
+    {
+      id: "APPROVED",
+      label: "Approved",
+      indicator: meta.counts.APPROVED ? meta.counts.APPROVED : null,
+    },
+    {
+      id: "DECLINED",
+      label: "Declined",
+      indicator: meta.counts.DECLINED ? meta.counts.DECLINED : null,
+    },
+    {
+      id: "BLOCKED",
+      label: "Restricted",
+      indicator: meta.counts.BLOCKED ? meta.counts.BLOCKED : null,
+    },
   ];
 
   return (
@@ -72,7 +91,11 @@ export default function ClientScholarship() {
           transition={{ duration: 0.3, delay: 0.2 }}
           className="overflow-y-hidden overflow-x-auto py-3 no-scrollbar "
         >
-          <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
+          <Tabs
+            activeTab={status}
+            tabs={tabs}
+            onTabChange={(tabId) => setStatus(tabId)}
+          />
         </motion.div>
         <div className=" grid lg:grid-cols-3 grid-cols-1 gap-6">
           <AnimatePresence mode="wait">

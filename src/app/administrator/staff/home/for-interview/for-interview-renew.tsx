@@ -51,14 +51,13 @@ export default function InterviewRenewalApplication({
       setRenewInterview(meta.totalRows);
     }
   }, [meta?.totalRows, setRenewInterview]);
-  const { rejectedIds } = useApplicationUIStore();
-  const { approvedIds } = useApplicationUIStore();
-  const { ForInterviewIds } = useApplicationUIStore();
+  const { rejectedIds, approvedIds, forInterviewIds } = useApplicationUIStore();
+
   const filteredData = (search.trim().length > 0 ? searchData : data)?.filter(
     (item) =>
       !rejectedIds.includes(item.applicationId) &&
       !approvedIds.includes(item.applicationId) &&
-      !ForInterviewIds.includes(item.applicationId)
+      !forInterviewIds.includes(item.applicationId)
   );
 
   return (

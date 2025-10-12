@@ -22,7 +22,7 @@ export function useInterviewdHandler({
   const [loadingInterview, setLoadingInterview] = useState(false);
   const [openInterview, setOpenInterview] = useState(false);
   const [isSuccessInterview, setIsSuccessInterview] = useState(false);
-  const { addForInterview } = useApplicationUIStore();
+  const { addForInterviewId } = useApplicationUIStore();
   const handleInterview = async () => {
     try {
       setOpenInterview(true);
@@ -38,7 +38,7 @@ export function useInterviewdHandler({
         { withCredentials: true }
       );
       if (res.status === 200) {
-        addForInterview(id);
+        addForInterviewId(res.data.interviewedApplication.applicationId);
         StyledToast({
           status: "success",
           title: "Application Interview",

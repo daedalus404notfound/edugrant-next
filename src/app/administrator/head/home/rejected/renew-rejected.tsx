@@ -50,18 +50,10 @@ export default function RejectedRenewApplication({
     query: search,
     status: status,
   });
-  const { rejectedIds } = useApplicationUIStore();
-  const { approvedIds } = useApplicationUIStore();
-  const { ForInterviewIds } = useApplicationUIStore();
-  const filteredData = (search.trim().length > 0 ? searchData : data)?.filter(
-    (item) =>
-      !rejectedIds.includes(item.applicationId) &&
-      !approvedIds.includes(item.applicationId) &&
-      !ForInterviewIds.includes(item.applicationId)
-  );
+
   return (
     <DataTable<ApplicationFormData, unknown>
-      data={filteredData}
+      data={search.trim().length > 0 ? searchData : data}
       columns={columns}
       meta={search.trim().length > 0 ? searchMeta : meta}
       pagination={pagination}

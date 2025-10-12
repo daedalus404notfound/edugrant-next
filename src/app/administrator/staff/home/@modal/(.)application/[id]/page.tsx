@@ -286,31 +286,34 @@ export default function InterceptReviewApplicants() {
                 )}
 
               {/* Decline Button */}
-              <DeleteDialog
-                open={openReject}
-                onOpenChange={setOpenReject}
-                onConfirm={handleReject}
-                loading={loadingReject}
-                title="Reject Application"
-                red={true} // make it visually destructive since this is a rejection
-                description="This will reject the application and notify the student. This action cannot be undone."
-                confirmText="Reject"
-                confirmTextLoading="Rejecting..."
-                cancelText="Cancel"
-                trigger={
-                  <Button
-                    onClick={() => setOpenReject(true)}
-                    variant="destructive"
-                    disabled={
-                      data?.status === "APPROVED" ||
-                      data?.status === "DECLINED" ||
-                      isButtonDisabled
-                    }
-                  >
-                    <UserRoundX /> Reject Application
-                  </Button>
-                }
-              />
+
+              {data?.status !== "APPROVED" && data?.status !== "DECLINED" && (
+                <DeleteDialog
+                  open={openReject}
+                  onOpenChange={setOpenReject}
+                  onConfirm={handleReject}
+                  loading={loadingReject}
+                  title="Reject Application"
+                  red={true} // make it visually destructive since this is a rejection
+                  description="This will reject the application and notify the student. This action cannot be undone."
+                  confirmText="Reject"
+                  confirmTextLoading="Rejecting..."
+                  cancelText="Cancel"
+                  trigger={
+                    <Button
+                      onClick={() => setOpenReject(true)}
+                      variant="destructive"
+                      disabled={
+                        data?.status === "APPROVED" ||
+                        data?.status === "DECLINED" ||
+                        isButtonDisabled
+                      }
+                    >
+                      <UserRoundX /> Reject Application
+                    </Button>
+                  }
+                />
+              )}
             </div>
           )}
         </DrawerFooter>
