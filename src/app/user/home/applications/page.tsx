@@ -2,7 +2,7 @@
 import { AnimatePresence, motion } from "motion/react";
 import { TextSearch } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import useClientApplications from "@/hooks/user/getApplications";
 import { useUserStore } from "@/store/useUserStore";
@@ -18,11 +18,17 @@ import { getPhaseLabel } from "@/lib/phaseLevel";
 
 export default function ClientScholarship() {
   const searchParams = useSearchParams();
-  const notificationStatus = searchParams.get("status");
-  console.log("qwqw", notificationStatus);
+  const [notificationStatus, setNotificationStatus] = useState("PENDING");
+
+  useEffect(() => {
+    const status = searchParams.get("status");
+    if (status) {
+      setNotificationStatus(status);
+    }
+  }, [searchParams]);
   const [currentPage] = useState(1);
   const [rowsPerPage] = useState(20);
-  const [status, setStatus] = useState(notificationStatus ?? "PENDING");
+  const [status, setStatus] = useState(notificationStatus);
   const user = useUserStore((state) => state.user);
   const userId = user?.accountId;
   const { data, loading, meta } = useClientApplications({
