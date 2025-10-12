@@ -185,20 +185,14 @@ export default function DataTableToolbar<TData>({
       {/* ⚙️ Sorting / View Options */}
 
       <div className="flex items-center gap-2">
-        <TourStep stepId="export">
+        {/* <TourStep stepId="export">
           <ExportCsvScholarship status={status} />
-        </TourStep>
+        </TourStep> */}
         <TourStep stepId="view">
           <DataTableViewOptions table={table} />
         </TourStep>
       </div>
-      <TourStep stepId="add">
-        <Link prefetch href={`/administrator/home/scholarships/create`}>
-          <Button size="sm" variant="secondary" className="relative">
-            <Plus /> Add scholarship
-          </Button>
-        </Link>
-      </TourStep>
+     
       <TourTrigger />
     </div>
   );

@@ -9,7 +9,16 @@ import {
 import { MetaTypes } from "../zodMeta";
 import { ApiErrorResponse } from "../admin/postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
-const defaultMeta: MetaTypes = {
+
+interface ScholarshipCounts {
+  APPROVED: number;
+  BLOCKED: number;
+  DECLINED: number;
+}
+interface MetaWithCounts extends MetaTypes {
+  counts: ScholarshipCounts;
+}
+const defaultMeta: MetaWithCounts = {
   page: 1,
   pageSize: 10,
   totalRows: 0,
@@ -18,7 +27,13 @@ const defaultMeta: MetaTypes = {
   order: "",
   filters: "",
   search: "",
+  counts: {
+    APPROVED: 0,
+    BLOCKED: 0,
+    DECLINED: 0,
+  },
 };
+
 export default function useClientApplications({
   page,
   pageSize,
@@ -37,7 +52,7 @@ export default function useClientApplications({
   applicationId?: string;
 }) {
   const [data, setData] = useState<ApplicationFormData[]>([]);
-  const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
+  const [meta, setMeta] = useState<MetaWithCounts>(defaultMeta);
   const [loading, setLoading] = useState(true);
   const [updateDocument, setUpdateDocument] =
     useState<UpdatedApplicationFormData | null>(null);

@@ -43,5 +43,5 @@ export default function useScholarshipUserByIdAdmin(id: string) {
     [id]
   );
 
-  return { data, loading, error };
+  return { data, loading, error, setData };
 }

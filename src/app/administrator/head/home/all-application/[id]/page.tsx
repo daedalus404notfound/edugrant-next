@@ -624,7 +624,11 @@ export default function InterceptReviewApplicants() {
                 confirmText="Delete"
                 cancelText="Keep Account"
                 trigger={
-                  <Button className="w-full" variant="destructive">
+                  <Button
+                    onClick={() => setOpenDelete(true)}
+                    className="w-full"
+                    variant="destructive"
+                  >
                     <Trash2 /> Delete Account
                   </Button>
                 }

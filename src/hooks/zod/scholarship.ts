@@ -22,13 +22,27 @@ export const scholarshipSchema = z.object({
     })
     .optional(),
   description: z.string().min(1, "Required"),
-  requiredGWA: z.string(),
+  requiredGWA: z
+    .string()
+    .regex(
+      /^(?:[1-5](?:\.\d{1,2})?)?$/,
+      "Enter a valid GWA (e.g. 1, 2.50, 3.00)"
+    ),
+
   deadline: z.date({
     message: "Required",
   }),
-  amount: z.string().optional(),
+  amount: z
+    .string()
+    .regex(
+      /^₱?\s?\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?$/,
+      "Enter a valid amount (e.g. 1,000.00)"
+    )
+    .or(z.literal(""))
+    .optional(),
+
   interview: z.boolean(),
-  limit: z.string(),
+  limit: z.string().regex(/^\d*$/, "Numbers only"),
   cover: z
     .any()
     .refine(

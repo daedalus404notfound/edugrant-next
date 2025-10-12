@@ -159,7 +159,12 @@ export default function DataTableToolbar<
           confirmText="Delete All"
           cancelText="Keep Items"
           trigger={
-            <Button size="sm" variant="destructive" className="justify-start">
+            <Button
+              onClick={() => setOpenAlert(true)}
+              size="sm"
+              variant="destructive"
+              className="justify-start"
+            >
               <Trash2 /> Delete
             </Button>
           }

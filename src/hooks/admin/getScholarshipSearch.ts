@@ -81,5 +81,5 @@ export default function useScholarshipSearch({
     return () => clearTimeout(delayDebounce);
   }, [page, pageSize, sortBy, order, query]);
 
-  return { searchData, searchMeta, searchLoading };
+  return { searchData, searchMeta, searchLoading, setSearchData };
 }

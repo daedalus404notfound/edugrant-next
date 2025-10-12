@@ -19,6 +19,11 @@ const buttonVariants = cva(
           "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
+        blue: "bg-blue-800/20 text-blue-500 hover:bg-blue-800/30",
+        red: "bg-red-800/20 text-red-500 hover:bg-red-800/30",
+        green: "bg-green-800/20 text-green-500 hover:bg-green-800/30",
+        indigo: "bg-indigo-800/20 text-indigo-500 hover:bg-indigo-800/30",
+        yellow: "bg-yellow-800/20 text-yellow-500 hover:bg-yellow-800/30",
         ghost:
           "text-foreground hover:bg-accent/10 dark:text-neutral-200 dark:hover:bg-neutral-800 transition-colors",
         link: "text-primary underline-offset-4 hover:underline dark:text-primary-light",

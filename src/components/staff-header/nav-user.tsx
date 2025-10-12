@@ -105,7 +105,11 @@ export function NavUser() {
               description="Are you sure you want to log out of your account?"
               cancelText="Stay Logged In"
               trigger={
-                <Button variant="ghost" className="w-full justify-start">
+                <Button
+                  onClick={() => setOpenLogout(true)}
+                  variant="ghost"
+                  className="w-full justify-start"
+                >
                   <LogOut /> Logout
                 </Button>
               }

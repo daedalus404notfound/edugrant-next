@@ -12,6 +12,7 @@ import {
   renewDocumentsFormData,
   useRedeployScholarshipZod,
 } from "./zodRedeploy";
+import { useApplicationUIStore } from "@/store/updateUIStore";
 type ApiError = AxiosError<ApiErrorResponse>;
 
 const addScholarshipApi = async (data: renewDocumentsFormData) => {
@@ -36,14 +37,16 @@ const addScholarshipApi = async (data: renewDocumentsFormData) => {
 };
 
 export const useAddScholarship = () => {
+  const { addRenewalScholarshipId } = useApplicationUIStore();
   return useMutation({
     mutationFn: addScholarshipApi,
-    onSuccess: () => {
+    onSuccess: (resData) => {
       StyledToast({
         status: "success",
         title: "Scholarship Updated",
         description: "Your scholarship has been successfully updated.",
       });
+      addRenewalScholarshipId(resData.renewedScholarship.scholarshipId);
     },
     onError: (error: ApiError) => {
       console.error("Update scholarship error:", error);

@@ -114,14 +114,19 @@ const updateUserApi = async (data: UserFormData) => {
 };
 
 export const useProfile = () => {
+  const { setUser } = useUserStore();
   return useMutation({
     mutationFn: updateUserApi,
-    onSuccess: () => {
+    onSuccess: (resData) => {
       StyledToast({
         status: "success",
         title: "Profile Updated",
-        description: "Your profile information has been successfully saved.",
+        description: resData.message
+          ? resData.message
+          : "Your profile information has been successfully saved.",
       });
+
+      setUser(resData.updatedStudent);
     },
     onError: (error: ApiError) => {
       console.error("Profile update error:", error);
@@ -134,8 +139,6 @@ export const useProfile = () => {
         });
       }
     },
-    retry: 1,
-    retryDelay: 1000,
   });
 };
 
@@ -144,21 +147,16 @@ export const useUpdateProfile = (data?: UserFormData | null) => {
   const profileUpdate = useProfile();
   const [open, setOpen] = useState(false);
   const [reset, setReset] = useState(false);
-  const { setUser } = useUserStore();
   const handleSubmit = async (data: UserFormData) => {
-    console.log("111", data);
     try {
       const result = await profileUpdate.mutateAsync(data);
 
       if (result) {
-        setUser(data);
         setOpen(false);
         setReset(true);
         profileUpdate.reset();
-        form.reset();
       }
     } catch (error) {
-      // Error toast is already handled in useSendAuthCode onError
       console.error("Login error:", error);
     }
   };

@@ -37,7 +37,7 @@ export function TourStep({ stepId, children, className }: TourStepProps) {
           {children}
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-4">
+      <PopoverContent className="w-80 p-4 mt-4">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h4 className="font-semibold text-sm">{currentStepData?.title}</h4>

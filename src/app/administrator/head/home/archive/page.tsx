@@ -38,22 +38,13 @@ export default function Manage() {
       description:
         "Apply filters to narrow down scholarships based on specific criteria.",
     },
-    {
-      id: "export",
-      title: "Export CSV",
-      description:
-        "Download the list of scholarships as a CSV file for easy access.",
-    },
+
     {
       id: "view",
       title: "Table View Options",
       description: "Show or hide table columns to customize your view.",
     },
-    {
-      id: "add",
-      title: "Add Scholarship Shortcut",
-      description: "Quickly add a new scholarship using this shortcut button.",
-    },
+
     {
       id: "table",
       title: "Scholarship Table",
@@ -78,7 +69,7 @@ export default function Manage() {
       <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
         <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
           <TitleReusable
-            title="Inactive Scholarships"
+            title="Inactive Scholarship Management"
             description="Manage inactive scholarships here. Switch between expired and archived scholarships using the tabs below."
             Icon={Archive}
             textColor="text-red-700/70"

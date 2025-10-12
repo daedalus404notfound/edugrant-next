@@ -4,19 +4,19 @@ import { Loader, Megaphone, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-import useAnnouncementFetch from "@/hooks/admin/getAnnouncement";
 import NoDataFound from "@/components/ui/nodata";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import TitleReusable from "@/components/ui/title";
+import useAnnouncementFetchUser from "@/hooks/user/getAnnouncement";
 
 export default function ClientScholarship() {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(5);
   const [sortBy] = useState("");
   const [order] = useState("");
-  const { data, meta, loading, isFetchingMore } = useAnnouncementFetch({
+  const { data, meta, loading, isFetchingMore } = useAnnouncementFetchUser({
     page,
     pageSize,
     sortBy,

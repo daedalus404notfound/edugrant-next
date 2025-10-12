@@ -85,6 +85,7 @@ export function DataTableRowActions<TData>({
           cancelText="Keep Account"
           trigger={
             <Button
+              onClick={() => setOpenAlert(true)}
               size="lg"
               variant="ghost"
               className="justify-start text-red-600 hover:text-red-500"

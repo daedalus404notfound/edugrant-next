@@ -22,47 +22,25 @@ export default function ClientScholarship() {
   const [status, setStatus] = useState("PENDING");
   const user = useUserStore((state) => state.user);
   const userId = user?.accountId;
-  const { data, loading } = useClientApplications({
+  const { data, loading, meta } = useClientApplications({
     userId: userId ? userId.toString() : "",
     page: currentPage,
     pageSize: rowsPerPage,
     status,
   });
 
-  const { data: data2 } = useClientApplications({
-    userId: userId ? userId.toString() : "",
-    page: currentPage,
-    pageSize: rowsPerPage,
-    status: "",
-  });
-
-  const pendingLength =
-    data2.filter((meow) => meow.status === "PENDING").length || null;
-  const reviewedLength =
-    data2.filter((meow) => meow.status === "INTERVIEW").length || null;
-  const approvedLength =
-    data2.filter((meow) => meow.status === "APPROVED").length || null;
-  const declinedLength =
-    data2.filter((meow) => meow.status === "DECLINED").length || null;
-  const blockedLength =
-    data2.filter((meow) => meow.status === "BLOCKED").length || null;
-
-  console.log(pendingLength);
   const tabs = [
-    { id: "PENDING", label: "Pending", indicator: pendingLength },
-    { id: "INTERVIEW", label: "For Interview", indicator: reviewedLength },
-    { id: "APPROVED", label: "Approved", indicator: approvedLength },
-    { id: "DECLINED", label: "Declined", indicator: declinedLength },
-    { id: "BLOCKED", label: "Restricted", indicator: blockedLength },
+    { id: "PENDING", label: "Pending", indicator: meta.counts.APPROVED },
+    {
+      id: "INTERVIEW",
+      label: "For Interview",
+      indicator: null,
+    },
+    { id: "APPROVED", label: "Approved", indicator: null },
+    { id: "DECLINED", label: "Declined", indicator: meta.counts.DECLINED },
+    { id: "BLOCKED", label: "Restricted", indicator: meta.counts.BLOCKED },
   ];
 
-  const findMatch = user?.Student.Application.find(
-    (meow) => meow.scholarshipId === meow?.scholarshipId
-  );
-  const isNotRenew =
-    user?.Student.Application.find(
-      (meow) => meow.scholarshipId === meow?.scholarshipId
-    )?.status !== "RENEW";
   return (
     <div className="  bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:pt-10  pt-3 space-y-8">

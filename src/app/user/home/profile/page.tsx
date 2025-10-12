@@ -15,7 +15,6 @@ export default function Profile() {
   const { user, loadingUser: useLoading } = useUserStore();
   const { form, siblings, handleSubmit, loading, isChanged } =
     useUpdateProfile(user);
-  console.log(user);
   const [tab, setTab] = useState("personal");
 
   const tabs = [
@@ -42,37 +41,39 @@ export default function Profile() {
               {tab === "family" && (
                 <FamilyForm form={form} siblings={siblings} />
               )}
-              <AnimatePresence>
-                {isChanged && (
-                  <div className="sticky bottom-16 lg:bottom-0 ">
-                    <motion.div
-                      className="bg-gradient-to-t from-background via-background/50 to-transparent w-full flex justify-center items-center py-8"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
+              {(tab === "personal" || tab === "family") && (
+                <AnimatePresence>
+                  {isChanged && (
+                    <div className="sticky bottom-16 lg:bottom-0 ">
                       <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 30 }}
+                        className="bg-gradient-to-t from-background via-background/50 to-transparent w-full flex justify-center items-center py-8"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
                         transition={{ duration: 0.3 }}
                       >
-                        <Button
-                          size="lg"
-                          className="cursor-pointer"
-                          type="submit"
-                          disabled={loading}
+                        <motion.div
+                          initial={{ opacity: 0, y: 30 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: 30 }}
+                          transition={{ duration: 0.3 }}
                         >
-                          <Check />
-                          {loading ? "Saving..." : "Save Changes"}
-                          {loading && <Loader className="animate-spin" />}
-                        </Button>
+                          <Button
+                            size="lg"
+                            className="cursor-pointer"
+                            type="submit"
+                            disabled={loading}
+                          >
+                            <Check />
+                            {loading ? "Saving..." : "Save Changes"}
+                            {loading && <Loader className="animate-spin" />}
+                          </Button>
+                        </motion.div>
                       </motion.div>
-                    </motion.div>
-                  </div>
-                )}
-              </AnimatePresence>
+                    </div>
+                  )}
+                </AnimatePresence>
+              )}
             </form>
           </Form>
 

@@ -150,12 +150,12 @@ export default function Create() {
           </DialogContent>
         </Dialog>
 
-        <div className="mx-auto  max-w-5xl w-full py-10">
+        <div className="mx-auto  max-w-4xl w-full py-10">
           <div className="px-4">
             {" "}
             <TitleReusable
-              title=" Create Scholarship"
-              description="Fill out the form below to add a new scholarship."
+              title=" Post Scholarship"
+              description="Fill out the form below to post a new scholarship."
               Icon={PenLine}
             />
           </div>
@@ -172,12 +172,16 @@ export default function Create() {
                     name="type"
                     render={({ field }) => (
                       <FormItem className="col-span-3">
-                        <FormLabel>
-                          <span>
-                            Scholarship Type
-                            <span className="text-red-800 ml-2">*</span>
-                          </span>
-                        </FormLabel>
+                        <div className="flex justify-between items-center">
+                          {" "}
+                          <FormLabel>
+                            <span>
+                              Scholarship Type
+                              <span className="text-red-800 ml-2">*</span>
+                            </span>
+                          </FormLabel>
+                          <FormMessage />
+                        </div>
                         <FormControl>
                           <RadioGroup
                             onValueChange={field.onChange}
@@ -211,7 +215,6 @@ export default function Create() {
                             </div>
                           </RadioGroup>
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -357,11 +360,7 @@ export default function Create() {
                           Required GWA <FormMessage />
                         </FormLabel>
                         <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="(Optional) eg. 2.50"
-                            type="number"
-                          />
+                          <Input {...field} placeholder="(Optional) eg. 2.50" />
                         </FormControl>
                       </FormItem>
                     )}
@@ -378,8 +377,7 @@ export default function Create() {
                         </FormLabel>
                         <FormControl>
                           <Input
-                            type="number"
-                            placeholder="(Optional) eg. 7000"
+                            placeholder="(Optional) eg. 7,000"
                             {...field}
                           />
                         </FormControl>
@@ -397,11 +395,7 @@ export default function Create() {
                           <FormMessage />
                         </FormLabel>
                         <FormControl>
-                          <Input
-                            placeholder="(Optional) eg. 1000"
-                            type="number"
-                            {...field}
-                          />
+                          <Input placeholder="(Optional) eg. 1000" {...field} />
                         </FormControl>
                       </FormItem>
                     )}
@@ -732,7 +726,7 @@ export default function Create() {
                   confirmTextLoading="Submitting..."
                   cancelText="Cancel"
                   trigger={
-                    <Button className="flex-1" onClick={handleTriggerClick}>
+                    <Button  className="flex-1" onClick={handleTriggerClick}>
                       Submit Scholarship <ArrowRight />
                     </Button>
                   }

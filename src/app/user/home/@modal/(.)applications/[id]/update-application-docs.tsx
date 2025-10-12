@@ -294,6 +294,7 @@ export default function EditApplication({
               cancelText="Cancel"
               trigger={
                 <Button
+                  onClick={() => setOpenAlert(true)}
                   // disabled={completedCount < requiredDocumentsCount || disable}
                   className="flex-1"
                 >

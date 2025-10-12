@@ -84,7 +84,7 @@ export default function ClientScholarship() {
             <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
           </motion.div>
 
-          <div className=" grid lg:grid-cols-3 grid-cols-1 gap-6">
+          <div className=" grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
             <AnimatePresence mode="wait">
               {loadingState ? (
                 [...Array(3)].map((_, index) => (

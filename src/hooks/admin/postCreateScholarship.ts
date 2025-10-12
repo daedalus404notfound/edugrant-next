@@ -90,8 +90,6 @@ export const useAddScholarship = () => {
         });
       }
     },
-    retry: 1,
-    retryDelay: 1000,
   });
 };
 
@@ -118,20 +116,21 @@ export const useCreateScholarship = () => {
   };
 
   const handleTriggerClick = async () => {
-    // Trigger form validation
-    const isValid = await form.trigger(); // This validates all fields
+    const isValid = await form.trigger();
 
-    if (isValid) {
-      setOpen(true); // Only open dialog if validation passes
-    } else {
-      // Optionally show a toast for validation errors
-      setOpen(false);
+    console.log(isValid);
+
+    if (!isValid) {
       StyledToast({
         status: "error",
         title: "Validation Error",
         description: "Please fill in all required fields correctly.",
       });
+      return; // ⛔ stop here if invalid
     }
+
+    // ✅ only open when valid
+    setOpen(true);
   };
 
   const resetCreateState = () => {

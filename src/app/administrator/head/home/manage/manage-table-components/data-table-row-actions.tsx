@@ -64,7 +64,7 @@ export function DataTableRowActions<TData>({
       </PopoverTrigger>
       <PopoverContent
         align="end"
-        className="grid grid-cols-1 w-[180px] !p-0 border"
+        className="grid grid-cols-1 gap-0.5 w-[180px] !p-0 !border-0 bg-background"
       >
         <Link
           href={`/administrator/head/home/manage/${rowData.scholarshipId}`}
@@ -72,11 +72,11 @@ export function DataTableRowActions<TData>({
           prefetch
           className="w-full"
         >
-          <Button size="lg" variant="ghost" className="justify-start w-full">
+          <Button size="lg" variant="green" className="justify-start w-full">
             <Maximize /> View
           </Button>
         </Link>
-        <Separator />
+
         {status === "ACTIVE" || status === "RENEW" ? (
           <Link
             href={`/administrator/head/home/manage/${rowData.scholarshipId}`}
@@ -85,7 +85,7 @@ export function DataTableRowActions<TData>({
             className="w-full"
             onClick={() => setMode("edit")}
           >
-            <Button size="lg" className="justify-start w-full" variant="ghost">
+            <Button size="lg" className="justify-start w-full" variant="blue">
               <PencilLine /> Edit
             </Button>
           </Link>
@@ -101,7 +101,7 @@ export function DataTableRowActions<TData>({
               <Button
                 size="lg"
                 className="justify-start w-full"
-                variant="ghost"
+                variant="indigo"
               >
                 <RefreshCcw /> Renewal
               </Button>
@@ -119,7 +119,12 @@ export function DataTableRowActions<TData>({
               description="Are you sure you want to archive this scholarship?"
               cancelText="Keep"
               trigger={
-                <Button size="lg" variant="ghost" className="justify-start ">
+                <Button
+                  onClick={() => setOpenArchive(true)}
+                  size="lg"
+                  variant="yellow"
+                  className="justify-start "
+                >
                   <Archive /> Archive
                 </Button>
               }
@@ -128,7 +133,6 @@ export function DataTableRowActions<TData>({
         ) : (
           ""
         )}
-        <Separator />
 
         <DeleteDialog
           open={openDelete}
@@ -140,9 +144,10 @@ export function DataTableRowActions<TData>({
           cancelText="Keep"
           trigger={
             <Button
+              onClick={() => setOpenDelete(true)}
               size="lg"
-              variant="ghost"
-              className="justify-start text-red-700 hover:text-red-600"
+              variant="red"
+              className="justify-start"
             >
               <Trash2 /> Delete
             </Button>

@@ -49,6 +49,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { useModeStore } from "@/store/scholarshipModalStore";
 import TitleReusable from "@/components/ui/title";
+import { useUpdateScholarshipStore } from "@/store/editScholarStore";
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
   {
@@ -78,7 +79,8 @@ export default function EditScholarship({
     documentFields,
     appendDocument,
     removeDocument,
-  } = useUpdateScholarship(data, HandleCloseDrawer);
+  } = useUpdateScholarship(data);
+
   const { setMode } = useModeStore();
   const documentPhases = Object.keys(data?.documents ?? {}).filter((key) =>
     key.startsWith("phase")

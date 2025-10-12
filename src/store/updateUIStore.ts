@@ -48,19 +48,23 @@ import { create } from "zustand";
 type ApplicationUIState = {
   deletedScholarshipIds: number[];
   archiveScholarshipIds: number[];
+  renewalScholarshipIds: number[];
   approvedIds: number[];
   pendingIds: number[];
   rejectedIds: number[];
-  ForInterviewIds: number[];
+  forInterviewIds: number[]; // updated
 
   addDeletedScholarshipId: (id: number) => void;
   addArchiveScholarshipId: (id: number) => void;
+  addRenewalScholarshipId: (id: number) => void; // updated
   addApprovedId: (id: number) => void;
   addPendingId: (id: number) => void;
   addRejectedId: (id: number) => void;
-  addForInterview: (id: number) => void;
+  addForInterviewId: (id: number) => void; // updated
 
   clearDeleted: () => void;
+  clearArchive: () => void;
+  clearRenewal: () => void;
   clearApproved: () => void;
   clearPending: () => void;
   clearRejected: () => void;
@@ -70,10 +74,11 @@ type ApplicationUIState = {
 export const useApplicationUIStore = create<ApplicationUIState>((set) => ({
   deletedScholarshipIds: [],
   archiveScholarshipIds: [],
+  renewalScholarshipIds: [],
   approvedIds: [],
   pendingIds: [],
   rejectedIds: [],
-  ForInterviewIds: [],
+  forInterviewIds: [],
 
   addDeletedScholarshipId: (id) =>
     set((state) => ({
@@ -83,19 +88,24 @@ export const useApplicationUIStore = create<ApplicationUIState>((set) => ({
     set((state) => ({
       archiveScholarshipIds: [...state.archiveScholarshipIds, id],
     })),
+  addRenewalScholarshipId: (id) =>
+    set((state) => ({
+      renewalScholarshipIds: [...state.renewalScholarshipIds, id],
+    })),
   addApprovedId: (id) =>
     set((state) => ({ approvedIds: [...state.approvedIds, id] })),
   addPendingId: (id) =>
     set((state) => ({ pendingIds: [...state.pendingIds, id] })),
   addRejectedId: (id) =>
     set((state) => ({ rejectedIds: [...state.rejectedIds, id] })),
-  addForInterview: (id) =>
-    set((state) => ({ rejectedIds: [...state.rejectedIds, id] })),
+  addForInterviewId: (id) =>
+    set((state) => ({ forInterviewIds: [...state.forInterviewIds, id] })),
 
   clearDeleted: () => set({ deletedScholarshipIds: [] }),
   clearArchive: () => set({ archiveScholarshipIds: [] }),
+  clearRenewal: () => set({ renewalScholarshipIds: [] }),
   clearApproved: () => set({ approvedIds: [] }),
   clearPending: () => set({ pendingIds: [] }),
   clearRejected: () => set({ rejectedIds: [] }),
-  clearForInterview: () => set({ rejectedIds: [] }),
+  clearForInterview: () => set({ forInterviewIds: [] }),
 }));

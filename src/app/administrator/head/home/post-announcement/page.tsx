@@ -217,7 +217,11 @@ export default function PostAnnouncement() {
                 description="Are you sure you want to post this announcement? It will be visible to all users."
                 cancelText="Cancel"
                 trigger={
-                  <Button size="lg" disabled={createLoading}>
+                  <Button
+                    onClick={() => setOpen(true)}
+                    size="lg"
+                    disabled={createLoading}
+                  >
                     {createLoading ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" />

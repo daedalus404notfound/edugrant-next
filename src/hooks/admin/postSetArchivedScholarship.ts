@@ -25,9 +25,7 @@ export default function useArchiveScholarship({
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/archiveScholarship`,
         {
-          scholarshipId: JSON.stringify({
-            data: scholarshipId,
-          }),
+          scholarshipId: scholarshipId,
           accountId: accountId,
         },
         { withCredentials: true }

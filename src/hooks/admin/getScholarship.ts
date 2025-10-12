@@ -6,6 +6,7 @@ import { scholarshipFormData } from "./zodUpdateScholarship";
 import { MetaTypes } from "../zodMeta";
 import StyledToast from "@/components/ui/toast-styled";
 import { ApiErrorResponse } from "./postReviewedHandler";
+import { useApplicationUIStore } from "@/store/updateUIStore";
 
 export default function useScholarshipData({
   page,
@@ -37,7 +38,6 @@ export default function useScholarshipData({
   });
 
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     async function fetchScholarships() {
       setLoading(true);
@@ -79,5 +79,5 @@ export default function useScholarshipData({
     fetchScholarships();
   }, [page, pageSize, sortBy, order, filters, status]);
 
-  return { data, loading, meta };
+  return { data, loading, meta, setData };
 }

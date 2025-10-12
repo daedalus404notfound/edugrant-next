@@ -132,20 +132,9 @@ export default function DynamicHeaderAdmin({
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className="flex items-center gap-2">
-        <Button variant="ghost">
-          <Avatar>
-            <AvatarFallback>
-              <UserRoundIcon
-                size={16}
-                className="opacity-60"
-                aria-hidden="true"
-              />
-            </AvatarFallback>
-          </Avatar>
-          {admin?.ISPSU_Head?.fName ? admin?.ISPSU_Head?.fName : "Head"}
-        </Button>
-
+      <div className="flex items-center gap-3">
+        {" "}
+        <ModeToggle />
         <DeleteDialog
           open={openLogout}
           onOpenChange={setOpenLogout}
@@ -158,12 +147,15 @@ export default function DynamicHeaderAdmin({
           description="Are you sure you want to log out of your account?"
           cancelText="Stay Logged In"
           trigger={
-            <Button variant="outline">
+            <Button
+              onClick={() => setOpenLogout(true)}
+              variant="secondary"
+              className="rounded-full"
+            >
               <LogOut />
             </Button>
           }
         />
-        <ModeToggle />
       </div>
       <Drawer direction="right" open={openNotif} onOpenChange={setOpenNotif}>
         <DrawerContent className="bg-transparent !border-0 p-4">

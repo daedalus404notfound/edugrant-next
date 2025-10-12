@@ -11,6 +11,9 @@ interface ApiErrorResponse {
 import { useAdminStore } from "@/store/adminUserStore";
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import { useUpdateScholarshipZod } from "./zodUpdateScholarship";
+import { useUserStore } from "@/store/useUserStore";
+import { useUpdateScholarshipStore } from "@/store/editScholarStore";
+import { useModeStore } from "@/store/scholarshipModalStore";
 type ApiError = AxiosError<ApiErrorResponse>;
 const today = new Date().toISOString().split("T")[0];
 const addScholarshipApi = async (data: scholarshipFormData) => {
@@ -64,14 +67,16 @@ const addScholarshipApi = async (data: scholarshipFormData) => {
 };
 
 export const useAddScholarship = () => {
+  const { setUpdatedScholarship } = useUpdateScholarshipStore();
   return useMutation({
     mutationFn: addScholarshipApi,
-    onSuccess: () => {
+    onSuccess: (resData) => {
       StyledToast({
         status: "success",
         title: "Scholarship Updated",
         description: "Your scholarship has been successfully updated.",
       });
+      setUpdatedScholarship(resData.updatedScholarship);
     },
     onError: (error: ApiError) => {
       console.error("Update scholarship error:", error);
@@ -89,22 +94,19 @@ export const useAddScholarship = () => {
   });
 };
 
-export const useUpdateScholarship = (
-  data?: scholarshipFormData,
-  HandleCloseDrawer?: (drawer: boolean) => void
-) => {
+export const useUpdateScholarship = (data?: scholarshipFormData) => {
   const { form, formData, documentFields, appendDocument, removeDocument } =
     useUpdateScholarshipZod(data);
   const addScholarship = useAddScholarship();
   const [open, setOpen] = useState(false);
-
+  const { setMode } = useModeStore();
   const handleSubmit = async (data: scholarshipFormData) => {
     try {
       const result = await addScholarship.mutateAsync(data);
 
       if (result) {
         setOpen(false);
-        HandleCloseDrawer?.(false);
+        setMode("details");
         addScholarship.reset();
         form.reset();
       }

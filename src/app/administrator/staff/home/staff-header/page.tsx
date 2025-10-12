@@ -90,7 +90,7 @@ export default function StaffHeader() {
               description="Are you sure you want to log out of your account?"
               cancelText="Stay Logged In"
               trigger={
-                <Button variant="outline">
+                <Button onClick={() => setOpen(true)} variant="outline">
                   <LogOut />
                 </Button>
               }

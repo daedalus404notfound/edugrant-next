@@ -47,10 +47,10 @@ export function DeleteDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-
+      {/* {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>} */}
+      {trigger && trigger}
       <DialogContent
-        className="max-w-lg p-6"
+        className="max-w-lg p-6 bg-gradient-to-bl to-card from-card/70 border-0"
         onInteractOutside={(e) => {
           e.preventDefault();
         }}

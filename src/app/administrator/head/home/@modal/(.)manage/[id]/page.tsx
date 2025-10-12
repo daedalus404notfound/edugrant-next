@@ -23,15 +23,29 @@ import RedeployScholarship from "./renewal";
 import ScholarshipModalLoading from "@/components/ui/scholarship-modal-loading";
 import ScholarshipModal from "@/components/ui/scholarship-modal";
 import ModalHeader from "@/components/ui/modal-header";
+import { useAdminStore } from "@/store/adminUserStore";
+import { useUpdateScholarshipStore } from "@/store/editScholarStore";
 
 export default function InterceptManageScholarship() {
   const [openAlert, setOpenAlert] = useState(false);
+
+  const { admin } = useAdminStore();
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(true);
   const id = params.id as string;
-  const { data, loading } = useScholarshipUserByIdAdmin(id);
 
+  const { data, loading, setData } = useScholarshipUserByIdAdmin(id);
+  const { updatedScholarship, clearUpdatedScholarship } =
+    useUpdateScholarshipStore();
+  useEffect(() => {
+    if (
+      updatedScholarship &&
+      updatedScholarship.scholarshipId === data?.scholarshipId
+    ) {
+      setData(updatedScholarship);
+    }
+  }, [updatedScholarship, data, setData]);
   const documentPhases = Object.keys(data?.documents ?? {}).filter((key) =>
     key.startsWith("phase")
   );
@@ -45,6 +59,7 @@ export default function InterceptManageScholarship() {
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
+      clearUpdatedScholarship();
       setTimeout(() => {
         router.back();
         setMode("details");
@@ -53,12 +68,13 @@ export default function InterceptManageScholarship() {
   };
   const { onSubmit, isSuccess, deleteLoading } = useDeleteScholarship({
     scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
+    accountId: admin?.accountId,
   });
 
   useEffect(() => {
     if (isSuccess) {
       setOpenAlert(false);
-      router.back();
+      HandleCloseDrawer(false);
     }
   }, [isSuccess]);
 
@@ -113,8 +129,8 @@ export default function InterceptManageScholarship() {
                         onConfirm={onSubmit}
                         loading={deleteLoading}
                         title="Delete application?"
-                        description="This will permanently delete application and cannot be undone."
-                        confirmText="Delete All"
+                        description="This will permanently delete scholarship and cannot be undone."
+                        confirmText="Delete"
                         cancelText="Keep"
                         trigger={
                           <Button

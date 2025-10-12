@@ -146,7 +146,12 @@ export default function DataTableToolbar<TData extends { studentId: number }>({
           confirmText="Delete All"
           cancelText="Keep Items"
           trigger={
-            <Button size="sm" variant="destructive" className="justify-start">
+            <Button
+              onClick={() => setOpenAlert(true)}
+              size="sm"
+              variant="destructive"
+              className="justify-start"
+            >
               <Trash2 /> Delete
             </Button>
           }

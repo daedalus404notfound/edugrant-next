@@ -219,7 +219,10 @@ export default function InterceptReviewApplicants() {
                     confirmTextLoading="Approving..."
                     cancelText="Cancel"
                     trigger={
-                      <Button disabled={isButtonDisabled || !!isThereRejected}>
+                      <Button
+                        onClick={() => setOpenApprove(true)}
+                        disabled={isButtonDisabled || !!isThereRejected}
+                      >
                         <UserCheck /> Approve Application
                       </Button>
                     }
@@ -239,7 +242,10 @@ export default function InterceptReviewApplicants() {
                     confirmTextLoading="Approving..."
                     cancelText="Cancel"
                     trigger={
-                      <Button disabled={isButtonDisabled || !!isThereRejected}>
+                      <Button
+                        onClick={() => setOpenApprove(true)}
+                        disabled={isButtonDisabled || !!isThereRejected}
+                      >
                         <UserCheck /> Approve Application
                       </Button>
                     }
@@ -262,6 +268,7 @@ export default function InterceptReviewApplicants() {
                     cancelText="Cancel"
                     trigger={
                       <Button
+                        onClick={() => setOpenInterview(true)}
                         disabled={
                           totalRequiredDocs !== reviewedDocs ||
                           !!isThereRejected
@@ -288,6 +295,7 @@ export default function InterceptReviewApplicants() {
                 trigger={
                   <Button
                     variant="destructive"
+                    onClick={() => setOpenReject(true)}
                     disabled={
                       data?.status === "APPROVED" ||
                       data?.status === "DECLINED" ||

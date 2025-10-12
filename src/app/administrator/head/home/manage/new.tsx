@@ -14,6 +14,7 @@ import DataTableToolbar from "./manage-table-components/data-table-toolbar";
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import { useApplicationUIStore } from "@/store/updateUIStore";
 import { useAdminStore } from "@/store/adminUserStore";
+import { useUpdateScholarshipStore } from "@/store/editScholarStore";
 export default function ManageActiveScholarship({
   setActive,
 }: {
@@ -28,7 +29,7 @@ export default function ManageActiveScholarship({
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { data, meta, loading } = useScholarshipData({
+  const { data, meta, loading, setData } = useScholarshipData({
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
     sortBy: sorting[0]?.id ?? "",
@@ -43,18 +44,71 @@ export default function ManageActiveScholarship({
       setActive(meta.totalRows);
     }
   }, [meta?.totalRows, setActive]);
-  const { searchData, searchLoading, searchMeta } = useScholarshipSearch({
-    page: pagination.pageIndex + 1,
-    pageSize: pagination.pageSize,
-    sortBy: sorting[0]?.id ?? "",
-    order: sorting[0]?.desc ? "desc" : "asc",
-    query: search,
-    status: status,
-  });
+  const { searchData, searchLoading, searchMeta, setSearchData } =
+    useScholarshipSearch({
+      page: pagination.pageIndex + 1,
+      pageSize: pagination.pageSize,
+      sortBy: sorting[0]?.id ?? "",
+      order: sorting[0]?.desc ? "desc" : "asc",
+      query: search,
+      status: status,
+    });
   const { deletedScholarshipIds } = useApplicationUIStore();
   const filteredData = (search.trim().length > 0 ? searchData : data)?.filter(
     (item) => !deletedScholarshipIds.includes(item.scholarshipId)
   );
+
+  const { updatedScholarship, clearUpdatedScholarship } =
+    useUpdateScholarshipStore();
+
+  useEffect(() => {
+    if (!updatedScholarship) return;
+
+    const now = new Date();
+    const isExpired = new Date(updatedScholarship.deadline) < now;
+
+    setData((prevData) =>
+      prevData
+        .map((item) =>
+          item.scholarshipId === updatedScholarship.scholarshipId
+            ? updatedScholarship
+            : item
+        )
+        .filter(
+          (item) =>
+            !(
+              item.scholarshipId === updatedScholarship.scholarshipId &&
+              isExpired
+            )
+        )
+    );
+
+    if (search.trim().length > 0) {
+      setSearchData((prevSearchData) =>
+        prevSearchData
+          .map((item) =>
+            item.scholarshipId === updatedScholarship.scholarshipId
+              ? updatedScholarship
+              : item
+          )
+          .filter(
+            (item) =>
+              !(
+                item.scholarshipId === updatedScholarship.scholarshipId &&
+                isExpired
+              )
+          )
+      );
+    }
+
+    clearUpdatedScholarship();
+  }, [
+    updatedScholarship,
+    setData,
+    setSearchData,
+    clearUpdatedScholarship,
+    search,
+  ]);
 
   return (
     <DataTable<scholarshipFormData, unknown>

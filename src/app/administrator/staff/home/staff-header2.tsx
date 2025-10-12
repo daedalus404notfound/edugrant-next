@@ -164,7 +164,7 @@ export default function DynamicHeaderAdmin({
           description="Are you sure you want to log out of your account?"
           cancelText="Stay Logged In"
           trigger={
-            <Button variant="outline">
+            <Button onClick={() => setOpenLogout(true)} variant="outline">
               <LogOut />
             </Button>
           }

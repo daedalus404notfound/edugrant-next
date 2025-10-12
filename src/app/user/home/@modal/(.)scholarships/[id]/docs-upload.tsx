@@ -368,6 +368,7 @@ export default function UploadDocs({
                 cancelText="Cancel"
                 trigger={
                   <Button
+                    onClick={() => setOpenAlert(true)}
                     disabled={
                       completedCount < requiredDocumentsCount || disable
                     }
@@ -392,6 +393,7 @@ export default function UploadDocs({
                 cancelText="Cancel"
                 trigger={
                   <Button
+                    onClick={() => setOpenAlert(true)}
                     disabled={
                       completedCount < requiredDocumentsCount || disable
                     }

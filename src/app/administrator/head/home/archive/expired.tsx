@@ -13,6 +13,7 @@ import DataTableToolbar from "../manage/manage-table-components/data-table-toolb
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import { useApplicationUIStore } from "@/store/updateUIStore";
 import { useAdminStore } from "@/store/adminUserStore";
+import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
 
 export default function ManageExpiredScholarship({
   setExpired,
@@ -25,6 +26,7 @@ export default function ManageExpiredScholarship({
     pageSize: 10,
   });
   const { admin } = useAdminStore();
+  const [search, setSearch] = useState("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const { data, meta, loading } = useScholarshipData({
@@ -42,23 +44,40 @@ export default function ManageExpiredScholarship({
       setExpired(meta.totalRows);
     }
   }, [meta?.totalRows, setExpired]);
-  const { deletedScholarshipIds } = useApplicationUIStore();
-  const { archiveScholarshipIds } = useApplicationUIStore();
-  const filteredData = data.filter(
+  const { searchData, searchLoading, searchMeta, setSearchData } =
+    useScholarshipSearch({
+      page: pagination.pageIndex + 1,
+      pageSize: pagination.pageSize,
+      sortBy: sorting[0]?.id ?? "",
+      order: sorting[0]?.desc ? "desc" : "asc",
+      query: search,
+      status: status,
+      accountId: admin?.accountId,
+    });
+  const {
+    deletedScholarshipIds,
+    renewalScholarshipIds,
+    archiveScholarshipIds,
+  } = useApplicationUIStore();
+
+  console.log("renewalScholarshipIds", renewalScholarshipIds);
+  const filteredData = (search.trim().length > 0 ? searchData : data)?.filter(
     (item) =>
       !deletedScholarshipIds.includes(item.scholarshipId) &&
+      !renewalScholarshipIds.includes(item.scholarshipId) &&
       !archiveScholarshipIds.includes(item.scholarshipId)
   );
-
   return (
     <DataTable<scholarshipFormData, unknown>
       data={filteredData}
       columns={columns(status)}
-      meta={meta}
+      meta={search.trim().length > 0 ? searchMeta : meta}
       pagination={pagination}
       setPagination={setPagination}
       getRowId={(row) => row.scholarshipId}
-      loading={loading}
+      loading={search ? searchLoading : loading}
+      search={search}
+      setSearch={setSearch}
       status={status}
       setStatus={setStatus}
       sorting={sorting}
