@@ -108,7 +108,7 @@ export default function InterceptManageApplicationClient() {
     >
       <DrawerContent
         className={`lg:w-[56%] bg-card w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 lg:p-1  ${
-          loading ? " lg:h-[75dvh] h-[68dvh]" : "h-auto "
+          loading ? " lg:h-[75dvh] h-[68dvh]" : "h-[90dvh] "
         }`}
       >
         <DrawerHeader className="p-0">
@@ -132,7 +132,7 @@ export default function InterceptManageApplicationClient() {
             />
           ) : (
             <div>
-              <div className="bg-card rounded-md overflow-hidden ">
+              <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-md overflow-hidden ">
                 {/* Header Section */}
                 <div className="relative flex lg:flex-row flex-col lg:items-end items-center  py-8 px-4">
                   <img

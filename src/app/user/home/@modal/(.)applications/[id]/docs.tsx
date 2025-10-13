@@ -46,7 +46,7 @@ export default function DocsStudent({ data }: DocsStudentProps) {
               <div>
                 {decisionMessage?.status === "REJECTED" ? (
                   <div className="rounded-md px-4 py-3 bg-red-500/10">
-                    <p className="text-sm line-clamp-1 text-red-500">
+                    <p className="text-sm line-clamp-1 ">
                       <TriangleAlert
                         className="me-3 -mt-0.5 inline-flex text-red-500"
                         size={16}
@@ -56,7 +56,7 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                   </div>
                 ) : decisionMessage?.status === "APPROVED" ? (
                   <div className="rounded-md px-4 py-3 bg-green-500/10">
-                    <p className="text-sm line-clamp-1 text-green-500">
+                    <p className="text-sm line-clamp-1 ">
                       <CircleCheckIcon
                         className="me-3 -mt-0.5 inline-flex text-emerald-500"
                         size={16}
@@ -66,7 +66,7 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                   </div>
                 ) : !meow.fileUrl ? (
                   <div className="rounded-md px-4 py-3 bg-red-500/10">
-                    <p className="text-sm line-clamp-1 text-red-500">
+                    <p className="text-sm line-clamp-1 ">
                       <TriangleAlertIcon
                         className="me-3 -mt-0.5 inline-flex text-red-500"
                         size={16}
@@ -76,7 +76,7 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                   </div>
                 ) : data?.status === "PENDING" && meow.fileUrl ? (
                   <div className="rounded-md px-4 py-3 bg-amber-500/10">
-                    <p className="text-sm line-clamp-1 text-amber-500">
+                    <p className="text-sm line-clamp-1 ">
                       <Clock
                         className="me-3 -mt-0.5 inline-flex text-amber-500"
                         size={16}
@@ -100,9 +100,9 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                       : "PENDING"
                   }
                 />
-                <div className="flex-1 flex items-center justify-center">
+                {/* <div className="flex-1 flex items-center justify-center">
                   <p className="text-sm">Download</p>
-                </div>
+                </div> */}
               </div>{" "}
               <div className="space-y-3">
                 <div className="flex justify-between items-center">

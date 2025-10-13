@@ -1,6 +1,6 @@
 "use client";
 import { AnimatePresence, motion } from "motion/react";
-import { TextSearch } from "lucide-react";
+import { ArrowRight, TextSearch } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Tabs } from "@/components/ui/vercel-tabs";
@@ -15,6 +15,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import NoDataFound from "@/components/ui/nodata";
 import Link from "next/link";
 import { getPhaseLabel } from "@/lib/phaseLevel";
+import { Button } from "@/components/ui/button";
 
 export default function ClientScholarship() {
   const [status, setStatus] = useState("PENDING");
@@ -114,14 +115,33 @@ export default function ClientScholarship() {
                       delay: index * 0.15,
                       ease: "easeOut",
                     }}
-                    className="p-2 bg-background/40 relative rounded-md border space-y-3"
+                    className="shadow-sm rounded-lg border bg-card p-1"
                   >
-                    <Skeleton className="aspect-[16/8.5]" />
-                    <Skeleton className="h-10" />
-                    <div className="flex gap-3 h-11">
-                      <Skeleton className="flex-1" />
-                      <Skeleton className="flex-1" />
-                      <Skeleton className="flex-1" />
+                    <div className="rounded-lg bg-background overflow-hidden">
+                      <Skeleton className="aspect-[16/8.5] w-full rounded-md" />
+
+                      <div className="p-4 space-y-6">
+                        <div className="flex items-center gap-3">
+                          <Skeleton className="w-10 h-10 rounded-full" />
+                          <div className="flex-1 space-y-2">
+                            <Skeleton className="h-4 w-3/4" />
+                            <Skeleton className="h-3 w-1/2" />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <Skeleton className="h-3 w-24" />
+                            <Skeleton className="h-3 w-28" />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <Skeleton className="h-3 w-24" />
+                            <Skeleton className="h-3 w-16" />
+                          </div>
+                        </div>
+
+                        <Skeleton className="h-10 w-full rounded-md" />
+                      </div>
                     </div>
                   </motion.div>
                 ))
@@ -141,142 +161,136 @@ export default function ClientScholarship() {
                     }}
                     className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
                   >
-                    <Link
+                    {/* <Link
                       href={`/user/home/applications/${meow.applicationId}`}
                       key={meow.applicationId}
                       prefetch
                       scroll={false}
-                    >
-                      <div className="relative rounded-lg bg-background overflow-hidden">
-                        <img
-                          className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
-                            status === "EXPIRED" ? "" : ""
-                          }`}
-                          src={meow.Scholarship.cover}
-                          alt=""
-                        />
-                        <div className="relative z-10">
-                          <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
-                            {meow.status && (
-                              <div className="absolute top-0 -left-2 flex items-center">
-                                {/* Shadow Layer */}
-                                <div
-                                  className="absolute"
-                                  style={{
-                                    width: "120px",
-                                    height: "40px",
-                                    background:
-                                      meow.status === "BLOCKED"
-                                        ? "rgba(0,0,0,0.5)"
-                                        : meow.status === "APPROVED"
-                                        ? "rgba(5 46 22)"
-                                        : meow.status === "PENDING"
-                                        ? "rgb(66 32 6)"
-                                        : meow.status === "INTERVIEW"
-                                        ? "rgb(23 37 84)"
-                                        : meow.status === "DECLINED"
-                                        ? "rgba(69 10 10)"
-                                        : "rgba(0,0,0,0.5)",
-                                    clipPath:
-                                      "polygon(0 0, 100% 0, 85% 100%, 0% 100%)",
-                                    transform: "translate(0px, 0px)", // shadow offset
-                                    zIndex: 0,
-                                  }}
-                                ></div>
-
-                                {/* Main Layer */}
-                                <div
-                                  className="flex items-center justify-center text-gray-200 font-medium text-sm px-6 py-2"
-                                  style={{
-                                    width: "120px",
-                                    height: "40px",
-                                    background:
-                                      meow.status === "BLOCKED"
-                                        ? "rgba(0,0,0,0.8)"
-                                        : meow.status === "APPROVED"
-                                        ? "rgba(0,128,0,0.8)"
-                                        : meow.status === "PENDING"
-                                        ? "rgba(218,165,32,0.8)"
-                                        : meow.status === "INTERVIEW"
-                                        ? "rgba(0,0,255,0.8)"
-                                        : meow.status === "DECLINED"
-                                        ? "rgba(255,0,0,0.8)"
-                                        : "rgba(0,0,0,0.8)",
-                                    clipPath:
-                                      "polygon(0 0, 100% 0, 85% 100%, 0% 100%)",
-                                    zIndex: 1,
-                                  }}
-                                >
-                                  {meow.status}
-                                </div>
-                              </div>
-                            )}
-
-                            <img
-                              className="h-full w-full object-cover"
-                              src={meow.Scholarship.cover}
-                              alt=""
-                            />
-                          </div>
-
-                          <div className=" lg:p-4 p-2 space-y-5">
-                            <div className="flex items-start justify-start">
-                              <div className="flex-1 lg:space-y-1">
-                                <div className="flex justify-between items-center">
-                                  <h3 className="font-semibold lg:text-lg text-base  text-balance leading-tight line-clamp-1">
-                                    {meow.Scholarship.title}
-                                  </h3>
-                                  <Badge
-                                    variant="secondary"
-                                    className="uppercase"
-                                  >
-                                    {meow.Scholarship.type}
-                                  </Badge>
-                                </div>
-                                <p className="text-sm text-muted-foreground">
-                                  {meow.Scholarship.Scholarship_Provider.name}
-                                </p>
+                    > */}
+                    <div className="relative rounded-lg bg-background overflow-hidden">
+                      <img
+                        className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
+                          status === "EXPIRED" ? "" : ""
+                        }`}
+                        src={meow.Scholarship.cover}
+                        alt=""
+                      />
+                      <div className="relative z-10">
+                        <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
+                          {/* <div className="flex gap-1.5 absolute top-0 right-2">
+                            <Badge
+                              variant="outline"
+                              className="mt-2 uppercase bg-blue-800 text-gray-200"
+                            >
+                              {" "}
+                              {getPhaseLabel(data[0]?.Scholarship?.phase)}
+                            </Badge>
+                            <Badge
+                              variant="outline"
+                              className={`mt-2 uppercase text-gray-200 ${
+                                data[0]?.Scholarship?.deadline &&
+                                Date.now() >
+                                  new Date(
+                                    data[0].Scholarship.deadline
+                                  ).getTime()
+                                  ? "bg-red-800"
+                                  : "bg-green-800"
+                              }`}
+                            >
+                              {data[0]?.Scholarship?.deadline &&
+                              Date.now() >
+                                new Date(data[0].Scholarship.deadline).getTime()
+                                ? "EXPIRED"
+                                : "ACTIVE"}
+                            </Badge>
+                          </div> */}
+                          {meow.status && (
+                            <div className="absolute top-0 -left-2 flex items-center">
+                              <div
+                                className={`flex items-center justify-center text-gray-200 font-medium text-sm px-7 py-1.5 bg-gradient-to-br  ${
+                                  meow.status === "BLOCKED"
+                                    ? "to-green-950 from-green-800"
+                                    : meow.status === "APPROVED"
+                                    ? "to-green-950 from-green-800"
+                                    : meow.status === "PENDING"
+                                    ? "to-yellow-950 from-yellow-800"
+                                    : meow.status === "INTERVIEW"
+                                    ? "to-blue-950 from-blue-800"
+                                    : meow.status === "DECLINED"
+                                    ? "to-red-950 from-red-800"
+                                    : "to-gray-950 from-gray-800"
+                                }`}
+                                style={{
+                                  clipPath:
+                                    "polygon(0 0, 100% 0, 85% 100%, 0% 100%)",
+                                }}
+                              >
+                                {meow.status}
                               </div>
                             </div>
+                          )}
 
-                            <div className="flex items-center justify-between text-sm text-muted-foreground ">
-                              <div className="flex gap-1.5 items-center">
-                                {meow.Scholarship?.deadline &&
-                                new Date(meow.Scholarship?.deadline).getTime() <
-                                  Date.now() ? (
-                                  <Badge className="bg-red-800 text-gray-200 tracking-wide">
-                                    EXPIRED
-                                  </Badge>
-                                ) : (
-                                  <Badge className="bg-green-800 text-gray-200 tracking-wide">
-                                    ACTIVE
-                                  </Badge>
-                                )}
-                                {meow.Scholarship.phase > 1 && (
-                                  <Badge className="bg-blue-800 text-gray-200 uppercase">
-                                    {getPhaseLabel(meow.Scholarship.phase)}
-                                  </Badge>
-                                )}
+                          <img
+                            className="h-full w-full object-cover"
+                            src={meow.Scholarship.cover}
+                            alt=""
+                          />
+                        </div>
+
+                        <div className="p-4 space-y-6">
+                          <div className="flex items-center gap-3">
+                            {meow.Scholarship ? (
+                              <img
+                                src={meow?.Scholarship?.logo}
+                                alt={meow?.Scholarship?.title}
+                                className="w-10 h-10 rounded-full object-cover border"
+                              />
+                            ) : (
+                              <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
+                                No Logo
                               </div>
+                            )}{" "}
+                            <div className="w-full">
+                              <h3 className="font-semibold text-sm line-clamp-1">
+                                {meow?.Scholarship?.title}
+                              </h3>
 
-                              {/* {user?.Student?.Application?.some(
-                                (app) =>
-                                  app.scholarshipId ===
-                                  meow.Scholarship.scholarshipId
-                              ) && (
-                                <Badge className=" bg-blue-800 text-white">
-                                  APPLIED
-                                </Badge>
-                              )} */}
-                              <span>
-                                Deadline:{" "}
-                                {format(meow.Scholarship.deadline, "MM/dd/yy")}
+                              <p className="text-sm text-muted-foreground">
+                                {meow?.Scholarship?.Scholarship_Provider
+                                  ?.name || "Unknown Provider"}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Details */}
+                          <div className="flex flex-col gap-1 text-sm text-muted-foreground">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs">Application Date:</span>
+                              <span className="font-medium text-foreground">
+                                {meow?.dateCreated
+                                  ? format(meow?.dateCreated, "PPP")
+                                  : "—"}
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs">Scholarship Type:</span>
+                              <span className="font-medium text-foreground">
+                                {meow?.Scholarship?.type || "N/A"}
                               </span>
                             </div>
                           </div>
+
+                          <Link
+                            href={`/user/home/applications/${meow.applicationId}`}
+                          >
+                            <Button className="w-full">
+                              View Details <ArrowRight />
+                            </Button>
+                          </Link>
                         </div>
                       </div>
-                    </Link>
+                    </div>
+                    {/* </Link> */}
                   </motion.div>
                 ))
               )}
@@ -287,3 +301,62 @@ export default function ClientScholarship() {
     </div>
   );
 }
+
+//  <div
+//    key={meow.scholarshipId}
+//    className="group relative flex flex-col justify-between  bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30 rounded-md p-1 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 "
+//  >
+//    <img
+//      className="w-full object-cover aspect-[16/10] rounded-md opacity-50"
+//      src={meow.Scholarship.cover}
+//      alt=""
+//    />
+//    {/* Logo + Provider */}
+//    <div className="p-4 space-y-6">
+//      <div className="flex items-center gap-3">
+//        {meow.Scholarship ? (
+//          <img
+//            src={meow?.Scholarship?.logo}
+//            alt={meow?.Scholarship?.title}
+//            className="w-10 h-10 rounded-full object-cover border"
+//          />
+//        ) : (
+//          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
+//            No Logo
+//          </div>
+//        )}
+//        <div>
+//          <h3 className="font-semibold text-sm line-clamp-1">
+//            {meow?.Scholarship?.title}
+//          </h3>
+//          <p className="text-sm text-muted-foreground">
+//            {meow?.Scholarship?.Scholarship_Provider?.name || "Unknown Provider"}
+//          </p>
+//        </div>
+//      </div>
+
+//      {/* Details */}
+//      <div className="flex flex-col gap-1 text-sm text-muted-foreground">
+//        <div className="flex items-center justify-between">
+//          <span className="text-xs">Deadline:</span>
+//          <span className="font-medium text-foreground">
+//            {meow?.Scholarship?.deadline
+//              ? format(meow?.Scholarship?.deadline, "PPP")
+//              : "—"}
+//          </span>
+//        </div>
+//        <div className="flex items-center justify-between">
+//          <span className="text-xs">Required GWA:</span>
+//          <span className="font-medium text-foreground">
+//            {meow?.Scholarship?.requiredGWA || "N/A"}
+//          </span>
+//        </div>
+//      </div>
+
+//      <Link href={`/user/home/scholarships/${meow?.Scholarship?.scholarshipId}`}>
+//        <Button className="w-full">
+//          View Details <ArrowRight />
+//        </Button>
+//      </Link>
+//    </div>
+//  </div>;
