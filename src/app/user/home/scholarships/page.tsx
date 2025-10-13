@@ -435,6 +435,8 @@ export default function ClientScholarship() {
 
                             <Link
                               href={`/user/home/scholarships/${scholarship.scholarshipId}`}
+                              prefetch={true}
+                              scroll={false}
                             >
                               <Button className="w-full">
                                 View Details <ArrowRight />

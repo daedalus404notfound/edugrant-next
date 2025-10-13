@@ -282,6 +282,8 @@ export default function ClientScholarship() {
 
                           <Link
                             href={`/user/home/applications/${meow.applicationId}`}
+                            prefetch={true}
+                            scroll={false}
                           >
                             <Button className="w-full">
                               View Details <ArrowRight />
