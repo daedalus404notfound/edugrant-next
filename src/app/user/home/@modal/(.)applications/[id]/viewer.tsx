@@ -42,7 +42,7 @@ export default function ApplicationViewer({
         <GlassFolder color="amber" />
         <Badge
           variant="secondary"
-          className="absolute bottom-0 z-50 uppercase tracking-wide"
+          className="absolute -bottom-0.5 right-1 z-50 uppercase tracking-wide"
         >
           {requirementType}
         </Badge>

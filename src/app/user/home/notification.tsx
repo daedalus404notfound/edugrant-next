@@ -303,6 +303,9 @@ import {
   CheckCircle,
   XCircle,
   Sparkles,
+  X,
+  MessageSquare,
+  CheckCheck,
 } from "lucide-react";
 import { useState } from "react";
 import useMarkAsReadNotification from "@/hooks/admin/patchReadNotification";
@@ -322,21 +325,6 @@ export default function Notification() {
   const { onSubmitPatch, patchMarkLoading } = useMarkAsReadNotification({
     accountId: 5,
   });
-
-  // Get notification icon based on type or priority
-  const getNotificationIcon = (notification: NotificationTypes) => {
-    // You can customize this based on your notification types
-    if (notification.title?.toLowerCase().includes("APPROVED")) {
-      return <CheckCircle className="w-5 h-5 text-green-500" />;
-    }
-    if (notification.title?.toLowerCase().includes("DECLINED")) {
-      return <XCircle className="w-5 h-5 text-red-500" />;
-    }
-    if (notification.title?.toLowerCase().includes("INTERVIEW")) {
-      return <AlertCircle className="w-5 h-5 text-yellow-500" />;
-    }
-    return <Info className="w-5 h-5 text-blue-500" />;
-  };
 
   const hasUnread = data.some((notif) => !notif.read);
 
@@ -358,13 +346,18 @@ export default function Notification() {
       </PopoverTrigger>
 
       <PopoverContent
-        className="w-[420px] p-0 overflow-hidden"
-        align="end"
+        className="lg:w-lg w-full p-0 overflow-hidden mr-6"
+        align="center"
         sideOffset={8}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 bg-muted/30 border-b">
-          <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between p-2 bg-muted/30 border-b">
+          <div className="flex-1 flex justify-start items-center">
+            <Button variant="ghost">
+              <Bell />
+            </Button>
+          </div>
+          <div className="flex-1 flex items-center justify-center gap-2">
             <h2 className="text-base font-semibold">Notifications</h2>
             {(unreadNotifications ?? 0) > 0 && (
               <Badge variant="secondary" className="rounded-full px-2 py-0">
@@ -372,20 +365,22 @@ export default function Notification() {
               </Badge>
             )}
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="gap-2 h-8 text-xs"
-            onClick={onSubmit}
-            disabled={markLoading || !hasUnread}
-          >
-            <Check className="w-3.5 h-3.5" />
-            Mark all read
-          </Button>
+          <div className="flex-1 flex justify-end items-center">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-2 h-8 text-xs"
+              onClick={onSubmit}
+              disabled={markLoading || !hasUnread}
+            >
+              <Check className="w-3.5 h-3.5" />
+              Mark all read
+            </Button>
+          </div>
         </div>
 
         {/* Notifications List */}
-        <ScrollArea className="max-h-[400px]">
+        <div className="h-115 overflow-auto">
           {data.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
               <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mb-3">
@@ -424,7 +419,7 @@ export default function Notification() {
                 >
                   {/* Unread indicator */}
                   {!notification.read && (
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-primary rounded-r-full" />
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-full bg-primary-second rounded-r-full" />
                   )}
 
                   {/* Icon */}
@@ -435,7 +430,13 @@ export default function Notification() {
                         !notification.read ? "bg-primary/10" : "bg-muted"
                       )}
                     >
-                      {getNotificationIcon(notification)}
+                      {notification.title === "APPROVED" ? (
+                        <CheckCheck className="text-green-600" />
+                      ) : notification.title === "DECLINED" ? (
+                        <X className="text-red-600" />
+                      ) : (
+                        <MessageSquare className="text-blue-600" />
+                      )}
                     </div>
                   </div>
 
@@ -475,14 +476,14 @@ export default function Notification() {
               ))}
             </div>
           )}
-        </ScrollArea>
+        </div>
 
         {/* Footer */}
         {data.length > 0 && (
           <>
             <Separator />
             <Link href="/user/administrator/notifications">
-              <div className="p-3 text-center bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer">
+              <div className="p-3 flex justify-center items-center bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer">
                 <Label className="text-sm font-medium text-primary cursor-pointer">
                   View all notifications
                 </Label>

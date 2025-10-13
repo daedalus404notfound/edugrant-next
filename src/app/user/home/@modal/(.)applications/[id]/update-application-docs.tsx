@@ -210,8 +210,8 @@ export default function EditApplication({
         {/* <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" /> */}
         <div className="space-y-8">
           <TitleReusable
-            title={`Upload Documents for Phase ${documentPhasesLength}`}
-            description={` Complete your application for ${data.Scholarship.title}`}
+            title="Update Documents"
+            description="Update your documents before scholarship expired"
           />
 
           <Form {...form}>

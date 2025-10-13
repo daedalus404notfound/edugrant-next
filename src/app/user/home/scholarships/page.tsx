@@ -70,7 +70,7 @@ export default function ClientScholarship() {
       {!completed && (
         <div className="absolute inset-0 z-20 bg-background/70 rounded-lg " />
       )}
-      <div className="mx-auto w-[95%] lg:pt-10  pt-3">
+      <div className="mx-auto w-[95%] lg:py-10  py-4">
         <motion.div
           className="flex justify-between items-end"
           initial={{ opacity: 0, x: -20 }}
@@ -83,18 +83,16 @@ export default function ClientScholarship() {
             Icon={TextSearch}
           />
         </motion.div>
-
-        <div className="py-8 space-y-8">
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+          className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b"
+        >
+          <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
+        </motion.div>
+        <div className="mt-15 lg:w-[80%] min-w-4xl w-full mx-auto">
           {!completed && <CompleteChecker />}
-
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-            className="overflow-y-hidden overflow-x-auto py-3 no-scrollbar "
-          >
-            <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
-          </motion.div>
 
           <div className=" grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
             <AnimatePresence mode="wait">

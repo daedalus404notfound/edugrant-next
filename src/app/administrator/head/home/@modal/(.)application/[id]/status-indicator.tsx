@@ -1,7 +1,7 @@
 import { Check, X, Ban, MessageSquare } from "lucide-react";
 
 interface StatusAlertProps {
-  status: "APPROVED" | "DECLINED" | "BLOCKED" | "INTERVIEW";
+  status: "APPROVED" | "DECLINED" | "BLOCKED" | "INTERVIEW" | "PENDING";
   title: string;
   description: string;
 }
@@ -29,8 +29,13 @@ export const StatusAlertIndicator = ({
     },
     INTERVIEW: {
       icon: <MessageSquare className="opacity-80" size={16} />,
-      bgColor: "dark:bg-indigo-900 bg-indigo-200",
-      bgColorIcon: "dark:bg-indigo-950 bg-indigo-300",
+      bgColor: "dark:bg-blue-900 bg-blue-200",
+      bgColorIcon: "dark:bg-blue-950 bg-blue-300",
+    },
+    PENDING: {
+      icon: <MessageSquare className="opacity-80" size={16} />,
+      bgColor: "dark:bg-yellow-900/50 bg-yellow-200",
+      bgColorIcon: "dark:bg-yellow-950 bg-yellow-300",
     },
   }[status];
 

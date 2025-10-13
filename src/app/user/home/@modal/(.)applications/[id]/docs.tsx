@@ -8,6 +8,7 @@ import {
   TriangleAlert,
   TriangleAlertIcon,
 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 type DocsStudentProps = {
   data: ApplicationFormData;
@@ -29,108 +30,102 @@ export default function DocsStudent({ data }: DocsStudentProps) {
   };
 
   return (
-    <div className=" grid lg:grid-cols-1  divide-y">
+    <div className=" grid lg:grid-cols-2 gap-6">
       {lastPhase &&
         lastPhase.map((meow) => {
-          // ✅ Pick Interview_Decision first, fallback to Application_Decision
           const decisionMessage =
             data?.Interview_Decision?.message?.[meow.document] ||
             data?.Application_Decision?.message?.[meow.document] ||
             null;
           console.log("meow", decisionMessage);
           return (
-            <div key={meow.document} className="py-10 ">
-              <div className="flex-1 flex flex-col lg:justify-end justify-between gap-5 relative">
-                <div className="flex gap-3">
-                  <ApplicationViewer
-                    fileFormat={mimeToLabelMap[meow.fileFormat]}
-                    resourceType={meow.resourceType}
-                    fileUrl={meow.fileUrl}
-                    document={meow.document}
-                    supabasePath={meow.supabasePath}
-                    requirementType={meow.requirementType}
-                    status={decisionMessage?.status}
-                  />
-                  <div className="flex-1">
-                    <div className="flex gap-3 items-center justify-between capitalize">
-                      <p className="font-medium lg:text-base text-sm">
-                        {meow.document}
-                      </p>
-
-                      <div className="flex gap-1.5 items-center">
-                        {meow.fileUrl && (
-                          <Badge className="hidden lg:block tracking-wide uppercase bg-blue-800/20 text-blue-600">
-                            SUBMITTED
-                          </Badge>
-                        )}
-                        {decisionMessage && (
-                          <Badge className="hidden lg:block tracking-wide uppercase bg-green-800/20 text-green-600">
-                            {decisionMessage.status}
-                          </Badge>
-                        )}
-                        {!meow.fileUrl && (
-                          <Badge className="hidden lg:block tracking-wide uppercase bg-red-800/20 text-red-600">
-                            MISSING
-                          </Badge>
-                        )}
-                      </div>
-                    </div>
-                    <p className="uppercase lg:text-sm text-xs text-muted-foreground lg:mt-1">
-                      {meow.fileFormat ? meow.fileFormat : "N/A"}
+            <div
+              key={meow.document}
+              className="bg-gradient-to-br to-card from-card/80 p-4 rounded-md"
+            >
+              <div>
+                {decisionMessage?.status === "REJECTED" ? (
+                  <div className="rounded-md px-4 py-3 bg-red-500/10">
+                    <p className="text-sm line-clamp-1 text-red-500">
+                      <TriangleAlert
+                        className="me-3 -mt-0.5 inline-flex text-red-500"
+                        size={16}
+                      />
+                      Document has been rejected
+                    </p>
+                  </div>
+                ) : decisionMessage?.status === "APPROVED" ? (
+                  <div className="rounded-md px-4 py-3 bg-green-500/10">
+                    <p className="text-sm line-clamp-1 text-green-500">
+                      <CircleCheckIcon
+                        className="me-3 -mt-0.5 inline-flex text-emerald-500"
+                        size={16}
+                      />
+                      Document has been approved
+                    </p>
+                  </div>
+                ) : !meow.fileUrl ? (
+                  <div className="rounded-md px-4 py-3 bg-red-500/10">
+                    <p className="text-sm line-clamp-1 text-red-500">
+                      <TriangleAlertIcon
+                        className="me-3 -mt-0.5 inline-flex text-red-500"
+                        size={16}
+                      />
+                      Failed to submit
+                    </p>
+                  </div>
+                ) : data?.status === "PENDING" && meow.fileUrl ? (
+                  <div className="rounded-md px-4 py-3 bg-amber-500/10">
+                    <p className="text-sm line-clamp-1 text-amber-500">
+                      <Clock
+                        className="me-3 -mt-0.5 inline-flex text-amber-500"
+                        size={16}
+                      />
+                      Your document is awaiting verification.
+                    </p>
+                  </div>
+                ) : null}
+              </div>
+              <div className="pb-6 pt-8 flex">
+                <ApplicationViewer
+                  fileFormat={mimeToLabelMap[meow.fileFormat]}
+                  resourceType={meow.resourceType}
+                  fileUrl={meow.fileUrl}
+                  document={meow.document}
+                  supabasePath={meow.supabasePath}
+                  requirementType={meow.requirementType}
+                  status={
+                    decisionMessage?.status
+                      ? decisionMessage?.status
+                      : "PENDING"
+                  }
+                />
+                <div className="flex-1 flex items-center justify-center">
+                  <p className="text-sm">Download</p>
+                </div>
+              </div>{" "}
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <p className="font-medium lg:text-base text-sm">
+                    {meow.document}
+                  </p>
+                  <div className="flex items-center gap-6">
+                    <p className="border-l pl-3 text-sm text-muted-foreground">
+                      {meow.fileFormat}
+                    </p>{" "}
+                    <p className="border-l pl-3 text-sm text-muted-foreground">
+                      {meow.requirementType}
                     </p>
                   </div>
                 </div>
 
-                <div>
-                  {decisionMessage?.status === "REJECTED" && (
-                    <div className="rounded-md px-4 py-3 bg-card">
-                      <p className="text-sm line-clamp-1 flex items-center">
-                        <TriangleAlert
-                          className="me-3 -mt-0.5 text-red-500"
-                          size={16}
-                        />
-                        {decisionMessage?.comment ||
-                          "Document has been rejected"}
-                      </p>
-                    </div>
-                  )}
-
-                  {data?.status === "PENDING" && meow.fileUrl && (
-                    <div className="rounded-md px-4 py-3 bg-amber-500/10">
-                      <p className="text-sm line-clamp-1 text-amber-500">
-                        <Clock
-                          className="me-3 -mt-0.5 inline-flex text-amber-500"
-                          size={16}
-                        />
-                        Your document is awaiting verification.
-                      </p>
-                    </div>
-                  )}
-
-                  {!meow.fileUrl && (
-                    <div className="rounded-md px-4 py-3 bg-card">
-                      <p className="text-sm line-clamp-1">
-                        <TriangleAlertIcon
-                          className="me-3 -mt-0.5 inline-flex text-red-500"
-                          size={16}
-                        />
-                        Missing Documents
-                      </p>
-                    </div>
-                  )}
-
-                  {decisionMessage?.status === "APPROVED" && (
-                    <div className="rounded-md border px-4 py-3 bg-card">
-                      <p className="text-sm">
-                        <CircleCheckIcon
-                          className="me-3 -mt-0.5 inline-flex text-emerald-500"
-                          size={16}
-                        />
-                        Document has been approved
-                      </p>
-                    </div>
-                  )}
-                </div>
+                <Textarea
+                  placeholder="Remarks"
+                  value={decisionMessage?.comment}
+                  readOnly
+                  disabled={!decisionMessage?.comment}
+                  className="border-0 bg-background"
+                />
               </div>
             </div>
           );
@@ -138,3 +133,36 @@ export default function DocsStudent({ data }: DocsStudentProps) {
     </div>
   );
 }
+
+//  <div key={meow.document} className="">
+//    <div className="flex-1 flex flex-col lg:justify-end justify-between gap-5 relative">
+//      <div className="flex gap-3">
+//        <ApplicationViewer
+//          fileFormat={mimeToLabelMap[meow.fileFormat]}
+//          resourceType={meow.resourceType}
+//          fileUrl={meow.fileUrl}
+//          document={meow.document}
+//          supabasePath={meow.supabasePath}
+//          requirementType={meow.requirementType}
+//          status={decisionMessage?.status ? decisionMessage?.status : "PENDING"}
+//        />
+//        <div className="flex-1">
+//          <div className="flex gap-3 items-center  capitalize">
+//            <p className="font-medium lg:text-base text-sm">{meow.document}</p>
+
+//            <div className="flex gap-1.5 items-center">
+//              {decisionMessage && (
+//                <Badge className="hidden lg:block tracking-wide uppercase bg-green-800/20 text-green-600">
+//                  {decisionMessage.status}
+//                </Badge>
+//              )}
+//            </div>
+//          </div>
+//          <p className="uppercase lg:text-sm text-xs text-muted-foreground lg:mt-1">
+//            {meow.fileFormat ? meow.fileFormat : "N/A"}
+//          </p>
+//        </div>
+//      </div>
+
+//    </div>
+//  </div>;
