@@ -57,7 +57,6 @@ export default function DataTableToolbar<
       icon: GraduationCap,
     })
   );
-
   const selectedRows = table.getSelectedRowModel().rows;
   const applicationIds = selectedRows.map((row) => row.original.applicationId);
 
@@ -161,7 +160,7 @@ export default function DataTableToolbar<
         />
       )}
       <TourStep stepId="export">
-        <ExportCsvScholarship status={status} />
+        <ExportCsvScholarship status={status} filters={table.getState().columnFilters} />
       </TourStep>
       <TourStep stepId="view">
         <DataTableViewOptions table={table} />

@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState } from "react";
 import { ApiErrorResponse } from "./postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
+import { ColumnFiltersState } from "@tanstack/react-table";
 
 export const downloadBlob = (blob: Blob, filename: string) => {
   const url = URL.createObjectURL(blob);
@@ -17,20 +18,29 @@ export default function useFetchApplicationCSV({
   dataSelections,
   filters,
   accountId,
+  status,
 }: {
   dataSelections: string;
-  filters?: string;
+  filters?: ColumnFiltersState;
   accountId?: number;
+  status?: string;
 }) {
   const [loading, setLoading] = useState(false);
   const [filename, setFilename] = useState("");
+
+  console.log("status", status);
   const onSubmit = async () => {
     setLoading(true);
     try {
       const params = new URLSearchParams();
       if (dataSelections) params.append("dataSelections", dataSelections);
       if (accountId) params.append("accountId", String(accountId));
-      if (filters) params.append("filters", filters);
+
+      const merge = [
+        ...(filters ?? []),
+        ...[{ id: "status", value: [status] }],
+      ];
+      if (filters) params.append("filters", JSON.stringify(merge));
 
       const endpoint = `${
         process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
