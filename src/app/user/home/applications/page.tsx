@@ -24,7 +24,7 @@ export default function ClientScholarship() {
   }, []);
 
   const [currentPage] = useState(1);
-  const [rowsPerPage] = useState(20);
+  const [rowsPerPage] = useState(50);
 
   const user = useUserStore((state) => state.user);
   const userId = user?.accountId;
@@ -100,7 +100,7 @@ export default function ClientScholarship() {
             onTabChange={(tabId) => setStatus(tabId)}
           />
         </motion.div>
-        <div className="mt-15 lg:w-[80%] min-w-4xl w-full mx-auto">
+        <div className="mt-15 lg:w-[80%] md:min-w-5xl w-full mx-auto">
           <div className=" grid lg:grid-cols-3 grid-cols-1 gap-6">
             <AnimatePresence mode="wait">
               {loading ? (
@@ -158,7 +158,7 @@ export default function ClientScholarship() {
                         <div className="relative z-10">
                           <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
                             {meow.status && (
-                              <div className="absolute top-2 -left-2 flex items-center">
+                              <div className="absolute top-0 -left-2 flex items-center">
                                 {/* Shadow Layer */}
                                 <div
                                   className="absolute"
@@ -169,17 +169,17 @@ export default function ClientScholarship() {
                                       meow.status === "BLOCKED"
                                         ? "rgba(0,0,0,0.5)"
                                         : meow.status === "APPROVED"
-                                        ? "rgba(0,128,0,0.5)"
+                                        ? "rgba(5 46 22)"
                                         : meow.status === "PENDING"
-                                        ? "rgba(218,165,32,0.5)"
+                                        ? "rgb(66 32 6)"
                                         : meow.status === "INTERVIEW"
-                                        ? "rgba(0,0,255,0.5)"
+                                        ? "rgb(23 37 84)"
                                         : meow.status === "DECLINED"
-                                        ? "rgba(255,0,0,0.5)"
+                                        ? "rgba(69 10 10)"
                                         : "rgba(0,0,0,0.5)",
                                     clipPath:
                                       "polygon(0 0, 100% 0, 85% 100%, 0% 100%)",
-                                    transform: "translate(4px, 4px)", // shadow offset
+                                    transform: "translate(0px, 0px)", // shadow offset
                                     zIndex: 0,
                                   }}
                                 ></div>

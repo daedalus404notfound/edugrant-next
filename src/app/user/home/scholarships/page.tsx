@@ -24,7 +24,7 @@ import { getPhaseLabel } from "@/lib/phaseLevel";
 import CompleteChecker from "../dashboard-components/complete-check";
 export default function ClientScholarship() {
   const [currentPage] = useState(1);
-  const [rowsPerPage] = useState(20);
+  const [rowsPerPage] = useState(50);
 
   const [status, setStatus] = useState("ACTIVE");
   const { user, loadingUser } = useUserStore();
@@ -91,7 +91,7 @@ export default function ClientScholarship() {
         >
           <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
         </motion.div>
-        <div className="mt-15 lg:w-[80%] min-w-4xl w-full mx-auto">
+        <div className="mt-15 lg:w-[80%] md:min-w-5xl w-full mx-auto">
           {!completed && <CompleteChecker />}
 
           <div className=" grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">

@@ -39,7 +39,7 @@ export default function ClientScholarship() {
             Icon={Megaphone}
           />
         </div>
-        <div className="mt-15 lg:w-[80%] min-w-4xl w-full mx-auto space-y-3">
+        <div className="mt-15 lg:w-[80%] md:min-w-5xl w-full mx-auto space-y-3">
           {data.map((item) => (
             <div
               key={item.announcementId}
