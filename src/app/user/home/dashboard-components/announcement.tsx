@@ -33,7 +33,7 @@ export default function Announcements({
           [...Array(2)].map((_, index) => (
             <div
               key={index}
-              className="relative overflow-hidden bg-card  rounded-lg p-5 space-y-4"
+              className="relative overflow-hidden bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-lg p-5 space-y-4"
             >
               <div className="flex items-start justify-between gap-3">
                 <Skeleton className="h-5 w-3/5" />
@@ -54,7 +54,7 @@ export default function Announcements({
           announcement.slice(0, 2).map((item, index) => (
             <div
               key={item.announcementId}
-              className="relative overflow-hidden bg-gradient-to-br from-card to-card/50 rounded-lg p-5 hover:shadow-lg hover:border-primary/20 transition-all duration-300 group"
+              className="relative overflow-hidden bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30 rounded-lg p-5 hover:shadow-lg hover:border-primary/20 transition-all duration-300 group"
             >
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/5 to-transparent rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:from-primary/10 transition-colors" />
 

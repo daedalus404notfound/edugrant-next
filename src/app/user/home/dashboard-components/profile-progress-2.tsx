@@ -36,7 +36,7 @@ export function ProfileCompletion({ loading }: { loading: boolean }) {
   ];
 
   return loading ? (
-    <div className="p-6 flex flex-col bg-gradient-to-br to-card from-card/50 rounded-lg">
+    <div className="p-6 flex flex-col  bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30 rounded-lg">
       <div className="mb-4">
         <Skeleton className="h-6 w-40 mb-2" />
         <Skeleton className="h-4 w-64" />
@@ -62,7 +62,7 @@ export function ProfileCompletion({ loading }: { loading: boolean }) {
       <Skeleton className="h-10 w-full rounded-md" />
     </div>
   ) : (
-    <div className="p-6 flex flex-col  bg-gradient-to-br to-card from-card/50 rounded-lg">
+    <div className="p-6 flex flex-col   bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30 rounded-lg">
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-foreground mb-1">
           Profile Completion

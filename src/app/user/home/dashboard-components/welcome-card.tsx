@@ -13,7 +13,7 @@ export default function WelcomeCard({
   application: number;
 }) {
   return (
-    <div className="relative overflow-hidden flex flex-col justify-between gap-4 h-70 bg-gradient-to-br to-card from-card/50 p-6 rounded-lg">
+    <div className="relative overflow-hidden flex flex-col justify-between gap-4 h-70  bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30 p-6 rounded-lg">
       <img
         className="absolute object-contain shadow lg:-right-8 -right-20 lg:h-full h-3/4 lg:-bottom-15 -bottom-0 opacity-20"
         src={logo.src || "/placeholder.svg"}

@@ -54,7 +54,7 @@ export default function FamilyForm({
         <AlertCircle size={15} /> If no information available, type{" "}
         <span className="font-medium">N/A.</span>
       </p>
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-gradient-to-br to-card from-card/50 px-6 pb-8 pt-4 rounded-lg">
+      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-card/40 dark:bg-gradient-to-br to-card from-card/50 px-6 pb-8 pt-4 rounded-lg">
         <div className="lg:col-span-2 col-span-1 space-y-4">
           <div className="flex items-center gap-3 flex-col lg:flex-row">
             <h3 className="text-base font-medium flex gap-2 items-center">

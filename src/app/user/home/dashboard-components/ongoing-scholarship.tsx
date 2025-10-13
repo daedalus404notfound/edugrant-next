@@ -29,7 +29,7 @@ export default function OngoingScholarshipDashboard({
           [...Array(2)].map((_, index) => (
             <div
               key={index}
-              className="bg-card rounded-md p-6 shadow-sm space-y-6"
+              className=" bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30 rounded-md p-6 shadow-sm space-y-6"
             >
               {/* Logo + Provider skeleton */}
               <div className="flex items-center gap-3">
@@ -64,7 +64,7 @@ export default function OngoingScholarshipDashboard({
           scholarship.slice(0, 2).map((meow) => (
             <div
               key={meow.scholarshipId}
-              className="group relative flex flex-col justify-between bg-gradient-to-br to-card from-card/50 rounded-md p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 gap-6"
+              className="group relative flex flex-col justify-between  bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30 rounded-md p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 gap-6"
             >
               {/* Logo + Provider */}
               <div className="flex items-center gap-3">

@@ -56,7 +56,7 @@ export default function PersonalProfile({
 
   return (
     <div className=" w-full space-y-12">
-      <div className="space-y-6 bg-gradient-to-br to-card from-card/50  px-6 pb-8 pt-4 rounded-lg">
+      <div className="space-y-6 bg-card/40 dark:bg-gradient-to-br to-card from-card/50  px-6 pb-8 pt-4 rounded-lg">
         <div className="">
           <h3 className="text-base font-medium flex gap-2 items-center py-3">
             <UserRoundCog className="h-4.5 w-4.5" /> Personal Information
@@ -367,7 +367,7 @@ export default function PersonalProfile({
         </div>
       </div>
 
-      <div className="space-y-6 bg-gradient-to-br to-card from-card/50  px-6 pb-8 pt-4 rounded-lg">
+      <div className="space-y-6 bg-card/40 dark:bg-gradient-to-br to-card from-card/50  px-6 pb-8 pt-4 rounded-lg">
         <div className="">
           <h3 className="text-base font-medium flex gap-2 items-center py-3">
             <Mail className="h-4.5 w-4.5" /> Account Information

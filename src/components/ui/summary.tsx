@@ -79,7 +79,7 @@ export function SummaryCard({
   loading,
 }: SummaryCardProps) {
   return (
-    <div className=" bg-gradient-to-br to-card from-card/50 shadow z-10 flex flex-col justify-between rounded-lg  p-6 lg:gap-2 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+    <div className=" bg-gradient-to-br dark:to-card to-card/50 dark:from-card/50 from-card/30 shadow z-10 flex flex-col justify-between rounded-lg  p-6 lg:gap-2 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
       <div className="flex justify-between items-start">
         <Button variant="secondary" className={colorStyles[color].text}>
           {icon}
