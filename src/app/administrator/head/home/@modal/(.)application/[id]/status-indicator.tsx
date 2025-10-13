@@ -14,27 +14,27 @@ export const StatusAlertIndicator = ({
   const statusConfig = {
     APPROVED: {
       icon: <Check className="opacity-80" size={16} />,
-      bgColor: "dark:bg-green-900 bg-green-200",
+      bgColor: "dark:bg-green-900 bg-green-100",
       bgColorIcon: "dark:bg-green-950 bg-green-300",
     },
     DECLINED: {
       icon: <X className="opacity-80" size={16} />,
-      bgColor: "dark:bg-red-900 bg-red-200",
+      bgColor: "dark:bg-red-900 bg-red-100",
       bgColorIcon: "dark:bg-red-950 bg-red-300",
     },
     BLOCKED: {
       icon: <Ban className="opacity-80" size={16} />,
-      bgColor: "dark:bg-gray-900 bg-gray-200",
+      bgColor: "dark:bg-gray-900 bg-gray-100",
       bgColorIcon: "dark:bg-gray-950 bg-gray-300",
     },
     INTERVIEW: {
       icon: <MessageSquare className="opacity-80" size={16} />,
-      bgColor: "dark:bg-blue-900 bg-blue-200",
+      bgColor: "dark:bg-blue-900 bg-blue-100",
       bgColorIcon: "dark:bg-blue-950 bg-blue-300",
     },
     PENDING: {
       icon: <MessageSquare className="opacity-80" size={16} />,
-      bgColor: "dark:bg-yellow-900/50 bg-yellow-200",
+      bgColor: "dark:bg-yellow-900/50 bg-yellow-100",
       bgColorIcon: "dark:bg-yellow-950 bg-yellow-300",
     },
   }[status];

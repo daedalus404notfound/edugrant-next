@@ -7,6 +7,7 @@ type UserStore = {
   loadingUser: boolean;
   error: string | null;
   setUser: (user: UserFormData) => void;
+  setStudent: (studentData: UserFormData["Student"]) => void;
   addApplication: (scholarshipId: number, status: string) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -20,6 +21,14 @@ export const useUserStore = create<UserStore>()(
       loadingUser: false,
       error: null,
       setUser: (user) => set({ user }),
+      // ✅ only updates the Student key inside user
+      setStudent: (studentData) =>
+        set((state) =>
+          state.user
+            ? { user: { ...state.user, Student: { ...studentData } } }
+            : state
+        ),
+
       // addApplication: (scholarshipId, status) =>
       //   set((state) => {
       //     if (!state.user) return state; // no user yet

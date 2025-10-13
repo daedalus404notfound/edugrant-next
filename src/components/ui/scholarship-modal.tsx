@@ -4,6 +4,7 @@ import {
   Building,
   Calendar,
   ExternalLink,
+  GraduationCap,
   HandCoins,
   Inbox,
   Landmark,
@@ -11,6 +12,7 @@ import {
   PhilippinePeso,
   UsersRound,
 } from "lucide-react";
+import logo from "@/assets/edugrant-logo.png";
 import { getPhaseLabel } from "@/lib/phaseLevel";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
@@ -21,6 +23,8 @@ import { format } from "date-fns";
 import Link from "next/link";
 import { displayScholarshipFormData } from "@/hooks/admin/displayScholarshipData";
 import { formatPHP } from "@/lib/formatPHP";
+import { Skeleton } from "./skeleton";
+import { Separator } from "./separator";
 
 export default function ScholarshipModal({
   data,
@@ -36,68 +40,14 @@ export default function ScholarshipModal({
   const lastPhaseLength = Object.keys(lastPhase).length;
   return (
     <div className="relative h-full w-full flex flex-col">
-      <div className="absolute top-0 left-0 lg:h-86 h-60 w-full opacity-30   mask-gradient flex">
-        <img
-          className="w-full h-full object-cover blur-md "
-          src={data?.cover}
-          alt=""
-        />
-      </div>
-
       <div className="relative flex justify-center items-center ">
-        <div className="absolute inset-0border-b-2 border-black bg-card" />
-        <div className="absolute left-0 lg:-bottom-18 -bottom-25 z-10 lg:px-6  px-2 flex flex-col lg:flex-row w-full  lg:items-end lg:gap-3 gap-2">
-          <Avatar className="lg:size-30 size-20 border-background border-2 shadow-md">
-            <AvatarImage className="object-cover" src={data?.logo} />
-            <AvatarFallback>
-              {data?.Scholarship_Provider?.name.slice(0, 2)}
-            </AvatarFallback>
-          </Avatar>
-          <div className="">
-            <motion.span
-              className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-600/70
-                                                     flex items-center gap-1.5 lg:text-2xl text-xl font-semibold tracking-tight
-                                                    "
-              initial={{ backgroundPosition: "200% 0" }}
-              animate={{ backgroundPosition: "-200% 0" }}
-              transition={{
-                repeat: Infinity,
-                repeatType: "loop",
-                duration: 7,
-                ease: "linear",
-              }}
-            >
-              <span className="line-clamp-1"> {data?.title}</span>
-              <span className="hidden lg:flex gap-1.5">
-                {data?.deadline &&
-                new Date(data.deadline).getTime() < Date.now() ? (
-                  <Badge className="bg-red-800 text-gray-200 tracking-wide">
-                    EXPIRED
-                  </Badge>
-                ) : (
-                  <Badge className="bg-green-800 text-gray-200 tracking-wide">
-                    ACTIVE
-                  </Badge>
-                )}
-                {data?.phase && data?.phase > 1 && (
-                  <Badge className="bg-blue-800 text-gray-200 uppercase tracking-wide">
-                    {getPhaseLabel(data?.phase)}
-                  </Badge>
-                )}
-              </span>
-            </motion.span>
-            <p className="text-muted-foreground text-sm">
-              by {data?.Scholarship_Provider?.name}
-            </p>
-          </div>
-        </div>
         <p className="italic lg:text-sm text-xs text-muted-foreground absolute right-2 lg:-bottom-18 -bottom-7 z-10 lg:px-6  px-2 ">
           Posted on {""}
           {data?.dateCreated && format(data?.dateCreated, "PPP")}
         </p>
         {data?.cover && (
           <img
-            className="w-full lg:aspect-[16/4] aspect-[16/9]  object-cover   rounded-lg shadow-md"
+            className="w-full lg:aspect-[16/4] dark:opacity-50 opacity-80 aspect-[16/9]  object-cover   rounded-t-lg"
             src={data?.cover}
             alt=""
           />
@@ -112,10 +62,118 @@ export default function ScholarshipModal({
         )}
       </div>
 
-      <div className="flex-1 pt-30 lg:px-6 px-2 space-y-8">
-        <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+      <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-b-lg overflow-hidden ">
+        {/* Header Section */}
+        <div className="relative flex lg:flex-row flex-col lg:items-end items-center  py-8 px-4">
+          <img
+            className="lg:w-70 w-50 absolute right-0 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-20 "
+            src={logo.src}
+            alt=""
+          />
+          <div className=" flex items-end justify-center">
+            <Avatar className="lg:size-25 size-20">
+              <AvatarImage
+                src={data?.logo}
+                className="rounded-full object-cover"
+              />
+              <AvatarFallback
+                className="rounded-full text-white font-semibold flex items-center justify-center 
+                          bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 
+                          dark:from-emerald-900 dark:via-teal-900 dark:to-cyan-900"
+              >
+                1212
+              </AvatarFallback>
+            </Avatar>
+            <Badge variant="secondary" className="uppercase absolute z-10">
+              {" "}
+              {data?.type}
+            </Badge>
+          </div>
+
+          <div className="flex-1 px-4 py-2 z-10">
+            <div className="flex items-center gap-3">
+              <h1 className="text-base lg:text-xl font-medium text-foreground capitalize line-clamp-1">
+                {data?.title}
+              </h1>
+              <div className="space-x-1.5">
+                <Badge
+                  variant="outline"
+                  className="mt-2 uppercase bg-blue-800 text-gray-200"
+                >
+                  {" "}
+                  {getPhaseLabel(data?.phase)}
+                </Badge>
+                <Badge
+                  variant="outline"
+                  className={`mt-2 uppercase text-gray-200 ${
+                    data?.deadline &&
+                    Date.now() > new Date(data.deadline).getTime()
+                      ? "bg-red-800"
+                      : "bg-green-800"
+                  }`}
+                >
+                  {data?.deadline &&
+                  Date.now() > new Date(data.deadline).getTime()
+                    ? "EXPIRED"
+                    : "ACTIVE"}
+                </Badge>
+              </div>
+            </div>
+            {/* <p className="font-medium font-mono text-base tracking-wide">
+                        {data?.Scholarship_Provider.name}
+                      </p>{" "} */}
+            <p className="text-muted-foreground lg:text-sm text-xs">
+              {data?.Scholarship_Provider.name}
+            </p>
+          </div>
+        </div>
+        <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+        {/* Info Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 py-6 px-4 bg-card relative z-10">
+          <div className="space-y-1.5 border-l-2 pl-4">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+              <h1 className="text-xs text-muted-foreground">
+                diko pa alam lalagay
+              </h1>
+            </div>
+
+            <p className="font-medium text-foreground">
+              {data?.dateCreated && format(data?.dateCreated, "PPP p")}
+            </p>
+          </div>{" "}
+          <div className="space-y-1.5  border-l-2 pl-4">
+            <div className="flex items-center gap-2">
+              <GraduationCap className="w-3.5 h-3.5 text-muted-foreground" />
+              <h1 className="text-xs text-muted-foreground">
+                Scholarship Deadline
+              </h1>
+            </div>
+
+            <span className="font-medium text-foreground">
+              {data?.deadline ? format(data?.deadline, "PPP p") : "—"}
+            </span>
+          </div>
+          <div className="space-y-1.5  border-l-2 pl-4">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+              <h1 className="text-xs text-muted-foreground">
+                Interview Requirement
+              </h1>
+            </div>
+
+            <p className="font-medium text-foreground">
+              {data.interview ? "Interview Required" : "No Interview Needed"}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 pt-10 lg:px-6 px-2 space-y-8">
         <div className="space-y-1">
-          <p className="text-sm text-muted-foreground">About {data?.title}</p>
+          <p className="text-xs uppercase text-muted-foreground">
+            About {data?.title}
+          </p>
           <p className="whitespace-pre-line">{data?.description}</p>
         </div>
 
@@ -220,11 +278,12 @@ export default function ScholarshipModal({
           <div className="space-y-6">
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <h3 className="text-xs font-medium text-muted-foreground  tracking-wide">
+                <h3 className="text-xs uppercase font-medium text-muted-foreground  tracking-wide">
                   Phase {documentPhasesLength} Required Documents
                 </h3>
                 <p className="font-medium text-lg">{lastPhaseLength}</p>
               </div>
+              <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
               <div className=" divide-y">
                 {Object.values(lastPhase).map((doc, index) => (
                   <div

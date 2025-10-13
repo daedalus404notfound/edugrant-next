@@ -43,7 +43,7 @@ export default function ClientScholarship() {
           {data.map((item) => (
             <div
               key={item.announcementId}
-              className=" dark:bg-card bg-card/30  rounded-md shadow pt-4 px-4 pb-6"
+              className=" dark:bg-card bg-card/30  rounded-md shadow pt-6 px-6 pb-8"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex items-center gap-3">

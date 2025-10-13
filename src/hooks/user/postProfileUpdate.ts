@@ -114,7 +114,7 @@ const updateUserApi = async (data: UserFormData) => {
 };
 
 export const useProfile = () => {
-  const { setUser } = useUserStore();
+  const { setStudent } = useUserStore();
   return useMutation({
     mutationFn: updateUserApi,
     onSuccess: (resData) => {
@@ -126,7 +126,7 @@ export const useProfile = () => {
           : "Your profile information has been successfully saved.",
       });
 
-      setUser(resData.updatedStudent);
+      setStudent(resData.updatedStudent.Student);
     },
     onError: (error: ApiError) => {
       console.error("Profile update error:", error);
