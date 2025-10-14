@@ -5,6 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
 import { useAdminStore } from "@/store/adminUserStore";
+import { headers } from "next/headers";
 
 interface ApiErrorResponse {
   message?: string;
@@ -14,26 +15,31 @@ interface ApiErrorResponse {
 
 type ApiError = AxiosError<ApiErrorResponse>;
 const updateUserApi = async (data: AdminProfileFormData) => {
+  const { admin } = useAdminStore.getState();
+  const isHead = admin?.role === "ISPSU_Head";
+  const head = {
+    address: data.ISPSU_Head.address,
+    firstName: data.ISPSU_Head.fName,
+    gender: data.ISPSU_Head.gender,
+    lastName: data.ISPSU_Head.lName,
+    middleName: data.ISPSU_Head.mName,
+
+    accountId: data.accountId,
+  };
+  const staff = {
+    address: data.ISPSU_Staff.address,
+    fName: data.ISPSU_Staff.fName,
+    gender: data.ISPSU_Staff.gender,
+    lName: data.ISPSU_Staff.lName,
+    mName: data.ISPSU_Staff.mName,
+    accountId: data.accountId,
+    ownerId: data.accountId,
+  };
   const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/editHead`,
-    {
-      address: data.ISPSU_Head.address
-        ? data.ISPSU_Head.address
-        : data.ISPSU_Staff.address,
-      firstName: data.ISPSU_Head.fName
-        ? data.ISPSU_Head.fName
-        : data.ISPSU_Staff.fName,
-      gender: data.ISPSU_Head.gender
-        ? data.ISPSU_Head.gender
-        : data.ISPSU_Staff.gender,
-      lastName: data.ISPSU_Head.lName
-        ? data.ISPSU_Head.lName
-        : data.ISPSU_Staff.lName,
-      middleName: data.ISPSU_Head.mName
-        ? data.ISPSU_Head.mName
-        : data.ISPSU_Staff.mName,
-      accountId: data.accountId,
-    },
+    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/${
+      isHead ? "editHead" : "editStaff"
+    }`,
+    isHead ? head : staff,
     { withCredentials: true }
   );
 
