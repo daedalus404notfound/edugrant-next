@@ -146,6 +146,7 @@ function Toolbar() {
       </div>
       <div>
         <Button
+          type="button"
           variant={alignment === "left" ? "secondary" : "ghost"}
           size="sm"
           onClick={() => handleAlign("left")}
@@ -155,6 +156,7 @@ function Toolbar() {
           <AlignLeft className="h-4 w-4" />
         </Button>
         <Button
+          type="button"
           variant={alignment === "center" ? "secondary" : "ghost"}
           size="sm"
           onClick={() => handleAlign("center")}
@@ -164,6 +166,7 @@ function Toolbar() {
           <AlignCenter className="h-4 w-4" />
         </Button>
         <Button
+          type="button"
           variant={alignment === "right" ? "secondary" : "ghost"}
           size="sm"
           onClick={() => handleAlign("right")}
@@ -173,6 +176,7 @@ function Toolbar() {
           <AlignRight className="h-4 w-4" />
         </Button>
         <Button
+          type="button"
           variant={alignment === "justify" ? "secondary" : "ghost"}
           size="sm"
           onClick={() => handleAlign("justify")}

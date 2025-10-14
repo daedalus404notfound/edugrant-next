@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ApiErrorResponse } from "./postReviewedHandler";
 
 type DeleteTypes = {
-  id: string;
+  id: number;
   accountId?: number;
 };
 

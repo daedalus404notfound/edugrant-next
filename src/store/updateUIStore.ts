@@ -47,6 +47,7 @@ import { create } from "zustand";
 // }));
 type ApplicationUIState = {
   deletedScholarshipIds: number[];
+  deletedAnnouncementIds: number[];
   archiveScholarshipIds: number[];
   renewalScholarshipIds: number[];
   approvedIds: number[];
@@ -55,6 +56,7 @@ type ApplicationUIState = {
   forInterviewIds: number[]; // updated
 
   addDeletedScholarshipId: (id: number) => void;
+  addDeletedAnnouncementId: (id: number) => void;
   addArchiveScholarshipId: (id: number) => void;
   addRenewalScholarshipId: (id: number) => void; // updated
   addApprovedId: (id: number) => void;
@@ -73,6 +75,7 @@ type ApplicationUIState = {
 
 export const useApplicationUIStore = create<ApplicationUIState>((set) => ({
   deletedScholarshipIds: [],
+  deletedAnnouncementIds: [],
   archiveScholarshipIds: [],
   renewalScholarshipIds: [],
   approvedIds: [],
@@ -83,6 +86,10 @@ export const useApplicationUIStore = create<ApplicationUIState>((set) => ({
   addDeletedScholarshipId: (id) =>
     set((state) => ({
       deletedScholarshipIds: [...state.deletedScholarshipIds, id],
+    })),
+  addDeletedAnnouncementId: (id) =>
+    set((state) => ({
+      deletedAnnouncementIds: [...state.deletedScholarshipIds, id],
     })),
   addArchiveScholarshipId: (id) =>
     set((state) => ({
@@ -102,6 +109,7 @@ export const useApplicationUIStore = create<ApplicationUIState>((set) => ({
     set((state) => ({ forInterviewIds: [...state.forInterviewIds, id] })),
 
   clearDeleted: () => set({ deletedScholarshipIds: [] }),
+  clearDeletedAnnouncement: () => set({ deletedAnnouncementIds: [] }),
   clearArchive: () => set({ archiveScholarshipIds: [] }),
   clearRenewal: () => set({ renewalScholarshipIds: [] }),
   clearApproved: () => set({ approvedIds: [] }),

@@ -66,21 +66,20 @@ export default function Manage() {
   ];
   return (
     <TourProvider steps={scholarshipTourSteps}>
-      <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-        <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
+      <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+        <div className="mx-auto w-[95%] lg:py-10  py-4">
           <TitleReusable
             title="Inactive Scholarship Management"
             description="Manage inactive scholarships here. Switch between expired and archived scholarships using the tabs below."
             Icon={Archive}
             textColor="text-red-700/70"
           />
-
-          <div className="py-8 space-y-5">
-            <div className="flex">
-              <TourStep stepId="tabs">
-                <Tabs tabs={tabs} onTabChange={(tabId) => setTabs(tabId)} />
-              </TourStep>
-            </div>
+          <div className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b">
+            <TourStep stepId="tabs">
+              <Tabs tabs={tabs} onTabChange={(tabId) => setTabs(tabId)} />
+            </TourStep>
+          </div>
+          <div className="mt-15 lg:w-full md:min-w-5xl w-full mx-auto">
             {tab === "EXPIRED" && (
               <ManageExpiredScholarship setExpired={setExpired} />
             )}

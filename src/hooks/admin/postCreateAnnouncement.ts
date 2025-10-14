@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { AnnouncementFormData } from "../zod/announcement";
+import { AnnouncementFormDataPost } from "../zod/announcement";
 import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
@@ -12,7 +12,7 @@ interface ApiErrorResponse {
 import { useAdminStore } from "@/store/adminUserStore";
 import { useCreateAnnouncementZod } from "../zodAnnouncement";
 type ApiError = AxiosError<ApiErrorResponse>;
-const addAnnouncementApi = async (data: AnnouncementFormData) => {
+const addAnnouncementApi = async (data: AnnouncementFormDataPost) => {
   const { admin } = useAdminStore.getState();
   const payload = {
     announcementTitle: data.title,
@@ -65,7 +65,7 @@ export const useCreateAnnouncement = () => {
   const addAnnouncement = useAnnouncement();
   const [open, setOpen] = useState(false);
 
-  const handleSubmit = async (data: AnnouncementFormData) => {
+  const handleSubmit = async (data: AnnouncementFormDataPost) => {
     try {
       const result = await addAnnouncement.mutateAsync(data);
 

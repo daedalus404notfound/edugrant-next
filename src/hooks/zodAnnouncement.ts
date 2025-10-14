@@ -1,12 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { AnnouncementFormData, AnnouncementSchema } from "./zod/announcement";
+import {
+  AnnouncementFormDataPost,
+  AnnouncementSchemaPost,
+} from "./zod/announcement";
 
 export function useCreateAnnouncementZod() {
-  const form = useForm<AnnouncementFormData>({
-    resolver: zodResolver(AnnouncementSchema),
+  const form = useForm<AnnouncementFormDataPost>({
+    resolver: zodResolver(AnnouncementSchemaPost),
     defaultValues: {
-      announcementId: undefined,
       title: "",
       description: "",
       tags: { data: [] },

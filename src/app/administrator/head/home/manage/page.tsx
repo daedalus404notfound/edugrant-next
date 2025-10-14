@@ -180,7 +180,7 @@ export default function Manage() {
   const [openGuide, setOpenGuide] = useState(true);
   return (
     <TourProvider steps={scholarshipTourSteps}>
-      <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+      <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
         <Dialog open={openGuide} onOpenChange={setOpenGuide}>
           <DialogContent
             className="!bg-card w-lg p-6"
@@ -219,19 +219,19 @@ export default function Manage() {
             </div>
           </DialogContent>
         </Dialog>
-        <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
+        <div className="mx-auto w-[95%] lg:py-10  py-4">
           <TitleReusable
             title="Active Scholarship Management"
             description="View and manage scholarships. Switch between active scholarships and renewals using the tabs below."
             Icon={GraduationCap}
-          />
-
-          <div className="py-8 space-y-5">
-            <div className="flex">
-              <TourStep stepId="tabs">
-                <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
-              </TourStep>
-            </div>
+          />{" "}
+          <div className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b">
+            {" "}
+            <TourStep stepId="tabs">
+              <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
+            </TourStep>
+          </div>
+          <div className="mt-15 lg:w-full md:min-w-5xl w-full mx-auto">
             <DataTable<scholarshipFormData, unknown>
               data={filteredData}
               columns={columns(status)}

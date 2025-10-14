@@ -1,3 +1,71 @@
+// // "use client";
+// // import axios from "axios";
+// // import { useEffect, useState } from "react";
+// // import { MetaTypes } from "../zodMeta";
+// // import { AnnouncementFormData } from "../zod/announcement";
+// // import { ApiErrorResponse } from "./postReviewedHandler";
+// // import StyledToast from "@/components/ui/toast-styled";
+// // const defaultMeta: MetaTypes = {
+// //   page: 1,
+// //   pageSize: 10,
+// //   totalRows: 0,
+// //   totalPage: 0,
+// //   sortBy: "",
+// //   order: "",
+// //   filters: "",
+// //   search: "",
+// // };
+// // export default function useAnnouncementFetch({
+// //   page,
+// //   pageSize,
+// //   sortBy,
+// //   order,
+// // }: {
+// //   page: number;
+// //   pageSize: number;
+// //   sortBy?: string;
+// //   order?: string;
+// // }) {
+// //   const [data, setData] = useState<AnnouncementFormData[]>([]);
+// //   const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
+// //   const [loading, setLoading] = useState(false);
+
+// //   useEffect(() => {
+// //     async function fetchAnnouncement() {
+// //       setLoading(true);
+
+// //       try {
+// //         const res = await axios.get(
+// //           `${
+// //             process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
+// //           }/getAnnouncement?page=${page}&dataPerPage=${pageSize}${
+// //             sortBy ? `&sortBy=${sortBy}` : ""
+// //           }${order ? `&order=${order}` : ""}`,
+
+// //           { withCredentials: true }
+// //         );
+
+// //         if (res.status === 200) {
+// //           setData(res.data.announcements);
+// //           setMeta(res.data.meta);
+// //         }
+// //       } catch (error) {
+// //         if (axios.isAxiosError<ApiErrorResponse>(error)) {
+// //           StyledToast({
+// //             status: "error",
+// //             title: error?.response?.data.message ?? "An error occurred.",
+// //             description: "Cannot process your request.",
+// //           });
+// //         }
+// //       } finally {
+// //         setLoading(false);
+// //       }
+// //     }
+// //     fetchAnnouncement();
+// //   }, [page, pageSize, sortBy, order]);
+
+// //   return { data, meta, loading };
+// // }
 // "use client";
 // import axios from "axios";
 // import { useEffect, useState } from "react";
@@ -5,6 +73,7 @@
 // import { AnnouncementFormData } from "../zod/announcement";
 // import { ApiErrorResponse } from "./postReviewedHandler";
 // import StyledToast from "@/components/ui/toast-styled";
+
 // const defaultMeta: MetaTypes = {
 //   page: 1,
 //   pageSize: 10,
@@ -15,6 +84,7 @@
 //   filters: "",
 //   search: "",
 // };
+
 // export default function useAnnouncementFetch({
 //   page,
 //   pageSize,
@@ -29,10 +99,11 @@
 //   const [data, setData] = useState<AnnouncementFormData[]>([]);
 //   const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
 //   const [loading, setLoading] = useState(false);
-
+//   const [isFetchingMore, setIsFetchingMore] = useState(false); // for pagination loading
 //   useEffect(() => {
 //     async function fetchAnnouncement() {
-//       setLoading(true);
+//       if (page === 1) setLoading(true);
+//       else setIsFetchingMore(true);
 
 //       try {
 //         const res = await axios.get(
@@ -41,12 +112,17 @@
 //           }/getAnnouncement?page=${page}&dataPerPage=${pageSize}${
 //             sortBy ? `&sortBy=${sortBy}` : ""
 //           }${order ? `&order=${order}` : ""}`,
-
 //           { withCredentials: true }
 //         );
 
 //         if (res.status === 200) {
-//           setData(res.data.announcements);
+
+//           setData((prevData) =>
+//             page > 1
+//               ? [...prevData, ...res.data.announcements]
+//               : res.data.announcements
+//           );
+
 //           setMeta(res.data.meta);
 //         }
 //       } catch (error) {
@@ -59,70 +135,80 @@
 //         }
 //       } finally {
 //         setLoading(false);
+//         setIsFetchingMore(false);
 //       }
 //     }
+
 //     fetchAnnouncement();
 //   }, [page, pageSize, sortBy, order]);
-
-//   return { data, meta, loading };
+//   useEffect(() => {
+//     // Reset data when sorting or ordering changes
+//     setData([]);
+//   }, [sortBy, order]);
+//   return { data, meta, loading, isFetchingMore };
 // }
 "use client";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { MetaTypes } from "../zodMeta";
-import { AnnouncementFormData } from "../zod/announcement";
-import { ApiErrorResponse } from "./postReviewedHandler";
-import StyledToast from "@/components/ui/toast-styled";
 
-const defaultMeta: MetaTypes = {
-  page: 1,
-  pageSize: 10,
-  totalRows: 0,
-  totalPage: 0,
-  sortBy: "",
-  order: "",
-  filters: "",
-  search: "",
-};
+import { AnnouncementFormDataGet } from "../zod/announcement";
+import { MetaTypes } from "../zodMeta";
+import StyledToast from "@/components/ui/toast-styled";
+import { ApiErrorResponse } from "./postReviewedHandler";
 
 export default function useAnnouncementFetch({
   page,
   pageSize,
   sortBy,
   order,
+  status,
+  filters,
+  accountId,
 }: {
-  page: number;
-  pageSize: number;
+  page?: number;
+  pageSize?: number;
   sortBy?: string;
   order?: string;
+  status?: string;
+  filters?: string;
+  accountId?: number;
 }) {
-  const [data, setData] = useState<AnnouncementFormData[]>([]);
-  const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
-  const [loading, setLoading] = useState(false);
-  const [isFetchingMore, setIsFetchingMore] = useState(false); // for pagination loading
+  const [data, setData] = useState<AnnouncementFormDataGet[]>([]);
+  const [meta, setMeta] = useState<MetaTypes>({
+    page: 1,
+    pageSize: 10,
+    totalRows: 0,
+    totalPage: 0,
+    sortBy: "",
+    order: "",
+    filters: "",
+    search: "",
+  });
+
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function fetchAnnouncement() {
-      if (page === 1) setLoading(true);
-      else setIsFetchingMore(true);
-
+      setLoading(true);
       try {
-        const res = await axios.get(
-          `${
-            process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
-          }/getAnnouncement?page=${page}&dataPerPage=${pageSize}${
-            sortBy ? `&sortBy=${sortBy}` : ""
-          }${order ? `&order=${order}` : ""}`,
-          { withCredentials: true }
-        );
+        const params = new URLSearchParams();
+
+        if (status) params.append("status", status);
+        if (page) params.append("page", page.toString());
+        if (pageSize) params.append("dataPerPage", pageSize.toString());
+        if (sortBy) params.append("sortBy", sortBy);
+        if (order) params.append("order", order);
+        if (filters) params.append("filters", filters);
+        if (accountId) params.append("accountId", accountId.toString());
+
+        const endpoint = `${
+          process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
+        }/getAnnouncement?${params.toString()}`;
+        console.log("Fetching:", endpoint);
+
+        const res = await axios.get(endpoint, { withCredentials: true });
 
         if (res.status === 200) {
-        
-          setData((prevData) =>
-            page > 1
-              ? [...prevData, ...res.data.announcements]
-              : res.data.announcements
-          );
-
+          setData(res.data.announcements);
           setMeta(res.data.meta);
         }
       } catch (error) {
@@ -135,15 +221,11 @@ export default function useAnnouncementFetch({
         }
       } finally {
         setLoading(false);
-        setIsFetchingMore(false);
       }
     }
 
     fetchAnnouncement();
-  }, [page, pageSize, sortBy, order]);
-  useEffect(() => {
-    // Reset data when sorting or ordering changes
-    setData([]);
-  }, [sortBy, order]);
-  return { data, meta, loading, isFetchingMore };
+  }, [page, pageSize, sortBy, order, filters, status]);
+
+  return { data, loading, meta, setData };
 }

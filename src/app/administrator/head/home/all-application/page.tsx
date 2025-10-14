@@ -8,6 +8,7 @@ import type { TourStep as TourStepType } from "@/lib/use-tour";
 import TitleReusable from "@/components/ui/title";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import ApprovedApplication from "./all";
+import { Separator } from "@/components/ui/separator";
 
 export default function PendingApplication() {
   const [status, setStatus] = useState("APPROVED");
@@ -67,15 +68,16 @@ export default function PendingApplication() {
   ];
   return (
     <TourProvider steps={applicationTourSteps}>
-      <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-        <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
+      <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+        <div className="mx-auto w-[95%] lg:py-10  py-4">
           <TitleReusable
             title="All Students"
-            description="List of all registered users."
+            description="View and manage all enrolled scholarship applicants."
             Icon={UsersRound}
           />
 
-          <div className="py-8 space-y-5">
+          <Separator className="mt-4" />
+          <div className="mt-15 lg:w-full md:min-w-5xl w-full mx-auto">
             <ApprovedApplication setApproved={setApproved} />
           </div>
         </div>
