@@ -319,76 +319,23 @@ export default function LoginClientModal() {
                 className="text-xs text-center p-4"
               >
                 By clicking continue, you agree to our <br />
-                <Dialog>
-                  <DialogTrigger className="underline text-blue-500 cursor-pointer">
-                    Privacy Policy
-                  </DialogTrigger>
-                  <DialogContent className="max-w-lg p-4">
-                    <DialogHeader>
-                      <DialogTitle className="text-base">
-                        PRIVACY NOTICE
-                      </DialogTitle>
-                      <DialogDescription className="sr-only">
-                        By continuing this form, you are consenting to the
-                        collection of your personal information, i.e., name,
-                        email addresses, and other personal data. All
-                        information we collect shall be kept private and
-                        confidential by the (office/s) and shall be used solely
-                        for legal purposes as mandated by Republic Act No. 10173
-                        or the Data Privacy Act, the BASC Data Privacy Manual,
-                        and other relevant laws.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <Separator />
-                    <div className="space-y-4 text-sm text-muted-foreground">
-                      <p>
-                        We collect only the information necessary to provide you
-                        with a smooth and personalized experience.
-                      </p>
-                      <p>
-                        Your data is stored securely and is never sold or shared
-                        with third parties without your consent, except as
-                        required by law.
-                      </p>
-                      <p>
-                        You may request deletion or modification of your data at
-                        any time by contacting support.
-                      </p>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                <Link
+                  scroll={false}
+                  prefetch={true}
+                  href={`/privacy-policy`}
+                  className="underline text-blue-500 cursor-pointer"
+                >
+                  Privacy Policy
+                </Link>
                 &nbsp; and &nbsp;
-                <Dialog>
-                  <DialogTrigger className="underline text-blue-500 cursor-pointer">
-                    Terms of Service
-                  </DialogTrigger>
-                  <DialogContent className="max-w-lg p-4">
-                    <DialogHeader>
-                      <DialogTitle className="text-base">
-                        Terms of Service
-                      </DialogTitle>
-                      <DialogDescription className="sr-only">
-                        Please read these terms carefully before using our
-                        services.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <Separator />
-                    <div className="space-y-4 text-sm text-muted-foreground">
-                      <p>
-                        By using this platform, you agree to comply with our
-                        rules and regulations.
-                      </p>
-                      <p>
-                        You must not use the service for any illegal activities
-                        or to harm others.
-                      </p>
-                      <p>
-                        We reserve the right to suspend or terminate your access
-                        if you violate any of these terms.
-                      </p>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                <Link
+                  scroll={false}
+                  prefetch={true}
+                  href={`/terms&conditions`}
+                  className="underline text-blue-500 cursor-pointer"
+                >
+                  Terms of Service
+                </Link>
               </motion.p>
             </div>
           )}

@@ -29,8 +29,8 @@ import { Input } from "@/components/ui/input";
 import { useCreateAnnouncement } from "@/hooks/admin/postCreateAnnouncement";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import TitleReusable from "@/components/ui/title";
-import LexicalEditor from "@/components/ui/lexical-editor";
 import { Separator } from "@/components/ui/separator";
+import { TipTapEditor } from "@/components/ui/tip-tap";
 
 export default function PostAnnouncement() {
   const [inputValue, setInputValue] = useState("");
@@ -75,7 +75,7 @@ export default function PostAnnouncement() {
                   <FormItem className="flex flex-col  items-end">
                     <FormMessage />
                     <div className="w-full flex items-center">
-                      <FormLabel className="w-70">Announcement Title</FormLabel>
+                      <FormLabel className="w-35">Title</FormLabel>
 
                       <FormControl>
                         <Input
@@ -97,7 +97,7 @@ export default function PostAnnouncement() {
                   <FormItem className="flex flex-col items-end ">
                     <FormMessage />
                     <div className="flex w-full">
-                      <FormLabel className="w-70">Announcement Tag</FormLabel>
+                      <FormLabel className="w-35">Tag</FormLabel>
 
                       <FormControl>
                         <div className="flex gap-2 w-full">
@@ -177,13 +177,13 @@ export default function PostAnnouncement() {
                   <FormItem className="flex flex-col items-end">
                     <FormMessage />
                     <div className="w-full flex items-start ">
-                      <FormLabel className="w-70">Description</FormLabel>
+                      <FormLabel className="w-35">Description</FormLabel>
                       <FormControl>
                         <div className="w-full">
-                          <LexicalEditor
-                            value={field.value}
+                          <TipTapEditor
+                            value={field.value || ""}
                             onChange={field.onChange}
-                            placeholder="Write your announcement details here..."
+                            placeholder="Write your announcement here..."
                           />
                         </div>
                       </FormControl>

@@ -60,7 +60,62 @@ input[type="date"]::-moz-calendar-picker-indicator {
 
 /* * {
   border: 1px solid red;
-} */
+} */ /* Add to your globals.css or styles file */
+.ProseMirror {
+  outline: none;
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.ProseMirror h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 1.5em;
+  margin: 0.5em 0;
+}
+
+.ProseMirror strong {
+  font-weight: bold;
+}
+
+.ProseMirror em {
+  font-style: italic;
+}
+.prose h1 {
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 700;
+}
+.prose h2 {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 600;
+}
+.prose h3 {
+  font-size: 1.25rem; /* text-xl */
+  font-weight: 600;
+}
+.prose h4 {
+  font-size: 1.125rem; /* text-lg */
+  font-weight: 500;
+}
+.prose [style*="color"] {
+  color: inherit !important;
+}
+
+.prose span[style*="color"] {
+  color: unset !important;
+}
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

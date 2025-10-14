@@ -67,13 +67,15 @@ export function Footer() {
             {/* Legal links */}
             <div className="flex items-center space-x-6">
               <Link
-                href="#"
+                href="/privacy-policy"
                 className="hover:text-foreground transition-colors"
               >
                 Privacy
               </Link>
               <Link
-                href="#"
+                href="/terms&conditions"
+                scroll={false}
+                prefetch={true}
                 className="hover:text-foreground transition-colors"
               >
                 Terms

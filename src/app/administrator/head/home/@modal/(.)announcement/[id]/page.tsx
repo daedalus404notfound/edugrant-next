@@ -55,7 +55,8 @@ import useGetAnnouncementById from "@/hooks/admin/getAnnouncementById";
 import useDeleteAnnouncement from "@/hooks/admin/postDeleteAnnouncement";
 import { useUpdateAnnouncement } from "@/hooks/admin/postEditAnnouncement";
 import { useAdminStore } from "@/store/adminUserStore";
-import LexicalEditor from "@/components/ui/lexical-editor";
+import { TipTapViewer } from "@/components/ui/tiptap-viewer";
+import { TipTapEditor } from "@/components/ui/tip-tap";
 
 export default function GetAnnouncementById() {
   const params = useParams();
@@ -285,10 +286,10 @@ export default function GetAnnouncementById() {
                           <FormLabel className="w-70">Description</FormLabel>
                           <FormControl>
                             <div className="w-full">
-                              <LexicalEditor
-                                value={field.value}
+                              <TipTapEditor
+                                value={field.value || ""}
                                 onChange={field.onChange}
-                                placeholder="Write your announcement details here..."
+                                placeholder="Write your announcement here..."
                               />
                             </div>
                           </FormControl>
@@ -337,11 +338,9 @@ export default function GetAnnouncementById() {
                 </div>
               )}
 
-              <div className="prose prose-sm max-w-none">
-                <p className="whitespace-pre-line text-base leading-relaxed text-foreground/90">
-                  {data?.description}
-                </p>
-              </div>
+              {data?.description && (
+                <TipTapViewer content={data?.description} className="p-4" />
+              )}
             </div>
           )}
         </div>
