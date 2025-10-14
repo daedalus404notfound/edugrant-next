@@ -145,9 +145,9 @@ export default function useAnnouncementFetch({
     fetchAnnouncement();
   }, [page, pageSize, sortBy, order, search]);
   useEffect(() => {
-    // Reset data when sorting or ordering changes
+    // Clear data when search, sort, or order changes
     setData([]);
-  }, [sortBy, order]);
+  }, [search, sortBy, order]);
   return { data, meta, loading, isFetchingMore };
 }
 // "use client";

@@ -32,7 +32,6 @@ export default function AdminAnnouncement() {
     }
   };
 
-
   const AnnouncementSkeleton = () => (
     <div className="dark:bg-card bg-card/30 rounded-md shadow pt-6 px-6 pb-8">
       <div className="flex items-start justify-between gap-4">
@@ -66,7 +65,7 @@ export default function AdminAnnouncement() {
             onChange={(e) => setSearch(e.target.value)}
           />
           <div className="flex flex-col gap-3">
-            {loading && data.length === 0 ? (
+            {loading ? (
               <>
                 {[...Array(3)].map((_, i) => (
                   <AnnouncementSkeleton key={i} />
@@ -131,7 +130,7 @@ export default function AdminAnnouncement() {
           )}
         </div>
 
-        {meta?.totalPage > 1 && (
+        {(meta?.totalPage > 1 || data.length !== 0) && (
           <div className="mt-6 flex justify-center">
             <Button
               onClick={handleLoadMore}
