@@ -75,14 +75,12 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
   },
   {
     accessorFn: (row) => row.Scholarship_Provider?.name,
-    id: "Scholarship_Provider_name",
+    id: "name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Sponsor" />
     ),
     cell: ({ row }) => (
-      <span className="capitalize">
-        {row.getValue("Scholarship_Provider_name")}
-      </span>
+      <span className="capitalize">{row.getValue("name")}</span>
     ),
     enableSorting: true,
     enableHiding: true,

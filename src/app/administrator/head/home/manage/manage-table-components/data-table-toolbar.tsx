@@ -163,7 +163,7 @@ export default function DataTableToolbar<TData>({
             />
             <DataTableFacetedFilter
               disabled={!!search}
-              column={table.getColumn("Scholarship_Provider_name")}
+              column={table.getColumn("name")}
               title="Provider"
               options={providerOption ?? []}
             />
@@ -192,7 +192,7 @@ export default function DataTableToolbar<TData>({
           <DataTableViewOptions table={table} />
         </TourStep>
       </div>
-     
+
       <TourTrigger />
     </div>
   );

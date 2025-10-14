@@ -30,7 +30,6 @@ export default function DataTableToolbar<TData extends { studentId: number }>({
   status,
 }: ToolbarProps<TData>) {
   const { filter } = useGetFilter({
-    applicationStatus: "PENDING",
     scholarshipStatus: "ACTIVE",
   });
 
