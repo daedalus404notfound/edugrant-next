@@ -90,11 +90,13 @@ export default function useAnnouncementFetch({
   pageSize,
   sortBy,
   order,
+  search,
 }: {
   page: number;
   pageSize: number;
   sortBy?: string;
   order?: string;
+  search?: string;
 }) {
   const [data, setData] = useState<AnnouncementFormDataGet[]>([]);
   const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
@@ -111,7 +113,9 @@ export default function useAnnouncementFetch({
             process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
           }/getAnnouncement?page=${page}&dataPerPage=${pageSize}${
             sortBy ? `&sortBy=${sortBy}` : ""
-          }${order ? `&order=${order}` : ""}`,
+          }${order ? `&order=${order}` : ""}${
+            search ? `&search=${search}` : ""
+          }`,
           { withCredentials: true }
         );
 
@@ -139,7 +143,7 @@ export default function useAnnouncementFetch({
     }
 
     fetchAnnouncement();
-  }, [page, pageSize, sortBy, order]);
+  }, [page, pageSize, sortBy, order, search]);
   useEffect(() => {
     // Reset data when sorting or ordering changes
     setData([]);

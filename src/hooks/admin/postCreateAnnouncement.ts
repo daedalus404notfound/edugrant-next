@@ -72,7 +72,7 @@ export const useCreateAnnouncement = () => {
       if (result) {
         setOpen(false);
         addAnnouncement.reset();
-        // form.reset();
+        form.reset();
       }
     } catch (error) {
       console.error("Login error:", error);

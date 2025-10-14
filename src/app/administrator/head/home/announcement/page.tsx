@@ -12,7 +12,7 @@ import Link from "next/link";
 import { useApplicationUIStore } from "@/store/updateUIStore";
 import NoDataFound from "@/components/ui/nodata";
 
-export default function ClientScholarship() {
+export default function AdminAnnouncement() {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(5);
   const [sortBy] = useState("");
@@ -23,6 +23,7 @@ export default function ClientScholarship() {
     pageSize,
     sortBy,
     order,
+    search,
   });
   const { deletedAnnouncementIds } = useApplicationUIStore();
   const handleLoadMore = () => {
