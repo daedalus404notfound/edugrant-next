@@ -89,7 +89,7 @@ export const useApplicationUIStore = create<ApplicationUIState>((set) => ({
     })),
   addDeletedAnnouncementId: (id) =>
     set((state) => ({
-      deletedAnnouncementIds: [...state.deletedScholarshipIds, id],
+      deletedAnnouncementIds: [...state.deletedAnnouncementIds, id],
     })),
   addArchiveScholarshipId: (id) =>
     set((state) => ({

@@ -63,7 +63,7 @@ export default function Manage() {
         />
         <div className="mt-15 lg:w-full md:min-w-5xl w-full mx-auto">
           <DataTable<AnnouncementFormDataGet, unknown>
-            data={data}
+            data={filteredData}
             columns={columns}
             meta={meta}
             pagination={pagination}

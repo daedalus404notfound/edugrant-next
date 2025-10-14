@@ -1,5 +1,5 @@
 import axios, { AxiosError } from "axios";
-import { AnnouncementFormData } from "../zod/announcement";
+import { AnnouncementFormDataPost } from "../zod/announcement";
 import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
@@ -14,13 +14,12 @@ interface ApiErrorResponse {
 
 type ApiError = AxiosError<ApiErrorResponse>;
 
-const updateAnnouncementApi = async (data: AnnouncementFormData) => {
-  const { admin } = useAdminStore.getState();
+const updateAnnouncementApi = async (data: AnnouncementFormDataPost) => {
   const payload = {
-    announcementTitle: data.title,
-    announcementDescription: data.description,
-    announcementTags: JSON.stringify(data.tags),
-    adminId: admin?.accountId,
+    title: data.title,
+    description: data.description,
+    tags: JSON.stringify(data.tags),
+    announcementId: data.announcementId,
   };
 
   const res = await axios.post(
@@ -68,12 +67,14 @@ export const useUpdateAnnouncementMutation = () => {
   });
 };
 
-export const useUpdateAnnouncement = (data: AnnouncementFormData | null) => {
+export const useUpdateAnnouncement = (
+  data: AnnouncementFormDataPost | null
+) => {
   const { form, formWatch } = useUpdateAnnouncementZod(data);
   const updateAnnouncement = useUpdateAnnouncementMutation();
   const [open, setOpen] = useState(false);
 
-  const handleSubmit = async (formData: AnnouncementFormData) => {
+  const handleSubmit = async (formData: AnnouncementFormDataPost) => {
     try {
       const result = await updateAnnouncement.mutateAsync(formData);
       if (result) {

@@ -3,6 +3,7 @@ import StyledToast from "@/components/ui/toast-styled";
 import axios from "axios";
 import { useState } from "react";
 import { ApiErrorResponse } from "./postReviewedHandler";
+import { useApplicationUIStore } from "@/store/updateUIStore";
 
 type DeleteTypes = {
   id: number;
@@ -12,7 +13,11 @@ type DeleteTypes = {
 export default function useDeleteAnnouncement({ id, accountId }: DeleteTypes) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const { addDeletedAnnouncementId, deletedAnnouncementIds } =
+    useApplicationUIStore();
   const [deleteLoading, setLoading] = useState(false);
+
+  console.log(deletedAnnouncementIds);
   const onSubmit = async () => {
     try {
       setLoading(true);
@@ -27,6 +32,7 @@ export default function useDeleteAnnouncement({ id, accountId }: DeleteTypes) {
       );
 
       if (res.status === 200) {
+        addDeletedAnnouncementId(res.data.announcementId);
         StyledToast({
           status: "success",
           title: "Announcement Deleted",

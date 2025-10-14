@@ -40,14 +40,35 @@ export const columns: ColumnDef<AnnouncementFormDataGet>[] = [
     accessorFn: (row) => row.title,
     id: "title",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Title" />
+      <DataTableColumnHeader className="pl-4" column={column} title="Title" />
     ),
     cell: ({ row }) => (
-      <span className="capitalize">{row.getValue("title")}</span>
+      <span className="capitalize pl-4 font-medium">
+        {row.getValue("title")}
+      </span>
     ),
     enableSorting: true,
     enableHiding: true,
   },
+  {
+    accessorFn: (row) => row.tags,
+    id: "tag",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="pl-4" column={column} title="Tags" />
+    ),
+    cell: ({ row }) =>
+      row.original.tags.data.slice(0, 3).map((tag, index) => (
+        <Badge
+          key={index}
+          className="capitalize pr-2 mr-1 bg-blue-800 text-gray-200"
+        >
+          {tag}
+        </Badge>
+      )),
+    enableSorting: true,
+    enableHiding: true,
+  },
+
   {
     accessorFn: (row) => row.description,
     id: "description",
@@ -55,10 +76,23 @@ export const columns: ColumnDef<AnnouncementFormDataGet>[] = [
       <DataTableColumnHeader column={column} title="Description" />
     ),
     cell: ({ row }) => (
-      <div>
-        <div className="w-full overflow-hidden truncate whitespace-nowrap">
-          {row.getValue("description")}
-        </div>
+      <div className="w-full overflow-hidden whitespace-pre-wrap line-clamp-2 max-w-md text-foreground/80">
+        {row.getValue("description")}
+      </div>
+    ),
+    enableSorting: true,
+    enableHiding: true,
+  },
+
+  {
+    accessorFn: (row) => row.dateCreated,
+    id: "date",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Posted Date" />
+    ),
+    cell: ({ row }) => (
+      <div className="w-full overflow-hidden whitespace-pre-wrap line-clamp-2 max-w-2xl text-foreground/80">
+        {format(row.getValue("date"), "PPP p")}
       </div>
     ),
     enableSorting: true,

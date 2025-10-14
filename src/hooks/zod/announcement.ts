@@ -14,6 +14,7 @@ export const AnnouncementSchemaGet = z.object({
 export type AnnouncementFormDataGet = z.infer<typeof AnnouncementSchemaGet>;
 
 export const AnnouncementSchemaPost = z.object({
+  announcementId: z.number().optional(),
   title: z.string().min(3, "Title Required"),
   description: z.string().min(3, "Description Required"),
   tags: z.object({

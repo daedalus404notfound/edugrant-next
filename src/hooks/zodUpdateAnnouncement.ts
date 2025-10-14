@@ -1,14 +1,20 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { AnnouncementFormData, AnnouncementSchema } from "./zod/announcement";
+import {
+  AnnouncementFormDataPost,
+  AnnouncementSchemaPost,
+} from "./zod/announcement";
 import { useEffect } from "react";
 
-export function useUpdateAnnouncementZod(data?: AnnouncementFormData | null) {
-  console.log("title", data?.title);
-  const form = useForm<AnnouncementFormData>({
-    resolver: zodResolver(AnnouncementSchema),
+export function useUpdateAnnouncementZod(
+  data?: AnnouncementFormDataPost | null
+) {
+  console.log("aaaaid", data?.description);
+  const form = useForm<AnnouncementFormDataPost>({
+    resolver: zodResolver(AnnouncementSchemaPost),
     defaultValues: {
       title: data?.title || "",
+      announcementId: data?.announcementId || 0,
       description: data?.description || "",
       tags: data?.tags || {},
     },
@@ -20,6 +26,7 @@ export function useUpdateAnnouncementZod(data?: AnnouncementFormData | null) {
       form.reset({
         title: data.title || "",
         description: data.description || "",
+        announcementId: data?.announcementId || 0,
         tags: data.tags || { data: [] },
       });
     } else {
@@ -27,6 +34,7 @@ export function useUpdateAnnouncementZod(data?: AnnouncementFormData | null) {
       form.reset({
         title: "",
         description: "",
+        announcementId: undefined,
         tags: { data: [] },
       });
     }

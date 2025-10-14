@@ -246,7 +246,7 @@ export default function LexicalEditor({
             contentEditable={
               <ContentEditable
                 className={cn(
-                  "min-h-[200px] resize-none bg-card text-sm leading-relaxed transition-colors focus:border-primary/50 focus:ring-2 focus:ring-primary/20 outline-none p-2"
+                  "min-h-[200px] resize-none bg-input/30 text-sm leading-relaxed transition-colors focus:border-primary/50 focus:ring-2 focus:ring-primary/20 outline-none p-2"
                 )}
               />
             }

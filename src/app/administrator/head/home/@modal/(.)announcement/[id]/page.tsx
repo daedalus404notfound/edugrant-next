@@ -35,7 +35,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Calendar,
   Clock,
@@ -55,11 +55,12 @@ import useGetAnnouncementById from "@/hooks/admin/getAnnouncementById";
 import useDeleteAnnouncement from "@/hooks/admin/postDeleteAnnouncement";
 import { useUpdateAnnouncement } from "@/hooks/admin/postEditAnnouncement";
 import { useAdminStore } from "@/store/adminUserStore";
+import LexicalEditor from "@/components/ui/lexical-editor";
 
 export default function GetAnnouncementById() {
   const params = useParams();
   const router = useRouter();
-  const id = params.id as string;
+  const id = Number(params.id);
 
   const [open, setOpen] = useState(true);
   const { admin } = useAdminStore();
@@ -84,6 +85,12 @@ export default function GetAnnouncementById() {
     }
   };
 
+  useEffect(() => {
+    if (isSuccess) {
+      HandleCloseDrawer(false);
+    }
+  }, [isSuccess]);
+
   const {
     open: openMeow,
     setOpen: setOpenMeow,
@@ -93,7 +100,7 @@ export default function GetAnnouncementById() {
     form,
     formWatch,
   } = useUpdateAnnouncement(data);
-
+  console.log(formWatch);
   return (
     <Dialog
       open={open}
@@ -106,7 +113,7 @@ export default function GetAnnouncementById() {
           <DialogTitle>Announcement Details</DialogTitle>
           <DialogDescription>View and manage announcement</DialogDescription>
         </DialogHeader>
-        <div className="flex items-center justify-between pb-2 sticky top bg-background">
+        <div className="flex items-center justify-between pb-2 sticky top bg-background/50">
           <div className="flex items-center gap-3">
             <Button
               className="relative justify-start"
@@ -168,19 +175,21 @@ export default function GetAnnouncementById() {
                     control={form.control}
                     name="title"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center gap-2 text-sm font-medium">
-                          <FileText className="w-4 h-4 text-muted-foreground" />
-                          Title
-                          <FormMessage className="ml-auto" />
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            className="h-11 text-base border-border/40 focus-visible:ring-primary/20"
-                            placeholder="Enter announcement title"
-                          />
-                        </FormControl>
+                      <FormItem className="flex flex-col  items-end">
+                        <FormMessage />
+                        <div className="w-full flex items-center">
+                          <FormLabel className="w-70">
+                            Announcement Title
+                          </FormLabel>
+
+                          <FormControl>
+                            <Input
+                              {...field}
+                              placeholder="Enter announcement title..."
+                              className=" border-0"
+                            />
+                          </FormControl>
+                        </div>
                       </FormItem>
                     )}
                   />
@@ -189,81 +198,78 @@ export default function GetAnnouncementById() {
                     control={form.control}
                     name="tags.data"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center gap-2 text-sm font-medium">
-                          <Tag className="w-4 h-4 text-muted-foreground" />
-                          Tags
-                          <FormMessage className="ml-auto" />
-                        </FormLabel>
+                      <FormItem className="flex flex-col items-end ">
+                        <FormMessage />
+                        <div className="flex w-full">
+                          <FormLabel className="w-70">
+                            Announcement Tag
+                          </FormLabel>
 
+                          <FormControl>
+                            <div className="flex gap-2 w-full">
+                              <Input
+                                id="tag-input"
+                                type="text"
+                                value={inputValue}
+                                onChange={handleInputChange}
+                                onKeyDown={(e) => {
+                                  if (e.key === "Enter" && inputValue.trim()) {
+                                    e.preventDefault();
+                                    const newTags = [
+                                      ...(field.value || []),
+                                      inputValue.trim(),
+                                    ];
+                                    field.onChange(newTags);
+                                    setInputValue("");
+                                  }
+                                }}
+                                placeholder="Type a tag and press Enter..."
+                                className=" border-0"
+                              />
+                              <Button
+                                type="button"
+                                onClick={() => {
+                                  if (inputValue.trim()) {
+                                    const newTags = [
+                                      ...(field.value || []),
+                                      inputValue.trim(),
+                                    ];
+                                    field.onChange(newTags);
+                                    setInputValue("");
+                                  }
+                                }}
+                              >
+                                <Plus className="h-4 w-4" />
+                                Add
+                              </Button>
+                            </div>
+                          </FormControl>
+                        </div>
+
+                        {(!field.value || field.value.length === 0) && (
+                          <p className="text-sm text-muted-foreground">
+                            No tags added yet. Type above and press Enter or
+                            click Add.
+                          </p>
+                        )}
                         {field.value && field.value.length > 0 && (
-                          <div className="flex flex-wrap gap-2 p-3 rounded-lg bg-muted/30 border border-border/40">
+                          <div className="flex  justify-center items-center flex-wrap gap-2 ">
                             {field.value.map((tag: string, index: number) => (
                               <Badge
                                 key={index}
-                                variant="secondary"
-                                className="px-3 py-1.5 text-xs font-medium bg-background hover:bg-muted border border-border/40 cursor-pointer transition-all hover:scale-105"
+                                className="bg-blue-800 uppercase px-2 tracking-wide py-1 cursor-pointer rounded-sm text-gray-200 border border-border/50 hover:border-destructive/50 hover:bg-destructive/10 hover:text-destructive"
                                 onClick={() => {
-                                  const newTags = (field.value || []).filter(
+                                  const newTags = field.value.filter(
                                     (_: string, i: number) => i !== index
                                   );
                                   field.onChange(newTags);
                                 }}
                               >
                                 {tag}
-                                <X className="w-3 h-3 ml-1.5" />
+                                <X className="" />
                               </Badge>
                             ))}
                           </div>
-                        )}
-
-                        <FormControl>
-                          <div className="flex gap-2">
-                            <Input
-                              id="tag-input"
-                              type="text"
-                              value={inputValue}
-                              onChange={handleInputChange}
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter" && inputValue.trim()) {
-                                  e.preventDefault();
-                                  const newTags = [
-                                    ...(field.value || []),
-                                    inputValue.trim(),
-                                  ];
-                                  field.onChange(newTags);
-                                  setInputValue("");
-                                }
-                              }}
-                              className="flex-1 h-11 border-border/40 focus-visible:ring-primary/20"
-                              placeholder="Type a tag and press Enter"
-                            />
-                            <Button
-                              type="button"
-                              variant="secondary"
-                              className="h-11 px-4 border border-border/40"
-                              onClick={() => {
-                                if (inputValue.trim()) {
-                                  const newTags = [
-                                    ...(field.value || []),
-                                    inputValue.trim(),
-                                  ];
-                                  field.onChange(newTags);
-                                  setInputValue("");
-                                }
-                              }}
-                            >
-                              <Plus className="w-4 h-4 mr-2" />
-                              Add
-                            </Button>
-                          </div>
-                        </FormControl>
-
-                        {(!field.value || field.value.length === 0) && (
-                          <p className="text-xs text-muted-foreground mt-2">
-                            No tags added yet. Type above and press Enter or
-                            click Add.
-                          </p>
                         )}
                       </FormItem>
                     )}
@@ -273,19 +279,20 @@ export default function GetAnnouncementById() {
                     control={form.control}
                     name="description"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex items-center gap-2 text-sm font-medium">
-                          <Sparkles className="w-4 h-4 text-muted-foreground" />
-                          Description
-                          <FormMessage className="ml-auto" />
-                        </FormLabel>
-                        <FormControl>
-                          <Textarea
-                            {...field}
-                            className="min-h-[200px] text-base border-border/40 focus-visible:ring-primary/20 resize-none"
-                            placeholder="Write your announcement description..."
-                          />
-                        </FormControl>
+                      <FormItem className="flex flex-col items-end">
+                        <FormMessage />
+                        <div className="w-full flex items-start ">
+                          <FormLabel className="w-70">Description</FormLabel>
+                          <FormControl>
+                            <div className="w-full">
+                              <LexicalEditor
+                                value={field.value}
+                                onChange={field.onChange}
+                                placeholder="Write your announcement details here..."
+                              />
+                            </div>
+                          </FormControl>
+                        </div>
                       </FormItem>
                     )}
                   />
@@ -338,26 +345,13 @@ export default function GetAnnouncementById() {
             </div>
           )}
         </div>
-        <div className="sticky bottom-0 z-10 bg-background/95 backdrop-blur-xl border-t border-border/40">
-          <div className="flex justify-end gap-3 px-6 py-4">
+        <div className="sticky bottom-0 z-10 bg-background/50 backdrop-blur-xl border-t border-border/40">
+          <div className="flex gap-3 px-6 py-4">
             {edit ? (
               <>
-                <Button
-                  variant="outline"
-                  disabled={updateLoading}
-                  onClick={() => setEdit(false)}
-                  className="h-10 px-4 border-border/40"
-                >
-                  <X className="w-4 h-4 mr-2" />
-                  Cancel
-                </Button>
-
                 <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
                   <AlertDialogTrigger asChild>
-                    <Button
-                      disabled={updateLoading}
-                      className="h-10 px-4 bg-primary hover:bg-primary/90"
-                    >
+                    <Button disabled={updateLoading} className="flex-1">
                       <Save className="w-4 h-4 mr-2" />
                       Save Changes
                     </Button>
@@ -396,15 +390,23 @@ export default function GetAnnouncementById() {
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
-                </AlertDialog>
+                </AlertDialog>{" "}
+                <Button
+                  variant="outline"
+                  disabled={updateLoading}
+                  onClick={() => setEdit(false)}
+                  className="flex-1"
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  Cancel
+                </Button>
               </>
             ) : (
               <>
                 <Button
-                  variant="outline"
                   disabled={deleteLoading}
                   onClick={() => setEdit(true)}
-                  className="h-10 px-4 border-border/40"
+                  className="flex-1"
                 >
                   <Pencil className="w-4 h-4 mr-2" />
                   Edit
@@ -415,7 +417,7 @@ export default function GetAnnouncementById() {
                     <Button
                       variant="destructive"
                       disabled={deleteLoading}
-                      className="h-10 px-4"
+                      className="flex-1"
                     >
                       <Trash2 className="w-4 h-4 mr-2" />
                       Delete

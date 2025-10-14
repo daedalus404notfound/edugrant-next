@@ -18,12 +18,8 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
-import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
-import { useEffect, useState } from "react";
-import useDeleteScholarship from "@/hooks/admin/postDeleteScholarship";
 import Link from "next/link";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
-import { Separator } from "@/components/ui/separator";
 import { useAdminStore } from "@/store/adminUserStore";
 import useArchiveScholarship from "@/hooks/admin/postSetArchivedScholarship";
 import { useModeStore } from "@/store/scholarshipModalStore";
@@ -41,7 +37,7 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const rowData = row.original as AnnouncementFormDataGet;
   const { admin } = useAdminStore();
-  const { onSubmit, deleteLoading, openDelete, setOpenDelete } =
+  const { onSubmit, deleteLoading, openDelete, setOpenDelete, isSuccess } =
     useDeleteAnnouncement({
       id: rowData.announcementId,
       accountId: admin?.accountId,
@@ -59,7 +55,7 @@ export function DataTableRowActions<TData>({
         className="grid grid-cols-1 gap-0.5 w-[180px] !p-0 !border-0 bg-background"
       >
         <Link
-          href={`/administrator/head/home/manage/${rowData.announcementId}`}
+          href={`/administrator/head/home/announcement/${rowData.announcementId}`}
           scroll={false}
           prefetch
           className="w-full"

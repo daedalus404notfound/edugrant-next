@@ -5,9 +5,9 @@ import { useEffect, useState } from "react";
 import { displayScholarshipFormData } from "./displayScholarshipData";
 import { ApiErrorResponse } from "./postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
-import { AnnouncementFormData } from "../zod/announcement";
-export default function useGetAnnouncementById(id: string, accountId?: number) {
-  const [data, setData] = useState<AnnouncementFormData | null>(null);
+import { AnnouncementFormDataGet } from "../zod/announcement";
+export default function useGetAnnouncementById(id: number, accountId?: number) {
+  const [data, setData] = useState<AnnouncementFormDataGet | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -16,7 +16,7 @@ export default function useGetAnnouncementById(id: string, accountId?: number) {
       async function fetchAnnouncementById() {
         setLoading(true);
         try {
-          const res = await axios.get<{ annoucement: AnnouncementFormData }>(
+          const res = await axios.get<{ annoucement: AnnouncementFormDataGet }>(
             `${
               process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
             }/getAnnouncementById?announcementId=${id}${
