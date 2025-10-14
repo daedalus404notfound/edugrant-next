@@ -66,41 +66,35 @@ export const useCreateAnnouncement = () => {
   const [open, setOpen] = useState(false);
 
   const handleSubmit = async (data: AnnouncementFormData) => {
-    // Show loading toast while processing
-    StyledToast({
-      status: "checking",
-      title: "Creating Announcement...",
-      description: "Please wait while we creating your announcement.",
-    });
-
     try {
       const result = await addAnnouncement.mutateAsync(data);
 
       if (result) {
         setOpen(false);
         addAnnouncement.reset();
-        form.reset();
+        // form.reset();
       }
     } catch (error) {
-      // Error toast is already handled in useSendAuthCode onError
       console.error("Login error:", error);
     }
   };
 
   const handleTriggerClick = async () => {
-    // Trigger form validation
-    const isValid = await form.trigger(); // This validates all fields
+    const isValid = await form.trigger();
 
-    if (isValid) {
-      setOpen(true); // Only open dialog if validation passes
-    } else {
-      // Optionally show a toast for validation errors
+    console.log(isValid);
+
+    if (!isValid) {
       StyledToast({
         status: "error",
         title: "Validation Error",
         description: "Please fill in all required fields correctly.",
       });
+      return; // ⛔ stop here if invalid
     }
+
+    // ✅ only open when valid
+    setOpen(true);
   };
 
   const resetCreateState = () => {

@@ -74,6 +74,7 @@ export function DeleteDialog({
             variant={red ? "destructive" : "default"}
             disabled={loading}
             onClick={handleConfirm}
+            type="submit"
           >
             {loading ? (
               <span className="flex items-center gap-2">

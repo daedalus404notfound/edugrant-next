@@ -11,6 +11,8 @@ export function useCreateAnnouncementZod() {
       description: "",
       tags: { data: [] },
     },
+    mode: "onChange",
+    reValidateMode: "onChange",
   });
   const formWatch = form.watch();
 
