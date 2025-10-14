@@ -2,7 +2,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { MetaTypes } from "../zodMeta";
-import { AnnouncementFormData } from "../zod/announcement";
+import { AnnouncementFormDataGet } from "../zod/announcement";
 import { ApiErrorResponse } from "../admin/postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
 
@@ -28,7 +28,7 @@ export default function useAnnouncementFetchUser({
   sortBy?: string;
   order?: string;
 }) {
-  const [data, setData] = useState<AnnouncementFormData[]>([]);
+  const [data, setData] = useState<AnnouncementFormDataGet[]>([]);
   const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
   const [loading, setLoading] = useState(false);
   const [isFetchingMore, setIsFetchingMore] = useState(false); // for pagination loading
