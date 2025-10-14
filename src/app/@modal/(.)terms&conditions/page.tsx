@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 
-export default function PrivacyPolicy() {
+export default function Termss() {
   const [open, setOpen] = useState(true);
   const router = useRouter();
   const HandleCloseDrawer = (value: boolean) => {
