@@ -5,13 +5,13 @@ import { format } from "date-fns";
 import { CalendarIcon, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import type { AnnouncementFormData } from "@/hooks/zod/announcement";
+import type { AnnouncementFormDataGet } from "@/hooks/zod/announcement";
 
 export default function Announcements({
   announcement,
   loading,
 }: {
-  announcement: AnnouncementFormData[];
+  announcement: AnnouncementFormDataGet[];
   loading: boolean;
 }) {
   return (
