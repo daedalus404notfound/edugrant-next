@@ -6,12 +6,12 @@ import { ApiErrorResponse } from "../admin/postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
 import { scholarshipFormData } from "../admin/zodUpdateScholarship";
 import { ApplicationFormData } from "../zod/application";
-import { AnnouncementFormData } from "../zod/announcement";
+import { AnnouncementFormDataGet } from "../zod/announcement";
 
 export type DashboardData = {
   recentApplications: ApplicationFormData[];
   onGoingScholarships: scholarshipFormData[];
-  announcements: AnnouncementFormData[];
+  announcements: AnnouncementFormDataGet[];
   interviewApplicationCount: number;
   approvedApplicationsCount: number;
   pendingApplicationCount: number;
