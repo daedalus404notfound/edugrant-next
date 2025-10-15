@@ -46,65 +46,67 @@ export function ActiveScholarships({
         ) : (
           data?.slice(0, 4).map((meow) => (
             <div
+              className="bg-background  rounded-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1 "
               key={meow.scholarshipId}
-              className="group relative flex flex-col justify-between bg-card rounded-md p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 gap-6"
             >
-              {/* Logo + Provider */}
-              <div className="flex items-center gap-3">
-                {meow.logo ? (
-                  <img
-                    src={meow.logo}
-                    alt={meow.title}
-                    className="w-10 h-10 rounded-full object-cover border"
-                  />
-                ) : (
-                  <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
-                    No Logo
+              <div className="group relative flex flex-col justify-between  bg-gradient-to-br dark:to-card to-card/50 dark:from-card/50 from-card/30  rounded-md p-6 shadow-sm gap-6">
+                {/* Logo + Provider */}
+                <div className="flex items-center gap-3">
+                  {meow.logo ? (
+                    <img
+                      src={meow.logo}
+                      alt={meow.title}
+                      className="w-10 h-10 rounded-full object-cover border"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
+                      No Logo
+                    </div>
+                  )}
+                  <div>
+                    <h3 className="font-semibold text-sm line-clamp-1">
+                      {meow.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {meow.Scholarship_Provider?.name || "Unknown Provider"}
+                    </p>
                   </div>
-                )}
-                <div>
-                  <h3 className="font-semibold text-sm line-clamp-1">
-                    {meow.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {meow.Scholarship_Provider?.name || "Unknown Provider"}
-                  </p>
                 </div>
-              </div>
 
-              {/* Details */}
-              <div className="flex flex-col gap-1 text-sm text-muted-foreground">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs">Deadline</span>
-                  <span className="font-medium text-foreground">
-                    {meow.deadline ? format(meow.deadline, "PPP") : "—"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs">Required GWA</span>
-                  <span className="font-medium text-foreground">
-                    {meow.requiredGWA || "N/A"}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs">Type</span>
-                  <span className="font-medium text-foreground capitalize">
-                    {meow.type || "N/A"}
-                  </span>
-                </div>
-                {/* <div className="flex items-center justify-between">
+                {/* Details */}
+                <div className="flex flex-col gap-1 text-sm text-muted-foreground">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs">Deadline</span>
+                    <span className="font-medium text-foreground">
+                      {meow.deadline ? format(meow.deadline, "PPP") : "—"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs">Required GWA</span>
+                    <span className="font-medium text-foreground">
+                      {meow.requiredGWA || "N/A"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs">Type</span>
+                    <span className="font-medium text-foreground capitalize">
+                      {meow.type || "N/A"}
+                    </span>
+                  </div>
+                  {/* <div className="flex items-center justify-between">
                   <span className="text-xs">Current Phase</span>
                   <span className="font-medium text-foreground capitalize">
                     {meow.phase || "N/A"}
                   </span>
                 </div> */}
-              </div>
+                </div>
 
-              <Link href={`/user/home/scholarships/${meow.scholarshipId}`}>
-                <Button className="w-full" size="sm">
-                  View Details <ArrowRight />
-                </Button>
-              </Link>
+                <Link href={`/user/home/scholarships/${meow.scholarshipId}`}>
+                  <Button className="w-full" size="sm">
+                    View Details <ArrowRight />
+                  </Button>
+                </Link>
+              </div>
             </div>
           ))
         )}

@@ -79,27 +79,29 @@ export function SummaryCard({
   loading,
 }: SummaryCardProps) {
   return (
-    <div className=" bg-gradient-to-br dark:to-card to-card/50 dark:from-card/50 from-card/30 shadow z-10 flex flex-col justify-between rounded-lg  p-6 lg:gap-2 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-      <div className="flex justify-between items-start">
-        <Button variant="secondary" className={colorStyles[color].text}>
-          {icon}
-        </Button>
+    <div className="bg-background rounded-lg hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+      <div className=" bg-gradient-to-br dark:to-card to-card/50 dark:from-card/50 from-card/30 shadow z-10 flex flex-col justify-between rounded-lg  p-6 lg:gap-2 ">
+        <div className="flex justify-between items-start">
+          <Button variant="secondary" className={colorStyles[color].text}>
+            {icon}
+          </Button>
 
-        <p
-          className={`flex text-xs p-1 rounded-sm font-mono tracking-tight ${colorStyles[color].badge}`}
-        >
-          + {todayIncrement} today
-        </p>
-      </div>
+          <p
+            className={`flex text-xs p-1 rounded-sm font-mono tracking-tight ${colorStyles[color].badge}`}
+          >
+            + {todayIncrement} today
+          </p>
+        </div>
 
-      <div className="flex justify-between items-end">
-        <p className="lg:text-sm text-xs line-clamp-1 jakarta">{label}</p>
+        <div className="flex justify-between items-end">
+          <p className="lg:text-sm text-xs line-clamp-1 jakarta">{label}</p>
 
-        {loading ? (
-          <Ring size={35} stroke={6} speed={2} bgOpacity={0} color="yellow" />
-        ) : (
-          <span className="text-3xl font-semibold font-mono"> {data} </span>
-        )}
+          {loading ? (
+            <Ring size={35} stroke={6} speed={2} bgOpacity={0} color="yellow" />
+          ) : (
+            <span className="text-3xl font-semibold font-mono"> {data} </span>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -1,20 +1,12 @@
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Fade as Hamburger } from "hamburger-react";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 import {
   DropdownMenu,
@@ -24,62 +16,26 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Timeline,
-  TimelineContent,
-  TimelineDate,
-  TimelineItem,
-  TimelineTitle,
-} from "@/components/ui/timeline";
-const announcements = [
-  {
-    id: 1,
-    title: "Scholarship Application Deadline Extended",
-    description:
-      "The deadline for scholarship applications has been extended to June 30, 2025.",
-    date: "Dec 12, 2024",
-    priority: "high",
-  },
-  {
-    id: 2,
-    title: "Scholarship Application Deadline Extended",
-    description:
-      "The deadline for scholarship applications has been extended to June 30, 2025.",
-    date: "Dec 12, 2024",
-    priority: "high",
-  },
-];
 
 import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  Bell,
-  CalendarIcon,
-  LogOut,
-  Moon,
-  UserRound,
-  UserRoundIcon,
-} from "lucide-react";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
+import { Activity, LogOut, PenLine, UserRoundPlus } from "lucide-react";
+
 import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
-import { useState } from "react";
 
-import { format } from "date-fns";
-
-import { useAdminStore } from "@/store/adminUserStore";
 import { ModeToggle } from "@/components/ui/dark-mode";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { TourStep } from "@/components/tour-2/tour-step";
 import TitleReusable from "@/components/ui/title";
-import AnnouncementDescription from "@/components/ui/description";
+import { TourTrigger } from "@/components/tour-2/tour-trigger";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -93,21 +49,16 @@ export default function DynamicHeaderAdmin({
   second,
   third,
 }: HeaderTypes) {
-  const { admin } = useAdminStore();
-
   const {
     handleLogout,
     loading: loadingLogout,
     open: openLogout,
     setOpen: setOpenLogout,
   } = useAdminLogout();
-  const [open, setOpen] = useState(false);
-  const [openNotif, setOpenNotif] = useState(false);
-  const [openOut, setOpenOut] = useState(false);
-  const [openDark, setOpenDark] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [openGuide, setOpenGuide] = useState(false);
+  const router = useRouter();
   return (
-    <header className="flex w-full z-30 items-center justify-between  backdrop-blur-sm sticky top-0 p-4 rounded-lg">
+    <header className="flex w-full z-30 items-center justify-between  p-4 rounded-lg">
       <div className="flex  shrink-0 items-center gap-2">
         <SidebarTrigger className="-ml-1 lg:flex hidden" />
         <Separator
@@ -133,7 +84,31 @@ export default function DynamicHeaderAdmin({
         </Breadcrumb>
       </div>
       <div className="flex items-center gap-3">
-        {" "}
+        <TourStep stepId="guide">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button>Guide (Soon)</Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Guides available</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setOpenGuide(true)}>
+                <PenLine /> Post Scholarship
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <PenLine /> Post Announcement
+              </DropdownMenuItem>{" "}
+              <DropdownMenuItem>
+                <UserRoundPlus /> Add Staff
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Activity />
+                Generate Report
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </TourStep>
         <ModeToggle />
         <DeleteDialog
           open={openLogout}
@@ -157,66 +132,52 @@ export default function DynamicHeaderAdmin({
           }
         />
       </div>
-      <Drawer direction="right" open={openNotif} onOpenChange={setOpenNotif}>
-        <DrawerContent className="bg-transparent !border-0 p-4">
-          <DrawerHeader className="sr-only">
-            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
-            <DrawerDescription>This action cannot be undone.</DrawerDescription>
-          </DrawerHeader>
-          <div className="flex flex-col bg-card flex-1 rounded-lg p-4 gap-y-10">
-            <div className="flex justify-between items-center">
-              <TitleReusable title="Notification" description="" />
-              <Button size="sm">Mark all as read</Button>
-            </div>
-            <div className="flex-1">
-              <Timeline className="space-y-5">
-                {loading ? (
-                  <></>
-                ) : (
-                  announcements.map((item) => (
-                    <TimelineItem
-                      key={item.id}
-                      step={item.id}
-                      className="!m-0  bg-card  p-4! rounded-md border !mb-2 "
-                    >
-                      <div className="flex items-start justify-between lg:flex-row flex-col gap-0.5">
-                        <TimelineTitle className="font-medium text-base">
-                          {item.title ?? "Win scholarship is now open."}
-                        </TimelineTitle>
-                      </div>
-                      <TimelineDate className="lg:text-sm text-xs text-muted-foreground flex items-center gap-1.5">
-                        <CalendarIcon size={13} /> {format(item.date, "PPP p")}
-                      </TimelineDate>
-                      <TimelineContent className="text-foreground mt-1 whitespace-pre-line">
-                        <AnnouncementDescription
-                          description={item.description}
-                        />
-                      </TimelineContent>
-                    </TimelineItem>
-                  ))
-                )}
-              </Timeline>
-              <div className=" justify-center items-center hidden">
-                <Button variant="link" size="lg" className="!p-0">
-                  Load More <ArrowRight />
-                </Button>
-              </div>
-            </div>
-            <DrawerFooter>
-              <DrawerClose asChild className="!bg-transparent">
-                <Button variant="outline">Close</Button>
-              </DrawerClose>
-            </DrawerFooter>
-          </div>
-        </DrawerContent>
-      </Drawer>
 
-      <Dialog open={openDark} onOpenChange={setOpenDark}>
-        <DialogContent showCloseButton={false} className="max-w-lg p-4">
+      <Dialog open={openGuide} onOpenChange={setOpenGuide}>
+        <DialogContent
+          className="!bg-card w-lg p-6"
+          onInteractOutside={(e) => {
+            e.preventDefault();
+          }}
+          onEscapeKeyDown={(e) => {
+            e.preventDefault();
+          }}
+          showCloseButton={false}
+        >
           <DialogHeader>
-            <DialogTitle>Theme</DialogTitle>
-            <DialogDescription></DialogDescription>
+            <DialogTitle>
+              <TitleReusable
+                title="Welcome to POST SCHOLARSHIP"
+                description=""
+              />
+            </DialogTitle>
+            <DialogDescription className="mt-3">
+              Begin managing scholarship programs. You can take a quick tour to
+              learn the process, or skip it and start right away.
+            </DialogDescription>
           </DialogHeader>
+
+          <div className="flex gap-3 mt-3">
+            <Button
+              className="flex-1"
+              variant="secondary"
+              onClick={() => setOpenGuide(false)}
+            >
+              Skip for Now
+            </Button>
+            <div
+              onClick={() => {
+                setOpenGuide(false);
+                router.push("/administrator/head/home/create");
+              }}
+              className="flex-1 "
+            >
+              <TourTrigger
+                tourName="postScholarship"
+                className="h-9 !bg-green-900 !text-gray-200 !border-0 w-full"
+              />
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </header>

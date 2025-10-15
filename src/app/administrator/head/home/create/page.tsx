@@ -57,6 +57,7 @@ import TitleReusable from "@/components/ui/title";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
+import { TourStep } from "@/components/tour-2/tour-step";
 
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
@@ -120,16 +121,21 @@ export default function Create() {
       </Dialog> */}
 
       <div className="mx-auto w-[95%] lg:py-10  py-4">
-        <TitleReusable
-          title=" Post Scholarship"
-          description="Fill out the form below to post a new scholarship."
-          Icon={PenLine}
-        />
-        <Separator className="mt-4" />
-        <div className="mt-15 lg:w-[60%] min-w-5xl w-full mx-auto">
+        <TourStep
+          stepId="post-scholarship"
+          className="bg-background p-4 rounded-md"
+        >
+          <TitleReusable
+            title=" Post Scholarship"
+            description="Fill out the form below to post a new scholarship."
+            Icon={PenLine}
+          />
+        </TourStep>
+        <Separator className="mt-2" />
+        <div className="mt-10 lg:w-[60%] min-w-5xl w-full mx-auto">
           <Form {...form}>
-            <div className="space-y-5 mt-10">
-              <div className="grid grid-cols-3 gap-x-5 gap-y-10">
+            <TourStep className="mt-" stepId="text-forms">
+              <div className="grid grid-cols-3 gap-x-5 gap-y-10 bg-background p-6 rounded-md ">
                 <FormField
                   control={form.control}
                   name="type"
@@ -378,7 +384,10 @@ export default function Create() {
                     </FormItem>
                   )}
                 />
-
+              </div>
+            </TourStep>
+            <TourStep className="mt-" stepId="interview-form">
+              <div className=" bg-background p-6 rounded-md ">
                 <FormField
                   control={form.control}
                   name="interview"
@@ -422,263 +431,270 @@ export default function Create() {
                   )}
                 />
               </div>
-            </div>
-
-            <div className="space-y-8 ">
-              <div className="w-full flex gap-5">
-                {/* Backdrop Image */}
-                <div className="flex flex-col flex-1 gap-2">
-                  <FormField
-                    control={form.control}
-                    name="cover"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex justify-between items-center">
-                          <span>
-                            {" "}
-                            Details Cover
-                            <span className="text-red-800 ml-2">*</span>
-                          </span>
-                          <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <DragAndDropArea
-                            reset={reset}
-                            setReset={setReset}
-                            label="backdrop image"
-                            accept={["image/png", "image/jpeg"]}
-                            onFilesChange={(files) => field.onChange(files[0])} // Single file
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                {/* Sponsor Logo Image */}
-                <div className="flex flex-col flex-1 gap-2">
-                  <FormField
-                    control={form.control}
-                    name="logo"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="flex justify-between items-center">
-                          <span>
-                            {" "}
-                            Sponsor Logo/Image
-                            <span className="text-red-800 ml-2">*</span>
-                          </span>{" "}
-                          <FormMessage />
-                        </FormLabel>
-                        <FormControl>
-                          <DragAndDropArea
-                            reset={reset}
-                            setReset={setReset}
-                            label="sponsor logo"
-                            accept={["image/png", "image/jpeg"]}
-                            onFilesChange={(files) => field.onChange(files[0])} // Single file
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-              <div className="col-span-3">
-                <FormField
-                  control={form.control}
-                  name="form"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="flex justify-between items-center">
-                        Scholarship Form (Optional)
-                        <FormMessage />
-                      </FormLabel>
-                      <FormControl>
-                        <DragAndDropArea
-                          reset={reset}
-                          setReset={setReset}
-                          label="scholarship form"
-                          accept={[
-                            "application/pdf",
-                            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                          ]}
-                          onFilesChange={(files) => field.onChange(files[0])} // Single file
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            {/* Dynamic Required Documents */}
-
-            <div className="space-y-8">
-              <div className="w-full flex items-center justify-between ">
-                <p className="text-sm font-medium text-muted-foreground">
-                  Note: Each document label must be unique.
-                </p>
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={() =>
-                    append({
-                      label: "",
-                      formats: [],
-                      requirementType: "required",
-                    })
-                  }
-                  variant="outline"
-                >
-                  <Plus className="w-4 h-4 mr-1" />
-                  Add document
-                </Button>
-              </div>
-
-              <div className="space-y-10">
-                {fields.map((field, index) => (
-                  <div
-                    key={field.id}
-                    className="grid grid-cols-1 gap-6 items-center"
-                  >
+            </TourStep>
+            <TourStep className="mt-" stepId="image-forms">
+              <div className="space-y-8  bg-background p-6 rounded-md">
+                <div className="w-full flex gap-5">
+                  {/* Backdrop Image */}
+                  <div className="flex flex-col flex-1 gap-2">
                     <FormField
                       control={form.control}
-                      name={`documents.documents.${index}.label`}
+                      name="cover"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="flex justify-between items-center">
                             <span>
                               {" "}
-                              Document Label {index + 1}
+                              Details Cover
+                              <span className="text-red-800 ml-2">*</span>
+                            </span>
+                            <FormMessage />
+                          </FormLabel>
+                          <FormControl>
+                            <DragAndDropArea
+                              reset={reset}
+                              setReset={setReset}
+                              label="backdrop image"
+                              accept={["image/png", "image/jpeg"]}
+                              onFilesChange={(files) =>
+                                field.onChange(files[0])
+                              } // Single file
+                            />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Sponsor Logo Image */}
+                  <div className="flex flex-col flex-1 gap-2">
+                    <FormField
+                      control={form.control}
+                      name="logo"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="flex justify-between items-center">
+                            <span>
+                              {" "}
+                              Sponsor Logo/Image
                               <span className="text-red-800 ml-2">*</span>
                             </span>{" "}
                             <FormMessage />
                           </FormLabel>
-                          <div className="flex gap-3 items-center">
-                            <FormControl>
-                              <Input placeholder="e.g. COR" {...field} />
-                            </FormControl>
-                            <Button
-                              type="button"
-                              variant="destructive"
-                              disabled={fields.length === 1}
-                              onClick={() => remove(index)}
-                            >
-                              <Trash2 />
-                            </Button>
-                          </div>
+                          <FormControl>
+                            <DragAndDropArea
+                              reset={reset}
+                              setReset={setReset}
+                              label="sponsor logo"
+                              accept={["image/png", "image/jpeg"]}
+                              onFilesChange={(files) =>
+                                field.onChange(files[0])
+                              } // Single file
+                            />
+                          </FormControl>
                         </FormItem>
                       )}
                     />
+                  </div>
+                </div>
+                <div className="col-span-3">
+                  <FormField
+                    control={form.control}
+                    name="form"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="flex justify-between items-center">
+                          Scholarship Form (Optional)
+                          <FormMessage />
+                        </FormLabel>
+                        <FormControl>
+                          <DragAndDropArea
+                            reset={reset}
+                            setReset={setReset}
+                            label="scholarship form"
+                            accept={[
+                              "application/pdf",
+                              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                            ]}
+                            onFilesChange={(files) => field.onChange(files[0])} // Single file
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            </TourStep>
 
-                    <div className="grid grid-cols-2 gap-6">
+            {/* Dynamic Required Documents */}
+            <TourStep className="mt-" stepId="document-forms">
+              <div className="space-y-8 mt-10 bg-background p-6 rounded-md">
+                <div className="w-full flex items-center justify-between ">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    Note: Each document label must be unique.
+                  </p>
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={() =>
+                      append({
+                        label: "",
+                        formats: [],
+                        requirementType: "required",
+                      })
+                    }
+                    variant="outline"
+                  >
+                    <Plus className="w-4 h-4 mr-1" />
+                    Add document
+                  </Button>
+                </div>
+
+                <div className="space-y-10">
+                  {fields.map((field, index) => (
+                    <div
+                      key={field.id}
+                      className="grid grid-cols-1 gap-6 items-center"
+                    >
                       <FormField
                         control={form.control}
-                        name={`documents.documents.${index}.formats`}
+                        name={`documents.documents.${index}.label`}
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel className="flex justify-between items-center">
                               <span>
                                 {" "}
-                                Document Formats
+                                Document Label {index + 1}
                                 <span className="text-red-800 ml-2">*</span>
-                              </span>
+                              </span>{" "}
                               <FormMessage />
                             </FormLabel>
-                            <FormControl>
-                              <MultipleSelector
-                                className="bg-white/5"
-                                commandProps={{
-                                  label: "Select document formats",
-                                }}
-                                value={options.filter((option) =>
-                                  field.value?.includes(option.value)
-                                )}
-                                defaultOptions={options}
-                                placeholder="Choose formats"
-                                hideClearAllButton
-                                hidePlaceholderWhenSelected
-                                emptyIndicator={
-                                  <p className="text-center text-sm">
-                                    No results found
-                                  </p>
-                                }
-                                onChange={(selected) => {
-                                  field.onChange(
-                                    selected.map((option) => option.value)
-                                  );
-                                }}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`documents.documents.${index}.requirementType`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>
-                              Type
-                              <FormMessage />
-                            </FormLabel>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                            >
+                            <div className="flex gap-3 items-center">
                               <FormControl>
-                                <SelectTrigger className="w-full">
-                                  <SelectValue placeholder="Requirement type" />
-                                </SelectTrigger>
+                                <Input placeholder="e.g. COR" {...field} />
                               </FormControl>
-                              <SelectContent>
-                                <SelectGroup>
-                                  <SelectItem value="required">
-                                    Required
-                                  </SelectItem>
-                                  <SelectItem value="optional">
-                                    Optional
-                                  </SelectItem>
-                                </SelectGroup>
-                              </SelectContent>
-                            </Select>
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                disabled={fields.length === 1}
+                                onClick={() => remove(index)}
+                              >
+                                <Trash2 />
+                              </Button>
+                            </div>
                           </FormItem>
                         )}
                       />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
 
-            <div className="flex gap-3 mt-10">
-              <Button
-                className="flex-1"
-                variant="secondary"
-                onClick={resetCreateState}
-              >
-                <RefreshCcw />
-                Clear Form
-              </Button>
-              <DeleteDialog
-                red={false}
-                open={open}
-                onOpenChange={setOpen}
-                onConfirm={form.handleSubmit(handleSubmit)}
-                loading={loading}
-                title="Confirm Submission"
-                description="  Are you sure you want to submit this scholarship?"
-                confirmText="Submit"
-                confirmTextLoading="Submitting..."
-                cancelText="Cancel"
-                trigger={
-                  <Button className="flex-1" onClick={handleTriggerClick}>
-                    Submit Scholarship <ArrowRight />
-                  </Button>
-                }
-              />
-            </div>
+                      <div className="grid grid-cols-2 gap-6">
+                        <FormField
+                          control={form.control}
+                          name={`documents.documents.${index}.formats`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="flex justify-between items-center">
+                                <span>
+                                  {" "}
+                                  Document Formats
+                                  <span className="text-red-800 ml-2">*</span>
+                                </span>
+                                <FormMessage />
+                              </FormLabel>
+                              <FormControl>
+                                <MultipleSelector
+                                  className="bg-white/5"
+                                  commandProps={{
+                                    label: "Select document formats",
+                                  }}
+                                  value={options.filter((option) =>
+                                    field.value?.includes(option.value)
+                                  )}
+                                  defaultOptions={options}
+                                  placeholder="Choose formats"
+                                  hideClearAllButton
+                                  hidePlaceholderWhenSelected
+                                  emptyIndicator={
+                                    <p className="text-center text-sm">
+                                      No results found
+                                    </p>
+                                  }
+                                  onChange={(selected) => {
+                                    field.onChange(
+                                      selected.map((option) => option.value)
+                                    );
+                                  }}
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name={`documents.documents.${index}.requirementType`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>
+                                Type
+                                <FormMessage />
+                              </FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Requirement type" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectGroup>
+                                    <SelectItem value="required">
+                                      Required
+                                    </SelectItem>
+                                    <SelectItem value="optional">
+                                      Optional
+                                    </SelectItem>
+                                  </SelectGroup>
+                                </SelectContent>
+                              </Select>
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </TourStep>
+            <TourStep className="mt-" stepId="submit-forms">
+              <div className="flex gap-3 p-6 ">
+                <Button
+                  className="flex-1"
+                  variant="secondary"
+                  onClick={resetCreateState}
+                >
+                  <RefreshCcw />
+                  Clear Form
+                </Button>
+                <DeleteDialog
+                  red={false}
+                  open={open}
+                  onOpenChange={setOpen}
+                  onConfirm={form.handleSubmit(handleSubmit)}
+                  loading={loading}
+                  title="Confirm Submission"
+                  description="  Are you sure you want to submit this scholarship?"
+                  confirmText="Submit"
+                  confirmTextLoading="Submitting..."
+                  cancelText="Cancel"
+                  trigger={
+                    <Button className="flex-1" onClick={handleTriggerClick}>
+                      Submit Scholarship <ArrowRight />
+                    </Button>
+                  }
+                />
+              </div>
+            </TourStep>
           </Form>
         </div>
       </div>

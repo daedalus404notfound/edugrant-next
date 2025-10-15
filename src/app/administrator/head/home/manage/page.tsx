@@ -181,7 +181,7 @@ export default function Manage() {
   return (
     <TourProvider steps={scholarshipTourSteps}>
       <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-        <Dialog open={openGuide} onOpenChange={setOpenGuide}>
+        {/* <Dialog open={openGuide} onOpenChange={setOpenGuide}>
           <DialogContent
             className="!bg-card w-lg p-6"
             onInteractOutside={(e) => {
@@ -218,7 +218,7 @@ export default function Manage() {
               </div>
             </div>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
         <div className="mx-auto w-[95%] lg:py-10  py-4">
           <TitleReusable
             title="Active Scholarship Management"

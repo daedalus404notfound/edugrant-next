@@ -49,51 +49,53 @@ export function RecentApplications({
           data?.applications.slice(0, 3).map((meow) => (
             <div
               key={meow.applicationId}
-              className="group relative flex flex-col justify-between bg-card rounded-md p-6 shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 gap-6"
+              className="bg-background hover:shadow-lg transition-all duration-300 hover:-translate-y-1 rounded-md"
             >
-              {/* Logo + Provider */}
-              <div className="flex justify-between items-center">
-                <div className="flex items-center gap-3">
-                  <div className="bg-background size-11 flex justify-center items-center rounded-md uppercase">
-                    {meow.Student.fName.slice(0, 2)}
+              <div className="group relative flex flex-col justify-between   bg-gradient-to-br dark:to-card to-card/50 dark:from-card/50 from-card/30 rounded-md p-6 shadow-sm gap-6">
+                {/* Logo + Provider */}
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-background size-11 flex justify-center items-center rounded-md uppercase">
+                      {meow.Student.fName.slice(0, 2)}
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-sm line-clamp-1">
+                        {meow.Student?.lName}, {meow.Student?.fName}{" "}
+                        {meow.Student?.mName &&
+                          `${meow.Student?.mName.slice(0, 1)}.`}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {meow.Scholarship?.title || "Unknown Scholarship"}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-semibold text-sm line-clamp-1">
-                      {meow.Student?.lName}, {meow.Student?.fName}{" "}
-                      {meow.Student?.mName &&
-                        `${meow.Student?.mName.slice(0, 1)}.`}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {meow.Scholarship?.title || "Unknown Scholarship"}
-                    </p>
-                  </div>
+                  <Link href={`/user/home/scholarships/${meow.scholarshipId}`}>
+                    <Button className="w-full" size="sm">
+                      <ArrowRight />
+                    </Button>
+                  </Link>
                 </div>
-                <Link href={`/user/home/scholarships/${meow.scholarshipId}`}>
-                  <Button className="w-full" size="sm">
-                    <ArrowRight />
-                  </Button>
-                </Link>
-              </div>
 
-              {/* Details */}
-              <div className="grid grid-cols-3 gap-1 text-sm text-muted-foreground">
-                <div className="flex flex-col border-l px-4">
-                  <span className="text-xs">Application Date</span>
-                  <span className="font-medium text-foreground">
-                    {format(meow.dateCreated, "PPP")}
-                  </span>
-                </div>
-                <div className="flex flex-col border-l px-4">
-                  <span className="text-xs">Student ID</span>
-                  <span className="font-medium text-foreground">
-                    {meow.Student.Account?.schoolId}
-                  </span>
-                </div>
-                <div className="flex flex-col border-l px-4">
-                  <span className="text-xs">Status</span>
-                  <span className="font-medium text-foreground">
-                    {meow.status}
-                  </span>
+                {/* Details */}
+                <div className="grid grid-cols-3 gap-1 text-sm text-muted-foreground">
+                  <div className="flex flex-col border-l px-4">
+                    <span className="text-xs">Application Date</span>
+                    <span className="font-medium text-foreground">
+                      {format(meow.dateCreated, "PPP")}
+                    </span>
+                  </div>
+                  <div className="flex flex-col border-l px-4">
+                    <span className="text-xs">Student ID</span>
+                    <span className="font-medium text-foreground">
+                      {meow.Student.Account?.schoolId}
+                    </span>
+                  </div>
+                  <div className="flex flex-col border-l px-4">
+                    <span className="text-xs">Status</span>
+                    <span className="font-medium text-foreground">
+                      {meow.status}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
