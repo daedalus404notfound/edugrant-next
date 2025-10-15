@@ -16,26 +16,37 @@ const defaultMeta: MetaTypes = {
   filters: "",
   search: "",
 };
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState(value);
 
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
 export default function useAnnouncementFetchUser({
   page,
   pageSize,
   sortBy,
   order,
+  search,
 }: {
   page: number;
   pageSize: number;
   sortBy?: string;
   order?: string;
+  search?: string;
 }) {
   const [data, setData] = useState<AnnouncementFormDataGet[]>([]);
   const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
   const [loading, setLoading] = useState(false);
-  const [isFetchingMore, setIsFetchingMore] = useState(false); // for pagination loading
+
+  const debouncedSearch = useDebounce(search, 800);
   useEffect(() => {
     async function fetchAnnouncement() {
-      if (page === 1) setLoading(true);
-      else setIsFetchingMore(true);
+      setLoading(true);
 
       try {
         const res = await axios.get(
@@ -43,16 +54,14 @@ export default function useAnnouncementFetchUser({
             process.env.NEXT_PUBLIC_USER_URL
           }/getAnnouncements?page=${page}&dataPerPage=${pageSize}${
             sortBy ? `&sortBy=${sortBy}` : ""
-          }${order ? `&order=${order}` : ""}`,
+          }${order ? `&order=${order}` : ""}${
+            debouncedSearch ? `&search=${debouncedSearch}` : ""
+          }`,
           { withCredentials: true }
         );
 
         if (res.status === 200) {
-          setData((prevData) =>
-            page > 1
-              ? [...prevData, ...res.data.annoucements]
-              : res.data.annoucements
-          );
+          setData(res.data.annoucements);
 
           setMeta(res.data.meta);
         }
@@ -66,15 +75,15 @@ export default function useAnnouncementFetchUser({
         }
       } finally {
         setLoading(false);
-        setIsFetchingMore(false);
       }
     }
 
     fetchAnnouncement();
-  }, [page, pageSize, sortBy, order]);
+  }, [page, pageSize, sortBy, order, debouncedSearch]);
+
   useEffect(() => {
-    // Reset data when sorting or ordering changes
     setData([]);
-  }, [sortBy, order]);
-  return { data, meta, loading, isFetchingMore };
+  }, [debouncedSearch, sortBy, order]);
+
+  return { data, meta, loading };
 }

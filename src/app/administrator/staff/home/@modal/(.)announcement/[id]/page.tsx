@@ -14,16 +14,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
+
 import {
   Dialog,
   DialogContent,
@@ -36,28 +27,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import {
-  Calendar,
-  Clock,
-  Trash2,
-  Pencil,
-  Loader2,
-  Megaphone,
-  X,
-  Save,
-  Plus,
-  Sparkles,
-  FileText,
-  Tag,
-} from "lucide-react";
+import { Calendar, Clock, GraduationCap, Megaphone, X } from "lucide-react";
 import { format } from "date-fns";
 import useGetAnnouncementById from "@/hooks/admin/getAnnouncementById";
 import useDeleteAnnouncement from "@/hooks/admin/postDeleteAnnouncement";
-import { useUpdateAnnouncement } from "@/hooks/admin/postEditAnnouncement";
 import { useAdminStore } from "@/store/adminUserStore";
 import { TipTapViewer } from "@/components/ui/tiptap-viewer";
-import { TipTapEditor } from "@/components/ui/tip-tap";
-
+import logo from "@/assets/basclogo.png";
 export default function GetAnnouncementById() {
   const params = useParams();
   const router = useRouter();
@@ -67,7 +43,7 @@ export default function GetAnnouncementById() {
   const { admin } = useAdminStore();
   const accountId = admin?.accountId;
   const { data, loading } = useGetAnnouncementById(id, accountId);
-  const [inputValue, setInputValue] = useState("");
+  const [edit, setEdit] = useState(false);
 
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
@@ -85,12 +61,12 @@ export default function GetAnnouncementById() {
         HandleCloseDrawer(value);
       }}
     >
-      <DialogContent className="max-w-4xl max-h-[90vh] flex flex-col overflow-hidden p-0 gap-0 border-border/40">
+      <DialogContent className="max-w-5xl overflow-hidden  gap-0 p-1 border-0">
         <DialogHeader className="sr-only">
           <DialogTitle>Announcement Details</DialogTitle>
           <DialogDescription>View and manage announcement</DialogDescription>
         </DialogHeader>
-        <div className="flex items-center justify-between pb-2 sticky top bg-background/50">
+        <div className="flex items-center justify-between pb-2 sticky top">
           <div className="flex items-center gap-3">
             <Button
               className="relative justify-start"
@@ -98,7 +74,7 @@ export default function GetAnnouncementById() {
               size="sm"
             >
               <Megaphone />
-              Announcement Details
+              Announcement {edit ? "Edit" : "Details"}
             </Button>
           </div>
           <div className="flex items-center gap-2">
@@ -113,7 +89,66 @@ export default function GetAnnouncementById() {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto">
+        <div className="bg-background rounded-t-md max-h-[90vh]  overflow-auto">
+          <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-b-lg overflow-hidden ">
+            {/* Header Section */}
+            <div className="relative flex lg:flex-row flex-col lg:items-end items-center  py-8 px-4">
+              <img
+                className="lg:w-70 w-50 absolute right-0 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-15 "
+                src={logo.src}
+                alt=""
+              />
+              <div className="flex-1 px-4 py-2 z-10 space-y-3">
+                <h1 className="text-base lg:text-xl font-medium text-foreground capitalize line-clamp-1">
+                  {data?.title}
+                </h1>
+
+                {/* <p className="font-medium font-mono text-base tracking-wide">
+                        {data?.Scholarship_Provider.name}
+                      </p>{" "} */}
+                <div>
+                  {data?.tags?.data && data.tags.data.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {data.tags.data.map((tag, i) => (
+                        <Badge key={i} variant="secondary">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+            {/* Info Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 py-6 px-4 bg-card relative z-10">
+              <div className="space-y-1.5 border-l-2 pl-4">
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+                  <h1 className="text-xs text-muted-foreground">
+                    Published Date
+                  </h1>
+                </div>
+
+                <p className="font-medium text-foreground">
+                  {data?.dateCreated && format(data.dateCreated, "PPP")}
+                </p>
+              </div>{" "}
+              <div className="space-y-1.5  border-l-2 pl-4">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+                  <h1 className="text-xs text-muted-foreground">
+                    Published Time
+                  </h1>
+                </div>
+
+                <span className="font-medium text-foreground">
+                  {data?.dateCreated && format(data.dateCreated, "p")}
+                </span>
+              </div>
+            </div>
+          </div>
+
           {loading ? (
             <div className="p-6 space-y-6">
               <div className="space-y-4">
@@ -143,49 +178,14 @@ export default function GetAnnouncementById() {
                   <Skeleton className="h-4 w-4/5 rounded" />
                 </div>
               </div>
+
+              <div className="flex gap-3">
+                <Skeleton className="h-9 flex-1" />{" "}
+                <Skeleton className="h-9 flex-1" />
+              </div>
             </div>
           ) : (
-            <div className="p-6 space-y-6">
-              <div className="space-y-4">
-                <h1 className="text-xl font-bold tracking-tight leading-tight text-balance">
-                  {data?.title}
-                </h1>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    <span>
-                      {data?.dateCreated && format(data.dateCreated, "PPP")}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4" />
-                    <span>
-                      {data?.dateCreated && format(data.dateCreated, "p")}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <Separator className="bg-border/40" />
-
-              {data?.tags?.data && data.tags.data.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {data.tags.data.map((tag, i) => (
-                    <Badge
-                      key={i}
-                      variant="secondary"
-                      className=" bg-primary/10 text-primary"
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              )}
-
-              {data?.description && (
-                <TipTapViewer content={data?.description} className="p-4" />
-              )}
-            </div>
+            <TipTapViewer content={data?.description || ""} className="p-6" />
           )}
         </div>
       </DialogContent>
