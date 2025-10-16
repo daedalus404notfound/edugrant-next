@@ -374,7 +374,7 @@ export default function ClientScholarship() {
                 <PaginationItem>
                   <Button
                     variant="outline"
-                    disabled={meta.page === 1}
+                    disabled={meta.page === 1 || loading}
                     onClick={handlePrev}
                   >
                     <ChevronLeft /> Previous
@@ -384,7 +384,9 @@ export default function ClientScholarship() {
                   <Button
                     variant="outline"
                     disabled={
-                      meta.page === meta.totalPage || meta.totalPage === 0
+                      meta.page === meta.totalPage ||
+                      meta.totalPage === 0 ||
+                      loading
                     }
                     onClick={handleNext}
                   >
