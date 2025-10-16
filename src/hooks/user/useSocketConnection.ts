@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from "react";
 import socket from "@/lib/socketLib";
-import { useAdminStore } from "@/store/adminUserStore";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function useSocketConnection() {
-  const { admin } = useAdminStore(); // make sure this store holds admin info after login
+  const { user } = useUserStore(); // make sure this store holds user info after login
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    // Only connect when admin info is available
-    if (!admin?.accountId || !admin?.role) return;
+    // Only connect when user info is available
+    if (!user?.accountId || !user?.role) return;
 
     socket.connect();
 
@@ -20,8 +20,8 @@ export default function useSocketConnection() {
 
       // Register user with backend socket
       socket.emit("register", {
-        role: admin.role === "ISPSU_Student" ? "Student" : "Staff",
-        id: admin.accountId,
+        role: user.role,
+        id: user.accountId,
       });
     });
 
@@ -42,7 +42,7 @@ export default function useSocketConnection() {
       socket.off("message");
       socket.disconnect();
     };
-  }, [admin?.accountId, admin?.role]);
+  }, [user?.accountId, user?.role]);
 
   return { connected, socket };
 }
