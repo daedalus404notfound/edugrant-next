@@ -88,12 +88,12 @@ export default function ClientScholarship() {
   const loadingState = loading || loadingUser;
   useEffect(() => {
     if (!socket.connected) socket.connect();
-    socket.on("getAllScholarship", (data) => {
+    socket.on("adminAddScholarships", (data) => {
       console.log("🎓 New scholarship received:", data);
     });
 
     return () => {
-      socket.off("getAllScholarship");
+      socket.off("adminAddScholarships");
     };
   }, []);
 
