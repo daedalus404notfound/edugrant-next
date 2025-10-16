@@ -1,6 +1,6 @@
 "use client";
 import { AppSidebar } from "@/components/user-sidebar/app-side";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -16,7 +16,9 @@ import useSocketConnection from "@/hooks/user/useSocketConnection";
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
   const { connected } = useSocketConnection();
-  console.log(connected);
+  useEffect(() => {
+    console.log("🔌 Socket connected:", connected);
+  }, [connected]);
   const path = usePathname();
   const segmentedPath = path.split("/");
   return (
