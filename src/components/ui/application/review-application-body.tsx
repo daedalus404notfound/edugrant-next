@@ -143,7 +143,7 @@ export default function ReviewBody({
               {loading ? (
                 <Skeleton className="h-5 w-full" />
               ) : (
-                <span className="font-medium text-foreground">
+                <span className="font-medium text-foreground line-clamp-1">
                   {data?.Scholarship.title}{" "}
                   <Badge className="bg-blue-800 text-gray-200">
                     PHASE {data?.Scholarship.phase}
@@ -173,11 +173,13 @@ export default function ReviewBody({
               </div>
               {loading ? (
                 <Skeleton className="h-5 w-20" />
-              ) : (
+              ) : reviewDetails ? (
                 <p className="font-medium text-foreground">
                   {reviewDetails?.ISPSU_Staff.fName}{" "}
                   {reviewDetails?.ISPSU_Staff.lName}
                 </p>
+              ) : (
+                "N/A"
               )}
             </div>
 
@@ -190,10 +192,12 @@ export default function ReviewBody({
               </div>
               {loading ? (
                 <Skeleton className="h-5 w-full" />
-              ) : (
+              ) : reviewDetails ? (
                 <p className="font-medium text-foreground">
                   {reviewDetails && format(reviewDetails.dateCreated, "PPP p")}
                 </p>
+              ) : (
+                "N/A"
               )}
             </div>
           </div>

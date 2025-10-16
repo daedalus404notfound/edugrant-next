@@ -165,13 +165,14 @@ export default function FamilyForm({
                     type="text"
                     placeholder=""
                     maxLength={10}
-                    value={field.value?.replace("+63", "") || ""}
-                    onChange={(e) => {
-                      const val = e.target.value
-                        .replace(/\D/g, "")
-                        .slice(0, 10);
-                      field.onChange(`+63${val}`);
-                    }}
+                    {...field}
+                    // value={field.value?.replace("+63", "") || ""}
+                    // onChange={(e) => {
+                    //   const val = e.target.value
+                    //     .replace(/\D/g, "")
+                    //     .slice(0, 10);
+                    //   field.onChange(`+63${val}`);
+                    // }}
                     className="rounded-l-none"
                   />
                 </div>
@@ -257,26 +258,8 @@ export default function FamilyForm({
               </FormLabel>
               <FormControl>
                 <div className="flex items-center">
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="rounded-r-none w-full">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="0-50k">₱0 - ₱50,000</SelectItem>
-                      <SelectItem value="50k-100k">
-                        ₱50,001 - ₱100,000
-                      </SelectItem>
-                      <SelectItem value="100k-150k">
-                        ₱100,001 - ₱150,000
-                      </SelectItem>
-                      <SelectItem value="150k-200k">
-                        ₱150,001 - ₱200,000
-                      </SelectItem>
-                      <SelectItem value="200k+">₱200,001 and above</SelectItem>
-                      <SelectItem value="N/A">N/A</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <span className="flex items-center border border-input border-l-0 rounded-r-md text-sm">
+                  <Input {...field} className="rounded-r-none" />
+                  <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
                     <Button variant="ghost">
                       <PhilippinePeso />
                     </Button>
@@ -395,13 +378,7 @@ export default function FamilyForm({
                     type="text"
                     placeholder=""
                     maxLength={10}
-                    value={field.value?.replace("+63", "") || ""}
-                    onChange={(e) => {
-                      const val = e.target.value
-                        .replace(/\D/g, "")
-                        .slice(0, 10);
-                      field.onChange(`+63${val}`);
-                    }}
+                    {...field}
                     className="rounded-l-none"
                   />
                 </div>
@@ -478,30 +455,12 @@ export default function FamilyForm({
           render={({ field }) => (
             <FormItem>
               <FormLabel className="text-muted-foreground">
-                Taxable Income
+                Occupation
               </FormLabel>
               <FormControl>
                 <div className="flex items-center">
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <SelectTrigger className="rounded-r-none w-full">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="0-50k">₱0 - ₱50,000</SelectItem>
-                      <SelectItem value="50k-100k">
-                        ₱50,001 - ₱100,000
-                      </SelectItem>
-                      <SelectItem value="100k-150k">
-                        ₱100,001 - ₱150,000
-                      </SelectItem>
-                      <SelectItem value="150k-200k">
-                        ₱150,001 - ₱200,000
-                      </SelectItem>
-                      <SelectItem value="200k+">₱200,001 and above</SelectItem>
-                      <SelectItem value="N/A">N/A</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <span className="flex items-center border border-input border-l-0 rounded-r-md text-sm">
+                  <Input {...field} className="rounded-r-none" />
+                  <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
                     <Button variant="ghost">
                       <PhilippinePeso />
                     </Button>
@@ -593,13 +552,7 @@ export default function FamilyForm({
                     type="text"
                     placeholder=""
                     maxLength={10}
-                    value={field.value?.replace("+63", "") || ""}
-                    onChange={(e) => {
-                      const val = e.target.value
-                        .replace(/\D/g, "")
-                        .slice(0, 10);
-                      field.onChange(`+63${val}`);
-                    }}
+                    {...field}
                     className="rounded-l-none"
                   />
                 </div>

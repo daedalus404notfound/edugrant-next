@@ -47,35 +47,22 @@ export const StudentSchema = z.object({
     ),
   indigenous: z.string().optional(),
   pwd: z.string().optional(),
-  fName: z
-    .string()
-    .min(1, "Required")
-    .regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "Only letters"),
+  fName: z.string().min(1, "Required"),
+
   gender: z.string(),
 
   institute: z.string(),
-  lName: z
-    .string()
-    .min(1, "Required")
-    .regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "Only letters"),
-  mName: z
-    .string()
-    .min(1, "Required")
-    .regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "Only letters"),
+  lName: z.string().min(1, "Required"),
+  mName: z.string().min(1, "Required"),
   section: z.string(),
   year: z.string(),
   familyBackground: z.object({
-    fatherFullName: z
-      .string()
-      .regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "Only letters")
-      .optional(),
+    fatherFullName: z.string().optional(),
     fatherAddress: z.string().optional(),
     fatherContactNumber: z
       .string()
-      .refine(
-        (val) => !val || val === "" || /^\+63\d{10}$/.test(val),
-        "Must be a valid phone number"
-      ),
+
+      .optional(),
     fatherOccupation: z.string().optional(),
     fatherHighestEducation: z.string().optional(),
     fatherStatus: z.string().optional(),
@@ -83,15 +70,10 @@ export const StudentSchema = z.object({
 
     motherFullName: z
       .string()
-      .regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "Only letters")
+
       .optional(),
     motherAddress: z.string().optional(),
-    motherContactNumber: z
-      .string()
-      .refine(
-        (val) => !val || val === "" || /^\+63\d{10}$/.test(val),
-        "Must be a valid phone number"
-      ),
+    motherContactNumber: z.string().optional(),
     motherOccupation: z.string().optional(),
     motherHighestEducation: z.string().optional(),
     motherStatus: z.string().optional(),
@@ -99,25 +81,17 @@ export const StudentSchema = z.object({
 
     guardianFullName: z
       .string()
-      .regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "Only letters")
+
       .optional(),
     guardianAddress: z.string().optional(),
-    guardianContactNumber: z
-      .string()
-      .refine(
-        (val) => !val || val === "" || /^\+63\d{10}$/.test(val),
-        "Must be a valid phone number"
-      ),
+    guardianContactNumber: z.string(),
     guardianOccupation: z.string().optional(),
     guardianHighestEducation: z.string().optional(),
 
     siblings: z
       .array(
         z.object({
-          fullName: z
-            .string()
-            .min(1, "Required")
-            .regex(/^[A-Za-zÀ-ÿ\s'-]+$/, "Only letters"),
+          fullName: z.string().min(1, "Required"),
           age: z.string().min(1, "Required").regex(/^\d+$/, "Only numbers"),
           occupation: z.string().min(1, "Required"),
         })

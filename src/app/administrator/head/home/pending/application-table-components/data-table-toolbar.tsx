@@ -1,3 +1,4 @@
+
 "use client";
 import {
   ArrowRightIcon,
@@ -20,8 +21,7 @@ import { ToolbarProps } from "@/app/table-components/data-table";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import useFetchApplications from "@/hooks/admin/getApplicant";
 import ExportCsvScholarship from "./export";
-import { TourTrigger } from "@/components/tour/tour-trigger";
-import { TourStep } from "@/components/tour/tour-step";
+
 
 export default function DataTableToolbar<
   TData extends { applicationId: number }
@@ -76,7 +76,7 @@ export default function DataTableToolbar<
   return (
     <div className="flex items-center justify-between gap-1.5">
       <div className="flex flex-1 items-center space-x-2">
-        <TourStep stepId="search">
+     
           <div className="relative">
             <Input
               placeholder="Filter scholarship..."
@@ -94,9 +94,9 @@ export default function DataTableToolbar<
               <ArrowRightIcon size={16} aria-hidden="true" />
             </button>
           </div>
-        </TourStep>
+       
 
-        <TourStep stepId="filters">
+       
           <div className="space-x-1">
             <DataTableFacetedFilter
               disabled={!!search}
@@ -124,7 +124,7 @@ export default function DataTableToolbar<
               options={year ?? []}
             />
           </div>
-        </TourStep>
+      
         {isFiltered && (
           <Button
             variant="ghost"
@@ -137,7 +137,7 @@ export default function DataTableToolbar<
         )}
       </div>
 
-      {selectedRows.length > 0 && (
+      {/* {selectedRows.length > 0 && (
         <DeleteDialog
           open={openAlert}
           onOpenChange={setOpenAlert}
@@ -158,15 +158,15 @@ export default function DataTableToolbar<
             </Button>
           }
         />
-      )}
-      <TourStep stepId="export">
-        <ExportCsvScholarship status={status} filters={table.getState().columnFilters} />
-      </TourStep>
-      <TourStep stepId="view">
+      )} */}
+   
+        {/* <ExportCsvScholarship status={status} filters={table.getState().columnFilters} /> */}
+    
+  
         <DataTableViewOptions table={table} />
-      </TourStep>
+    
 
-      <TourTrigger />
+     
     </div>
   );
 }

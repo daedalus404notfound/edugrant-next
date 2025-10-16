@@ -14,6 +14,7 @@ import {
   Crown,
   GraduationCap,
   Home,
+  Hourglass,
   LayoutDashboard,
   Megaphone,
   PenLine,
@@ -42,9 +43,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Badge } from "../ui/badge";
 const data = {
   user: {
     name: "Admin User",
@@ -125,6 +128,11 @@ const sidebarData = [
     url: "/administrator/head/home/profile",
     icon: UserRoundCog,
   },
+  {
+    title: "Generate Report",
+    url: "/administrator/head/home/generate-report",
+    icon: Activity,
+  },
 ];
 const sidebarScholar = [
   {
@@ -157,19 +165,28 @@ const sidebarStaff = [
 ];
 const sidebarApplication = [
   {
+    title: "Pending Application",
+    url: "/administrator/head/home/pending",
+    icon: Hourglass,
+    indicator: 0,
+  },
+  {
     title: "Approved Application",
     url: "/administrator/head/home/approved",
     icon: CheckCheck,
+    indicator: 0,
   },
   {
     title: "Rejected Application",
     url: "/administrator/head/home/rejected",
     icon: UserRoundX,
+    indicator: 0,
   },
   {
     title: "Blocked Application",
     url: "/administrator/head/home/blocked",
     icon: X,
+    indicator: 0,
   },
 ];
 const sidebarAnnouncements = [
@@ -195,6 +212,8 @@ const manageStudent = [
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const { open } = useSidebar();
+  console.log(open);
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -316,11 +335,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <Link
                         prefetch
                         scroll={false}
-                        className="flex items-center gap-2 cursor-pointer"
+                        className="flex items-center  gap-2 cursor-pointer relative"
                         href={meow.url}
                       >
                         <meow.icon className="w-4 h-4" />
                         {meow.title}
+
+                        {open && (
+                          <Badge className="absolute right-2" variant="outline">
+                            {meow.indicator}
+                          </Badge>
+                        )}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

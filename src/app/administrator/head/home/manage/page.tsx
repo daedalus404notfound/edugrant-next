@@ -226,7 +226,7 @@ export default function Manage() {
             Icon={GraduationCap}
           />{" "}
           <div className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b">
-            {" "}
+           
             <TourStep stepId="tabs">
               <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
             </TourStep>
