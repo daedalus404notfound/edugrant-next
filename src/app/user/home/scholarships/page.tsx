@@ -65,7 +65,6 @@ export default function ClientScholarship() {
     search: search,
     status: status,
     filters: formatFilters(),
-    accountId: user?.accountId.toString(),
   });
   const tabs = [
     {
@@ -89,12 +88,12 @@ export default function ClientScholarship() {
   const loadingState = loading || loadingUser;
   useEffect(() => {
     if (!socket.connected) socket.connect();
-    socket.on("newScholarshipBroadcast", (data) => {
+    socket.on("getAllScholarship", (data) => {
       console.log("🎓 New scholarship received:", data);
     });
 
     return () => {
-      socket.off("newScholarshipBroadcast");
+      socket.off("getAllScholarship");
     };
   }, []);
 
@@ -138,7 +137,13 @@ export default function ClientScholarship() {
         </motion.div>
         <div className="mt-15 lg:w-[80%] md:min-w-5xl w-full mx-auto space-y-8">
           {!loadingState && !completed && <CompleteChecker />}
-          <div className="flex justify-between items-center gap-2">
+
+          <motion.div
+            className="flex justify-between items-center gap-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: 0.4 }}
+          >
             <Input
               placeholder="Search Scholarship..."
               onChange={(e) => setSearch(e.target.value)}
@@ -153,7 +158,7 @@ export default function ClientScholarship() {
                 <SelectItem value="desc">Oldest</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </motion.div>
           {search ? (
             <p className="text-sm">
               Showing search result for{" "}
@@ -408,8 +413,12 @@ export default function ClientScholarship() {
               })
             )}
           </div>
-
-          <div className="flex items-center justify-between gap-3">
+          <motion.div
+            className="flex items-center justify-between gap-3"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: 0.4 }}
+          >
             <p
               className="grow text-sm text-muted-foreground"
               aria-live="polite"
@@ -443,7 +452,7 @@ export default function ClientScholarship() {
                 </PaginationItem>
               </PaginationContent>
             </Pagination>
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
