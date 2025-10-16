@@ -66,6 +66,12 @@ export default function ClientScholarship() {
     status: status,
     filters: formatFilters(),
   });
+  const { completed } = getFamilyBackgroundProgress(user?.Student);
+  const loadingState = loading || loadingUser;
+  const [scholarships, setScholarships] = useState(data);
+  useEffect(() => {
+    setScholarships(data);
+  }, [data]);
   const tabs = [
     {
       id: "ACTIVE",
@@ -83,13 +89,13 @@ export default function ClientScholarship() {
       indicator: meta.counts.countExpired ? meta.counts.countExpired : null,
     },
   ];
-  const { completed } = getFamilyBackgroundProgress(user?.Student);
 
-  const loadingState = loading || loadingUser;
   useEffect(() => {
     if (!socket.connected) socket.connect();
-    socket.on("adminAddScholarships", (data) => {
-      console.log("🎓 New scholarship received:", data);
+
+    socket.on("adminAddScholarships", ({ newScholarship }) => {
+      console.log("🎓 New scholarship received:", newScholarship);
+      setScholarships((prev) => [newScholarship, ...prev]);
     });
 
     return () => {
@@ -209,10 +215,10 @@ export default function ClientScholarship() {
                   </div>
                 </motion.div>
               ))
-            ) : data.length === 0 ? (
+            ) : scholarships.length === 0 ? (
               <NoDataFound />
             ) : (
-              data.map((scholarship, index) => {
+              scholarships.map((scholarship, index) => {
                 const findMatch = user?.Student.Application.find(
                   (meow) =>
                     scholarship.scholarshipId === scholarship?.scholarshipId
