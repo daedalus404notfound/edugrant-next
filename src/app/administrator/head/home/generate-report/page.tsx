@@ -29,13 +29,7 @@ import { ColumnFiltersState } from "@tanstack/react-table";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import { Separator } from "@/components/ui/separator";
 
-export default function GenerateReport({
-  status,
-  filters,
-}: {
-  status?: string;
-  filters?: ColumnFiltersState;
-}) {
+export default function GenerateReport() {
   const { data, loading } = useFetchApplicationCSVShit();
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
   console.log(data?.dataSelections);
