@@ -37,9 +37,6 @@ export default function ApprovedApplication({
   //   accountId: accountId ? accountId : 3,
   // });
 
-  const {} = useFetchApplicationCSVShit({
-    accountId: accountId ? accountId : 3,
-  });
   const { data, meta, loading } = useFetchStudents({
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,

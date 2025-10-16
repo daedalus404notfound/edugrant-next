@@ -382,9 +382,7 @@ export default function ExportCsvScholarship({
   status?: string;
   filters?: ColumnFiltersState;
 }) {
-  const { data, loading, onSubmitting } = useFetchApplicationCSVShit({
-    accountId: 3,
-  });
+  const { data, loading, } = useFetchApplicationCSVShit();
   console.log("filters", filters);
   const [selectedFields, setSelectedFields] = useState<string[]>([]);
   const [selectAll, setSelectAll] = useState(false);
