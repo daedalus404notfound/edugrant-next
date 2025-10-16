@@ -31,44 +31,13 @@ import TitleReusable from "@/components/ui/title";
 import { ApiErrorResponse } from "@/hooks/admin/postReviewedHandler";
 import { downloadFile } from "@/lib/downloadUtils";
 import { displayScholarshipFormData } from "@/hooks/admin/displayScholarshipData";
-
-// export const createFormSchema = (requiredDocuments: documentFormData[]) => {
-//   const schemaShape: Record<string, z.ZodType> = {};
-//   Object.entries(requiredDocuments).forEach(([key, doc]) => {
-//     const baseValidation = z
-//       .array(z.instanceof(File))
-//       .refine(
-//         (files) =>
-//           files.length === 0 ||
-//           files.every((file) => doc.formats.includes(file.type)),
-//         `Invalid file format for ${doc.label}`
-//       )
-//       .refine(
-//         (files) =>
-//           files.length === 0 ||
-//           files.every((file) => file.size <= 2 * 1024 * 1024),
-//         `File size must be less than 2MB for ${doc.label}`
-//       );
-//     if (doc.requirementType === "required") {
-//       schemaShape[doc.label] = baseValidation.min(
-//         1,
-//         `${doc.label} is required`
-//       );
-//     } else {
-//       // For optional documents, allow empty array
-//       schemaShape[doc.label] = baseValidation.default([]);
-//     }
-//   });
-
-//   return z.object(schemaShape);
-// };
-
+const sanitizeLabel = (label: string): string => {
+  return label.replace(/['\s]/g, "_").replace(/[^a-zA-Z0-9_]/g, "");
+};
 export const createFormSchema = (requiredDocuments: documentFormData[]) => {
   const schemaShape: Record<string, z.ZodType> = {};
-
-  requiredDocuments.forEach((doc, index) => {
-    const safeKey = doc.label.replace(/[^a-zA-Z0-9_-]/g, "_"); // sanitize key
-
+  Object.entries(requiredDocuments).forEach(([key, doc]) => {
+    const sanitizedKey = sanitizeLabel(doc.label);
     const baseValidation = z
       .array(z.instanceof(File))
       .refine(
@@ -83,11 +52,13 @@ export const createFormSchema = (requiredDocuments: documentFormData[]) => {
           files.every((file) => file.size <= 2 * 1024 * 1024),
         `File size must be less than 2MB for ${doc.label}`
       );
-
     if (doc.requirementType === "required") {
-      schemaShape[safeKey] = baseValidation.min(1, `${doc.label} is required`);
+      schemaShape[sanitizedKey] = baseValidation.min(
+        1,
+        `${doc.label} is required`
+      );
     } else {
-      schemaShape[safeKey] = baseValidation.default([]);
+      schemaShape[sanitizedKey] = baseValidation.default([]);
     }
   });
 
@@ -132,7 +103,7 @@ export default function UploadDocs({
   // Initialize default values
   const defaultValues: Record<string, File[]> = {};
   lastPhase.forEach((doc) => {
-    defaultValues[doc.label] = [];
+    defaultValues[sanitizeLabel(doc.label)] = [];
   });
 
   const form = useForm<FormData>({
@@ -141,20 +112,22 @@ export default function UploadDocs({
   });
 
   const handleFilesChange = (label: string, files: File[]) => {
-    form.setValue(label as keyof FormData, files as File[]);
-    form.trigger(label as keyof FormData);
+    const sanitizedKey = sanitizeLabel(label);
+    form.setValue(sanitizedKey as keyof FormData, files as File[]);
+    form.trigger(sanitizedKey as keyof FormData);
 
-    // Count how many REQUIRED document fields are filled (not optional ones)
     const filledRequired = lastPhase.filter((doc) => {
-      // Only count required documents
       if (doc.requirementType !== "required") return false;
-
-      const fieldFiles = form.getValues(doc.label as keyof FormData) as File[];
+      const sanitizedDocKey = sanitizeLabel(doc.label);
+      const fieldFiles = form.getValues(
+        sanitizedDocKey as keyof FormData
+      ) as File[];
       return fieldFiles && fieldFiles.length > 0;
     }).length;
 
     setCompletedCount(filledRequired);
   };
+
   const onSubmit = async (data: FormData) => {
     try {
       setLoading(true);
@@ -163,11 +136,16 @@ export default function UploadDocs({
       formData.append("accountId", String(userId));
       formData.append("scholarshipId", String(scholarId));
 
-      Object.entries(data).forEach(([label, files]) => {
-        // Check if files exists and has length > 0
+      Object.entries(data).forEach(([sanitizedKey, files]) => {
+        // Find the original label
+        const doc = lastPhase.find(
+          (d) => sanitizeLabel(d.label) === sanitizedKey
+        );
+        const originalLabel = doc?.label || sanitizedKey;
+
         if (files && Array.isArray(files) && files.length > 0) {
           files.forEach((file: File) => {
-            formData.append(label, file);
+            formData.append(originalLabel, file);
           });
         }
       });
@@ -214,11 +192,15 @@ export default function UploadDocs({
       formData.append("accountId", String(userId));
       formData.append("scholarshipId", String(scholarId));
 
-      Object.entries(data).forEach(([label, files]) => {
-        // Check if files exists and has length > 0
+      Object.entries(data).forEach(([sanitizedKey, files]) => {
+        const doc = lastPhase.find(
+          (d) => sanitizeLabel(d.label) === sanitizedKey
+        );
+        const originalLabel = doc?.label || sanitizedKey;
+
         if (files && Array.isArray(files) && files.length > 0) {
           files.forEach((file: File) => {
-            formData.append(label, file);
+            formData.append(originalLabel, file);
           });
         }
       });
@@ -315,7 +297,7 @@ export default function UploadDocs({
                 <FormField
                   key={`required-${index}`}
                   control={form.control}
-                  name={doc.label as keyof FormData}
+                  name={sanitizeLabel(doc.label) as keyof FormData}
                   render={() => (
                     <FormItem>
                       <div className="space-y-4 rounded-md ">
