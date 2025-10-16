@@ -1,11 +1,10 @@
-//useSocketConection
-
 "use client";
 
 import { useEffect, useState } from "react";
 import socket from "@/lib/socketLib";
+
 import { useAdminStore } from "@/store/adminUserStore";
-const SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
+
 export default function useSocketConnection() {
   const { admin } = useAdminStore(); // make sure this store holds admin info after login
   const [connected, setConnected] = useState(false);
@@ -20,7 +19,7 @@ export default function useSocketConnection() {
       console.log("✅ Connected to socket:", socket.id);
       setConnected(true);
 
-      // Register user with backend socket
+      // Register admin with backend socket
       socket.emit("register", {
         role: admin.role,
         id: admin.accountId,
@@ -44,7 +43,7 @@ export default function useSocketConnection() {
       socket.off("message");
       socket.disconnect();
     };
-  }, [admin?.accountId, admin?.role]);
+  }, []);
 
   return { connected, socket };
 }

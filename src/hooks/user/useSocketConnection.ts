@@ -42,7 +42,7 @@ export default function useSocketConnection() {
       socket.off("message");
       socket.disconnect();
     };
-  }, [user?.accountId, user?.role]);
+  }, []);
 
   return { connected, socket };
 }
