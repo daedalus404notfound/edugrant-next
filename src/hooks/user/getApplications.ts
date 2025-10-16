@@ -56,7 +56,7 @@ export default function useClientApplications({
   status?: string;
   userId?: string;
   applicationId?: string;
-  search: string;
+  search?: string;
 }) {
   const [data, setData] = useState<ApplicationFormData[]>([]);
   const [meta, setMeta] = useState<MetaWithCounts>(defaultMeta);
