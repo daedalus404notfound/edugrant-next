@@ -22,7 +22,7 @@ export default function useSocketConnection() {
 
       // Register user with backend socket
       socket.emit("register", {
-        role: admin.role === "ISPSU_Student" ? "Student" : "Staff",
+        role: admin.role,
         id: admin.accountId,
       });
     });
