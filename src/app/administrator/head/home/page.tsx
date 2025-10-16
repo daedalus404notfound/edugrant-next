@@ -30,9 +30,6 @@ export default function AdminDashboard() {
   const { admin } = useAdminStore();
   const accountId = admin?.accountId;
   const { data, loading } = usefetchHeadDashboard(accountId);
-  const { connected, socket } = useSocketConnection();
-
-  console.log("connected?", socket);
   const summaryCards: SummaryCardProps[] = [
     {
       label: "Total Applicants",

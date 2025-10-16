@@ -1,6 +1,6 @@
 "use client";
 import { AppSidebar } from "@/components/head-sidebar/app-side";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import useAuthenticatedUser from "@/hooks/head/getTokenAuthentication";
 interface DashboardLayoutProps {
@@ -15,7 +15,7 @@ import { tourConfigs } from "@/lib/tour-config";
 import useSocketConnection from "@/hooks/head/useSocketConnection";
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
-  const { connected } = useSocketConnection();
+  useSocketConnection();
   const path = usePathname();
   const segmentedPath = path.split("/");
 

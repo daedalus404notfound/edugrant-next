@@ -17,9 +17,6 @@ import useSocketConnection from "@/hooks/user/useSocketConnection";
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
   const { connected } = useSocketConnection();
-  useEffect(() => {
-    console.log("🔌 Socket connected:", connected);
-  }, [connected]);
   const path = usePathname();
   const segmentedPath = path.split("/");
   return (

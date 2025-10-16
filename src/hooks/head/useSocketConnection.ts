@@ -12,7 +12,7 @@ export default function useSocketConnection() {
   useEffect(() => {
     // Only connect when admin info is available
     if (!admin?.accountId || !admin?.role) return;
-
+    console.log(admin.role);
     socket.connect();
 
     socket.on("connect", () => {
@@ -43,7 +43,7 @@ export default function useSocketConnection() {
       socket.off("message");
       socket.disconnect();
     };
-  }, []);
+  }, [admin?.accountId, admin?.role]);
 
   return { connected, socket };
 }
