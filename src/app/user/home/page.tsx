@@ -78,8 +78,7 @@ export default function AdminDashboard() {
   return (
     <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="py-6 lg:px-5 px-2 space-y-5">
-        {!completed && <CompleteChecker />}
-
+        {!loadingState && !completed && <CompleteChecker />}
         <div className="grid lg:grid-cols-3 grid-cols-1 gap-8 ">
           <div className="  lg:col-span-3 lg:grid-cols-4 grid-cols-2 lg:gap-5 gap-3 grid">
             {summaryCards.map((card, index) => (
