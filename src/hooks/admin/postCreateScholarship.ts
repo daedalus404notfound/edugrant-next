@@ -54,7 +54,11 @@ const addScholarshipApi = async (data: scholarshipFormData) => {
   const docs = {
     documents: data.documents.documents,
   };
-  formDataToSend.append("scholarshipDocuments", JSON.stringify(docs));
+  // formDataToSend.append("scholarshipDocuments", JSON.stringify(docs));
+  formDataToSend.append(
+    "scholarshipDocuments",
+    encodeURIComponent(JSON.stringify(docs))
+  );
 
   const res = await axios.post(
     `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/adminAddScholarships`,
