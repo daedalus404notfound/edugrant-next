@@ -134,7 +134,7 @@ export default function InterceptManageApplicationClient() {
             <div>
               <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-md overflow-hidden ">
                 {/* Header Section */}
-                <div className="relative flex lg:flex-row flex-col lg:items-end items-center  py-8 px-4">
+                <div className="relative flex  lg:items-end items-center  py-8 px-4">
                   <img
                     className="lg:w-70 w-50 absolute right-0 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-20 "
                     src={logo.src}
@@ -175,7 +175,7 @@ export default function InterceptManageApplicationClient() {
                         <h1 className="text-base lg:text-xl font-medium text-foreground capitalize line-clamp-1">
                           {data[0]?.Scholarship.title}
                         </h1>
-                        <div className="space-x-1.5">
+                        <div className="space-x-1.5 hidden lg:block">
                           <Badge
                             variant="outline"
                             className="mt-2 uppercase bg-blue-800 text-gray-200"
@@ -212,7 +212,7 @@ export default function InterceptManageApplicationClient() {
                 </div>
                 <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
                 {/* Info Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 py-6 px-4 bg-card relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:py-6 py-4 lg:px-4 px-2 bg-card relative z-10">
                   <div className="space-y-1.5 border-l-2 pl-4">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-3.5 h-3.5 text-muted-foreground" />

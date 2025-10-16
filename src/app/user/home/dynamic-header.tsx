@@ -99,6 +99,7 @@ import useMarkAllAsRead from "@/hooks/admin/postMarkAllAsRead";
 import useMarkAsReadNotification from "@/hooks/admin/patchReadNotification";
 import Notification from "./notification";
 import ProfileCard from "./profile-card";
+import LogoutDialog from "./logout-dialog";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -114,12 +115,7 @@ export default function DynamicHeaderUser({
 }: HeaderTypes) {
   const { user } = useUserStore();
   const accountId = user?.accountId;
-  // console.log(admin);
-  const isMobile = useIsMobile();
-  const { handleLogout, loading: loadingLogout } = useUserLogout();
 
-  const [open, setOpen] = useState(false);
-  const [openNotif, setOpenNotif] = useState(false);
   const [openOut, setOpenOut] = useState(false);
   const [openDark, setOpenDark] = useState(false);
 
@@ -130,7 +126,7 @@ export default function DynamicHeaderUser({
   });
 
   return (
-    <header className="flex w-full z-30 items-center justify-between  backdrop-blur-sm rounded-lg">
+    <header className="w-full z-30 items-center justify-between  backdrop-blur-sm rounded-lg hidden lg:flex">
       <div className="flex h-16 shrink-0 items-center gap-2 lg:px-10 px-3">
         <SidebarTrigger className="-ml-1 lg:flex hidden" />
         <Separator
@@ -155,110 +151,10 @@ export default function DynamicHeaderUser({
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-
-      {!isMobile && (
-        <div className="flex items-center gap-3 lg:px-5 px-3">
-          <Notification />
-          <ModeToggle />
-
-          <Button
-            variant="secondary"
-            className="rounded-full"
-            onClick={() => {
-              setOpenOut(true);
-            }}
-          >
-            <LogOut />
-          </Button>
-        </div>
-      )}
-      {isMobile && (
-        <DropdownMenu open={open} onOpenChange={setOpen}>
-          <DropdownMenuTrigger asChild>
-            <Button className="p-0 " variant="ghost">
-              <Hamburger toggled={open} toggle={setOpen} size={28} rounded />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="lg:mr-5 mr-3 w-[200px] space-y-2">
-            <DropdownMenuItem>
-              <UserRound />
-              My Account
-            </DropdownMenuItem>{" "}
-            <DropdownMenuItem
-              onClick={() => {
-                setOpenNotif(true);
-                setOpen(false);
-              }}
-            >
-              <Bell />
-              Notification
-            </DropdownMenuItem>{" "}
-            <DropdownMenuItem
-              onClick={() => {
-                setOpenOut(true);
-                setOpen(false);
-                handleLogout;
-              }}
-              disabled={loadingLogout}
-            >
-              <LogOut />
-              Log out
-            </DropdownMenuItem>{" "}
-            <DropdownMenuItem
-              onClick={() => {
-                setOpenDark(true);
-                setOpen(false);
-              }}
-            >
-              <Moon />
-              Dark mode
-            </DropdownMenuItem>{" "}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      )}
-
-      <Dialog open={openOut} onOpenChange={setOpenOut}>
-        <DialogContent showCloseButton={false} className="max-w-lg p-4">
-          <DialogHeader>
-            <DialogTitle>Logout?</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to log out of your account? You can log back
-              in anytime.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-end gap-2">
-            <Button
-              className="flex-1 lg:flex-none"
-              onClick={() => setOpenOut(false)}
-              variant="outline"
-            >
-              Stay logged in
-            </Button>
-            <Button className="flex-1 lg:flex-none" onClick={handleLogout}>
-              {loadingLogout ? (
-                <>
-                  Logging out...
-                  <Loader className="animate-spin" />
-                </>
-              ) : (
-                <>
-                  <LogOut />
-                  Log out
-                </>
-              )}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-      <Dialog open={openDark} onOpenChange={setOpenDark}>
-        <DialogContent showCloseButton={false} className="max-w-lg p-4">
-          <DialogHeader>
-            <DialogTitle>Theme</DialogTitle>
-            <DialogDescription></DialogDescription>
-          </DialogHeader>
-          <ModeToggle2 />
-        </DialogContent>
-      </Dialog>
+      <div className="space-x-2 px-5">
+        <Notification /> <ModeToggle />
+        <LogoutDialog />
+      </div>
     </header>
   );
 }

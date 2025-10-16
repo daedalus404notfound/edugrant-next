@@ -41,13 +41,13 @@ export default function ScholarshipModal({
   return (
     <div className="relative h-full w-full flex flex-col">
       <div className="relative flex justify-center items-center ">
-        <p className="italic lg:text-sm text-xs text-muted-foreground absolute right-2 lg:-bottom-18 -bottom-7 z-10 lg:px-6  px-2 ">
+        {/* <p className="italic lg:text-sm text-xs text-muted-foreground absolute right-2 lg:-bottom-18 -bottom-7 z-10 lg:px-6  px-2 ">
           Posted on {""}
           {data?.dateCreated && format(data?.dateCreated, "PPP")}
-        </p>
+        </p> */}
         {data?.cover && (
           <img
-            className="w-full lg:aspect-[16/4] dark:opacity-50 opacity-80 aspect-[16/9]  object-cover   rounded-t-lg"
+            className="w-full lg:aspect-[16/4] dark:opacity-50 opacity-80 aspect-[16/7]  object-cover   rounded-t-lg"
             src={data?.cover}
             alt=""
           />
@@ -64,9 +64,9 @@ export default function ScholarshipModal({
 
       <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-b-lg overflow-hidden ">
         {/* Header Section */}
-        <div className="relative flex lg:flex-row flex-col lg:items-end items-center  py-8 px-4">
+        <div className="relative flex  lg:items-end items-center  lg:py-8 py-4 lg:px-4 px-2">
           <img
-            className="lg:w-70 w-50 absolute right-0 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-20 "
+            className="lg:w-70 w-43 absolute lg:right-0 -right-18 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-20 "
             src={logo.src}
             alt=""
           />
@@ -95,7 +95,7 @@ export default function ScholarshipModal({
               <h1 className="text-base lg:text-xl font-medium text-foreground capitalize line-clamp-1">
                 {data?.title}
               </h1>
-              <div className="space-x-1.5">
+              <div className="space-x-1.5 lg:block hidden">
                 <Badge
                   variant="outline"
                   className="mt-2 uppercase bg-blue-800 text-gray-200"
@@ -129,7 +129,7 @@ export default function ScholarshipModal({
         </div>
         <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
         {/* Info Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 py-6 px-4 bg-card relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:py-6 py-4 lg:px-4 px-2 bg-card relative z-10 ">
           <div className="space-y-1.5 border-l-2 pl-4">
             <div className="flex items-center gap-2">
               <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
@@ -138,7 +138,7 @@ export default function ScholarshipModal({
               </h1>
             </div>
 
-            <p className="font-medium text-foreground">
+            <p className="font-medium lg:text-base text-sm text-foreground">
               {data?.dateCreated && format(data?.dateCreated, "PPP p")}
             </p>
           </div>{" "}
@@ -150,7 +150,7 @@ export default function ScholarshipModal({
               </h1>
             </div>
 
-            <span className="font-medium text-foreground">
+            <span className="font-medium lg:text-base text-sm  text-foreground">
               {data?.deadline ? format(data?.deadline, "PPP p") : "—"}
             </span>
           </div>
@@ -162,7 +162,7 @@ export default function ScholarshipModal({
               </h1>
             </div>
 
-            <p className="font-medium text-foreground">
+            <p className="font-medium lg:text-base text-sm  text-foreground">
               {data.interview ? "Interview Required" : "No Interview Needed"}
             </p>
           </div>
@@ -171,17 +171,14 @@ export default function ScholarshipModal({
 
       <div className="flex-1 pt-10 lg:px-6 px-2 space-y-8">
         <div className="space-y-1">
-          <p className="text-xs uppercase text-muted-foreground">
-            About {data?.title}
-          </p>
+          <p className="text-xs uppercase text-muted-foreground">About</p>
           <p className="whitespace-pre-line">{data?.description}</p>
         </div>
 
         <div className="space-y-8">
-          <div className="flex gap-3 items-center">
-            <h1 className="font-medium">Scholarship Details</h1>
-            <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-          </div>
+          <p className="text-xs uppercase text-muted-foreground">
+            Scholarship Details
+          </p>
 
           <div className="grid lg:grid-cols-2 grid-cols-1 gap-3">
             {data?.interview && (

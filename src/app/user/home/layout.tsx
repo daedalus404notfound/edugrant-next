@@ -11,6 +11,7 @@ import { Toaster } from "sonner";
 import DynamicHeaderUser from "./dynamic-header";
 import { usePathname } from "next/navigation";
 import MobDock from "./dock";
+import MobHeader from "./mobile-header";
 
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
@@ -34,6 +35,7 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
             second={segmentedPath[3]}
             third={segmentedPath[4]}
           />
+          <MobHeader />
           {children} {modal}
           <MobDock />
         </div>

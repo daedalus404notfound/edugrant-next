@@ -77,32 +77,45 @@ export default function AdminDashboard() {
   const loadingState = loading || loadingUser;
   return (
     <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className="lg:py-6 py-4 lg:px-5 px-2 space-y-5">
+      <div className="py-6 lg:px-5 px-2 space-y-5">
         {!completed && <CompleteChecker />}
 
         <div className="grid lg:grid-cols-3 grid-cols-1 gap-8 ">
-          <div className="  col-span-3 lg:grid-cols-4 grid-cols-1 lg:gap-5 gap-3 hidden lg:grid">
+          <div className="  lg:col-span-3 lg:grid-cols-4 grid-cols-2 lg:gap-5 gap-3 grid">
             {summaryCards.map((card, index) => (
               <SummaryCard key={index} {...card} loading={loadingState} />
             ))}
           </div>
-          <div className="space-y-10 col-span-2">
+          <div className="space-y-10 lg:col-span-2">
             <WelcomeCard
               pending={data?.pendingApplicationCount ?? 0}
               application={data?.totalApplicationsCount ?? 0}
               loading={loadingState}
             />
+            <div className="block lg:hidden">
+              <ProfileCompletion loading={loadingState} />
+            </div>
+            <div className="block lg:hidden">
+              <Announcements
+                announcement={data?.announcements ?? []}
+                loading={loadingState}
+              />
+            </div>
             <RecentApplicationDashboard
               application={data?.recentApplications ?? []}
               loading={loadingState}
             />
-            <Announcements
-              announcement={data?.announcements ?? []}
-              loading={loadingState}
-            />
+            <div className="hidden lg:block">
+              <Announcements
+                announcement={data?.announcements ?? []}
+                loading={loadingState}
+              />
+            </div>
           </div>
           <div className="space-y-12">
-            <ProfileCompletion loading={loadingState} />
+            <div className="hidden lg:block">
+              <ProfileCompletion loading={loadingState} />
+            </div>
             {completed && (
               <OngoingScholarshipDashboard
                 scholarship={data?.onGoingScholarships ?? []}
@@ -114,7 +127,7 @@ export default function AdminDashboard() {
               selected={date}
               onSelect={setDate}
               className="rounded-md p-6 shadow-sm w-full bg-gradient-to-br to-card from-card/50"
-            />{" "}
+            />
           </div>
         </div>
       </div>

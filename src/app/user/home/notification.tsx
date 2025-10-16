@@ -346,7 +346,7 @@ export default function Notification() {
       </PopoverTrigger>
 
       <PopoverContent
-        className="lg:w-lg w-full p-0 overflow-hidden mr-6"
+        className="lg:w-lg w-xs p-0 overflow-hidden lg:mr-6 mr-2"
         align="center"
         sideOffset={8}
       >
@@ -380,7 +380,7 @@ export default function Notification() {
         </div>
 
         {/* Notifications List */}
-        <div className="h-115 overflow-auto">
+        <div className="lg:h-115 h-80 overflow-auto">
           {data.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
               <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mb-3">

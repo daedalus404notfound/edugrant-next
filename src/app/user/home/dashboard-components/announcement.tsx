@@ -68,11 +68,13 @@ export default function Announcements({
                     {item.dateCreated && format(item.dateCreated, "MMM d")}
                   </div>
                 </div>
-
-                <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                {/* <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
                   {item.description}
-                </p>
-
+                </p>{" "} */}
+                <p
+                  className="line-clamp-2 text-sm leading-relaxed text-foreground/80  lg:w-3/4   max-w-none"
+                  dangerouslySetInnerHTML={{ __html: item.description }}
+                />
                 <div className="flex items-center gap-2">
                   <Badge variant="secondary" className="font-medium text-xs">
                     Win Gatchalian

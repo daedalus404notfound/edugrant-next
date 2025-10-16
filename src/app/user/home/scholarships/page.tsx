@@ -108,7 +108,7 @@ export default function ClientScholarship() {
                       delay: index * 0.15,
                       ease: "easeOut",
                     }}
-                    className="shadow-sm rounded-lg border bg-card p-1"
+                    className="shadow-sm rounded-lg border bg-card lg:p-1 p-0.5"
                   >
                     <div className="rounded-lg bg-background overflow-hidden">
                       <Skeleton className="aspect-[16/8.5] w-full rounded-md" />
@@ -269,7 +269,7 @@ export default function ClientScholarship() {
                         delay: index * 0.1,
                         ease: "easeOut",
                       }}
-                      className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
+                      className="shadow-sm hover:shadow-md transition-all duration-200 lg:p-1 p-0.5  rounded-lg border bg-card"
                     >
                       {/* <Link
                       href={`/user/home/applications/${scholarship.applicationId}`}

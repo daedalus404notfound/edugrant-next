@@ -34,6 +34,7 @@ import useDeleteAnnouncement from "@/hooks/admin/postDeleteAnnouncement";
 import { useAdminStore } from "@/store/adminUserStore";
 import { TipTapViewer } from "@/components/ui/tiptap-viewer";
 import logo from "@/assets/basclogo.png";
+import useGetAnnouncementByIdUser from "@/hooks/user/getAnnouncementsById";
 export default function GetAnnouncementById() {
   const params = useParams();
   const router = useRouter();
@@ -42,7 +43,7 @@ export default function GetAnnouncementById() {
   const [open, setOpen] = useState(true);
   const { admin } = useAdminStore();
   const accountId = admin?.accountId;
-  const { data, loading } = useGetAnnouncementById(id, accountId);
+  const { data, loading } = useGetAnnouncementByIdUser(id, accountId);
   const [edit, setEdit] = useState(false);
 
   const HandleCloseDrawer = (value: boolean) => {
@@ -61,7 +62,10 @@ export default function GetAnnouncementById() {
         HandleCloseDrawer(value);
       }}
     >
-      <DialogContent className="max-w-5xl overflow-hidden  gap-0 p-1 border-0">
+      <DialogContent
+        showCloseButton={false}
+        className="max-w-5xl overflow-hidden  gap-0 p-1 border-0"
+      >
         <DialogHeader className="sr-only">
           <DialogTitle>Announcement Details</DialogTitle>
           <DialogDescription>View and manage announcement</DialogDescription>

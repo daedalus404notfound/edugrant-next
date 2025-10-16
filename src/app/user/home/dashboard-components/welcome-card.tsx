@@ -1,5 +1,11 @@
 import { Button } from "@/components/ui/button";
-import { ArrowRight, LayoutTemplate, Map, Sparkles } from "lucide-react";
+import {
+  ArrowRight,
+  GraduationCap,
+  LayoutTemplate,
+  Map,
+  Sparkles,
+} from "lucide-react";
 import logo from "@/assets/edugrant-logo.png";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
@@ -13,7 +19,7 @@ export default function WelcomeCard({
   application: number;
 }) {
   return (
-    <div className="relative overflow-hidden flex flex-col justify-between gap-4 h-70  bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30 p-6 rounded-lg">
+    <div className="dark:border relative overflow-hidden flex flex-col justify-between gap-4 h-70  bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30 p-6 rounded-lg">
       <img
         className="absolute object-contain shadow lg:-right-8 -right-20 lg:h-full h-3/4 lg:-bottom-15 -bottom-0 opacity-20"
         src={logo.src || "/placeholder.svg"}
@@ -45,7 +51,7 @@ export default function WelcomeCard({
         <>
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <LayoutTemplate className="h-4 w-4 text-primary" />
+              <GraduationCap className="h-4 w-4 text-primary" />
               <span className="text-sm font-bold text-primary jakarta">
                 Welcome back
               </span>
