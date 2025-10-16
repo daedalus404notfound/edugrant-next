@@ -32,9 +32,43 @@ import { ApiErrorResponse } from "@/hooks/admin/postReviewedHandler";
 import { downloadFile } from "@/lib/downloadUtils";
 import { displayScholarshipFormData } from "@/hooks/admin/displayScholarshipData";
 
+// export const createFormSchema = (requiredDocuments: documentFormData[]) => {
+//   const schemaShape: Record<string, z.ZodType> = {};
+//   Object.entries(requiredDocuments).forEach(([key, doc]) => {
+//     const baseValidation = z
+//       .array(z.instanceof(File))
+//       .refine(
+//         (files) =>
+//           files.length === 0 ||
+//           files.every((file) => doc.formats.includes(file.type)),
+//         `Invalid file format for ${doc.label}`
+//       )
+//       .refine(
+//         (files) =>
+//           files.length === 0 ||
+//           files.every((file) => file.size <= 2 * 1024 * 1024),
+//         `File size must be less than 2MB for ${doc.label}`
+//       );
+//     if (doc.requirementType === "required") {
+//       schemaShape[doc.label] = baseValidation.min(
+//         1,
+//         `${doc.label} is required`
+//       );
+//     } else {
+//       // For optional documents, allow empty array
+//       schemaShape[doc.label] = baseValidation.default([]);
+//     }
+//   });
+
+//   return z.object(schemaShape);
+// };
+
 export const createFormSchema = (requiredDocuments: documentFormData[]) => {
   const schemaShape: Record<string, z.ZodType> = {};
-  Object.entries(requiredDocuments).forEach(([key, doc]) => {
+
+  requiredDocuments.forEach((doc, index) => {
+    const safeKey = doc.label.replace(/[^a-zA-Z0-9_-]/g, "_"); // sanitize key
+
     const baseValidation = z
       .array(z.instanceof(File))
       .refine(
@@ -49,14 +83,11 @@ export const createFormSchema = (requiredDocuments: documentFormData[]) => {
           files.every((file) => file.size <= 2 * 1024 * 1024),
         `File size must be less than 2MB for ${doc.label}`
       );
+
     if (doc.requirementType === "required") {
-      schemaShape[doc.label] = baseValidation.min(
-        1,
-        `${doc.label} is required`
-      );
+      schemaShape[safeKey] = baseValidation.min(1, `${doc.label} is required`);
     } else {
-      // For optional documents, allow empty array
-      schemaShape[doc.label] = baseValidation.default([]);
+      schemaShape[safeKey] = baseValidation.default([]);
     }
   });
 
