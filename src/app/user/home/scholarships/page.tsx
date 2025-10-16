@@ -151,7 +151,7 @@ export default function ClientScholarship() {
             transition={{ duration: 0.2, delay: 0.4 }}
           >
             <Input
-              placeholder="Search Scholarship..."
+              placeholder="Search Scholarship...(Single API ready)"
               onChange={(e) => setSearch(e.target.value)}
               className="max-w-sm w-full text-sm"
             />
