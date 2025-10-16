@@ -73,18 +73,12 @@ const addScholarshipApi = async (data: scholarshipFormData) => {
 export const useAddScholarship = () => {
   return useMutation({
     mutationFn: addScholarshipApi,
-    onSuccess: (data) => {
+    onSuccess: () => {
       StyledToast({
         status: "success",
         title: "Scholarship Posted",
         description: "Your scholarship has been successfully posted.",
       });
-      if (socket.connected) {
-        socket.emit("adminAddScholarships", data);
-        console.log(" Broadcasted new scholarship:", data);
-      } else {
-        console.warn(" Socket not connected — unable to broadcast");
-      }
     },
     onError: (error: ApiError) => {
       console.error("Add scholarship error:", error);
