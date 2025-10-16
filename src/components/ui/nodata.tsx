@@ -9,7 +9,7 @@ export default function NoDataFound() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
         className="flex items-center justify-center rounded-full bg-muted p-4 shadow-sm"
       >
         <Inbox className="lg:w-10 w-8 lg:h-10 h-8 text-muted-foreground" />
@@ -18,7 +18,7 @@ export default function NoDataFound() {
       <motion.h1
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.2, duration: 0.5 }}
+        transition={{ delay: 0.1, duration: 0.3 }}
         className="text-lg font-semibold"
       >
         No Data Available
@@ -27,7 +27,7 @@ export default function NoDataFound() {
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.4, duration: 0.5 }}
+        transition={{ delay: 0.2, duration: 0.3 }}
         className="text-sm text-muted-foreground max-w-sm"
       >
         We couldn’t find any records to display. Please refresh the page or

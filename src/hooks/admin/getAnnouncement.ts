@@ -5,6 +5,7 @@ import { MetaTypes } from "../zodMeta";
 import { AnnouncementFormDataGet } from "../zod/announcement";
 import { ApiErrorResponse } from "./postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
+import { useDebounce } from "@/lib/debounder";
 
 const defaultMeta: MetaTypes = {
   page: 1,
@@ -16,16 +17,7 @@ const defaultMeta: MetaTypes = {
   filters: "",
   search: "",
 };
-function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState(value);
 
-  useEffect(() => {
-    const handler = setTimeout(() => setDebouncedValue(value), delay);
-    return () => clearTimeout(handler);
-  }, [value, delay]);
-
-  return debouncedValue;
-}
 export default function useAnnouncementFetch({
   page,
   pageSize,

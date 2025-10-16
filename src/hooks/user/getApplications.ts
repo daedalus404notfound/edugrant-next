@@ -9,6 +9,7 @@ import {
 import { MetaTypes } from "../zodMeta";
 import { ApiErrorResponse } from "../admin/postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
+import { useDebounce } from "@/lib/debounder";
 
 interface ScholarshipCounts {
   APPROVED: number;
@@ -45,6 +46,7 @@ export default function useClientApplications({
   order,
   status,
   userId,
+  search,
   applicationId,
 }: {
   page?: number;
@@ -54,14 +56,15 @@ export default function useClientApplications({
   status?: string;
   userId?: string;
   applicationId?: string;
+  search: string;
 }) {
   const [data, setData] = useState<ApplicationFormData[]>([]);
   const [meta, setMeta] = useState<MetaWithCounts>(defaultMeta);
   const [loading, setLoading] = useState(true);
   const [updateDocument, setUpdateDocument] =
     useState<UpdatedApplicationFormData | null>(null);
-  console.log("data", data[0]?.submittedDocuments);
-  console.log("updated", updateDocument?.submittedDocuments);
+
+  const debouncedSearch = useDebounce(search, 800);
   useEffect(
     function () {
       async function fetchApplications() {
@@ -77,6 +80,7 @@ export default function useClientApplications({
           if (pageSize) params.append("dataPerPage", pageSize.toString());
           if (sortBy) params.append("sortBy", sortBy);
           if (order) params.append("order", order);
+          if (debouncedSearch) params.append("search", debouncedSearch);
 
           const endpoint = `${
             process.env.NEXT_PUBLIC_USER_URL
@@ -104,9 +108,12 @@ export default function useClientApplications({
 
       fetchApplications();
     },
-    [page, pageSize, sortBy, order, status]
+    [page, pageSize, sortBy, order, status, debouncedSearch]
   );
 
+  useEffect(() => {
+    setData([]);
+  }, [debouncedSearch, order]);
   useEffect(() => {
     if (updateDocument && data.length > 0) {
       setData((prev) =>

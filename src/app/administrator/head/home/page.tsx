@@ -24,12 +24,15 @@ import {
 import TitleReusable from "@/components/ui/title";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import useSocketConnection from "@/hooks/head/useSocketConnection";
 
 export default function AdminDashboard() {
   const { admin } = useAdminStore();
   const accountId = admin?.accountId;
   const { data, loading } = usefetchHeadDashboard(accountId);
+  const { connected, socket } = useSocketConnection();
 
+  console.log("connected?", socket);
   const summaryCards: SummaryCardProps[] = [
     {
       label: "Total Applicants",

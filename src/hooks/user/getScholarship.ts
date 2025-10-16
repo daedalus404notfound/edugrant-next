@@ -54,6 +54,7 @@ import { scholarshipFormData } from "../admin/zodUpdateScholarship";
 import { MetaTypes } from "../zodMeta";
 import { ApiErrorResponse } from "../admin/postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
+import { useDebounce } from "@/lib/debounder";
 interface ScholarshipCounts {
   countActive: number;
   countRenew: number;
@@ -100,6 +101,7 @@ export default function useScholarshipData({
   });
   const [loading, setLoading] = useState(true);
 
+  const debouncedSearch = useDebounce(search, 800);
   useEffect(
     function () {
       async function fetchScholarships() {
@@ -112,7 +114,9 @@ export default function useScholarshipData({
           }${order ? `&order=${order}` : ""}${
             status ? `&status=${status}` : ""
           }${filters ? `&filters=${encodeURIComponent(filters)}` : ""}${
-            search ? `&search=${encodeURIComponent(search)}` : ""
+            debouncedSearch
+              ? `&search=${encodeURIComponent(debouncedSearch)}`
+              : ""
           }${accountId ? `&accountId=${accountId}` : ""}`;
 
           const res = await axios.get(endpoint, { withCredentials: true });
@@ -136,7 +140,7 @@ export default function useScholarshipData({
 
       fetchScholarships();
     },
-    [page, pageSize, sortBy, order, filters, status, search]
+    [page, pageSize, sortBy, order, filters, status, debouncedSearch]
   );
 
   return { data, loading, meta };

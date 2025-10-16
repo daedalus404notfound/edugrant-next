@@ -12,8 +12,10 @@ import { usePathname } from "next/navigation";
 import DynamicHeaderAdmin from "../../admin-header";
 import { TourProvider } from "@/components/tour-2/tour-provider";
 import { tourConfigs } from "@/lib/tour-config";
+import useSocketConnection from "@/hooks/head/useSocketConnection";
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
+  useSocketConnection();
   const path = usePathname();
   const segmentedPath = path.split("/");
 

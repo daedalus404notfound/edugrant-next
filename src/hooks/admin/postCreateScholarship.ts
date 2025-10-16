@@ -11,6 +11,7 @@ interface ApiErrorResponse {
   statusCode?: number;
 }
 import { useAdminStore } from "@/store/adminUserStore";
+import socket from "@/lib/socketLib";
 type ApiError = AxiosError<ApiErrorResponse>;
 const today = new Date().toISOString().split("T")[0];
 const addScholarshipApi = async (data: scholarshipFormData) => {
@@ -72,12 +73,18 @@ const addScholarshipApi = async (data: scholarshipFormData) => {
 export const useAddScholarship = () => {
   return useMutation({
     mutationFn: addScholarshipApi,
-    onSuccess: () => {
+    onSuccess: (data) => {
       StyledToast({
         status: "success",
         title: "Scholarship Posted",
         description: "Your scholarship has been successfully posted.",
       });
+      if (socket.connected) {
+        socket.emit("adminAddScholarships", data);
+        console.log(" Broadcasted new scholarship:", data);
+      } else {
+        console.warn(" Socket not connected — unable to broadcast");
+      }
     },
     onError: (error: ApiError) => {
       console.error("Add scholarship error:", error);

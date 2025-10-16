@@ -3,6 +3,7 @@ import { AnnouncementFormDataPost } from "../zod/announcement";
 import { useMutation } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
+import socket from "@/lib/socketLib";
 
 interface ApiErrorResponse {
   message?: string;
@@ -37,12 +38,19 @@ const addAnnouncementApi = async (data: AnnouncementFormDataPost) => {
 export const useAnnouncement = () => {
   return useMutation({
     mutationFn: addAnnouncementApi,
-    onSuccess: () => {
+    onSuccess: (data) => {
       StyledToast({
         status: "success",
         title: "Scholarship Created",
         description: "Your announcement has been successfully posted.",
       });
+
+      if (socket.connected) {
+        socket.emit("newAnnouncement", data); // 🔥 real-time update
+        console.log("📡 Broadcasted new announcement:", data);
+      } else {
+        console.warn("⚠️ Socket not connected — unable to broadcast");
+      }
     },
     onError: (error: ApiError) => {
       console.error("Add scholarship error:", error);
