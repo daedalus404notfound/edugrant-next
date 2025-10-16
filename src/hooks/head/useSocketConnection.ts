@@ -6,16 +6,15 @@ import { useEffect, useState } from "react";
 import socket from "@/lib/socketLib";
 import Cookies from "js-cookie";
 import * as jose from "jose";
-const SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
 export default function useSocketConnection() {
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    // Only connect when admin info is available
+   
 
     const token = Cookies.get("AdminToken") || Cookies.get("token");
     if (!token) {
-      console.warn("🚫 No token found — skipping socket connection.");
+      console.warn("no token found — skipping socket connection.");
       return;
     }
     let payload: any;

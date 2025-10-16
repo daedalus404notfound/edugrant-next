@@ -12,7 +12,7 @@ import DynamicHeaderUser from "./dynamic-header";
 import { usePathname } from "next/navigation";
 import MobDock from "./dock";
 import MobHeader from "./mobile-header";
-import useSocketConnection from "@/hooks/user/useSocketConnection";
+import useSocketConnection from "@/hooks/head/useSocketConnection";
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
   const { connected } = useSocketConnection();
