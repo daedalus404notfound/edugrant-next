@@ -10,9 +10,7 @@ export default function useSocketConnection() {
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-   
-
-    const token = Cookies.get("AdminToken") || Cookies.get("token");
+    const token = Cookies.get("AdminToken");
     if (!token) {
       console.warn("no token found — skipping socket connection.");
       return;
