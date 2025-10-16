@@ -4,33 +4,16 @@
 
 import { useEffect, useState } from "react";
 import socket from "@/lib/socketLib";
-import Cookies from "js-cookie";
-import * as jose from "jose";
+import { useAdminStore } from "@/store/adminUserStore";
+const SECRET = new TextEncoder().encode(process.env.JWT_SECRET!);
 export default function useSocketConnection() {
+  const { admin } = useAdminStore(); // make sure this store holds admin info after login
   const [connected, setConnected] = useState(false);
 
   useEffect(() => {
-    const token = Cookies.get("AdminToken");
-    if (!token) {
-      console.warn("no token found — skipping socket connection.");
-      return;
-    }
-    let payload: any;
-    try {
-      payload = jose.decodeJwt(token);
-    } catch (error) {
-      console.error("❌ Failed to decode token:", error);
-      return;
-    }
-    const accountId = payload?.accountId || payload?.id;
-    const role = payload?.role;
+    // Only connect when admin info is available
+    if (!admin?.accountId || !admin?.role) return;
 
-    if (!accountId || !role) {
-      console.warn(
-        "🚫 Token missing accountId or role — cannot connect socket."
-      );
-      return;
-    }
     socket.connect();
 
     socket.on("connect", () => {
@@ -39,10 +22,9 @@ export default function useSocketConnection() {
 
       // Register user with backend socket
       socket.emit("register", {
-        role: role,
-        id: accountId,
+        role: admin.role === "ISPSU_Student" ? "Student" : "Staff",
+        id: admin.accountId,
       });
-      console.log("📡 Emitted register event:", { role, accountId });
     });
 
     socket.on("disconnect", () => {
@@ -62,7 +44,7 @@ export default function useSocketConnection() {
       socket.off("message");
       socket.disconnect();
     };
-  }, []);
+  }, [admin?.accountId, admin?.role]);
 
   return { connected, socket };
 }
