@@ -27,9 +27,8 @@ import { useState } from "react";
 import useSocketConnection from "@/hooks/head/useSocketConnection";
 
 export default function AdminDashboard() {
-  const { admin } = useAdminStore();
-  const accountId = admin?.accountId;
-  const { data, loading } = usefetchHeadDashboard(accountId);
+
+  const { data, loading } = usefetchHeadDashboard();
   const summaryCards: SummaryCardProps[] = [
     {
       label: "Total Applicants",

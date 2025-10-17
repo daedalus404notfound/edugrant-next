@@ -12,6 +12,7 @@ import {
   CheckCheck,
   CircleUserRound,
   Crown,
+  FileSpreadsheet,
   GraduationCap,
   Home,
   Hourglass,
@@ -48,6 +49,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Badge } from "../ui/badge";
+import usefetchHeadDashboard from "@/hooks/admin/getHeadDashboard";
 const data = {
   user: {
     name: "Admin User",
@@ -133,6 +135,11 @@ const sidebarData = [
     url: "/administrator/head/home/generate-report",
     icon: Activity,
   },
+  {
+    title: "Staff Logs",
+    url: "/administrator/head/home/staff-logs",
+    icon: FileSpreadsheet,
+  },
 ];
 const sidebarScholar = [
   {
@@ -163,32 +170,7 @@ const sidebarStaff = [
     icon: UserRoundCheck,
   },
 ];
-const sidebarApplication = [
-  {
-    title: "Pending Application",
-    url: "/administrator/head/home/pending",
-    icon: Hourglass,
-    indicator: 0,
-  },
-  {
-    title: "Approved Application",
-    url: "/administrator/head/home/approved",
-    icon: CheckCheck,
-    indicator: 0,
-  },
-  {
-    title: "Rejected Application",
-    url: "/administrator/head/home/rejected",
-    icon: UserRoundX,
-    indicator: 0,
-  },
-  {
-    title: "Blocked Application",
-    url: "/administrator/head/home/blocked",
-    icon: X,
-    indicator: 0,
-  },
-];
+
 const sidebarAnnouncements = [
   {
     title: "Post announcement",
@@ -213,6 +195,33 @@ const manageStudent = [
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   const { open } = useSidebar();
+  const { data, loading } = usefetchHeadDashboard();
+  const sidebarApplication = [
+    {
+      title: "Pending Application",
+      url: "/administrator/head/home/pending",
+      icon: Hourglass,
+      indicator: data?.pendingApplcationCount,
+    },
+    {
+      title: "Approved Application",
+      url: "/administrator/head/home/approved",
+      icon: CheckCheck,
+      indicator: data?.approvedApplcationCount,
+    },
+    {
+      title: "Rejected Application",
+      url: "/administrator/head/home/rejected",
+      icon: UserRoundX,
+      indicator: 0,
+    },
+    {
+      title: "Blocked Application",
+      url: "/administrator/head/home/blocked",
+      icon: X,
+      indicator: 0,
+    },
+  ];
   console.log(open);
   return (
     <Sidebar collapsible="icon" {...props}>
