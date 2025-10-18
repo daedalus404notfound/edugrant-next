@@ -30,6 +30,7 @@ const ApplicationSchema = z.object({
 
 export const StudentSchema = z.object({
   Application: z.array(ApplicationSchema),
+  profileImg: z.any().optional(),
   PWD: z.string(),
   studentId: z.number(),
   address: z.string(),
@@ -134,6 +135,7 @@ export function useProfileForm(data?: UserFormData | null) {
             supabasePath: [],
           },
         ],
+        profileImg: data?.Student.profileImg || "",
         PWD: data?.Student?.PWD || "",
         studentId: data?.Student?.studentId || 0,
         address: data?.Student?.address || "",

@@ -26,21 +26,22 @@ export function NavMain({
 }: {
   items: {
     title: string;
- 
+
     url: string;
     icon?: LucideIcon;
     isActive?: boolean;
+
     items?: {
       title: string;
       url: string;
-   
+      indicator?: number;
     }[];
   }[];
 }) {
   const pathname = usePathname();
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Admin</SidebarGroupLabel>
+      <SidebarGroupLabel>Head</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <Collapsible
@@ -64,13 +65,19 @@ export function NavMain({
                     const isActive = pathname === subItem.url;
                     return (
                       <SidebarMenuSubItem key={subItem.title}>
-                        <SidebarMenuSubButton
-                          asChild
-                          isActive={isActive}
-                     
-                        >
-                          <Link scroll={false} prefetch href={subItem.url}>
+                        <SidebarMenuSubButton asChild isActive={isActive}>
+                          <Link
+                            scroll={false}
+                            prefetch
+                            href={subItem.url}
+                            className="flex justify-between"
+                          >
                             <span>{subItem.title}</span>
+                            {subItem.indicator && (
+                              <Badge variant="outline">
+                                {subItem.indicator}
+                              </Badge>
+                            )}
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>

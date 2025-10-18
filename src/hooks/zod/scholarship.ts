@@ -1,7 +1,12 @@
 import z from "zod";
 
 export const documentsSchema = z.object({
-  label: z.string().min(1, "Requireds"),
+  label: z
+    .string()
+    .trim()
+    .min(1, "Required")
+    .regex(/^[A-Za-z0-9\s-_]+$/, "Label must not contain special characters"),
+
   formats: z.array(z.string()).min(1, "Required"),
   requirementType: z.enum(["required", "optional"], {
     message: "Required",
@@ -34,11 +39,7 @@ export const scholarshipSchema = z.object({
   }),
   amount: z
     .string()
-    .regex(
-      /^₱?\s?\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?$/,
-      "Enter a valid amount (e.g. 1,000.00)"
-    )
-    .or(z.literal(""))
+    .regex(/^\d*$/, "Amount must contain numbers only")
     .optional(),
 
   interview: z.boolean(),

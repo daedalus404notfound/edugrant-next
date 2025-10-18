@@ -34,7 +34,6 @@ export default function useFetchApplications({
   const [data, setData] = useState<ApplicationFormData[]>([]);
   const [meta, setMeta] = useState<MetaTypes>(defaultMeta);
   const [loading, setLoading] = useState(true);
-  console.log("2323", data);
   useEffect(
     function () {
       async function fetchApplications() {

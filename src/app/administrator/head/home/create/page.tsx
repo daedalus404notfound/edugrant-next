@@ -55,9 +55,10 @@ import { Label } from "@/components/ui/label";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import TitleReusable from "@/components/ui/title";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { TourStep } from "@/components/tour-2/tour-step";
+import socket from "@/lib/socketLib";
 
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
@@ -83,43 +84,20 @@ export default function Create() {
 
   const [openGuide, setOpenGuide] = useState(true);
 
+  useEffect(() => {
+    if (!socket.connected) socket.connect();
+
+    socket.on("adminAddScholarships", ({ newScholarship }) => {
+      console.log("🎓 New scholarship received:", newScholarship);
+    });
+
+    return () => {
+      socket.off("adminAddScholarships");
+    };
+  }, []);
+
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      {/* <Dialog open={openGuide} onOpenChange={setOpenGuide}>
-        <DialogContent
-          className="!bg-card w-lg p-6"
-          onInteractOutside={(e) => {
-            e.preventDefault();
-          }}
-          onEscapeKeyDown={(e) => {
-            e.preventDefault();
-          }}
-          showCloseButton={false}
-        >
-          <DialogHeader>
-            <DialogTitle>
-              <TitleReusable
-                title="Welcome to Post Scholarship"
-                description=""
-              />
-            </DialogTitle>
-            <DialogDescription className="mt-3">
-              Start posting scholarship program. You can take a quick tour to
-              learn the process, or skip and begin right away.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex gap-3 mt-3">
-            <Button
-              className="flex-1"
-              variant="secondary"
-              onClick={() => setOpenGuide(false)}
-            >
-              Skip for Now
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog> */}
-
       <div className="mx-auto w-[95%] lg:py-10  py-4">
         <TourStep
           stepId="post-scholarship"
@@ -134,8 +112,8 @@ export default function Create() {
         <Separator className="mt-2" />
         <div className="mt-10 lg:w-[60%] min-w-5xl w-full mx-auto">
           <Form {...form}>
-            <TourStep className="mt-" stepId="text-forms">
-              <div className="grid grid-cols-3 gap-x-5 gap-y-10 bg-background p-6 rounded-md ">
+            <TourStep className="mt-10" stepId="text-forms">
+              <div className="grid grid-cols-3 gap-x-5 gap-y-10 bg-card/40 dark:bg-gradient-to-br to-card from-card/50 p-6 rounded-md ">
                 <FormField
                   control={form.control}
                   name="type"
@@ -386,8 +364,8 @@ export default function Create() {
                 />
               </div>
             </TourStep>
-            <TourStep className="mt-" stepId="interview-form">
-              <div className=" bg-background p-6 rounded-md ">
+            <TourStep className="mt-10" stepId="interview-form">
+              <div className=" p-6 rounded-md bg-card/40 dark:bg-gradient-to-br to-card from-card/50">
                 <FormField
                   control={form.control}
                   name="interview"
@@ -432,8 +410,8 @@ export default function Create() {
                 />
               </div>
             </TourStep>
-            <TourStep className="mt-" stepId="image-forms">
-              <div className="space-y-8  bg-background p-6 rounded-md">
+            <TourStep className="mt-10" stepId="image-forms">
+              <div className="space-y-8 bg-card/40 dark:bg-gradient-to-br to-card from-card/50 p-6 rounded-md">
                 <div className="w-full flex gap-5">
                   {/* Backdrop Image */}
                   <div className="flex flex-col flex-1 gap-2">
@@ -527,8 +505,8 @@ export default function Create() {
             </TourStep>
 
             {/* Dynamic Required Documents */}
-            <TourStep className="mt-" stepId="document-forms">
-              <div className="space-y-8 mt-10 bg-background p-6 rounded-md">
+            <TourStep className="mt-10" stepId="document-forms">
+              <div className="space-y-8 mt-10 ">
                 <div className="w-full flex items-center justify-between ">
                   <p className="text-sm font-medium text-muted-foreground">
                     Note: Each document label must be unique.
@@ -550,11 +528,11 @@ export default function Create() {
                   </Button>
                 </div>
 
-                <div className="space-y-10">
+                <div className="space-y-6">
                   {fields.map((field, index) => (
                     <div
                       key={field.id}
-                      className="grid grid-cols-1 gap-6 items-center"
+                      className="grid grid-cols-1 gap-6 items-center p-6  bg-card/40 dark:bg-gradient-to-br to-card from-card/50 rounded-md"
                     >
                       <FormField
                         control={form.control}

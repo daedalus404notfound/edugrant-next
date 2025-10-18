@@ -2,24 +2,34 @@
 import "ldrs/react/Ring.css";
 import { useEffect, useState } from "react";
 import { DataTable } from "@/app/table-components/data-table";
-import { columns } from "../pending/staff-application-table-components/columns";
+import { columns } from "../staff-application-table-components/columns";
 import {
   ColumnFiltersState,
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
-import DataTableToolbar from "../pending/staff-application-table-components/data-table-toolbar";
+import DataTableToolbar from "../staff-application-table-components/data-table-toolbar";
 import { ApplicationFormData } from "@/hooks/zod/application";
 import useApplicantsSearch from "@/hooks/admin/getApplicantSearch";
 import useFetchApplications from "@/hooks/admin/getApplicant";
 import TitleReusable from "@/components/ui/title";
 import { useApplicationUIStore } from "@/store/updateUIStore";
+import socket from "@/lib/socketLib";
 
 export default function ForInterviewApplication({
   setInterview,
 }: {
   setInterview: (interview: number) => void;
 }) {
+  useEffect(() => {
+    socket.on("forInterview", ({ forInterview }) => {
+      console.log("forInterview:", forInterview);
+    });
+
+    return () => {
+      socket.off("forInterview");
+    };
+  }, []);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("INTERVIEW");
   const [pagination, setPagination] = useState<PaginationState>({

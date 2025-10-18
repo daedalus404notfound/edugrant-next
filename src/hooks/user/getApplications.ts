@@ -129,5 +129,5 @@ export default function useClientApplications({
     }
   }, [updateDocument]);
 
-  return { data, loading, meta, setUpdateDocument };
+  return { data, loading, meta, setUpdateDocument, setData };
 }

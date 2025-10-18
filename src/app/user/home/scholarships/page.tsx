@@ -91,8 +91,6 @@ export default function ClientScholarship() {
   ];
 
   useEffect(() => {
-    if (!socket.connected) socket.connect();
-
     socket.on("adminAddScholarships", ({ newScholarship }) => {
       console.log("🎓 New scholarship received:", newScholarship);
       setScholarships((prev) => [newScholarship, ...prev]);
@@ -219,9 +217,9 @@ export default function ClientScholarship() {
               <NoDataFound />
             ) : (
               scholarships.map((scholarship, index) => {
-                const findMatch = user?.Student.Application.find(
-                  (meow) => meow.scholarshipId === scholarship?.scholarshipId
-                );
+                // const findMatch = user?.Student.Application.find(
+                //   (meow) => meow.scholarshipId === scholarship?.scholarshipId
+                // );
                 // const isNotRenew =
                 //   user?.Student.Application.find(
                 //     (meow) =>
@@ -282,7 +280,7 @@ export default function ClientScholarship() {
                               </Badge> */}
                           </div>
 
-                          {findMatch && (
+                          {scholarship.Application?.length! > 0 && (
                             <div className="absolute top-0 -left-2 flex items-center">
                               <div
                                 className="flex items-center justify-center text-gray-200 font-medium text-sm px-7 py-1.5 bg-gradient-to-br to-green-950 from-green-800"
@@ -295,6 +293,7 @@ export default function ClientScholarship() {
                               </div>
                             </div>
                           )}
+
                           {/* {scholarship.status && (
                               <div className="absolute top-0 -left-2 flex items-center">
                                 

@@ -3,18 +3,19 @@ import "ldrs/react/Ring.css";
 import { UserRoundMinus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DataTable } from "@/app/table-components/data-table";
-import { columns } from "../pending/staff-application-table-components/columns";
+import { columns } from "../staff-application-table-components/columns";
 import {
   ColumnFiltersState,
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
-import DataTableToolbar from "../pending/staff-application-table-components/data-table-toolbar";
+import DataTableToolbar from "../staff-application-table-components/data-table-toolbar";
 import { ApplicationFormData } from "@/hooks/zod/application";
 import useApplicantsSearch from "@/hooks/admin/getApplicantSearch";
 import useFetchApplications from "@/hooks/admin/getApplicant";
 import TitleReusable from "@/components/ui/title";
 import { useApplicationUIStore } from "@/store/updateUIStore";
+import socket from "@/lib/socketLib";
 
 export default function RejectedApplication({
   setRejected,
@@ -59,7 +60,15 @@ export default function RejectedApplication({
     year: false,
     institute: false,
   });
+  useEffect(() => {
+    socket.on("declineApplication", ({ declineApplication }) => {
+      console.log("declineApplication:", declineApplication);
+    });
 
+    return () => {
+      socket.off("declineApplication");
+    };
+  }, []);
   return (
     <DataTable<ApplicationFormData, unknown>
       data={search.trim().length > 0 ? searchData : data}

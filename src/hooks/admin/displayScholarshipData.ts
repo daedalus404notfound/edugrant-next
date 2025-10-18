@@ -9,6 +9,13 @@ export const displayDocumentsSchema = z.object({
 });
 
 export const displayScholarshipSchema = z.object({
+  Application: z
+    .array(
+      z.object({
+        applicationId: z.number(),
+      })
+    )
+    .optional(),
   ISPSUId: z.number(),
   SPId: z.number(),
   Scholarship_Provider: z.object({

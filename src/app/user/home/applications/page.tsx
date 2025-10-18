@@ -33,6 +33,7 @@ import {
   PaginationContent,
   PaginationItem,
 } from "@/components/ui/pagination";
+import socket from "@/lib/socketLib";
 
 export default function ClientScholarship() {
   const [status, setStatus] = useState("PENDING");
@@ -46,7 +47,7 @@ export default function ClientScholarship() {
   const [page, setPage] = useState(1);
   const [rowsPerPage] = useState(6);
 
-  const { data, loading, meta } = useClientApplications({
+  const { data, loading, meta, setData } = useClientApplications({
     page,
     pageSize: rowsPerPage,
     status,
@@ -59,6 +60,32 @@ export default function ClientScholarship() {
       setPage((prev) => prev + 1);
     }
   };
+
+  useEffect(() => {
+    socket.on(
+      "approveApplication",
+      ({ approveApplication }: { approveApplication: string }) => {
+        console.log("APPROVED:", approveApplication);
+      }
+    );
+
+    socket.on(
+      "declineApplication",
+      ({ declineApplication }: { declineApplication: string }) => {
+        console.log("DECLINED:", declineApplication);
+      }
+    );
+
+    socket.on("forInterview", ({ forInterview }: { forInterview: string }) => {
+      console.log("FOR INTERVIEW:", forInterview);
+    });
+
+    return () => {
+      socket.off("approveApplication");
+      socket.off("declineApplication");
+      socket.off("forInterview");
+    };
+  }, []);
 
   const handlePrev = () => {
     if (meta.page > 1) {

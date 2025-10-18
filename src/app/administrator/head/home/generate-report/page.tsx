@@ -29,6 +29,7 @@ import TitleReusable from "@/components/ui/title";
 import useFetchApplicationCSVShit from "@/hooks/admin/getShit";
 import useFetchApplicationCSV from "@/hooks/admin/getApplicationCSV";
 import { AnimatePresence, motion } from "motion/react";
+import { Separator } from "@/components/ui/separator";
 
 export default function GenerateReport() {
   const { data, loading } = useFetchApplicationCSVShit();
@@ -56,7 +57,7 @@ export default function GenerateReport() {
       step: "Step One",
       title: "Choose Available Scholarships",
       description:
-        "Completed wireframes and user interface mockups. Stakeholder review and feedback incorporated.",
+        "Select one or more scholarship programs you want to include in the report.",
       headers: data?.filters.scholarshipTitles,
       icon: GraduationCap,
       headerLabel: "title",
@@ -66,7 +67,7 @@ export default function GenerateReport() {
       step: "Step Two",
       title: "Select Application Status",
       description:
-        "Completed wireframes and user interface mockups. Stakeholder review and feedback incorporated.",
+        "Filter applicants by their current application status, such as Pending, Approved, or Rejected.",
       headers: data?.filters.applicationStatus,
       icon: Layers,
       headerLabel: "status",
@@ -76,7 +77,7 @@ export default function GenerateReport() {
       step: "Step Three",
       title: "Select Institute",
       description:
-        "Backend API implementation and frontend component development in progress.",
+        "Choose the institute or campus from which the applicants are enrolled.",
       headers: data?.filters.institute,
       icon: Building2,
       headerLabel: "institute",
@@ -86,7 +87,7 @@ export default function GenerateReport() {
       step: "Step Four",
       title: "Select Course",
       description:
-        "Quality assurance testing, performance optimization, and production deployment preparation.",
+        "Select specific courses or degree programs to narrow down the report results.",
       headers: data?.filters.course,
       icon: BookOpen,
       headerLabel: "course",
@@ -96,7 +97,7 @@ export default function GenerateReport() {
       step: "Step Five",
       title: "Select Year",
       description:
-        "Quality assurance testing, performance optimization, and production deployment preparation.",
+        "Filter applicants by their academic year or level, such as 1st Year, 2nd Year, etc.",
       headers: data?.filters.year,
       icon: Calendar,
       headerLabel: "year",
@@ -106,7 +107,7 @@ export default function GenerateReport() {
       step: "Step Six",
       title: "Select Section",
       description:
-        "Quality assurance testing, performance optimization, and production deployment preparation.",
+        "Choose the specific section or class group you want to include in the report.",
       headers: data?.filters.section,
       icon: Layers,
       headerLabel: "section",
@@ -116,7 +117,7 @@ export default function GenerateReport() {
       step: "Step Seven",
       title: "Choose Student Information",
       description:
-        "Quality assurance testing, performance optimization, and production deployment preparation.",
+        "Select which student details (e.g., name, email, course, address) should appear in the generated report.",
       headers: data?.dataSelections,
       icon: UserRound,
       headerLabel: "",
@@ -178,7 +179,7 @@ export default function GenerateReport() {
       <div className="mx-auto w-[95%] lg:py-10  py-4">
         <TitleReusable
           title="Generate Report"
-          description="View and manage scholarships. Switch between active scholarships and renewals using the tabs below."
+          description="Generate and download customized scholarship reports by selecting filters and student information fields below."
           Icon={Activity}
         />
 
@@ -190,11 +191,11 @@ export default function GenerateReport() {
                   <TimelineHeader>
                     <TimelineSeparator />
 
-                    <TimelineTitle>{item.step}</TimelineTitle>
+                    <TimelineTitle>{item.title}</TimelineTitle>
                     <TimelineIndicator />
                   </TimelineHeader>
                   <TimelineContent className="flex justify-between items-center">
-                    {item.title}
+                    {item.description}
                     {item.id === 7 && (
                       <span className="flex gap-2 items-center">
                         <Checkbox
@@ -219,6 +220,7 @@ export default function GenerateReport() {
                     )}
                   </TimelineContent>
                 </div>
+
                 <div className="grid grid-cols-5 gap-3 mt-5">
                   {item.headers?.map((meow) => {
                     const Icon = item.icon;

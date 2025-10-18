@@ -13,6 +13,7 @@ import {
   CircleUserRound,
   Crown,
   FileSpreadsheet,
+  GalleryVerticalEnd,
   GraduationCap,
   Home,
   Hourglass,
@@ -50,7 +51,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Badge } from "../ui/badge";
 import usefetchHeadDashboard from "@/hooks/admin/getHeadDashboard";
-const data = {
+const dataa = {
   user: {
     name: "Admin User",
     email: "admin@example.com",
@@ -130,6 +131,13 @@ const sidebarData = [
     url: "/administrator/head/home/profile",
     icon: UserRoundCog,
   },
+];
+const usersData = [
+  {
+    title: "All Student",
+    url: "/administrator/head/home/all-application",
+    icon: UsersRound,
+  },
   {
     title: "Generate Report",
     url: "/administrator/head/home/generate-report",
@@ -141,56 +149,56 @@ const sidebarData = [
     icon: FileSpreadsheet,
   },
 ];
-const sidebarScholar = [
-  {
-    title: "Post Scholarship",
-    url: "/administrator/head/home/create",
-    icon: PenLine,
-  },
-  {
-    title: "Active Scholarship",
-    url: "/administrator/head/home/manage",
-    icon: GraduationCap,
-  },
-  {
-    title: "Inactive Scholarships",
-    url: "/administrator/head/home/archive",
-    icon: Archive,
-  },
-];
-const sidebarStaff = [
-  {
-    title: "Add New Staff",
-    url: "/administrator/head/home/add",
-    icon: UserRoundPlus,
-  },
-  {
-    title: "Manage Staff",
-    url: "/administrator/head/home/manage-staff",
-    icon: UserRoundCheck,
-  },
-];
+// const sidebarScholar = [
+//   {
+//     title: "Post Scholarship",
+//     url: "/administrator/head/home/create",
+//     icon: PenLine,
+//   },
+//   {
+//     title: "Active Scholarship",
+//     url: "/administrator/head/home/manage",
+//     icon: GraduationCap,
+//   },
+//   {
+//     title: "Inactive Scholarships",
+//     url: "/administrator/head/home/archive",
+//     icon: Archive,
+//   },
+// ];
+// const sidebarStaff = [
+//   {
+//     title: "Add New Staff",
+//     url: "/administrator/head/home/add",
+//     icon: UserRoundPlus,
+//   },
+//   {
+//     title: "Manage Staff",
+//     url: "/administrator/head/home/manage-staff",
+//     icon: UserRoundCheck,
+//   },
+// ];
 
-const sidebarAnnouncements = [
-  {
-    title: "Post announcement",
-    url: "/administrator/head/home/post-announcement",
-    icon: PenLine,
-  },
-  {
-    title: "Announcements",
-    url: "/administrator/head/home/announcement",
-    icon: Megaphone,
-  },
-];
+// const sidebarAnnouncements = [
+//   {
+//     title: "Post announcement",
+//     url: "/administrator/head/home/post-announcement",
+//     icon: PenLine,
+//   },
+//   {
+//     title: "Announcements",
+//     url: "/administrator/head/home/announcement",
+//     icon: Megaphone,
+//   },
+// ];
 
-const manageStudent = [
-  {
-    title: "All Student",
-    url: "/administrator/head/home/all-application",
-    icon: UsersRound,
-  },
-];
+// const manageStudent = [
+//   {
+//     title: "All Student",
+//     url: "/administrator/head/home/all-application",
+//     icon: UsersRound,
+//   },
+// ];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
@@ -213,15 +221,116 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       title: "Rejected Application",
       url: "/administrator/head/home/rejected",
       icon: UserRoundX,
-      indicator: 0,
+      indicator: data?.approvedApplcationCount,
     },
     {
       title: "Blocked Application",
       url: "/administrator/head/home/blocked",
       icon: X,
-      indicator: 0,
+      indicator: data?.approvedApplcationCount,
     },
   ];
+
+  const dataa = {
+    user: {
+      name: "Admin User",
+      email: "admin@example.com",
+      avatar: "/avatars/admin.jpg",
+    },
+    navMain: [
+      {
+        title: "Scholarships",
+        url: "/administrator/home/scholarships",
+        icon: GraduationCap,
+        isActive: false,
+        items: [
+          {
+            title: "Post Scholarship",
+            url: "/administrator/head/home/create",
+            icon: PenLine,
+          },
+          {
+            title: "Active Scholarship",
+            url: "/administrator/head/home/manage",
+            icon: GraduationCap,
+          },
+          {
+            title: "Inactive Scholarships",
+            url: "/administrator/head/home/archive",
+            icon: Archive,
+          },
+        ],
+      },
+      {
+        title: "Applications",
+        url: "/administrator/home/applicants",
+        icon: UsersRound,
+        items: [
+          {
+            title: "Pending Application",
+            url: "/administrator/head/home/pending",
+            icon: Hourglass,
+            indicator: data?.pendingApplcationCount,
+          },
+          {
+            title: "Approved Application",
+            url: "/administrator/head/home/approved",
+            icon: CheckCheck,
+            indicator: data?.approvedApplcationCount,
+          },
+          {
+            title: "Rejected Application",
+            url: "/administrator/head/home/rejected",
+            icon: UserRoundX,
+            indicator: data?.approvedApplcationCount,
+          },
+          {
+            title: "Blocked Application",
+            url: "/administrator/head/home/blocked",
+            icon: X,
+            indicator: data?.approvedApplcationCount,
+          },
+        ],
+      },
+
+      {
+        title: "Announcements",
+        url: "/administrator/home/announcements",
+        icon: Megaphone,
+        items: [
+          {
+            title: "Post announcement",
+            url: "/administrator/head/home/post-announcement",
+            icon: PenLine,
+          },
+          {
+            title: "Announcements",
+            url: "/administrator/head/home/announcement",
+            icon: Megaphone,
+          },
+        ],
+      },
+
+      {
+        title: "Manage Staff",
+        url: "/administrator/home/announcements",
+        icon: UsersRound,
+        items: [
+          {
+            title: "Add New Staff",
+            url: "/administrator/head/home/add",
+            icon: UserRoundPlus,
+          },
+          {
+            title: "Manage Staff",
+            url: "/administrator/head/home/manage-staff",
+            icon: UserRoundCheck,
+          },
+        ],
+      },
+    ],
+  };
+
   console.log(open);
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -282,7 +391,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <SidebarGroup>
+        {/* <SidebarGroup>
           <SidebarGroupLabel>Manage Scholarship</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
@@ -412,11 +521,40 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               })}
             </SidebarMenu>
           </SidebarGroupContent>
+        </SidebarGroup> */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Tools</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {usersData.map((meow) => {
+                const isActive = pathname === meow.url;
+                return (
+                  <SidebarMenuItem key={meow.title}>
+                    <SidebarMenuButton isActive={isActive} asChild>
+                      <Link
+                        prefetch
+                        scroll={false}
+                        className="flex items-center gap-2 cursor-pointer"
+                        href={meow.url}
+                      >
+                        <meow.icon className="w-4 h-4" />
+                        {meow.title}
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
         </SidebarGroup>
+
+        <NavMain items={dataa.navMain} />
       </SidebarContent>
+
       <SidebarFooter>
         <NavUser />
       </SidebarFooter>
+
       <SidebarRail />
     </Sidebar>
   );

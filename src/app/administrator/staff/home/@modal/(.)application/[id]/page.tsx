@@ -32,6 +32,7 @@ import { DeleteDialog } from "@/components/ui/delete-dialog";
 import ModalHeader from "@/components/ui/modal-header";
 
 import ReviewBody from "../../../../../../../components/ui/application/review-application-body";
+import socket from "@/lib/socketLib";
 
 export default function InterceptReviewApplicants() {
   const router = useRouter();
@@ -178,6 +179,17 @@ export default function InterceptReviewApplicants() {
     { id: "family", label: "Family Background", indicator: null },
   ];
 
+
+    useEffect(() => {
+      if (!socket.connected) socket.connect();
+      socket.on("approveApplication", ({ approveApplication }) => {
+        console.log("APPROVED:", approveApplication);
+      });
+  
+      return () => {
+        socket.off("approveApplication");
+      };
+    }, []);
   return (
     <Drawer
       open={open}

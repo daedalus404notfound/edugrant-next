@@ -11,6 +11,14 @@ export const displayDocumentsSchema = z.object({
 });
 
 export const scholarshipSchema = z.object({
+  Application: z
+    .array(
+      z.object({
+        ownerId: z.number().optional(),
+        status: z.string().optional(),
+      })
+    )
+    .optional(),
   ISPSUId: z.number(),
   SPId: z.number(),
   Scholarship_Provider: z.object({

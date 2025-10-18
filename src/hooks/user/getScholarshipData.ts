@@ -17,7 +17,7 @@ export default function useScholarshipUserById(id: string) {
         setLoading(true);
         try {
           const res = await axios.get<{
-            scholarship: scholarshipFormData;
+            scholarship: displayScholarshipFormData;
           }>(
             `${process.env.NEXT_PUBLIC_USER_URL}/getScholarshipsbyId?scholarshipId=${id}`,
 

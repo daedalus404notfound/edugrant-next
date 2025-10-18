@@ -3,13 +3,13 @@ import "ldrs/react/Ring.css";
 import { UserRoundMinus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DataTable } from "@/app/table-components/data-table";
-import { columns } from "../pending/staff-application-table-components/columns";
+import { columns } from "../staff-application-table-components/columns";
 import {
   ColumnFiltersState,
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
-import DataTableToolbar from "../pending/staff-application-table-components/data-table-toolbar";
+import DataTableToolbar from "../staff-application-table-components/data-table-toolbar";
 import { ApplicationFormData } from "@/hooks/zod/application";
 import useApplicantsSearch from "@/hooks/admin/getApplicantSearch";
 import { useApplicationUIStore } from "@/store/updateUIStore";

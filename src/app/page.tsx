@@ -40,6 +40,8 @@ import {
   Milestone,
   GraduationCap,
   ChevronRight,
+  ArrowDown,
+  Megaphone,
 } from "lucide-react";
 import bascLogo from "@/assets/basclogo.png";
 import osas from "@/assets/osasa.png";
@@ -61,6 +63,14 @@ import { FeaturesSection } from "@/components/ui/features-section";
 import AppSection from "@/components/ui/feature-second";
 import TitleReusable from "@/components/ui/title";
 import AboutTheTeam from "@/components/ui/credits";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import Image from "next/image";
 const navItems = [
   { label: "Home", icon: Home },
@@ -265,7 +275,13 @@ export default function DesktopLandingPage() {
           </ul>
         </span>
         <span className="flex gap-3 items-center">
-          <Link href={"/user/login"} prefetch={true}>
+          <Link href={"/public-announcement"} prefetch={true} scroll={false}>
+            <Button>
+              <Megaphone />
+              Announcements
+            </Button>
+          </Link>
+          <Link href={"/user/login"} prefetch={true} scroll={false}>
             <Button variant="secondary">
               Login <LogInIcon />
             </Button>
@@ -279,6 +295,13 @@ export default function DesktopLandingPage() {
   return (
     <>
       <div className="gradient absolute inset-0 z-10 hidden dark:block h-[88dvh]"></div>
+
+      {/* <div className="fixed flex  gap-3 items-center bottom-10 right-10">
+        <p className="text-sm">Announcements</p>{" "}
+        <Button className="rounded-full">
+          <ArrowDown />
+        </Button>
+      </div> */}
       <div
         className="absolute inset-0 z-0 dark:hidden lg:hidden h-100"
         style={{

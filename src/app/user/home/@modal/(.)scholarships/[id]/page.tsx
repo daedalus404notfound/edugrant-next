@@ -36,9 +36,9 @@ export default function InterceptManageScholarshipClient() {
     }
   };
   const { user } = useUserStore();
-  const findMatch = user?.Student.Application.find(
-    (meow) => meow.scholarshipId === data?.scholarshipId
-  );
+  // const findMatch = user?.Student.Application.find(
+  //   (meow) => meow.scholarshipId === data?.scholarshipId
+  // );
 
   const documentPhases = Object.keys(data?.documents ?? {}).filter((key) =>
     key.startsWith("phase")
@@ -87,10 +87,7 @@ export default function InterceptManageScholarshipClient() {
                     disabled={
                       (data?.deadline &&
                         new Date(data.deadline).getTime() < Date.now()) ||
-                      findMatch?.status === "APPROVED" ||
-                      findMatch?.status === "PENDING" ||
-                      findMatch?.status === "INTERVIEW" ||
-                      findMatch?.status === "BLOCKED"
+                      data?.Application?.length! > 0
                     }
                   >
                     <Upload /> Apply Scholarship

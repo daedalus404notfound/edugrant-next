@@ -13,6 +13,7 @@ export const ISPSU_Head = z.object({
   lName: z.string(),
   mName: z.string(),
   gender: z.string(),
+  profileImage: z.string().optional(),
 });
 export const ISPSU_Staff = z.object({
   dateCreated: z.string(),
@@ -22,6 +23,7 @@ export const ISPSU_Staff = z.object({
   lName: z.string(),
   mName: z.string(),
   gender: z.string(),
+  profileImage: z.string().optional(),
 });
 
 export const HeadSchema = z.object({
@@ -47,6 +49,7 @@ export function useAdminProfileForm(data?: AdminProfileFormData) {
         ? format(data?.ISPSU_Head?.dateCreated, "yyyy-MM-dd")
         : "",
       address: data?.ISPSU_Head?.address || "",
+      profileImage: data?.ISPSU_Head.profileImage || "",
     },
     ISPSU_Staff: {
       fName: data?.ISPSU_Staff?.fName || "",

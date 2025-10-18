@@ -15,6 +15,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -24,6 +32,7 @@ import {
 import { UserFormData } from "@/hooks/user/zodUserProfile";
 import { useUserStore } from "@/store/useUserStore";
 import { format } from "date-fns";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Accessibility,
   BookMarked,
@@ -42,6 +51,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
+import { DragAndDropAreaProfile } from "@/components/ui/upload-profile";
 export default function PersonalProfile({
   form,
 }: {
@@ -56,6 +66,38 @@ export default function PersonalProfile({
 
   return (
     <div className=" w-full space-y-12">
+      <div className="space-y-6 bg-card/40 dark:bg-gradient-to-br to-card from-card/50  px-6 pb-8 pt-4 rounded-lg">
+        <div className="flex">
+          <div className="relative flex items-end gap-4">
+            <FormField
+              control={form.control}
+              name="Student.profileImg"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="flex justify-between items-center">
+                    <FormMessage />
+                  </FormLabel>
+                  <FormControl>
+                    <DragAndDropAreaProfile
+                      // reset={reset}
+                      // setReset={setReset}
+                      label="backdrop image"
+                      accept={["image/png", "image/jpeg"]}
+                      onFilesChange={(files) => field.onChange(files[0])} // Single file
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+
+            <div>
+              <h1 className="text-xl font-medium">{`${user?.Student.lName}, ${user?.Student.fName} ${user?.Student.mName}`}</h1>
+              <p className="text-muted-foreground">{user?.schoolId}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="space-y-6 bg-card/40 dark:bg-gradient-to-br to-card from-card/50  px-6 pb-8 pt-4 rounded-lg">
         <div className="">
           <h3 className="text-base font-medium flex gap-2 items-center py-3">
@@ -499,6 +541,9 @@ export default function PersonalProfile({
                         <SelectItem value="2nd Year">2nd Year</SelectItem>
                         <SelectItem value="3rd Year">3rd Year</SelectItem>
                         <SelectItem value="4th Year">4th Year</SelectItem>
+                        <SelectItem value="5th Year">5th Year</SelectItem>
+                        <SelectItem value="6th Year">6th Year</SelectItem>
+                        <SelectItem value="7th Year">7th Year</SelectItem>
                       </SelectContent>
                     </Select>
 
@@ -531,6 +576,11 @@ export default function PersonalProfile({
                         <SelectItem value="C">C</SelectItem>
                         <SelectItem value="D">D</SelectItem>
                         <SelectItem value="E">E</SelectItem>
+                        <SelectItem value="F">F</SelectItem>
+                        <SelectItem value="G">G</SelectItem>
+                        <SelectItem value="H">H</SelectItem>
+                        <SelectItem value="I">I</SelectItem>
+                        <SelectItem value="J">J</SelectItem>
                       </SelectContent>
                     </Select>
                     <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">

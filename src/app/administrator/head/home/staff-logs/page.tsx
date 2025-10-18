@@ -17,6 +17,9 @@ import { StaffFormData } from "@/hooks/zod/staff";
 import useAdminData from "@/hooks/admin/getAdmins";
 import useAdminsSearch from "@/hooks/admin/getAdminSearch";
 import TitleReusable from "@/components/ui/title";
+import useGetAllStaffLogs, {
+  AllStaffLogsType,
+} from "@/hooks/admin/getAllStaffLogs";
 export default function Manage() {
   const [search, setSearch] = useState("");
   const [pagination, setPagination] = useState<PaginationState>({
@@ -26,39 +29,31 @@ export default function Manage() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const { data, loading, meta } = useAdminData({
+  const { data, loading, meta } = useGetAllStaffLogs({
     page: pagination.pageIndex + 1,
     pageSize: pagination.pageSize,
     sortBy: sorting[0]?.id ?? "",
     order: sorting[0]?.desc ? "desc" : "asc",
-  });
-
-  const { searchData, searchLoading, searchMeta } = useAdminsSearch({
-    page: pagination.pageIndex + 1,
-    pageSize: pagination.pageSize,
-    sortBy: sorting[0]?.id ?? "",
-    order: sorting[0]?.desc ? "desc" : "asc",
-    query: search,
   });
 
   return (
     <div className="min-h-screen px-4 relative z-10">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <TitleReusable
-          title="Manage Staffs"
-          description=" View, search, and manage staff accounts."
+          title="Staff Logs"
+          description="Review and monitor staff activities."
           Icon={UsersRound}
         />
 
         <div className="py-8">
-          <DataTable<StaffFormData, unknown>
-            data={search.trim().length > 0 ? searchData : data}
+          <DataTable<AllStaffLogsType, unknown>
+            data={data}
             columns={columns}
-            meta={search.trim().length > 0 ? searchMeta : meta}
+            meta={meta}
             pagination={pagination}
             setPagination={setPagination}
-            getRowId={(row) => row.staffId}
-            loading={search ? searchLoading : loading}
+            getRowId={(row) => row.logsId}
+            loading={loading}
             search={search}
             setSearch={setSearch}
             sorting={sorting}

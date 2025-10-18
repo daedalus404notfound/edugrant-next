@@ -10,9 +10,12 @@ interface DashboardLayoutProps {
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { usePathname } from "next/navigation";
 import DynamicHeaderAdmin from "./staff-header2";
+import useSocketConnection from "@/hooks/head/useSocketConnection";
 
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
+  const { connected } = useSocketConnection();
+  console.log("Staff connected?", connected);
   const path = usePathname();
   const segmentedPath = path.split("/");
 

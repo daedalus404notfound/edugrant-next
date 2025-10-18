@@ -2,18 +2,19 @@
 import "ldrs/react/Ring.css";
 import { useEffect, useState } from "react";
 import { DataTable } from "@/app/table-components/data-table";
-import { columns } from "./staff-application-table-components/columns";
+import { columns } from "../staff-application-table-components/columns";
 import {
   ColumnFiltersState,
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
-import DataTableToolbar from "./staff-application-table-components/data-table-toolbar";
+import DataTableToolbar from "../staff-application-table-components/data-table-toolbar";
 import { ApplicationFormData } from "@/hooks/zod/application";
 import useApplicantsSearch from "@/hooks/admin/getApplicantSearch";
 import useFetchApplications from "@/hooks/admin/getApplicant";
 import TitleReusable from "@/components/ui/title";
 import { useApplicationUIStore } from "@/store/updateUIStore";
+import socket from "@/lib/socketLib";
 
 export default function PendingStaffApplication({
   setPending,
@@ -67,6 +68,15 @@ export default function PendingStaffApplication({
       !forInterviewIds.includes(item.applicationId)
   );
 
+  useEffect(() => {
+    socket.on("applyScholarship", ({ applyScholarship }) => {
+      console.log("🎓 New application received:", applyScholarship);
+    });
+
+    return () => {
+      socket.off("applyScholarship");
+    };
+  }, []);
   return (
     <DataTable<ApplicationFormData, unknown>
       data={filteredData}

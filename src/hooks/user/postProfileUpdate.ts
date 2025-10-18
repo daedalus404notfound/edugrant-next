@@ -86,27 +86,32 @@ const updateUserApi = async (data: UserFormData) => {
         siblings: data.Student.familyBackground.siblings,
       }),
   };
-  const hasFamilyBackground = Object.keys(familyBackground).length > 0;
+  const formData = new FormData();
 
+  formData.append("address", data.Student.address);
+  formData.append("contactNumber", data.Student.contactNumber);
+  formData.append("course", data.Student.course);
+  formData.append("dateOfBirth", data.Student.dateOfBirth);
+  formData.append("firstName", data.Student.fName);
+  formData.append("gender", data.Student.gender);
+  formData.append("lastName", data.Student.lName);
+  formData.append("middleName", data.Student.mName);
+  formData.append("section", data.Student.section);
+  formData.append("studentId", String(data.Student.studentId));
+  formData.append("accountId", String(data.accountId));
+  formData.append("year", data.Student.year);
+
+  const hasFamilyBackground = Object.keys(familyBackground).length > 0;
+  formData.append(
+    "familyBackground",
+    hasFamilyBackground ? JSON.stringify(familyBackground) : JSON.stringify({})
+  );
+  if (data.Student.profileImg) {
+    formData.append("profileImg", data.Student.profileImg);
+  }
   const res = await axios.post(
     `${process.env.NEXT_PUBLIC_USER_URL}/updateStudentInfo`,
-    {
-      address: data.Student.address,
-      contactNumber: data.Student.contactNumber,
-      course: data.Student.course,
-      dateOfBirth: data.Student.dateOfBirth,
-      firstName: data.Student.fName,
-      gender: data.Student.gender,
-      lastName: data.Student.lName,
-      middleName: data.Student.mName,
-      section: data.Student.section,
-      studentId: data.Student.studentId,
-      accountId: data.accountId,
-      year: data.Student.year,
-      familyBackground: hasFamilyBackground
-        ? JSON.stringify(familyBackground)
-        : JSON.stringify({}),
-    },
+    formData,
     { withCredentials: true }
   );
 
