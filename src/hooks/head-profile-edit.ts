@@ -13,7 +13,12 @@ export const ISPSU_Head = z.object({
   lName: z.string(),
   mName: z.string(),
   gender: z.string(),
-  profileImage: z.string().optional(),
+  profileImg: z
+    .object({
+      publicUrl: z.any().optional(),
+      path: z.string().optional(),
+    })
+    .optional(),
 });
 export const ISPSU_Staff = z.object({
   dateCreated: z.string(),
@@ -23,7 +28,12 @@ export const ISPSU_Staff = z.object({
   lName: z.string(),
   mName: z.string(),
   gender: z.string(),
-  profileImage: z.string().optional(),
+  profileImg: z
+    .object({
+      publicUrl: z.any().optional(),
+      path: z.string().optional(),
+    })
+    .optional(),
 });
 
 export const HeadSchema = z.object({
@@ -49,7 +59,10 @@ export function useAdminProfileForm(data?: AdminProfileFormData) {
         ? format(data?.ISPSU_Head?.dateCreated, "yyyy-MM-dd")
         : "",
       address: data?.ISPSU_Head?.address || "",
-      profileImage: data?.ISPSU_Head.profileImage || "",
+      profileImg: {
+        publicUrl: data?.ISPSU_Head?.profileImg?.publicUrl,
+        path: data?.ISPSU_Head?.profileImg?.path,
+      },
     },
     ISPSU_Staff: {
       fName: data?.ISPSU_Staff?.fName || "",
@@ -61,6 +74,10 @@ export function useAdminProfileForm(data?: AdminProfileFormData) {
         ? format(data?.ISPSU_Staff?.dateCreated, "yyyy-MM-dd")
         : "",
       address: data?.ISPSU_Staff?.address || "",
+      profileImg: {
+        publicUrl: data?.ISPSU_Head?.profileImg?.publicUrl,
+        path: data?.ISPSU_Head?.profileImg?.path,
+      },
     },
     accountId: data?.accountId || 0,
     dateCreated: data?.dateCreated

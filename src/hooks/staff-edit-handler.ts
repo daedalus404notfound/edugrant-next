@@ -17,19 +17,19 @@ type ApiError = AxiosError<ApiErrorResponse>;
 const updateUserApi = async (data: AdminProfileFormData) => {
   const formData = new FormData();
 
-  formData.append("address", data.ISPSU_Head.address);
-  formData.append("firstName", data.ISPSU_Head.fName);
-  formData.append("gender", data.ISPSU_Head.gender);
-  formData.append("lastName", data.ISPSU_Head.lName);
-  formData.append("middleName", data.ISPSU_Head.mName);
+  formData.append("address", data.ISPSU_Staff.address);
+  formData.append("firstName", data.ISPSU_Staff.fName);
+  formData.append("gender", data.ISPSU_Staff.gender);
+  formData.append("lastName", data.ISPSU_Staff.lName);
+  formData.append("middleName", data.ISPSU_Staff.mName);
   formData.append("accountId", String(data.accountId));
 
-  if (data.ISPSU_Head.profileImg?.publicUrl) {
-    formData.append("profileImg", data.ISPSU_Head.profileImg.publicUrl);
+  if (data.ISPSU_Staff.profileImg?.publicUrl) {
+    formData.append("profileImg", data.ISPSU_Staff.profileImg.publicUrl);
   }
 
   const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/editHead
+    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/editStaff
     `,
     formData,
     { withCredentials: true }
@@ -66,7 +66,7 @@ export const useProfile = () => {
   });
 };
 
-export const useUpdateProfileAdmin = (data?: AdminProfileFormData) => {
+export const useUpdateProfileStaff = (data?: AdminProfileFormData) => {
   const { form, isChanged } = useAdminProfileForm(data);
   const profileUpdate = useProfile();
   const [open, setOpen] = useState(false);

@@ -13,6 +13,7 @@ import {
   Loader,
   Mail,
   Map,
+  Settings,
   UserRound,
   UserRoundCheck,
   UserRoundCog,
@@ -96,11 +97,13 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DragAndDropAreaProfile } from "@/components/ui/upload-profile";
+import { useUpdateProfileStaff } from "@/hooks/staff-edit-handler";
 export default function Profile() {
   const { admin, loading: loadingAdmin } = useAdminStore();
   const [openCalendar, setOpenCalendar] = useState(false);
 
-  const { form, handleSubmit, loading, isChanged } = useUpdateProfileAdmin(
+  const { form, handleSubmit, loading, isChanged } = useUpdateProfileStaff(
     admin ?? undefined
   );
   const [tab, setTab] = useState("personal");
@@ -127,296 +130,308 @@ export default function Profile() {
 
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className=" lg:pb-10   w-full p-2 lg:p-0 mx-auto">
-        {/* <motion.div
-          className="flex justify-between items-end"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.3, delay: 0.4 }}
-        >
-          <TitleReusable
-            title="Profile Settings"
-            description="Manage and update your personal information and account preferences."
-            Icon={UserRoundCog}
-          />
-        </motion.div> */}
+      <div className="mx-auto w-[95%] lg:py-10  py-4">
+        <TitleReusable
+          title="Profile Settings"
+          description="Manage your personal information, account details."
+          Icon={Settings}
+        />
 
-        <div className="h-50 w-full rounded-md relative bg-gradient-to-br from-background via-card to-card/50  shadow-md flex justify-center items-center ">
-          <div className="absolute top-0 right-0 h-full overflow-hidden">
-            <img src={logo.src} className="opacity-40 -translate-y-7" alt="" />
-          </div>
-          <div className="absolute -bottom-20 w-[60%] flex items-end">
-            {loadingAdmin ? (
-              <>
-                {/* Avatar Skeleton */}
-                <Skeleton className="size-25 rounded-full flex-shrink-0" />
-
-                {/* Text Content Skeleton */}
-                <div className="p-3 flex-1">
-                  <Skeleton className="h-7 w-48 mb-2" />
-                  <Skeleton className="h-4 w-32" />
-                </div>
-              </>
-            ) : (
-              <>
-                {/* Avatar */}
-                <div className="size-25 bg-emerald-900 rounded-full flex justify-center items-center text-2xl font-bold tracking-wide text-white shadow-lg flex-shrink-0">
-                  JT
-                </div>
-
-                {/* Text Content */}
-                <div className="p-3">
-                  <h1 className="text-xl font-medium text-foreground">
-                    {admin?.ISPSU_Staff.lName}, {admin?.ISPSU_Staff.fName}{" "}
-                    {admin?.ISPSU_Staff.mName}
-                  </h1>
-                  <p className="text-muted-foreground text-sm">{admin?.role}</p>
-                </div>
-              </>
-            )}
-          </div>
+        <div className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b">
+          <Tabs tabs={tabs} onTabChange={(tabId) => setTab(tabId)} />
         </div>
-        <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
-        <div className="py-8 w-[60%] mx-auto space-y-8 mt-20">
-          <div className="overflow-y-hidden overflow-x-auto py-3 no-scrollbar ">
-            <Tabs tabs={tabs} onTabChange={(tabId) => setTab(tabId)} />
-          </div>
+        <div className="mt-15 lg:w-[60%] min-w-5xl w-full mx-auto">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)}>
               {tab === "personal" && (
-                <div className=" w-full space-y-5">
-                  <div className="flex items-center gap-3 border-b py-4">
-                    <h1 className="font-medium ">Personal Details</h1>
+                <div className=" w-full space-y-12">
+                  <div className="space-y-6 bg-card/40 dark:bg-gradient-to-br to-card from-card/50  px-6 pb-8 pt-4 rounded-lg">
+                    <div className="flex">
+                      <div className="relative flex items-end gap-4">
+                        <FormField
+                          control={form.control}
+                          name="ISPSU_Staff.profileImg.publicUrl"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="flex justify-between items-center">
+                                <FormMessage />
+                              </FormLabel>
+                              <FormControl>
+                                <DragAndDropAreaProfile
+                                  // reset={reset}
+                                  // setReset={setReset}
+                                  label="backdrop image"
+                                  accept={["image/png", "image/jpeg"]}
+                                  onFilesChange={(files) =>
+                                    field.onChange(
+                                      files[0]
+                                        ? files[0]
+                                        : admin?.ISPSU_Staff.profileImg
+                                            ?.publicUrl
+                                    )
+                                  } // Single file/ Single file
+                                />
+                              </FormControl>
+                            </FormItem>
+                          )}
+                        />
+
+                        <div>
+                          <h1 className="text-lg font-medium">
+                            {admin?.ISPSU_Staff?.lName || ""},{" "}
+                            {admin?.ISPSU_Staff?.fName || ""}{" "}
+                            {admin?.ISPSU_Staff?.mName || ""}
+                          </h1>
+                          <p className="text-muted-foreground text-sm">
+                            {admin?.email}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2  gap-8 py-4">
-                    <FormField
-                      control={form.control}
-                      name="ISPSU_Staff.fName"
-                      render={({ field }) => (
-                        <FormItem className="">
-                          <FormLabel className="text-muted-foreground">
-                            First Name
-                          </FormLabel>
-                          <FormControl>
-                            <div className="flex items-center">
-                              <Input {...field} className="rounded-r-none" />
-                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                                <Button variant="ghost">
-                                  <UserRound />
-                                </Button>
-                              </span>
-                            </div>
-                          </FormControl>
+                  <div className="space-y-6 bg-card/40 dark:bg-gradient-to-br to-card from-card/50  px-6 pb-8 pt-4 rounded-lg">
+                    <div className="">
+                      <h3 className="text-base font-medium flex gap-2 items-center py-3">
+                        <UserRoundCog className="h-4.5 w-4.5" /> Personal
+                        Information
+                      </h3>
+                      <div className="w-full h-[2px] flex-1 bg-gradient-to-r from-border to-transparent" />
+                    </div>
+                    <div className="grid lg:grid-cols-2 grid-cols-1 gap-10">
+                      <FormField
+                        control={form.control}
+                        name="ISPSU_Staff.fName"
+                        render={({ field }) => (
+                          <FormItem className="">
+                            <FormLabel className="text-muted-foreground">
+                              First Name
+                            </FormLabel>
+                            <FormControl>
+                              <div className="flex items-center">
+                                <Input {...field} className="rounded-r-none" />
+                                <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                  <Button variant="ghost">
+                                    <UserRound />
+                                  </Button>
+                                </span>
+                              </div>
+                            </FormControl>
 
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="ISPSU_Staff.mName"
-                      render={({ field }) => (
-                        <FormItem className="">
-                          <FormLabel className="text-muted-foreground">
-                            Middle Name
-                          </FormLabel>
-                          <FormControl className="">
-                            <div className="flex items-center">
-                              <Input
-                                placeholder="(Optional)"
-                                {...field}
-                                className="rounded-r-none"
-                              />
-                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                                <Button variant="ghost">
-                                  <CircleUserRound />
-                                </Button>
-                              </span>
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="ISPSU_Staff.mName"
+                        render={({ field }) => (
+                          <FormItem className="">
+                            <FormLabel className="text-muted-foreground">
+                              Middle Name
+                            </FormLabel>
+                            <FormControl className="">
+                              <div className="flex items-center">
+                                <Input
+                                  placeholder="(Optional)"
+                                  {...field}
+                                  className="rounded-r-none"
+                                />
+                                <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                  <Button variant="ghost">
+                                    <CircleUserRound />
+                                  </Button>
+                                </span>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    <FormField
-                      control={form.control}
-                      name="ISPSU_Staff.lName"
-                      render={({ field }) => (
-                        <FormItem className="col-span-2">
-                          <FormLabel className="text-muted-foreground">
-                            Last Name
-                          </FormLabel>
-                          <FormControl className="">
-                            <div className="flex items-center">
-                              <Input
-                                placeholder=""
-                                className="rounded-r-none"
-                                {...field}
-                              />
-                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                                <Button variant="ghost">
-                                  <UserRoundCheck />
-                                </Button>
-                              </span>
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      <FormField
+                        control={form.control}
+                        name="ISPSU_Staff.lName"
+                        render={({ field }) => (
+                          <FormItem className="col-span-2">
+                            <FormLabel className="text-muted-foreground">
+                              Last Name
+                            </FormLabel>
+                            <FormControl className="">
+                              <div className="flex items-center">
+                                <Input
+                                  placeholder=""
+                                  className="rounded-r-none"
+                                  {...field}
+                                />
+                                <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                  <Button variant="ghost">
+                                    <UserRoundCheck />
+                                  </Button>
+                                </span>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    <FormField
-                      control={form.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem className="">
-                          <FormLabel className="text-muted-foreground">
-                            Email
-                          </FormLabel>
-                          <FormControl className="">
-                            <div className="flex items-center">
-                              <Input
-                                placeholder=""
-                                className="rounded-r-none"
-                                {...field}
-                                readOnly
-                                disabled
-                              />
-                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                                <Button variant="ghost">
-                                  <Mail />
-                                </Button>
-                              </span>
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      <FormField
+                        control={form.control}
+                        name="email"
+                        render={({ field }) => (
+                          <FormItem className="">
+                            <FormLabel className="text-muted-foreground">
+                              Email
+                            </FormLabel>
+                            <FormControl className="">
+                              <div className="flex items-center">
+                                <Input
+                                  placeholder=""
+                                  className="rounded-r-none"
+                                  {...field}
+                                  readOnly
+                                  disabled
+                                />
+                                <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                  <Button variant="ghost">
+                                    <Mail />
+                                  </Button>
+                                </span>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    <FormField
-                      control={form.control}
-                      name="ISPSU_Staff.gender"
-                      render={({ field }) => (
-                        <FormItem className="">
-                          <FormLabel className="text-muted-foreground">
-                            Gender
-                          </FormLabel>
-                          <FormControl>
-                            <div className="flex items-center">
-                              <Select
-                                onValueChange={field.onChange}
-                                value={field.value}
-                              >
-                                <SelectTrigger className="rounded-r-none w-full">
-                                  <SelectValue placeholder="Select" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="Male">Male</SelectItem>
-                                  <SelectItem value="Female">Female</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                                <Button variant="ghost">
-                                  <VenusAndMars />
-                                </Button>
-                              </span>
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="ISPSU_Staff.address"
-                      render={({ field }) => (
-                        <FormItem className="col-span-2">
-                          <FormLabel className="text-muted-foreground">
-                            Address
-                          </FormLabel>
-                          <FormControl className="">
-                            <div className="flex items-center">
-                              <Input
-                                placeholder=""
-                                className="rounded-r-none"
-                                {...field}
-                              />
-                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                                <Button variant="ghost">
-                                  <Map />
-                                </Button>
-                              </span>
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      <FormField
+                        control={form.control}
+                        name="ISPSU_Staff.gender"
+                        render={({ field }) => (
+                          <FormItem className="">
+                            <FormLabel className="text-muted-foreground">
+                              Gender
+                            </FormLabel>
+                            <FormControl>
+                              <div className="flex items-center">
+                                <Select
+                                  onValueChange={field.onChange}
+                                  value={field.value}
+                                >
+                                  <SelectTrigger className="rounded-r-none w-full">
+                                    <SelectValue placeholder="Select" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="Male">Male</SelectItem>
+                                    <SelectItem value="Female">
+                                      Female
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                  <Button variant="ghost">
+                                    <VenusAndMars />
+                                  </Button>
+                                </span>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="ISPSU_Staff.address"
+                        render={({ field }) => (
+                          <FormItem className="col-span-2">
+                            <FormLabel className="text-muted-foreground">
+                              Address
+                            </FormLabel>
+                            <FormControl className="">
+                              <div className="flex items-center">
+                                <Input
+                                  placeholder=""
+                                  className="rounded-r-none"
+                                  {...field}
+                                />
+                                <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                  <Button variant="ghost">
+                                    <Map />
+                                  </Button>
+                                </span>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
-                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
-                  <div className="flex items-center gap-3 border-b py-4">
-                    <h1 className="font-medium ">Account Details</h1>
-                  </div>
-                  <div className="grid grid-cols-2 gap-8 py-4">
-                    <FormField
-                      control={form.control}
-                      name="role"
-                      render={({ field }) => (
-                        <FormItem className="">
-                          <FormLabel className="text-muted-foreground">
-                            Role
-                          </FormLabel>
-                          <FormControl className="">
-                            <div className="flex items-center">
-                              <Input
-                                placeholder=""
-                                disabled
-                                className="rounded-r-none"
-                                {...field}
-                              />
-                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                                <Button variant="ghost">
-                                  <Crown />
-                                </Button>
-                              </span>
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
 
-                    <FormField
-                      control={form.control}
-                      name="dateCreated"
-                      render={({ field }) => (
-                        <FormItem className="">
-                          <FormLabel className="text-muted-foreground">
-                            Member Since
-                          </FormLabel>
-                          <FormControl className="">
-                            <div className="flex items-center">
-                              <Input
-                                placeholder=""
-                                disabled
-                                className="rounded-r-none"
-                                {...field}
-                              />
-                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                                <Button variant="ghost">
-                                  <Calendar1 />
-                                </Button>
-                              </span>
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                  <div className="space-y-6 bg-card/40 dark:bg-gradient-to-br to-card from-card/50  px-6 pb-8 pt-4 rounded-lg">
+                    <div className="">
+                      <h3 className="text-base font-medium flex gap-2 items-center py-3">
+                        <Mail className="h-4.5 w-4.5" /> Account Information
+                      </h3>
+                      <div className="w-full h-[2px] flex-1 bg-gradient-to-r from-border to-transparent" />
+                    </div>
+                    <div className="grid lg:grid-cols-2 grid-cols-1 gap-10">
+                      <FormField
+                        control={form.control}
+                        name="role"
+                        render={({ field }) => (
+                          <FormItem className="">
+                            <FormLabel className="text-muted-foreground">
+                              Role
+                            </FormLabel>
+                            <FormControl className="">
+                              <div className="flex items-center">
+                                <Input
+                                  placeholder=""
+                                  disabled
+                                  className="rounded-r-none"
+                                  {...field}
+                                />
+                                <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                  <Button variant="ghost">
+                                    <Crown />
+                                  </Button>
+                                </span>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    {/* <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" /> */}
+                      <FormField
+                        control={form.control}
+                        name="dateCreated"
+                        render={({ field }) => (
+                          <FormItem className="">
+                            <FormLabel className="text-muted-foreground">
+                              Member Since
+                            </FormLabel>
+                            <FormControl className="">
+                              <div className="flex items-center">
+                                <Input
+                                  placeholder=""
+                                  disabled
+                                  className="rounded-r-none"
+                                  {...field}
+                                />
+                                <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                                  <Button variant="ghost">
+                                    <Calendar1 />
+                                  </Button>
+                                </span>
+                              </div>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
                   </div>
 
                   <AnimatePresence>

@@ -121,7 +121,7 @@ export default function Profile() {
                       <div className="relative flex items-end gap-4">
                         <FormField
                           control={form.control}
-                          name="ISPSU_Head.profileImage"
+                          name="ISPSU_Head.profileImg.publicUrl"
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel className="flex justify-between items-center">
@@ -134,8 +134,13 @@ export default function Profile() {
                                   label="backdrop image"
                                   accept={["image/png", "image/jpeg"]}
                                   onFilesChange={(files) =>
-                                    field.onChange(files[0])
-                                  } // Single file
+                                    field.onChange(
+                                      files[0]
+                                        ? files[0]
+                                        : admin?.ISPSU_Head.profileImg
+                                            ?.publicUrl
+                                    )
+                                  } // Single file/ Single file
                                 />
                               </FormControl>
                             </FormItem>
@@ -143,7 +148,11 @@ export default function Profile() {
                         />
 
                         <div>
-                          <h1 className="text-lg font-medium">{`${admin?.ISPSU_Head.lName}, ${admin?.ISPSU_Head.fName} ${admin?.ISPSU_Head.mName}`}</h1>
+                          <h1 className="text-lg font-medium">
+                            {admin?.ISPSU_Head?.lName || ""},{" "}
+                            {admin?.ISPSU_Head?.fName || ""}{" "}
+                            {admin?.ISPSU_Head?.mName || ""}
+                          </h1>
                           <p className="text-muted-foreground text-sm">
                             {admin?.email}
                           </p>
