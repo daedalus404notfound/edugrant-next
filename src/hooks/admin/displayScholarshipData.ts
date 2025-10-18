@@ -12,7 +12,9 @@ export const displayScholarshipSchema = z.object({
   Application: z
     .array(
       z.object({
-        applicationId: z.number(),
+        ownerId: z.number().optional(),
+        status: z.string().optional(),
+        applicationId: z.number().optional(),
       })
     )
     .optional(),

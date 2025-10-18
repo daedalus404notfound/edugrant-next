@@ -71,6 +71,7 @@ export function useUpdateScholarshipZod(data?: scholarshipFormData) {
   const form = useForm<scholarshipFormData>({
     resolver: zodResolver(scholarshipSchema),
     defaultValues: {
+      Application: data?.Application,
       ISPSUId: data?.ISPSUId || 0,
       SPId: data?.SPId || 0,
       Scholarship_Provider: {
