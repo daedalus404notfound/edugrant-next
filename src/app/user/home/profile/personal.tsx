@@ -54,8 +54,12 @@ import { UseFormReturn } from "react-hook-form";
 import { DragAndDropAreaProfile } from "@/components/ui/upload-profile";
 export default function PersonalProfile({
   form,
+  isSuccess,
+  setIsSuccess,
 }: {
   form: UseFormReturn<UserFormData>;
+  isSuccess: boolean;
+  setIsSuccess: (reset: boolean) => void;
 }) {
   const { user, loadingUser: useLoading } = useUserStore();
   const [openCalendar, setOpenCalendar] = useState(false);
@@ -71,7 +75,7 @@ export default function PersonalProfile({
           <div className="relative flex items-end gap-4">
             <FormField
               control={form.control}
-              name="Student.profileImg"
+              name="Student.profileImg.publicUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="flex justify-between items-center">
@@ -79,11 +83,18 @@ export default function PersonalProfile({
                   </FormLabel>
                   <FormControl>
                     <DragAndDropAreaProfile
-                      // reset={reset}
-                      // setReset={setReset}
+                      isSuccess={isSuccess}
+                      setIsSuccess={setIsSuccess}
                       label="backdrop image"
                       accept={["image/png", "image/jpeg"]}
-                      onFilesChange={(files) => field.onChange(files[0])} // Single file
+                      initialImageUrl={user?.Student.profileImg?.publicUrl}
+                      onFilesChange={(files) =>
+                        field.onChange(
+                          files[0]
+                            ? files[0]
+                            : user?.Student.profileImg?.publicUrl
+                        )
+                      } // Single file
                     />
                   </FormControl>
                 </FormItem>

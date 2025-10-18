@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   Dialog,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -16,11 +17,13 @@ import {
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import {
+  ArrowLeft,
   ArrowRight,
   ArrowRightIcon,
   Calendar,
   Megaphone,
   SearchIcon,
+  X,
 } from "lucide-react";
 import { format } from "date-fns";
 import Link from "next/link";
@@ -34,9 +37,21 @@ import {
 } from "@/components/ui/select";
 import TitleReusable from "@/components/ui/title";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AnnouncementFormDataGet } from "@/hooks/zod/announcement";
+import { TipTapViewer } from "@/components/ui/tiptap-viewer";
 
 export default function PublicAnnouncement() {
   const [open, setOpen] = useState(true);
+  const [full, setFull] = useState(false);
+
+  const [announce, setAnnounce] = useState<AnnouncementFormDataGet>({
+    title: "",
+    description: "",
+    tags: { data: [] },
+    announcementId: 0,
+    dateCreated: new Date(), // ✅ correct
+  });
+
   const [page, setPage] = useState(1);
   const [pageSize] = useState(5);
   const router = useRouter();
@@ -87,111 +102,131 @@ export default function PublicAnnouncement() {
         HandleCloseDrawer(value);
       }}
     >
-      <DialogContent className="max-w-4xl p-0 border-0 rounded-lg overflow-hidden">
-        <DialogHeader className="sr-only">
-          <DialogTitle className="text-2xl font-semibold">
-            Privacy Policy
-          </DialogTitle>
-        </DialogHeader>
-        <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-          <div className="mx-auto w-[95%] lg:py-10  py-4">
-            <div className="pb-6 border-b">
-              <TitleReusable
-                title="Announcements"
-                description="Here's what's new! Stay tuned for the latest updates."
-                Icon={Megaphone}
-              />
-            </div>
-            <div className="mt-15 lg:w-[80%] md:min-w-5xl w-full mx-auto space-y-3">
-              {/* <div className="flex justify-between">
-                   <div className="relative max-w-lg w-full">
-                     <Input
-                       placeholder="Search announcement..."
-                       onChange={(e) => setSearch(e.target.value)}
-                       className="w-full peer ps-9 pe-9"
-                       type="search"
-                     />
-       
-                     <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 text-muted-foreground/80 peer-disabled:opacity-50">
-                       <SearchIcon size={16} />
-                     </div>
-                     <button
-                       className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground/80 transition-[color,box-shadow] outline-none hover:text-foreground focus:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-                       aria-label="Submit search"
-                       type="submit"
-                     >
-                       <ArrowRightIcon size={16} />
-                     </button>
-                   </div>
-                   <Select onValueChange={(value) => setSelected(value)}>
-                     <SelectTrigger className="w-[150px]">
-                       <SelectValue placeholder="Sort" />
-                     </SelectTrigger>
-                     <SelectContent>
-                       <SelectItem value="asc">Newest</SelectItem>
-                       <SelectItem value="desc">Oldest</SelectItem>
-                     </SelectContent>
-                   </Select>
-                 </div> */}
-              <div className="flex flex-col gap-3">
-                {loading ? (
-                  <>
-                    {[...Array(3)].map((_, i) => (
-                      <AnnouncementSkeleton key={i} />
-                    ))}
-                  </>
-                ) : data.length === 0 ? (
-                  <NoDataFound />
-                ) : (
-                  data.map((item) => (
-                    <Link
-                      key={item.announcementId}
-                      scroll={false}
-                      prefetch={true}
-                      href={`/user/home/announcements/${item.announcementId}`}
-                      className="block bg-card hover:bg-gray-200 dark:bg-card/80 dark:hover:bg-card rounded-lg shadow pt-6 px-6 pb-8 transition-all duration-200"
-                    >
-                      <div className=" ">
-                        <div className="flex items-start justify-between gap-4">
-                          <div className="flex items-center gap-3">
-                            <h2 className="lg:text-lg text-base font-semibold tracking-tight text-foreground  text-balance ">
-                              {item.title}
-                            </h2>{" "}
-                          </div>
+      <DialogContent className="max-w-4xl border-0 rounded-lg gap-0  p-1">
+        <div className="flex items-center justify-between pb-2 sticky top ">
+          <div className="flex items-center gap-3">
+            <Button
+              className="relative justify-start"
+              variant="ghost"
+              size="sm"
+            >
+              <Megaphone />
+              Announcements
+            </Button>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button
+              className="ghost"
+              variant="ghost"
+              size="sm"
+              onClick={() => HandleCloseDrawer(false)}
+            >
+              <X />
+            </Button>
+          </div>
+        </div>
+        <div className=" bg-background p-4 rounded-md space-y-6 ">
+          <DialogHeader className="sr-only">
+            <DialogTitle className=" font-semibold">Announcements</DialogTitle>
+          </DialogHeader>
 
-                          <Button size="sm" variant="ghost">
-                            <ArrowRight />
-                          </Button>
-                        </div>{" "}
-                        <p
-                          className="line-clamp-2 text-sm leading-relaxed text-foreground/80 text-pretty w-3/4 mt-3  max-w-none"
-                          dangerouslySetInnerHTML={{ __html: item.description }}
-                        />
-                        <div className="flex justify-between items-center">
-                          {item.tags.data.length > 0 && (
-                            <div className=" flex flex-wrap gap-2 mt-5">
-                              {item.tags.data.map((tag, i) => (
-                                <p
-                                  className="pl-3 border-l text-sm font-medium text-green-700 "
-                                  key={i}
-                                >
-                                  {tag}
-                                </p>
-                              ))}
-                            </div>
-                          )}
-                          <time className=" text-xs text-foreground/70 flex items-center gap-1.5 jakarta tracking-wide mt-1">
-                            <Calendar className="h-3 w-3" />{" "}
-                            {item.dateCreated &&
-                              format(item.dateCreated, "PPP p")}
-                          </time>
-                        </div>
-                      </div>
-                    </Link>
-                  ))
-                )}
+          {full ? (
+            <div className="">
+              <div className="flex justify-between items-center">
+                <Button
+                  onClick={() => {
+                    setFull(false);
+                    setAnnounce({
+                      title: "",
+                      description: "",
+                      tags: { data: [] },
+                      announcementId: 0,
+                      dateCreated: new Date(),
+                    });
+                  }}
+                >
+                  <ArrowLeft />
+                  Back
+                </Button>
+                <p className="text-sm text-muted-foreground ">
+                  Published:{" "}
+                  {announce.dateCreated &&
+                    format(announce.dateCreated, "PPP p")}
+                </p>
               </div>
 
+              <TipTapViewer content={announce?.description} className="p-6" />
+            </div>
+          ) : (
+            <div className="flex  flex-col gap-3">
+              {loading ? (
+                <>
+                  {[...Array(3)].map((_, i) => (
+                    <AnnouncementSkeleton key={i} />
+                  ))}
+                </>
+              ) : data.length === 0 ? (
+                <NoDataFound />
+              ) : (
+                data.map((item) => (
+                  <div
+                    key={item.announcementId}
+                    onClick={() => {
+                      setFull(true);
+                      setAnnounce({
+                        title: item.title,
+                        description: item.description,
+                        tags: item.tags,
+                        announcementId: item.announcementId,
+                        dateCreated: item.dateCreated,
+                      });
+                    }}
+                    className="block bg-card hover:bg-gray-200 dark:bg-card/80 dark:hover:bg-card rounded-lg shadow pt-6 px-6 pb-8 transition-all duration-200"
+                  >
+                    <div className=" ">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                          <h2 className="lg:text-lg text-base font-semibold tracking-tight text-foreground  text-balance ">
+                            {item.title}
+                          </h2>{" "}
+                        </div>
+
+                        <Button size="sm" variant="ghost">
+                          <ArrowRight />
+                        </Button>
+                      </div>{" "}
+                      <p
+                        className="line-clamp-2 text-sm leading-relaxed text-foreground/80 text-pretty w-3/4 mt-3  max-w-none"
+                        dangerouslySetInnerHTML={{ __html: item.description }}
+                      />
+                      <div className="flex justify-between items-center">
+                        {item.tags.data.length > 0 && (
+                          <div className=" flex flex-wrap gap-2 mt-5">
+                            {item.tags.data.map((tag, i) => (
+                              <p
+                                className="pl-3 border-l text-sm font-medium text-green-700 "
+                                key={i}
+                              >
+                                {tag}
+                              </p>
+                            ))}
+                          </div>
+                        )}
+                        <time className=" text-xs text-foreground/70 flex items-center gap-1.5 jakarta tracking-wide mt-1">
+                          <Calendar className="h-3 w-3" />{" "}
+                          {item.dateCreated &&
+                            format(item.dateCreated, "PPP p")}
+                        </time>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+
+          {!full && (
+            <DialogFooter>
               <div className="flex items-center justify-between gap-3">
                 <p
                   className="grow text-sm text-muted-foreground"
@@ -226,8 +261,8 @@ export default function PublicAnnouncement() {
                   </PaginationContent>
                 </Pagination>
               </div>
-            </div>
-          </div>
+            </DialogFooter>
+          )}
         </div>
       </DialogContent>
     </Dialog>

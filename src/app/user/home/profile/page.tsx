@@ -13,8 +13,15 @@ import SecurityForm from "./security";
 import TitleReusable from "@/components/ui/title";
 export default function Profile() {
   const { user, loadingUser: useLoading } = useUserStore();
-  const { form, siblings, handleSubmit, loading, isChanged } =
-    useUpdateProfile(user);
+  const {
+    form,
+    siblings,
+    handleSubmit,
+    loading,
+    isChanged,
+    isSuccess,
+    setIsSuccess,
+  } = useUpdateProfile(user);
   const [tab, setTab] = useState("personal");
 
   const tabs = [
@@ -36,7 +43,13 @@ export default function Profile() {
         <div className="mt-15 lg:w-[60%] min-w-5xl w-full mx-auto">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)}>
-              {tab === "personal" && <PersonalProfile form={form} />}
+              {tab === "personal" && (
+                <PersonalProfile
+                  form={form}
+                  isSuccess={isSuccess}
+                  setIsSuccess={setIsSuccess}
+                />
+              )}
 
               {tab === "family" && (
                 <FamilyForm form={form} siblings={siblings} />

@@ -107,7 +107,7 @@ const updateUserApi = async (data: UserFormData) => {
     hasFamilyBackground ? JSON.stringify(familyBackground) : JSON.stringify({})
   );
   if (data.Student.profileImg) {
-    formData.append("profileImg", data.Student.profileImg);
+    formData.append("profileImg", data.Student.profileImg.publicUrl);
   }
   const res = await axios.post(
     `${process.env.NEXT_PUBLIC_USER_URL}/updateStudentInfo`,
@@ -151,14 +151,14 @@ export const useUpdateProfile = (data?: UserFormData | null) => {
   const { form, siblings, isChanged } = useProfileForm(data);
   const profileUpdate = useProfile();
   const [open, setOpen] = useState(false);
-  const [reset, setReset] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const handleSubmit = async (data: UserFormData) => {
     try {
       const result = await profileUpdate.mutateAsync(data);
 
       if (result) {
         setOpen(false);
-        setReset(true);
+        setIsSuccess(true);
         profileUpdate.reset();
       }
     } catch (error) {
@@ -186,7 +186,7 @@ export const useUpdateProfile = (data?: UserFormData | null) => {
   const resetCreateState = () => {
     profileUpdate.reset();
     form.reset();
-    setReset(true);
+    setIsSuccess(true);
     StyledToast({
       status: "success",
       title: "Form Reset",
@@ -200,8 +200,8 @@ export const useUpdateProfile = (data?: UserFormData | null) => {
     handleSubmit,
     handleTriggerClick,
     resetCreateState,
-    reset,
-    setReset,
+    isSuccess,
+    setIsSuccess,
     form,
     siblings,
     isChanged,

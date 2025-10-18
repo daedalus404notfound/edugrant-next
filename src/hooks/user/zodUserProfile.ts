@@ -30,7 +30,12 @@ const ApplicationSchema = z.object({
 
 export const StudentSchema = z.object({
   Application: z.array(ApplicationSchema),
-  profileImg: z.any().optional(),
+  profileImg: z
+    .object({
+      publicUrl: z.any().optional(),
+      path: z.string().optional(),
+    })
+    .optional(),
   PWD: z.string(),
   studentId: z.number(),
   address: z.string(),
@@ -135,7 +140,10 @@ export function useProfileForm(data?: UserFormData | null) {
             supabasePath: [],
           },
         ],
-        profileImg: data?.Student.profileImg || "",
+        profileImg: {
+          path: data?.Student.profileImg?.path,
+          publicUrl: data?.Student.profileImg?.publicUrl,
+        },
         PWD: data?.Student?.PWD || "",
         studentId: data?.Student?.studentId || 0,
         address: data?.Student?.address || "",
@@ -222,11 +230,55 @@ export function useProfileForm(data?: UserFormData | null) {
       form.reset(defaultValues);
     }
   }, [data, form]);
+  // useEffect(() => {
+  //   const subscription = form.watch((values) => {
+  //     const hasChanged = !deepEqual(defaultValues, values); // ✅ compare against saved defaultValues
+  //     setIsChanged(hasChanged);
+  //   });
+  //   return () => subscription.unsubscribe();
+  // }, [form, defaultValues]);
   useEffect(() => {
     const subscription = form.watch((values) => {
-      const hasChanged = !deepEqual(defaultValues, values); // ✅ compare against saved defaultValues
-      setIsChanged(hasChanged);
+      const equal = deepEqual(defaultValues, values);
+
+      // 🪲 Debug differences when deepEqual says "not equal"
+      if (!equal) {
+        console.group("🪲 Form change detected (deepEqual = false)");
+        console.log("Default Values:", defaultValues);
+        console.log("Current Values:", values);
+
+        try {
+          // Compare the two JSON objects deeply and log the differing keys
+          const diffKeys: string[] = [];
+          const checkDiff = (obj1: any, obj2: any, path = "") => {
+            if (typeof obj1 !== typeof obj2) {
+              diffKeys.push(path);
+              return;
+            }
+            if (typeof obj1 !== "object" || obj1 === null || obj2 === null) {
+              if (obj1 !== obj2) diffKeys.push(path);
+              return;
+            }
+            const allKeys = new Set([
+              ...Object.keys(obj1),
+              ...Object.keys(obj2),
+            ]);
+            for (const key of allKeys) {
+              checkDiff(obj1[key], obj2[key], path ? `${path}.${key}` : key);
+            }
+          };
+          checkDiff(defaultValues, values);
+          console.log("🔍 Different Keys:", diffKeys);
+        } catch (err) {
+          console.warn("Diff inspection failed:", err);
+        }
+
+        console.groupEnd();
+      }
+
+      setIsChanged(!equal);
     });
+
     return () => subscription.unsubscribe();
   }, [form, defaultValues]);
 
