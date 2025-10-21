@@ -1,0 +1,63 @@
+[
+  {
+    "scholarshipName": "CHED Tulong Dunong Program",
+    "applicationsReceived": 5200,
+    "applicationsApproved": 3500,
+    "eligibility": "Filipino undergraduate students from low-income families",
+    "amount": "₱15,000 per semester",
+    "deadline": "2025-07-31",
+    "sponsor": "Commission on Higher Education (CHED)",
+    "renewable": true,
+    "level": "Undergraduate",
+    "region": "Nationwide"
+  },
+  {
+    "scholarshipName": "DOST-SEI Merit Scholarship",
+    "applicationsReceived": 4200,
+    "applicationsApproved": 1900,
+    "eligibility": "Senior high graduates pursuing STEM-related courses",
+    "amount": "₱40,000 tuition + ₱7,000 monthly stipend",
+    "deadline": "2025-06-15",
+    "sponsor": "Department of Science and Technology (DOST)",
+    "renewable": true,
+    "level": "Undergraduate",
+    "region": "Nationwide"
+  },
+  {
+    "scholarshipName": "Iskolar ng Bayan Program",
+    "applicationsReceived": 3100,
+    "applicationsApproved": 2800,
+    "eligibility": "Top 10 of senior high school graduates enrolled in SUCs",
+    "amount": "Full tuition subsidy",
+    "deadline": "2025-07-15",
+    "sponsor": "CHED / SUCs",
+    "renewable": true,
+    "level": "Undergraduate",
+    "region": "Nationwide"
+  },
+  {
+    "scholarshipName": "Bangsamoro Government Scholarship",
+    "applicationsReceived": 2500,
+    "applicationsApproved": 1200,
+    "eligibility": "Students residing in the BARMM region with financial need",
+    "amount": "₱20,000 per semester",
+    "deadline": "2025-08-01",
+    "sponsor": "BARMM Ministry of Basic, Higher and Technical Education",
+    "renewable": true,
+    "level": "Undergraduate",
+    "region": "BARMM"
+  },
+  {
+    "scholarshipName": "Tertiary Education Subsidy (TES)",
+    "applicationsReceived": 8000,
+    "applicationsApproved": 6000,
+    "eligibility": "Poor but deserving students enrolled in public/state universities",
+    "amount": "₱60,000 annually for tuition, board, and allowance",
+    "deadline": "2025-07-20",
+    "sponsor": "Unified Student Financial Assistance System for Tertiary Education (UniFAST)",
+    "renewable": true,
+    "level": "Undergraduate",
+    "region": "Nationwide"
+  }
+  
+]

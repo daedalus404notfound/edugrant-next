@@ -1,0 +1,219 @@
+[
+  {
+    "id": 1,
+    "studentId": "2021-0453",
+    "fullName": "Maria Clara Santos",
+    "course": "BS Agriculture",
+    "yearLevel": "3rd Year",
+    "applications": [
+      {
+        "scholarshipId": "scholarship_ched",
+        "scholarshipName": "CHED Tulong Dunong",
+        "priority": 1,
+        "status": "Approved",
+        "submittedDate": "2025-06-01",
+        "documents": {
+          "schoolId": "uploads/2021-0453/school_id.pdf",
+          "grades": "uploads/2021-0453/grades.pdf",
+          "incomeProof": "uploads/2021-0453/itr.pdf"
+        },
+        "adminRemarks": "Qualified. GPA meets requirement.",
+        "reviewedBy": "admin001",
+        "reviewDate": "2025-06-05",
+        "history": [
+          {
+            "status": "Pending",
+            "date": "2025-06-01",
+            "by": "System"
+          },
+          {
+            "status": "Under Review",
+            "date": "2025-06-03",
+            "by": "admin001"
+          },
+          {
+            "status": "Approved",
+            "date": "2025-06-05",
+            "by": "admin001"
+          }
+        ]
+      },
+      {
+        "scholarshipId": "scholarship_sm",
+        "scholarshipName": "SM Foundation Scholarship",
+        "priority": 2,
+        "status": "Withdrawn",
+        "submittedDate": "2025-06-01",
+        "documents": {
+          "schoolId": "uploads/2021-0453/school_id.pdf",
+          "grades": "uploads/2021-0453/grades.pdf",
+          "incomeProof": "uploads/2021-0453/itr.pdf"
+        },
+        "adminRemarks": "Auto-withdrawn due to approved CHED scholarship.",
+        "reviewedBy": null,
+        "reviewDate": null,
+        "history": [
+          {
+            "status": "Pending",
+            "date": "2025-06-01",
+            "by": "System"
+          },
+          {
+            "status": "Withdrawn",
+            "date": "2025-06-05",
+            "by": "System"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "studentId": "2022-0311",
+    "fullName": "John Michael Reyes",
+    "course": "BS Information Technology",
+    "yearLevel": "2nd Year",
+    "applications": [
+      {
+        "scholarshipId": "scholarship_sm",
+        "scholarshipName": "SM Foundation Scholarship",
+        "priority": 1,
+        "status": "Under Review",
+        "submittedDate": "2025-06-02",
+        "documents": {
+          "schoolId": "uploads/2022-0311/school_id.pdf",
+          "grades": "uploads/2022-0311/grades.pdf",
+          "incomeProof": "uploads/2022-0311/itr.pdf"
+        },
+        "adminRemarks": "",
+        "reviewedBy": "admin002",
+        "reviewDate": null,
+        "history": [
+          {
+            "status": "Pending",
+            "date": "2025-06-02",
+            "by": "System"
+          },
+          {
+            "status": "Under Review",
+            "date": "2025-06-04",
+            "by": "admin002"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "studentId": "2020-0289",
+    "fullName": "Angelica Dela Cruz",
+    "course": "BS Education",
+    "yearLevel": "4th Year",
+    "applications": [
+      {
+        "scholarshipId": "scholarship_ched",
+        "scholarshipName": "CHED Tulong Dunong",
+        "priority": 1,
+        "status": "Rejected",
+        "submittedDate": "2025-06-01",
+        "documents": {
+          "schoolId": "uploads/2020-0289/school_id.pdf",
+          "grades": "uploads/2020-0289/grades.pdf",
+          "incomeProof": "uploads/2020-0289/itr.pdf"
+        },
+        "adminRemarks": "GPA below minimum requirement.",
+        "reviewedBy": "admin001",
+        "reviewDate": "2025-06-06",
+        "history": [
+          {
+            "status": "Pending",
+            "date": "2025-06-01",
+            "by": "System"
+          },
+          {
+            "status": "Under Review",
+            "date": "2025-06-04",
+            "by": "admin001"
+          },
+          {
+            "status": "Rejected",
+            "date": "2025-06-06",
+            "by": "admin001"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "studentId": "2023-0177",
+    "fullName": "Carlos Miguel Fernandez",
+    "course": "BS Mechanical Engineering",
+    "yearLevel": "1st Year",
+    "applications": [
+      {
+        "scholarshipId": "scholarship_dost",
+        "scholarshipName": "DOST-SEI Scholarship",
+        "priority": 1,
+        "status": "Pending",
+        "submittedDate": "2025-06-07",
+        "documents": {
+          "schoolId": "uploads/2023-0177/school_id.pdf",
+          "grades": "uploads/2023-0177/grades.pdf",
+          "incomeProof": "uploads/2023-0177/itr.pdf"
+        },
+        "adminRemarks": "",
+        "reviewedBy": null,
+        "reviewDate": null,
+        "history": [
+          {
+            "status": "Pending",
+            "date": "2025-06-07",
+            "by": "System"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "studentId": "2021-0580",
+    "fullName": "Juliana Mae Lopez",
+    "course": "BS Nursing",
+    "yearLevel": "3rd Year",
+    "applications": [
+      {
+        "scholarshipId": "scholarship_sm",
+        "scholarshipName": "SM Foundation Scholarship",
+        "priority": 1,
+        "status": "Approved",
+        "submittedDate": "2025-06-03",
+        "documents": {
+          "schoolId": "uploads/2021-0580/school_id.pdf",
+          "grades": "uploads/2021-0580/grades.pdf",
+          "incomeProof": "uploads/2021-0580/itr.pdf"
+        },
+        "adminRemarks": "Strong academic record.",
+        "reviewedBy": "admin003",
+        "reviewDate": "2025-06-06",
+        "history": [
+          {
+            "status": "Pending",
+            "date": "2025-06-03",
+            "by": "System"
+          },
+          {
+            "status": "Under Review",
+            "date": "2025-06-05",
+            "by": "admin003"
+          },
+          {
+            "status": "Approved",
+            "date": "2025-06-06",
+            "by": "admin003"
+          }
+        ]
+      }
+    ]
+  }
+]
