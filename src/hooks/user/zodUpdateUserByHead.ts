@@ -30,6 +30,10 @@ const ApplicationSchema = z.object({
 
 export const StudentSchema = z.object({
   Application: z.array(ApplicationSchema),
+  profileImg: z.object({
+    publicUrl: z.any().optional(),
+    path: z.string().optional(),
+  }),
   PWD: z.string(),
   studentId: z.number(),
   address: z.string(),
@@ -84,6 +88,10 @@ export function zodUpdateUserByHead(data?: StudentUserFormData | null) {
         supabasePath: [],
       },
     ],
+    profileImg: {
+      path: data?.profileImg?.path,
+      publicUrl: data?.profileImg?.publicUrl,
+    },
     PWD: data?.PWD || "",
     studentId: data?.studentId || 0,
     address: data?.address || "",

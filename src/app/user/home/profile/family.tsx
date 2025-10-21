@@ -54,7 +54,7 @@ export default function FamilyForm({
         <AlertCircle size={15} /> If no information available, type{" "}
         <span className="font-medium">N/A.</span>
       </p>
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-card/40 dark:bg-gradient-to-br to-card from-card/50 px-6 pb-8 pt-4 rounded-lg">
+      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-card/40 dark:bg-gradient-to-br to-card from-card/50 lg:p-6 p-4 rounded-lg">
         <div className="lg:col-span-2 col-span-1 space-y-4">
           <div className="flex items-center gap-3 flex-col lg:flex-row">
             <h3 className="text-base font-medium flex gap-2 items-center">
@@ -271,7 +271,7 @@ export default function FamilyForm({
           )}
         />
       </div>
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-gradient-to-br to-card from-card/50 px-6 pb-8 pt-4 rounded-lg">
+      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-gradient-to-br to-card from-card/50 lg:p-6 p-4  rounded-lg">
         <div className="lg:col-span-2 col-span-1 space-y-4">
           <div className="flex items-center gap-3 flex-col lg:flex-row">
             <h3 className="text-base font-medium flex gap-2 items-center">
@@ -472,7 +472,7 @@ export default function FamilyForm({
           )}
         />
       </div>
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-gradient-to-br to-card from-card/50 px-6 pb-8 pt-4 rounded-lg">
+      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-gradient-to-br to-card from-card/50 lg:p-6 p-4  rounded-lg">
         <div className="lg:col-span-2 col-span-1 space-y-4">
           <div className="flex items-center gap-3 flex-col lg:flex-row">
             <h3 className="text-base font-medium flex gap-2 items-center">
@@ -482,7 +482,6 @@ export default function FamilyForm({
           </div>
         </div>
 
-        {/* Guardian Full Name */}
         <FormField
           control={form.control}
           name="Student.familyBackground.guardianFullName"
@@ -508,7 +507,6 @@ export default function FamilyForm({
           )}
         />
 
-        {/* Guardian Address */}
         <FormField
           control={form.control}
           name="Student.familyBackground.guardianAddress"
@@ -530,7 +528,6 @@ export default function FamilyForm({
           )}
         />
 
-        {/* Guardian Contact Number */}
         <FormField
           control={form.control}
           name="Student.familyBackground.guardianContactNumber"
@@ -561,7 +558,6 @@ export default function FamilyForm({
           )}
         />
 
-        {/* Guardian Occupation */}
         <FormField
           control={form.control}
           name="Student.familyBackground.guardianOccupation"
@@ -585,13 +581,11 @@ export default function FamilyForm({
           )}
         />
 
-        {/* Guardian Highest Education */}
-
         <FormField
           control={form.control}
           name="Student.familyBackground.guardianHighestEducation"
           render={({ field }) => (
-            <FormItem className="col-span-2">
+            <FormItem className="">
               <FormLabel className="text-muted-foreground">
                 Highest Education Attainment
               </FormLabel>
@@ -626,30 +620,28 @@ export default function FamilyForm({
           )}
         />
       </div>
-      <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-gradient-to-br to-card from-card/50 px-6 pb-8 pt-4 rounded-lg">
-        <div className="lg:col-span-2 col-span-1 space-y-4">
-          <div className="flex items-center gap-3">
-            <h3 className="text-base font-medium flex gap-2 items-center">
-              Siblings Information
-            </h3>
-            <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-            <Button
-              size="sm"
-              type="button"
-              onClick={() =>
-                siblings.append({
-                  fullName: "",
-                  age: "",
-                  occupation: "",
-                })
-              }
-            >
-              + Add fields
-            </Button>
-          </div>
+      <div className="w-full">
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row lg:items-center gap-4 mb-4">
+          <h3 className="text-lg font-medium flex items-center gap-2">
+            Sibling(s) Information
+          </h3>
+
+          <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
+
+          <Button
+            size="sm"
+            type="button"
+            onClick={() =>
+              siblings.append({ fullName: "", age: "", occupation: "" })
+            }
+          >
+            + Add fields
+          </Button>
         </div>
 
-        <div className="flex flex-col gap-3 col-span-3">
+        {/* Sibling Fields */}
+        <div className="flex flex-col gap-4">
           {siblings.fields.map(
             (
               item: {
@@ -660,65 +652,67 @@ export default function FamilyForm({
               },
               index
             ) => (
-              <div key={item.id} className="space-y-3 w-full">
-                <div className="flex gap-3 items-end ">
-                  <FormField
-                    control={form.control}
-                    name={`Student.familyBackground.siblings.${index}.fullName`}
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <div className="flex justify-between items-center">
-                          <FormLabel className="text-muted-foreground">
-                            Full Name
-                          </FormLabel>
-                          <FormMessage />
-                        </div>
-                        <FormControl className="">
-                          <Input {...field} className="w-full bg-card " />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+              <div
+                key={item.id}
+                className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6 bg-gradient-to-br from-card/50 to-card p-4 lg:p-6 rounded-lg items-start"
+              >
+                {/* Full Name */}
+                <FormField
+                  control={form.control}
+                  name={`Student.familyBackground.siblings.${index}.fullName`}
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col w-full">
+                      <FormLabel className="text-muted-foreground">
+                        Full Name
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} className="w-full bg-card" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                  <FormField
-                    control={form.control}
-                    name={`Student.familyBackground.siblings.${index}.age`}
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <div className="flex justify-between items-center">
-                          <FormLabel className="text-muted-foreground">
-                            Age
-                          </FormLabel>
-                          <FormMessage />
-                        </div>
-                        <FormControl>
-                          <Input {...field} className="w-full bg-card " />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+                {/* Age */}
+                <FormField
+                  control={form.control}
+                  name={`Student.familyBackground.siblings.${index}.age`}
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col w-full">
+                      <FormLabel className="text-muted-foreground">
+                        Age
+                      </FormLabel>
+                      <FormControl>
+                        <Input {...field} className="w-full bg-card" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                  <FormField
-                    control={form.control}
-                    name={`Student.familyBackground.siblings.${index}.occupation`}
-                    render={({ field }) => (
-                      <FormItem className="flex-1">
-                        <div className="flex justify-between items-center">
-                          <FormLabel className="text-muted-foreground">
-                            Occupation
-                          </FormLabel>
-                          <FormMessage />
-                        </div>
-                        <FormControl>
-                          <Input
-                            {...field}
-                            className="w-full bg-card "
-                            placeholder="Type N/A if not provided"
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+                {/* Occupation */}
+                <FormField
+                  control={form.control}
+                  name={`Student.familyBackground.siblings.${index}.occupation`}
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col w-full">
+                      <FormLabel className="text-muted-foreground">
+                        Occupation
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          className="w-full bg-card"
+                          placeholder="Type N/A if not provided"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Delete Button */}
+                <div className="flex items-start justify-end">
                   <Button
                     size="sm"
                     variant="destructive"

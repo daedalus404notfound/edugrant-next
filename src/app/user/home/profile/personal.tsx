@@ -420,33 +420,35 @@ export default function PersonalProfile({
         </div>
       </div>
 
-      <div className="space-y-6 bg-card/40 dark:bg-gradient-to-br to-card from-card/50  px-6 pb-8 pt-4 rounded-lg">
-        <div className="">
-          <h3 className="text-base font-medium flex gap-2 items-center py-3">
+      <div className="space-y-6 bg-card/40 dark:bg-gradient-to-br to-card from-card/50 px-6 pb-8 pt-4 rounded-lg">
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row lg:items-center gap-3 mb-4">
+          <h3 className="text-base font-medium flex gap-2 items-center py-2">
             <Mail className="h-4.5 w-4.5" /> Account Information
           </h3>
-          <div className="w-full h-[2px] flex-1 bg-gradient-to-r from-border to-transparent" />
+          <div className="w-full lg:flex-1 h-[2px] bg-gradient-to-r from-border to-transparent" />
         </div>
-        <div className="grid lg:grid-cols-2 grid-cols-1 gap-10">
+
+        {/* Form Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Student ID */}
           <FormField
             control={form.control}
             name="schoolId"
             render={({ field }) => (
-              <FormItem className="">
+              <FormItem className="w-full">
                 <FormLabel className="text-muted-foreground">
                   Student ID
                 </FormLabel>
-                <FormControl className="">
-                  <div className="flex items-center">
-                    {" "}
+                <FormControl>
+                  <div className="flex w-full">
                     <Input
-                      placeholder=""
-                      className="rounded-r-none"
                       type="number"
                       {...field}
                       disabled
+                      className="flex-1 rounded-r-none"
                     />
-                    <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                    <span className="flex items-center border border-input border-l-0 rounded-r-md">
                       <Button variant="ghost">
                         <IdCard />
                       </Button>
@@ -457,16 +459,18 @@ export default function PersonalProfile({
               </FormItem>
             )}
           />
+
+          {/* Course */}
           <FormField
             control={form.control}
             name="Student.course"
             render={({ field }) => (
-              <FormItem className="">
+              <FormItem className="w-full">
                 <FormLabel className="text-muted-foreground">Course</FormLabel>
-                <FormControl className="">
-                  <div className="flex items-center">
+                <FormControl>
+                  <div className="flex w-full">
                     <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="rounded-r-none w-full">
+                      <SelectTrigger className="flex-1 rounded-r-none">
                         <SelectValue placeholder="Select Course" />
                       </SelectTrigger>
                       <SelectContent>
@@ -493,7 +497,7 @@ export default function PersonalProfile({
                         </SelectItem>
                       </SelectContent>
                     </Select>
-                    <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                    <span className="flex items-center border border-input border-l-0 rounded-r-md">
                       <Button variant="ghost">
                         <GraduationCap />
                       </Button>
@@ -505,23 +509,22 @@ export default function PersonalProfile({
             )}
           />
 
+          {/* Email */}
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
-              <FormItem className="col-span-2">
+              <FormItem className="w-full col-span-1 lg:col-span-2">
                 <FormLabel className="text-muted-foreground">Email</FormLabel>
-                <FormControl className="">
-                  <div className="flex items-center">
-                    {" "}
+                <FormControl>
+                  <div className="flex w-full">
                     <Input
-                      placeholder=""
-                      className="rounded-r-none"
                       type="email"
                       {...field}
                       disabled
+                      className="flex-1 rounded-r-none"
                     />
-                    <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                    <span className="flex items-center border border-input border-l-0 rounded-r-md">
                       <Button variant="ghost">
                         <Mail />
                       </Button>
@@ -533,18 +536,19 @@ export default function PersonalProfile({
             )}
           />
 
+          {/* Year Level */}
           <FormField
             control={form.control}
             name="Student.year"
             render={({ field }) => (
-              <FormItem className="">
+              <FormItem className="w-full">
                 <FormLabel className="text-muted-foreground">
                   Year Level
                 </FormLabel>
-                <FormControl className="">
-                  <div className="flex items-center">
+                <FormControl>
+                  <div className="flex w-full">
                     <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="rounded-r-none w-full">
+                      <SelectTrigger className="flex-1 rounded-r-none">
                         <SelectValue placeholder="Select Year Level" />
                       </SelectTrigger>
                       <SelectContent>
@@ -557,8 +561,7 @@ export default function PersonalProfile({
                         <SelectItem value="7th Year">7th Year</SelectItem>
                       </SelectContent>
                     </Select>
-
-                    <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                    <span className="flex items-center border border-input border-l-0 rounded-r-md">
                       <Button variant="ghost">
                         <BookMarked />
                       </Button>
@@ -569,32 +572,31 @@ export default function PersonalProfile({
               </FormItem>
             )}
           />
+
+          {/* Section */}
           <FormField
             control={form.control}
             name="Student.section"
             render={({ field }) => (
-              <FormItem className="">
+              <FormItem className="w-full">
                 <FormLabel className="text-muted-foreground">Section</FormLabel>
-                <FormControl className="">
-                  <div className="flex items-center">
+                <FormControl>
+                  <div className="flex w-full">
                     <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="rounded-r-none w-full">
+                      <SelectTrigger className="flex-1 rounded-r-none">
                         <SelectValue placeholder="Select Section" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="A">A</SelectItem>
-                        <SelectItem value="B">B</SelectItem>
-                        <SelectItem value="C">C</SelectItem>
-                        <SelectItem value="D">D</SelectItem>
-                        <SelectItem value="E">E</SelectItem>
-                        <SelectItem value="F">F</SelectItem>
-                        <SelectItem value="G">G</SelectItem>
-                        <SelectItem value="H">H</SelectItem>
-                        <SelectItem value="I">I</SelectItem>
-                        <SelectItem value="J">J</SelectItem>
+                        {["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"].map(
+                          (s) => (
+                            <SelectItem key={s} value={s}>
+                              {s}
+                            </SelectItem>
+                          )
+                        )}
                       </SelectContent>
                     </Select>
-                    <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                    <span className="flex items-center border border-input border-l-0 rounded-r-md">
                       <Button variant="ghost">
                         <LayoutPanelTop />
                       </Button>

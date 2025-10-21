@@ -3,6 +3,7 @@
 import * as React from "react";
 import logo from "@/assets/basclogo.png";
 import {
+  Activity,
   Ban,
   CheckCheck,
   CircleUserRound,
@@ -51,6 +52,11 @@ const sidebarData = [
     title: "Announcements",
     url: "/administrator/staff/home/announcement",
     icon: Megaphone,
+  },
+  {
+    title: "Activity Log",
+    url: "/administrator/staff/home/logs",
+    icon: Activity,
   },
 ];
 const sidebarScholar = [

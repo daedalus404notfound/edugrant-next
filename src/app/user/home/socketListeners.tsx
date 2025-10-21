@@ -96,6 +96,360 @@
 //     };
 //   }, [status, queryClient]);
 // }
+// import { useEffect } from "react";
+// import { useQueryClient } from "@tanstack/react-query";
+// import socket from "@/lib/socketLib";
+// import { ApplicationFormData } from "@/hooks/zod/application";
+// import { MetaWithCounts } from "@/hooks/user/getApplications";
+// import { useApplicationStore } from "@/store/applicationUsetStore";
+// import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
+// import { useScholarshipUserStore } from "@/store/scholarshipUserStore";
+// import { includes } from "zod";
+// import { useScholarshipIdStore } from "@/store/scholarshipByIdStore";
+// import { ScholarshipByIdResponse } from "@/hooks/user/getScholarshipData";
+// import StyledToast from "@/components/ui/toast-styled";
+
+// interface ClientApplicationsData {
+//   applications: ApplicationFormData[];
+//   meta: MetaWithCounts;
+// }
+// interface ClientScholarshipsData {
+//   data: scholarshipFormData[];
+//   meta: MetaWithCounts;
+// }
+
+// export default function useScholarshipSocketListeners() {
+//   const queryClient = useQueryClient();
+//   console.log(
+//     "All cached keys:",
+//     queryClient
+//       .getQueryCache()
+//       .getAll()
+//       .map((q) => q.queryKey)
+//   );
+//   const {
+//     search,
+//     page,
+//     sortBy,
+//     status,
+//     order,
+//     pageSize,
+//     meta,
+//     setCounts,
+//     setStatus1,
+//   } = useApplicationStore();
+
+//   const {
+//     search: searchScholarship,
+//     page: pageScholarship,
+//     sortBy: sortByScholarship,
+//     order: orderScholarship,
+//     pageSize: pageSizeScholarship,
+//     meta: metaScholarship,
+//     setCounts: setCountsScholarship,
+//     status: statusScholarship,
+//     setStatus1: setStatus1Scholarship,
+//   } = useScholarshipUserStore();
+//   // const { id } = useScholarshipIdStore();
+//   useEffect(() => {
+//     socket.on("applyScholarship", (data) => {
+//       console.log("you applied:", data);
+//       const pending = data.newApplication;
+//       const scholarshipId = pending.Scholarship.scholarshipId;
+//       const scholarshipData = pending.Scholarship;
+//       console.log("scholarshipData", scholarshipData);
+//       //APPLY TO PENDING
+//       queryClient.setQueryData<ClientApplicationsData>(
+//         [
+//           "clientApplications",
+//           page,
+//           pageSize,
+//           sortBy,
+//           order,
+//           "PENDING",
+//           search,
+//         ],
+//         (old) => {
+//           if (!old) return old;
+
+//           return {
+//             ...old,
+//             applications: [pending, ...old.applications],
+//           };
+//         }
+//       );
+//       setCounts({
+//         PENDING: meta.counts.PENDING + 1,
+//       });
+//       //SUBMITTED SIGN
+//       queryClient.setQueryData<ClientScholarshipsData>(
+//         [
+//           "scholarshipData",
+//           pageScholarship,
+//           pageSizeScholarship,
+//           sortByScholarship,
+//           orderScholarship,
+//           "ACTIVE",
+//           searchScholarship,
+//         ],
+//         (old) => {
+//           if (!old) return old;
+//           console.log("Scholarship cache snapshot:", old.data);
+//           const exists = old.data.some(
+//             (s) => s.scholarshipId === scholarshipId
+//           );
+//           console.log("exists", exists);
+//           const updatedData = exists
+//             ? old.data.map((s) =>
+//                 s.scholarshipId === scholarshipId ? scholarshipData : s
+//               )
+//             : [scholarshipData, ...old.data];
+//           console.log("updatedData", updatedData);
+//           return { ...old, data: updatedData }; // Change 'scholarships' to 'data'
+//         }
+//       );
+
+//       queryClient.setQueryData<ClientScholarshipsData>(
+//         [
+//           "scholarshipData",
+//           pageScholarship,
+//           pageSizeScholarship,
+//           sortByScholarship,
+//           orderScholarship,
+//           "ACTIVE",
+//           searchScholarship,
+//         ],
+//         (old) => {
+//           if (!old) return old;
+//           console.log("Scholarship cache snapshot:", old.data);
+//           const exists = old.data.some(
+//             (s) => s.scholarshipId === scholarshipId
+//           );
+//           console.log("exists", exists);
+//           const updatedData = exists
+//             ? old.data.map((s) =>
+//                 s.scholarshipId === scholarshipId ? scholarshipData : s
+//               )
+//             : [scholarshipData, ...old.data];
+//           console.log("updatedData", updatedData);
+//           return { ...old, data: updatedData }; // Change 'scholarships' to 'data'
+//         }
+//       );
+//     });
+//     //AAPEND BAGONG POST NA SCHOLARSHIP
+//     socket.on("adminAddScholarships", (data) => {
+//       const scholarshipNew = data.newScholarship;
+//       queryClient.setQueryData<ClientScholarshipsData>(
+//         [
+//           "scholarshipData",
+//           1,
+//           pageSizeScholarship,
+//           sortByScholarship,
+//           orderScholarship,
+//           "ACTIVE",
+//           searchScholarship,
+//         ],
+//         (old) => {
+//           if (!old) return old;
+
+//           return {
+//             ...old,
+//             data: [scholarshipNew, ...old.data],
+//           };
+//         }
+//       );
+//     });
+//     //DELETE SCHOLARSHIP
+//     socket.on("deleteScholarship", (data) => {
+//       console.log("🎓 deleted:", data.deletedScholarship.scholarshipId);
+//       const deletedId = data.deletedScholarship.scholarshipId;
+
+//       queryClient.setQueryData<ClientScholarshipsData>(
+//         [
+//           "scholarshipData",
+//           pageScholarship,
+//           pageSizeScholarship,
+//           sortByScholarship,
+//           orderScholarship,
+//           statusScholarship,
+//           searchScholarship,
+//         ],
+//         (old) => {
+//           if (!old) return old;
+
+//           return {
+//             ...old,
+//             data: old.data.filter((item) => item.scholarshipId !== deletedId),
+//           };
+//         }
+//       );
+//     });
+//     //EDIT SCHOLARSHIP UPDATE
+//     socket.on("updateScholarship", (data) => {
+//       console.log("edited:", data);
+//       const editedData = data.update;
+//       const editedId = editedData.scholarshipId;
+//       queryClient.setQueryData<ClientScholarshipsData>(
+//         [
+//           "scholarshipData",
+//           pageScholarship,
+//           pageSizeScholarship,
+//           sortByScholarship,
+//           orderScholarship,
+//           "ACTIVE",
+//           searchScholarship,
+//         ],
+//         (old) => {
+//           if (!old) return old;
+//           console.log("Scholarship cache snapshot:", old.data);
+//           const exists = old.data.some((s) => s.scholarshipId === editedId);
+//           console.log("exists", exists);
+//           const updatedData = exists
+//             ? old.data.map((s) =>
+//                 s.scholarshipId === editedId ? editedData : s
+//               )
+//             : [editedData, ...old.data];
+//           console.log("updatedData", updatedData);
+//           return { ...old, data: updatedData }; // Change 'scholarships' to 'data'
+//         }
+//       );
+
+//       //UPDATE SCHOLARSHIPBYIDD
+
+//       queryClient.setQueryData<ScholarshipByIdResponse>(
+//         ["scholarship", editedId],
+//         (old) => {
+//           if (!old) return old; // do nothing if cache is empty
+//           return { ...old, scholarship: editedData }; // only update `scholarship`
+//         }
+//       );
+//       StyledToast({
+//         status: "success",
+//         title: "Scholarship updated",
+//         description: `Scholarship "${editedData.title}" was updated successfully.`,
+//       });
+//     });
+//     //RENEWAL
+//     socket.on("renewScholarship", (data) => {
+//       const renewData = data.renewScholar;
+//       const renewId = renewData.scholarshipId;
+//       console.log("renew scholarship received:", data);
+//       console.log("ID:", renewData);
+//       console.log("ID:", renewId);
+//       queryClient.setQueryData<ClientScholarshipsData>(
+//         [
+//           "scholarshipData",
+//           1,
+//           pageSizeScholarship,
+//           sortByScholarship,
+//           orderScholarship,
+//           "RENEW",
+//           searchScholarship,
+//         ],
+//         (old) => {
+//           if (!old) return old;
+
+//           return {
+//             ...old,
+//             data: [renewData, ...old.data],
+//           };
+//         }
+//       );
+
+//       queryClient.setQueryData<ClientScholarshipsData>(
+//         [
+//           "scholarshipData",
+//           1,
+//           pageSizeScholarship,
+//           sortByScholarship,
+//           orderScholarship,
+//           "EXPIRED",
+//           searchScholarship,
+//         ],
+//         (old) => {
+//           if (!old) return old;
+
+//           return {
+//             ...old,
+//             data: old.data.filter((item) => item.scholarshipId !== renewId),
+//           };
+//         }
+//       );
+//     });
+
+//     socket.on("approveApplication", (data) => {
+//       const approveData = data.approvedApplication;
+//       const approvedId = approveData.applicationId;
+//       const blockedWhenApproved = data.blockedApplicationIDs;
+
+//       console.log("approveData scholarship received:", data);
+//       // 1. Add to APPROVED list
+//       queryClient.setQueryData<ClientApplicationsData>(
+//         [
+//           "clientApplications",
+//           page,
+//           pageSize,
+//           sortBy,
+//           order,
+//           "APPROVED",
+//           search,
+//         ],
+//         (old) => {
+//           if (!old) return old;
+
+//           return {
+//             ...old,
+//             applications: [approveData, ...old.applications],
+//           };
+//         }
+//       );
+//       // 2. Remove from PENDING list
+//       queryClient.setQueryData<ClientApplicationsData>(
+//         [
+//           "clientApplications",
+//           page,
+//           pageSize,
+//           sortBy,
+//           order,
+//           "PENDING",
+//           search,
+//         ],
+//         (old) => {
+//           if (!old) return old;
+
+//           return {
+//             ...old,
+//             applications: old.applications.filter(
+//               (item) =>
+//                 item.applicationId !== approvedId &&
+//                 !blockedWhenApproved.includes(item.applicationId)
+//             ),
+//           };
+//         }
+//       );
+//     });
+//     return () => {
+//       socket.off("applyScholarship");
+//       socket.off("adminAddScholarships");
+//       socket.off("deleteScholarship");
+//       socket.off("updateScholarship");
+//       socket.off("renewScholarship");
+//       socket.off("approveApplication");
+//     };
+//   }, [
+//     queryClient,
+//     page,
+//     pageSize,
+//     sortBy,
+//     order,
+//     search,
+//     setCounts,
+//     status,
+//     statusScholarship,
+//     // id,
+//   ]);
+// }
+"use client";
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import socket from "@/lib/socketLib";
@@ -104,7 +458,8 @@ import { MetaWithCounts } from "@/hooks/user/getApplications";
 import { useApplicationStore } from "@/store/applicationUsetStore";
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import { useScholarshipUserStore } from "@/store/scholarshipUserStore";
-import { includes } from "zod";
+import { ScholarshipByIdResponse } from "@/hooks/user/getScholarshipData";
+import StyledToast from "@/components/ui/toast-styled";
 
 interface ClientApplicationsData {
   applications: ApplicationFormData[];
@@ -114,7 +469,8 @@ interface ClientScholarshipsData {
   data: scholarshipFormData[];
   meta: MetaWithCounts;
 }
-export default function useScholarshipSocketListeners() {
+
+export default function ScholarshipSocketListener() {
   const queryClient = useQueryClient();
   console.log(
     "All cached keys:",
@@ -123,17 +479,8 @@ export default function useScholarshipSocketListeners() {
       .getAll()
       .map((q) => q.queryKey)
   );
-  const {
-    search,
-    page,
-    sortBy,
-    status,
-    order,
-    pageSize,
-    meta,
-    setCounts,
-    setStatus1,
-  } = useApplicationStore();
+  const { search, page, sortBy, status, order, pageSize, meta, setCounts } =
+    useApplicationStore();
 
   const {
     search: searchScholarship,
@@ -141,20 +488,16 @@ export default function useScholarshipSocketListeners() {
     sortBy: sortByScholarship,
     order: orderScholarship,
     pageSize: pageSizeScholarship,
-    meta: metaScholarship,
-    setCounts: setCountsScholarship,
     status: statusScholarship,
-    setStatus1: setStatus1Scholarship,
   } = useScholarshipUserStore();
 
   useEffect(() => {
+    // --- APPLY SCHOLARSHIP ---
     socket.on("applyScholarship", (data) => {
-      console.log("you applied:", data.newApplication);
       const pending = data.newApplication;
       const scholarshipId = pending.Scholarship.scholarshipId;
       const scholarshipData = pending.Scholarship;
-      console.log("scholarshipData", scholarshipData);
-      //APPLY TO PENDING
+
       queryClient.setQueryData<ClientApplicationsData>(
         [
           "clientApplications",
@@ -165,19 +508,12 @@ export default function useScholarshipSocketListeners() {
           "PENDING",
           search,
         ],
-        (old) => {
-          if (!old) return old;
-
-          return {
-            ...old,
-            applications: [pending, ...old.applications],
-          };
-        }
+        (old) =>
+          old ? { ...old, applications: [pending, ...old.applications] } : old
       );
-      setCounts({
-        PENDING: meta.counts.PENDING + 1,
-      });
-      //SUBMITTED SIGN
+
+      setCounts({ PENDING: meta.counts.PENDING + 1 });
+
       queryClient.setQueryData<ClientScholarshipsData>(
         [
           "scholarshipData",
@@ -190,22 +526,20 @@ export default function useScholarshipSocketListeners() {
         ],
         (old) => {
           if (!old) return old;
-          console.log("Scholarship cache snapshot:", old.data);
           const exists = old.data.some(
             (s) => s.scholarshipId === scholarshipId
           );
-          console.log("exists", exists);
           const updatedData = exists
             ? old.data.map((s) =>
                 s.scholarshipId === scholarshipId ? scholarshipData : s
               )
             : [scholarshipData, ...old.data];
-          console.log("updatedData", updatedData);
-          return { ...old, data: updatedData }; // Change 'scholarships' to 'data'
+          return { ...old, data: updatedData };
         }
       );
     });
-    //AAPEND BAGONG POST NA SCHOLARSHIP
+
+    // --- ADD SCHOLARSHIP ---
     socket.on("adminAddScholarships", (data) => {
       const scholarshipNew = data.newScholarship;
       queryClient.setQueryData<ClientScholarshipsData>(
@@ -218,21 +552,18 @@ export default function useScholarshipSocketListeners() {
           "ACTIVE",
           searchScholarship,
         ],
-        (old) => {
-          if (!old) return old;
-
-          return {
-            ...old,
-            data: [scholarshipNew, ...old.data],
-          };
-        }
+        (old) => (old ? { ...old, data: [scholarshipNew, ...old.data] } : old)
       );
+      // StyledToast({
+      //   status: "success",
+      //   title: "New Scholarship Added",
+      //   description: `Scholarship "${scholarshipNew.title}" was added successfully.`,
+      // });
     });
-    //DELETE SCHOLARSHIP
-    socket.on("deleteScholarship", (data) => {
-      console.log("🎓 deleted:", data.deletedScholarship.scholarshipId);
-      const deletedId = data.deletedScholarship.scholarshipId;
 
+    // --- DELETE SCHOLARSHIP ---
+    socket.on("deleteScholarship", (data) => {
+      const deletedId = data.deletedScholarship.scholarshipId;
       queryClient.setQueryData<ClientScholarshipsData>(
         [
           "scholarshipData",
@@ -243,21 +574,28 @@ export default function useScholarshipSocketListeners() {
           statusScholarship,
           searchScholarship,
         ],
-        (old) => {
-          if (!old) return old;
-
-          return {
-            ...old,
-            data: old.data.filter((item) => item.scholarshipId !== deletedId),
-          };
-        }
+        (old) =>
+          old
+            ? {
+                ...old,
+                data: old.data.filter(
+                  (item) => item.scholarshipId !== deletedId
+                ),
+              }
+            : old
       );
+      // StyledToast({
+      //   status: "success",
+      //   title: "Scholarship Deleted",
+      //   description: `Scholarship with ID ${deletedId} has been deleted.`,
+      // });
     });
-    //EDIT SCHOLARSHIP UPDATE
+
+    // --- UPDATE SCHOLARSHIP ---
     socket.on("updateScholarship", (data) => {
-      console.log("edited:", data);
       const editedData = data.update;
       const editedId = editedData.scholarshipId;
+
       queryClient.setQueryData<ClientScholarshipsData>(
         [
           "scholarshipData",
@@ -270,125 +608,34 @@ export default function useScholarshipSocketListeners() {
         ],
         (old) => {
           if (!old) return old;
-          console.log("Scholarship cache snapshot:", old.data);
           const exists = old.data.some((s) => s.scholarshipId === editedId);
-          console.log("exists", exists);
           const updatedData = exists
             ? old.data.map((s) =>
                 s.scholarshipId === editedId ? editedData : s
               )
             : [editedData, ...old.data];
-          console.log("updatedData", updatedData);
-          return { ...old, data: updatedData }; // Change 'scholarships' to 'data'
-        }
-      );
-    });
-    //RENEWAL
-    socket.on("renewScholarship", (data) => {
-      const renewData = data.renewScholar;
-      const renewId = renewData.scholarshipId;
-      console.log("renew scholarship received:", data);
-      console.log("ID:", renewData);
-      console.log("ID:", renewId);
-      queryClient.setQueryData<ClientScholarshipsData>(
-        [
-          "scholarshipData",
-          1,
-          pageSizeScholarship,
-          sortByScholarship,
-          orderScholarship,
-          "RENEW",
-          searchScholarship,
-        ],
-        (old) => {
-          if (!old) return old;
-
-          return {
-            ...old,
-            data: [renewData, ...old.data],
-          };
+          return { ...old, data: updatedData };
         }
       );
 
-      queryClient.setQueryData<ClientScholarshipsData>(
-        [
-          "scholarshipData",
-          1,
-          pageSizeScholarship,
-          sortByScholarship,
-          orderScholarship,
-          "EXPIRED",
-          searchScholarship,
-        ],
-        (old) => {
-          if (!old) return old;
-
-          return {
-            ...old,
-            data: old.data.filter((item) => item.scholarshipId !== renewId),
-          };
-        }
+      queryClient.setQueryData<ScholarshipByIdResponse>(
+        ["scholarship", editedId],
+        (old) => (old ? { ...old, scholarship: editedData } : old)
       );
+
+      // StyledToast({
+      //   status: "success",
+      //   title: "Scholarship Updated",
+      //   description: `Scholarship "${editedData.title}" was updated successfully.`,
+      // });
     });
 
-    socket.on("approveApplication", (data) => {
-      const approveData = data.approvedApplication;
-      const approvedId = approveData.applicationId;
-      const blockedWhenApproved = data.blockedApplicationIDs;
-
-      console.log("approveData scholarship received:", data);
-      // 1. Add to APPROVED list
-      queryClient.setQueryData<ClientApplicationsData>(
-        [
-          "clientApplications",
-          page,
-          pageSize,
-          sortBy,
-          order,
-          "APPROVED",
-          search,
-        ],
-        (old) => {
-          if (!old) return old;
-
-          return {
-            ...old,
-            applications: [approveData, ...old.applications],
-          };
-        }
-      );
-      // 2. Remove from PENDING list
-      queryClient.setQueryData<ClientApplicationsData>(
-        [
-          "clientApplications",
-          page,
-          pageSize,
-          sortBy,
-          order,
-          "PENDING",
-          search,
-        ],
-        (old) => {
-          if (!old) return old;
-
-          return {
-            ...old,
-            applications: old.applications.filter(
-              (item) =>
-                item.applicationId !== approvedId &&
-                !blockedWhenApproved.includes(item.applicationId)
-            ),
-          };
-        }
-      );
-    });
+    // --- CLEANUP ---
     return () => {
       socket.off("applyScholarship");
       socket.off("adminAddScholarships");
       socket.off("deleteScholarship");
       socket.off("updateScholarship");
-      socket.off("renewScholarship");
-      socket.off("approveApplication");
     };
   }, [
     queryClient,
@@ -398,7 +645,14 @@ export default function useScholarshipSocketListeners() {
     order,
     search,
     setCounts,
-    status,
+    meta,
+    pageScholarship,
+    pageSizeScholarship,
+    sortByScholarship,
+    orderScholarship,
+    searchScholarship,
     statusScholarship,
   ]);
+
+  return null; // This component renders nothing
 }

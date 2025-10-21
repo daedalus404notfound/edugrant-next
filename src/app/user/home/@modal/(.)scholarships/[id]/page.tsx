@@ -28,8 +28,9 @@ export default function InterceptManageScholarshipClient() {
   const params = useParams();
   const [open, setOpen] = useState(true);
   const id = params.id as string;
-  const { data, loading, isGovernmentAlready, setData } =
-    useScholarshipUserById(id);
+  const { data, loading, isGovernmentAlready } = useScholarshipUserById(
+    Number(id)
+  );
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {

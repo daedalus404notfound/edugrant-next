@@ -168,7 +168,7 @@ export default function useScholarshipData({
   const debouncedSearch = useDebounce(search, 800);
   useEffect(() => {
     resetPage();
-  }, [debouncedSearch, sortBy, order, filters]);
+  }, [debouncedSearch, sortBy, order, filters, status]);
   const query = useQuery({
     queryKey: [
       "scholarshipData",
@@ -189,9 +189,9 @@ export default function useScholarshipData({
       if (order) params.append("order", order);
       if (debouncedSearch) params.append("search", debouncedSearch);
 
-      const endpoint = `${
-        process.env.NEXT_PUBLIC_USER_URL
-      }/getAllScholarship?${params.toString()}`;
+      const endpoint = `${process.env.NEXT_PUBLIC_USER_URL}/${
+        debouncedSearch ? "searchScholarship" : "getAllScholarship"
+      }?${params.toString()}`;
 
       console.log("Fetching scholarships:", endpoint);
 

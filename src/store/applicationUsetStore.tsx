@@ -46,6 +46,7 @@ export interface ApplicationStore {
   setOrder: (order: string) => void; // <-- added setter
   setMeta: (meta: MetaWithCounts) => void;
   setCounts: (counts: Partial<ScholarshipCounts>) => void; // ✅ added
+  resetPage: () => void;
 }
 
 export const useApplicationStore = create<ApplicationStore>((set) => ({
@@ -70,4 +71,5 @@ export const useApplicationStore = create<ApplicationStore>((set) => ({
         counts: { ...state.meta.counts, ...counts },
       },
     })),
+  resetPage: () => set({ page: 1 }),
 }));

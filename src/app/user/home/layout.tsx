@@ -14,8 +14,8 @@ import MobDock from "./dock";
 import MobHeader from "./mobile-header";
 import useSocketConnection from "@/hooks/user/useSocketConnection";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import SocketListener from "./socketListenerComponent";
 import { useApplicationStore } from "@/store/applicationUsetStore";
+import ScholarshipSocketListener from "./socketListeners";
 // import useScholarshipSocketListeners from "./socketListeners";
 
 export default function Home({ children, modal }: DashboardLayoutProps) {
@@ -46,7 +46,7 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
             />
             <MobHeader />
             {children} {modal}
-            <SocketListener />
+            <ScholarshipSocketListener />
             <MobDock />
           </div>
         </SidebarInset>

@@ -179,16 +179,16 @@ export default function InterceptReviewApplicants() {
     { id: "family", label: "Family Background", indicator: null },
   ];
 
-  useEffect(() => {
-    if (!socket.connected) socket.connect();
-    socket.on("approveApplication", ({ approveApplication }) => {
-      console.log("APPROVED:", approveApplication);
-    });
+  // useEffect(() => {
+  //   if (!socket.connected) socket.connect();
+  //   socket.on("approveApplication", ({ approveApplication }) => {
+  //     console.log("APPROVED:", approveApplication);
+  //   });
 
-    return () => {
-      socket.off("approveApplication");
-    };
-  }, []);
+  //   return () => {
+  //     socket.off("approveApplication");
+  //   };
+  // }, []);
   return (
     <Drawer
       open={open}

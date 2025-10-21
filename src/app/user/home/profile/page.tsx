@@ -40,7 +40,7 @@ export default function Profile() {
         <div className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b">
           <Tabs tabs={tabs} onTabChange={(tabId) => setTab(tabId)} />
         </div>
-        <div className="mt-15 lg:w-[60%] min-w-5xl w-full mx-auto">
+        <div className="mt-15 lg:w-[60%] lg:min-w-5xl w-full mx-auto">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)}>
               {tab === "personal" && (

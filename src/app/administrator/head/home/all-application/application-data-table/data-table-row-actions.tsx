@@ -24,6 +24,7 @@ import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import { Separator } from "@/components/ui/separator";
 import StyledToast from "@/components/ui/toast-styled";
+import { StudentUserFormData } from "@/hooks/user/zodUserProfile";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>;
@@ -32,10 +33,10 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
-  const rowData = row.original as ApplicationFormData;
+  const rowData = row.original as StudentUserFormData;
   const [openAlert, setOpenAlert] = useState(false);
   const { onSubmit, isSuccess, loading } = useDeleteApplication({
-    applicationId: [rowData.applicationId],
+    applicationId: [rowData.studentId],
   });
 
   useEffect(() => {
@@ -61,7 +62,7 @@ export function DataTableRowActions<TData>({
         className="grid grid-cols-1 w-[180px] !p-0 border"
       >
         <Link
-          href={`/administrator/head/home/all-application/${rowData.applicationId}`}
+          href={`/administrator/head/home/all-application/${rowData.studentId}`}
         >
           <Button
             variant="ghost"

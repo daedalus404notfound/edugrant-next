@@ -187,30 +187,29 @@ export default function ClientScholarship() {
           />
         </motion.div>
         <div className="mt-15 lg:w-[80%] md:min-w-5xl w-full mx-auto space-y-8">
-          {(data.length !== 0 || loadingState) && (
-            <motion.div
-              className="flex justify-between items-center gap-2"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2, delay: 0.4 }}
-            >
-              <Input
-                placeholder="Search Scholarship..."
-                onChange={(e) => setSearch(e.target.value)}
-                value={search}
-                className="max-w-sm w-full text-sm"
-              />
-              <Select value={order} onValueChange={(e) => setOrder(e)}>
-                <SelectTrigger className="text-sm">
-                  <SelectValue placeholder="Sort" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="desc">Newest</SelectItem>
-                  <SelectItem value="asc">Oldest</SelectItem>
-                </SelectContent>
-              </Select>
-            </motion.div>
-          )}
+          <motion.div
+            className="flex justify-between items-center gap-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: 0.4 }}
+          >
+            <Input
+              placeholder="Search Scholarship..."
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+              className="max-w-sm w-full text-sm"
+            />
+            <Select value={order} onValueChange={(e) => setOrder(e)}>
+              <SelectTrigger className="text-sm">
+                <SelectValue placeholder="Sort" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="desc">Newest</SelectItem>
+                <SelectItem value="asc">Oldest</SelectItem>
+              </SelectContent>
+            </Select>
+          </motion.div>
+
           {search ? (
             <p className="text-sm">
               Showing search result for{" "}
@@ -413,50 +412,49 @@ export default function ClientScholarship() {
               ))
             )}
           </div>
-          {(data.length !== 0 || loadingState) && (
-            <motion.div
-              className="flex items-center justify-between gap-3"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2, delay: 0.4 }}
-            >
-              <p
-                className="grow text-sm text-muted-foreground"
-                aria-live="polite"
-              >
-                Page <span className="text-foreground">{meta.page}</span> of{" "}
-                <span className="text-foreground">{meta.totalPage}</span>
-              </p>
 
-              <Pagination className="w-auto">
-                <PaginationContent className="gap-3">
-                  <PaginationItem>
-                    <Button
-                      variant="outline"
-                      disabled={meta.page === 1 || loadingState}
-                      onClick={handlePrev}
-                    >
-                      <ChevronLeft /> Previous
-                    </Button>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <Button
-                      variant="outline"
-                      disabled={
-                        meta.page === meta.totalPage ||
-                        meta.totalPage === 0 ||
-                        loadingState
-                      }
-                      onClick={handleNext}
-                    >
-                      Next
-                      <ChevronRight />
-                    </Button>
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </motion.div>
-          )}
+          <motion.div
+            className="flex items-center justify-between gap-3"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: 0.4 }}
+          >
+            <p
+              className="grow text-sm text-muted-foreground"
+              aria-live="polite"
+            >
+              Page <span className="text-foreground">{meta.page}</span> of{" "}
+              <span className="text-foreground">{meta.totalPage}</span>
+            </p>
+
+            <Pagination className="w-auto">
+              <PaginationContent className="gap-3">
+                <PaginationItem>
+                  <Button
+                    variant="outline"
+                    disabled={meta.page === 1 || loadingState}
+                    onClick={handlePrev}
+                  >
+                    <ChevronLeft /> Previous
+                  </Button>
+                </PaginationItem>
+                <PaginationItem>
+                  <Button
+                    variant="outline"
+                    disabled={
+                      meta.page === meta.totalPage ||
+                      meta.totalPage === 0 ||
+                      loadingState
+                    }
+                    onClick={handleNext}
+                  >
+                    Next
+                    <ChevronRight />
+                  </Button>
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </motion.div>
         </div>
       </div>
     </div>

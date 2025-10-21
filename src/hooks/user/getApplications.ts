@@ -207,9 +207,12 @@ export default function useClientApplications({
     setStatus: setTabStatus,
     meta: metaZustand,
     setMeta,
+    resetPage,
   } = useApplicationStore();
   const debouncedSearch = useDebounce(search, 800);
-
+  useEffect(() => {
+    resetPage();
+  }, [debouncedSearch, sortBy, order, metaZustand]);
   const query = useQuery({
     queryKey: [
       "clientApplications",
@@ -219,6 +222,7 @@ export default function useClientApplications({
       order,
       tabStatus,
       debouncedSearch,
+      applicationId,
     ],
     queryFn: async () => {
       const params = new URLSearchParams();
