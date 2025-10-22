@@ -45,6 +45,7 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
             />
             <MobHeader />
             {children} {modal}
+            
             <SocketListener />
             <MobDock />
           </div>
