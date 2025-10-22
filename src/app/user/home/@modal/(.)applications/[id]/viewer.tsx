@@ -12,7 +12,7 @@ import { ZoomIn, ZoomOut, RotateCw, RefreshCw, Loader, X } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import GlassFolder from "@/components/ui/folder";
 import { Badge } from "@/components/ui/badge";
-
+import useGetDocument from "@/hooks/user/postOpenDocument";
 interface UserDocument {
   document: string;
   fileFormat: string;
@@ -21,6 +21,7 @@ interface UserDocument {
   resourceType: string;
   supabasePath: string;
   status?: string;
+  applicationId: number;
 }
 
 export default function ApplicationViewer({
@@ -28,9 +29,12 @@ export default function ApplicationViewer({
   fileUrl,
   document,
   status,
+  supabasePath,
   requirementType,
+  applicationId,
 }: UserDocument) {
   const [rotation, setRotation] = useState(0);
+  const { onGetDocument } = useGetDocument();
   console.log(fileFormat);
   const [open, setOpen] = useState(false);
   const [loading, setIsLoading] = useState(true);
@@ -38,7 +42,10 @@ export default function ApplicationViewer({
   console.log("status", status);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="relative">
+      <DialogTrigger
+        className="relative"
+        onClick={() => onGetDocument(applicationId, supabasePath)}
+      >
         <GlassFolder color="amber" />
         <Badge
           variant="secondary"

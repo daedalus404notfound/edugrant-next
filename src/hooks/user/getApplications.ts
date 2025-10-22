@@ -184,35 +184,25 @@ const defaultMeta: MetaWithCounts = {
   },
 };
 
-export default function useClientApplications({
-  page,
-  pageSize,
-  sortBy,
-  order,
-  applicationId,
-  search,
-}: {
-  page?: number;
-  pageSize?: number;
-  sortBy?: string;
-  order?: string;
-  status?: string;
-  userId?: string;
-  applicationId?: string;
-  search?: string;
-}) {
+export default function useClientApplications() {
   const { loadingUser } = useUserStore();
   const {
     status: tabStatus,
     setStatus: setTabStatus,
-    meta: metaZustand,
+    meta,
     setMeta,
     resetPage,
+    search,
+    sortBy,
+    order,
+    page,
+    pageSize,
   } = useApplicationStore();
+
   const debouncedSearch = useDebounce(search, 800);
   useEffect(() => {
     resetPage();
-  }, [debouncedSearch, sortBy, order, metaZustand]);
+  }, [debouncedSearch, sortBy, order, tabStatus]);
   const query = useQuery({
     queryKey: [
       "clientApplications",
@@ -222,7 +212,6 @@ export default function useClientApplications({
       order,
       tabStatus,
       debouncedSearch,
-      applicationId,
     ],
     queryFn: async () => {
       const params = new URLSearchParams();
@@ -232,7 +221,6 @@ export default function useClientApplications({
       if (pageSize) params.append("dataPerPage", pageSize.toString());
       if (sortBy) params.append("sortBy", sortBy);
       if (order) params.append("order", order);
-      if (applicationId) params.append("applicationId", applicationId);
       if (debouncedSearch) params.append("search", debouncedSearch);
 
       const endpoint = `${
@@ -263,12 +251,11 @@ export default function useClientApplications({
   });
 
   const data = query.data?.applications ?? [];
-  const meta = query.data?.meta ?? defaultMeta;
   useEffect(() => {
-    if (query.data?.meta) {
+    if (query.isSuccess && query.data?.meta) {
       setMeta(query.data.meta);
     }
-  }, [query.data?.meta, setMeta]);
+  }, [query.isSuccess, query.data?.meta, setMeta]);
   return {
     data,
     meta,

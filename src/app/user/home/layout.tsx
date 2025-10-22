@@ -15,8 +15,7 @@ import MobHeader from "./mobile-header";
 import useSocketConnection from "@/hooks/user/useSocketConnection";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useApplicationStore } from "@/store/applicationUsetStore";
-import ScholarshipSocketListener from "./socketListeners";
-// import useScholarshipSocketListeners from "./socketListeners";
+import SocketListener from "./socketListeners";
 
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
@@ -46,7 +45,7 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
             />
             <MobHeader />
             {children} {modal}
-            <ScholarshipSocketListener />
+            <SocketListener />
             <MobDock />
           </div>
         </SidebarInset>

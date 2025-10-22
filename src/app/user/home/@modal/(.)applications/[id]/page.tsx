@@ -42,6 +42,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StatusAlertIndicator } from "@/app/administrator/head/home/@modal/(.)application/[id]/status-indicator";
 import { format } from "date-fns";
 import { getPhaseLabel } from "@/lib/phaseLevel";
+import useApplicationUserById from "@/hooks/user/getApplicationData";
 
 export default function InterceptManageApplicationClient() {
   const [activeSection, setActiveSection] = useState("documents");
@@ -49,7 +50,7 @@ export default function InterceptManageApplicationClient() {
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(true);
-  const id = params.id as string;
+  const id = Number(params.id);
 
   const user = useUserStore((state) => state.user);
   const userId = user?.accountId;
@@ -62,8 +63,8 @@ export default function InterceptManageApplicationClient() {
     }
   };
 
-  const { data, isLoading: loadingState } = useClientApplications({
-    applicationId: id,
+  const { data, loading, error, isError, refetch } = useApplicationUserById({
+    id,
   });
 
   // const navigationTabs = [
@@ -89,8 +90,8 @@ export default function InterceptManageApplicationClient() {
     },
   ];
 
-  const processedInterviewDate = data[0]?.Interview_Decision?.dateCreated;
-  const processedApprovedDate = data[0]?.Interview_Decision?.dateCreated;
+  const processedInterviewDate = data?.Interview_Decision?.dateCreated;
+  const processedApprovedDate = data?.Interview_Decision?.dateCreated;
 
   const meoww = processedInterviewDate
     ? format(processedInterviewDate, "PPP p")
@@ -107,7 +108,7 @@ export default function InterceptManageApplicationClient() {
     >
       <DrawerContent
         className={`lg:w-[56%] bg-card w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 lg:p-1  ${
-          loadingState ? " lg:h-[75dvh] h-[68dvh]" : "h-[90dvh] "
+          loading ? " lg:h-[75dvh] h-[68dvh]" : "h-[90dvh] "
         }`}
       >
         <DrawerHeader className="p-0">
@@ -121,11 +122,11 @@ export default function InterceptManageApplicationClient() {
           scholarship={false}
         />
         <div className=" h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md">
-          {loadingState ? (
+          {loading ? (
             <ScholarshipModalLoading />
           ) : edit ? (
             <EditApplication
-              data={data[0]}
+              data={data}
               setEdit={setEdit}
               // setUpdateDocument={setUpdateDocument}
             />
@@ -142,7 +143,7 @@ export default function InterceptManageApplicationClient() {
                   <div className=" flex items-end justify-center">
                     <Avatar className="lg:size-25 size-20">
                       <AvatarImage
-                        src={data[0]?.Scholarship.logo}
+                        src={data?.Scholarship.logo}
                         className="rounded-full object-cover"
                       />
                       <AvatarFallback
@@ -150,8 +151,8 @@ export default function InterceptManageApplicationClient() {
                           bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 
                           dark:from-emerald-900 dark:via-teal-900 dark:to-cyan-900"
                       >
-                        {data[0]?.Student.lName.slice(0, 1)}
-                        {data[0]?.Student.fName.slice(0, 1)}
+                        {data?.Student.lName.slice(0, 1)}
+                        {data?.Student.fName.slice(0, 1)}
                       </AvatarFallback>
                     </Avatar>
                     <Badge
@@ -159,11 +160,11 @@ export default function InterceptManageApplicationClient() {
                       className="uppercase absolute z-10"
                     >
                       {" "}
-                      {data[0]?.Scholarship.type}
+                      {data?.Scholarship.type}
                     </Badge>
                   </div>
 
-                  {loadingState ? (
+                  {loading ? (
                     <div className="flex flex-col gap-2 flex-1 px-4">
                       <Skeleton className="h-6 w-64" />
                       <Skeleton className="h-4 w-32" />
@@ -172,39 +173,39 @@ export default function InterceptManageApplicationClient() {
                     <div className="flex-1 px-4 py-2 z-10">
                       <div className="flex items-center gap-3">
                         <h1 className="text-base lg:text-xl font-medium text-foreground capitalize line-clamp-1">
-                          {data[0]?.Scholarship.title}
+                          {data?.Scholarship.title}
                         </h1>
                         <div className="space-x-1.5 hidden lg:block">
                           <Badge
                             variant="outline"
                             className="mt-2 uppercase bg-blue-800 text-gray-200"
                           >
-                            {" "}
-                            {getPhaseLabel(data[0]?.Scholarship?.phase)}
+                            {data?.Scholarship &&
+                              getPhaseLabel(data?.Scholarship?.phase)}
                           </Badge>
                           <Badge
                             variant="outline"
                             className={`mt-2 uppercase text-gray-200 ${
-                              data[0]?.Scholarship?.deadline &&
+                              data?.Scholarship?.deadline &&
                               Date.now() >
-                                new Date(data[0].Scholarship.deadline).getTime()
+                                new Date(data.Scholarship.deadline).getTime()
                                 ? "bg-red-800"
                                 : "bg-green-800"
                             }`}
                           >
-                            {data[0]?.Scholarship?.deadline &&
+                            {data?.Scholarship?.deadline &&
                             Date.now() >
-                              new Date(data[0].Scholarship.deadline).getTime()
+                              new Date(data.Scholarship.deadline).getTime()
                               ? "EXPIRED"
                               : "ACTIVE"}
                           </Badge>
                         </div>
                       </div>
                       {/* <p className="font-medium font-mono text-base tracking-wide">
-                        {data[0]?.Scholarship.Scholarship_Provider.name}
+                        {data?.Scholarship.Scholarship_Provider.name}
                       </p>{" "} */}
                       <p className="text-muted-foreground lg:text-sm text-xs">
-                        {data[0]?.Scholarship.Scholarship_Provider.name}
+                        {data?.Scholarship?.Scholarship_Provider?.name}
                       </p>
                     </div>
                   )}
@@ -219,12 +220,12 @@ export default function InterceptManageApplicationClient() {
                         Application Date
                       </h1>
                     </div>
-                    {loadingState ? (
+                    {loading ? (
                       <Skeleton className="h-5 w-full" />
                     ) : (
                       <p className="font-medium text-foreground">
-                        {data[0]?.dateCreated &&
-                          format(data[0]?.dateCreated, "PPP p")}
+                        {data?.dateCreated &&
+                          format(data?.dateCreated, "PPP p")}
                       </p>
                     )}
                   </div>{" "}
@@ -235,12 +236,12 @@ export default function InterceptManageApplicationClient() {
                         Scholarship Deadline
                       </h1>
                     </div>
-                    {loadingState ? (
+                    {loading ? (
                       <Skeleton className="h-5 w-full" />
                     ) : (
                       <span className="font-medium text-foreground">
-                        {data[0]?.Scholarship.deadline
-                          ? format(data[0]?.Scholarship.deadline, "PPP p")
+                        {data?.Scholarship.deadline
+                          ? format(data?.Scholarship.deadline, "PPP p")
                           : "—"}
                       </span>
                     )}
@@ -252,7 +253,7 @@ export default function InterceptManageApplicationClient() {
                         Processed Date
                       </h1>
                     </div>
-                    {loadingState ? (
+                    {loading ? (
                       <Skeleton className="h-5 w-full" />
                     ) : (
                       <p className="font-medium text-foreground">{meoww}</p>
@@ -261,7 +262,7 @@ export default function InterceptManageApplicationClient() {
                 </div>
               </div>
               <div className="lg:p-4 p-4 space-y-6">
-                {data[0]?.status === "PENDING" && (
+                {data?.status === "PENDING" && (
                   <StatusAlertIndicator
                     status="PENDING"
                     title="Application Submitted"
@@ -269,7 +270,7 @@ export default function InterceptManageApplicationClient() {
                   />
                 )}
 
-                {data[0]?.status === "APPROVED" && (
+                {data?.status === "APPROVED" && (
                   <StatusAlertIndicator
                     status="APPROVED"
                     title="Application Approved"
@@ -277,7 +278,7 @@ export default function InterceptManageApplicationClient() {
                   />
                 )}
 
-                {data[0]?.status === "DECLINED" && (
+                {data?.status === "DECLINED" && (
                   <StatusAlertIndicator
                     status="DECLINED"
                     title="Application Declined"
@@ -285,7 +286,7 @@ export default function InterceptManageApplicationClient() {
                   />
                 )}
 
-                {data[0]?.status === "INTERVIEW" && (
+                {data?.status === "INTERVIEW" && (
                   <StatusAlertIndicator
                     status="INTERVIEW"
                     title="Interview Required"
@@ -293,7 +294,7 @@ export default function InterceptManageApplicationClient() {
                   />
                 )}
 
-                {data[0]?.status === "BLOCKED" && (
+                {data?.status === "BLOCKED" && (
                   <StatusAlertIndicator
                     status="BLOCKED"
                     title="Application Blocked"
@@ -301,9 +302,9 @@ export default function InterceptManageApplicationClient() {
                   />
                 )}
 
-                {data[0]?.status === "PENDING" &&
+                {data?.status === "PENDING" &&
                   Date.now() <=
-                    new Date(data[0].Scholarship.deadline).getTime() && (
+                    new Date(data.Scholarship.deadline).getTime() && (
                     <div className="flex justify-between items-center">
                       <p className="text-sm text-muted-foreground">
                         Edit document will be disabled after scholarship
@@ -319,7 +320,7 @@ export default function InterceptManageApplicationClient() {
                       </Button>
                     </div>
                   )}
-                <DocsStudent data={data[0]} />
+                <DocsStudent data={data} />
               </div>
               {/* <div className="sticky bottom-0 z-50">
                 <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
@@ -327,7 +328,7 @@ export default function InterceptManageApplicationClient() {
                   <Button
                     className="flex-1"
                     onClick={() => setEdit(true)}
-                    disabled={data[0]?.status !== "PENDING"}
+                    disabled={data?.status !== "PENDING"}
                   >
                     <PenLine /> Edit Documents
                   </Button>

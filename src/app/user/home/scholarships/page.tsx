@@ -42,21 +42,13 @@ export default function ClientScholarship() {
   const {
     search,
     page,
-    sortBy,
     order,
-    pageSize,
     setPage,
     setSearch,
     setOrder,
     meta,
   } = useScholarshipUserStore();
-  const { data, isLoading: loadingState } = useScholarshipData({
-    search,
-    sortBy,
-    order,
-    page,
-    pageSize,
-  });
+  const { data, isLoading: loadingState } = useScholarshipData();
   const { completed } = getFamilyBackgroundProgress(user?.Student);
 
   // useEffect(() => {
@@ -159,7 +151,7 @@ export default function ClientScholarship() {
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.2, delay: 0.2 }}
-          className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b"
+          className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b sticky z-20 top-0 bg-background"
         >
           <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
         </motion.div>

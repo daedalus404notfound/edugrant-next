@@ -36,81 +36,11 @@ import { useApplicationStore } from "@/store/applicationUsetStore";
 export default function ClientScholarship() {
   const { status, setStatus } = useApplicationStore();
 
-  const {
-    search,
-    page,
-    sortBy,
-    order,
-    pageSize,
-    setPage,
-    setSearch,
-    setOrder,
-    meta,
-  } = useApplicationStore();
+  const { search, page, order, setPage, setSearch, setOrder, meta } =
+    useApplicationStore();
 
-  const { data, isLoading: loadingState } = useClientApplications({
-    search,
-    sortBy,
-    order,
-    page,
-    pageSize,
-  });
+  const { data, isLoading: loadingState } = useClientApplications();
 
-  // useEffect(() => {
-  //   socket.on("approveApplication", (data) => {
-  //     console.log(data);
-  //     setData((prev) => {
-  //       const approved = data.approvedApplication;
-  //       const blockedIds = data.blockedApplicationIDs;
-  //       const blockedIdsLength = data.blockedApplicationIDs.length;
-  //       const isSameTab = approved.status === status;
-  //       const filtered = prev.filter(
-  //         (a) =>
-  //           a.applicationId !== approved.applicationId &&
-  //           !blockedIds.includes(a.applicationId)
-  //       );
-
-  //       if (isSameTab) {
-  //         return [approved, ...filtered];
-  //       }
-  //       return filtered;
-  //     });
-  //   });
-
-  //   socket.on("declineApplication", (data) => {
-  //     setData((prev) => {
-  //       const decline = data.declineApplication;
-  //       const isSameTab = decline.status === status;
-  //       const filtered = prev.filter(
-  //         (a) => a.applicationId !== decline.applicationId
-  //       );
-  //       if (isSameTab) {
-  //         return [decline, ...filtered];
-  //       }
-  //       return filtered;
-  //     });
-  //   });
-
-  //   socket.on("forInterview", (data) => {
-  //     setData((prev) => {
-  //       const interview = data.interviewApplication;
-  //       const isSameTab = interview.status === status;
-  //       const filtered = prev.filter(
-  //         (a) => a.applicationId !== interview.applicationId
-  //       );
-  //       if (isSameTab) {
-  //         return [interview, ...filtered];
-  //       }
-  //       return filtered;
-  //     });
-  //   });
-
-  //   return () => {
-  //     socket.off("approveApplication");
-  //     socket.off("declineApplication");
-  //     socket.off("forInterview");
-  //   };
-  // }, [status, setData]);
   const handleNext = () => {
     if (meta && meta.page < meta.totalPage) {
       setPage(page + 1);
@@ -178,7 +108,7 @@ export default function ClientScholarship() {
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.2, delay: 0.2 }}
-          className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b"
+          className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b sticky top-0 bg-background z-20"
         >
           <Tabs
             activeTab={status}

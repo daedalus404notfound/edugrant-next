@@ -43,6 +43,9 @@ export interface ApplicationStore {
   setMeta: (meta: MetaWithCounts) => void;
   setCounts: (counts: Partial<ScholarshipCounts>) => void; // ✅ added
   resetPage: () => void;
+  incrementActive: () => void; // ✅ new
+  incrementRenew: () => void; // ✅ new
+  incrementExpired: () => void; // ✅ new
 }
 
 export const useScholarshipUserStore = create<ApplicationStore>((set) => ({
@@ -68,4 +71,36 @@ export const useScholarshipUserStore = create<ApplicationStore>((set) => ({
       },
     })),
   resetPage: () => set({ page: 1 }),
+  incrementActive: () =>
+    set((state) => ({
+      meta: {
+        ...state.meta,
+        counts: {
+          ...state.meta.counts,
+          countActive: state.meta.counts.countActive + 1,
+        },
+      },
+    })),
+
+  incrementRenew: () =>
+    set((state) => ({
+      meta: {
+        ...state.meta,
+        counts: {
+          ...state.meta.counts,
+          countRenew: state.meta.counts.countRenew + 1,
+        },
+      },
+    })),
+
+  incrementExpired: () =>
+    set((state) => ({
+      meta: {
+        ...state.meta,
+        counts: {
+          ...state.meta.counts,
+          countExpired: state.meta.counts.countExpired + 1,
+        },
+      },
+    })),
 }));

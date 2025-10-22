@@ -11,7 +11,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 type DocsStudentProps = {
-  data: ApplicationFormData;
+  data: ApplicationFormData | null;
 };
 
 export default function DocsStudent({ data }: DocsStudentProps) {
@@ -99,6 +99,7 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                       ? decisionMessage?.status
                       : "PENDING"
                   }
+                  applicationId={data?.applicationId || 0}
                 />
                 {/* <div className="flex-1 flex items-center justify-center">
                   <p className="text-sm">Download</p>

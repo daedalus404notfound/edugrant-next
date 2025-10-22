@@ -62,7 +62,7 @@ export const createFormSchema = (documents: documentFormData[]) => {
 };
 
 type EditApplicationTypes = {
-  data: ApplicationFormData;
+  data: ApplicationFormData | null;
   setEdit: (edit: boolean) => void;
   // setUpdateDocument: (update: UpdatedApplicationFormData | null) => void;
 };
@@ -74,8 +74,8 @@ EditApplicationTypes) {
   const { addApplication } = useUserStore.getState();
   const user = useUserStore((state) => state.user);
   const userId = user?.accountId;
-  const scholarId = data.scholarshipId;
-  const applicationId = data.applicationId;
+  const scholarId = data?.scholarshipId || 0;
+  const applicationId = data?.applicationId;
   const [completedCount, setCompletedCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [disable, setDisable] = useState(false);
@@ -180,10 +180,10 @@ EditApplicationTypes) {
   return (
     <div className="h-full flex flex-col">
       <div className="flex-1 lg:p-4 p-2 space-y-10">
-        {data.Scholarship.form && (
+        {data?.Scholarship.form && (
           <div className="bg-muted px-4 py-3 md:py-2 rounded-md">
             <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-              <p className="text-sm">{data.Scholarship.title} Form</p>
+              <p className="text-sm">{data?.Scholarship.title} Form</p>
 
               <Button
                 size="sm"
@@ -191,8 +191,8 @@ EditApplicationTypes) {
                 className="min-w-24"
                 onClick={() =>
                   downloadFile(
-                    data.Scholarship.form,
-                    `${data.Scholarship.title} Scholarship Form.pdf`
+                    data?.Scholarship.form,
+                    `${data?.Scholarship.title} Scholarship Form.pdf`
                   )
                 }
               >
@@ -260,7 +260,7 @@ EditApplicationTypes) {
                               handleFilesChange(doc.label, files)
                             }
                             initialImageUrl={
-                              data.submittedDocuments?.[lastPhaseKey]?.find(
+                              data?.submittedDocuments?.[lastPhaseKey]?.find(
                                 (submittedDoc) =>
                                   submittedDoc.document === doc.label
                               )?.fileUrl

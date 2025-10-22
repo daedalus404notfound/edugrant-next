@@ -3,6 +3,7 @@
 import * as React from "react";
 import logo from "@/assets/basclogo.png";
 import {
+  GalleryVerticalEnd,
   GraduationCap,
   Grid2X2,
   Home,
@@ -56,6 +57,11 @@ const scholar = [
     title: "My Applications",
     url: "/user/home/applications",
     icon: Grid2X2,
+  },
+  {
+    title: "Application History",
+    url: "/user/home/history",
+    icon: GalleryVerticalEnd,
   },
 ];
 

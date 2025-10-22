@@ -3,29 +3,22 @@ import axios from "axios";
 import { useState } from "react";
 import { ApiErrorResponse } from "./postReviewedHandler";
 
-type MarkAllAsReadTypes = {
-  accountId?: number;
-};
-
-export default function useMarkAsReadNotification({
-  accountId,
-}: MarkAllAsReadTypes) {
-  const [patchMarkLoading, setMarkLoading] = useState(false);
-  const onSubmitPatch = async (notificationId?: number) => {
+export default function useMarkAsReadNotification() {
+  const [markReadLoading, setMarkReadLoading] = useState(false);
+  const markReadSubmit = async (notificationId?: number) => {
     try {
-      setMarkLoading(true);
+      setMarkReadLoading(true);
 
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_USER_URL}/readNotification`,
         {
-          accountId: accountId,
           notifiactionId: notificationId,
         },
         { withCredentials: true }
       );
 
       if (res.status === 200) {
-        setMarkLoading(false);
+        setMarkReadLoading(false);
       }
     } catch (error) {
       if (axios.isAxiosError<ApiErrorResponse>(error)) {
@@ -35,10 +28,12 @@ export default function useMarkAsReadNotification({
           description: "Cannot process your request.",
         });
 
-        setMarkLoading(false);
+        setMarkReadLoading(false);
       }
+    } finally {
+      setMarkReadLoading(false);
     }
   };
 
-  return { onSubmitPatch, patchMarkLoading };
+  return { markReadSubmit, markReadLoading };
 }
