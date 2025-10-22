@@ -3,17 +3,27 @@ import axios from "axios";
 import { useState } from "react";
 import { ApiErrorResponse } from "../admin/postReviewedHandler";
 
-export default function useGetDocument() {
+interface GetDocumentTypes {
+  message: string;
+  signedURL: string;
+  success: boolean;
+}
+export default function useGetDocument(user: string) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [filePath, setFilePath] = useState("");
   const onGetDocument = async (
     applicationId: string | number,
     path: string
   ) => {
     try {
       setLoading(true);
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_USER_URL}/getFileUrl`,
+      const baseUrl =
+        user === "student"
+          ? process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
+          : process.env.NEXT_PUBLIC_USER_URL;
+      const res = await axios.post<GetDocumentTypes>(
+        `${baseUrl}/getFileUrl`,
         {
           applicationId,
           path,
@@ -22,28 +32,24 @@ export default function useGetDocument() {
       );
 
       if (res.status === 200) {
-        StyledToast({
-          status: "success",
-          title: "Admin Deleted",
-          description:
-            "The admin has been successfully removed from the system.",
-        });
         setIsSuccess(true);
-
+        setFilePath(res.data.signedURL);
         setLoading(false);
       }
     } catch (error) {
       if (axios.isAxiosError<ApiErrorResponse>(error)) {
         StyledToast({
           status: "error",
-          title: error?.response?.data.message ?? "An error occurred.",
-          description: "Cannot process your request.",
+          title: error?.response?.data.message ?? "An error occurred",
+          description: "Cannot fetch the document at this time.",
         });
         setIsSuccess(false);
         setLoading(false);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
-  return { onGetDocument, isSuccess, loading };
+  return { onGetDocument, isSuccess, loading, filePath };
 }

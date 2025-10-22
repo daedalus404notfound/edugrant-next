@@ -64,7 +64,7 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                       Document has been approved
                     </p>
                   </div>
-                ) : !meow.fileUrl ? (
+                ) : !meow.supabasePath ? (
                   <div className="rounded-md px-4 py-3 bg-red-500/10">
                     <p className="text-sm line-clamp-1 ">
                       <TriangleAlertIcon
@@ -74,7 +74,7 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                       Failed to submit
                     </p>
                   </div>
-                ) : data?.status === "PENDING" && meow.fileUrl ? (
+                ) : data?.status === "PENDING" && meow.supabasePath ? (
                   <div className="rounded-md px-4 py-3 bg-amber-500/10">
                     <p className="text-sm line-clamp-1 ">
                       <Clock
@@ -90,7 +90,7 @@ export default function DocsStudent({ data }: DocsStudentProps) {
                 <ApplicationViewer
                   fileFormat={mimeToLabelMap[meow.fileFormat]}
                   resourceType={meow.resourceType}
-                  fileUrl={meow.fileUrl}
+               
                   document={meow.document}
                   supabasePath={meow.supabasePath}
                   requirementType={meow.requirementType}

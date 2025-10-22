@@ -322,12 +322,11 @@ export default function Notification() {
                     !notification.read && "bg-primary/5 dark:bg-primary/10"
                   )}
                   onSelect={() => {
-                    setStatus(notification.title);
+                    setStatus(notification.status);
                     if (!notification.read) {
                       markReadSubmit(notification.notificationId);
                     }
                   }}
-                  
                   asChild
                 >
                   <Link href={`/user/home/applications`}>

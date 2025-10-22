@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { Ring } from "ldrs/react";
+import "ldrs/react/Ring.css";
 import {
   Dialog,
   DialogContent,
@@ -16,7 +18,6 @@ import useGetDocument from "@/hooks/user/postOpenDocument";
 interface UserDocument {
   document: string;
   fileFormat: string;
-  fileUrl: string;
   requirementType: string;
   resourceType: string;
   supabasePath: string;
@@ -26,7 +27,7 @@ interface UserDocument {
 
 export default function ApplicationViewer({
   fileFormat,
-  fileUrl,
+
   document,
   status,
   supabasePath,
@@ -34,12 +35,10 @@ export default function ApplicationViewer({
   applicationId,
 }: UserDocument) {
   const [rotation, setRotation] = useState(0);
-  const { onGetDocument } = useGetDocument();
-  console.log(fileFormat);
+  const { onGetDocument, filePath, loading } = useGetDocument("student");
+  console.log(filePath);
   const [open, setOpen] = useState(false);
-  const [loading, setIsLoading] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  console.log("status", status);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
@@ -119,15 +118,27 @@ export default function ApplicationViewer({
                 </Button>
               </div>
 
+              {/* */}
+
               <div className="flex-1 bg-card  rounded-md ">
                 <TransformComponent
                   wrapperClass="!w-full !h-full "
                   contentClass="flex items-center justify-center"
                 >
                   <div className="lg:h-[calc(100dvh-80px)] h-[calc(100dvh-64px)] lg:w-[calc(100dvw-32px)] w-[calc(100dvw-16px)] ">
-                    {fileFormat === "JPG" || fileFormat === "PNG" ? (
+                    {loading || filePath === "" ? (
+                      <div className="h-full w-full  flex justify-center items-center">
+                        <Ring
+                          size={35}
+                          stroke={6}
+                          speed={2}
+                          bgOpacity={0}
+                          color="green"
+                        />
+                      </div>
+                    ) : fileFormat === "JPG" || fileFormat === "PNG" ? (
                       <img
-                        src={fileUrl}
+                        src={filePath}
                         alt={document}
                         className="h-full w-full object-contain rounded-md"
                         style={{
@@ -137,20 +148,14 @@ export default function ApplicationViewer({
                         }}
                         draggable={false}
                       />
-                    ) : fileFormat === "DOCX" || fileFormat === "PDF" ? (
+                    ) : fileFormat === "PDF" ? (
                       <div className="w-full h-full">
-                        {loading && (
-                          <div className="absolute inset-0 flex items-center justify-center  z-20">
-                            <Loader className="h-8 w-8 animate-spin " />
-                          </div>
-                        )}
                         <iframe
                           ref={iframeRef}
-                          key={fileUrl}
+                          key={filePath}
                           className="h-full w-full rounded-lg"
-                          src={fileUrl}
+                          src={filePath}
                           title={`Document preview: ${document}`}
-                          onLoad={() => setIsLoading(false)}
                           style={{
                             transform: `rotate(${rotation}deg)`,
                             maxHeight: "100vh",
