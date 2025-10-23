@@ -1,17 +1,13 @@
 "use client";
-import { GraduationCap } from "lucide-react";
+import { GraduationCap, RefreshCcw } from "lucide-react";
 import { columns } from "./manage-table-components/columns";
 import DataTableToolbar from "./manage-table-components/data-table-toolbar";
 import TitleReusable from "@/components/ui/title";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
-
 import useScholarshipData from "@/hooks/admin/getScholarship";
-
 import { DataTable } from "@/app/table-components/data-table";
-
 import { useHeadScholarshipStore } from "@/store/headScholarshipMeta";
-
 export default function Manage() {
   const {
     meta,
@@ -44,15 +40,29 @@ export default function Manage() {
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:py-10  py-4">
-        <TitleReusable
-          title="Active Scholarship Management"
-          description="View and manage scholarships. Switch between active scholarships and renewals using the tabs below."
-          Icon={GraduationCap}
-        />{" "}
-        <div className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b">
-          <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
+        {status === "ACTIVE" ? (
+          <TitleReusable
+            title="Active Scholarships"
+            description="Browse and manage all currently active scholarships. Use the tabs below to switch between active scholarships and renewals."
+            Icon={GraduationCap}
+          />
+        ) : (
+          <TitleReusable
+            title="Scholarship Renewals"
+            description="Browse and manage scholarship renewals. Use the tabs below to switch between active scholarships and renewals."
+            Icon={RefreshCcw}
+            textColor="text-blue-700/70"
+          />
+        )}
+
+        <div className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b sticky top-0 bg-background z-20">
+          <Tabs
+            tabs={tabs}
+            activeTab={status}
+            onTabChange={(tabId) => setStatus(tabId)}
+          />
         </div>
-        <div className="mt-15 lg:w-full md:min-w-5xl w-full mx-auto">
+        <div className="mt-10 lg:w-full md:min-w-5xl w-full mx-auto">
           <DataTable<scholarshipFormData, unknown>
             data={data}
             columns={columns(status)}

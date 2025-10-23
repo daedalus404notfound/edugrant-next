@@ -57,6 +57,78 @@ const chartConfig = {
     label: "CBA",
     color: "var(--chart-5)",
   },
+  IAS: {
+    label: "IAS",
+    color: "var(--chart-6)",
+  },
+  CVM: {
+    label: "Doctor of Veterinary Medicine",
+    color: "var(--chart-7)",
+  },
+  BSA: {
+    label: "BS in Agriculture",
+    color: "var(--chart-8)",
+  },
+  BSAE: {
+    label: "BS in Agricultural and Biosystems Engineering",
+    color: "var(--chart-9)",
+  },
+  BSGE: {
+    label: "BS in Geodetic Engineering",
+    color: "var(--chart-10)",
+  },
+  BSIT: {
+    label: "BS in Information Technology",
+    color: "var(--chart-11)",
+  },
+  BSFT: {
+    label: "BS in Food Technology",
+    color: "var(--chart-12)",
+  },
+  BEED: {
+    label: "Bachelor of Elementary Education",
+    color: "var(--chart-13)",
+  },
+  BSED: {
+    label: "Bachelor of Secondary Education",
+    color: "var(--chart-14)",
+  },
+  BSHM: {
+    label: "BS in Hospitality Management",
+    color: "var(--chart-15)",
+  },
+  BSBA: {
+    label: "BS in Business Administration",
+    color: "var(--chart-16)",
+  },
+  BADC: {
+    label: "BS in Development Communication",
+    color: "var(--chart-17)",
+  },
+  MSAg: {
+    label: "Master of Science in Agriculture",
+    color: "var(--chart-18)",
+  },
+  MAEd: {
+    label: "Master of Arts in Education",
+    color: "var(--chart-19)",
+  },
+  PhDAg: {
+    label: "Doctor of Philosophy in Agricultural Sciences",
+    color: "var(--chart-20)",
+  },
+  PhDEd: {
+    label: "Doctor of Philosophy in Educational Management",
+    color: "var(--chart-21)",
+  },
+  TECC: {
+    label: "Teacher Education Certificate Course",
+    color: "var(--chart-22)",
+  },
+  CASAg: {
+    label: "Certificate of Agricultural Sciences",
+    color: "var(--chart-23)",
+  },
 } satisfies ChartConfig;
 
 export function ChartBarMixed({ data }: { data: DashboardData | null }) {
@@ -73,62 +145,6 @@ export function ChartBarMixed({ data }: { data: DashboardData | null }) {
         <CardHeader className="text-center">
           <CardTitle>Application by Institute</CardTitle>
           <CardDescription>Number of Application per Institute</CardDescription>
-          <CardAction>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="secondary">
-                  <Download />
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="w-2xl p-6">
-                <DialogHeader className="sr-only">
-                  <DialogTitle>Download Data</DialogTitle>
-                  <DialogDescription></DialogDescription>
-                </DialogHeader>
-                <div className="space-y-8">
-                  {/* Header */}
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <h1 className="text-base font-semibold tracking-tight text-foreground">
-                      Scholarship Applications Institute
-                    </h1>
-                    <Button className="flex items-center gap-2 text-sm hover:bg-muted transition-colors">
-                      <Download />
-                      Download
-                    </Button>
-                  </div>
-
-                  {/* Content */}
-                  <div className="space-y-3">
-                    {data?.applicationCountPerInsti.map((item, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center justify-between rounded-xl bg-muted/40 px-5 py-4 hover:bg-muted transition-all duration-200"
-                      >
-                        {/* Left Section */}
-                        <div className="flex flex-col">
-                          <h2 className="text-base font-medium truncate">
-                            {item.institute}
-                          </h2>
-                        </div>
-
-                        {/* Right Section */}
-                        <div className="flex items-center gap-6">
-                          <div className="text-center">
-                            <p className="text-xs text-muted-foreground mb-1">
-                              Total
-                            </p>
-                            <p className="text-lg font-semibold text-green-600">
-                              {item.applicationCount ?? 0}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </CardAction>
         </CardHeader>
 
         <CardContent className="flex-1">

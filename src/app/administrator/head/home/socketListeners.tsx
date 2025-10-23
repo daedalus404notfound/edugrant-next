@@ -9,6 +9,7 @@ import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import { MetaWithCountsScholarship } from "@/store/scholarshipUserStore";
 import { useScholarshipUserStore } from "@/store/scholarshipUserStore";
 import { ScholarshipByIdResponse } from "@/hooks/user/getScholarshipData";
+import { displayScholarshipFormData } from "@/hooks/admin/displayScholarshipData";
 import StyledToast from "@/components/ui/toast-styled";
 import { useNotificationStore } from "@/store/userNotificationStore";
 import { NotificationPage } from "@/hooks/user/getNotfications";
@@ -19,7 +20,7 @@ import { useHeadScholarshipStatus } from "@/store/headStatusStore";
 import { useHeadScholarshipStore } from "@/store/headScholarshipMeta";
 import { useHeadInactiveScholarshipStore } from "@/store/headInactiveScholarshipStore";
 interface HeadApplicationsData {
-  applications: ApplicationFormData[];
+  data: ApplicationFormData[];
   meta: MetaWithCounts;
 }
 interface HeadScholarshipsData {
@@ -126,6 +127,7 @@ export default function SocketListener() {
       console.log("edited:", data);
       const editedData = data.update;
       const editedId = editedData.scholarshipId;
+      console.log("editedId", editedId);
       queryClient.setQueryData<HeadScholarshipsData>(
         [
           "adminScholarshipData",
@@ -152,18 +154,14 @@ export default function SocketListener() {
 
       //UPDATE SCHOLARSHIPBYIDD
 
-      // queryClient.setQueryData<ScholarshipByIdResponse>(
-      //   ["scholarship", editedId],
-      //   (old) => {
-      //     if (!old) return old; // do nothing if cache is empty
-      //     return { ...old, scholarship: editedData }; // only update `scholarship`
-      //   }
-      // );
-      StyledToast({
-        status: "success",
-        title: "Scholarship updated",
-        description: `Scholarship "${editedData.title}" was updated successfully.`,
-      });
+      queryClient.setQueryData<displayScholarshipFormData>(
+        ["adminScholarship", editedId],
+        (old) => {
+          if (!old) return old; // do nothing if cache is empty
+          console.log("lopit");
+          return editedData;
+        }
+      );
     });
     // //RENEWAL
     socket.on("renewScholarship", (data) => {
@@ -173,14 +171,7 @@ export default function SocketListener() {
       console.log("ID:", renewData);
       console.log("ID:", renewId);
       queryClient.setQueryData<HeadScholarshipsData>(
-        [
-          "adminScholarshipData",
-          pagination,
-          sorting,
-          columnFilters,
-          "RENEW",
-          search,
-        ],
+        ["adminScholarshipData", paginationDefault, [], [], "RENEW", ""],
         (old) => {
           if (!old) return old;
 
@@ -211,295 +202,141 @@ export default function SocketListener() {
       );
     });
 
-    // socket.on("approveApplication", (data) => {
-    //   const approveData = data.approvedApplication;
-    //   const approvedId = approveData.applicationId;
-    //   const notificationData = data.notification;
-    //   const blockedWhenApproved = data.blockedApplicationIDs;
+    socket.on("approveApplication", (data) => {
+      const approveData = data.approvedApplication;
+      const approvedId = approveData.applicationId;
+      const notificationData = data.notification;
+      const blockedWhenApproved = data.blockedApplicationIDs;
 
-    //   console.log("approveData scholarship received:", data);
-    //   // 1. Add to APPROVED list
-    //   queryClient.setQueryData<ClientApplicationsData>(
-    //     [
-    //       "clientApplications",
-    //       page,
-    //       pageSize,
-    //       sortBy,
-    //       order,
-    //       "APPROVED",
-    //       search,
-    //     ],
-    //     (old) => {
-    //       if (!old) return old;
+      console.log("approveData scholarship received:", data);
+      // 1. Add to APPROVED list
+      queryClient.setQueryData<HeadApplicationsData>(
+        ["adminApplicationData", paginationDefault, [], [], "APPROVED", ""],
+        (old) => {
+          if (!old) return old;
 
-    //       return {
-    //         ...old,
-    //         applications: [approveData, ...old.applications],
-    //       };
-    //     }
-    //   );
-    //   // 2. Remove from PENDING list
-    //   queryClient.setQueryData<ClientApplicationsData>(
-    //     [
-    //       "clientApplications",
-    //       page,
-    //       pageSize,
-    //       sortBy,
-    //       order,
-    //       "PENDING",
-    //       search,
-    //     ],
-    //     (old) => {
-    //       if (!old) return old;
+          return {
+            ...old,
+            data: [approveData, ...old.data],
+          };
+        }
+      );
+      // 2. Remove from PENDING list
+      queryClient.setQueryData<HeadApplicationsData>(
+        ["adminApplicationData", paginationDefault, [], [], "PENDING", ""],
+        (old) => {
+          if (!old) return old;
 
-    //       return {
-    //         ...old,
-    //         applications: old.applications.filter(
-    //           (item) =>
-    //             item.applicationId !== approvedId &&
-    //             !blockedWhenApproved.includes(item.applicationId)
-    //         ),
-    //       };
-    //     }
-    //   );
-    //   queryClient.setQueryData<ClientApplicationsData>(
-    //     [
-    //       "clientApplications",
-    //       page,
-    //       pageSize,
-    //       sortBy,
-    //       order,
-    //       "INTERVIEW",
-    //       search,
-    //     ],
-    //     (old) => {
-    //       if (!old) return old;
+          return {
+            ...old,
+            data: old.data.filter(
+              (item) =>
+                item.applicationId !== approvedId &&
+                !blockedWhenApproved.includes(item.applicationId)
+            ),
+          };
+        }
+      );
+      queryClient.setQueryData<HeadApplicationsData>(
+        ["adminApplicationData", paginationDefault, [], [], "INTERVIEW", ""],
+        (old) => {
+          if (!old) return old;
 
-    //       return {
-    //         ...old,
-    //         applications: old.applications.filter(
-    //           (item) => item.applicationId !== approvedId
-    //         ),
-    //       };
-    //     }
-    //   );
+          return {
+            ...old,
+            data: old.data.filter((item) => item.applicationId !== approvedId),
+          };
+        }
+      );
+      playNotificationSound();
+    });
 
-    //   queryClient.setQueryData<InfiniteData<NotificationPage>>(
-    //     ["notifications", 10],
-    //     (old) => {
-    //       if (!old) return old;
+    socket.on("declineApplication", (data) => {
+      const declinedData = data.declineApplication;
+      const declinedId = declinedData.applicationId;
 
-    //       console.log("🟢 Found existing notifications — prepending new one");
+      // 1. Add to declinedD list
+      queryClient.setQueryData<HeadApplicationsData>(
+        ["adminApplicationData", paginationDefault, [], [], "DECLINED", ""],
+        (old) => {
+          if (!old) return old;
 
-    //       return {
-    //         ...old,
-    //         pages: old.pages.map((page, index) => {
-    //           if (index === 0) {
-    //             console.log("🧩 Adding to first page of notifications");
-    //             return {
-    //               ...page,
-    //               notification: [notificationData, ...page.notification],
-    //             };
-    //           } else {
-    //             return page;
-    //           }
-    //         }),
-    //       };
-    //     }
-    //   );
+          return {
+            ...old,
+            data: [declinedData, ...old.data],
+          };
+        }
+      );
+      // 2. Remove from PENDING list
+      queryClient.setQueryData<HeadApplicationsData>(
+        ["adminApplicationData", paginationDefault, [], [], "PENDING", ""],
+        (old) => {
+          if (!old) return old;
 
-    //   StyledToast({
-    //     status: "success",
-    //     title: "1 new notification recieved",
-    //     description: "",
-    //   });
-    //   incrementNotifications(1);
-    //   playNotificationSound();
-    //   triggerConfetti();
-    // });
+          return {
+            ...old,
+            data: old.data.filter((item) => item.applicationId !== declinedId),
+          };
+        }
+      );
+      // 2. Remove from APPROVED list
+      queryClient.setQueryData<HeadApplicationsData>(
+        ["adminApplicationData", paginationDefault, [], [], "APPROVED", ""],
+        (old) => {
+          if (!old) return old;
 
-    // socket.on("declineApplication", (data) => {
-    //   const declinedData = data.declineApplication;
-    //   const declinedId = declinedData.applicationId;
-    //   const notificationData = data.notification;
+          return {
+            ...old,
+            data: old.data.filter((item) => item.applicationId !== declinedId),
+          };
+        }
+      );
+      // 2. Remove from INTEVIEW list
+      queryClient.setQueryData<HeadApplicationsData>(
+        ["adminApplicationData", paginationDefault, [], [], "INTERVIEW", ""],
+        (old) => {
+          if (!old) return old;
 
-    //   // 1. Add to declinedD list
-    //   queryClient.setQueryData<ClientApplicationsData>(
-    //     ["clientApplications", 1, pageSize, sortBy, order, "DECLINED", search],
-    //     (old) => {
-    //       if (!old) return old;
+          return {
+            ...old,
+            data: old.data.filter((item) => item.applicationId !== declinedId),
+          };
+        }
+      );
+    });
+    socket.on("forInterview", (data) => {
+      const interviewData = data.interviewApplication;
+      const interviewId = interviewData.applicationId;
 
-    //       return {
-    //         ...old,
-    //         applications: [declinedData, ...old.applications],
-    //       };
-    //     }
-    //   );
-    //   // 2. Remove from PENDING list
-    //   queryClient.setQueryData<ClientApplicationsData>(
-    //     [
-    //       "clientApplications",
-    //       page,
-    //       pageSize,
-    //       sortBy,
-    //       order,
-    //       "PENDING",
-    //       search,
-    //     ],
-    //     (old) => {
-    //       if (!old) return old;
+      console.log("interviewData scholarship received:", data);
+      // 1. Add to interviewD list
+      queryClient.setQueryData<HeadApplicationsData>(
+        ["adminApplicationData", paginationDefault, [], [], "INTERVIEW", ""],
+        (old) => {
+          if (!old) return old;
 
-    //       return {
-    //         ...old,
-    //         applications: old.applications.filter(
-    //           (item) => item.applicationId !== declinedId
-    //         ),
-    //       };
-    //     }
-    //   );
-    //   queryClient.setQueryData<ClientApplicationsData>(
-    //     [
-    //       "clientApplications",
-    //       page,
-    //       pageSize,
-    //       sortBy,
-    //       order,
-    //       "INTERVIEW",
-    //       search,
-    //     ],
-    //     (old) => {
-    //       if (!old) return old;
+          return {
+            ...old,
+            data: [interviewData, ...old.data],
+          };
+        }
+      );
 
-    //       return {
-    //         ...old,
-    //         applications: old.applications.filter(
-    //           (item) => item.applicationId !== declinedId
-    //         ),
-    //       };
-    //     }
-    //   );
+      // 2. Remove from PENDING list
+      queryClient.setQueryData<HeadApplicationsData>(
+        ["adminApplicationData", paginationDefault, [], [], "PENDING", ""],
+        (old) => {
+          if (!old) return old;
 
-    //   queryClient.setQueryData<InfiniteData<NotificationPage>>(
-    //     ["notifications", 10],
-    //     (old) => {
-    //       if (!old) return old;
+          return {
+            ...old,
+            data: old.data.filter((item) => item.applicationId !== interviewId),
+          };
+        }
+      );
 
-    //       console.log("🟢 Found existing notifications — prepending new one");
-
-    //       return {
-    //         ...old,
-    //         pages: old.pages.map((page, index) => {
-    //           if (index === 0) {
-    //             console.log("🧩 Adding to first page of notifications");
-    //             return {
-    //               ...page,
-    //               notification: [notificationData, ...page.notification],
-    //             };
-    //           } else {
-    //             return page;
-    //           }
-    //         }),
-    //       };
-    //     }
-    //   );
-
-    //   StyledToast({
-    //     status: "success",
-    //     title: "1 new notification recieved",
-    //     description: "",
-    //   });
-    //   incrementNotifications(1);
-    //   playNotificationSound();
-    // });
-    // socket.on("forInterview", (data) => {
-    //   const interviewData = data.interviewApplication;
-    //   const interviewId = interviewData.applicationId;
-    //   const notificationData = data.notification;
-    //   console.log("interviewData scholarship received:", data);
-    //   // 1. Add to interviewD list
-    //   queryClient.setQueryData<ClientApplicationsData>(
-    //     ["clientApplications", 1, pageSize, sortBy, order, "INTERVIEW", search],
-    //     (old) => {
-    //       if (!old) return old;
-
-    //       return {
-    //         ...old,
-    //         applications: [interviewData, ...old.applications],
-    //       };
-    //     }
-    //   );
-
-    //   queryClient.setQueryData<InfiniteData<NotificationPage>>(
-    //     ["notifications", pageSize],
-    //     (old) => {
-    //       if (!old) return old;
-    //       return {
-    //         ...old,
-    //         pages: old.pages.map((page, index) =>
-    //           index === 0
-    //             ? {
-    //                 ...page,
-    //                 notification: [notificationData, ...page.notification],
-    //               }
-    //             : page
-    //         ),
-    //       };
-    //     }
-    //   );
-    //   // 2. Remove from PENDING list
-    //   queryClient.setQueryData<ClientApplicationsData>(
-    //     [
-    //       "clientApplications",
-    //       page,
-    //       pageSize,
-    //       sortBy,
-    //       order,
-    //       "PENDING",
-    //       search,
-    //     ],
-    //     (old) => {
-    //       if (!old) return old;
-
-    //       return {
-    //         ...old,
-    //         applications: old.applications.filter(
-    //           (item) => item.applicationId !== interviewId
-    //         ),
-    //       };
-    //     }
-    //   );
-    //   queryClient.setQueryData<InfiniteData<NotificationPage>>(
-    //     ["notifications", 10],
-    //     (old) => {
-    //       if (!old) return old;
-
-    //       console.log("🟢 Found existing notifications — prepending new one");
-
-    //       return {
-    //         ...old,
-    //         pages: old.pages.map((page, index) => {
-    //           if (index === 0) {
-    //             console.log("🧩 Adding to first page of notifications");
-    //             return {
-    //               ...page,
-    //               notification: [notificationData, ...page.notification],
-    //             };
-    //           } else {
-    //             return page;
-    //           }
-    //         }),
-    //       };
-    //     }
-    //   );
-
-    //   StyledToast({
-    //     status: "success",
-    //     title: "1 new notification recieved",
-    //     description: "",
-    //   });
-    //   incrementNotifications(1);
-    //   playNotificationSound();
-    // });
+      playNotificationSound();
+    });
 
     // socket.on("createAnnouncement", (data) => {
     //   const announcementData = data.newAnnouncement;
@@ -579,26 +416,28 @@ export default function SocketListener() {
     return () => {
       socket.off("applyScholarship");
       socket.off("adminAddScholarships");
-      // socket.off("deleteScholarship");
-      // socket.off("updateScholarship");
-      // socket.off("renewScholarship");
-      // socket.off("approveApplication");
-      // socket.off("declineApplication");
-      // socket.off("forInterview");
-      // socket.off("createAnnouncement");
-      // socket.off("endScholarship");
+      socket.off("deleteScholarship");
+      socket.off("updateScholarship");
+      socket.off("renewScholarship");
+      socket.off("approveApplication");
+      socket.off("declineApplication");
+      socket.off("forInterview");
+      socket.off("createAnnouncement");
+      socket.off("endScholarship");
     };
   }, [
     queryClient,
     search,
-
     meta,
-
     status,
     pagination,
     sorting,
     columnFilters,
-
+    paginationInactive,
+    sortingInactive,
+    columnFiltersInactive,
+    statusInactive,
+    searchInactive,
     // id,
   ]);
 

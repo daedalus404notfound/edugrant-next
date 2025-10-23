@@ -132,14 +132,14 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
           <Avatar>
             <AvatarImage src={scholarship.logo} />
             <AvatarFallback className="uppercase">
-              {scholarship.Scholarship_Provider.name.charAt(0)}
+              {scholarship.Scholarship_Provider?.name.charAt(0)}
             </AvatarFallback>
           </Avatar>
           <div className="flex items-center gap-2">
             <div>
               <div className="font-medium capitalize">{scholarship.title}</div>
               <p className="text-xs text-muted-foreground">
-                {scholarship.Scholarship_Provider.name}
+                {scholarship.Scholarship_Provider?.name}
               </p>
             </div>
             <Badge className="uppercase" variant="secondary">
@@ -167,14 +167,12 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
 
   {
     accessorFn: (row) => row.dateCreated,
-    id: "applicationDate",
+    id: "dateCreated",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Application Date" />
     ),
     cell: ({ row }) => (
-      <span className="">
-        {format(row.getValue("applicationDate"), "PPP p")}
-      </span>
+      <span className="">{format(row.getValue("dateCreated"), "PPP p")}</span>
     ),
     enableSorting: true,
     enableHiding: true,
@@ -182,14 +180,14 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
 
   {
     accessorFn: (row) => row.Application_Decision?.dateCreated,
-    id: "decisionDateCreated",
+    id: "processedDate",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Processed Date" />
     ),
     cell: ({ row }) => (
       <span className="">
         {row.original.Application_Decision?.dateCreated
-          ? format(row.getValue("decisionDateCreated"), "PPP p")
+          ? format(row.getValue("processedDate"), "PPP p")
           : "N/A"}
       </span>
     ),

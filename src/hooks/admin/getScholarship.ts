@@ -114,20 +114,6 @@ export default function useScholarshipData() {
     setPagination,
   } = useHeadScholarshipStore();
 
-  const {
-    metaInactive,
-    statusInactive,
-    setStatusInactive,
-    paginationInactive,
-    setPaginationInactive,
-    searchInactive,
-    setSearchInactive,
-    setSortingInactive,
-    sortingInactive,
-    columnFiltersInactive,
-    setColumnFiltersInactive,
-  } = useHeadInactiveScholarshipStore();
-
   // Destructure pagination
   const { pageIndex, pageSize } = pagination;
 

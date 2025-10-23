@@ -52,8 +52,6 @@ import { useQuery } from "@tanstack/react-query";
 import { displayScholarshipFormData } from "../admin/displayScholarshipData";
 import StyledToast from "@/components/ui/toast-styled";
 import { ApiErrorResponse } from "../admin/postReviewedHandler";
-import { useScholarshipIdStore } from "@/store/scholarshipByIdStore";
-import { useEffect } from "react";
 
 export interface ScholarshipByIdResponse {
   scholarship: displayScholarshipFormData;

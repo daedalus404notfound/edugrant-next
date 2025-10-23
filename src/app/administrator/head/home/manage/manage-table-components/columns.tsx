@@ -8,7 +8,15 @@ import { DataTableColumnHeader } from "@/app/table-components/data-table-column-
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { CircleCheck } from "lucide-react";
+import {
+  Archive,
+  Check,
+  CheckCircle,
+  CheckCircle2,
+  CircleCheck,
+  RefreshCcw,
+  TriangleAlert,
+} from "lucide-react";
 import { getPhaseLabel } from "@/lib/phaseLevel";
 export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
   // {
@@ -111,10 +119,18 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
               ? "bg-red-600/10 text-red-700"
               : status === "RENEW"
               ? "bg-blue-500/10 text-blue-700"
-              : "bg-gray-500/10 text-gray-700"
+              : "bg-indigo-500/10 text-indigo-700"
           }`}
         >
-          <CircleCheck />
+          {status === "ACTIVE" ? (
+            <CheckCircle />
+          ) : status === "EXPIRED" ? (
+            <TriangleAlert />
+          ) : status === "RENEW" ? (
+            <RefreshCcw />
+          ) : (
+            <Archive />
+          )}{" "}
           {status}
         </Badge>
       );

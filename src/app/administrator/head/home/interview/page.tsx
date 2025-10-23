@@ -1,44 +1,34 @@
 "use client";
 import "ldrs/react/Ring.css";
-import { useEffect, useState } from "react";
-import { DataTable } from "@/app/table-components/data-table";
+import { UserRoundMinus } from "lucide-react";
+import { useState } from "react";
+import TitleReusable from "@/components/ui/title";
 import { columns } from "../pending/application-table-components/columns";
+import { DataTable } from "@/app/table-components/data-table";
+import { ApplicationFormData } from "@/hooks/zod/application";
+import DataTableToolbar from "../pending/application-table-components/data-table-toolbar";
 import {
   ColumnFiltersState,
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
-import DataTableToolbar from "../pending/application-table-components/data-table-toolbar";
-import { ApplicationFormData } from "@/hooks/zod/application";
-import useApplicantsSearch from "@/hooks/admin/getApplicantSearch";
-import useFetchApplications from "@/hooks/admin/getApplicant";
-import socket from "@/lib/socketLib";
+import useApplicationData from "@/hooks/admin/getApplicant";
 
-export default function RejectedApplication() {
+export default function PendingApplication() {
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("INTERVOIE");
+  const [status, setStatus] = useState("INTERVIEW");
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { data, meta, loadingState, setData } = useFetchApplications({
-    page: pagination.pageIndex + 1,
-    pageSize: pagination.pageSize,
-    sortBy: sorting[0]?.id ?? "",
-    order: sorting[0]?.desc ? "desc" : "asc",
-    filters:
-      columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
-    status: status,
-  });
-  const { searchData, searchLoading, searchMeta } = useApplicantsSearch({
-    page: pagination.pageIndex + 1,
-    pageSize: pagination.pageSize,
-    sortBy: sorting[0]?.id ?? "",
-    order: sorting[0]?.desc ? "desc" : "asc",
-    query: search,
-    status: status,
+  const { data, meta, isLoading } = useApplicationData({
+    pagination,
+    sorting,
+    columnFilters,
+    status,
+    search,
   });
   const [columnVisibility, setColumnVisibility] = useState<
     Record<string, boolean>
@@ -48,36 +38,40 @@ export default function RejectedApplication() {
     year: false,
     institute: false,
   });
-  useEffect(() => {
-    socket.on("forInterview", (data) => {
-      console.log(data);
-      setData((prev) => [data.interviewApplication, ...prev]);
-    });
 
-    return () => {
-      socket.off("forInterview");
-    };
-  }, []);
   return (
-    <DataTable<ApplicationFormData, unknown>
-      data={search.trim().length > 0 ? searchData : data}
-      columns={columns}
-      meta={search.trim().length > 0 ? searchMeta : meta}
-      pagination={pagination}
-      setPagination={setPagination}
-      getRowId={(row) => row.scholarshipId}
-      loading={search ? searchLoading : loadingState}
-      search={search}
-      setSearch={setSearch}
-      status={status}
-      setStatus={setStatus}
-      sorting={sorting}
-      setSorting={setSorting}
-      columnFilters={columnFilters}
-      setColumnFilters={setColumnFilters}
-      toolbar={DataTableToolbar}
-      columnVisibility={columnVisibility} // <-- pass visibility
-      setColumnVisibility={setColumnVisibility} // <-- pass setter
-    />
+    <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+      <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
+        <TitleReusable
+          textColor="text-emerald-700/70"
+          title="Approved Applications"
+          description="Applications that have been approved and finalized."
+          Icon={UserRoundMinus}
+        />
+
+        <div className="py-8 space-y-5">
+          <DataTable<ApplicationFormData, unknown>
+            data={data}
+            columns={columns}
+            meta={meta}
+            pagination={pagination}
+            setPagination={setPagination}
+            getRowId={(row) => row.scholarshipId}
+            loading={isLoading}
+            search={search}
+            setSearch={setSearch}
+            status={status}
+            setStatus={setStatus}
+            sorting={sorting}
+            setSorting={setSorting}
+            columnFilters={columnFilters}
+            setColumnFilters={setColumnFilters}
+            toolbar={DataTableToolbar}
+            columnVisibility={columnVisibility} // <-- pass visibility
+            setColumnVisibility={setColumnVisibility} // <-- pass setter
+          />
+        </div>
+      </div>
+    </div>
   );
 }

@@ -40,7 +40,7 @@ export default function DataTableToolbar<TData>({
 
         <div className="relative">
           <Input
-            placeholder="Filter scholarship..."
+            placeholder="Search title..."
             className="peer ps-9 pe-9 h-8 w-[150px] lg:w-[250px]"
             onChange={(e) => setSearch?.(e.target.value)}
           />

@@ -72,7 +72,7 @@ export default function DataTableToolbar<
       <div className="flex flex-1 items-center space-x-2">
         <div className="relative">
           <Input
-            placeholder="Filter scholarship..."
+            placeholder="Search name..."
             className="peer ps-9 pe-9 h-8 w-[150px] lg:w-[250px]"
             onChange={(e) => setSearch?.(e.target.value)}
           />

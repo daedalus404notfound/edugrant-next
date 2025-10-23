@@ -33,19 +33,11 @@ export default function InterceptManageScholarship() {
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(true);
-  const id = params.id as string;
+  const id = Number(params.id);
 
-  const { data, loading, setData } = useScholarshipUserByIdAdmin(id);
+  const { data, loading } = useScholarshipUserByIdAdmin(id);
   const { updatedScholarship, clearUpdatedScholarship } =
     useUpdateScholarshipStore();
-  useEffect(() => {
-    if (
-      updatedScholarship &&
-      updatedScholarship.scholarshipId === data?.scholarshipId
-    ) {
-      setData(updatedScholarship);
-    }
-  }, [updatedScholarship, data, setData]);
   const documentPhases = Object.keys(data?.documents ?? {}).filter((key) =>
     key.startsWith("phase")
   );

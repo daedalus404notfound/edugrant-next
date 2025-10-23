@@ -74,55 +74,7 @@ export function DonutPieDonut({ data }: { data: DashboardData | null }) {
         <CardHeader className="items-center pb-0 text-center">
           <CardTitle>Scholarship Applicants</CardTitle>
           <CardDescription>By Group (PWD, Indigenous, General)</CardDescription>
-          <CardAction>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="secondary">
-                  <Download />
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="w-2xl p-6">
-                <DialogHeader className="sr-only">
-                  <DialogTitle>Download Data</DialogTitle>
-                  <DialogDescription></DialogDescription>
-                </DialogHeader>
-                <div className="space-y-8">
-                  <h1 className="font-medium">
-                    Download Scholarship Applicants Data
-                  </h1>
-                  <div className="grid grid-cols-3 gap-3">
-                    <div className="">
-                      <h1 className="text-muted-foreground text-sm">
-                        General Applicants
-                      </h1>
-                      <p className="text-2xl font-medium">
-                        {data?.GeneralCount}
-                      </p>
-                    </div>
-                    <div className="">
-                      <h1 className="text-muted-foreground text-sm">
-                        PWD Applicants
-                      </h1>
-                      <p className="text-2xl font-medium">
-                        {data?.PWDApplicationCount}
-                      </p>
-                    </div>
-                    <div className="">
-                      <h1 className="text-muted-foreground text-sm">
-                        Indigenous Applicants
-                      </h1>
-                      <p className="text-2xl font-medium">
-                        {data?.indiginousApplicationCount}
-                      </p>
-                    </div>
-                  </div>
-                  <Button className="w-full">
-                    Download <Download />
-                  </Button>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </CardAction>
+         
         </CardHeader>
 
         <CardContent className="flex-1 pb-0">

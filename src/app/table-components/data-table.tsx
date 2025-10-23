@@ -106,11 +106,11 @@ export function DataTable<TData, TValue>({
           <TableHeader
             className={`${
               status === "ACTIVE"
-                ? "bg-green-100 text-green-800 dark:bg-gradient-to-br to-green-950 from-green-900 dark:text-green-300"
+                ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300"
                 : status === "ARCHIVED"
                 ? "bg-gray-100 text-gray-800 dark:bg-gray-900/60 dark:text-gray-300"
                 : status === "PENDING"
-                ? "bg-yellow-100 text-yellow-800 dark:bg-gradient-to-br to-yellow-950 from-yellow-900 dark:text-yellow-300"
+                ? "bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300"
                 : status === "DECLINED"
                 ? "bg-red-100 text-red-700 dark:bg-red-800/60 dark:text-red-300"
                 : status === "APPROVED"
@@ -121,7 +121,7 @@ export function DataTable<TData, TValue>({
                 ? "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/60 dark:text-indigo-300"
                 : status === "EXPIRED"
                 ? "bg-orange-100 text-red-800 dark:bg-red-900/60 dark:text-red-300"
-                : "bg-neutral-100 text-neutral-800 dark:bg-neutral-900/60 dark:text-neutral-300"
+                : "bg-green-100 text-green-800 dark:bg-green-900/60 dark:text-green-300"
             } text-sm font-medium px-3 py-1 rounded-full transition-colors duration-200`}
           >
             {table.getHeaderGroups().map((headerGroup) => (

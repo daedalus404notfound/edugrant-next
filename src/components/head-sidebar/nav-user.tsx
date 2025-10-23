@@ -6,7 +6,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -21,16 +20,35 @@ import { useAdminStore } from "@/store/adminUserStore";
 import { DeleteDialog } from "../ui/delete-dialog";
 import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
 import { Button } from "../ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const { admin } = useAdminStore();
+  const { admin, loading } = useAdminStore();
   const {
     handleLogout,
     loading: loadingLogout,
     open: openLogout,
     setOpen: setOpenLogout,
   } = useAdminLogout();
+
+  if (loading) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <div className="flex items-center gap-2 rounded-md p-2">
+            <Skeleton className="h-8 w-8 rounded-lg" />
+            <div className="grid flex-1 gap-2">
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-3 w-32" />
+            </div>
+            <Skeleton className="h-4 w-4" />
+          </div>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
+  }
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -42,10 +60,14 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src={``}
+                  src={
+                    admin?.ISPSU_Head.profileImg?.publicUrl ||
+                    "https://github.com/shadcn.png" ||
+                    "/placeholder.svg"
+                  }
                   alt={
                     admin?.ISPSU_Head
-                      ? `${admin.ISPSU_Head.fName} ${admin.ISPSU_Head.lName}`
+                      ? `${admin.ISPSU_Head?.fName} ${admin.ISPSU_Head?.lName}`
                       : "Admin"
                   }
                 />
@@ -54,7 +76,7 @@ export function NavUser() {
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
                   {admin?.ISPSU_Head
-                    ? `${admin.ISPSU_Head.fName} ${admin.ISPSU_Head.lName}`
+                    ? `${admin.ISPSU_Head?.fName} ${admin.ISPSU_Head?.lName}`
                     : "Admin"}
                 </span>
 
@@ -76,7 +98,7 @@ export function NavUser() {
                     src={``}
                     alt={
                       admin?.ISPSU_Head
-                        ? `${admin.ISPSU_Head.fName} ${admin.ISPSU_Head.lName}`
+                        ? `${admin.ISPSU_Head?.fName} ${admin.ISPSU_Head?.lName}`
                         : "Admin"
                     }
                   />
@@ -85,7 +107,7 @@ export function NavUser() {
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
                     {admin?.ISPSU_Head
-                      ? `${admin.ISPSU_Head.fName} ${admin.ISPSU_Head.lName}`
+                      ? `${admin.ISPSU_Head?.fName} ${admin.ISPSU_Head?.lName}`
                       : "Admin"}
                   </span>
                   <span className="truncate text-xs">{admin?.email}</span>

@@ -50,7 +50,7 @@ export function DeleteDialog({
       {/* {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>} */}
       {trigger && trigger}
       <DialogContent
-        className="max-w-lg p-6 bg-gradient-to-bl to-card from-card/70 border-0"
+        className="max-w-lg p-6 bg-gradient-to-bl to-card from-card border-0"
         onInteractOutside={(e) => {
           e.preventDefault();
         }}

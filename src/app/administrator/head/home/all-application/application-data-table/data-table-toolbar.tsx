@@ -20,9 +20,6 @@ import { ToolbarProps } from "@/app/table-components/data-table";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import useFetchApplications from "@/hooks/admin/getApplicant";
 
-import { TourTrigger } from "@/components/tour/tour-trigger";
-import { TourStep } from "@/components/tour/tour-step";
-
 export default function DataTableToolbar<TData extends { studentId: number }>({
   table,
   search,
@@ -81,7 +78,7 @@ export default function DataTableToolbar<TData extends { studentId: number }>({
       <div className="flex flex-1 items-center space-x-2">
         <div className="relative">
           <Input
-            placeholder="Filter scholarship..."
+            placeholder="Search name..."
             className="peer ps-9 pe-9 h-8 w-[150px] lg:w-[250px]"
             onChange={(e) => setSearch?.(e.target.value)}
           />
@@ -155,8 +152,6 @@ export default function DataTableToolbar<TData extends { studentId: number }>({
       )}
 
       <DataTableViewOptions table={table} />
-
-      <TourTrigger />
     </div>
   );
 }

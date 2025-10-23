@@ -30,6 +30,7 @@ import useFetchApplicationCSVShit from "@/hooks/admin/getShit";
 import useFetchApplicationCSV from "@/hooks/admin/getApplicationCSV";
 import { AnimatePresence, motion } from "motion/react";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function GenerateReport() {
   const { data, loading } = useFetchApplicationCSVShit();
@@ -184,88 +185,106 @@ export default function GenerateReport() {
         />
 
         <div className="mt-15  w-full mx-auto space-y-6">
-          <Timeline value={step}>
-            {items.map((item, index) => (
-              <TimelineItem key={item.id} step={item.id}>
-                <div>
-                  <TimelineHeader>
-                    <TimelineSeparator />
-
-                    <TimelineTitle>{item.title}</TimelineTitle>
-                    <TimelineIndicator />
-                  </TimelineHeader>
-                  <TimelineContent className="flex justify-between items-center">
-                    {item.description}
-                    {item.id === 7 && (
-                      <span className="flex gap-2 items-center">
-                        <Checkbox
-                          disabled={loadingCSV}
-                          id="select-all"
-                          checked={selectAll}
-                          onCheckedChange={(checked) => {
-                            setSelectAll(!!checked);
-                            if (checked) {
-                              // Select all data selections (Step Seven)
-                              setSelectedDataSelections(
-                                data?.dataSelections || []
-                              );
-                            } else {
-                              // Deselect all
-                              setSelectedDataSelections([]);
-                            }
-                          }}
-                        />
-                        <Label htmlFor="select-all">Select All</Label>
-                      </span>
-                    )}
-                  </TimelineContent>
+          {loading ? (
+            <div className="space-y-6">
+              {[1, 2, 3, 4, 5, 6, 7].map((step) => (
+                <div key={step} className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="h-6 w-6 rounded-full" />
+                    <Skeleton className="h-5 w-40" />
+                  </div>
+                  <div className="grid grid-cols-5 gap-3">
+                    {[1, 2, 3, 4, 5].map((card) => (
+                      <Skeleton key={card} className="h-24 rounded-md" />
+                    ))}
+                  </div>
                 </div>
+              ))}
+            </div>
+          ) : (
+            <Timeline value={step}>
+              {items.map((item, index) => (
+                <TimelineItem key={item.id} step={item.id}>
+                  <div>
+                    <TimelineHeader>
+                      <TimelineSeparator />
 
-                <div className="grid grid-cols-5 gap-3 mt-5">
-                  {item.headers?.map((meow) => {
-                    const Icon = item.icon;
-                    const isStepSeven = item.id === 7;
-
-                    const isChecked = isStepSeven
-                      ? selectedDataSelections.includes(meow)
-                      : selectedFilters
-                          .find((filter) => filter.id === item.headerLabel)
-                          ?.value.includes(meow) || false;
-                    return (
-                      <div key={meow} onClick={() => setStep(index + 1)}>
-                        <div className="relative bg-card  flex w-full items-start gap-2 rounded-md  p-6 shadow-xs outline-none dark:has-data-[state=checked]:bg-green-950 ">
+                      <TimelineTitle>{item.title}</TimelineTitle>
+                      <TimelineIndicator />
+                    </TimelineHeader>
+                    <TimelineContent className="flex justify-between items-center">
+                      {item.description}
+                      {item.id === 7 && (
+                        <span className="flex gap-2 items-center">
                           <Checkbox
-                            id="meow"
                             disabled={loadingCSV}
-                            checked={isChecked}
-                            onCheckedChange={() => {
-                              if (item.id === 7) {
-                                handleCheckboxToggle(meow);
+                            id="select-all"
+                            checked={selectAll}
+                            onCheckedChange={(checked) => {
+                              setSelectAll(!!checked);
+                              if (checked) {
+                                // Select all data selections (Step Seven)
+                                setSelectedDataSelections(
+                                  data?.dataSelections || []
+                                );
                               } else {
-                                handleFilterToggle(item.headerLabel, meow);
+                                // Deselect all
+                                setSelectedDataSelections([]);
                               }
                             }}
-                            className="order-1 after:absolute after:inset-0  !border-0"
                           />
-                          <div className="flex grow items-center gap-3">
-                            <Icon className="h-5 min-w-5" />
-                            <div className="grid gap-2">
-                              <Label
-                                htmlFor="meow"
-                                className="line-clamp-1 capitalize"
-                              >
-                                {meow}
-                              </Label>
+                          <Label htmlFor="select-all">Select All</Label>
+                        </span>
+                      )}
+                    </TimelineContent>
+                  </div>
+
+                  <div className="grid grid-cols-5 gap-3 mt-5">
+                    {item.headers?.map((meow) => {
+                      const Icon = item.icon;
+                      const isStepSeven = item.id === 7;
+
+                      const isChecked = isStepSeven
+                        ? selectedDataSelections.includes(meow)
+                        : selectedFilters
+                            .find((filter) => filter.id === item.headerLabel)
+                            ?.value.includes(meow) || false;
+                      return (
+                        <div key={meow} onClick={() => setStep(index + 1)}>
+                          <div className="relative bg-card  flex w-full items-start gap-2 rounded-md  p-6 shadow-xs outline-none dark:has-data-[state=checked]:bg-green-950 ">
+                            <Checkbox
+                              id="meow"
+                              disabled={loadingCSV}
+                              checked={isChecked}
+                              onCheckedChange={() => {
+                                if (item.id === 7) {
+                                  handleCheckboxToggle(meow);
+                                } else {
+                                  handleFilterToggle(item.headerLabel, meow);
+                                }
+                              }}
+                              className="order-1 after:absolute after:inset-0  !border-0"
+                            />
+                            <div className="flex grow items-center gap-3">
+                              <Icon className="h-5 min-w-5" />
+                              <div className="grid gap-2">
+                                <Label
+                                  htmlFor="meow"
+                                  className="line-clamp-1 capitalize"
+                                >
+                                  {meow}
+                                </Label>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </TimelineItem>
-            ))}
-          </Timeline>
+                      );
+                    })}
+                  </div>
+                </TimelineItem>
+              ))}
+            </Timeline>
+          )}
 
           <AnimatePresence>
             {(selectedDataSelections.length > 0 ||

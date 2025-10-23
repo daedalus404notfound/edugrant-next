@@ -89,7 +89,7 @@ const dataa = {
         },
         {
           title: "For Interview",
-          url: "/administrator/home/applicants/pending",
+          url: "/administrator/home/applicants/interview",
         },
         {
           title: "Approved Applications",
@@ -275,6 +275,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             url: "/administrator/head/home/pending",
             icon: Hourglass,
             indicator: data?.pendingApplcationCount,
+          },
+          {
+            title: "For Interview",
+            url: "/administrator/head/home/interview",
+            icon: CheckCheck,
+            indicator: data?.approvedApplcationCount,
           },
           {
             title: "Approved Application",

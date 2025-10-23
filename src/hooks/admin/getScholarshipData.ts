@@ -1,47 +1,43 @@
 "use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
-
+import { useQuery } from "@tanstack/react-query";
 import { displayScholarshipFormData } from "./displayScholarshipData";
-import { ApiErrorResponse } from "./postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
-export default function useScholarshipUserByIdAdmin(id: string) {
-  const [data, setData] = useState<displayScholarshipFormData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+import { ApiErrorResponse } from "./postReviewedHandler";
 
-  useEffect(
-    function () {
-      async function fetchScholarshipsAdmin() {
-        setLoading(true);
-        try {
-          const res = await axios.get<{
-            scholarship: displayScholarshipFormData;
-          }>(
-            `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/getScholarshipsById?scholarshipId=${id}`,
-
-            { withCredentials: true }
-          );
-          if (res.status === 200) {
-            setData(res.data.scholarship);
-          }
-        } catch (error) {
-          if (axios.isAxiosError<ApiErrorResponse>(error)) {
-            StyledToast({
-              status: "error",
-              title: error?.response?.data.message ?? "An error occurred.",
-              description: "Cannot process your request.",
-            });
-          }
-        } finally {
-          setLoading(false);
+export default function useScholarshipUserByIdAdmin(id: number) {
+  const query = useQuery({
+    queryKey: ["adminScholarship", id],
+    queryFn: async () => {
+      try {
+        const res = await axios.get<{
+          scholarship: displayScholarshipFormData;
+        }>(
+          `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/getScholarshipsById?scholarshipId=${id}`,
+          { withCredentials: true }
+        );
+        return res.data.scholarship;
+      } catch (error) {
+        if (axios.isAxiosError<ApiErrorResponse>(error)) {
+          StyledToast({
+            status: "error",
+            title: error?.response?.data.message ?? "An error occurred.",
+            description: "Cannot process your request.",
+          });
         }
+        throw error;
       }
-
-      fetchScholarshipsAdmin();
     },
-    [id]
-  );
+    enabled: !!id, // only fetch if id exists
+    retry: false,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
 
-  return { data, loading, error, setData };
+  return {
+    data: query.data ?? null,
+    loading: query.isLoading,
+    error: query.isError ? "An error occurred" : "",
+    isError: query.isError,
+    refetch: query.refetch,
+  };
 }
