@@ -15,62 +15,41 @@ import {
 import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
 import { DataTable } from "@/app/table-components/data-table";
 import socket from "@/lib/socketLib";
+import { useHeadScholarshipStore } from "@/store/headScholarshipMeta";
+import { useHeadInactiveScholarshipStore } from "@/store/headInactiveScholarshipStore";
+import useScholarshipInactiveData from "@/hooks/admin/getScolarshipInactive";
 export default function Manage() {
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [status, setStatus] = useState("EXPIRED");
-  const [search, setSearch] = useState("");
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-
-  const { data, meta, loadingState, setData } = useScholarshipData({
-    page: pagination.pageIndex + 1,
-    pageSize: pagination.pageSize,
-    sortBy: sorting[0]?.id ?? "",
-    order: sorting[0]?.desc ? "desc" : "asc",
-    filters:
-      columnFilters.length > 0 ? JSON.stringify(columnFilters) : undefined,
-    status: status,
-  });
-  const { searchData, searchLoading, searchMeta, setSearchData } =
-    useScholarshipSearch({
-      page: pagination.pageIndex + 1,
-      pageSize: pagination.pageSize,
-      sortBy: sorting[0]?.id ?? "",
-      order: sorting[0]?.desc ? "desc" : "asc",
-      query: search,
-      status: status,
-    });
+  const {
+    metaInactive,
+    statusInactive,
+    setStatusInactive,
+    paginationInactive,
+    setPaginationInactive,
+    searchInactive,
+    setSearchInactive,
+    setSortingInactive,
+    sortingInactive,
+    columnFiltersInactive,
+    setColumnFiltersInactive,
+  } = useHeadInactiveScholarshipStore();
+  const { data, isLoading } = useScholarshipInactiveData();
 
   const tabs = [
     {
       id: "EXPIRED",
       label: "Expired",
-      indicator: meta.count.countExpired ? meta.count.countExpired : null,
+      indicator: metaInactive.count.countExpired
+        ? metaInactive.count.countExpired
+        : null,
     },
     {
       id: "ENDED",
       label: "Ended",
-      indicator: meta.count.countArchived ? meta.count.countArchived : null,
+      indicator: metaInactive.count.countArchived
+        ? metaInactive.count.countArchived
+        : null,
     },
   ];
-
-  useEffect(() => {
-    socket.on("deleteScholarship", (data) => {
-      console.log("🎓 deleted:", data.deletedScholarship.scholarshipId);
-
-      setData((prev) =>
-        prev.filter(
-          (meow) => meow.scholarshipId !== data.deletedScholarship.scholarshipId
-        )
-      );
-    });
-    return () => {
-      socket.off("deleteScholarship");
-    };
-  }, []);
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:py-10  py-4">
@@ -81,25 +60,25 @@ export default function Manage() {
           textColor="text-red-700"
         />{" "}
         <div className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b">
-          <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
+          <Tabs tabs={tabs} onTabChange={(tabId) => setStatusInactive(tabId)} />
         </div>
         <div className="mt-15 lg:w-full md:min-w-5xl w-full mx-auto">
           <DataTable<scholarshipFormData, unknown>
-            data={search.trim().length > 0 ? searchData : data}
-            columns={columns(status)}
-            meta={search.trim().length > 0 ? searchMeta : meta}
-            pagination={pagination}
-            setPagination={setPagination}
+            data={data}
+            columns={columns(statusInactive)}
+            meta={metaInactive}
+            pagination={paginationInactive}
+            setPagination={setPaginationInactive}
             getRowId={(row) => row.scholarshipId}
-            loading={search ? searchLoading : loadingState}
-            search={search}
-            setSearch={setSearch}
-            status={status}
-            setStatus={setStatus}
-            sorting={sorting}
-            setSorting={setSorting}
-            columnFilters={columnFilters}
-            setColumnFilters={setColumnFilters}
+            loading={isLoading}
+            search={searchInactive}
+            setSearch={setSearchInactive}
+            status={statusInactive}
+            setStatus={setStatusInactive}
+            sorting={sortingInactive}
+            setSorting={setSortingInactive}
+            columnFilters={columnFiltersInactive}
+            setColumnFilters={setColumnFiltersInactive}
             toolbar={DataTableToolbar}
           />
         </div>

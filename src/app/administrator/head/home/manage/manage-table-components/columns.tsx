@@ -58,7 +58,7 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
           <Avatar>
             <AvatarImage className="object-cover" src={value.logo} />
             <AvatarFallback>
-              {row.original.Scholarship_Provider.name.slice(0, 1)}
+              {row.original.Scholarship_Provider?.name.slice(0, 1)}
             </AvatarFallback>
           </Avatar>
           <span className="capitalize">{value?.title}</span>

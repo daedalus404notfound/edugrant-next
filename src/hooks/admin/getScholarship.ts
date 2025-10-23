@@ -1,80 +1,189 @@
+// "use client";
+// import axios from "axios";
+// import { useQuery } from "@tanstack/react-query";
+// import { useEffect } from "react";
+// import { scholarshipFormData } from "./zodUpdateScholarship";
+// import StyledToast from "@/components/ui/toast-styled";
+// import { ApiErrorResponse } from "./postReviewedHandler";
+// import { useDebounce } from "@/lib/debounder";
+// import { useHeadScholarshipStore } from "@/store/headScholarshipMeta";
+// import { MetaWithCountsScholarship } from "@/store/headScholarshipMeta";
+
+// export default function useScholarshipData() {
+//   const {
+//     status: tabStatus,
+//     setStatus: setTabStatus,
+//     setMeta,
+//     meta,
+//     pagination,
+//     sorting,
+//     columnFilters,
+//     search,
+//   } = useHeadScholarshipStore();
+
+//   const debouncedSearch = useDebounce(search, 800);
+//   useEffect(() => {
+//     resetPage();
+//   }, [debouncedSearch, sorting, tabStatus, columnFilters]);
+//   const query = useQuery({
+//     queryKey: [
+//       "adminScholarshipData",
+//       pagination,
+//       sorting,
+//       columnFilters,
+//       tabStatus,
+//       debouncedSearch,
+//     ],
+//     queryFn: async () => {
+//       const params = new URLSearchParams();
+//       if (tabStatus) params.append("status", tabStatus);
+//       if (pagination.) params.append("page", page.toString());
+//       if (pageSize) params.append("dataPerPage", pageSize.toString());
+//       if (sortBy) params.append("sortBy", sortBy);
+//       if (order) params.append("order", order);
+//       if (filters) params.append("filters", filters);
+//       if (debouncedSearch) params.append("search", debouncedSearch);
+//       const endpoint = `${
+//         process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
+//       }/getScholarship?${params.toString()}`;
+
+//       console.log("Fetching (admin):", endpoint);
+
+//       try {
+//         const res = await axios.get<{
+//           data: scholarshipFormData[];
+//           meta: MetaWithCountsScholarship;
+//         }>(endpoint, { withCredentials: true });
+
+//         return res.data;
+//       } catch (error) {
+//         if (axios.isAxiosError<ApiErrorResponse>(error)) {
+//           StyledToast({
+//             status: "error",
+//             title: error?.response?.data.message ?? "An error occurred.",
+//             description: "Cannot process your request.",
+//           });
+//         }
+//         throw error;
+//       }
+//     },
+//     retry: false,
+//     staleTime: 1000 * 60 * 5,
+//   });
+
+//   const data = query.data?.data ?? [];
+
+//   useEffect(() => {
+//     if (query.isSuccess && query.data?.meta) {
+//       setMeta(query.data.meta);
+//     }
+//   }, [query.isSuccess, query.data?.meta]);
+
+//   return {
+//     data,
+//     meta,
+//     setMeta,
+//     isLoading: query.isLoading,
+//     isError: query.isError,
+//     refetch: query.refetch,
+//     setTabStatus,
+//   };
+// }
 "use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
-
+import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { scholarshipFormData } from "./zodUpdateScholarship";
-import { MetaTypes } from "../zodMeta";
 import StyledToast from "@/components/ui/toast-styled";
 import { ApiErrorResponse } from "./postReviewedHandler";
-import { useAdminStore } from "@/store/adminUserStore";
+import { useDebounce } from "@/lib/debounder";
+import { useHeadScholarshipStore } from "@/store/headScholarshipMeta";
+import { MetaWithCountsScholarship } from "@/store/headScholarshipMeta";
+import { useHeadInactiveScholarshipStore } from "@/store/headInactiveScholarshipStore";
 
-type CountIndicator = {
-  countActive: number;
-  countExpired: number;
-  countRenew: number;
-  countArchived: number;
-};
+export default function useScholarshipData() {
+  const {
+    status: tabStatus,
+    setStatus: setTabStatus,
+    setMeta,
+    meta,
+    pagination,
+    sorting,
+    columnFilters,
+    search,
+    setPagination,
+  } = useHeadScholarshipStore();
 
-export type ExtendedMeta = MetaTypes & { count: CountIndicator };
+  const {
+    metaInactive,
+    statusInactive,
+    setStatusInactive,
+    paginationInactive,
+    setPaginationInactive,
+    searchInactive,
+    setSearchInactive,
+    setSortingInactive,
+    sortingInactive,
+    columnFiltersInactive,
+    setColumnFiltersInactive,
+  } = useHeadInactiveScholarshipStore();
 
-export default function useScholarshipData({
-  page,
-  pageSize,
-  sortBy,
-  order,
-  status,
-  filters,
-  accountId,
-}: {
-  page?: number;
-  pageSize?: number;
-  sortBy?: string;
-  order?: string;
-  status?: string;
-  filters?: string;
-  accountId?: number;
-}) {
-  const [data, setData] = useState<scholarshipFormData[]>([]);
-  const [meta, setMeta] = useState<ExtendedMeta>({
-    page: 1,
-    pageSize: 10,
-    totalRows: 0,
-    totalPage: 0,
-    sortBy: "",
-    order: "",
-    filters: "",
-    search: "",
-    count: { countActive: 0, countExpired: 0, countRenew: 0, countArchived: 0 },
-  });
+  // Destructure pagination
+  const { pageIndex, pageSize } = pagination;
 
-  const [loading, setLoading] = useState(true);
-  const { loading: loadingAdmin } = useAdminStore();
-  const loadingState = loading || loadingAdmin;
+  // Debounce search input
+  const debouncedSearch = useDebounce(search, 800);
+
+  // Reset page to 0 when filters change
+  const resetPage = () => {
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  };
+
   useEffect(() => {
-    async function fetchScholarships() {
-      setLoading(true);
+    resetPage();
+  }, [debouncedSearch, sorting, tabStatus, columnFilters]);
+
+  const query = useQuery({
+    queryKey: [
+      "adminScholarshipData",
+      pagination,
+      sorting,
+      columnFilters,
+      tabStatus,
+      debouncedSearch,
+    ],
+    queryFn: async () => {
+      const params = new URLSearchParams();
+
+      // Append parameters dynamically
+      if (tabStatus) params.append("status", tabStatus);
+      params.append("page", (pageIndex + 1).toString()); // +1 if backend uses 1-based page indexing
+      params.append("dataPerPage", pageSize.toString());
+
+      if (sorting.length > 0) {
+        params.append("sortBy", sorting[0].id);
+        params.append("order", sorting[0].desc ? "desc" : "asc");
+      }
+
+      if (columnFilters.length > 0) {
+        params.append("filters", JSON.stringify(columnFilters));
+      }
+
+      if (debouncedSearch) params.append("search", debouncedSearch);
+
+      const endpoint = `${
+        process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
+      }/getScholarship?${params.toString()}`;
+
+      console.log("Fetching (admin):", endpoint);
+
       try {
-        const params = new URLSearchParams();
+        const res = await axios.get<{
+          data: scholarshipFormData[];
+          meta: MetaWithCountsScholarship;
+        }>(endpoint, { withCredentials: true });
 
-        if (status) params.append("status", status);
-        if (page) params.append("page", page.toString());
-        if (pageSize) params.append("dataPerPage", pageSize.toString());
-        if (sortBy) params.append("sortBy", sortBy);
-        if (order) params.append("order", order);
-        if (filters) params.append("filters", filters);
-        if (accountId) params.append("accountId", accountId.toString());
-
-        const endpoint = `${
-          process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
-        }/getScholarship?${params.toString()}`;
-        console.log("Fetching:", endpoint);
-
-        const res = await axios.get(endpoint, { withCredentials: true });
-
-        if (res.status === 200) {
-          setData(res.data.data);
-          setMeta(res.data.meta);
-        }
+        return res.data;
       } catch (error) {
         if (axios.isAxiosError<ApiErrorResponse>(error)) {
           StyledToast({
@@ -83,13 +192,27 @@ export default function useScholarshipData({
             description: "Cannot process your request.",
           });
         }
-      } finally {
-        setLoading(false);
+        throw error;
       }
+    },
+    retry: false,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const data = query.data?.data ?? [];
+
+  useEffect(() => {
+    if (query.isSuccess && query.data?.meta) {
+      setMeta(query.data.meta);
     }
+  }, [query.isSuccess, query.data?.meta, setMeta]);
 
-    fetchScholarships();
-  }, [page, pageSize, sortBy, order, filters, status]);
-
-  return { data, loadingState, meta, setData };
+  return {
+    data,
+    meta,
+    isLoading: query.isLoading,
+    isError: query.isError,
+    refetch: query.refetch,
+    setTabStatus,
+  };
 }

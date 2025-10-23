@@ -84,18 +84,6 @@ export default function Create() {
 
   const [openGuide, setOpenGuide] = useState(true);
 
-  useEffect(() => {
-    // if (!socket.connected) socket.connect();
-
-    socket.on("adminAddScholarships", (data) => {
-      console.log("🎓 New scholarship received:", data);
-    });
-
-    return () => {
-      socket.off("adminAddScholarships");
-    };
-  }, []);
-
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:py-10  py-4">
@@ -110,7 +98,7 @@ export default function Create() {
           />
         </TourStep>
         <Separator className="mt-2" />
-        <div className="mt-10 lg:w-[60%] min-w-5xl w-full mx-auto">
+        <div className="mt-10 max-w-5xl w-full mx-auto">
           <Form {...form}>
             <TourStep className="mt-10" stepId="text-forms">
               <div className="grid grid-cols-3 gap-x-5 gap-y-10 bg-card/40 dark:bg-gradient-to-br to-card from-card/50 p-6 rounded-md ">

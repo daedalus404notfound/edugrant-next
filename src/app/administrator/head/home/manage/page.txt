@@ -5,27 +5,26 @@ import DataTableToolbar from "./manage-table-components/data-table-toolbar";
 import TitleReusable from "@/components/ui/title";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
-
+import { useEffect, useState } from "react";
 import useScholarshipData from "@/hooks/admin/getScholarship";
-
+import {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+} from "@tanstack/react-table";
 import { DataTable } from "@/app/table-components/data-table";
-
 import { useHeadScholarshipStore } from "@/store/headScholarshipMeta";
 
 export default function Manage() {
-  const {
-    meta,
-    status,
-    setStatus,
-    pagination,
-    setPagination,
-    search,
-    setSearch,
-    setSorting,
-    sorting,
-    columnFilters,
-    setColumnFilters,
-  } = useHeadScholarshipStore();
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+  const { search, meta, status, setStatus, setSearch, setPage } =
+    useHeadScholarshipStore();
   const { data, isLoading } = useScholarshipData();
 
   const tabs = [
@@ -40,7 +39,11 @@ export default function Manage() {
       indicator: meta.count?.countRenew,
     },
   ];
-
+  useEffect(() => {
+    if (pagination) {
+      setPage(pagination.pageIndex + 1);
+    }
+  }, [pagination]);
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:py-10  py-4">
