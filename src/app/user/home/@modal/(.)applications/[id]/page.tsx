@@ -72,23 +72,6 @@ export default function InterceptManageApplicationClient() {
 
   //   { id: "scholarship", label: "Scholarship Details", indicator: null },
   // ];
-  const steps = [
-    {
-      step: 1,
-      title: "Step One",
-      description: "Choose Scholarship",
-    },
-    {
-      step: 2,
-      title: "Step Two",
-      description: "Upload Documents",
-    },
-    {
-      step: 3,
-      title: "Step Three",
-      description: "Wait for Approval",
-    },
-  ];
 
   const processedInterviewDate = data?.Interview_Decision?.dateCreated;
   const processedApprovedDate = data?.Interview_Decision?.dateCreated;
@@ -122,9 +105,7 @@ export default function InterceptManageApplicationClient() {
           scholarship={false}
         />
         <div className=" h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md">
-          {loading ? (
-            <ScholarshipModalLoading />
-          ) : edit ? (
+          {edit ? (
             <EditApplication
               data={data}
               setEdit={setEdit}
@@ -262,44 +243,38 @@ export default function InterceptManageApplicationClient() {
                 </div>
               </div>
               <div className="lg:p-4 p-4 space-y-6">
-                {data?.status === "PENDING" && (
+                {data?.status === "PENDING" ? (
                   <StatusAlertIndicator
                     status="PENDING"
                     title="Application Submitted"
                     description="Your application has been submitted and is currently under review."
                   />
-                )}
-
-                {data?.status === "APPROVED" && (
+                ) : data?.status === "APPROVED" ? (
                   <StatusAlertIndicator
                     status="APPROVED"
                     title="Application Approved"
                     description="Congratulations! Your application has been approved for this scholarship."
                   />
-                )}
-
-                {data?.status === "DECLINED" && (
+                ) : data?.status === "DECLINED" ? (
                   <StatusAlertIndicator
                     status="DECLINED"
                     title="Application Declined"
                     description="Unfortunately, your application was not approved for this scholarship."
                   />
-                )}
-
-                {data?.status === "INTERVIEW" && (
+                ) : data?.status === "INTERVIEW" ? (
                   <StatusAlertIndicator
                     status="INTERVIEW"
                     title="Interview Required"
                     description="You've passed the initial review and are now invited for an interview."
                   />
-                )}
-
-                {data?.status === "BLOCKED" && (
+                ) : data?.status === "BLOCKED" ? (
                   <StatusAlertIndicator
                     status="BLOCKED"
                     title="Application Blocked"
                     description="Your application is blocked due to an existing approved government scholarship."
                   />
+                ) : (
+                  ""
                 )}
 
                 {data?.status === "PENDING" &&
@@ -320,7 +295,7 @@ export default function InterceptManageApplicationClient() {
                       </Button>
                     </div>
                   )}
-                <DocsStudent data={data} />
+                <DocsStudent data={data} loading={loading} />
               </div>
               {/* <div className="sticky bottom-0 z-50">
                 <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />

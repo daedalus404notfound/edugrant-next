@@ -1,30 +1,33 @@
-
 "use client";
-
 import axios from "axios";
-import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { ApplicationFormData } from "../zod/application";
 import { MetaTypes } from "../zodMeta";
-import { AnnouncementFormDataGet } from "../zod/announcement";
 import { ApiErrorResponse } from "../admin/postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
-import { useDebounce } from "@/lib/debounder"; // use same debounce util
-import { useAnnouncementUserStore } from "@/store/announcementUserStore";
+import { useDebounce } from "@/lib/debounder";
 import { useUserStore } from "@/store/useUserStore";
+import { useEffect } from "react";
+import { useHistoryStore } from "@/store/historyUserStore";
 
-export default function useAnnouncementData() {
+export default function useClientHistoryApplications() {
   const { loadingUser } = useUserStore();
-  const { meta, setMeta, page, pageSize, sortBy, order, search, resetPage } =
-    useAnnouncementUserStore();
+  const { meta, setMeta, resetPage, search, sortBy, order, page, pageSize } =
+    useHistoryStore();
 
   const debouncedSearch = useDebounce(search, 800);
-
   useEffect(() => {
     resetPage();
-  }, [debouncedSearch, sortBy, order, search]);
-
+  }, [debouncedSearch, sortBy, order]);
   const query = useQuery({
-    queryKey: ["announcements", page, pageSize, sortBy, order, debouncedSearch],
+    queryKey: [
+      "historyApplications",
+      page,
+      pageSize,
+      sortBy,
+      order,
+      debouncedSearch,
+    ],
     queryFn: async () => {
       const params = new URLSearchParams();
       if (page) params.append("page", page.toString());
@@ -35,12 +38,12 @@ export default function useAnnouncementData() {
 
       const endpoint = `${
         process.env.NEXT_PUBLIC_USER_URL
-      }/getAnnouncements?${params.toString()}`;
-      console.log("Fetching announcements:", endpoint);
+      }/getApplicationHistory?${params.toString()}`;
+      console.log("Fetching:", endpoint);
 
       try {
         const res = await axios.get<{
-          annoucements: AnnouncementFormDataGet[];
+          applications: ApplicationFormData[];
           meta: MetaTypes;
         }>(endpoint, { withCredentials: true });
 
@@ -50,25 +53,22 @@ export default function useAnnouncementData() {
           StyledToast({
             status: "error",
             title: error?.response?.data.message ?? "An error occurred.",
-            description: "Cannot process get announcements request.",
+            description: "Cannot process your request.",
           });
         }
         throw error;
       }
     },
-    retry: false,
-    staleTime: 1000 * 60 * 5, // 5 min cache
+    staleTime: 1000 * 60 * 5,
     enabled: !loadingUser,
   });
 
-  const data = query.data?.annoucements ?? [];
-
+  const data = query.data?.applications ?? [];
   useEffect(() => {
     if (query.isSuccess && query.data?.meta) {
       setMeta(query.data.meta);
     }
   }, [query.isSuccess, query.data?.meta, setMeta]);
-
   return {
     data,
     meta,

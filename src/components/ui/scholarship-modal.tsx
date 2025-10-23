@@ -123,26 +123,24 @@ export default function ScholarshipModal({
                         {data?.Scholarship_Provider.name}
                       </p>{" "} */}
             <p className="text-muted-foreground lg:text-sm text-xs">
-              {data?.Scholarship_Provider.name}
+              {data?.Scholarship_Provider?.name}
             </p>
           </div>
         </div>
         <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
         {/* Info Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:py-6 py-4 lg:px-4 px-2 bg-card relative z-10 ">
-          <div className="space-y-1.5 border-l-2 pl-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-8 gap-6 lg:py-6 py-4 lg:px-4 px-2 bg-card relative z-10 ">
+          <div className="space-y-1.5 lg:border-l-2 lg:pl-4">
             <div className="flex items-center gap-2">
               <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-              <h1 className="text-xs text-muted-foreground">
-                diko pa alam lalagay
-              </h1>
+              <h1 className="text-xs text-muted-foreground">Posted on</h1>
             </div>
 
             <p className="font-medium lg:text-base text-sm text-foreground">
               {data?.dateCreated && format(data?.dateCreated, "PPP p")}
             </p>
           </div>{" "}
-          <div className="space-y-1.5  border-l-2 pl-4">
+          <div className="space-y-1.5 lg:border-l-2 lg:pl-4">
             <div className="flex items-center gap-2">
               <GraduationCap className="w-3.5 h-3.5 text-muted-foreground" />
               <h1 className="text-xs text-muted-foreground">
@@ -154,7 +152,7 @@ export default function ScholarshipModal({
               {data?.deadline ? format(data?.deadline, "PPP p") : "—"}
             </span>
           </div>
-          <div className="space-y-1.5  border-l-2 pl-4">
+          <div className="space-y-1.5 lg:border-l-2 lg:pl-4">
             <div className="flex items-center gap-2">
               <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
               <h1 className="text-xs text-muted-foreground">
@@ -177,7 +175,7 @@ export default function ScholarshipModal({
 
         <div className="space-y-8">
           <p className="text-xs uppercase text-muted-foreground">
-            Scholarship Details
+            Full Scholarship Details
           </p>
 
           <div className="grid lg:grid-cols-2 grid-cols-1 gap-3">
@@ -188,10 +186,12 @@ export default function ScholarshipModal({
                 </div>
                 <div className="flex flex-col">
                   <p className="text-muted-foreground text-sm">
-                    For Interview?
+                    Interview Required
                   </p>
                   <h1 className="text-lg font-medium tracking-wider">
-                    {data.interview ? "Yes" : "No"}
+                    {data.interview
+                      ? "Interview Required"
+                      : "No Interview Needed"}
                   </h1>
                 </div>
               </div>

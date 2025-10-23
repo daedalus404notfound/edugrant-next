@@ -39,15 +39,8 @@ import { useUserStore } from "@/store/useUserStore";
 export default function ClientScholarship() {
   const { status, setStatus } = useScholarshipUserStore();
   const { user } = useUserStore();
-  const {
-    search,
-    page,
-    order,
-    setPage,
-    setSearch,
-    setOrder,
-    meta,
-  } = useScholarshipUserStore();
+  const { search, page, order, setPage, setSearch, setOrder, meta } =
+    useScholarshipUserStore();
   const { data, isLoading: loadingState } = useScholarshipData();
   const { completed } = getFamilyBackgroundProgress(user?.Student);
 
@@ -116,17 +109,17 @@ export default function ClientScholarship() {
     {
       id: "ACTIVE",
       label: "Ongoing",
-      indicator: meta.counts.countActive ? meta.counts.countActive : null,
+      indicator: meta.counts?.countActive ? meta.counts?.countActive : null,
     },
     {
       id: "RENEW",
       label: "For Renewal",
-      indicator: meta.counts.countRenew ? meta.counts.countRenew : null,
+      indicator: meta.counts?.countRenew ? meta.counts?.countRenew : null,
     },
     {
       id: "EXPIRED",
       label: "Closed",
-      indicator: meta.counts.countExpired ? meta.counts.countExpired : null,
+      indicator: meta.counts?.countExpired ? meta.counts?.countExpired : null,
     },
   ];
   return (
@@ -151,11 +144,11 @@ export default function ClientScholarship() {
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.2, delay: 0.2 }}
-          className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b sticky z-20 top-0 bg-background"
+          className="overflow-y-hidden overflow-x-auto pb-1.5 pt-7.5 no-scrollbar border-b sticky z-20 top-0 bg-background"
         >
           <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
         </motion.div>
-        <div className="mt-15 lg:w-[80%] md:min-w-5xl w-full mx-auto space-y-8">
+        <div className="lg:mt-15 mt-10 lg:w-[80%] md:min-w-5xl w-full mx-auto lg:space-y-8 space-y-6">
           {!loadingState && !completed && <CompleteChecker />}
 
           <motion.div
@@ -189,7 +182,7 @@ export default function ClientScholarship() {
           ) : (
             ""
           )}
-          <div className=" grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
+          <div className=" grid lg:grid-cols-3 md:grid-cols-2 grid-cols-2 lg:gap-6 gap-2">
             {loadingState ? (
               [...Array(3)].map((_, index) => (
                 <motion.div
@@ -204,11 +197,11 @@ export default function ClientScholarship() {
                   className="shadow-sm rounded-lg border bg-card lg:p-1 p-0.5"
                 >
                   <div className="rounded-lg bg-background overflow-hidden">
-                    <Skeleton className="aspect-[16/8.5] w-full rounded-md" />
+                    <Skeleton className="lg:aspect-[16/8.5] aspect-[16/10] w-full rounded-md" />
 
-                    <div className="p-4 space-y-6">
+                    <div className="lg:p-4 p-2 lg:space-y-6 space-y-3">
                       <div className="flex items-center gap-3">
-                        <Skeleton className="w-10 h-10 rounded-full" />
+                        <Skeleton className="w-10 h-10 rounded-full hidden lg:block" />
                         <div className="flex-1 space-y-2">
                           <Skeleton className="h-4 w-3/4" />
                           <Skeleton className="h-3 w-1/2" />
@@ -216,17 +209,17 @@ export default function ClientScholarship() {
                       </div>
 
                       <div className="space-y-2">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-3">
                           <Skeleton className="h-3 w-24" />
                           <Skeleton className="h-3 w-28" />
                         </div>
-                        <div className="flex items-center justify-between">
+                        <div className=" items-center justify-between hidden lg:flex">
                           <Skeleton className="h-3 w-24" />
                           <Skeleton className="h-3 w-16" />
                         </div>
                       </div>
 
-                      <Skeleton className="h-10 w-full rounded-md" />
+                      <Skeleton className="lg:h-10 h-8 w-full rounded-md" />
                     </div>
                   </div>
                 </motion.div>
@@ -254,7 +247,7 @@ export default function ClientScholarship() {
                       delay: index * 0.1,
                       ease: "easeOut",
                     }}
-                    className="shadow-sm hover:shadow-md transition-all duration-200 lg:p-1 p-0.5  rounded-lg border bg-card"
+                    className="shadow-sm hover:shadow-md transition-all duration-200 lg:p-1  p-0.5  lg:rounded-lg rounded-md border bg-card"
                   >
                     {/* <Link
                       href={`/user/home/applications/${scholarship.applicationId}`}
@@ -262,7 +255,7 @@ export default function ClientScholarship() {
                       prefetch
                       scroll={false}
                     > */}
-                    <div className="relative rounded-lg bg-background overflow-hidden">
+                    <div className="relative lg:rounded-lg rounded-md bg-background overflow-hidden">
                       <img
                         className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
                           status === "EXPIRED" ? "" : ""
@@ -271,11 +264,11 @@ export default function ClientScholarship() {
                         alt=""
                       />
                       <div className="relative z-10">
-                        <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
+                        <div className="relative lg:aspect-[16/8.5] aspect-[16/10] w-full lg:rounded-md rounded-sm overflow-hidden">
                           {scholarship.Application?.length! > 0 && (
                             <div className="absolute bg-black/80  inset-0 z-10" />
                           )}
-                          <div className="flex gap-1.5 absolute top-0 right-2 z-20">
+                          <div className=" gap-1.5 absolute top-0 right-2 z-20 hidden lg:flex">
                             <Badge
                               variant="secondary"
                               className="mt-2 uppercase bg-blue-800 text-gray-200"
@@ -304,7 +297,7 @@ export default function ClientScholarship() {
                           {scholarship.Application?.length! > 0 && (
                             <div className="absolute top-0 -left-2 flex items-center z-20">
                               <div
-                                className="flex items-center justify-center text-gray-200 font-medium text-sm px-7 py-1.5 bg-gradient-to-br to-green-950 from-green-800"
+                                className="flex items-center justify-center text-gray-200 font-medium lg:text-sm  text-xs lg:px-7 px-4 py-1.5 bg-gradient-to-br to-green-950 from-green-800"
                                 style={{
                                   clipPath:
                                     "polygon(0 0, 100% 0, 85% 100%, 0% 100%)",
@@ -322,13 +315,13 @@ export default function ClientScholarship() {
                           />
                         </div>
 
-                        <div className="p-4 space-y-6">
+                        <div className="lg:p-4 p-2 space-y-2 lg:space-y-6 ">
                           <div className="flex items-center gap-3">
                             {scholarship ? (
                               <img
                                 src={scholarship?.logo}
                                 alt={scholarship?.title}
-                                className="w-10 h-10 rounded-full object-cover border"
+                                className="w-10 h-10 rounded-full object-cover border hidden lg:block"
                               />
                             ) : (
                               <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
@@ -336,11 +329,11 @@ export default function ClientScholarship() {
                               </div>
                             )}{" "}
                             <div className="w-full">
-                              <h3 className="font-semibold text-sm line-clamp-1">
+                              <h3 className="font-semibold lg:text-sm text-xs line-clamp-1">
                                 {scholarship?.title}
                               </h3>
 
-                              <p className="text-sm text-muted-foreground">
+                              <p className="lg:text-sm text-xs text-muted-foreground">
                                 {scholarship?.Scholarship_Provider?.name ||
                                   "Unknown Provider"}
                               </p>
@@ -348,16 +341,16 @@ export default function ClientScholarship() {
                           </div>
 
                           {/* Details */}
-                          <div className="flex flex-col gap-1 text-sm text-muted-foreground">
-                            <div className="flex items-center justify-between">
+                          <div className="flex flex-col gap-1 lg:text-sm text-xs text-muted-foreground">
+                            <div className="flex flex-col lg:flex-row lg:items-center justify-between">
                               <span className="text-xs">Deadline</span>
-                              <span className="font-medium text-foreground">
+                              <span className="font-medium text-foreground line-clamp-1">
                                 {scholarship?.dateCreated
                                   ? format(scholarship?.dateCreated, "PPP")
                                   : "—"}
                               </span>
                             </div>
-                            <div className="flex items-center justify-between">
+                            <div className="hidden lg:flex items-center justify-between">
                               <span className="text-xs">Scholarship Type</span>
                               <span className="font-medium text-foreground">
                                 {scholarship?.type || "N/A"}
@@ -370,7 +363,13 @@ export default function ClientScholarship() {
                             prefetch={true}
                             scroll={false}
                           >
-                            <Button className="w-full">
+                            <Button className="w-full hidden lg:flex">
+                              View Details <ArrowRight />
+                            </Button>
+                            <Button
+                              size="sm"
+                              className="w-full text-xs lg:hidden flex"
+                            >
                               View Details <ArrowRight />
                             </Button>
                           </Link>

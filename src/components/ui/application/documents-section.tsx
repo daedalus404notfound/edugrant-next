@@ -104,7 +104,7 @@ export default function DocumentSection({
 
               return (
                 <div key={index} className="bg-card p-4 rounded-lg space-y-6">
-                  {doc.fileFormat ? (
+                  {doc.supabasePath ? (
                     <div className="flex gap-3 items-center">
                       <div className="rounded-md flex-1 bg-green-600/10 text-green-600 p-2 ">
                         <div className="flex gap-3">
@@ -114,7 +114,7 @@ export default function DocumentSection({
                             aria-hidden="true"
                           />
                           <div className="flex grow justify-between gap-3">
-                            <p className="text-sm">Document provided</p>
+                            <p className="text-sm">Document available</p>
                           </div>
                         </div>
                       </div>
@@ -131,7 +131,7 @@ export default function DocumentSection({
                           aria-hidden="true"
                         />
                         <div className="flex grow justify-between gap-3">
-                          <p className="text-sm">Failed to submit</p>
+                          <p className="text-sm">Document unavailable</p>
                         </div>
                       </div>
                     </div>
@@ -150,6 +150,7 @@ export default function DocumentSection({
                         onUpdate={(field, value) =>
                           updateReviewData(doc.document, field, value)
                         }
+                        applicationId={data?.applicationId || 0}
                       />
                       <h4 className=" font-semibold  flex gap-2 items-start ">
                         {doc.document}{" "}

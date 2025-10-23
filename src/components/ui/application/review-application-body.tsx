@@ -1,6 +1,5 @@
 "use client";
 import { ApplicationFormData } from "@/hooks/zod/application";
-import { StatusAlertIndicator } from "../../../app/administrator/head/home/@modal/(.)application/[id]/status-indicator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import logo from "@/assets/edugrant-logo.png";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,13 +9,23 @@ import { format } from "date-fns";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import { Separator } from "@/components/ui/separator";
 import DocumentSection from "@/components/ui/application/documents-section";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import StudentStaff from "@/components/ui/application/student";
 import FamilyStaff from "@/components/ui/application/family";
 import { useState } from "react";
+import ScholarshipModal from "../scholarship-modal";
 const navigationTabs = [
   { id: "documents", label: "Documents", indicator: null },
   { id: "student", label: "Student Info", indicator: null },
   { id: "family", label: "Family Background", indicator: null },
+  { id: "scholarship", label: "Scholarship Details", indicator: null },
 ];
 export default function ReviewBody({
   data,
@@ -34,65 +43,44 @@ export default function ReviewBody({
   ) => void;
 }) {
   const [activeSection, setActiveSection] = useState("documents");
-
   const reviewDetails = data?.Interview_Decision || data?.Application_Decision;
   return (
-    <div className="overflow-auto h-full no-scrollbar p-4 bg-background rounded-lg">
+    <div className="overflow-auto h-full no-scrollbar bg-background rounded-lg">
       <div className="flex-1">
-        <div className="bg-card rounded-md overflow-hidden">
-          {data?.status === "APPROVED" && (
-            <StatusAlertIndicator
-              status="APPROVED"
-              title="Application Approved"
-              description="The applicant has successfully met all eligibility requirements for this scholarship."
-            />
-          )}
-
-          {data?.status === "DECLINED" && (
-            <StatusAlertIndicator
-              status="DECLINED"
-              title="Application Declined"
-              description="The applicant did not meet the eligibility requirements for this scholarship."
-            />
-          )}
-
-          {data?.status === "INTERVIEW" && (
-            <StatusAlertIndicator
-              status="INTERVIEW"
-              title="Application For Interview"
-              description="The applicant has successfully met all eligibility requirements proceeding to interview."
-            />
-          )}
-
-          {data?.status === "BLOCKED" && (
-            <StatusAlertIndicator
-              status="BLOCKED"
-              title="Application Blocked"
-              description="This is automated because the user has an approved government scholarship."
-            />
-          )}
+        <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-md overflow-hidden ">
           {/* Header Section */}
-          <div className="relative flex items-end  py-8 px-4">
+          <div className="relative flex  lg:items-end items-center  py-8 px-4">
             <img
-              className=" w-70 absolute right-0 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-20 "
+              className="lg:w-70 w-50 absolute right-0 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-20 "
               src={logo.src}
               alt=""
             />
             <div className=" flex items-end justify-center">
-              <Avatar className="size-25">
-                <AvatarImage
-                  src={data?.Student.profileImg?.publicUrl || ""}
-                  className="rounded-full object-cover"
-                />
-                <AvatarFallback
-                  className="rounded-full text-white font-semibold flex items-center justify-center 
+              <Dialog>
+                <DialogTrigger asChild className="cursor-pointer">
+                  <Avatar className="size-25">
+                    <AvatarImage
+                      src={data?.Student.profileImg?.publicUrl || ""}
+                      className="rounded-full object-cover"
+                    />
+                    <AvatarFallback
+                      className="rounded-full text-white font-semibold flex items-center justify-center 
                bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 
                dark:from-emerald-900 dark:via-teal-900 dark:to-cyan-900"
-                >
-                  {data?.Student.lName.slice(0, 1)}
-                  {data?.Student.fName.slice(0, 1)}
-                </AvatarFallback>
-              </Avatar>
+                    >
+                      {data?.Student.lName.slice(0, 1)}
+                      {data?.Student.fName.slice(0, 1)}
+                    </AvatarFallback>
+                  </Avatar>
+                </DialogTrigger>
+                <DialogContent className="lg:max-w-5xl w-full !p-0 overflow-hidden">
+                  <DialogHeader className="sr-only">
+                    <DialogTitle>Are you absolutely sure?</DialogTitle>
+                    <DialogDescription></DialogDescription>
+                  </DialogHeader>
+                  <img src={data?.Student.profileImg?.publicUrl || ""} alt="" />
+                </DialogContent>
+              </Dialog>
               <div className="absolute   flex items-center justify-center flex-col">
                 {data?.Student.PWD && <Badge variant="secondary">PWD</Badge>}
                 {data?.Student.indigenous && (
@@ -172,7 +160,7 @@ export default function ReviewBody({
             <div className="space-y-1.5  border-l-2 pl-4">
               <div className="flex items-center gap-2">
                 <UserRoundCheck className="w-3.5 h-3.5 text-muted-foreground" />
-                <h1 className="text-xs text-muted-foreground">Processed By</h1>
+                <h1 className="text-xs text-muted-foreground">Reviewed By</h1>
               </div>
               {loading ? (
                 <Skeleton className="h-5 w-20" />
@@ -205,13 +193,13 @@ export default function ReviewBody({
             </div>
           </div>
         </div>
-        <Tabs
-          tabs={navigationTabs}
-          onTabChange={(tabId) => setActiveSection(tabId)}
-          className="pb-6 mt-8"
-        />
 
-        <div className="py-6">
+        <div className="p-4 space-y-8">
+          <Tabs
+            tabs={navigationTabs}
+            onTabChange={(tabId) => setActiveSection(tabId)}
+            className=""
+          />
           {/* Documents Section */}
           {activeSection === "documents" && (
             <DocumentSection
@@ -236,6 +224,12 @@ export default function ReviewBody({
               <>loa</>
             ) : (
               data && <FamilyStaff data={data} loading={loading} />
+            ))}
+          {activeSection === "scholarship" &&
+            (loading ? (
+              <>loading.</>
+            ) : (
+              data && <ScholarshipModal data={data.Scholarship} />
             ))}
         </div>
       </div>

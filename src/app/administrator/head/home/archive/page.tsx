@@ -1,5 +1,5 @@
 "use client";
-import { GraduationCap } from "lucide-react";
+import { Archive, GraduationCap } from "lucide-react";
 import { columns } from "../manage/manage-table-components/columns";
 import DataTableToolbar from "../manage/manage-table-components/data-table-toolbar";
 import TitleReusable from "@/components/ui/title";
@@ -47,12 +47,12 @@ export default function Manage() {
   const tabs = [
     {
       id: "EXPIRED",
-      label: "Expired Scholarship",
+      label: "Expired",
       indicator: meta.count.countExpired ? meta.count.countExpired : null,
     },
     {
-      id: "ARCHIVED",
-      label: "Completed Scholarships",
+      id: "ENDED",
+      label: "Ended",
       indicator: meta.count.countArchived ? meta.count.countArchived : null,
     },
   ];
@@ -75,9 +75,10 @@ export default function Manage() {
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:py-10  py-4">
         <TitleReusable
-          title="Active Scholarship Management"
+          title="Inactive Scholarships"
           description="View and manage scholarships. Switch between active scholarships and renewals using the tabs below."
-          Icon={GraduationCap}
+          Icon={Archive}
+          textColor="text-red-700"
         />{" "}
         <div className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b">
           <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />

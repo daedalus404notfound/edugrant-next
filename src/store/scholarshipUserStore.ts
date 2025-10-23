@@ -7,10 +7,10 @@ interface ScholarshipCounts {
   countRenew: number;
   countExpired: number;
 }
-export interface MetaWithCounts extends MetaTypes {
+export interface MetaWithCountsScholarship extends MetaTypes {
   counts: ScholarshipCounts;
 }
-export const defaultMeta: MetaWithCounts = {
+export const defaultMeta: MetaWithCountsScholarship = {
   page: 1,
   pageSize: 10,
   totalRows: 0,
@@ -34,13 +34,13 @@ export interface ApplicationStore {
   sortBy: string;
   order: string;
   search: string;
-  meta: MetaWithCounts;
+  meta: MetaWithCountsScholarship;
   setStatus: (status: string) => void;
   setStatus1: (status: string) => void;
   setPage: (page: number) => void;
   setSearch: (search: string) => void;
   setOrder: (order: string) => void; // <-- added setter
-  setMeta: (meta: MetaWithCounts) => void;
+  setMeta: (meta: MetaWithCountsScholarship) => void;
   setCounts: (counts: Partial<ScholarshipCounts>) => void; // ✅ added
   resetPage: () => void;
   incrementActive: () => void; // ✅ new

@@ -81,13 +81,32 @@ export function SummaryCard({
   return (
     <div className="dark:border bg-background rounded-lg hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
       <div className=" bg-gradient-to-br dark:to-card to-card/50 dark:from-card/50 from-card/30 shadow z-10 flex flex-col justify-between rounded-lg  lg:p-6 p-4 lg:gap-2 ">
+        <p className=" text-xs line-clamp-1 jakarta lg:hidden block mb-2">
+          {label}
+        </p>
         <div className="flex justify-between items-start">
           <Button
             variant="secondary"
-            className={`shadow ${colorStyles[color].text}`}
+            className={`shadow hidden lg:block ${colorStyles[color].text}`}
           >
             {icon}
           </Button>
+
+          <span className={`lg:hidden ${colorStyles[color].text}`}>{icon}</span>
+
+          <span className="lg:hidden block">
+            {loading ? (
+              <Ring
+                size={25}
+                stroke={3}
+                speed={2}
+                bgOpacity={0}
+                color="green"
+              />
+            ) : (
+              <span className="text-2xl font-semibold font-mono"> {data} </span>
+            )}
+          </span>
 
           <p
             className={` text-xs p-1 rounded-sm font-mono tracking-tight lg:flex hidden ${colorStyles[color].badge}`}
@@ -96,7 +115,7 @@ export function SummaryCard({
           </p>
         </div>
 
-        <div className="flex justify-between items-end gap-3">
+        <div className="justify-between items-end gap-3 hidden lg:flex">
           <p className="lg:text-sm text-xs line-clamp-1 jakarta">{label}</p>
 
           {loading ? (
@@ -109,3 +128,37 @@ export function SummaryCard({
     </div>
   );
 }
+
+//  <div className="dark:border bg-background rounded-lg hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+//    <div className=" bg-gradient-to-br dark:to-card to-card/50 dark:from-card/50 from-card/30 shadow z-10 flex flex-col justify-between rounded-lg  lg:p-6 p-4 lg:gap-2 ">
+//      {" "}
+//      <p className="lg:text-sm text-xs line-clamp-1 jakarta mb-2">{label}</p>
+//      <div className="flex justify-between items-start">
+//        {icon}
+
+//        <p
+//          className={` text-xs p-1 rounded-sm font-mono tracking-tight lg:flex hidden ${colorStyles[color].badge}`}
+//        >
+//          + {todayIncrement} today
+//        </p>
+//        <span className="lg:hidden">
+//          {loading ? (
+//            <Ring size={25} stroke={3} speed={2} bgOpacity={0} color="green" />
+//          ) : (
+//            <span className="text-3xl font-semibold font-mono"> {data} </span>
+//          )}
+//        </span>
+//      </div>
+//      <div className=" justify-between items-end gap-3 hidden lg:flex">
+//        <p className="lg:text-sm text-xs line-clamp-1 jakarta">{label}</p>
+
+//        {loading ? (
+//          <span>
+//            <Ring size={35} stroke={6} speed={2} bgOpacity={0} color="green" />
+//          </span>
+//        ) : (
+//          <span className="text-3xl font-semibold font-mono"> </span>
+//        )}
+//      </div>
+//    </div>
+//  </div>;

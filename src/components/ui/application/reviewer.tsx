@@ -36,6 +36,8 @@ import GlassFolder from "@/components/ui/folder";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { useAdminStore } from "@/store/adminUserStore";
+import useGetDocument from "@/hooks/user/postOpenDocument";
+import { Ring } from "ldrs/react";
 
 interface UserDocument {
   document: string;
@@ -47,6 +49,7 @@ interface UserDocument {
   onUpdate: (field: "comment" | "status", value: string) => void;
   docStatus: string;
   docComment: string;
+  applicationId: number;
 }
 
 export default function ApplicationViewer({
@@ -55,18 +58,23 @@ export default function ApplicationViewer({
   document,
   docStatus,
   requirementType,
+  supabasePath,
   onUpdate,
+  applicationId,
 }: UserDocument) {
   const [rotation, setRotation] = useState(0);
   console.log(fileFormat);
   const [open, setOpen] = useState(false);
-  const [loading, setIsLoading] = useState(true);
+  const [loadingFile, setIsLoading] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-
+  const { onGetDocument, filePath, loading } = useGetDocument(true);
   const { admin } = useAdminStore();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="relative">
+      <DialogTrigger
+        className="relative"
+        onClick={() => onGetDocument(applicationId, supabasePath)}
+      >
         <GlassFolder color="amber" />
         <Badge className="absolute bottom-0 z-60 uppercase" variant="secondary">
           {requirementType}
@@ -223,40 +231,36 @@ export default function ApplicationViewer({
                   contentClass="flex items-center justify-center"
                 >
                   <div className="lg:h-[calc(100dvh-80px)] h-[calc(100dvh-64px)] lg:w-[calc(100dvw-32px)] w-[calc(100dvw-16px)] ">
-                    {fileFormat === "JPG" || fileFormat === "PNG" ? (
-                      <div className="w-full h-full">
-                        {loading && (
-                          <div className="absolute inset-0 flex items-center justify-center  z-20">
-                            <Loader className="h-8 w-8 animate-spin " />
-                          </div>
-                        )}
-                        <img
-                          src={fileUrl}
-                          alt={document}
-                          className="h-full w-full object-contain rounded-md"
-                          onLoad={() => setIsLoading(false)}
-                          style={{
-                            transform: `rotate(${rotation}deg)`,
-                            maxHeight: "100vh",
-                            maxWidth: "100vw",
-                          }}
-                          draggable={false}
+                    {loading || filePath === "" ? (
+                      <div className="h-full w-full  flex justify-center items-center">
+                        <Ring
+                          size={35}
+                          stroke={6}
+                          speed={2}
+                          bgOpacity={0}
+                          color="green"
                         />
                       </div>
-                    ) : fileFormat === "DOCX" || fileFormat === "PDF" ? (
+                    ) : fileFormat === "JPG" || fileFormat === "PNG" ? (
+                      <img
+                        src={filePath}
+                        alt={document}
+                        className="h-full w-full object-contain rounded-md"
+                        style={{
+                          transform: `rotate(${rotation}deg)`,
+                          maxHeight: "100vh",
+                          maxWidth: "100vw",
+                        }}
+                        draggable={false}
+                      />
+                    ) : fileFormat === "PDF" ? (
                       <div className="w-full h-full">
-                        {loading && (
-                          <div className="absolute inset-0 flex items-center justify-center  z-20">
-                            <Loader className="h-8 w-8 animate-spin " />
-                          </div>
-                        )}
                         <iframe
                           ref={iframeRef}
-                          key={fileUrl}
+                          key={filePath}
                           className="h-full w-full rounded-lg"
-                          src={fileUrl}
+                          src={filePath}
                           title={`Document preview: ${document}`}
-                          onLoad={() => setIsLoading(false)}
                           style={{
                             transform: `rotate(${rotation}deg)`,
                             maxHeight: "100vh",
@@ -265,8 +269,8 @@ export default function ApplicationViewer({
                         />
                       </div>
                     ) : (
-                      <div className=" flex justify-center h-full w-full items-center">
-                        FAILED TO SUBMIT
+                      <div className=" flex justify-center items-center">
+                        MISSING DOCUMENT
                       </div>
                     )}
                   </div>

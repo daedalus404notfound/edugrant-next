@@ -8,7 +8,7 @@ interface GetDocumentTypes {
   signedURL: string;
   success: boolean;
 }
-export default function useGetDocument(user: string) {
+export default function useGetDocument(user: boolean) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filePath, setFilePath] = useState("");
@@ -18,10 +18,11 @@ export default function useGetDocument(user: string) {
   ) => {
     try {
       setLoading(true);
-      const baseUrl =
-        user === "student"
-          ? process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
-          : process.env.NEXT_PUBLIC_USER_URL;
+      const baseUrl = user
+        ? process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
+        : process.env.NEXT_PUBLIC_USER_URL;
+
+      console.log(baseUrl);
       const res = await axios.post<GetDocumentTypes>(
         `${baseUrl}/getFileUrl`,
         {

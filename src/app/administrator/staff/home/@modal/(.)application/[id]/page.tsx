@@ -196,7 +196,11 @@ export default function InterceptReviewApplicants() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="max-w-[1200px] h-full  w-full mx-auto  outline-0 border-0 px-1 ">
+      <DrawerContent
+        className={`lg:w-[68%] bg-card w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 lg:p-1  ${
+          loading ? " lg:h-[75dvh] h-[68dvh]" : "h-[90dvh] "
+        }`}
+      >
         <DrawerHeader className="sr-only">
           <DrawerTitle></DrawerTitle>
           <DrawerDescription></DrawerDescription>

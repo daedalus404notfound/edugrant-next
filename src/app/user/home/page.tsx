@@ -50,7 +50,7 @@ export default function AdminDashboard() {
       todayIncrement: 0,
     },
     {
-      label: "For Intervew",
+      label: "For Interview",
       data: user?.Student.Application
         ? user?.Student.Application.filter(
             (meow) => meow.status === "INTERVIEW"

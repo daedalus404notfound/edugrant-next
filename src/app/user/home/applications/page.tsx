@@ -254,7 +254,7 @@ export default function ClientScholarship() {
                             <div
                               className={`flex items-center justify-center text-gray-200 font-medium text-sm px-7 py-1.5 bg-gradient-to-br  ${
                                 meow.status === "BLOCKED"
-                                  ? "to-green-950 from-green-800"
+                                  ? "to-gray-950 from-gray-800"
                                   : meow.status === "APPROVED"
                                   ? "to-green-950 from-green-800"
                                   : meow.status === "PENDING"

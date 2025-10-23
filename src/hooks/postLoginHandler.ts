@@ -91,13 +91,31 @@ export const useVerifyLogin = () => {
       // console.log("login:", data);
     },
     onError: (error: ApiError) => {
-      console.error("Add scholarship error:", error);
-      if (error.response?.data.message) {
+      console.error("Login error:", error);
+
+      if (!error.response) {
+        // Network error / no internet
+        StyledToast({
+          status: "error",
+          title: "No Internet Connection",
+          description: "Please check your network and try again.",
+          duration: 10000,
+        });
+      } else if (error.response.data?.message) {
+        // Server returned an error
         StyledToast({
           status: "error",
           title: error.response.data.message,
-          duration: 10000,
           description: "Cannot process your request.",
+          duration: 10000,
+        });
+      } else {
+        // Other unknown error
+        StyledToast({
+          status: "error",
+          title: "Something went wrong",
+          description: error.message,
+          duration: 10000,
         });
       }
     },

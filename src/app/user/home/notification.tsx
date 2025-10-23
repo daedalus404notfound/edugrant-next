@@ -261,7 +261,7 @@ export default function Notification() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className=" w-md mr-8 p-0"
+        className=" lg:w-md w-xs lg:mr-8 p-0"
         align="center"
         sideOffset={8}
       >

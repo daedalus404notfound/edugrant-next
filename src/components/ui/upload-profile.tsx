@@ -15,6 +15,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   AlertDialog,
@@ -117,10 +118,21 @@ export function DragAndDropAreaProfile({
 
   return (
     <div className="relative">
-      <Avatar className="size-26 border-2 border-background">
-        <AvatarImage className="object-cover" src={previewUrl} />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
+      <Dialog>
+        <DialogTrigger className="cursor-pointer" asChild>
+          <Avatar className="size-26 border-2 border-background">
+            <AvatarImage className="object-cover" src={previewUrl} />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+        </DialogTrigger>
+        <DialogContent className="lg:max-w-5xl w-full !p-0 overflow-hidden">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Are you absolutely sure?</DialogTitle>
+            <DialogDescription></DialogDescription>
+          </DialogHeader>
+          <img src={previewUrl} alt="" />
+        </DialogContent>
+      </Dialog>
 
       <div className="absolute right-0 bottom-0">
         {uploadedFiles.length > 0 || croppedImage ? (

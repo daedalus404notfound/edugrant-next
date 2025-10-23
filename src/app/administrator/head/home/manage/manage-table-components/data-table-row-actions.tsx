@@ -49,7 +49,6 @@ export function DataTableRowActions<TData>({
     archiveLoading,
   } = useArchiveScholarship({
     scholarshipId: rowData.scholarshipId,
-    accountId: admin?.accountId,
   });
 
   return (
@@ -112,8 +111,8 @@ export function DataTableRowActions<TData>({
               confirmText="Complete"
               red={false}
               confirmTextLoading="Please wait..."
-              title="Move to completed?"
-              description="Are you sure you want to complete this scholarship?"
+              title="End Scholarship"
+              description="Are you sure you want to end this scholarship?"
               cancelText="Keep"
               trigger={
                 <Button
@@ -122,7 +121,7 @@ export function DataTableRowActions<TData>({
                   variant="yellow"
                   className="justify-start "
                 >
-                  <Archive /> Completed
+                  <Archive /> End
                 </Button>
               }
             />

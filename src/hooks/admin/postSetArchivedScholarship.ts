@@ -6,13 +6,9 @@ import { ApiErrorResponse } from "./postReviewedHandler";
 
 type DeleteTypes = {
   scholarshipId: number;
-  accountId?: number;
 };
 
-export default function useArchiveScholarship({
-  scholarshipId,
-  accountId,
-}: DeleteTypes) {
+export default function useArchiveScholarship({ scholarshipId }: DeleteTypes) {
   const { addArchiveScholarshipId } = useApplicationUIStore();
   const [isSuccess, setIsSuccess] = useState(false);
   const [archiveLoading, setLoading] = useState(false);
@@ -23,11 +19,8 @@ export default function useArchiveScholarship({
       setLoading(true);
 
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/archiveScholarship`,
-        {
-          scholarshipId: scholarshipId,
-          accountId: accountId,
-        },
+        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/endScholarship`,
+        { scholarshipId },
         { withCredentials: true }
       );
 

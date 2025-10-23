@@ -57,29 +57,6 @@ export default function InterceptManageScholarshipClient() {
     data?.deadline && new Date(data.deadline).getTime() < Date.now();
   const isSubmitted = data?.Application?.length! > 0;
 
-  // useEffect(() => {
-  //   socket.on("applyScholarship", (data) => {
-  //     console.log("you applied:", data);
-  //   });
-
-  //   socket.on("updateScholarship", (data) => {
-  //     setData(data.update);
-  //   });
-
-  //   socket.on("renewScholarship", (data) => {
-  //     HandleCloseDrawer(false);
-  //     console.log("renew scholarship received:", data);
-  //   });
-  //   socket.on("deleteScholarship", () => {
-  //     HandleCloseDrawer(false);
-  //   });
-  //   return () => {
-  //     socket.off("applyScholarship");
-  //     socket.off("deleteScholarship");
-  //     socket.off("renewScholarship");
-  //     socket.off("updateScholarship");
-  //   };
-  // }, []);
   return (
     <Drawer
       open={open}

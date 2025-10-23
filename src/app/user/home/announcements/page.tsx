@@ -6,13 +6,21 @@ import {
   Calendar,
   SearchIcon,
   ArrowRightIcon,
+  X,
+  Clock,
 } from "lucide-react";
-import { useState } from "react";
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
+import logo from "@/assets/basclogo.png";
 import { Button } from "@/components/ui/button";
 import TitleReusable from "@/components/ui/title";
-import useAnnouncementFetch from "@/hooks/admin/getAnnouncement";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -21,8 +29,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
-import { useApplicationUIStore } from "@/store/updateUIStore";
 import NoDataFound from "@/components/ui/nodata";
 import {
   Pagination,
@@ -30,28 +36,28 @@ import {
   PaginationItem,
 } from "@/components/ui/pagination";
 import useAnnouncementFetchUser from "@/hooks/user/getAnnouncement";
+import { useAnnouncementUserStore } from "@/store/announcementUserStore";
+import { useState } from "react";
+import useGetAnnouncementByIdUser from "@/hooks/user/getAnnouncementsById";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { TipTapViewer } from "@/components/ui/tiptap-viewer";
 export default function AdminAnnouncement() {
-  const [page, setPage] = useState(1);
-  const [pageSize] = useState(5);
-  const [search, setSearch] = useState("");
-  const [select, setSelected] = useState("");
-  const { data, meta, loading } = useAnnouncementFetchUser({
-    page,
-    pageSize,
-    sortBy: select ? "dateCreated" : "",
-    order: select,
-    search,
-  });
-  console.log(data);
+  const { meta, page, setOrder, order, search, setSearch, setPage } =
+    useAnnouncementUserStore();
+  const [id, setId] = useState(0);
+  const { fullData, loading, refetch } = useGetAnnouncementByIdUser(id);
+  const { data, isLoading } = useAnnouncementFetchUser();
+  const [open, setOpen] = useState(false);
+
   const handleNext = () => {
-    if (meta && page < meta.totalPage) {
-      setPage((prev) => prev + 1);
+    if (meta && meta.page < meta.totalPage) {
+      setPage(page + 1);
     }
   };
-
   const handlePrev = () => {
-    if (page > 1) {
-      setPage((prev) => prev - 1);
+    if (meta.page > 1) {
+      setPage(page - 1);
     }
   };
 
@@ -87,6 +93,7 @@ export default function AdminAnnouncement() {
             <div className="relative max-w-lg w-full">
               <Input
                 placeholder="Search announcement..."
+                value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full peer ps-9 pe-9"
                 type="search"
@@ -103,18 +110,18 @@ export default function AdminAnnouncement() {
                 <ArrowRightIcon size={16} />
               </button>
             </div>
-            <Select onValueChange={(value) => setSelected(value)}>
+            <Select value={order} onValueChange={(value) => setOrder(value)}>
               <SelectTrigger className="w-[150px]">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="asc">Newest</SelectItem>
-                <SelectItem value="desc">Oldest</SelectItem>
+                <SelectItem value="desc">Newest</SelectItem>
+                <SelectItem value="asc">Oldest</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="flex flex-col gap-3">
-            {loading ? (
+            {isLoading ? (
               <>
                 {[...Array(3)].map((_, i) => (
                   <AnnouncementSkeleton key={i} />
@@ -123,12 +130,14 @@ export default function AdminAnnouncement() {
             ) : data.length === 0 ? (
               <NoDataFound />
             ) : (
-              data.map((item) => (
-                <Link
+              data.slice(0, 6).map((item) => (
+                <div
                   key={item.announcementId}
-                  scroll={false}
-                  prefetch={true}
-                  href={`/user/home/announcements/${item.announcementId}`}
+                  onClick={() => {
+                    setId(item.announcementId);
+
+                    setOpen(true);
+                  }}
                   className="block bg-card hover:bg-gray-200 dark:bg-card/80 dark:hover:bg-card rounded-lg shadow pt-6 px-6 pb-8 transition-all duration-200"
                 >
                   <div className=" ">
@@ -166,7 +175,7 @@ export default function AdminAnnouncement() {
                       </time>
                     </div>
                   </div>
-                </Link>
+                </div>
               ))
             )}
           </div>
@@ -205,6 +214,139 @@ export default function AdminAnnouncement() {
           </div>
         </div>
       </div>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent
+          showCloseButton={false}
+          className="max-w-5xl overflow-hidden  gap-0 p-1 border-0"
+        >
+          <DialogHeader className="sr-only">
+            <DialogTitle>Announcement Details</DialogTitle>
+            <DialogDescription>View and manage announcement</DialogDescription>
+          </DialogHeader>
+          <div className="flex items-center justify-between pb-2 sticky top">
+            <div className="flex items-center gap-3">
+              <Button
+                className="relative justify-start"
+                variant="ghost"
+                size="sm"
+              >
+                <Megaphone />
+                Announcement Details
+              </Button>
+            </div>
+            <div className="flex items-center gap-2">
+              <Button className="ghost" variant="ghost" size="sm">
+                <X />
+              </Button>
+            </div>
+          </div>
+
+          <div className="bg-background rounded-t-md max-h-[90vh]  overflow-auto">
+            <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-b-lg overflow-hidden ">
+              {/* Header Section */}
+              <div className="relative flex lg:flex-row flex-col lg:items-end items-center  py-8 px-4">
+                <img
+                  className="lg:w-70 w-50 absolute right-0 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-15 "
+                  src={logo.src}
+                  alt=""
+                />
+                <div className="flex-1 px-4 py-2 z-10 space-y-3">
+                  <h1 className="text-base lg:text-xl font-medium text-foreground capitalize line-clamp-1">
+                    {fullData?.title}
+                  </h1>
+
+                  {/* <p className="font-medium font-mono text-base tracking-wide">
+                        {fullData?.Scholarship_Provider.name}
+                      </p>{" "} */}
+                  <div>
+                    {fullData?.tags?.data && fullData.tags.data.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {fullData.tags.data.map((tag, i) => (
+                          <Badge key={i} variant="secondary">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+              {/* Info Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 py-6 px-4 bg-card relative z-10">
+                <div className="space-y-1.5 border-l-2 pl-4">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+                    <h1 className="text-xs text-muted-foreground">
+                      Published Date
+                    </h1>
+                  </div>
+
+                  <p className="font-medium text-foreground">
+                    {fullData?.dateCreated &&
+                      format(fullData.dateCreated, "PPP")}
+                  </p>
+                </div>{" "}
+                <div className="space-y-1.5  border-l-2 pl-4">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+                    <h1 className="text-xs text-muted-foreground">
+                      Published Time
+                    </h1>
+                  </div>
+
+                  <span className="font-medium text-foreground">
+                    {fullData?.dateCreated && format(fullData.dateCreated, "p")}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {loading ? (
+              <div className="p-6 space-y-6">
+                <div className="space-y-4">
+                  <Skeleton className="h-10 w-3/4 rounded-lg" />
+                  <div className="flex items-center gap-4">
+                    <Skeleton className="h-5 w-5 rounded" />
+                    <Skeleton className="h-5 w-48 rounded-lg" />
+                    <Skeleton className="h-5 w-5 rounded" />
+                    <Skeleton className="h-5 w-32 rounded-lg" />
+                  </div>
+                </div>
+
+                <Separator className="bg-border/40" />
+
+                <div className="space-y-4">
+                  <div className="flex gap-2">
+                    <Skeleton className="h-7 w-24 rounded-full" />
+                    <Skeleton className="h-7 w-28 rounded-full" />
+                    <Skeleton className="h-7 w-20 rounded-full" />
+                  </div>
+
+                  <div className="space-y-3 pt-2">
+                    <Skeleton className="h-4 w-full rounded" />
+                    <Skeleton className="h-4 w-full rounded" />
+                    <Skeleton className="h-4 w-5/6 rounded" />
+                    <Skeleton className="h-4 w-full rounded" />
+                    <Skeleton className="h-4 w-4/5 rounded" />
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <Skeleton className="h-9 flex-1" />{" "}
+                  <Skeleton className="h-9 flex-1" />
+                </div>
+              </div>
+            ) : (
+              <TipTapViewer
+                content={fullData?.description || ""}
+                className="p-6"
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

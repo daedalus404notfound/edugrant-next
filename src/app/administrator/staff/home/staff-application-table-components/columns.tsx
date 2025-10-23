@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { ApplicationFormData } from "@/hooks/zod/application";
 import { DataTableColumnHeader } from "@/app/table-components/data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
@@ -9,7 +8,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Clock } from "lucide-react";
 import { getPhaseLabel } from "@/lib/phaseLevel";
-import { useState } from "react";
 import { format } from "date-fns";
 
 export const columns: ColumnDef<ApplicationFormData>[] = [
@@ -22,7 +20,7 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     cell: ({ row }) => {
       const student = row.original.Student;
       return (
-        <div className="flex gap-2 items-center pl-4">
+        <div className="flex gap-2 items-center pl-4   ">
           <Avatar>
             <AvatarImage
               className="object-cover"
@@ -38,7 +36,7 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
               {student.fName} {student.mName} {student.lName}
             </div>
             <p className="text-xs text-muted-foreground">
-              {student.Account.email}
+              {student.Account.schoolId}
             </p>
           </div>
         </div>
@@ -47,19 +45,51 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     enableSorting: true,
     enableHiding: true,
   },
-
   {
-    accessorFn: (row) => row.Student.Account.schoolId,
-    id: "Student_Account_studentId",
+    accessorFn: (row) => row.Scholarship.title,
+    id: "title",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Student ID" />
+      <DataTableColumnHeader column={column} title="Scholarship" className="" />
     ),
-    cell: ({ row }) => (
-      <span className="">{row.getValue("Student_Account_studentId")}</span>
-    ),
+    cell: ({ row }) => {
+      const scholarship = row.original.Scholarship;
+      return (
+        <div className="flex gap-2 items-center  ">
+          <Avatar>
+            <AvatarImage className="object-cover" src={scholarship.logo} />
+            <AvatarFallback className="uppercase">
+              {scholarship.Scholarship_Provider.name.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex items-start gap-3">
+            <div>
+              <div className="font-medium capitalize">{scholarship.title}</div>
+              <p className="text-xs text-muted-foreground">
+                {scholarship.Scholarship_Provider.name}
+              </p>
+            </div>
+            <Badge className="uppercase" variant="secondary">
+              {getPhaseLabel(scholarship.phase)}
+            </Badge>
+          </div>
+        </div>
+      );
+    },
     enableSorting: true,
     enableHiding: true,
   },
+  // {
+  //   accessorFn: (row) => row.Student.Account.schoolId,
+  //   id: "Student_Account_studentId",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Student ID" />
+  //   ),
+  //   cell: ({ row }) => (
+  //     <span className="">{row.getValue("Student_Account_studentId")}</span>
+  //   ),
+  //   enableSorting: true,
+  //   enableHiding: true,
+  // },
 
   {
     accessorFn: (row) => row.Student.institute,
@@ -77,14 +107,14 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     accessorFn: (row) => row.Student.course,
     id: "course",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Course, Year & Section" />
+      <DataTableColumnHeader column={column} title="C/Y/S" />
     ),
     cell: ({ row }) => {
       const course = row.original.Student.course;
       const year = row.original.Student.year;
       const section = row.original.Student.section;
       return (
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center  ">
           <div className="font-medium capitalize">
             {course} - {year.slice(0, 1)}
             {section}
@@ -120,39 +150,6 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     enableHiding: true,
   },
 
-  {
-    accessorFn: (row) => row.Scholarship.title,
-    id: "title",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Scholarship" className="" />
-    ),
-    cell: ({ row }) => {
-      const scholarship = row.original.Scholarship;
-      return (
-        <div className="flex gap-2 items-center">
-          <Avatar>
-            <AvatarImage className="object-cover" src={scholarship.logo} />
-            <AvatarFallback className="uppercase">
-              {scholarship.Scholarship_Provider.name.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex items-center gap-2">
-            <div>
-              <div className="font-medium capitalize">{scholarship.title}</div>
-              <p className="text-xs text-muted-foreground">
-                {scholarship.Scholarship_Provider.name}
-              </p>
-            </div>
-            <Badge className="uppercase" variant="secondary">
-              {getPhaseLabel(scholarship.phase)}
-            </Badge>
-          </div>
-        </div>
-      );
-    },
-    enableSorting: true,
-    enableHiding: true,
-  },
   {
     accessorFn: (row) => row.Scholarship.phase,
     id: "phase",
@@ -197,34 +194,34 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     enableHiding: true,
   },
 
-  // {
-  //   accessorKey: "status",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title="Status" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     return (
-  //       <Badge
-  //         className={
-  //           row.getValue("status") === "PENDING"
-  //             ? "bg-yellow-500/10 text-yellow-500"
-  //             : row.getValue("status") === "DECLINED"
-  //             ? "bg-red-500/10 text-red-500"
-  //             : row.getValue("status") === "INTERVIEW"
-  //             ? "bg-blue-indigo-700/10 text-indigo-500"
-  //             : row.getValue("status") === "APPROVED"
-  //             ? "bg-green-500/10 text-green-500"
-  //             : ""
-  //         }
-  //       >
-  //         <Clock />
-  //         {row.getValue("status")}
-  //       </Badge>
-  //     );
-  //   },
-  //   enableSorting: true,
-  //   enableHiding: true,
-  // },
+  {
+    accessorKey: "status",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <Badge
+          className={
+            row.getValue("status") === "PENDING"
+              ? "bg-yellow-500/10 text-yellow-500"
+              : row.getValue("status") === "DECLINED"
+              ? "/10 text-red-500"
+              : row.getValue("status") === "INTERVIEW"
+              ? "bg-blue-indigo-700/10 text-indigo-500"
+              : row.getValue("status") === "APPROVED"
+              ? "bg-green-500/10 text-green-500"
+              : ""
+          }
+        >
+          <Clock />
+          {row.getValue("status")}
+        </Badge>
+      );
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
 
   {
     id: "actions",

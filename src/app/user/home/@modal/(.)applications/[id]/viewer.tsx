@@ -35,7 +35,7 @@ export default function ApplicationViewer({
   applicationId,
 }: UserDocument) {
   const [rotation, setRotation] = useState(0);
-  const { onGetDocument, filePath, loading } = useGetDocument("student");
+  const { onGetDocument, filePath, loading } = useGetDocument(false);
   console.log(filePath);
   const [open, setOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);

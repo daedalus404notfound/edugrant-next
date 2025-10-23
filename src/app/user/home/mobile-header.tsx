@@ -22,7 +22,7 @@ export default function MobHeader() {
   const [openDark, setOpenDark] = useState(false);
   const { handleLogout, loading: loadingLogout } = useUserLogout();
   return (
-    <div className="relative lg:hidden flex justify-between items-center  border  px-2 py-3 rounded-b-md">
+    <div className=" lg:hidden flex justify-between items-center  border  px-2 py-3 rounded-b-md sticky top-0 z-20 bg-background">
       <div className="flex items-center gap-1">
         <img className="size-10" src={basc.src} alt="" />{" "}
         <img className="size-10" src={logo.src} alt="" />{" "}
