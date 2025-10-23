@@ -58,11 +58,7 @@ export default function Manage() {
   const [search, setSearch] = useState("");
 
   const { admin, loading: loadingAdmin } = useAdminStore();
-  const { data, meta, loadingState, setData } = useScholarshipData({
-    page,
-    pageSize: rowsPerPage,
-    status: status,
-  });
+  const { data, meta, isLoading } = useScholarshipData();
   const { searchData, searchLoading, searchMeta, setSearchData } =
     useScholarshipSearch({
       page,
@@ -84,27 +80,27 @@ export default function Manage() {
     },
   ];
 
-  useEffect(() => {
-    socket.on("adminAddScholarships", ({ newScholarship }) => {
-      console.log("🎓 New scholarship received:", newScholarship);
-      setData((prev) => [newScholarship, ...prev]);
-    });
+  // useEffect(() => {
+  //   socket.on("adminAddScholarships", ({ newScholarship }) => {
+  //     console.log("🎓 New scholarship received:", newScholarship);
+  //     setData((prev) => [newScholarship, ...prev]);
+  //   });
 
-    socket.on("deleteScholarship", (data) => {
-      console.log("🎓 deleted:", data.deletedScholarship.scholarshipId);
+  //   socket.on("deleteScholarship", (data) => {
+  //     console.log("🎓 deleted:", data.deletedScholarship.scholarshipId);
 
-      setData((prev) =>
-        prev.filter(
-          (meow) => meow.scholarshipId !== data.deletedScholarship.scholarshipId
-        )
-      );
-    });
+  //     setData((prev) =>
+  //       prev.filter(
+  //         (meow) => meow.scholarshipId !== data.deletedScholarship.scholarshipId
+  //       )
+  //     );
+  //   });
 
-    return () => {
-      socket.off("adminAddScholarships");
-      socket.off("deleteScholarship");
-    };
-  }, []);
+  //   return () => {
+  //     socket.off("adminAddScholarships");
+  //     socket.off("deleteScholarship");
+  //   };
+  // }, []);
 
   const handleNext = () => {
     if (meta && meta.page < meta.totalPage) {
@@ -172,7 +168,7 @@ export default function Manage() {
             ""
           )}
           <div className=" grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
-            {loadingState ? (
+            {isLoading ? (
               [...Array(3)].map((_, index) => (
                 <motion.div
                   key={index}
@@ -436,7 +432,7 @@ export default function Manage() {
                 <PaginationItem>
                   <Button
                     variant="outline"
-                    disabled={meta.page === 1 || loadingState}
+                    disabled={meta.page === 1 || isLoading}
                     onClick={handlePrev}
                   >
                     <ChevronLeft /> Previous
@@ -448,7 +444,7 @@ export default function Manage() {
                     disabled={
                       meta.page === meta.totalPage ||
                       meta.totalPage === 0 ||
-                      loadingState
+                      isLoading
                     }
                     onClick={handleNext}
                   >
