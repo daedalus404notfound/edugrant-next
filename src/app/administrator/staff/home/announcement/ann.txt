@@ -1,0 +1,366 @@
+"use client";
+
+import {
+  Megaphone,
+  ArrowRight,
+  Calendar,
+  SearchIcon,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  Clock,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { format } from "date-fns";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { useApplicationUIStore } from "@/store/updateUIStore";
+import NoDataFound from "@/components/ui/nodata";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+} from "@/components/ui/pagination";
+import type {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+} from "@tanstack/react-table";
+import useAnnouncementDataAdmin from "@/hooks/admin/getAnnouncement";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import useGetAnnouncementByIdAdmin from "@/hooks/admin/getAnnouncementById";
+import { Separator } from "@/components/ui/separator";
+import { TipTapViewer } from "@/components/ui/tiptap-viewer";
+import { Badge } from "@/components/ui/badge";
+
+export default function AdminAnnouncement() {
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 6,
+  });
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: "dateCreated",
+      desc: true,
+    },
+  ]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+  const [search, setSearch] = useState("");
+
+  const { query, meta } = useAnnouncementDataAdmin({
+    pagination,
+    sorting,
+    columnFilters,
+    search,
+  });
+
+  const [id, setId] = useState<null | number>(null);
+  const [open, setOpen] = useState(false);
+  const { fullData, loading, refetch } = useGetAnnouncementByIdAdmin(id);
+  const { deletedAnnouncementIds } = useApplicationUIStore();
+
+  const handleNext = () => {
+    if (meta && pagination.pageIndex + 1 < meta.totalPage) {
+      setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex + 1 }));
+    }
+  };
+
+  const handlePrev = () => {
+    if (pagination.pageIndex > 0) {
+      setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex - 1 }));
+    }
+  };
+
+  const isLoading = query.isLoading;
+  const data = query.data?.announcements ?? [];
+
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, [sorting, search, columnFilters]);
+
+  const AnnouncementSkeleton = () => (
+    <div className="group relative overflow-hidden rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm p-6 transition-all duration-300 hover:border-border hover:bg-card/80">
+      <div className="space-y-4">
+        <div className="flex items-start justify-between gap-4">
+          <Skeleton className="h-7 w-64" />
+          <Skeleton className="h-9 w-9 rounded-lg" />
+        </div>
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-3/4" />
+        <div className="flex items-center justify-between pt-2">
+          <Skeleton className="h-6 w-32" />
+          <Skeleton className="h-4 w-24" />
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 lg:py-12">
+        {/* Header Section */}
+
+        {/* Controls Section */}
+        <div className="mb-8 space-y-4">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="relative flex-1 max-w-md">
+              <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search announcements..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-10 pr-4 bg-card/50 border-border/50 focus:border-primary/50"
+              />
+            </div>
+            <Select
+              value={sorting[0]?.desc ? "desc" : "asc"}
+              onValueChange={(e) =>
+                setSorting([{ id: "dateCreated", desc: e === "desc" }])
+              }
+            >
+              <SelectTrigger className="w-full lg:w-40 bg-card/50 border-border/50">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="desc">Newest First</SelectItem>
+                <SelectItem value="asc">Oldest First</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Announcements Grid */}
+        <div className="space-y-4">
+          {isLoading ? (
+            <>
+              {[...Array(3)].map((_, i) => (
+                <AnnouncementSkeleton key={i} />
+              ))}
+            </>
+          ) : data.length === 0 ? (
+            <NoDataFound />
+          ) : (
+            data.slice(0, 6).map((item) => (
+              <div
+                key={item.announcementId}
+                onClick={() => {
+                  setId(item.announcementId);
+                  setOpen(true);
+                }}
+                className="group relative overflow-hidden rounded-xl border border-border/50 bg-card/50 backdrop-blur-sm p-6 transition-all duration-300  hover:shadow-lg cursor-pointer"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-green-900/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+                <div className="relative space-y-4">
+                  {/* Title and Action */}
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <h2 className="text-lg font-semibold tracking-tight text-foreground group-hover:text-primary transition-colors duration-200 line-clamp-2">
+                        {item.title}
+                      </h2>
+                    </div>
+                    <div className="flex-shrink-0 rounded-lg bg-primary/10 p-2 opacity-0 transition-all duration-200 group-hover:opacity-100">
+                      <ArrowRight className="h-5 w-5 text-primary" />
+                    </div>
+                  </div>
+
+                  {/* Description */}
+                  <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground text-pretty">
+                    <span
+                      dangerouslySetInnerHTML={{ __html: item.description }}
+                    />
+                  </p>
+
+                  {/* Footer: Tags and Date */}
+                  <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:items-center sm:justify-between">
+                    {item.tags.data.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {item.tags.data.slice(0, 2).map((tag, i) => (
+                          <Badge
+                            key={i}
+                            variant="secondary"
+                            className="text-xs font-medium"
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                        {item.tags.data.length > 2 && (
+                          <Badge variant="outline" className="text-xs">
+                            +{item.tags.data.length - 2}
+                          </Badge>
+                        )}
+                      </div>
+                    )}
+                    <time className="text-xs text-muted-foreground flex items-center gap-1.5 whitespace-nowrap">
+                      <Calendar className="h-3.5 w-3.5" />
+                      {item.dateCreated &&
+                        format(item.dateCreated, "MMM d, yyyy")}
+                    </time>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* Pagination */}
+        <div className=" flex  items-center justify-between ">
+          <span className="flex">
+            Page
+            {meta.page} of {meta.totalPage}
+          </span>
+
+          <Pagination>
+            <PaginationContent className="gap-2">
+              <PaginationItem>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={meta.page === 1 || isLoading}
+                  onClick={handlePrev}
+                  className="gap-2 bg-transparent"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Previous
+                </Button>
+              </PaginationItem>
+              <PaginationItem>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={
+                    meta.page === meta.totalPage ||
+                    meta.totalPage === 0 ||
+                    isLoading
+                  }
+                  onClick={handleNext}
+                  className="gap-2 bg-transparent"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      </div>
+
+      {/* Detail Modal */}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent
+          showCloseButton={false}
+          className="max-w-4xl overflow-hidden gap-0 p-0 border-0"
+        >
+          <DialogHeader className="sr-only">
+            <DialogTitle>Announcement Details</DialogTitle>
+            <DialogDescription>View announcement details</DialogDescription>
+          </DialogHeader>
+
+          {/* Modal Header */}
+          <div className="flex items-center justify-between border-b border-border/50 bg-card/50 px-6 py-4 backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <div className="rounded-lg bg-primary/10 p-2">
+                <Megaphone className="h-5 w-5 text-primary" />
+              </div>
+              <span className="font-semibold text-foreground">
+                Announcement Details
+              </span>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setOpen(false)}
+              className="h-8 w-8 p-0"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+
+          {/* Modal Content */}
+          <div className="max-h-[80vh] overflow-auto bg-background">
+            {/* Header Section */}
+            <div className="border-b border-border/50 bg-gradient-to-br from-card/50 to-card/30 p-6 lg:p-8">
+              <div className="space-y-4">
+                <h1 className="text-2xl font-bold tracking-tight text-foreground line-clamp-2">
+                  {fullData?.title}
+                </h1>
+
+                {/* Tags */}
+                {fullData?.tags?.data && fullData.tags.data.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {fullData.tags.data.map((tag, i) => (
+                      <Badge key={i} variant="secondary">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+
+                {/* Meta Info */}
+                <div className="grid grid-cols-2 gap-4 pt-2">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Calendar className="h-3.5 w-3.5" />
+                      Published Date
+                    </div>
+                    <p className="font-medium text-foreground">
+                      {fullData?.dateCreated &&
+                        format(fullData.dateCreated, "PPP")}
+                    </p>
+                  </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Clock className="h-3.5 w-3.5" />
+                      Published Time
+                    </div>
+                    <p className="font-medium text-foreground">
+                      {fullData?.dateCreated &&
+                        format(fullData.dateCreated, "p")}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Content */}
+            {loading ? (
+              <div className="p-6 space-y-6 lg:p-8">
+                <div className="space-y-4">
+                  <Skeleton className="h-10 w-3/4 rounded-lg" />
+                  <Skeleton className="h-5 w-full rounded-lg" />
+                  <Skeleton className="h-5 w-5/6 rounded-lg" />
+                </div>
+                <Separator className="bg-border/40" />
+                <div className="space-y-3">
+                  <Skeleton className="h-4 w-full rounded" />
+                  <Skeleton className="h-4 w-full rounded" />
+                  <Skeleton className="h-4 w-4/5 rounded" />
+                </div>
+              </div>
+            ) : (
+              <TipTapViewer
+                content={fullData?.description || ""}
+                className="p-6 lg:p-8"
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}

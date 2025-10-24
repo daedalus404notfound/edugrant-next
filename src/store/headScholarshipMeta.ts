@@ -155,7 +155,7 @@ interface ScholarshipCounts {
   countActive: number;
   countExpired: number;
   countRenew: number;
-  countArchived: number;
+  countEnded: number;
 }
 
 export interface MetaWithCountsScholarship extends MetaTypes {
@@ -175,7 +175,7 @@ export const defaultMeta: MetaWithCountsScholarship = {
     countActive: 0,
     countExpired: 0,
     countRenew: 0,
-    countArchived: 0,
+    countEnded: 0,
   },
 };
 

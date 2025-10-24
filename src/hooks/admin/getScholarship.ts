@@ -92,57 +92,67 @@
 "use client";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { scholarshipFormData } from "./zodUpdateScholarship";
 import StyledToast from "@/components/ui/toast-styled";
 import { ApiErrorResponse } from "./postReviewedHandler";
 import { useDebounce } from "@/lib/debounder";
-import { useHeadScholarshipStore } from "@/store/headScholarshipMeta";
 import { MetaWithCountsScholarship } from "@/store/headScholarshipMeta";
-import { useHeadInactiveScholarshipStore } from "@/store/headInactiveScholarshipStore";
+import {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+} from "@tanstack/react-table";
 
-export default function useScholarshipData() {
-  const {
-    status: tabStatus,
-    setStatus: setTabStatus,
-    setMeta,
-    meta,
-    pagination,
-    sorting,
-    columnFilters,
-    search,
-    setPagination,
-  } = useHeadScholarshipStore();
+export const defaultMeta: MetaWithCountsScholarship = {
+  page: 0,
+  pageSize: 10,
+  totalRows: 0,
+  totalPage: 0,
+  sortBy: "",
+  order: "",
+  filters: "",
+  search: "",
+  count: {
+    countActive: 0,
+    countExpired: 0,
+    countRenew: 0,
+    countEnded: 0,
+  },
+};
+type HeadScholarshipMetaTypes = {
+  status: string;
+  pagination: PaginationState;
+  sorting: SortingState;
+  columnFilters: ColumnFiltersState;
+  search?: string;
+};
 
-  // Destructure pagination
+export default function useScholarshipData({
+  status,
+  pagination,
+  sorting,
+  columnFilters,
+  search,
+}: HeadScholarshipMetaTypes) {
   const { pageIndex, pageSize } = pagination;
-
-  // Debounce search input
+  const [meta, setMeta] = useState<MetaWithCountsScholarship>(defaultMeta);
   const debouncedSearch = useDebounce(search, 800);
-
-  // Reset page to 0 when filters change
-  const resetPage = () => {
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
-  };
-
-  useEffect(() => {
-    resetPage();
-  }, [debouncedSearch, sorting, tabStatus, columnFilters]);
 
   const query = useQuery({
     queryKey: [
       "adminScholarshipData",
+      status,
       pagination,
       sorting,
       columnFilters,
-      tabStatus,
       debouncedSearch,
     ],
     queryFn: async () => {
       const params = new URLSearchParams();
 
       // Append parameters dynamically
-      if (tabStatus) params.append("status", tabStatus);
+      if (status) params.append("status", status);
       params.append("page", (pageIndex + 1).toString()); // +1 if backend uses 1-based page indexing
       params.append("dataPerPage", pageSize.toString());
 
@@ -185,7 +195,6 @@ export default function useScholarshipData() {
     staleTime: 1000 * 60 * 5,
   });
 
-  const data = query.data?.data ?? [];
 
   useEffect(() => {
     if (query.isSuccess && query.data?.meta) {
@@ -194,11 +203,7 @@ export default function useScholarshipData() {
   }, [query.isSuccess, query.data?.meta, setMeta]);
 
   return {
-    data,
+    query,
     meta,
-    isLoading: query.isLoading,
-    isError: query.isError,
-    refetch: query.refetch,
-    setTabStatus,
   };
 }

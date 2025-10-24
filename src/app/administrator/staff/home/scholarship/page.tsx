@@ -3,31 +3,22 @@ import {
   ArrowRight,
   ChevronLeft,
   ChevronRight,
-  GraduationCap,
   TextSearch,
 } from "lucide-react";
 import TitleReusable from "@/components/ui/title";
 import { Tabs } from "@/components/ui/vercel-tabs";
-import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
+
 import { useEffect, useState } from "react";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import useScholarshipData from "@/hooks/admin/getScholarship";
+
 import {
   ColumnFiltersState,
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
-import useScholarshipSearch from "@/hooks/admin/getScholarshipSearch";
-import { DataTable } from "@/app/table-components/data-table";
-import { AnimatePresence, motion } from "motion/react";
+
+import { motion } from "motion/react";
 import { Skeleton } from "@/components/ui/skeleton";
 import NoDataFound from "@/components/ui/nodata";
 import { Badge } from "@/components/ui/badge";
@@ -48,72 +39,70 @@ import {
   PaginationItem,
 } from "@/components/ui/pagination";
 import { useAdminStore } from "@/store/adminUserStore";
-import socket from "@/lib/socketLib";
+import useScholarshipDataStaff from "@/hooks/staff/getScholarshipStaff";
 
 export default function Manage() {
-  const [page, setPage] = useState(1);
-  const [rowsPerPage] = useState(6);
-  const [sort, setSort] = useState("asc");
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 6,
+  });
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: "dateCreated",
+      desc: true,
+    },
+  ]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [status, setStatus] = useState("ACTIVE");
   const [search, setSearch] = useState("");
-
-  const { admin, loading: loadingAdmin } = useAdminStore();
-  const { data, meta, isLoading } = useScholarshipData();
-  const { searchData, searchLoading, searchMeta, setSearchData } =
-    useScholarshipSearch({
-      page,
-      pageSize: rowsPerPage,
-      query: search,
-      status: status,
-    });
+  const { query, meta } = useScholarshipDataStaff({
+    pagination,
+    sorting,
+    columnFilters,
+    status,
+    search,
+  });
 
   const tabs = [
     {
       id: "ACTIVE",
-      label: "Active Scholarship",
-      indicator: meta.count.countActive,
+      label: "Active",
+      indicator: meta.count?.countActive ? meta.count?.countActive : null,
     },
     {
       id: "RENEW",
-      label: "Scholarship Renewals",
-      indicator: meta.count.countRenew,
+      label: "Renewals",
+      indicator: meta.count?.countRenew ? meta.count?.countRenew : null,
+    },
+    {
+      id: "EXPIRED",
+      label: "Expired",
+      indicator: meta.count?.countExpired ? meta.count?.countExpired : null,
+    },
+    {
+      id: "ENDED",
+      label: "Ended",
+      indicator: meta.count?.countEnded ? meta.count?.countEnded : null,
     },
   ];
 
-  // useEffect(() => {
-  //   socket.on("adminAddScholarships", ({ newScholarship }) => {
-  //     console.log("🎓 New scholarship received:", newScholarship);
-  //     setData((prev) => [newScholarship, ...prev]);
-  //   });
-
-  //   socket.on("deleteScholarship", (data) => {
-  //     console.log("🎓 deleted:", data.deletedScholarship.scholarshipId);
-
-  //     setData((prev) =>
-  //       prev.filter(
-  //         (meow) => meow.scholarshipId !== data.deletedScholarship.scholarshipId
-  //       )
-  //     );
-  //   });
-
-  //   return () => {
-  //     socket.off("adminAddScholarships");
-  //     socket.off("deleteScholarship");
-  //   };
-  // }, []);
-
   const handleNext = () => {
-    if (meta && meta.page < meta.totalPage) {
-      setPage((prev) => prev + 1);
+    if (meta && pagination.pageIndex + 1 < meta.totalPage) {
+      setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex + 1 }));
     }
   };
 
   const handlePrev = () => {
-    if (meta.page > 1) {
-      setPage((prev) => prev - 1);
+    if (pagination.pageIndex > 0) {
+      setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex - 1 }));
     }
   };
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, [status, sorting, search, columnFilters]);
 
+  const isLoading = query.isLoading;
+  const data = query.data?.data ?? [];
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:py-10  py-4">
@@ -133,11 +122,11 @@ export default function Manage() {
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.2, delay: 0.2 }}
-          className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b"
+          className="overflow-y-hidden overflow-x-auto pb-1.5 pt-7.5 no-scrollbar border-b sticky z-20 top-0 bg-background"
         >
           <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
         </motion.div>
-        <div className="mt-15 lg:w-[80%] md:min-w-5xl w-full mx-auto space-y-8">
+        <div className="lg:mt-15 mt-10 lg:w-[80%] md:min-w-5xl w-full mx-auto lg:space-y-8 space-y-6">
           <motion.div
             className="flex justify-between items-center gap-2"
             initial={{ opacity: 0, y: 20 }}
@@ -145,20 +134,27 @@ export default function Manage() {
             transition={{ duration: 0.2, delay: 0.4 }}
           >
             <Input
-              placeholder="Search Scholarship...(Single API ready)"
+              placeholder="Search Scholarship..."
               onChange={(e) => setSearch(e.target.value)}
+              value={search}
               className="max-w-sm w-full text-sm"
             />
-            <Select value={sort} onValueChange={(e) => setSort(e)}>
+            <Select
+              value={sorting[0]?.desc ? "desc" : "asc"}
+              onValueChange={(e) =>
+                setSorting([{ id: "dateCreated", desc: e === "desc" }])
+              }
+            >
               <SelectTrigger className="text-sm">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="asc">Newest</SelectItem>
-                <SelectItem value="desc">Oldest</SelectItem>
+                <SelectItem value="desc">Newest</SelectItem>
+                <SelectItem value="asc">Oldest</SelectItem>
               </SelectContent>
             </Select>
           </motion.div>
+
           {search ? (
             <p className="text-sm">
               Showing search result for{" "}
@@ -167,7 +163,7 @@ export default function Manage() {
           ) : (
             ""
           )}
-          <div className=" grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6">
+          <div className=" grid lg:grid-cols-3 md:grid-cols-2 grid-cols-2 lg:gap-6 gap-2">
             {isLoading ? (
               [...Array(3)].map((_, index) => (
                 <motion.div
@@ -182,11 +178,11 @@ export default function Manage() {
                   className="shadow-sm rounded-lg border bg-card lg:p-1 p-0.5"
                 >
                   <div className="rounded-lg bg-background overflow-hidden">
-                    <Skeleton className="aspect-[16/8.5] w-full rounded-md" />
+                    <Skeleton className="lg:aspect-[16/8.5] aspect-[16/10] w-full rounded-md" />
 
-                    <div className="p-4 space-y-6">
+                    <div className="lg:p-4 p-2 lg:space-y-6 space-y-3">
                       <div className="flex items-center gap-3">
-                        <Skeleton className="w-10 h-10 rounded-full" />
+                        <Skeleton className="w-10 h-10 rounded-full hidden lg:block" />
                         <div className="flex-1 space-y-2">
                           <Skeleton className="h-4 w-3/4" />
                           <Skeleton className="h-3 w-1/2" />
@@ -194,17 +190,17 @@ export default function Manage() {
                       </div>
 
                       <div className="space-y-2">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-3">
                           <Skeleton className="h-3 w-24" />
                           <Skeleton className="h-3 w-28" />
                         </div>
-                        <div className="flex items-center justify-between">
+                        <div className=" items-center justify-between hidden lg:flex">
                           <Skeleton className="h-3 w-24" />
                           <Skeleton className="h-3 w-16" />
                         </div>
                       </div>
 
-                      <Skeleton className="h-10 w-full rounded-md" />
+                      <Skeleton className="lg:h-10 h-8 w-full rounded-md" />
                     </div>
                   </div>
                 </motion.div>
@@ -212,7 +208,7 @@ export default function Manage() {
             ) : data.length === 0 ? (
               <NoDataFound />
             ) : (
-              data.map((scholarship, index) => {
+              data.slice(0, 6).map((scholarship, index) => {
                 // const findMatch = user?.Student.Application.find(
                 //   (meow) => meow.scholarshipId === scholarship?.scholarshipId
                 // );
@@ -232,15 +228,15 @@ export default function Manage() {
                       delay: index * 0.1,
                       ease: "easeOut",
                     }}
-                    className="shadow-sm hover:shadow-md transition-all duration-200 lg:p-1 p-0.5  rounded-lg border bg-card"
+                    className="shadow-sm hover:shadow-md transition-all duration-200 lg:p-1  p-0.5  lg:rounded-lg rounded-md border bg-card"
                   >
                     {/* <Link
-                        href={`/user/home/applications/${scholarship.applicationId}`}
-                        key={scholarship.applicationId}
-                        prefetch
-                        scroll={false}
-                      > */}
-                    <div className="relative rounded-lg bg-background overflow-hidden">
+                         href={`/user/home/applications/${scholarship.applicationId}`}
+                         key={scholarship.applicationId}
+                         prefetch
+                         scroll={false}
+                       > */}
+                    <div className="relative lg:rounded-lg rounded-md bg-background overflow-hidden">
                       <img
                         className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
                           status === "EXPIRED" ? "" : ""
@@ -249,8 +245,8 @@ export default function Manage() {
                         alt=""
                       />
                       <div className="relative z-10">
-                        <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
-                          <div className="flex gap-1.5 absolute top-0 right-2">
+                        <div className="relative lg:aspect-[16/8.5] aspect-[16/10] w-full lg:rounded-md rounded-sm overflow-hidden">
+                          <div className=" gap-1.5 absolute top-0 right-2 z-20 hidden lg:flex">
                             <Badge
                               variant="secondary"
                               className="mt-2 uppercase bg-blue-800 text-gray-200"
@@ -259,91 +255,46 @@ export default function Manage() {
                               {getPhaseLabel(scholarship.phase)}
                             </Badge>
                             {/* <Badge
-                                  variant="secondary"
-                                  className={`mt-2 uppercase text-gray-200 ${
-                                    data[0]?.deadline &&
-                                    Date.now() >
-                                      new Date(data[0].deadline).getTime()
-                                      ? "bg-red-800"
-                                      : "bg-green-800"
-                                  }`}
-                                >
-                                  {data[0]?.deadline &&
-                                  Date.now() >
-                                    new Date(data[0].deadline).getTime()
-                                    ? "EXPIRED"
-                                    : "ACTIVE"}
-                                </Badge> */}
+                                   variant="secondary"
+                                   className={`mt-2 uppercase text-gray-200 ${
+                                     data[0]?.deadline &&
+                                     Date.now() >
+                                       new Date(data[0].deadline).getTime()
+                                       ? "bg-red-800"
+                                       : "bg-green-800"
+                                   }`}
+                                 >
+                                   {data[0]?.deadline &&
+                                   Date.now() >
+                                     new Date(data[0].deadline).getTime()
+                                     ? "EXPIRED"
+                                     : "ACTIVE"}
+                                 </Badge> */}
                           </div>
 
-                          {scholarship.Application?.length! > 0 && (
+                          {status && (
                             <div className="absolute top-0 -left-2 flex items-center">
                               <div
-                                className="flex items-center justify-center text-gray-200 font-medium text-sm px-7 py-1.5 bg-gradient-to-br to-green-950 from-green-800"
+                                className={`flex items-center justify-center text-gray-200 font-medium text-sm px-7 py-1.5 bg-gradient-to-br  ${
+                                  status === "ACTIVE"
+                                    ? "to-green-950 from-green-800"
+                                    : status === "RENEW"
+                                    ? "to-blue-950 from-blue-800"
+                                    : status === "EXPIRED"
+                                    ? "to-red-950 from-red-800"
+                                    : status === "ENDED"
+                                    ? "to-gray-950 from-gray-800"
+                                    : "to-gray-950 from-gray-800"
+                                }`}
                                 style={{
                                   clipPath:
                                     "polygon(0 0, 100% 0, 85% 100%, 0% 100%)",
                                 }}
                               >
-                                SUBMITTED
+                                {status}
                               </div>
                             </div>
                           )}
-
-                          {/* {scholarship.status && (
-                                <div className="absolute top-0 -left-2 flex items-center">
-                                  
-                                  <div
-                                    className="absolute"
-                                    style={{
-                                      width: "120px",
-                                      height: "30px",
-                                      background:
-                                        scholarship.status === "BLOCKED"
-                                          ? "rgba(0,0,0,0.5)"
-                                          : scholarship.status === "APPROVED"
-                                          ? "rgba(5 46 22)"
-                                          : scholarship.status === "PENDING"
-                                          ? "rgb(66 32 6)"
-                                          : scholarship.status === "INTERVIEW"
-                                          ? "rgb(23 37 84)"
-                                          : scholarship.status === "DECLINED"
-                                          ? "rgba(69 10 10)"
-                                          : "rgba(0,0,0,0.5)",
-                                      clipPath:
-                                        "polygon(0 0, 100% 0, 85% 100%, 0% 100%)",
-                                      transform: "translate(0px, 0px)", // shadow offset
-                                      zIndex: 0,
-                                    }}
-                                  ></div>
-  
-                                  
-                                  <div
-                                    className="flex items-center justify-center text-gray-200 font-medium text-sm px-6 py-2"
-                                    style={{
-                                      width: "120px",
-                                      height: "30px",
-                                      background:
-                                        scholarship.status === "BLOCKED"
-                                          ? "rgba(0,0,0,0.5)"
-                                          : scholarship.status === "APPROVED"
-                                          ? "rgba(5 46 22)"
-                                          : scholarship.status === "PENDING"
-                                          ? "rgb(66 32 6)"
-                                          : scholarship.status === "INTERVIEW"
-                                          ? "rgb(23 37 84)"
-                                          : scholarship.status === "DECLINED"
-                                          ? "rgba(69 10 10)"
-                                          : "rgba(0,0,0,0.5)",
-                                      clipPath:
-                                        "polygon(0 0, 100% 0, 85% 100%, 0% 100%)",
-                                      zIndex: 1,
-                                    }}
-                                  >
-                                    {scholarship.status}
-                                  </div>
-                                </div>
-                              )} */}
 
                           <img
                             className="h-full w-full object-cover"
@@ -352,13 +303,13 @@ export default function Manage() {
                           />
                         </div>
 
-                        <div className="p-4 space-y-6">
+                        <div className="lg:p-4 p-2 space-y-2 lg:space-y-6 ">
                           <div className="flex items-center gap-3">
                             {scholarship ? (
                               <img
                                 src={scholarship?.logo}
                                 alt={scholarship?.title}
-                                className="w-10 h-10 rounded-full object-cover border"
+                                className="w-10 h-10 rounded-full object-cover border hidden lg:block"
                               />
                             ) : (
                               <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
@@ -366,11 +317,11 @@ export default function Manage() {
                               </div>
                             )}{" "}
                             <div className="w-full">
-                              <h3 className="font-semibold text-sm line-clamp-1">
+                              <h3 className="font-semibold lg:text-sm text-xs line-clamp-1">
                                 {scholarship?.title}
                               </h3>
 
-                              <p className="text-sm text-muted-foreground">
+                              <p className="lg:text-sm text-xs text-muted-foreground">
                                 {scholarship?.Scholarship_Provider?.name ||
                                   "Unknown Provider"}
                               </p>
@@ -378,16 +329,16 @@ export default function Manage() {
                           </div>
 
                           {/* Details */}
-                          <div className="flex flex-col gap-1 text-sm text-muted-foreground">
-                            <div className="flex items-center justify-between">
+                          <div className="flex flex-col gap-1 lg:text-sm text-xs text-muted-foreground">
+                            <div className="flex flex-col lg:flex-row lg:items-center justify-between">
                               <span className="text-xs">Deadline</span>
-                              <span className="font-medium text-foreground">
+                              <span className="font-medium text-foreground line-clamp-1">
                                 {scholarship?.dateCreated
                                   ? format(scholarship?.dateCreated, "PPP")
                                   : "—"}
                               </span>
                             </div>
-                            <div className="flex items-center justify-between">
+                            <div className="hidden lg:flex items-center justify-between">
                               <span className="text-xs">Scholarship Type</span>
                               <span className="font-medium text-foreground">
                                 {scholarship?.type || "N/A"}
@@ -396,11 +347,17 @@ export default function Manage() {
                           </div>
 
                           <Link
-                            href={`/user/home/scholarships/${scholarship.scholarshipId}`}
+                            href={`/administrator/staff/home/scholarship/${scholarship.scholarshipId}`}
                             prefetch={true}
                             scroll={false}
                           >
-                            <Button className="w-full">
+                            <Button className="w-full hidden lg:flex">
+                              View Details <ArrowRight />
+                            </Button>
+                            <Button
+                              size="sm"
+                              className="w-full text-xs lg:hidden flex"
+                            >
                               View Details <ArrowRight />
                             </Button>
                           </Link>
@@ -413,6 +370,7 @@ export default function Manage() {
               })
             )}
           </div>
+
           <motion.div
             className="flex items-center justify-between gap-3"
             initial={{ opacity: 0, y: -20 }}

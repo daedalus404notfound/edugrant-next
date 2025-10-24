@@ -61,7 +61,7 @@ export function NavUser() {
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
                   src={
-                    admin?.ISPSU_Head.profileImg?.publicUrl ||
+                    admin?.ISPSU_Head?.profileImg?.publicUrl ||
                     "https://github.com/shadcn.png" ||
                     "/placeholder.svg"
                   }

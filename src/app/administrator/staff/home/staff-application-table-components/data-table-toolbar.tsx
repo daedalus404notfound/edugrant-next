@@ -80,7 +80,7 @@ export default function DataTableToolbar<
       <div className="flex flex-1 items-center space-x-2">
         <div className="relative">
           <Input
-            placeholder="Filter scholarship..."
+            placeholder="Search name..."
             className="peer ps-9 pe-9 h-8 w-[150px] lg:w-[250px]"
             onChange={(e) => setSearch?.(e.target.value)}
           />
@@ -132,7 +132,7 @@ export default function DataTableToolbar<
 
         {isFiltered && (
           <Button
-            variant="ghost"
+            variant="secondary"
             onClick={() => table.resetColumnFilters()}
             className="h-8 px-2 lg:px-3"
           >

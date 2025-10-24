@@ -18,7 +18,7 @@ export default function InterceptManageScholarship() {
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(true);
-  const id = params.id as string;
+  const id = Number(params.id);
   const { data, loading } = useScholarshipUserByIdAdmin(id);
 
   const HandleCloseDrawer = (value: boolean) => {

@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BASC EDUGRANT",
+  title: "BASC | Edugrant",
   description: "Online scholarship portal for BASC students.",
 };
 

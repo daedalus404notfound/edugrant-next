@@ -8,21 +8,33 @@ import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import useScholarshipData from "@/hooks/admin/getScholarship";
 import { DataTable } from "@/app/table-components/data-table";
 import { useHeadScholarshipStore } from "@/store/headScholarshipMeta";
+import {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+} from "@tanstack/react-table";
+import { useEffect, useState } from "react";
 export default function Manage() {
-  const {
-    meta,
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: "dateCreated",
+      desc: true,
+    },
+  ]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [status, setStatus] = useState("ACTIVE");
+  const [search, setSearch] = useState("");
+  const { query, meta } = useScholarshipData({
     status,
-    setStatus,
     pagination,
-    setPagination,
-    search,
-    setSearch,
-    setSorting,
     sorting,
     columnFilters,
-    setColumnFilters,
-  } = useHeadScholarshipStore();
-  const { data, isLoading } = useScholarshipData();
+    search,
+  });
 
   const tabs = [
     {
@@ -36,7 +48,12 @@ export default function Manage() {
       indicator: meta.count?.countRenew,
     },
   ];
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, [status, sorting, search, columnFilters]);
 
+  const isLoading = query.isLoading;
+  const data = query.data?.data ?? [];
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:py-10  py-4">

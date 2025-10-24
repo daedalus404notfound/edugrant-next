@@ -1,5 +1,6 @@
 "use client";
 import {
+  Activity,
   Banknote,
   Building,
   Calendar,
@@ -40,6 +41,12 @@ export default function ScholarshipModal({
   const lastPhaseLength = Object.keys(lastPhase).length;
   return (
     <div className="relative h-full w-full flex flex-col">
+      <div className=" p-3  sticky bg-muted top-0 z-30 flex items-center justify-center">
+        <p className="text-sm">
+          {data?.title} has ended on{" "}
+          {data?.dateEnded && format(data?.dateEnded, "PPP p")}.
+        </p>
+      </div>
       <div className="relative flex justify-center items-center ">
         {/* <p className="italic lg:text-sm text-xs text-muted-foreground absolute right-2 lg:-bottom-18 -bottom-7 z-10 lg:px-6  px-2 ">
           Posted on {""}
@@ -61,8 +68,7 @@ export default function ScholarshipModal({
           </Link>
         )}
       </div>
-
-      <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-b-lg overflow-hidden ">
+      <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-b-lg  ">
         {/* Header Section */}
         <div className="relative flex  lg:items-end items-center  lg:py-8 py-4 lg:px-4 px-2">
           <img
@@ -166,7 +172,6 @@ export default function ScholarshipModal({
           </div>
         </div>
       </div>
-
       <div className="flex-1 pt-10 lg:px-6 px-2 space-y-8">
         <div className="space-y-1">
           <p className="text-xs uppercase text-muted-foreground">About</p>

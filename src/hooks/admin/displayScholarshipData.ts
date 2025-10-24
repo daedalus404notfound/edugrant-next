@@ -33,6 +33,7 @@ export const displayScholarshipSchema = z.object({
   phase: z.number(),
   cover: z.any().optional(),
   dateCreated: z.date().optional(),
+  dateEnded: z.date().optional(),
   deadline: z.date({
     message: "Required",
   }),

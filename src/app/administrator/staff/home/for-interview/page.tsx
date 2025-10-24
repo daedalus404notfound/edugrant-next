@@ -1,84 +1,75 @@
 "use client";
 import "ldrs/react/Ring.css";
 import { useState } from "react";
-
+import { DataTable } from "@/app/table-components/data-table";
+import { columns } from "../staff-application-table-components/columns";
+import {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+} from "@tanstack/react-table";
+import DataTableToolbar from "../staff-application-table-components/data-table-toolbar";
+import { ApplicationFormData } from "@/hooks/zod/application";
+import useApplicationDataStaff from "@/hooks/staff/getApplicationStaff";
 import TitleReusable from "@/components/ui/title";
-import { TourProvider } from "@/components/tour/tour-provider";
-import { TourStep } from "@/components/tour/tour-step";
-import type { TourStep as TourStepType } from "@/lib/use-tour";
-import { Tabs } from "@/components/ui/vercel-tabs";
-import ForInterviewApplication from "./for-interview";
-import InterviewRenewalApplication from "./for-interview-renew";
-export default function PendingApplication() {
+
+export default function PendingStaffApplication() {
+  const [columnVisibility, setColumnVisibility] = useState<
+    Record<string, boolean>
+  >({
+    phase: false,
+    section: false,
+    year: false,
+    institute: false,
+  });
+  const [search, setSearch] = useState("");
   const [status, setStatus] = useState("INTERVIEW");
-  const [interview, setInterview] = useState(0);
-  const [interviewRenewal, setRenewInterview] = useState(0);
-  const tabs = [
-    {
-      id: "INTERVIEW",
-      label: "For Interview Application",
-      indicator: interview,
-    },
-    {
-      id: "RENEWINTERVIEW",
-      label: "For Interview Renewals",
-      indicator: interviewRenewal,
-    },
-  ];
-  const applicationTourSteps: TourStepType[] = [
-    {
-      id: "search",
-      title: "Search Scholarships",
-      description:
-        "Find scholarships quickly by typing their name in the search bar.",
-    },
-    {
-      id: "filters",
-      title: "Filter Options",
-      description:
-        "Apply filters to narrow down scholarships based on specific criteria.",
-    },
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const { data, meta, isLoading } = useApplicationDataStaff({
+    pagination,
+    sorting,
+    columnFilters,
+    status,
+    search,
+  });
 
-    {
-      id: "view",
-      title: "Table View Options",
-      description: "Show or hide table columns to customize your view.",
-    },
-
-    {
-      id: "table",
-      title: "Scholarship Table",
-      description:
-        "View all available scholarships in a table format. Click a row to see more details.",
-    },
-    {
-      id: "rowperpage",
-      title: "Table Row Per Page",
-      description:
-        "Navigate between multiple pages of scholarships using the pagination controls.",
-    },
-    {
-      id: "pagination",
-      title: "Table Pagination",
-      description:
-        "Navigate between multiple pages of scholarships using the pagination controls.",
-    },
-  ];
   return (
-    <TourProvider steps={applicationTourSteps}>
-      <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-        <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
-          <TitleReusable
-            title="For Interview Application"
-            textColor="text-indigo-700/70"
-            description="Applicants currently waiting for review."
-          />
+    <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+      <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
+        <TitleReusable
+          title="Pending Applications"
+          textColor="text-yellow-700/70"
+          description="Applicants currently waiting for review."
+        />
 
-          <div className="py-8 space-y-5">
-            <ForInterviewApplication setInterview={setInterview} />
-          </div>
+        <div className="py-8 space-y-5">
+          <DataTable<ApplicationFormData, unknown>
+            data={data}
+            columns={columns}
+            meta={meta}
+            pagination={pagination}
+            setPagination={setPagination}
+            getRowId={(row) => row.scholarshipId}
+            loading={isLoading}
+            search={search}
+            setSearch={setSearch}
+            status={status}
+            setStatus={setStatus}
+            sorting={sorting}
+            setSorting={setSorting}
+            columnFilters={columnFilters}
+            setColumnFilters={setColumnFilters}
+            toolbar={DataTableToolbar}
+            columnVisibility={columnVisibility} // <-- pass visibility
+            setColumnVisibility={setColumnVisibility} // <-- pass setter
+          />
         </div>
       </div>
-    </TourProvider>
+    </div>
   );
 }

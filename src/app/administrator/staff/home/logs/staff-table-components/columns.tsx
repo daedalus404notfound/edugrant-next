@@ -48,13 +48,13 @@ export const columns: ColumnDef<AllStaffLogsType>[] = [
       <DataTableColumnHeader
         column={column}
         title="Processed Student"
-        className=""
+        className="pl-4"
       />
     ),
     cell: ({ row }) => {
       const student = row.original.application.Student;
       return (
-        <div className="flex gap-2 items-center ">
+        <div className="flex gap-2 items-center pl-4">
           <Avatar>
             <AvatarImage src={student.profileImg?.publicUrl || ""} />
             <AvatarFallback className="uppercase">

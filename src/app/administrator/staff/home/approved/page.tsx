@@ -1,35 +1,19 @@
 "use client";
 import "ldrs/react/Ring.css";
-import { UserRoundMinus } from "lucide-react";
 import { useState } from "react";
-import { TourProvider } from "@/components/tour/tour-provider";
-import TitleReusable from "@/components/ui/title";
-import { columns } from "../staff-application-table-components/columns";
 import { DataTable } from "@/app/table-components/data-table";
-import { ApplicationFormData } from "@/hooks/zod/application";
-import DataTableToolbar from "../staff-application-table-components/data-table-toolbar";
+import { columns } from "../staff-application-table-components/columns";
 import {
   ColumnFiltersState,
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
-import useApplicationData from "@/hooks/admin/getApplicant";
+import DataTableToolbar from "../staff-application-table-components/data-table-toolbar";
+import { ApplicationFormData } from "@/hooks/zod/application";
+import useApplicationDataStaff from "@/hooks/staff/getApplicationStaff";
+import TitleReusable from "@/components/ui/title";
 
-export default function PendingApplication() {
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("APPROVED");
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 10,
-  });
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const { data, meta, isLoading } = useApplicationData({
-    pagination,
-    sorting,
-    columnFilters,
-    status,
-  });
+export default function PendingStaffApplication() {
   const [columnVisibility, setColumnVisibility] = useState<
     Record<string, boolean>
   >({
@@ -38,15 +22,29 @@ export default function PendingApplication() {
     year: false,
     institute: false,
   });
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("APPROVED");
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const { data, meta, isLoading } = useApplicationDataStaff({
+    pagination,
+    sorting,
+    columnFilters,
+    status,
+    search,
+  });
 
   return (
     <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <TitleReusable
-          textColor="text-emerald-700/70"
-          title="Approved Applications"
-          description="Applications that have been approved and finalized."
-          Icon={UserRoundMinus}
+          title="Pending Applications"
+          textColor="text-yellow-700/70"
+          description="Applicants currently waiting for review."
         />
 
         <div className="py-8 space-y-5">

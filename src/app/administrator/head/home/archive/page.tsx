@@ -8,42 +8,59 @@ import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import { DataTable } from "@/app/table-components/data-table";
 import { useHeadInactiveScholarshipStore } from "@/store/headInactiveScholarshipStore";
 import useScholarshipInactiveData from "@/hooks/admin/getScolarshipInactive";
+import useScholarshipData from "@/hooks/admin/getScholarship";
+import { useHeadScholarshipStore } from "@/store/headScholarshipMeta";
+import {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+} from "@tanstack/react-table";
+import { useEffect, useState } from "react";
 export default function Manage() {
-  const {
-    metaInactive,
-    statusInactive,
-    setStatusInactive,
-    paginationInactive,
-    setPaginationInactive,
-    searchInactive,
-    setSearchInactive,
-    setSortingInactive,
-    sortingInactive,
-    columnFiltersInactive,
-    setColumnFiltersInactive,
-  } = useHeadInactiveScholarshipStore();
-  const { data, isLoading } = useScholarshipInactiveData();
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: "dateCreated",
+      desc: true,
+    },
+  ]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [status, setStatus] = useState("EXPIRED");
+  const [search, setSearch] = useState("");
+  const { query, meta } = useScholarshipData({
+    status,
+    pagination,
+    sorting,
+    columnFilters,
+    search,
+  });
 
   const tabs = [
     {
       id: "EXPIRED",
       label: "Expired",
-      indicator: metaInactive.count.countExpired
-        ? metaInactive.count.countExpired
-        : null,
+      indicator: meta.count.countExpired ? meta.count.countExpired : null,
     },
     {
       id: "ENDED",
       label: "Ended",
-      indicator: metaInactive.count.countArchived
-        ? metaInactive.count.countArchived
-        : null,
+      indicator: meta.count.countEnded ? meta.count.countEnded : null,
     },
   ];
+
+  useEffect(() => {
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  }, [status, sorting, search, columnFilters]);
+
+  const isLoading = query.isLoading;
+  const data = query.data?.data ?? [];
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:py-10  py-4">
-        {statusInactive === "EXPIRED" ? (
+        {status === "EXPIRED" ? (
           <TitleReusable
             title="Inactive Scholarships"
             description="View and manage all scholarships that are currently inactive. Use the tabs below to navigate between inactive and ended scholarships."
@@ -55,34 +72,34 @@ export default function Manage() {
             title="Ended Scholarships"
             description="View and manage all scholarships that have ended. Use the tabs below to navigate between inactive and ended scholarships."
             Icon={Clock} // changed to Clock to represent ended
-            textColor="text-indigo-700/70"
+            textColor="text-emerald-700/70"
           />
         )}
 
         <div className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b">
           <Tabs
             tabs={tabs}
-            activeTab={statusInactive}
-            onTabChange={(tabId) => setStatusInactive(tabId)}
+            activeTab={status}
+            onTabChange={(tabId) => setStatus(tabId)}
           />
         </div>
         <div className="mt-10 lg:w-full md:min-w-5xl w-full mx-auto">
           <DataTable<scholarshipFormData, unknown>
             data={data}
-            columns={columns(statusInactive)}
-            meta={metaInactive}
-            pagination={paginationInactive}
-            setPagination={setPaginationInactive}
+            columns={columns(status)}
+            meta={meta}
+            pagination={pagination}
+            setPagination={setPagination}
             getRowId={(row) => row.scholarshipId}
             loading={isLoading}
-            search={searchInactive}
-            setSearch={setSearchInactive}
-            status={statusInactive}
-            setStatus={setStatusInactive}
-            sorting={sortingInactive}
-            setSorting={setSortingInactive}
-            columnFilters={columnFiltersInactive}
-            setColumnFilters={setColumnFiltersInactive}
+            search={search}
+            setSearch={setSearch}
+            status={status}
+            setStatus={setStatus}
+            sorting={sorting}
+            setSorting={setSorting}
+            columnFilters={columnFilters}
+            setColumnFilters={setColumnFilters}
             toolbar={DataTableToolbar}
           />
         </div>
