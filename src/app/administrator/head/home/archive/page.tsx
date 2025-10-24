@@ -7,7 +7,6 @@ import { Tabs } from "@/components/ui/vercel-tabs";
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import { DataTable } from "@/app/table-components/data-table";
 import { useHeadInactiveScholarshipStore } from "@/store/headInactiveScholarshipStore";
-import useScholarshipInactiveData from "@/hooks/admin/getScolarshipInactive";
 import useScholarshipData from "@/hooks/admin/getScholarship";
 import { useHeadScholarshipStore } from "@/store/headScholarshipMeta";
 import {
