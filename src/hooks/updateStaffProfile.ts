@@ -21,7 +21,7 @@ const updateUserApi = async (data: getStaffFormData) => {
   formData.append("email", data.Account.email);
   formData.append("ownerId", String(data.staffId));
   if (data.validated) {
-    formData.append("validated", data.validated);
+    formData.append("validate", data.validated);
   }
   if (data.profileImg?.publicUrl) {
     formData.append("profileImg", data.profileImg.publicUrl);
