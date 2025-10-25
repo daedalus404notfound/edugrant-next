@@ -196,7 +196,7 @@ export function TipTapEditor({
         >
           <ListOrdered className="h-4 w-4" />
         </Button>
-        <div className="w-px bg-border mx-1" />
+        {/* <div className="w-px bg-border mx-1" />
         <Button
           variant="ghost"
           size="sm"
@@ -220,7 +220,7 @@ export function TipTapEditor({
           onClick={() => editor.chain().focus().unsetColor().run()}
         >
           <RefreshCcw />
-        </Button>
+        </Button> */}
 
         <div className="w-px bg-border mx-1" />
 

@@ -568,7 +568,7 @@ export default function Profile() {
                               return (
                                 <FormItem className="lg:col-span-2">
                                   <FormLabel className="flex items-center justify-between">
-                                    Password <FormMessage />
+                                    New Password <FormMessage />
                                   </FormLabel>
 
                                   {/* Password Input + Toggle */}
