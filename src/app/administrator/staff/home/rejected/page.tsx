@@ -42,9 +42,9 @@ export default function PendingStaffApplication() {
     <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <TitleReusable
-          title="Pending Applications"
-          textColor="text-yellow-700/70"
-          description="Applicants currently waiting for review."
+          title="Rejected Applications"
+          textColor="text-red-700/70"
+          description="Applications that have been reviewed and did not meet the approval criteria."
         />
 
         <div className="py-8 space-y-5">

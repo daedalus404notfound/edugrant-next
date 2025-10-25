@@ -42,7 +42,10 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
-                  src={``}
+                  src={
+                    admin?.ISPSU_Staff?.profileImg?.publicUrl ||
+                    "https://github.com/shadcn.png"
+                  }
                   alt={
                     admin?.ISPSU_Staff
                       ? `${admin.ISPSU_Staff.fName} ${admin.ISPSU_Staff.lName}`

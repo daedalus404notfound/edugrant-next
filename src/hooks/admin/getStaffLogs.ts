@@ -9,7 +9,6 @@ export default function useGetStaffById(id: string) {
   const [data, setData] = useState<getStaffFormData | null>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  console.log(data);
   useEffect(
     function () {
       async function fetchStaffLogs() {

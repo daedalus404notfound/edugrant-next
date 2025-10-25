@@ -43,9 +43,9 @@ export default function PendingApplication() {
     <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <TitleReusable
-          textColor="text-emerald-700/70"
-          title="Approved Applications"
-          description="Applications that have been approved and finalized."
+          textColor="text-red-700/70"
+          title="Rejected Applications"
+          description="Applications that have been reviewed and not approved."
           Icon={UserRoundMinus}
         />
 

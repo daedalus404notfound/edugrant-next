@@ -54,11 +54,8 @@ import { ProfileInfoSkeleton } from "../../all-application/[id]/profile-skeleton
 export default function InterceptManageStaff() {
   const router = useRouter();
   const params = useParams();
-
   const staffId = params.id as string;
-
   const { data, loading } = useGetStaffLogs(staffId);
-  console.log("datadta", data);
   const {
     form,
     handleSubmit,
@@ -155,10 +152,15 @@ export default function InterceptManageStaff() {
                                   />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  <SelectItem value="true">Activate</SelectItem>
-                                  <SelectItem value="false">
-                                    Deactivated
-                                  </SelectItem>
+                                  {data?.validated?.toString() === "false" ? (
+                                    <SelectItem value="true">
+                                      Activate
+                                    </SelectItem>
+                                  ) : (
+                                    <SelectItem value="false">
+                                      Deactivated
+                                    </SelectItem>
+                                  )}
                                 </SelectContent>
                               </Select>
                             </FormControl>
@@ -269,7 +271,6 @@ export default function InterceptManageStaff() {
                                   className="rounded-r-none"
                                   {...field}
                                   readOnly
-                                  disabled
                                 />
                                 <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
                                   <Button variant="ghost">
@@ -341,11 +342,13 @@ export default function InterceptManageStaff() {
                               size="lg"
                               type="submit"
                               className="cursor-pointer"
-                              disabled={loading}
+                              disabled={loadingUpdate}
                             >
                               <Check />
-                              {loading ? "Saving..." : "Save Changes"}
-                              {loading && <Loader className="animate-spin" />}
+                              {loadingUpdate ? "Saving..." : "Save Changes"}
+                              {loadingUpdate && (
+                                <Loader className="animate-spin" />
+                              )}
                             </Button>
                           </motion.div>
                         </motion.div>

@@ -6,11 +6,10 @@ import { ApiErrorResponse } from "./postReviewedHandler";
 import { useApplicationUIStore } from "@/store/updateUIStore";
 
 type DeleteTypes = {
-  id: number;
-  accountId?: number;
+  id: number | null;
 };
 
-export default function useDeleteAnnouncement({ id, accountId }: DeleteTypes) {
+export default function useDeleteAnnouncement({ id }: DeleteTypes) {
   const [isSuccess, setIsSuccess] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const { addDeletedAnnouncementId, deletedAnnouncementIds } =
@@ -26,7 +25,6 @@ export default function useDeleteAnnouncement({ id, accountId }: DeleteTypes) {
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/deleteAnnouncement`,
         {
           announcementId: id,
-          accountId: accountId,
         },
         { withCredentials: true }
       );

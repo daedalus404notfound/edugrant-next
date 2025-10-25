@@ -204,12 +204,12 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
             row.getValue("status") === "PENDING"
               ? "bg-yellow-500/10 text-yellow-500"
               : row.getValue("status") === "DECLINED"
-              ? "/10 text-red-500"
+              ? "bg-red-500/10 text-red-500"
               : row.getValue("status") === "INTERVIEW"
-              ? "bg-blue-indigo-700/10 text-indigo-500"
+              ? "bg-indigo-500/10 text-indigo-500"
               : row.getValue("status") === "APPROVED"
               ? "bg-green-500/10 text-green-500"
-              : ""
+              : "bg-gray-500/10 text-gray-500"
           }
         >
           <Clock />

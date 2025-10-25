@@ -1,15 +1,20 @@
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-const adminProfileSchema = z.object({
-  email: z.string().min(1, "Required"),
-  firstName: z.string().min(1, "Required"),
-  middleName: z.string().optional(),
-  lastName: z.string().min(1, "Required"),
-  phone: z.string().min(1, "Required"),
-  password: z.string().min(1, "Required"),
-  confirmPassword: z.string().min(1, "Required"),
-});
+const adminProfileSchema = z
+  .object({
+    email: z.string().min(1, "Required"),
+    firstName: z.string().min(1, "Required"),
+    middleName: z.string().optional(),
+    lastName: z.string().min(1, "Required"),
+    phone: z.string().min(1, "Required"),
+    password: z.string().min(1, "Required"),
+    confirmPassword: z.string().min(1, "Required"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 export type createAdminFormData = z.infer<typeof adminProfileSchema>;
 

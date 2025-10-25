@@ -87,9 +87,13 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
           className={`${
             status === "ACTIVE"
               ? "bg-green-500/10 text-green-700"
-              : status
+              : status === "DECLINED"
               ? "bg-red-500/10 text-red-700"
-              : ""
+              : status === "INTERVIEW"
+              ? "bg-indigo-500/10 text-indigo-700"
+              : status === "BLOCKED"
+              ? "bg-gray-500/10 text-gray-700"
+              : "bg-green-500/10 text-green-700"
           }`}
         >
           <CircleCheck />

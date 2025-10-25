@@ -45,7 +45,7 @@ export default function PendingApplication() {
         <TitleReusable
           textColor="text-gray-700/70"
           title="Blocked Applications"
-          description="Applications that have been approved and finalized."
+          description="Applications blocked due to the applicant’s existing approval under Government Scholarship."
           Icon={UserRoundMinus}
         />
 
