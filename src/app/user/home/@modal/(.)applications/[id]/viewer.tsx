@@ -36,8 +36,9 @@ export default function ApplicationViewer({
 }: UserDocument) {
   const [rotation, setRotation] = useState(0);
   const { onGetDocument, filePath, loading } = useGetDocument(false);
-  console.log(filePath);
+  console.log("filePath", filePath);
   const [open, setOpen] = useState(false);
+
   const iframeRef = useRef<HTMLIFrameElement>(null);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -155,12 +156,14 @@ export default function ApplicationViewer({
                           key={filePath}
                           className="h-full w-full rounded-lg"
                           src={filePath}
+                          allow="fullscreen"
                           title={`Document preview: ${document}`}
                           style={{
                             transform: `rotate(${rotation}deg)`,
                             maxHeight: "100vh",
                             maxWidth: "100vw",
                           }}
+                          sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
                         />
                       </div>
                     ) : (
