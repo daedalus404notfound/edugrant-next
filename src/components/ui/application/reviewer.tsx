@@ -65,7 +65,6 @@ export default function ApplicationViewer({
   const [rotation, setRotation] = useState(0);
   console.log(fileFormat);
   const [open, setOpen] = useState(false);
-  const [loadingFile, setIsLoading] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const { onGetDocument, filePath, loading } = useGetDocument(true);
   const { admin } = useAdminStore();
@@ -231,7 +230,7 @@ export default function ApplicationViewer({
                   contentClass="flex items-center justify-center"
                 >
                   <div className="lg:h-[calc(100dvh-80px)] h-[calc(100dvh-64px)] lg:w-[calc(100dvw-32px)] w-[calc(100dvw-16px)] ">
-                    {loading || filePath === "" ? (
+                    {loading ? (
                       <div className="h-full w-full  flex justify-center items-center">
                         <Ring
                           size={35}
