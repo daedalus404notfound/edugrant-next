@@ -163,7 +163,7 @@ export default function ApplicationViewer({
                             maxHeight: "100vh",
                             maxWidth: "100vw",
                           }}
-                          sandbox="allow-same-origin"
+                          sandbox="allow-same-origin allow-scripts"
                         />
                       </div>
                     ) : (
