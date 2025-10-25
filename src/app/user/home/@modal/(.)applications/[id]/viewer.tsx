@@ -37,6 +37,7 @@ export default function ApplicationViewer({
   const [rotation, setRotation] = useState(0);
   const { onGetDocument, filePath, loading } = useGetDocument(false);
   console.log("filePath", filePath);
+  console.log("fileFormat", fileFormat);
   const [open, setOpen] = useState(false);
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
