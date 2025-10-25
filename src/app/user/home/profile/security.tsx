@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { motion } from "motion/react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,33 +13,11 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
-  Accessibility,
-  AlertCircle,
   ArrowRight,
-  BookMarked,
-  Briefcase,
-  Calendar1,
-  Check,
   CheckIcon,
-  CircleUserRound,
   EyeIcon,
   EyeOffIcon,
-  Feather,
-  GraduationCap,
-  IdCard,
-  Key,
-  LayoutPanelTop,
   Loader,
-  LoaderCircleIcon,
-  Mail,
-  Map,
-  MapPinHouse,
-  PhilippinePeso,
-  Trash2,
-  UserRound,
-  UserRoundCheck,
-  UserRoundCog,
-  VenusAndMars,
   XIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -53,29 +30,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import logo from "@/assets/edugrant-logo.png";
-import { useUserStore } from "@/store/useUserStore";
-import { Tabs } from "@/components/ui/vercel-tabs";
-import { Label } from "@/components/ui/label";
-import { Controller } from "react-hook-form";
-import { useUpdateProfile } from "@/hooks/user/postProfileUpdate";
+
 import { Separator } from "@/components/ui/separator";
-import TitleReusable from "@/components/ui/title";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { useChangePasswordProfileUser } from "@/hooks/zod/user/changePasswordProfileZod";
+
 import { useProfileUserChangePassword } from "@/hooks/user/profileUserChangePassword";
 import {
   InputOTP,
@@ -83,9 +40,6 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { useProfileUserChangeEmail } from "@/hooks/user/profileUserChangeEmail";
-import { Skeleton } from "@/components/ui/skeleton";
-import PersonalProfile from "./personal";
-import FamilyForm from "./family";
 
 export default function SecurityForm() {
   const {
@@ -117,6 +71,9 @@ export default function SecurityForm() {
     requestNewCode: requestNewCodeChangeEmail,
     resendTimer: resendTimerChangeEmail,
   } = useProfileUserChangeEmail();
+
+  const [openPass, setOpenPass] = useState(false);
+  const [openEmail, setOpenEmail] = useState(false);
   return (
     <div className=" w-full space-y-8">
       <div className="flex items-center gap-3">
@@ -124,7 +81,7 @@ export default function SecurityForm() {
           Change Password
         </h3>
         <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-        <AlertDialog>
+        <AlertDialog open={open} onOpenChange={setOpen}>
           <AlertDialogTrigger asChild>
             <Button>Change</Button>
           </AlertDialogTrigger>
@@ -514,7 +471,7 @@ export default function SecurityForm() {
           Change Email
         </h3>
         <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-        <AlertDialog>
+        <AlertDialog open={openChangeEmail} onOpenChange={setOpenChangeEmail}>
           <AlertDialogTrigger asChild>
             <Button>Change</Button>
           </AlertDialogTrigger>

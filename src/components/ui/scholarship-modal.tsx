@@ -41,12 +41,14 @@ export default function ScholarshipModal({
   const lastPhaseLength = Object.keys(lastPhase).length;
   return (
     <div className="relative h-full w-full flex flex-col">
-      <div className=" p-3  sticky bg-muted top-0 z-30 flex items-center justify-center">
-        <p className="text-sm">
-          {data?.title} has ended on{" "}
-          {data?.dateEnded && format(data?.dateEnded, "PPP p")}.
-        </p>
-      </div>
+      {data.dateEnded && (
+        <div className=" p-3  sticky bg-muted top-0 z-30 flex items-center justify-center">
+          <p className="text-sm">
+            {data?.title} has ended on{" "}
+            {data?.dateEnded && format(data?.dateEnded, "PPP p")}.
+          </p>
+        </div>
+      )}
       <div className="relative flex justify-center items-center ">
         {/* <p className="italic lg:text-sm text-xs text-muted-foreground absolute right-2 lg:-bottom-18 -bottom-7 z-10 lg:px-6  px-2 ">
           Posted on {""}

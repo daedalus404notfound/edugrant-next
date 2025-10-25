@@ -122,7 +122,7 @@ export const useVerifyLogin = () => {
 export const useProfileUserChangePassword = () => {
   const router = useRouter();
   const [step, setStep] = useState<"email" | "otp">("email");
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const { changePasswordForm, LoginData, changePasswordOtpForm } =
     useChangePasswordProfileUser();
   const [resendTimer, setResendTimer] = useState<number>(0);
@@ -163,7 +163,7 @@ export const useProfileUserChangePassword = () => {
       });
       if (result.success === true) {
         setOpen(false);
-        router.replace("/user/home");
+        // router.replace("/user/home");
       }
     } catch (error) {
       // Error toast is already handled in useVerifyLogin onError

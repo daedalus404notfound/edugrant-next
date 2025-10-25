@@ -322,18 +322,18 @@ export default function PersonalProfile({
                   <div className="flex">
                     {/* Fixed +639 prefix */}
                     <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
-                      +63
+                      +639
                     </span>
                     <Input
                       type="text"
                       placeholder=""
-                      maxLength={10}
-                      value={field.value?.replace("+63", "") || ""}
+                      maxLength={9}
+                      value={field.value?.replace("+639", "") || ""}
                       onChange={(e) => {
                         const val = e.target.value
                           .replace(/\D/g, "")
-                          .slice(0, 10);
-                        field.onChange(`+63${val}`);
+                          .slice(0, 9);
+                        field.onChange(`+639${val}`);
                       }}
                       className="rounded-l-none"
                     />

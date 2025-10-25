@@ -159,12 +159,12 @@ export default function FamilyForm({
                 <div className="flex">
                   {/* Fixed +639 prefix */}
                   <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
-                    +63
+                    +639
                   </span>
                   <Input
                     type="text"
                     placeholder=""
-                    maxLength={10}
+                    maxLength={9}
                     {...field}
                     // value={field.value?.replace("+63", "") || ""}
                     // onChange={(e) => {
@@ -372,12 +372,12 @@ export default function FamilyForm({
                 <div className="flex">
                   {/* Fixed +639 prefix */}
                   <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
-                    +63
+                    +639
                   </span>
                   <Input
                     type="text"
                     placeholder=""
-                    maxLength={10}
+                    maxLength={9}
                     {...field}
                     className="rounded-l-none"
                   />
@@ -543,12 +543,12 @@ export default function FamilyForm({
                 <div className="flex">
                   {/* Fixed +639 prefix */}
                   <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
-                    +63
+                    +639
                   </span>
                   <Input
                     type="text"
                     placeholder=""
-                    maxLength={10}
+                    maxLength={9}
                     {...field}
                     className="rounded-l-none"
                   />

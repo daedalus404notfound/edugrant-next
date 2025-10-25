@@ -120,7 +120,7 @@ export const useVerifyLogin = () => {
 export const useProfileUserChangeEmail = () => {
   const router = useRouter();
   const [step, setStep] = useState<"email" | "otp">("email");
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const { changeEmailForm, LoginData, changeEmailOtpForm } =
     useChangeEmailProfileUser();
   const [resendTimer, setResendTimer] = useState<number>(0);
