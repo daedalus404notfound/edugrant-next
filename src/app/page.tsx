@@ -1,20 +1,3 @@
-// "use client";
-// import dynamic from "next/dynamic";
-// import { useIsMobile } from "@/hooks/use-mobile";
-
-// const DesktopLandingPage = dynamic(() => import("./desktop-landing"), {
-//   ssr: false,
-// });
-// const MobileLandingPage = dynamic(() => import("./mobile-landing"), {
-//   ssr: false,
-// });
-
-// export default function HeroPage() {
-//   const isMobile = useIsMobile();
-//   if (isMobile === null) return null;
-
-//   return isMobile ? <MobileLandingPage /> : <DesktopLandingPage />;
-// }
 "use client";
 import create from "@/assets/create-2.svg";
 import browse from "@/assets/browse-2.svg";
@@ -29,18 +12,14 @@ import track from "@/assets/track-2.svg";
 import {
   ArrowRight,
   LogInIcon,
-  MessageCircleQuestion,
-  MonitorCog,
   Home,
   Settings,
   Mail,
   HelpCircle,
   Zap,
-  Building,
   Milestone,
   GraduationCap,
   ChevronRight,
-  ArrowDown,
   Megaphone,
 } from "lucide-react";
 import bascLogo from "@/assets/basclogo.png";
@@ -59,25 +38,17 @@ import { Footer } from "@/components/ui/footer";
 import SpotlightBorderWrapper from "@/components/ui/border";
 import { Badge } from "@/components/ui/badge";
 import ContactSection from "@/components/ui/contact-section";
-import { FeaturesSection } from "@/components/ui/features-section";
 import AppSection from "@/components/ui/feature-second";
 import TitleReusable from "@/components/ui/title";
 import AboutTheTeam from "@/components/ui/credits";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 import Image from "next/image";
 const navItems = [
-  { label: "Home", icon: Home },
-  { label: "Features", icon: Zap },
-  { label: "How it works", icon: Settings },
-  { label: "Contact", icon: Mail },
-  { label: "Faqs", icon: HelpCircle },
+  { label: "Home", icon: Home, href: "home" },
+  { label: "Features", icon: Zap, href: "features" },
+  { label: "How it works", icon: Settings, href: "how-it-works" },
+  { label: "Contact", icon: Mail, href: "contact" },
+  { label: "Faqs", icon: HelpCircle, href: "faqs" },
 ];
 const faqs = [
   {
@@ -146,34 +117,53 @@ const howItWorks = [
   },
 ];
 const HowitworksComponent = () => {
+  // Define motion variants (same pattern as in AppSection)
+  const fadeUpVariant = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0 },
+  };
   return (
     <div className="w-full space-y-12 py-20 px-6">
-      <div className="relative z-10 ">
+      <div className="relative z-10">
         <TitleReusable
           description="Follow these four simple steps to apply for scholarships seamlessly."
-          title=" How it works"
+          title="How it works"
           Icon={Milestone}
         />
       </div>
-      <div className="grid md:grid-cols-2 gap-8 ">
+
+      <div className="grid md:grid-cols-2 gap-8">
         {howItWorks.map((step, index) => (
-          <SpotlightBorderWrapper key={index}>
-            <div className="flex  border dark:border-green-900/30 flex-col sm:flex-row items-start gap-6 p-6 shadow-sm  dark:bg-green-950/20  rounded-lg ">
-              <div className="w-3/4 aspect-[16/8.5] min-h-40 overflow-hidden rounded-md dark:bg-transparent">
-                <img
-                  src={step.image}
-                  alt={step.title}
-                  className="w-full   object-cover h-full"
-                />
+          <motion.div
+            key={index}
+            variants={fadeUpVariant}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: false, amount: 0.3 }}
+            transition={{
+              duration: 0.5,
+              ease: "easeOut",
+              delay: index * 0.2, // stagger effect
+            }}
+          >
+            <SpotlightBorderWrapper>
+              <div className="flex border dark:border-green-900/30 flex-col sm:flex-row items-start gap-6 p-6 shadow-sm dark:bg-green-950/20 rounded-lg">
+                <div className="w-3/4 aspect-[16/8.5] min-h-40 overflow-hidden rounded-md dark:bg-transparent">
+                  <img
+                    src={step.image}
+                    alt={step.title}
+                    className="w-full object-cover h-full"
+                  />
+                </div>
+                <div>
+                  <h3 className="text-lg font-medium">{step.title}</h3>
+                  <p className="text-sm mt-1 text-muted-foreground">
+                    {step.description}
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="text-lg font-medium">{step.title}</h3>
-                <p className="text-sm mt-1 text-muted-foreground">
-                  {step.description}
-                </p>
-              </div>
-            </div>
-          </SpotlightBorderWrapper>
+            </SpotlightBorderWrapper>
+          </motion.div>
         ))}
       </div>
     </div>
@@ -248,27 +238,16 @@ export default function DesktopLandingPage() {
             <img className="h-10 w-10" src={bascLogo.src} alt="" />
             <img className="h-10 w-10" src={osas.src} alt="" />
             <img className="h-10 w-10" src={edugrant.src} alt="" />
-            <p className="font-semibold text-xl ">BASC</p>
           </span>
           <Separator orientation="vertical" />
           <ul className="flex gap-2">
             {navItems.map((item, index) => (
-              <li
-                key={index}
-                onClick={() => {
-                  const sectionId = item.label
-                    .toLowerCase()
-                    .replace(/\s+/g, "-");
-                  const section = document.getElementById(sectionId);
-                  if (section) {
-                    section.scrollIntoView({ behavior: "smooth" });
-                  }
-                }}
-                className=" flex items-center"
-              >
-                <Button variant="ghost" className="cursor-pointer">
-                  <item.icon className="w-4 h-4" />
-                  {item.label}
+              <li key={index} className="flex items-center">
+                <Button variant="ghost" className="cursor-pointer" asChild>
+                  <Link href={`#${item.href}`}>
+                    <item.icon className="w-4 h-4" />
+                    {item.label}
+                  </Link>
                 </Button>
               </li>
             ))}
@@ -295,13 +274,6 @@ export default function DesktopLandingPage() {
   return (
     <>
       <div className="gradient absolute inset-0 z-10 hidden dark:block h-[88dvh]"></div>
-
-      {/* <div className="fixed flex  gap-3 items-center bottom-10 right-10">
-        <p className="text-sm">Announcements</p>{" "}
-        <Button className="rounded-full">
-          <ArrowDown />
-        </Button>
-      </div> */}
       <div
         className="absolute inset-0 z-0 dark:hidden lg:hidden h-100"
         style={{
@@ -317,7 +289,7 @@ export default function DesktopLandingPage() {
           opacity: 0.4,
         }}
       />
-      <div className="relative w-full z-10 ">
+      <div className="relative w-full z-10 overflow-x-hidden">
         <HeaderComponent />
         <AnimatePresence mode="wait">
           <motion.div
@@ -470,19 +442,24 @@ export default function DesktopLandingPage() {
           </motion.div>
         </div>
         <div className="mx-auto xl:w-3/4 p-4">
-          <AppSection />
+          <div id="features" className="hidden lg:block">
+            <AppSection />
+          </div>
           <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-          <div className="hidden lg:block">
+          <div id="how-it-works" className="hidden lg:block">
             <HowitworksComponent />
           </div>
-
           <div className="block lg:hidden">
             <HowitworksComponentMobile />
           </div>
           <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-          <ContactSection />
+          <div id="contact">
+            <ContactSection />
+          </div>
           <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-          <FaqsComponent />
+          <div id="faqs">
+            <FaqsComponent />
+          </div>
           <AboutTheTeam />
           <Footer />
         </div>

@@ -146,9 +146,9 @@ const AppSection = () => {
               variants={variants[index]}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, amount: 0.3 }}
+              viewport={{ once: false, amount: 0.3 }}
               transition={{
-                duration: 0.6,
+                duration: 0.3,
                 ease: "easeOut",
                 delay: index * 0.2, // slight stagger
               }}
