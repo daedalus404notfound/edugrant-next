@@ -316,7 +316,6 @@ export default function ApplicationViewer({
   const [open, setOpen] = useState(false);
   const [loading, setIsLoading] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  console.log("status", status);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="relative">

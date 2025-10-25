@@ -5,7 +5,9 @@ import { ApiErrorResponse } from "../admin/postReviewedHandler";
 
 interface GetDocumentTypes {
   message: string;
-  signedURLs: string;
+  signedURLs: {
+    signedURLs: string;
+  };
   success: boolean;
 }
 export default function useGetDocument(user: boolean) {
@@ -34,7 +36,7 @@ export default function useGetDocument(user: boolean) {
 
       if (res.status === 200) {
         setIsSuccess(true);
-        setFilePath(res.data.signedURLs);
+        setFilePath(res.data.signedURLs.signedURLs);
         setLoading(false);
       }
     } catch (error) {
