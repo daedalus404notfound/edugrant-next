@@ -59,7 +59,7 @@ export const StudentSchema = z.object({
 
   institute: z.string(),
   lName: z.string().min(1, "Required"),
-  mName: z.string().min(1, "Required"),
+  mName: z.string().optional(),
   section: z.string(),
   year: z.string(),
   familyBackground: z.object({

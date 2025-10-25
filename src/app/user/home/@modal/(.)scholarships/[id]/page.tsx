@@ -22,11 +22,14 @@ import ModalHeader from "@/components/ui/modal-header";
 import ScholarshipModal from "@/components/ui/scholarship-modal";
 import socket from "@/lib/socketLib";
 import NoDataFound from "@/components/ui/nodata";
+import { useScholarshipIdStore } from "@/store/scholarshipByIdStore";
+import { useScholarshipUserStore } from "@/store/scholarshipUserStore";
 export default function InterceptManageScholarshipClient() {
   const [applying, setApplying] = useState(false);
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(true);
+
   const id = params.id as string;
   const { data, loading, isGovernmentAlready } = useScholarshipUserById(
     Number(id)

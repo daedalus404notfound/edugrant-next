@@ -95,7 +95,9 @@ const updateUserApi = async (data: UserFormData) => {
   formData.append("firstName", data.Student.fName);
   formData.append("gender", data.Student.gender);
   formData.append("lastName", data.Student.lName);
-  formData.append("middleName", data.Student.mName);
+  if (data.Student.mName) {
+    formData.append("middleName", data.Student.mName);
+  }
   formData.append("section", data.Student.section);
   formData.append("studentId", String(data.Student.studentId));
   formData.append("accountId", String(data.accountId));
