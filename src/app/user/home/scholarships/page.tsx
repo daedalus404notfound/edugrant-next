@@ -182,7 +182,7 @@ export default function ClientScholarship() {
           ) : (
             ""
           )}
-          <div className=" grid lg:grid-cols-3 md:grid-cols-2 grid-cols-2 lg:gap-6 gap-2">
+          <div className=" grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 lg:gap-6 gap-2">
             {loadingState ? (
               [...Array(3)].map((_, index) => (
                 <motion.div
@@ -227,10 +227,10 @@ export default function ClientScholarship() {
             ) : data.length === 0 ? (
               <NoDataFound />
             ) : (
-              data.slice(0, 6).map((scholarship, index) => {
+              data.slice(0, 6).map((meow, index) => {
                 return (
                   <motion.div
-                    key={scholarship.scholarshipId}
+                    key={meow.scholarshipId}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -239,54 +239,52 @@ export default function ClientScholarship() {
                       delay: index * 0.1,
                       ease: "easeOut",
                     }}
-                    className="shadow-sm hover:shadow-md transition-all duration-200 lg:p-1  p-0.5  lg:rounded-lg rounded-md border bg-card"
+                    className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
                   >
                     {/* <Link
-                      href={`/user/home/applications/${scholarship.applicationId}`}
-                      key={scholarship.applicationId}
+                      href={`/user/home/applications/${meow.applicationId}`}
+                      key={meow.applicationId}
                       prefetch
                       scroll={false}
                     > */}
-                    <div className="relative lg:rounded-lg rounded-md bg-background overflow-hidden">
+                    <div className="relative rounded-lg bg-background overflow-hidden">
                       <img
                         className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
                           status === "EXPIRED" ? "" : ""
                         }`}
-                        src={scholarship.cover}
+                        src={meow.cover}
                         alt=""
                       />
                       <div className="relative z-10">
-                        <div className="relative lg:aspect-[16/8.5] aspect-[16/10] w-full lg:rounded-md rounded-sm overflow-hidden">
-                          {scholarship.Application?.length! > 0 && (
-                            <div className="absolute bg-black/80  inset-0 z-10" />
-                          )}
-                          <div className=" gap-1.5 absolute top-0 right-2 z-20 hidden lg:flex">
+                        <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
+                          {/* <div className="flex gap-1.5 absolute top-0 right-2">
                             <Badge
-                              variant="secondary"
+                              variant="outline"
                               className="mt-2 uppercase bg-blue-800 text-gray-200"
                             >
                               {" "}
-                              {getPhaseLabel(scholarship.phase)}
+                              {getPhaseLabel(data[0]?.Scholarship?.phase)}
                             </Badge>
-                            {/* <Badge
-                                variant="secondary"
-                                className={`mt-2 uppercase text-gray-200 ${
-                                  data[0]?.deadline &&
-                                  Date.now() >
-                                    new Date(data[0].deadline).getTime()
-                                    ? "bg-red-800"
-                                    : "bg-green-800"
-                                }`}
-                              >
-                                {data[0]?.deadline &&
+                            <Badge
+                              variant="outline"
+                              className={`mt-2 uppercase text-gray-200 ${
+                                data[0]?.Scholarship?.deadline &&
                                 Date.now() >
-                                  new Date(data[0].deadline).getTime()
-                                  ? "EXPIRED"
-                                  : "ACTIVE"}
-                              </Badge> */}
-                          </div>
-
-                          {scholarship.Application?.length! > 0 && (
+                                  new Date(
+                                    data[0].Scholarship.deadline
+                                  ).getTime()
+                                  ? "bg-red-800"
+                                  : "bg-green-800"
+                              }`}
+                            >
+                              {data[0]?.Scholarship?.deadline &&
+                              Date.now() >
+                                new Date(data[0].Scholarship.deadline).getTime()
+                                ? "EXPIRED"
+                                : "ACTIVE"}
+                            </Badge>
+                          </div> */}
+                          {meow.Application?.length! > 0 && (
                             <div className="absolute top-0 -left-2 flex items-center z-20">
                               <div
                                 className="flex items-center justify-center text-gray-200 font-medium lg:text-sm  text-xs lg:px-7 px-4 py-1.5 bg-gradient-to-br to-green-950 from-green-800"
@@ -302,18 +300,18 @@ export default function ClientScholarship() {
 
                           <img
                             className="h-full w-full object-cover"
-                            src={scholarship.cover}
+                            src={meow.cover}
                             alt=""
                           />
                         </div>
 
-                        <div className="lg:p-4 p-2 space-y-2 lg:space-y-6 ">
+                        <div className="p-4 space-y-6">
                           <div className="flex items-center gap-3">
-                            {scholarship ? (
+                            {meow ? (
                               <img
-                                src={scholarship?.logo}
-                                alt={scholarship?.title}
-                                className="w-10 h-10 rounded-full object-cover border hidden lg:block"
+                                src={meow?.logo}
+                                alt={meow?.title}
+                                className="w-10 h-10 rounded-full object-cover border"
                               />
                             ) : (
                               <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
@@ -321,47 +319,41 @@ export default function ClientScholarship() {
                               </div>
                             )}{" "}
                             <div className="w-full">
-                              <h3 className="font-semibold lg:text-sm text-xs line-clamp-1">
-                                {scholarship?.title}
+                              <h3 className="font-semibold text-sm line-clamp-1">
+                                {meow?.title}
                               </h3>
 
-                              <p className="lg:text-sm text-xs text-muted-foreground">
-                                {scholarship?.Scholarship_Provider?.name ||
+                              <p className="text-sm text-muted-foreground">
+                                {meow?.Scholarship_Provider?.name ||
                                   "Unknown Provider"}
                               </p>
                             </div>
                           </div>
 
                           {/* Details */}
-                          <div className="flex flex-col gap-1 lg:text-sm text-xs text-muted-foreground">
-                            <div className="flex flex-col lg:flex-row lg:items-center justify-between">
-                              <span className="text-xs">Deadline</span>
-                              <span className="font-medium text-foreground line-clamp-1">
-                                {scholarship?.dateCreated
-                                  ? format(scholarship?.dateCreated, "PPP")
+                          <div className="flex flex-col gap-1 text-sm text-muted-foreground">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs">Deadline Date:</span>
+                              <span className="font-medium text-foreground">
+                                {meow?.deadline
+                                  ? format(meow?.deadline, "PPP")
                                   : "—"}
                               </span>
                             </div>
-                            <div className="hidden lg:flex items-center justify-between">
-                              <span className="text-xs">Scholarship Type</span>
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs">Scholarship Type:</span>
                               <span className="font-medium text-foreground">
-                                {scholarship?.type || "N/A"}
+                                {meow?.type || "N/A"}
                               </span>
                             </div>
                           </div>
 
                           <Link
-                            href={`/user/home/scholarships/${scholarship.scholarshipId}`}
+                            href={`/user/home/scholarships/${meow.scholarshipId}`}
                             prefetch={true}
                             scroll={false}
                           >
-                            <Button className="w-full hidden lg:flex">
-                              View Details <ArrowRight />
-                            </Button>
-                            <Button
-                              size="sm"
-                              className="w-full text-xs lg:hidden flex"
-                            >
+                            <Button className="w-full">
                               View Details <ArrowRight />
                             </Button>
                           </Link>

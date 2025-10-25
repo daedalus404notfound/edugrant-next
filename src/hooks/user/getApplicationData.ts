@@ -5,7 +5,7 @@ import StyledToast from "@/components/ui/toast-styled";
 import { ApiErrorResponse } from "../admin/postReviewedHandler";
 import { ApplicationFormData } from "../zod/application";
 
-export interface ScholarshipByIdResponse {
+export interface ApplicatioByIdResponse {
   application: ApplicationFormData;
 }
 
@@ -14,7 +14,7 @@ export default function useApplicationUserById({ id }: { id: number }) {
     queryKey: ["application", id],
     queryFn: async () => {
       try {
-        const res = await axios.get<ScholarshipByIdResponse>(
+        const res = await axios.get<ApplicatioByIdResponse>(
           `${process.env.NEXT_PUBLIC_USER_URL}/getStudentApplicationById?applicationId=${id}`,
           { withCredentials: true }
         );

@@ -9,6 +9,7 @@ import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import { MetaWithCountsScholarship } from "@/store/scholarshipUserStore";
 import { useScholarshipUserStore } from "@/store/scholarshipUserStore";
 import { ScholarshipByIdResponse } from "@/hooks/user/getScholarshipData";
+import { ApplicatioByIdResponse } from "@/hooks/user/getApplicationData";
 import StyledToast from "@/components/ui/toast-styled";
 import { useNotificationStore } from "@/store/userNotificationStore";
 import { NotificationPage } from "@/hooks/user/getNotfications";
@@ -48,7 +49,13 @@ export default function SocketListener() {
     setCounts,
     setStatus1,
   } = useApplicationStore();
-
+  type BlockedApplication = {
+    applicationId: number;
+    scholarshipId: number;
+    ownerId: number;
+    status: string;
+    supabasePath: string[];
+  };
   const {
     search: searchScholarship,
     page: pageScholarship,
@@ -126,6 +133,15 @@ export default function SocketListener() {
             : [scholarshipData, ...old.data];
           console.log("updatedData", updatedData);
           return { ...old, data: updatedData }; // Change 'scholarships' to 'data'
+        }
+      );
+
+      //AAPEND SA ID
+      queryClient.setQueryData<ScholarshipByIdResponse>(
+        ["scholarship", scholarshipId],
+        (old) => {
+          if (!old) return old; // do nothing if cache is empty
+          return { ...old, scholarship: scholarshipData }; // only update `scholarship`
         }
       );
     });
@@ -281,7 +297,10 @@ export default function SocketListener() {
       const approveData = data.approvedApplication;
       const approvedId = approveData.applicationId;
       const notificationData = data.notification;
-      const blockedWhenApproved = data.blockedApplicationIDs;
+      const blockedWhenApproved =
+        data.BlockedApplications?.map(
+          (item: BlockedApplication) => item.applicationId
+        ) || [];
 
       console.log("approveData scholarship received:", data);
       // 1. Add to APPROVED list
@@ -371,6 +390,14 @@ export default function SocketListener() {
               }
             }),
           };
+        }
+      );
+
+      queryClient.setQueryData<ApplicatioByIdResponse>(
+        ["application", approvedId],
+        (old) => {
+          if (!old) return old; // do nothing if cache is empty
+          return { ...old, application: approveData }; // only update `scholarship`
         }
       );
 
@@ -469,6 +496,14 @@ export default function SocketListener() {
         }
       );
 
+      queryClient.setQueryData<ApplicatioByIdResponse>(
+        ["application", declinedId],
+        (old) => {
+          if (!old) return old; // do nothing if cache is empty
+          return { ...old, application: declinedData }; // only update `scholarship`
+        }
+      );
+
       StyledToast({
         status: "success",
         title: "1 new notification recieved",
@@ -557,7 +592,13 @@ export default function SocketListener() {
           };
         }
       );
-
+      queryClient.setQueryData<ApplicatioByIdResponse>(
+        ["application", interviewId],
+        (old) => {
+          if (!old) return old; // do nothing if cache is empty
+          return { ...old, application: interviewData }; // only update `scholarship`
+        }
+      );
       StyledToast({
         status: "success",
         title: "1 new notification recieved",
@@ -639,7 +680,7 @@ export default function SocketListener() {
       // );
 
       playNotificationSound();
-      triggerConfetti();
+    
     });
 
     return () => {
@@ -670,7 +711,7 @@ export default function SocketListener() {
   return null;
 }
 function playNotificationSound() {
-  const audio = new Audio("/gago-effect-by-cong-tv.mp3");
+  const audio = new Audio("/mixkit-long-pop-2358.wav");
   audio.volume = 0.7; // optional
   audio.play().catch((err) => console.warn("Sound play blocked:", err));
 }

@@ -19,7 +19,13 @@ export default function SocketListener() {
       .getAll()
       .map((q) => q.queryKey)
   );
-
+  type BlockedApplication = {
+    applicationId: number;
+    scholarshipId: number;
+    ownerId: number;
+    status: string;
+    supabasePath: string[];
+  };
   const paginationDefault = {
     pageIndex: 0,
     pageSize: 6,
@@ -380,7 +386,10 @@ export default function SocketListener() {
     socket.on("approveApplication", (data) => {
       const approveData = data.approvedApplication;
       const approvedId = approveData.applicationId;
-      const blockedWhenApproved = data.blockedApplicationIDs;
+      const blockedWhenApproved =
+        data.BlockedApplications?.map(
+          (item: BlockedApplication) => item.applicationId
+        ) || [];
 
       console.log("approveData scholarship received:", data);
 
