@@ -12,15 +12,30 @@ interface ApiErrorResponse {
 
 type ApiError = AxiosError<ApiErrorResponse>;
 const updateUserApi = async (data: getStaffFormData) => {
+  const formData = new FormData();
+
+  formData.append("fName", data.fName);
+  formData.append("lName", data.lName);
+  formData.append("mName", data.mName);
+
+  formData.append("email", data.Account.email);
+  formData.append("ownerId", String(data.staffId));
+  if (data.validated) {
+    formData.append("validated", data.validated);
+  }
+  if (data.profileImg?.publicUrl) {
+    formData.append("profileImg", data.profileImg.publicUrl);
+  }
+
   const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/updateStaffByHead`,
+    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/editStaff`,
+    formData,
     {
-      fName: data.fName,
-      lName: data.lName,
-      mName: data.mName,
-      email: data.Account.email,
-    },
-    { withCredentials: true }
+      withCredentials: true,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
   );
 
   return res.data;

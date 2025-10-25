@@ -5,6 +5,7 @@ export const StaffSchema = z.object({
   mName: z.string().optional(),
   lName: z.string(),
   staffId: z.string(),
+  validated: z.boolean(),
   profileImg: z
     .object({
       publicUrl: z.any().optional(),

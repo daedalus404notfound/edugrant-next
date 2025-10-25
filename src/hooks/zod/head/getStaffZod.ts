@@ -24,7 +24,15 @@ export const getStaffSchema = z.object({
   lName: z.string(),
   dateCreated: z.string(),
   mName: z.string(),
+  gender: z.string(),
   staffId: z.number(),
+  validated: z.string().optional(),
+  profileImg: z
+    .object({
+      publicUrl: z.any().optional(),
+      path: z.string().optional(),
+    })
+    .optional(),
 });
 
 export type getStaffFormData = z.infer<typeof getStaffSchema>;
@@ -38,7 +46,12 @@ export function useUpdateStaffByHead(data?: getStaffFormData | null) {
       fName: data?.fName || "",
       lName: data?.lName || "",
       mName: data?.mName || "",
+      gender: data?.gender || "",
       staffId: data?.staffId || 0,
+      profileImg: {
+        publicUrl: data?.profileImg?.publicUrl,
+        path: data?.profileImg?.path,
+      },
     }),
     [data]
   );

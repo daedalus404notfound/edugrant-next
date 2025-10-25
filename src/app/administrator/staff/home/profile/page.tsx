@@ -20,18 +20,11 @@ import {
   VenusAndMars,
   XIcon,
 } from "lucide-react";
-import logo from "@/assets/edugrant-logo.png";
-import {
-  Timeline,
-  TimelineContent,
-  TimelineDate,
-  TimelineItem,
-} from "@/components/ui/timeline";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   AlertDialog,
-  AlertDialogAction,
+
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -51,7 +44,6 @@ import {
 
 import { Tabs } from "@/components/ui/vercel-tabs";
 
-import { Separator } from "@/components/ui/separator";
 import TitleReusable from "@/components/ui/title";
 import {
   Select,
@@ -60,43 +52,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-const items = [
-  {
-    id: 1,
-    date: new Date("2024-01-09T10:55:00"),
-    description: "System backup completed successfully.",
-  },
-  {
-    id: 2,
-    date: new Date("2024-01-09T10:50:00"),
-    description:
-      "User authentication service restarted due to configuration update.",
-  },
-  {
-    id: 3,
-    date: new Date("2024-01-09T10:45:00"),
-    description: "Warning: High CPU usage detected on worker node-03.",
-  },
-  {
-    id: 4,
-    date: new Date("2024-01-09T10:40:00"),
-    description: "New deployment initiated for api-service v2.1.0.",
-  },
-];
+
+
 import { useAdminStore } from "@/store/adminUserStore";
-import { useUpdateProfileAdmin } from "@/hooks/head-edit-handler";
 import { useProfileUserChangePassword } from "@/hooks/user/profileUserChangePassword";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { Skeleton } from "@/components/ui/skeleton";
 import { DragAndDropAreaProfile } from "@/components/ui/upload-profile";
 import { useUpdateProfileStaff } from "@/hooks/staff-edit-handler";
 export default function Profile() {

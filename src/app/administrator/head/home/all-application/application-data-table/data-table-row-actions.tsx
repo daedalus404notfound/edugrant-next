@@ -1,14 +1,7 @@
 "use client";
 
 import { Row } from "@tanstack/react-table";
-import {
-  Copy,
-  Edit,
-  Maximize,
-  MoreHorizontal,
-  SquareArrowOutUpRight,
-  Trash2,
-} from "lucide-react";
+import { Maximize, MoreHorizontal, Trash2 } from "lucide-react";
 
 import {
   Popover,
@@ -16,14 +9,10 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-
-import { ApplicationFormData } from "@/hooks/zod/application";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
-import { Separator } from "@/components/ui/separator";
-import StyledToast from "@/components/ui/toast-styled";
 import { StudentUserFormData } from "@/hooks/user/zodUserProfile";
 
 interface DataTableRowActionsProps<TData> {
@@ -75,7 +64,7 @@ export function DataTableRowActions<TData>({
           </Button>
         </Link>
 
-        <DeleteDialog
+        {/* <DeleteDialog
           open={openAlert}
           onOpenChange={setOpenAlert}
           onConfirm={onSubmit}
@@ -94,7 +83,7 @@ export function DataTableRowActions<TData>({
               <Trash2 /> Delete
             </Button>
           }
-        />
+        /> */}
       </PopoverContent>
     </Popover>
   );

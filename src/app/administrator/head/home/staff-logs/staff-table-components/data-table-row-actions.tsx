@@ -1,25 +1,8 @@
 "use client";
 
 import { Row } from "@tanstack/react-table";
-import {
-  Loader,
-  Logs,
-  Maximize,
-  MoreHorizontal,
-  PencilLine,
-  Trash2,
-  View,
-} from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { MoreHorizontal, View } from "lucide-react";
+
 import {
   Popover,
   PopoverContent,
@@ -45,7 +28,7 @@ export function DataTableRowActions<TData>({
   const { onSubmit, isSuccess, loading } = useDeleteAdmin({
     adminId: [rowData.logsId],
   });
-  console.log("row", rowData);
+
   useEffect(() => {
     if (isSuccess) {
       setOpenAlert(false);

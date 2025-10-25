@@ -228,14 +228,6 @@ export default function ClientScholarship() {
               <NoDataFound />
             ) : (
               data.slice(0, 6).map((scholarship, index) => {
-                // const findMatch = user?.Student.Application.find(
-                //   (meow) => meow.scholarshipId === scholarship?.scholarshipId
-                // );
-                // const isNotRenew =
-                //   user?.Student.Application.find(
-                //     (meow) =>
-                //       scholarship.scholarshipId === scholarship?.scholarshipId
-                //   )?.status !== "RENEW";
                 return (
                   <motion.div
                     key={scholarship.scholarshipId}

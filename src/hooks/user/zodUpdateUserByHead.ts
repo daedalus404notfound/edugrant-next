@@ -5,6 +5,7 @@ import deepEqual from "fast-deep-equal";
 
 import z from "zod";
 import { format } from "date-fns";
+import { scholarshipSchema } from "../zod/scholarship";
 
 export const displayDocumentsSchema = z.object({
   label: z.string().min(1, "Requireds"),
@@ -15,6 +16,7 @@ export const displayDocumentsSchema = z.object({
 });
 
 const ApplicationSchema = z.object({
+  Scholarship: scholarshipSchema.optional(),
   applicationId: z.number().optional(),
   dateCreated: z.string().optional(),
   decisionId: z.string().nullable().optional(),
@@ -77,6 +79,7 @@ export function zodUpdateUserByHead(data?: StudentUserFormData | null) {
     },
     Application: [
       {
+        Scholarship: undefined,
         applicationId: 0,
         dateCreated: "",
         decisionId: null,

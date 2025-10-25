@@ -1,18 +1,11 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { ApplicationFormData } from "@/hooks/zod/application";
 import { DataTableColumnHeader } from "@/app/table-components/data-table-column-header";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Clock } from "lucide-react";
-import { getPhaseLabel } from "@/lib/phaseLevel";
-import { useState } from "react";
 import { format } from "date-fns";
 import { StudentUserFormData } from "@/hooks/user/zodUserProfile";
-
 export const columns: ColumnDef<StudentUserFormData>[] = [
   {
     accessorFn: (row) => row.fName,
@@ -21,21 +14,27 @@ export const columns: ColumnDef<StudentUserFormData>[] = [
       <DataTableColumnHeader column={column} title="Student" className="pl-4" />
     ),
     cell: ({ row }) => {
+      const student = row.original;
       return (
         <div className="flex gap-2 items-center pl-4">
           <Avatar>
-            <AvatarImage src={`/avatars/${row.original.studentId}.jpg`} />
+            <AvatarImage
+              className="object-cover"
+              src={
+                student.profileImg?.publicUrl || "https://github.com/shadcn.png"
+              }
+            />
             <AvatarFallback className="uppercase">
-              {row.original.fName.charAt(0)}
-              {row.original.lName.charAt(0)}
+              {student?.fName?.charAt(0) ?? ""}
+              {student?.lName?.charAt(0) ?? ""}
             </AvatarFallback>
           </Avatar>
           <div>
             <div className="font-medium capitalize">
-              {row.original.fName} {row.original.mName} {row.original.lName}
+              {student.fName} {student.mName} {student.lName}
             </div>
             <p className="text-xs text-muted-foreground">
-              {row.original.Account?.email}
+              {student.Account?.email}
             </p>
           </div>
         </div>
@@ -47,26 +46,15 @@ export const columns: ColumnDef<StudentUserFormData>[] = [
 
   {
     accessorFn: (row) => row.Account?.schoolId,
-    id: "schoolId",
+    id: "studentId",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Student ID" />
     ),
-    cell: ({ row }) => <span className="">{row.getValue("schoolId")}</span>,
+    cell: ({ row }) => <span className="">{row.getValue("studentId")}</span>,
     enableSorting: true,
     enableHiding: true,
   },
-  {
-    accessorFn: (row) => row.gender,
-    id: "gender",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Gender" />
-    ),
-    cell: ({ row }) => (
-      <span className="capitalize">{row.getValue("gender")}</span>
-    ),
-    enableSorting: true,
-    enableHiding: true,
-  },
+
   {
     accessorFn: (row) => row.institute,
     id: "institute",
@@ -79,7 +67,6 @@ export const columns: ColumnDef<StudentUserFormData>[] = [
     enableSorting: true,
     enableHiding: true,
   },
-
   {
     accessorFn: (row) => row.course,
     id: "course",
@@ -87,9 +74,9 @@ export const columns: ColumnDef<StudentUserFormData>[] = [
       <DataTableColumnHeader column={column} title="Course, Year & Section" />
     ),
     cell: ({ row }) => {
-      const course = row.original.course;
-      const year = row.original.year;
-      const section = row.original.section;
+      const course = row.original.course ?? "";
+      const year = row.original.year ?? "";
+      const section = row.original.section ?? "";
       return (
         <div className="flex gap-2 items-center">
           <div className="font-medium capitalize">
@@ -129,21 +116,16 @@ export const columns: ColumnDef<StudentUserFormData>[] = [
 
   {
     accessorFn: (row) => row.dateCreated,
-    id: "accountCreated",
+    id: "dateCreated",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Account Created" />
+      <DataTableColumnHeader column={column} title="Date created" />
     ),
     cell: ({ row }) => (
-      <span className="">
-        {row.original.dateCreated
-          ? format(row.getValue("accountCreated"), "PPP p")
-          : "N/A"}
-      </span>
+      <span className="">{format(row.getValue("dateCreated"), "PPP p")}</span>
     ),
     enableSorting: true,
     enableHiding: true,
   },
-
   {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,

@@ -22,7 +22,6 @@ export default function DataTableToolbar<TData>({
   table,
   getRowId,
   search,
-  setSearch,
 }: ToolbarProps<TData>) {
   console.log(search);
   const isFiltered = table.getState().columnFilters.length > 0;
@@ -45,8 +44,8 @@ export default function DataTableToolbar<TData>({
   }, [isSuccess, table]);
 
   return (
-    <div className="flex items-center justify-between gap-1.5">
-      <div className="flex flex-1 items-center space-x-2">
+    <div className="flex items-center justify-end gap-1.5">
+      {/* <div className="flex flex-1 items-center space-x-2">
         <div className="relative">
           <Input
             placeholder="Search names..."
@@ -75,7 +74,7 @@ export default function DataTableToolbar<TData>({
             <X />
           </Button>
         )}
-      </div>
+      </div> */}
       {selectedRows.length > 0 && (
         <AlertDialog open={openAlert} onOpenChange={setOpenAlert}>
           <AlertDialogTrigger asChild>

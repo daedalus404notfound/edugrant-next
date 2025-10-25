@@ -1,29 +1,81 @@
 "use client";
 import "ldrs/react/Ring.css";
-import { UsersRound } from "lucide-react";
 import { useState } from "react";
-
+import { DataTable } from "@/app/table-components/data-table";
+import { columns } from "./application-data-table/columns";
+import {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+} from "@tanstack/react-table";
+import DataTableToolbar from "./application-data-table/data-table-toolbar";
 import TitleReusable from "@/components/ui/title";
-import { Tabs } from "@/components/ui/vercel-tabs";
-import ApprovedApplication from "./all";
-import { Separator } from "@/components/ui/separator";
+import useGetAllStudents from "@/hooks/admin/getStudents";
+import { StudentUserFormData } from "@/hooks/user/zodUserProfile";
+import { Loader, Users2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-export default function PendingApplication() {
-  const [approved, setApproved] = useState(0);
-  const [approvedRenewal, setRenewApproved] = useState(0);
+export default function PendingStaffApplication() {
+  const [columnVisibility, setColumnVisibility] = useState<
+    Record<string, boolean>
+  >({
+    phase: false,
+    section: false,
+    year: false,
+    institute: false,
+  });
+  const [search, setSearch] = useState("");
+
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const { data, meta, isLoading, isFetching } = useGetAllStudents({
+    pagination,
+    sorting,
+    columnFilters,
+
+    search,
+  });
 
   return (
-    <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className="mx-auto w-[95%] lg:py-10  py-4">
+    <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+      <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <TitleReusable
-          title="All Students"
-          description="View and manage all enrolled scholarship applicants."
-          Icon={UsersRound}
+          title="Registered Students"
+          Icon={Users2}
+          description="View and manage all registered students in the system."
         />
 
-        <Separator className="mt-4" />
-        <div className="mt-10 lg:w-full md:min-w-5xl w-full mx-auto">
-          <ApprovedApplication setApproved={setApproved} />
+        <div className="py-8 space-y-5">
+          {!isLoading && isFetching && (
+            <div className="text-center">
+              <Button variant="ghost">
+                Refreshing List...
+                <Loader className="animate-spin" />
+              </Button>
+            </div>
+          )}
+          <DataTable<StudentUserFormData, unknown>
+            data={data}
+            columns={columns}
+            meta={meta}
+            pagination={pagination}
+            setPagination={setPagination}
+            getRowId={(row) => row.studentId}
+            loading={isLoading}
+            search={search}
+            setSearch={setSearch}
+            sorting={sorting}
+            setSorting={setSorting}
+            columnFilters={columnFilters}
+            setColumnFilters={setColumnFilters}
+            toolbar={DataTableToolbar}
+            columnVisibility={columnVisibility} // <-- pass visibility
+            setColumnVisibility={setColumnVisibility} // <-- pass setter
+          />
         </div>
       </div>
     </div>

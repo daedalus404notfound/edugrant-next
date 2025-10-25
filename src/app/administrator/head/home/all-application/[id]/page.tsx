@@ -2,13 +2,10 @@
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useAdminStore } from "@/store/adminUserStore";
 import { Button } from "@/components/ui/button";
 import {
   Accessibility,
   ArrowLeft,
-  ArrowRight,
-  Banknote,
   BookMarked,
   Calendar1,
   Check,
@@ -16,13 +13,10 @@ import {
   Feather,
   GraduationCap,
   IdCard,
-  Landmark,
   LayoutPanelTop,
   Loader,
   Mail,
   Map,
-  Save,
-  Settings,
   Trash2,
   UserRound,
   UserRoundCheck,
@@ -30,9 +24,9 @@ import {
   VenusAndMars,
   X,
 } from "lucide-react";
-import useApplicationById from "@/hooks/admin/getApplicantData";
+
 import { useUpdateUserByHead } from "@/hooks/user/updateUserByHead";
-import { Separator } from "@/components/ui/separator";
+
 import {
   Form,
   FormControl,
@@ -59,41 +53,35 @@ import {
 import { format } from "date-fns";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import useDeleteStudent from "@/hooks/admin/postDeleteUserByHead";
-import TitleReusable from "@/components/ui/title";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import useStudentById from "@/hooks/admin/getStudentById";
 import { Skeleton } from "@/components/ui/skeleton";
-import Link from "next/link";
 import { DragAndDropAreaProfile } from "@/components/ui/upload-profile";
-import { useUserStore } from "@/store/useUserStore";
+import { ProfileInfoSkeleton } from "./profile-skeleton";
 
 export default function InterceptReviewApplicants() {
-  const router = useRouter();
   const params = useParams();
-  const [open, setOpen] = useState(true);
+
   const [openCalendar, setOpenCalendar] = useState(false);
   const [status, setStatus] = useState("info");
-  const [edit, setEdit] = useState(false);
+
   const id = Number(params.id);
-  const { data, loading } = useStudentById(id);
-  const [openAlert, setOpenAlert] = useState(false);
-  const { onSubmit, isSuccess, deleteLoading, openDelete, setOpenDelete } =
+  const { data, isLoading } = useStudentById(id);
+  const { onSubmit, deleteLoading, openDelete, setOpenDelete } =
     useDeleteStudent({ id });
   const {
     form,
-
     handleSubmit,
     loading: ludeng,
     isChanged,
     reset,
     setReset,
   } = useUpdateUserByHead(data);
-  const { user, loadingUser: useLoading } = useUserStore();
   const [isIndigenousChecked, setIsIndigenousChecked] = useState(
-    !!user?.Student.indigenous
+    !!data?.indigenous
   );
-  const [isPWDChecked, setIsPWDChecked] = useState(!!user?.Student.PWD);
-
+  const [isPWDChecked, setIsPWDChecked] = useState(!!data?.PWD);
+  const router = useRouter();
   const tabs = [
     { id: "info", label: "Student Information", indicator: null },
     { id: "scholarships", label: "Scholarships", indicator: null },
@@ -101,17 +89,18 @@ export default function InterceptReviewApplicants() {
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:py-10  py-4">
-        <TitleReusable
-          title="Student Profile Settings"
-          description="Manage your personal information, account details of student."
-          Icon={Settings}
-        />
+        <Button className="mb-6" onClick={() => router.back()}>
+          <ArrowLeft />
+          Back
+        </Button>
+
         <div className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b">
           <Tabs tabs={tabs} onTabChange={(tabId) => setStatus(tabId)} />
         </div>
-
         <div className="mt-15 lg:w-[60%] min-w-5xl w-full mx-auto">
-          {status === "info" && (
+          {isLoading ? (
+            <ProfileInfoSkeleton />
+          ) : status === "info" ? (
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(handleSubmit)}
@@ -135,13 +124,15 @@ export default function InterceptReviewApplicants() {
                                 label="backdrop image"
                                 accept={["image/png", "image/jpeg"]}
                                 initialImageUrl={
-                                  user?.Student.profileImg?.publicUrl
+                                  data?.profileImg?.publicUrl ||
+                                  "https://github.com/shadcn.png"
                                 }
                                 onFilesChange={(files) =>
                                   field.onChange(
                                     files[0]
                                       ? files[0]
-                                      : user?.Student.profileImg?.publicUrl
+                                      : data?.profileImg?.publicUrl ||
+                                          "https://github.com/shadcn.png"
                                   )
                                 } // Single file
                               />
@@ -151,9 +142,9 @@ export default function InterceptReviewApplicants() {
                       />
 
                       <div>
-                        <h1 className="text-xl font-medium">{`${user?.Student.lName}, ${user?.Student.fName} ${user?.Student.mName}`}</h1>
+                        <h1 className="text-xl font-medium">{`${data?.lName}, ${data?.fName} ${data?.mName}`}</h1>
                         <p className="text-muted-foreground">
-                          {user?.schoolId}
+                          {data?.Account?.schoolId}
                         </p>
                       </div>
                     </div>
@@ -169,6 +160,7 @@ export default function InterceptReviewApplicants() {
                       trigger={
                         <Button
                           onClick={() => setOpenDelete(true)}
+                          type="button"
                           variant="destructive"
                         >
                           <Trash2 /> Delete Account
@@ -749,92 +741,113 @@ export default function InterceptReviewApplicants() {
                 </AnimatePresence>
               </form>
             </Form>
-          )}
+          ) : (
+            status === "scholarships" && (
+              <div className="grid grid-cols-3  gap-4">
+                {isLoading ? (
+                  [...Array(2)].map((_, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ y: 50, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      transition={{
+                        duration: 0.3,
+                        delay: index * 0.1,
+                        ease: "easeOut",
+                      }}
+                      className="bg-background/40 relative rounded-md space-y-3"
+                    >
+                      <Skeleton className="h-40" />
+                    </motion.div>
+                  ))
+                ) : data?.Application.length === 0 ? (
+                  <div className="flex justify-center items-center w-full p-4">
+                    <p>No application found.</p>
+                  </div>
+                ) : (
+                  data?.Application.slice(0, 2).map((scholarship, index) => (
+                    <motion.div
+                      key={scholarship.scholarshipId}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{
+                        duration: 0.2,
+                        delay: index * 0.1,
+                        ease: "easeOut",
+                      }}
+                      className="shadow-sm hover:shadow-md transition-all duration-200 lg:p-1  p-0.5  lg:rounded-lg rounded-md border bg-card"
+                    >
+                      <div className="relative lg:rounded-lg rounded-md bg-background overflow-hidden">
+                        <img
+                          className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs`}
+                          src={scholarship.Scholarship?.cover}
+                          alt=""
+                        />
+                        <div className="relative z-10">
+                          <div className="relative lg:aspect-[16/8.5] aspect-[16/10] w-full lg:rounded-md rounded-sm overflow-hidden">
+                            <div className=" gap-1.5 absolute top-0 right-2 z-20 hidden lg:flex"></div>
 
-          {status === "scholarships" && (
-            <div className="grid grid-cols-1  gap-4">
-              {loading ? (
-                [...Array(2)].map((_, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ y: 50, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{
-                      duration: 0.3,
-                      delay: index * 0.1,
-                      ease: "easeOut",
-                    }}
-                    className="bg-background/40 relative rounded-md space-y-3"
-                  >
-                    <Skeleton className="h-40" />
-                  </motion.div>
-                ))
-              ) : data?.Application.length === 0 ? (
-                <>No application found.</>
-              ) : (
-                data?.Application.slice(0, 2).map((meow) => (
-                  <div
-                    key={meow.scholarshipId}
-                    className="group relative flex flex-col justify-between bg-card rounded-md p-6 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 gap-6"
-                  >
-                    {/* Logo + Provider */}
-                    {/* <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        {meow ? (
-                          <img
-                            src={meow.logo}
-                            alt={meow.title}
-                            className="w-10 h-10 rounded-full object-cover border"
-                          />
-                        ) : (
-                          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
-                            No Logo
+                            <img
+                              className="h-full w-full object-cover"
+                              src={scholarship.Scholarship?.cover}
+                              alt=""
+                            />
                           </div>
-                        )}
-                        <div>
-                          <h3 className="font-semibold text-sm line-clamp-1">
-                            {meow.title}
-                          </h3>
-                          <p className="text-sm text-muted-foreground">
-                            {meow.Scholarship_Provider?.name ||
-                              "Unknown Provider"}
-                          </p>
+
+                          <div className="lg:p-4 p-2 space-y-2 lg:space-y-6 ">
+                            <div className="flex items-center gap-3">
+                              {scholarship ? (
+                                <img
+                                  src={scholarship.Scholarship?.logo}
+                                  alt={scholarship.Scholarship?.title}
+                                  className="w-10 h-10 rounded-full object-cover border hidden lg:block"
+                                />
+                              ) : (
+                                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
+                                  No Logo
+                                </div>
+                              )}{" "}
+                              <div className="w-full">
+                                <h3 className="font-semibold lg:text-sm text-xs line-clamp-1">
+                                  {scholarship?.Scholarship?.title}
+                                </h3>
+
+                                <p className="lg:text-sm text-xs text-muted-foreground">
+                                  {scholarship?.Scholarship
+                                    ?.Scholarship_Provider?.name ||
+                                    "Unknown Provider"}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Details */}
+                            <div className="flex flex-col gap-1 lg:text-sm text-xs text-muted-foreground">
+                              <div className="flex flex-col lg:flex-row lg:items-center justify-between">
+                                <span className="text-xs">Deadline</span>
+                                <span className="font-medium text-foreground line-clamp-1">
+                                  {scholarship?.dateCreated
+                                    ? format(scholarship?.dateCreated, "PPP")
+                                    : "—"}
+                                </span>
+                              </div>
+                              <div className="hidden lg:flex items-center justify-between">
+                                <span className="text-xs">
+                                  Scholarship Type
+                                </span>
+                                <span className="font-medium text-foreground">
+                                  {scholarship?.Scholarship?.type || "N/A"}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                      <Link
-                        href={`/user/home/scholarships/${meow.scholarshipId}`}
-                      >
-                        <Button className="w-full" size="sm">
-                          View <ArrowRight />
-                        </Button>
-                      </Link>
-                    </div> */}
-
-                    {/* Details */}
-                    {/* <div className="grid grid-cols-3 gap-1 text-sm text-muted-foreground">
-                      <div className="flex flex-col border-l px-4">
-                        <span className="text-xs">Deadline:</span>
-                        <span className="font-medium text-foreground text-base">
-                          {meow.deadline ? format(meow.deadline, "PPP") : "—"}
-                        </span>
-                      </div>
-                      <div className="flex flex-col border-l px-4">
-                        <span className="text-xs">Required GWA:</span>
-                        <span className="font-medium text-foreground text-base">
-                          {meow.requiredGWA || "N/A"}
-                        </span>
-                      </div>
-                      <div className="flex flex-col border-l px-4">
-                        <span className="text-xs">Submitted Documents:</span>
-                        <span className="font-medium text-foreground text-base">
-                          3 / 3
-                        </span>
-                      </div>
-                    </div> */}
-                  </div>
-                ))
-              )}
-            </div>
+                    </motion.div>
+                  ))
+                )}
+              </div>
+            )
           )}
         </div>
       </div>

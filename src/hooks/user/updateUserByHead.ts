@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { StudentUserFormData } from "./zodUpdateUserByHead";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
 import { useUserStore } from "@/store/useUserStore";
@@ -41,13 +41,23 @@ const updateUserApi = async (data: StudentUserFormData) => {
 };
 
 export const useProfile = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateUserApi,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const studentData = data.updatedStudent;
+      const studentId = data.updatedStudent.accountId;
       StyledToast({
         status: "success",
         title: "Profile Updated",
         description: "Your profile information has been successfully saved.",
+      });
+
+      console.log("ussd", studentData, studentId);
+      queryClient.setQueryData(["headStudentManage", studentId], (old) => {
+        if (!old) return old;
+        console.log("gomana lopit");
+        return studentData;
       });
     },
     onError: (error: ApiError) => {

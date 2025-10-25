@@ -48,11 +48,14 @@ export const columns: ColumnDef<StaffFormData>[] = [
       const first = row.original.fName;
       const middle = row.original.mName;
       const last = row.original.lName;
-      const profile = row.original.fName;
+      const profile = row.original.profileImg?.publicUrl;
       return (
         <div className="flex gap-2 items-center pl-4">
           <Avatar>
-            <AvatarImage className="object-cover" src={profile || ""} />
+            <AvatarImage
+              className="object-cover"
+              src={profile || "https://github.com/shadcn.png"}
+            />
             <AvatarFallback className="uppercase">
               {first.charAt(0)}
               {last.charAt(0)}
@@ -89,7 +92,38 @@ export const columns: ColumnDef<StaffFormData>[] = [
     enableSorting: true,
     enableHiding: true,
   },
-
+  {
+    accessorKey: "validated",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Account status" />
+    ),
+    cell: ({ row }) => {
+      const validated = row.getValue("validated") as boolean;
+      return (
+        <span className="max-w-[500px] truncate">
+          {validated ? "Active" : "Inactive"}
+        </span>
+      );
+    },
+    enableSorting: true,
+    enableHiding: true,
+  },
+  // {
+  //   accessorKey: "lastOnline",
+  //   header: ({ column }) => (
+  //     <DataTableColumnHeader column={column} title="Last online" />
+  //   ),
+  //   cell: ({ row }) => {
+  //     const validated = row.getValue("validated") as boolean;
+  //     return (
+  //       <span className="max-w-[500px] truncate">
+  //         {validated ? "Active" : "Inactive"}
+  //       </span>
+  //     );
+  //   },
+  //   enableSorting: true,
+  //   enableHiding: true,
+  // },
   {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,

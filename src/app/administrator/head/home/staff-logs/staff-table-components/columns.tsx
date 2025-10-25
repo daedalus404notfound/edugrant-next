@@ -56,7 +56,11 @@ export const columns: ColumnDef<AllStaffLogsType>[] = [
       return (
         <div className="flex gap-2 items-center pl-4 ">
           <Avatar>
-            <AvatarImage src={staff.profileImg?.publicUrl || ""} />
+            <AvatarImage
+              src={
+                staff.profileImg?.publicUrl || "https://github.com/shadcn.png"
+              }
+            />
             <AvatarFallback className="uppercase">
               {staff.fName.charAt(0)}
               {staff.lName.charAt(0)}
