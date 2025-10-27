@@ -118,6 +118,15 @@ export default function ApplicationViewer({
                   </p>
                   <p className="text-xs tracking-wide">{fileFormat}</p>
                 </div>
+                <span className="flex gap-3 items-center justify-end">
+                  <Button
+                    className=""
+                    variant="secondary"
+                    onClick={() => setOpen(false)}
+                  >
+                    Close <X />
+                  </Button>
+                </span>
               </div>
 
               <div className="flex-1 bg-card  rounded-md ">

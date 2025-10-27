@@ -291,27 +291,39 @@ export default function ClientScholarship() {
                         </div>
 
                         <div className="p-4 space-y-6">
-                          <div className="flex items-center gap-3">
-                            {meow ? (
-                              <img
-                                src={meow?.logo}
-                                alt={meow?.title}
-                                className="w-10 h-10 rounded-full object-cover border"
-                              />
-                            ) : (
-                              <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
-                                No Logo
-                              </div>
-                            )}{" "}
-                            <div className="w-full">
-                              <h3 className="font-semibold text-sm line-clamp-1">
-                                {meow?.title}
-                              </h3>
+                          <div className="flex justify-between items-start">
+                            <div className="flex items-center gap-3">
+                              {meow ? (
+                                <img
+                                  src={meow?.logo}
+                                  alt={meow?.title}
+                                  className="w-10 h-10 rounded-full object-cover border"
+                                />
+                              ) : (
+                                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
+                                  No Logo
+                                </div>
+                              )}{" "}
+                              <div className="w-full">
+                                <h3 className="font-semibold text-sm line-clamp-1">
+                                  {meow?.title}
+                                </h3>
 
-                              <p className="text-sm text-muted-foreground">
-                                {meow?.Scholarship_Provider?.name ||
-                                  "Unknown Provider"}
-                              </p>
+                                <p className="text-sm text-muted-foreground">
+                                  {meow?.Scholarship_Provider?.name ||
+                                    "Unknown Provider"}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
+                              {meow.phase > 1 && (
+                                <Badge className="bg-blue-800 text-gray-200">
+                                  RENEWAL
+                                </Badge>
+                              )}
+                              <Badge className="bg-blue-800 text-gray-200 uppercase">
+                                {getPhaseLabel(meow.phase)}
+                              </Badge>
                             </div>
                           </div>
 
