@@ -179,14 +179,14 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
   },
 
   {
-    accessorFn: (row) => row.Application_Decision?.dateCreated,
+    accessorFn: (row) => row?.dateCreated,
     id: "processedDate",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Processed Date" />
     ),
     cell: ({ row }) => (
       <span className="">
-        {row.original.Application_Decision?.dateCreated
+        {row.original?.dateCreated
           ? format(row.getValue("processedDate"), "PPP p")
           : "N/A"}
       </span>
