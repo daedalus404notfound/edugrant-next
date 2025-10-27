@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Ring } from "ldrs/react";
 import "ldrs/react/Ring.css";
+import logo from "@/assets/edugrant-logo.png";
 import {
   Dialog,
   DialogContent,
@@ -35,12 +36,11 @@ export default function ApplicationViewer({
   applicationId,
 }: UserDocument) {
   const [rotation, setRotation] = useState(0);
-  const { onGetDocument, filePath, loading } = useGetDocument(false);
-  console.log("filePath", filePath);
-  console.log("fileFormat", fileFormat);
-  const [open, setOpen] = useState(false);
 
+  const [open, setOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const { onGetDocument, filePath, loading } = useGetDocument(false);
+  console.log(loading);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
@@ -49,8 +49,10 @@ export default function ApplicationViewer({
       >
         <GlassFolder color="amber" />
         <Badge
+          className={`absolute bottom-0 right-0 z-60 uppercase  text-gray-200 ${
+            requirementType === "required" ? "bg-green-900" : "bg-blue-900"
+          }`}
           variant="secondary"
-          className="absolute -bottom-0.5 right-1 z-50 uppercase tracking-wide"
         >
           {requirementType}
         </Badge>
@@ -74,7 +76,7 @@ export default function ApplicationViewer({
         >
           {({ zoomIn, zoomOut, resetTransform }) => (
             <div className=" rounded-md  flex flex-col gap-3 bg-background  lg:p-4 p-2">
-              <div className="flex justify-between rounded-md ">
+              <div className="grid grid-cols-3 rounded-md ">
                 <div className="  flex gap-2  rounded-lg">
                   <Button
                     variant="secondary"
@@ -110,17 +112,13 @@ export default function ApplicationViewer({
                     <RefreshCw />
                   </Button>
                 </div>
-
-                <Button
-                  className=""
-                  variant="secondary"
-                  onClick={() => setOpen(false)}
-                >
-                  Close <X />
-                </Button>
+                <div className="flex gap-2 justify-center items-center">
+                  <p className="uppercase tracking-wide font-medium">
+                    {document}
+                  </p>
+                  <p className="text-xs tracking-wide">{fileFormat}</p>
+                </div>
               </div>
-
-              {/* */}
 
               <div className="flex-1 bg-card  rounded-md ">
                 <TransformComponent
@@ -128,19 +126,17 @@ export default function ApplicationViewer({
                   contentClass="flex items-center justify-center"
                 >
                   <div className="lg:h-[calc(100dvh-80px)] h-[calc(100dvh-64px)] lg:w-[calc(100dvw-32px)] w-[calc(100dvw-16px)] ">
-                    {loading || filePath === "" ? (
-                      <div className="h-full w-full  flex justify-center items-center">
-                        <Ring
-                          size={35}
-                          stroke={6}
-                          speed={2}
-                          bgOpacity={0}
-                          color="green"
+                    {loading ? (
+                      <div className="h-full w-full  flex flex-col  justify-center items-center">
+                        <img
+                          className="size-15 object-contain animate-pulse"
+                          src={logo.src}
+                          alt=""
                         />
                       </div>
                     ) : fileFormat === "JPG" || fileFormat === "PNG" ? (
                       <img
-                        src={filePath}
+                        src={filePath || undefined}
                         alt={document}
                         className="h-full w-full object-contain rounded-md"
                         style={{
@@ -156,15 +152,13 @@ export default function ApplicationViewer({
                           ref={iframeRef}
                           key={filePath}
                           className="h-full w-full rounded-lg"
-                          src={filePath}
-                          allow="fullscreen"
+                          src={filePath || undefined}
                           title={`Document preview: ${document}`}
                           style={{
                             transform: `rotate(${rotation}deg)`,
                             maxHeight: "100vh",
                             maxWidth: "100vw",
                           }}
-                          sandbox="allow-same-origin allow-scripts"
                         />
                       </div>
                     ) : (
