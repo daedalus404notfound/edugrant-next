@@ -370,6 +370,21 @@ export default function SocketListener() {
         )
       );
 
+      cache.findAll({ queryKey: queryKeyApplicationAll }).forEach((query) =>
+        queryClient.setQueryData<ClientApplicationsData>(
+          query.queryKey,
+          (old) => {
+            if (!old) return old;
+            return {
+              ...old,
+              applications: old.applications.filter(
+                (item) => item.applicationId !== renewId
+              ),
+            };
+          }
+        )
+      );
+
       queryClient.setQueryData<ClientScholarshipsData>(
         queryKeyScholarshipRenew,
         (old) => {
@@ -404,7 +419,7 @@ export default function SocketListener() {
           (item: BlockedApplication) => item.applicationId
         ) || [];
       // 1. Remove from all list
-      cache.findAll({ queryKey: queryKeyScholarshipAll }).forEach((query) =>
+      cache.findAll({ queryKey: queryKeyApplicationAll }).forEach((query) =>
         queryClient.setQueryData<ClientApplicationsData>(
           query.queryKey,
           (old) => {
@@ -483,7 +498,7 @@ export default function SocketListener() {
       const declinedId = declinedData.applicationId;
       const notificationData = data.notification;
 
-      cache.findAll({ queryKey: queryKeyScholarshipAll }).forEach((query) =>
+      cache.findAll({ queryKey: queryKeyApplicationAll }).forEach((query) =>
         //REMOVE ALL
         queryClient.setQueryData<ClientApplicationsData>(
           query.queryKey,
@@ -563,7 +578,7 @@ export default function SocketListener() {
       const notificationData = data.notification;
       console.log("interviewData scholarship received:", data);
 
-      cache.findAll({ queryKey: queryKeyScholarshipAll }).forEach((query) =>
+      cache.findAll({ queryKey: queryKeyApplicationAll }).forEach((query) =>
         queryClient.setQueryData<ClientApplicationsData>(
           query.queryKey,
           (old) => {

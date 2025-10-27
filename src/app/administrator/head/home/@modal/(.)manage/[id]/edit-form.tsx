@@ -52,11 +52,6 @@ import TitleReusable from "@/components/ui/title";
 import { useUpdateScholarshipStore } from "@/store/editScholarStore";
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
-  {
-    label: "Word Document",
-    value:
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  },
   { label: "JPEG Image", value: "image/jpeg" },
   { label: "PNG Image", value: "image/png" },
 ];

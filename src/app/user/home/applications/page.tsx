@@ -37,6 +37,7 @@ import {
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
+import { Badge } from "@/components/ui/badge";
 
 export default function ClientScholarship() {
   const [search, setSearch] = useState("");
@@ -314,28 +315,35 @@ export default function ClientScholarship() {
                       </div>
 
                       <div className="p-4 space-y-6">
-                        <div className="flex items-center gap-3">
-                          {meow.Scholarship ? (
-                            <img
-                              src={meow?.Scholarship?.logo}
-                              alt={meow?.Scholarship?.title}
-                              className="w-10 h-10 rounded-full object-cover border"
-                            />
-                          ) : (
-                            <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
-                              No Logo
-                            </div>
-                          )}{" "}
-                          <div className="w-full">
-                            <h3 className="font-semibold text-sm line-clamp-1">
-                              {meow?.Scholarship?.title}
-                            </h3>
+                        <div className="flex justify-between items-start">
+                          <div className="flex items-center gap-3">
+                            {meow.Scholarship ? (
+                              <img
+                                src={meow?.Scholarship?.logo}
+                                alt={meow?.Scholarship?.title}
+                                className="w-10 h-10 rounded-full object-cover border"
+                              />
+                            ) : (
+                              <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
+                                No Logo
+                              </div>
+                            )}{" "}
+                            <div className="w-full">
+                              <h3 className="font-semibold text-sm line-clamp-1">
+                                {meow?.Scholarship?.title}
+                              </h3>
 
-                            <p className="text-sm text-muted-foreground">
-                              {meow?.Scholarship?.Scholarship_Provider?.name ||
-                                "Unknown Provider"}
-                            </p>
+                              <p className="text-sm text-muted-foreground">
+                                {meow?.Scholarship?.Scholarship_Provider
+                                  ?.name || "Unknown Provider"}
+                              </p>
+                            </div>
                           </div>
+                          {meow.Scholarship.phase < 1 && (
+                            <Badge className="bg-blue-800 text-gray-200">
+                              RENEWAL
+                            </Badge>
+                          )}
                         </div>
 
                         {/* Details */}

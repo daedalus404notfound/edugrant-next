@@ -64,11 +64,6 @@ import { useAdminStore } from "@/store/adminUserStore";
 import { Checkbox } from "@/components/ui/checkbox";
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
-  {
-    label: "Word Document",
-    value:
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-  },
   { label: "JPEG Image", value: "image/jpeg" },
   { label: "PNG Image", value: "image/png" },
 ];
