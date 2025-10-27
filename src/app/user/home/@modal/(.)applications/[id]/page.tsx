@@ -82,9 +82,15 @@ export default function InterceptManageApplicationClient() {
     ? format(processedApprovedDate, "PPP p")
     : "—";
   // console.log(processedDate);
+  const submittedDocuments = Object.keys(data?.submittedDocuments || {});
+  // KUKUNIN ILAN LAHAT NG PHASE
+  const phaseLength = submittedDocuments.length;
+  // KUKUNIN LAST PHASE KEY
+  const getLastPhase = phaseLength > 0 ? submittedDocuments.at(-1) : undefined;
+  const phaseDecision = getLastPhase
+    ? data?.submittedDocuments?.[getLastPhase]?.Application_Decision
+    : null;
 
-
-  
   return (
     <Drawer
       open={open}
@@ -240,7 +246,11 @@ export default function InterceptManageApplicationClient() {
                     {loading ? (
                       <Skeleton className="h-5 w-full" />
                     ) : (
-                      <p className="font-medium text-foreground">{meoww}</p>
+                      <p className="font-medium text-foreground">
+                        {phaseDecision?.dateCreated
+                          ? format(phaseDecision?.dateCreated, "PPP p")
+                          : "N/A"}
+                      </p>
                     )}
                   </div>
                 </div>
