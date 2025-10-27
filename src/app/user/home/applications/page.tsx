@@ -38,6 +38,7 @@ import {
   SortingState,
 } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
+import { getPhaseLabel } from "@/lib/phaseLevel";
 
 export default function ClientScholarship() {
   const [search, setSearch] = useState("");
@@ -339,11 +340,16 @@ export default function ClientScholarship() {
                               </p>
                             </div>
                           </div>
-                          {meow.Scholarship.phase < 1 && (
-                            <Badge className="bg-blue-800 text-gray-200">
-                              RENEWAL
+                          <div className="flex gap-2">
+                            {meow.Scholarship.phase > 1 && (
+                              <Badge className="bg-blue-800 text-gray-200">
+                                RENEWAL
+                              </Badge>
+                            )}
+                            <Badge className="bg-blue-800 text-gray-200 uppercase">
+                              {getPhaseLabel(meow.Scholarship.phase)}
                             </Badge>
-                          )}
+                          </div>
                         </div>
 
                         {/* Details */}
