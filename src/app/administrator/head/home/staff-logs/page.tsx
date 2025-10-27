@@ -134,7 +134,7 @@ export default function PendingStaffApplication() {
             meta={meta}
             pagination={pagination}
             setPagination={setPagination}
-            getRowId={(row) => row.logsId}
+            getRowId={(row) => row.logsId.toString()}
             loading={isLoading}
             sorting={sorting}
             setSorting={setSorting}
