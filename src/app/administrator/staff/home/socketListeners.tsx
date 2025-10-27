@@ -492,7 +492,7 @@ export default function SocketListener() {
   return null;
 }
 function playNotificationSound() {
-  const audio = new Audio("/gago-effect-by-cong-tv.mp3");
+  const audio = new Audio("/mixkit-long-pop-2358.wav");
   audio.volume = 0.7; // optional
   audio.play().catch((err) => console.warn("Sound play blocked:", err));
 }
