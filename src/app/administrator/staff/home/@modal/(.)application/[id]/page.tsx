@@ -218,7 +218,8 @@ export default function InterceptReviewApplicants() {
           ) : (
             <div className="grid grid-cols-2 gap-3">
               {/* Approve Button */}
-              {approveButton && (
+
+              {forInterviewButton ? (
                 <DeleteDialog
                   open={openApprove}
                   onOpenChange={setOpenApprove}
@@ -239,8 +240,7 @@ export default function InterceptReviewApplicants() {
                     </Button>
                   }
                 />
-              )}
-              {forInterviewButton && (
+              ) : (
                 <DeleteDialog
                   open={openApprove}
                   onOpenChange={setOpenApprove}
