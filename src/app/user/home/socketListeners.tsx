@@ -178,7 +178,8 @@ export default function SocketListener() {
       queryClient.setQueryData<ScholarshipByIdResponse>(
         ["scholarship", scholarshipId],
         (old) => {
-          if (!old) return old; // do nothing if cache is empty
+          if (!old)
+            return { scholarship: scholarshipData, inGovScholar: false }; // do nothing if cache is empty
           return { ...old, scholarship: scholarshipData }; // only update `scholarship`
         }
       );
@@ -368,6 +369,7 @@ export default function SocketListener() {
           }
         )
       );
+
       queryClient.setQueryData<ClientScholarshipsData>(
         queryKeyScholarshipRenew,
         (old) => {
@@ -380,16 +382,17 @@ export default function SocketListener() {
         }
       );
 
+      //AAPEND SA ID
       queryClient.setQueryData<ScholarshipByIdResponse>(
         ["scholarship", renewId],
         (old) => {
-          if (!old) {
-            return { scholarship: renewData, inGovScholar: true };
-          }
-          return { ...old, scholarship: renewData };
+          if (!old) return { scholarship: renewData, inGovScholar: false }; // do nothing if cache is empty
+          return { ...old, scholarship: renewData }; // only update `scholarship`
         }
       );
+
       queryClient.invalidateQueries({ queryKey: queryKeyScholarshipAll });
+      queryClient.invalidateQueries({ queryKey: ["scholarship", renewId] });
     });
 
     socket.on("approveApplication", (data) => {
