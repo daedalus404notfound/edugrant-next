@@ -175,8 +175,7 @@ export default function InterceptReviewApplicants() {
   ];
 
   //BUTTON LOGIC
-  const approveButton =
-    data?.status === "PENDING" && data.Scholarship.interview === false;
+  const approveButton = data?.status === "PENDING";
   const forInterviewButton =
     data?.status === "PENDING" && data.Scholarship.interview === true;
   const deleteButton =
