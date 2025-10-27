@@ -84,7 +84,7 @@ export default function InterceptReviewApplicants() {
     const isRequired = doc.requirementType?.trim() === "required";
     return isRequired && (hasExistingStatus || hasNewReviewStatus);
   }).length;
-  
+
   const isThereRejected = lastPhaseDocuments.some((doc) => {
     const isRequired = doc.requirementType?.trim() === "required";
     const existingStatus = doc.rejectMessage?.status === "REJECTED";
@@ -179,8 +179,6 @@ export default function InterceptReviewApplicants() {
     data?.status === "PENDING" && data.Scholarship.interview === false;
   const forInterviewButton =
     data?.status === "PENDING" && data.Scholarship.interview === true;
-  const approveForInterview =
-    data?.status === "PENDING" && data.Scholarship.interview === true;
   const deleteButton =
     data?.status !== "APPROVED" &&
     data?.status !== "DECLINED" &&
@@ -261,30 +259,6 @@ export default function InterceptReviewApplicants() {
                       onClick={() => setOpenApprove(true)}
                     >
                       <UserRoundCheck /> Approve Application
-                    </Button>
-                  }
-                />
-              )}
-
-              {/* Approve for Interview Button */}
-              {approveForInterview && (
-                <DeleteDialog
-                  open={openInterview}
-                  onOpenChange={setOpenInterview}
-                  onConfirm={handleInterview}
-                  loading={loadingInterview}
-                  title="Approve for Interview"
-                  red={false}
-                  description="This will approve the application for the interview stage and notify the student. This action cannot be undone."
-                  confirmText="Approve"
-                  confirmTextLoading="Approving..."
-                  cancelText="Cancel"
-                  trigger={
-                    <Button
-                      disabled={reviewCheckpoint || isThereRejected}
-                      onClick={() => setOpenInterview(true)}
-                    >
-                      <UserRoundCheck /> Approve for Interview
                     </Button>
                   }
                 />
