@@ -42,39 +42,32 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
   //   },
   // },
   {
-    accessorFn: (row) => ({
-      title: row?.title,
-      renew: row?.phase,
-      logo: row?.logo,
-    }),
+    accessorFn: (row) => row.title,
     id: "title",
     header: ({ column }) => (
-      <DataTableColumnHeader
-        className="pl-4"
-        column={column}
-        title="Scholarship Title"
-      />
+      <DataTableColumnHeader column={column} title="Scholarship" className="" />
     ),
     cell: ({ row }) => {
-      const value = row.getValue("title") as {
-        title?: string;
-        phase?: number;
-        logo?: string;
-      };
+      const scholarship = row.original;
       return (
-        <div className="flex items-center gap-2 pl-4">
+        <div className="flex gap-2 items-center">
           <Avatar>
-            <AvatarImage className="object-cover" src={value.logo} />
-            <AvatarFallback>
-              {row.original.Scholarship_Provider?.name.slice(0, 1)}
+            <AvatarImage src={scholarship.logo} />
+            <AvatarFallback className="uppercase">
+              {scholarship.Scholarship_Provider?.name.charAt(0)}
             </AvatarFallback>
           </Avatar>
-          <span className="capitalize">{value?.title}</span>
-          {value?.phase && (
-            <Badge className="bg-blue-800 text-gray-200">
-              {getPhaseLabel(value.phase)}
+          <div className="flex items-center gap-2">
+            <div>
+              <div className="font-medium capitalize">{scholarship.title}</div>
+              <p className="text-xs text-muted-foreground">
+                {scholarship.Scholarship_Provider?.name}
+              </p>
+            </div>
+            <Badge className="uppercase" variant="secondary">
+              {getPhaseLabel(scholarship.phase)}
             </Badge>
-          )}
+          </div>
         </div>
       );
     },
