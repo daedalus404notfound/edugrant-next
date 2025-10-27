@@ -85,7 +85,7 @@ export function DragAndDropArea({
             <Upload />
           </div>
 
-          <p className="text-muted-foreground text-sm">
+          <p className="text-muted-foreground text-sm hidden lg:block">
             {isDragActive
               ? `Drop your ${label} file here...`
               : `Drag & drop or click to upload ${label}`}
