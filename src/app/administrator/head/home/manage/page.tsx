@@ -86,7 +86,7 @@ export default function Manage() {
             meta={meta}
             pagination={pagination}
             setPagination={setPagination}
-            getRowId={(row) => row.scholarshipId}
+            getRowId={(row) => row.scholarshipId.toString()}
             loading={isLoading}
             search={search}
             setSearch={setSearch}

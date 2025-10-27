@@ -64,7 +64,7 @@ export default function PendingStaffApplication() {
             meta={meta}
             pagination={pagination}
             setPagination={setPagination}
-            getRowId={(row) => row.studentId}
+            getRowId={(row) => row.studentId.toString()}
             loading={isLoading}
             search={search}
             setSearch={setSearch}
