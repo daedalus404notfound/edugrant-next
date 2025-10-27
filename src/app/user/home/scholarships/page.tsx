@@ -224,7 +224,8 @@ export default function ClientScholarship() {
                       delay: index * 0.1,
                       ease: "easeOut",
                     }}
-                    className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
+                    // className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
+                    className="shadow-sm hover:shadow-md transition-all duration-200 rounded-lg border bg-card overflow-hidden group"
                   >
                     {/* <Link
                       href={`/user/home/applications/${meow.applicationId}`}
@@ -270,6 +271,9 @@ export default function ClientScholarship() {
                             </Badge>
                           </div> */}
                           {meow.Application?.length! > 0 && (
+                            <div className="absolute inset-0 bg-background/70 z-10"></div>
+                          )}
+                          {meow.Application?.length! > 0 && (
                             <div className="absolute top-0 -left-2 flex items-center z-20">
                               <div
                                 className="flex items-center justify-center text-gray-200 font-medium text-sm  px-7  py-1.5 bg-gradient-to-br to-green-950 from-green-800"
@@ -284,7 +288,7 @@ export default function ClientScholarship() {
                           )}
 
                           <img
-                            className="h-full w-full object-cover"
+                            className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300"
                             src={meow.cover}
                             alt=""
                           />

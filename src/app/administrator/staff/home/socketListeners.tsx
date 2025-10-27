@@ -4,8 +4,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import socket from "@/lib/socketLib";
 import { displayScholarshipFormData } from "@/hooks/admin/displayScholarshipData";
 import StyledToast from "@/components/ui/toast-styled";
-import confetti from "canvas-confetti";
-import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import {
   defaultMeta,
   GetScholarshopTypes,
@@ -495,33 +493,4 @@ function playNotificationSound() {
   const audio = new Audio("/mixkit-long-pop-2358.wav");
   audio.volume = 0.7; // optional
   audio.play().catch((err) => console.warn("Sound play blocked:", err));
-}
-function triggerConfetti() {
-  const duration = 5 * 1000;
-  const animationEnd = Date.now() + duration;
-  const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-  const randomInRange = (min: number, max: number) =>
-    Math.random() * (max - min) + min;
-
-  const interval = window.setInterval(() => {
-    const timeLeft = animationEnd - Date.now();
-
-    if (timeLeft <= 0) {
-      clearInterval(interval);
-      return;
-    }
-
-    const particleCount = 50 * (timeLeft / duration);
-    confetti({
-      ...defaults,
-      particleCount,
-      origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
-    });
-    confetti({
-      ...defaults,
-      particleCount,
-      origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-    });
-  }, 250);
 }

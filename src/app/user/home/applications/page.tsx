@@ -1014,3 +1014,402 @@ export default function ClientScholarship() {
 // //      </Link>
 // //    </div>
 // //  </div>;
+/////////////////////////////////////////////////////////
+
+// "use client";
+// import { AnimatePresence, motion } from "motion/react";
+// import {
+//   ArrowRight,
+//   ChevronLeft,
+//   ChevronRight,
+//   TextSearch,
+// } from "lucide-react";
+
+// import { useEffect, useState } from "react";
+// import { Tabs } from "@/components/ui/vercel-tabs";
+// import useClientApplications from "@/hooks/user/getApplications";
+
+// import { format } from "date-fns";
+// import { Input } from "@/components/ui/input";
+// import TitleReusable from "@/components/ui/title";
+// import { Skeleton } from "@/components/ui/skeleton";
+// import NoDataFound from "@/components/ui/nodata";
+// import Link from "next/link";
+
+// import { Button } from "@/components/ui/button";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+// import {
+//   Pagination,
+//   PaginationContent,
+//   PaginationItem,
+// } from "@/components/ui/pagination";
+// import { useApplicationStore } from "@/store/applicationUsetStore";
+// import {
+//   ColumnFiltersState,
+//   PaginationState,
+//   SortingState,
+// } from "@tanstack/react-table";
+// import { Badge } from "@/components/ui/badge";
+// import { getPhaseLabel } from "@/lib/phaseLevel";
+
+// export default function ClientScholarship() {
+//   const [search, setSearch] = useState("");
+//   const [status, setStatus] = useState("PENDING");
+//   const [pagination, setPagination] = useState<PaginationState>({
+//     pageIndex: 0,
+//     pageSize: 6,
+//   });
+//   const [sorting, setSorting] = useState<SortingState>([
+//     {
+//       id: "dateCreated",
+//       desc: true,
+//     },
+//   ]);
+//   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+//   const { query, meta } = useClientApplications({
+//     pagination,
+//     sorting,
+//     columnFilters,
+//     status,
+//     search,
+//   });
+//   const handleNext = () => {
+//     if (meta && pagination.pageIndex + 1 < meta.totalPage) {
+//       setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex + 1 }));
+//     }
+//   };
+
+//   const handlePrev = () => {
+//     if (pagination.pageIndex > 0) {
+//       setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex - 1 }));
+//     }
+//   };
+//   const tabs = [
+//     {
+//       id: "PENDING",
+//       label: "Pending",
+//       indicator: meta.counts.PENDING ? meta.counts.PENDING : null,
+//     },
+//     {
+//       id: "INTERVIEW",
+//       label: "For Interview",
+//       indicator: meta.counts.INTERVIEW ? meta.counts.INTERVIEW : null,
+//     },
+//     {
+//       id: "APPROVED",
+//       label: "Approved",
+//       indicator: meta.counts.APPROVED ? meta.counts.APPROVED : null,
+//     },
+//     {
+//       id: "DECLINED",
+//       label: "Declined",
+//       indicator: meta.counts.DECLINED ? meta.counts.DECLINED : null,
+//     },
+//     {
+//       id: "BLOCKED",
+//       label: "Restricted",
+//       indicator: meta.counts.BLOCKED ? meta.counts.BLOCKED : null,
+//     },
+//   ];
+//   const loadingState = query.isLoading;
+//   const data = query.data?.applications ?? [];
+//   return (
+//     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+//       <div className="mx-auto w-[95%] lg:py-10  py-4">
+//         <motion.div
+//           className="flex justify-between items-end"
+//           initial={{ opacity: 0, x: -20 }}
+//           animate={{ opacity: 1, x: 0 }}
+//           transition={{ duration: 0.3, delay: 0.3 }}
+//         >
+//           <TitleReusable
+//             title="My Applications"
+//             description="Track and manage your submitted scholarship applications."
+//             Icon={TextSearch}
+//           />
+//         </motion.div>
+
+//         {/* <div className="flex gap-2 mt-5">
+//           <div className="flex-1">
+//             <Input placeholder="Search..." />
+//           </div>
+//           <Button variant="secondary">
+//             <MoreHorizontal />
+//           </Button>
+//         </div> */}
+
+//         <motion.div
+//           initial={{ opacity: 0, x: -30 }}
+//           animate={{ opacity: 1, x: 0 }}
+//           transition={{ duration: 0.2, delay: 0.2 }}
+//           className="overflow-y-hidden overflow-x-auto pb-1.5 pt-6 no-scrollbar border-b sticky top-0 bg-background z-20"
+//         >
+//           <Tabs
+//             activeTab={status}
+//             tabs={tabs}
+//             onTabChange={(tabId) => setStatus(tabId)}
+//           />
+//         </motion.div>
+//         <div className="mt-15 lg:w-[80%] md:min-w-5xl w-full mx-auto space-y-8">
+//           <motion.div
+//             className="flex justify-between items-center gap-2"
+//             initial={{ opacity: 0, y: 20 }}
+//             animate={{ opacity: 1, y: 0 }}
+//             transition={{ duration: 0.2, delay: 0.4 }}
+//           >
+//             <Input
+//               placeholder="Search Scholarship..."
+//               onChange={(e) => setSearch(e.target.value)}
+//               value={search}
+//               className="max-w-sm w-full text-sm"
+//             />
+//             <Select
+//               value={sorting[0].desc ? "desc" : "asc"}
+//               onValueChange={(e) =>
+//                 setSorting([
+//                   {
+//                     id: "dateCreated",
+//                     desc: e === "desc",
+//                   },
+//                 ])
+//               }
+//             >
+//               <SelectTrigger className="text-sm">
+//                 <SelectValue placeholder="Sort" />
+//               </SelectTrigger>
+//               <SelectContent>
+//                 <SelectItem value="desc">Newest</SelectItem>
+//                 <SelectItem value="asc">Oldest</SelectItem>
+//               </SelectContent>
+//             </Select>
+//           </motion.div>
+
+//           {search ? (
+//             <p className="text-sm">
+//               Showing search result for{" "}
+//               <strong className="underline">{search}</strong>{" "}
+//             </p>
+//           ) : (
+//             ""
+//           )}
+//           <div className="grid grid-cols-1 gap-6">
+//             {loadingState ? (
+//               [...Array(3)].map((_, index) => (
+//                 <motion.div
+//                   key={index}
+//                   initial={{ y: 50, opacity: 0 }}
+//                   animate={{ y: 0, opacity: 1 }}
+//                   transition={{
+//                     duration: 0.2,
+//                     delay: index * 0.05,
+//                     ease: "easeOut",
+//                   }}
+//                   className="shadow-sm rounded-lg border bg-card p-1"
+//                 >
+//                   <div className="rounded-lg bg-background overflow-hidden">
+//                     <Skeleton className="aspect-[16/8.5] w-full rounded-md" />
+//                     <div className="p-4 space-y-6">
+//                       <div className="flex items-center gap-3">
+//                         <Skeleton className="w-10 h-10 rounded-full" />
+//                         <div className="flex-1 space-y-2">
+//                           <Skeleton className="h-4 w-3/4" />
+//                           <Skeleton className="h-3 w-1/2" />
+//                         </div>
+//                       </div>
+//                       <div className="space-y-2">
+//                         <div className="flex items-center justify-between">
+//                           <Skeleton className="h-3 w-24" />
+//                           <Skeleton className="h-3 w-28" />
+//                         </div>
+//                         <div className="flex items-center justify-between">
+//                           <Skeleton className="h-3 w-24" />
+//                           <Skeleton className="h-3 w-16" />
+//                         </div>
+//                       </div>
+//                       <Skeleton className="h-10 w-full rounded-md" />
+//                     </div>
+//                   </div>
+//                 </motion.div>
+//               ))
+//             ) : data.length === 0 ? (
+//               <NoDataFound />
+//             ) : (
+//               data.slice(0, 6).map((meow, index) => (
+//                 <motion.div
+//                   key={meow.applicationId}
+//                   initial={{ opacity: 0 }}
+//                   animate={{ opacity: 1 }}
+//                   exit={{ opacity: 0 }}
+//                   transition={{
+//                     duration: 0.2,
+//                     delay: index * 0.1,
+//                     ease: "easeOut",
+//                   }}
+//                   className="shadow-sm hover:shadow-md transition-all duration-200 rounded-lg border bg-card overflow-hidden group flex p-2"
+//                 >
+//                   {/* Cover Image with Status Badge */}
+//                   <div className="relative aspect-[16/8.5] w-sm overflow-hidden">
+//                     {meow.status && (
+//                       <div className="absolute top-3 left-0 z-20">
+//                         <div
+//                           className={`flex items-center justify-center text-white font-semibold text-xs px-6 py-1.5 shadow-lg ${
+//                             meow.status === "BLOCKED"
+//                               ? "bg-gradient-to-r from-gray-700 to-gray-900"
+//                               : meow.status === "APPROVED"
+//                               ? "bg-gradient-to-r from-green-600 to-green-800"
+//                               : meow.status === "PENDING"
+//                               ? "bg-gradient-to-r from-yellow-600 to-yellow-800"
+//                               : meow.status === "INTERVIEW"
+//                               ? "bg-gradient-to-r from-blue-600 to-blue-800"
+//                               : meow.status === "DECLINED"
+//                               ? "bg-gradient-to-r from-red-600 to-red-800"
+//                               : "bg-gradient-to-r from-gray-700 to-gray-900"
+//                           }`}
+//                           style={{
+//                             clipPath: "polygon(0 0, 100% 0, 90% 100%, 0% 100%)",
+//                           }}
+//                         >
+//                           {meow.status}
+//                         </div>
+//                       </div>
+//                     )}
+
+//                     <img
+//                       className="h-full w-full object-cover rounded-md group-hover:scale-105 transition-transform duration-300"
+//                       src={meow.Scholarship.cover}
+//                       alt={meow.Scholarship.title}
+//                     />
+//                   </div>
+
+//                   {/* Card Content */}
+//                   <div className="p-5 space-y-4 bg-background/50 backdrop-blur-sm relative flex-1">
+//                     {/* Subtle Background */}
+//                     <img
+//                       className="absolute inset-0 h-full w-full object-cover opacity-5 -z-10"
+//                       src={meow.Scholarship.cover}
+//                       alt=""
+//                     />
+
+//                     {/* Header: Logo + Title */}
+//                     <div className="flex items-start gap-3">
+//                       {meow.Scholarship ? (
+//                         <img
+//                           src={meow.Scholarship.logo}
+//                           alt={meow.Scholarship.title}
+//                           className="w-12 h-12 rounded-full object-cover border-2 border-border shadow-sm flex-shrink-0"
+//                         />
+//                       ) : (
+//                         <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground flex-shrink-0">
+//                           ?
+//                         </div>
+//                       )}
+
+//                       <div className="flex-1 min-w-0">
+//                         <h3 className="font-bold text-base line-clamp-2 leading-tight mb-1">
+//                           {meow.Scholarship.title}
+//                         </h3>
+//                         <p className="text-xs text-muted-foreground line-clamp-1">
+//                           {meow.Scholarship.Scholarship_Provider?.name ||
+//                             "Unknown Provider"}
+//                         </p>
+//                       </div>
+//                     </div>
+
+//                     {/* Badges */}
+//                     <div className="flex flex-wrap gap-2">
+//                       <Badge variant="secondary" className="text-xs">
+//                         {meow.Scholarship.type || "N/A"}
+//                       </Badge>
+//                       <Badge className="bg-blue-600 text-white text-xs uppercase">
+//                         {getPhaseLabel(meow.Scholarship.phase)}
+//                       </Badge>
+//                       {meow.Scholarship.phase > 1 && (
+//                         <Badge className="bg-purple-600 text-white text-xs">
+//                           RENEWAL
+//                         </Badge>
+//                       )}
+//                     </div>
+
+//                     {/* Metadata */}
+//                     <div className="space-y-2 pt-2 border-t border-border/50 flex justify-between items-center">
+//                       <div className="flex flex-col text-sm">
+//                         <span className="text-muted-foreground">Applied:</span>
+//                         <span className="font-medium">
+//                           {meow.dateCreated
+//                             ? format(meow.dateCreated, "PPP")
+//                             : "—"}
+//                         </span>
+//                       </div>{" "}
+//                       <Link
+//                         href={`/user/home/applications/${meow.applicationId}`}
+//                         prefetch={true}
+//                         scroll={false}
+//                       >
+//                         <Button className=" group/btn">
+//                           View Details
+//                           <ArrowRight className="ml-2 h-4 w-4 group-hover/btn:translate-x-1 transition-transform" />
+//                         </Button>
+//                       </Link>
+//                     </div>
+
+//                     {/* Action Button */}
+//                   </div>
+//                 </motion.div>
+//               ))
+//             )}
+//           </div>
+
+//           <motion.div
+//             className="flex items-center justify-between gap-3"
+//             initial={{ opacity: 0, y: -20 }}
+//             animate={{ opacity: 1, y: 0 }}
+//             transition={{ duration: 0.2, delay: 0.4 }}
+//           >
+//             <p
+//               className="grow text-sm text-muted-foreground"
+//               aria-live="polite"
+//             >
+//               Page <span className="text-foreground">{meta.page}</span> of{" "}
+//               <span className="text-foreground">{meta.totalPage}</span>
+//             </p>
+
+//             <Pagination className="w-auto">
+//               <PaginationContent className="gap-3">
+//                 <PaginationItem>
+//                   <Button
+//                     variant="outline"
+//                     disabled={meta.page === 1 || loadingState}
+//                     onClick={handlePrev}
+//                   >
+//                     <ChevronLeft /> Previous
+//                   </Button>
+//                 </PaginationItem>
+//                 <PaginationItem>
+//                   <Button
+//                     variant="outline"
+//                     disabled={
+//                       meta.page === meta.totalPage ||
+//                       meta.totalPage === 0 ||
+//                       loadingState
+//                     }
+//                     onClick={handleNext}
+//                   >
+//                     Next
+//                     <ChevronRight />
+//                   </Button>
+//                 </PaginationItem>
+//               </PaginationContent>
+//             </Pagination>
+//           </motion.div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
