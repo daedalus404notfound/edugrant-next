@@ -5,6 +5,7 @@ import { DashboardData } from "@/hooks/admin/getHeadDashboard";
 import { format } from "date-fns";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function RecentApplications({
   data,
@@ -55,9 +56,16 @@ export function RecentApplications({
                 {/* Logo + Provider */}
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
-                    <div className="bg-background size-11 flex justify-center items-center rounded-md uppercase">
-                      {meow.Student.fName.slice(0, 2)}
-                    </div>
+                    <Avatar>
+                      <AvatarImage
+                        className="object-cover"
+                        src={
+                          meow.Student.profileImg?.publicUrl ||
+                          "https://github.com/shadcn.png"
+                        }
+                      />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
                     <div>
                       <h3 className="font-semibold text-sm line-clamp-1">
                         {meow.Student?.lName}, {meow.Student?.fName}{" "}

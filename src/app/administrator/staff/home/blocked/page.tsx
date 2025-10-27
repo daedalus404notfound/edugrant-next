@@ -12,6 +12,7 @@ import DataTableToolbar from "../staff-application-table-components/data-table-t
 import { ApplicationFormData } from "@/hooks/zod/application";
 import useApplicationDataStaff from "@/hooks/staff/getApplicationStaff";
 import TitleReusable from "@/components/ui/title";
+import { Ban } from "lucide-react";
 
 export default function PendingStaffApplication() {
   const [columnVisibility, setColumnVisibility] = useState<
@@ -39,11 +40,12 @@ export default function PendingStaffApplication() {
   });
 
   return (
-    <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+    <div className="lg:px-4 lg:min-h-[calc(100vh-85px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <TitleReusable
           title="Blocked Applications"
           textColor="text-gray-700/70"
+          Icon={Ban}
           description="Applicants currently waiting for review."
         />
 
@@ -54,7 +56,7 @@ export default function PendingStaffApplication() {
             meta={meta}
             pagination={pagination}
             setPagination={setPagination}
-            getRowId={(row) => row.scholarshipId}
+            getRowId={(row) => row.scholarshipId.toString()}
             loading={isLoading}
             search={search}
             setSearch={setSearch}
@@ -67,6 +69,8 @@ export default function PendingStaffApplication() {
             toolbar={DataTableToolbar}
             columnVisibility={columnVisibility} // <-- pass visibility
             setColumnVisibility={setColumnVisibility} // <-- pass setter
+            customLink={true}
+            setLink="/administrator/staff/home/application"
           />
         </div>
       </div>

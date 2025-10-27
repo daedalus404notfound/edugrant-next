@@ -1,5 +1,6 @@
 import { UserFormData } from "@/hooks/user/register";
 import { ApplicationFormData } from "@/hooks/zod/application";
+import { GetApplicationFormData } from "@/hooks/zod/getApplicationZod";
 import { format } from "date-fns";
 import {
   UserRound,
@@ -15,7 +16,7 @@ import {
 } from "lucide-react";
 
 // Allow data to be null
-export const getFatherDetails = (data: ApplicationFormData | null) => [
+export const getFatherDetails = (data: GetApplicationFormData | null) => [
   {
     label: "Father Full Name",
     icon: UserRound,
@@ -53,7 +54,7 @@ export const getFatherDetails = (data: ApplicationFormData | null) => [
   },
 ];
 
-export const getMotherDetails = (data: ApplicationFormData | null) => [
+export const getMotherDetails = (data: GetApplicationFormData | null) => [
   {
     label: "Mother Full Name",
     icon: UserRound,
@@ -91,7 +92,7 @@ export const getMotherDetails = (data: ApplicationFormData | null) => [
   },
 ];
 
-export const getGuardianDetails = (data: ApplicationFormData | null) => [
+export const getGuardianDetails = (data: GetApplicationFormData | null) => [
   {
     label: "Guardian Full Name",
     icon: UserRound,
@@ -119,7 +120,7 @@ export const getGuardianDetails = (data: ApplicationFormData | null) => [
   },
 ];
 
-export const getPersonalInformation = (data: ApplicationFormData | null) => [
+export const getPersonalInformation = (data: GetApplicationFormData | null) => [
   {
     label: "First Name",
     icon: UserRound,
@@ -165,7 +166,7 @@ export const getPersonalInformation = (data: ApplicationFormData | null) => [
   },
 ];
 
-export const getAcademicInformation = (data: ApplicationFormData | null) => [
+export const getAcademicInformation = (data: GetApplicationFormData | null) => [
   {
     label: "Student Id",
     icon: Building2,

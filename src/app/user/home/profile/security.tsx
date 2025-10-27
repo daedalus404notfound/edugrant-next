@@ -57,20 +57,20 @@ export default function SecurityForm() {
     resendTimer,
   } = useProfileUserChangePassword();
 
-  const {
-    open: openChangeEmail,
-    setOpen: setOpenChangeEmail,
-    step: stepChangeEmail,
-    setStep: setStepChangeEmail,
-    changeEmailForm,
-    changeEmailOtpForm,
-    handleSendCode: handleSendCodeChangeEmail,
-    handleOtpVerification: handleOtpVerificationChangeEmail,
-    authLoading: authLoadingChangeEmail,
-    verifyLoading: verifyLoadingChangeEmail,
-    requestNewCode: requestNewCodeChangeEmail,
-    resendTimer: resendTimerChangeEmail,
-  } = useProfileUserChangeEmail();
+  // const {
+  //   open: openChangeEmail,
+  //   setOpen: setOpenChangeEmail,
+  //   step: stepChangeEmail,
+  //   setStep: setStepChangeEmail,
+  //   changeEmailForm,
+  //   changeEmailOtpForm,
+  //   handleSendCode: handleSendCodeChangeEmail,
+  //   handleOtpVerification: handleOtpVerificationChangeEmail,
+  //   authLoading: authLoadingChangeEmail,
+  //   verifyLoading: verifyLoadingChangeEmail,
+  //   requestNewCode: requestNewCodeChangeEmail,
+  //   resendTimer: resendTimerChangeEmail,
+  // } = useProfileUserChangeEmail();
 
   const [openPass, setOpenPass] = useState(false);
   const [openEmail, setOpenEmail] = useState(false);
@@ -466,7 +466,7 @@ export default function SecurityForm() {
         </AlertDialog>
       </div>
 
-      <div className="flex items-center gap-3">
+      {/* <div className="flex items-center gap-3">
         <h3 className=" font-medium text-sm flex gap-2 items-center">
           Change Email
         </h3>
@@ -632,7 +632,7 @@ export default function SecurityForm() {
                                                     <span className="underline" onClick={requestNewCode}>
                                                       Resend Now
                                                     </span>
-                                                  </Label> */}
+                                                  </Label> 
                     <Button
                       variant="link"
                       size="sm"
@@ -651,13 +651,13 @@ export default function SecurityForm() {
                                                   <p className="text-red-500 text-sm text-center">
                                                     OTP expired. Please request a new code.
                                                   </p>
-                                                )} */}
+                                                )}
                 </form>
               </Form>
             )}
           </AlertDialogContent>
         </AlertDialog>
-      </div>
+      </div> */}
 
       <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
     </div>

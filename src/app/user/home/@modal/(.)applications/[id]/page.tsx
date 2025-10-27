@@ -73,8 +73,8 @@ export default function InterceptManageApplicationClient() {
   //   { id: "scholarship", label: "Scholarship Details", indicator: null },
   // ];
 
-  const processedInterviewDate = data?.Interview_Decision?.dateCreated;
-  const processedApprovedDate = data?.Interview_Decision?.dateCreated;
+  const processedInterviewDate = data?.Interview_Decision[0]?.dateCreated;
+  const processedApprovedDate = data?.Interview_Decision[0]?.dateCreated;
 
   const meoww = processedInterviewDate
     ? format(processedInterviewDate, "PPP p")
@@ -82,6 +82,9 @@ export default function InterceptManageApplicationClient() {
     ? format(processedApprovedDate, "PPP p")
     : "—";
   // console.log(processedDate);
+
+
+  
   return (
     <Drawer
       open={open}

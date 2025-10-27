@@ -1,8 +1,13 @@
-import { CircleCheck, LoaderCircle, XCircle } from "lucide-react";
+import {
+  CircleCheck,
+  LoaderCircle,
+  TriangleAlert,
+  XCircle,
+} from "lucide-react";
 import { toast } from "sonner";
 
 interface StyledToastProps {
-  status: "success" | "error" | "checking";
+  status: "success" | "error" | "checking" | "warning";
   title: string;
   description: string;
   duration?: number;
@@ -57,6 +62,22 @@ export default function StyledToast({
       () => (
         <div className="flex items-center gap-4 p-4 border  bg-card text-foreground rounded-md shadow-md lg:w-sm w-full ">
           <LoaderCircle className="animate-spin text-green-600 size-8" />
+          <div className="flex flex-col gap-1">
+            <span className="font-semibold text-sm">{title}</span>
+            <span className="text-xs text-muted-foreground">{description}</span>
+          </div>
+        </div>
+      ),
+      {
+        duration: toastDuration,
+      }
+    );
+  }
+  if (status === "warning") {
+    toast.custom(
+      () => (
+        <div className="flex items-center gap-4 p-4 border border-amber-800 bg-amber-900 text-white rounded-md shadow-md lg:w-sm w-full ">
+          <TriangleAlert className="text-yellow-300 size-6" />
           <div className="flex flex-col gap-1">
             <span className="font-semibold text-sm">{title}</span>
             <span className="text-xs text-muted-foreground">{description}</span>

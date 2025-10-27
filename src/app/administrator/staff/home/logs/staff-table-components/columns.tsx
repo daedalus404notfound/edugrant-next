@@ -56,7 +56,10 @@ export const columns: ColumnDef<AllStaffLogsType>[] = [
       return (
         <div className="flex gap-2 items-center pl-4">
           <Avatar>
-            <AvatarImage src={student.profileImg?.publicUrl || ""} />
+            <AvatarImage
+              className="object-cover"
+              src={student.profileImg?.publicUrl || ""}
+            />
             <AvatarFallback className="uppercase">
               {student.fName.charAt(0)}
               {student.lName.charAt(0)}
@@ -67,7 +70,7 @@ export const columns: ColumnDef<AllStaffLogsType>[] = [
               {student.fName} {student.mName} {student.lName}
             </div>
             <p className="text-xs text-muted-foreground">
-              walang res na student id
+              {student.Account?.schoolId}
             </p>
           </div>
         </div>

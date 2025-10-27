@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/edugrant-logo.png";
 import {
   Dialog,
   DialogContent,
@@ -30,6 +31,7 @@ import {
   CheckCheck,
   Check,
   ArrowRight,
+  LoaderCircle,
 } from "lucide-react";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import GlassFolder from "@/components/ui/folder";
@@ -42,7 +44,7 @@ import { Ring } from "ldrs/react";
 interface UserDocument {
   document: string;
   fileFormat: string;
-  fileUrl: string;
+
   requirementType: string;
   resourceType: string;
   supabasePath: string;
@@ -54,7 +56,6 @@ interface UserDocument {
 
 export default function ApplicationViewer({
   fileFormat,
-  fileUrl,
   document,
   docStatus,
   requirementType,
@@ -63,10 +64,11 @@ export default function ApplicationViewer({
   applicationId,
 }: UserDocument) {
   const [rotation, setRotation] = useState(0);
-  console.log(fileFormat);
+
   const [open, setOpen] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const { onGetDocument, filePath, loading } = useGetDocument(true);
+  console.log(loading);
   const { admin } = useAdminStore();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -75,7 +77,12 @@ export default function ApplicationViewer({
         onClick={() => onGetDocument(applicationId, supabasePath)}
       >
         <GlassFolder color="amber" />
-        <Badge className="absolute bottom-0 z-60 uppercase" variant="secondary">
+        <Badge
+          className={`absolute bottom-0 right-0 z-60 uppercase  text-gray-200 ${
+            requirementType === "required" ? "bg-green-900" : "bg-blue-900"
+          }`}
+          variant="secondary"
+        >
           {requirementType}
         </Badge>
       </DialogTrigger>
@@ -148,7 +155,7 @@ export default function ApplicationViewer({
                         <AlertDialogTrigger asChild>
                           <Button
                             className=""
-                            disabled={!fileUrl || !fileFormat}
+                            disabled={!filePath || !fileFormat}
                           >
                             Approve <Check />
                           </Button>
@@ -181,7 +188,7 @@ export default function ApplicationViewer({
                           <Button
                             className=""
                             variant="destructive"
-                            disabled={!fileUrl || !fileFormat}
+                            disabled={!filePath || !fileFormat}
                           >
                             Reject <X />
                           </Button>
@@ -231,18 +238,16 @@ export default function ApplicationViewer({
                 >
                   <div className="lg:h-[calc(100dvh-80px)] h-[calc(100dvh-64px)] lg:w-[calc(100dvw-32px)] w-[calc(100dvw-16px)] ">
                     {loading ? (
-                      <div className="h-full w-full  flex justify-center items-center">
-                        <Ring
-                          size={35}
-                          stroke={6}
-                          speed={2}
-                          bgOpacity={0}
-                          color="green"
+                      <div className="h-full w-full  flex flex-col  justify-center items-center">
+                        <img
+                          className="size-15 object-contain animate-pulse"
+                          src={logo.src}
+                          alt=""
                         />
                       </div>
                     ) : fileFormat === "JPG" || fileFormat === "PNG" ? (
                       <img
-                        src={filePath}
+                        src={filePath || undefined}
                         alt={document}
                         className="h-full w-full object-contain rounded-md"
                         style={{
@@ -258,7 +263,7 @@ export default function ApplicationViewer({
                           ref={iframeRef}
                           key={filePath}
                           className="h-full w-full rounded-lg"
-                          src={filePath}
+                          src={filePath || undefined}
                           title={`Document preview: ${document}`}
                           style={{
                             transform: `rotate(${rotation}deg)`,

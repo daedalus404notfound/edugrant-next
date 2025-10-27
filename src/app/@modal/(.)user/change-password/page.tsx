@@ -104,7 +104,24 @@ export default function LoginClientModal() {
                   </FormItem>
                 )}
               />
-
+              <FormField
+                control={changePasswordForm.control}
+                name="schoolId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="flex justify-between items-center">
+                      Student ID <FormMessage />
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={authLoading}
+                        {...field}
+                        placeholder="Enter your student Id"
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
               <AlertDialogFooter>
                 <Button
                   variant="outline"
@@ -192,7 +209,7 @@ export default function LoginClientModal() {
                     return (
                       <FormItem className="lg:col-span-2">
                         <FormLabel className="flex items-center justify-between">
-                          Password <FormMessage />
+                          New Password <FormMessage />
                         </FormLabel>
 
                         {/* Password Input + Toggle */}
@@ -340,6 +357,7 @@ export default function LoginClientModal() {
                   render={({ field }) => (
                     <FormItem className="">
                       <FormLabel className="flex justify-between items-center">
+                        Enter 6-digit code
                         <FormMessage />
                       </FormLabel>
                       <FormControl>

@@ -46,6 +46,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Checkbox } from "@/components/ui/checkbox";
 import useRememberAdminStore from "@/store/rememberMe-admin";
+import Link from "next/link";
 
 export default function LoginAdmin() {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -213,31 +214,11 @@ export default function LoginAdmin() {
                         <Label htmlFor="remember-admin">Remember me</Label>
                       </span>
 
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Label className="hover:underline cursor-pointer">
-                            Forgot password?
-                          </Label>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Reset your password
-                            </AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Enter your email address below and we&apos;ll send
-                              you a link to reset your password.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <Input type="email" placeholder="Enter your email" />
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction>
-                              Send Reset Link <ArrowRight />
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
+                      <Link href={`/administrator/change-password`}>
+                        <Label className="hover:underline cursor-pointer">
+                          Forgot password?
+                        </Label>
+                      </Link>
                     </motion.div>
                   </motion.div>
                 </Form>

@@ -100,9 +100,11 @@ export function zodUpdateUserByHead(data?: StudentUserFormData | null) {
     address: data?.address || "",
     contactNumber: data?.contactNumber || "",
     course: data?.course || "",
-    dateCreated: data?.dateCreated || "",
-    dateOfBirth: data?.dateCreated
-      ? format(data?.dateOfBirth, "yyyy-MM-dd")
+    dateCreated: data?.dateCreated
+      ? format(new Date(data?.dateCreated), "yyyy-MM-dd")
+      : "",
+    dateOfBirth: data?.dateOfBirth
+      ? format(new Date(data?.dateOfBirth), "yyyy-MM-dd")
       : "",
     fName: data?.fName || "",
     mName: data?.mName || "",

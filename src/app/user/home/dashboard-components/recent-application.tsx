@@ -116,11 +116,7 @@ export default function RecentApplicationDashboard({
                 <div className="flex flex-col border-l px-4">
                   <span className="text-xs">Processed Date:</span>
                   <span className="font-medium text-foreground text-base truncate">
-                    {meow.Interview_Decision
-                      ? format(meow.Interview_Decision.dateCreated, "PPP")
-                      : meow.Application_Decision
-                      ? format(meow.Application_Decision.dateCreated, "PPP")
-                      : "—"}
+                    need fixing
                   </span>
                 </div>
               </div>

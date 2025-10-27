@@ -1,147 +1,3 @@
-// "use client";
-// import axios from "axios";
-// import { useEffect, useState } from "react";
-
-// import {
-//   ApplicationFormData,
-//   UpdatedApplicationFormData,
-// } from "../zod/application";
-// import { MetaTypes } from "../zodMeta";
-// import { ApiErrorResponse } from "../admin/postReviewedHandler";
-// import StyledToast from "@/components/ui/toast-styled";
-// import { useDebounce } from "@/lib/debounder";
-// import { useUserStore } from "@/store/useUserStore";
-
-// interface ScholarshipCounts {
-//   APPROVED: number;
-//   BLOCKED: number;
-//   DECLINED: number;
-//   PENDING: number;
-//   INTERVIEW: number;
-// }
-// interface MetaWithCounts extends MetaTypes {
-//   counts: ScholarshipCounts;
-// }
-// const defaultMeta: MetaWithCounts = {
-//   page: 1,
-//   pageSize: 10,
-//   totalRows: 0,
-//   totalPage: 0,
-//   sortBy: "",
-//   order: "",
-//   filters: "",
-//   search: "",
-//   counts: {
-//     APPROVED: 0,
-//     BLOCKED: 0,
-//     DECLINED: 0,
-//     PENDING: 0,
-//     INTERVIEW: 0,
-//   },
-// };
-
-// export default function useClientApplications({
-//   page,
-//   pageSize,
-//   sortBy,
-//   order,
-//   userId,
-//   search,
-//   applicationId,
-// }: {
-//   page?: number;
-//   pageSize?: number;
-//   sortBy?: string;
-//   order?: string;
-//   status?: string;
-//   userId?: string;
-//   applicationId?: string;
-//   search?: string;
-// }) {
-//   const [data, setData] = useState<ApplicationFormData[]>([]);
-//   const { loadingUser } = useUserStore();
-//   const [meta, setMeta] = useState<MetaWithCounts>(defaultMeta);
-//   const [loading, setLoading] = useState(true);
-//   const [status, setStatus] = useState("PENDING");
-//   const [updateDocument, setUpdateDocument] =
-//     useState<UpdatedApplicationFormData | null>(null);
-//   const loadingState = loading || loadingUser;
-//   const debouncedSearch = useDebounce(search, 800);
-//   useEffect(
-//     function () {
-//       async function fetchApplications() {
-//         setLoading(true);
-//         try {
-//           const params = new URLSearchParams();
-
-//           if (status) params.append("status", status);
-//           if (applicationId)
-//             params.append("applicationId", applicationId.toString());
-//           if (userId) params.append("accountId", userId.toString());
-//           if (page) params.append("page", page.toString());
-//           if (pageSize) params.append("dataPerPage", pageSize.toString());
-//           if (sortBy) params.append("sortBy", sortBy);
-//           if (order) params.append("order", order);
-//           if (debouncedSearch) params.append("search", debouncedSearch);
-
-//           const endpoint = `${
-//             process.env.NEXT_PUBLIC_USER_URL
-//           }/getApplications?${params.toString()}`;
-//           console.log("Fetching:", endpoint);
-
-//           const res = await axios.get(endpoint, { withCredentials: true });
-
-//           if (res.status === 200) {
-//             setData(res.data.applications);
-//             setMeta(res.data.meta);
-//           }
-//         } catch (error) {
-//           if (axios.isAxiosError<ApiErrorResponse>(error)) {
-//             StyledToast({
-//               status: "error",
-//               title: error?.response?.data.message ?? "An error occurred.",
-//               description: "Cannot process your request.",
-//             });
-//           }
-//         } finally {
-//           setLoading(false);
-//         }
-//       }
-
-//       fetchApplications();
-//     },
-//     [page, pageSize, sortBy, order, status, debouncedSearch]
-//   );
-
-//   useEffect(() => {
-//     setData([]);
-//   }, [debouncedSearch, order]);
-//   useEffect(() => {
-//     if (updateDocument && data.length > 0) {
-//       setData((prev) =>
-//         prev.map((app) =>
-//           app.applicationId === updateDocument.applicationId
-//             ? {
-//                 ...app,
-//                 submittedDocuments: updateDocument.submittedDocuments,
-//               }
-//             : app
-//         )
-//       );
-//     }
-//   }, [updateDocument]);
-
-//   return {
-//     data,
-//     loadingState,
-//     meta,
-//     setUpdateDocument,
-//     setData,
-//     status,
-//     setStatus,
-//     setMeta,
-//   };
-// }
 "use client";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -149,10 +5,13 @@ import { ApplicationFormData } from "../zod/application";
 import { MetaTypes } from "../zodMeta";
 import { ApiErrorResponse } from "../admin/postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
+import {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+} from "@tanstack/react-table";
 import { useDebounce } from "@/lib/debounder";
-import { useUserStore } from "@/store/useUserStore";
-import { useApplicationStore } from "@/store/applicationUsetStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface ScholarshipCounts {
   APPROVED: number;
@@ -184,85 +43,136 @@ const defaultMeta: MetaWithCounts = {
   },
 };
 
-export default function useClientApplications() {
-  const { loadingUser } = useUserStore();
-  const {
-    status: tabStatus,
-    setStatus: setTabStatus,
-    meta,
-    setMeta,
-    resetPage,
-    search,
-    sortBy,
-    order,
-    page,
-    pageSize,
-  } = useApplicationStore();
-
-  const debouncedSearch = useDebounce(search, 800);
-  useEffect(() => {
-    resetPage();
-  }, [debouncedSearch, sortBy, order, tabStatus]);
+export type UseApplicationDataProps = {
+  pagination: PaginationState;
+  sorting: SortingState;
+  columnFilters: ColumnFiltersState;
+  status: string;
+  search?: string;
+};
+export interface StaffApplicationsDataTypes {
+  applications: ApplicationFormData[];
+  meta: MetaWithCounts;
+}
+export default function useClientApplications({
+  pagination,
+  sorting,
+  columnFilters,
+  status,
+  search,
+}: UseApplicationDataProps) {
+  const [meta, setMeta] = useState<MetaWithCounts>(defaultMeta);
+  const debounce = useDebounce(search, 800);
   const query = useQuery({
     queryKey: [
       "clientApplications",
-      page,
-      pageSize,
-      sortBy,
-      order,
-      tabStatus,
-      debouncedSearch,
+      pagination,
+      sorting,
+      columnFilters,
+      status,
+      debounce,
     ],
     queryFn: async () => {
       const params = new URLSearchParams();
-      if (tabStatus) params.append("status", tabStatus);
 
-      if (page) params.append("page", page.toString());
-      if (pageSize) params.append("dataPerPage", pageSize.toString());
-      if (sortBy) params.append("sortBy", sortBy);
-      if (order) params.append("order", order);
-      if (debouncedSearch) params.append("search", debouncedSearch);
+      if (status) params.append("status", status);
+      if (debounce) params.append("search", debounce);
+      params.append("page", (pagination.pageIndex + 1).toString()); // +1 if backend uses 1-based page indexing
+      params.append("dataPerPage", pagination.pageSize.toString());
+      if (sorting.length > 0) {
+        params.append("sortBy", sorting[0].id);
+        params.append("order", sorting[0].desc ? "desc" : "asc");
+      }
+      if (columnFilters.length > 0) {
+        params.append("filters", JSON.stringify(columnFilters));
+      }
 
       const endpoint = `${
         process.env.NEXT_PUBLIC_USER_URL
       }/getApplications?${params.toString()}`;
-      console.log("Fetching:", endpoint);
+
+      console.log("Fetching (admin):", endpoint);
 
       try {
-        const res = await axios.get<{
-          applications: ApplicationFormData[];
-          meta: MetaWithCounts;
-        }>(endpoint, { withCredentials: true });
+        const res = await axios.get<StaffApplicationsDataTypes>(endpoint, {
+          withCredentials: true,
+        });
 
         return res.data;
       } catch (error) {
-        if (axios.isAxiosError<ApiErrorResponse>(error)) {
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        const status = error.response?.status;
+        const message = error.response?.data?.message;
+
+        if (!error.response) {
           StyledToast({
             status: "error",
-            title: error?.response?.data.message ?? "An error occurred.",
+            title: "Network Error",
+            description:
+              "No internet connection or the server is unreachable. Please check your connection and try again.",
+          });
+        } else if (status === 400) {
+          StyledToast({
+            status: "error",
+            title: "Bad Request",
+            description: message ?? "Invalid request. Please check your input.",
+          });
+        } else if (status === 401) {
+          StyledToast({
+            status: "error",
+            title: "Unauthorized",
+            description:
+              message ?? "You are not authorized. Please log in again.",
+          });
+        } else if (status === 403) {
+          StyledToast({
+            status: "error",
+            title: "Forbidden",
+            description:
+              message ?? "You do not have permission to perform this action.",
+          });
+        } else if (status === 404) {
+          StyledToast({
+            status: "warning",
+            title: "No data found",
+            description: message ?? "There are no records found.",
+          });
+        } else if (status === 500) {
+          StyledToast({
+            status: "error",
+            title: "Server Error",
+            description:
+              message ?? "Internal server error. Please try again later.",
+          });
+        } else {
+          StyledToast({
+            status: "error",
+            title: message ?? "Export CSV error occurred.",
             description: "Cannot process your request.",
           });
         }
-        throw error;
+      } else {
+        StyledToast({
+          status: "error",
+          title: "Unexpected Error",
+          description: "Something went wrong. Please try again later.",
+        });
+      }
+      throw error;
       }
     },
+    retry: false,
     staleTime: 1000 * 60 * 5,
-    enabled: !loadingUser,
   });
 
-  const data = query.data?.applications ?? [];
   useEffect(() => {
     if (query.isSuccess && query.data?.meta) {
       setMeta(query.data.meta);
     }
   }, [query.isSuccess, query.data?.meta, setMeta]);
+
   return {
-    data,
+    query,
     meta,
-    tabStatus,
-    setTabStatus,
-    isLoading: query.isLoading || loadingUser,
-    isError: query.isError,
-    refetch: query.refetch,
   };
 }

@@ -36,73 +36,45 @@ import {
 import { useApplicationStore } from "@/store/applicationUsetStore";
 import { useScholarshipUserStore } from "@/store/scholarshipUserStore";
 import { useUserStore } from "@/store/useUserStore";
+import {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+} from "@tanstack/react-table";
 export default function ClientScholarship() {
-  const { status, setStatus } = useScholarshipUserStore();
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 6,
+  });
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: "dateCreated",
+      desc: true,
+    },
+  ]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [status, setStatus] = useState("ACTIVE");
+  const [search, setSearch] = useState("");
+
   const { user } = useUserStore();
-  const { search, page, order, setPage, setSearch, setOrder, meta } =
-    useScholarshipUserStore();
-  const { data, isLoading: loadingState } = useScholarshipData();
+  const { query, meta } = useScholarshipData({
+    pagination,
+    sorting,
+    columnFilters,
+    status,
+    search,
+  });
   const { completed } = getFamilyBackgroundProgress(user?.Student);
 
-  // useEffect(() => {
-  //   socket.on("updateScholarship", (data) => {
-  //     console.log("edited:", data);
-
-  //     setData((prev) =>
-  //       prev.map((item) =>
-  //         item.scholarshipId === data.update.scholarshipId
-  //           ? { ...item, ...data.update }
-  //           : item
-  //       )
-  //     );
-  //   });
-
-  //   socket.on("renewScholarship", (data) => {
-  //     console.log("renew scholarship received:", data);
-
-  //     setData((prev) => {
-  //       const filtered = prev.filter(
-  //         (meow) => meow.scholarshipId !== data.renewScholar.scholarshipId
-  //       );
-  //       if (status === "RENEW") {
-  //         return [data.renewScholar, ...prev];
-  //       }
-
-  //       return filtered;
-  //     });
-  //   });
-
-  //   socket.on("adminAddScholarships", (data) => {
-  //     console.log("New scholarship received:", data);
-  //     setData((prev) => [data.newScholarship, ...prev]);
-  //   });
-
-  //   socket.on("deleteScholarship", (data) => {
-  //     console.log("🎓 deleted:", data.deletedScholarship.scholarshipId);
-
-  //     setData((prev) =>
-  //       prev.filter(
-  //         (meow) => meow.scholarshipId !== data.deletedScholarship.scholarshipId
-  //       )
-  //     );
-  //   });
-  //   return () => {
-  //     socket.off("applyScholarship");
-  //     socket.off("adminAddScholarships");
-  //     socket.off("deleteScholarship");
-  //     socket.off("renewScholarship");
-  //     socket.off("updateScholarship");
-  //   };
-  // }, [status, setStatus]);
-
   const handleNext = () => {
-    if (meta && meta.page < meta.totalPage) {
-      setPage(page + 1);
+    if (meta && pagination.pageIndex + 1 < meta.totalPage) {
+      setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex + 1 }));
     }
   };
+
   const handlePrev = () => {
-    if (meta.page > 1) {
-      setPage(page - 1);
+    if (pagination.pageIndex > 0) {
+      setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex - 1 }));
     }
   };
   const tabs = [
@@ -122,6 +94,9 @@ export default function ClientScholarship() {
       indicator: meta.counts?.countExpired ? meta.counts?.countExpired : null,
     },
   ];
+
+  const loadingState = query.isLoading;
+  const data = query.data?.data ?? [];
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       {!loadingState && !completed && (
@@ -163,7 +138,17 @@ export default function ClientScholarship() {
               value={search}
               className="max-w-sm w-full text-sm"
             />
-            <Select value={order} onValueChange={(e) => setOrder(e)}>
+            <Select
+              value={sorting[0].desc ? "desc" : "asc"}
+              onValueChange={(e) =>
+                setSorting([
+                  {
+                    id: "dateCreated",
+                    desc: e === "desc",
+                  },
+                ])
+              }
+            >
               <SelectTrigger className="text-sm">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
@@ -287,7 +272,7 @@ export default function ClientScholarship() {
                           {meow.Application?.length! > 0 && (
                             <div className="absolute top-0 -left-2 flex items-center z-20">
                               <div
-                                className="flex items-center justify-center text-gray-200 font-medium lg:text-sm  text-xs lg:px-7 px-4 py-1.5 bg-gradient-to-br to-green-950 from-green-800"
+                                className="flex items-center justify-center text-gray-200 font-medium text-sm  px-7  py-1.5 bg-gradient-to-br to-green-950 from-green-800"
                                 style={{
                                   clipPath:
                                     "polygon(0 0, 100% 0, 85% 100%, 0% 100%)",

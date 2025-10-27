@@ -11,7 +11,7 @@ import {
 
 import TitleReusable from "@/components/ui/title";
 
-import { Loader, Users2 } from "lucide-react";
+import { Activity, Loader, Users2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import useGetAllStaffLogs, {
   AllStaffLogsType,
@@ -45,7 +45,7 @@ export default function PendingStaffApplication() {
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <TitleReusable
           title="Activity Logs"
-          Icon={Users2}
+          Icon={Activity}
           description="Monitor, review, activities and actions recorded in the system."
         />
 
@@ -64,7 +64,7 @@ export default function PendingStaffApplication() {
             meta={meta}
             pagination={pagination}
             setPagination={setPagination}
-            getRowId={(row) => row.logsId}
+            getRowId={(row) => row.logsId.toString()}
             loading={isLoading}
             sorting={sorting}
             setSorting={setSorting}

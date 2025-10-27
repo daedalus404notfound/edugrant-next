@@ -23,6 +23,7 @@ import {
 import { MetaTypes } from "@/hooks/zodMeta";
 import { DataTablePagination } from "./data-table-pagination";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 export interface ToolbarProps<TData> {
   table: TanstackTable<TData>;
   getRowId?: (row: TData) => string | number;
@@ -35,7 +36,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   meta: MetaTypes;
   data: TData[];
-  getRowId?: (row: TData) => string | number;
+  getRowId?: (row: TData) => string;
   pagination: PaginationState;
   setPagination: OnChangeFn<PaginationState>;
   loading: boolean;
@@ -50,6 +51,8 @@ interface DataTableProps<TData, TValue> {
   toolbar?: React.ComponentType<ToolbarProps<TData>>;
   columnVisibility?: Record<string, boolean>; // <-- added
   setColumnVisibility?: OnChangeFn<Record<string, boolean>>; // <-- added
+  customLink?: boolean;
+  setLink?: string;
 }
 
 export function DataTable<TData, TValue>({
@@ -71,10 +74,13 @@ export function DataTable<TData, TValue>({
   columnVisibility,
   setColumnVisibility,
   toolbar: ToolbarComponent,
+  customLink,
+  setLink,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
+    getRowId,
     getCoreRowModel: getCoreRowModel(),
     enableRowSelection: true,
     manualPagination: true,
@@ -121,7 +127,7 @@ export function DataTable<TData, TValue>({
                 ? "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/60 dark:text-indigo-300"
                 : status === "EXPIRED"
                 ? "bg-orange-100 text-red-800 dark:bg-red-900/60 dark:text-red-300"
-                : "bg-green-100 text-green-800 dark:bg-green-900/60 dark:text-green-300"
+                : "bg-gray-100 text-gray-800 dark:bg-gray-900/60 dark:text-gray-300"
             } text-sm font-medium px-3 py-1 rounded-full transition-colors duration-200`}
           >
             {table.getHeaderGroups().map((headerGroup) => (
@@ -157,15 +163,25 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
+                <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                      {customLink ? (
+                        <Link
+                          href={`${setLink}/${row.id}`}
+                          prefetch
+                          scroll={false}
+                        >
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </Link>
+                      ) : (
+                        flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )
                       )}
                     </TableCell>
                   ))}

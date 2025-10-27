@@ -71,6 +71,7 @@ import {
 } from "@/components/ui/input-otp";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DragAndDropAreaProfile } from "@/components/ui/upload-profile";
+import { useProfileUserChangePasswordd } from "@/hooks/user/headChangePassword";
 export default function Profile() {
   const { admin, loading: loadingAdmin } = useAdminStore();
   const [openCalendar, setOpenCalendar] = useState(false);
@@ -92,7 +93,7 @@ export default function Profile() {
     verifyLoading,
     requestNewCode,
     resendTimer,
-  } = useProfileUserChangePassword();
+  } = useProfileUserChangePasswordd();
 
   const tabs = [
     { id: "personal", label: "Head Information", indicator: null },
@@ -303,32 +304,6 @@ export default function Profile() {
                                 <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
                                   <Button variant="ghost">
                                     <VenusAndMars />
-                                  </Button>
-                                </span>
-                              </div>
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="ISPSU_Head.address"
-                        render={({ field }) => (
-                          <FormItem className="col-span-2">
-                            <FormLabel className="text-muted-foreground">
-                              Address
-                            </FormLabel>
-                            <FormControl className="">
-                              <div className="flex items-center">
-                                <Input
-                                  placeholder=""
-                                  className="rounded-r-none"
-                                  {...field}
-                                />
-                                <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                                  <Button variant="ghost">
-                                    <Map />
                                   </Button>
                                 </span>
                               </div>

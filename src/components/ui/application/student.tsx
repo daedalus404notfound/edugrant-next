@@ -9,12 +9,13 @@ import {
 import { GraduationCap, UserRound } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { GetApplicationFormData } from "@/hooks/zod/getApplicationZod";
 
 export default function StudentStaff({
   data,
   loading,
 }: {
-  data: ApplicationFormData | null;
+  data: GetApplicationFormData | null;
   loading: boolean;
 }) {
   const personalInformation = getPersonalInformation(data);

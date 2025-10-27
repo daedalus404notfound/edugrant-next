@@ -21,6 +21,7 @@ import { DeleteDialog } from "../ui/delete-dialog";
 import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
 import { Button } from "../ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
@@ -60,6 +61,7 @@ export function NavUser() {
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
+                  className="object-cover"
                   src={
                     admin?.ISPSU_Head?.profileImg?.publicUrl ||
                     "https://github.com/shadcn.png" ||
@@ -92,10 +94,18 @@ export function NavUser() {
             sideOffset={4}
           >
             <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+              <Link
+                href={`/administrator/head/home/profile`}
+                className="flex items-center gap-2 px-1 py-1.5 text-left text-sm"
+              >
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage
-                    src={``}
+                    className="object-cover"
+                    src={
+                      admin?.ISPSU_Head?.profileImg?.publicUrl ||
+                      "https://github.com/shadcn.png" ||
+                      "/placeholder.svg"
+                    }
                     alt={
                       admin?.ISPSU_Head
                         ? `${admin.ISPSU_Head?.fName} ${admin.ISPSU_Head?.lName}`
@@ -110,9 +120,11 @@ export function NavUser() {
                       ? `${admin.ISPSU_Head?.fName} ${admin.ISPSU_Head?.lName}`
                       : "Admin"}
                   </span>
-                  <span className="truncate text-xs">{admin?.email}</span>
+                  <span className="truncate text-xs">
+                    {admin?.role || "Unknown Role"}
+                  </span>
                 </div>
-              </div>
+              </Link>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
 

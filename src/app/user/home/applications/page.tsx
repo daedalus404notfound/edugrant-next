@@ -32,23 +32,43 @@ import {
   PaginationItem,
 } from "@/components/ui/pagination";
 import { useApplicationStore } from "@/store/applicationUsetStore";
+import {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+} from "@tanstack/react-table";
 
 export default function ClientScholarship() {
-  const { status, setStatus } = useApplicationStore();
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("PENDING");
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 6,
+  });
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: "dateCreated",
+      desc: true,
+    },
+  ]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  const { search, page, order, setPage, setSearch, setOrder, meta } =
-    useApplicationStore();
-
-  const { data, isLoading: loadingState } = useClientApplications();
-
+  const { query, meta } = useClientApplications({
+    pagination,
+    sorting,
+    columnFilters,
+    status,
+    search,
+  });
   const handleNext = () => {
-    if (meta && meta.page < meta.totalPage) {
-      setPage(page + 1);
+    if (meta && pagination.pageIndex + 1 < meta.totalPage) {
+      setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex + 1 }));
     }
   };
+
   const handlePrev = () => {
-    if (meta.page > 1) {
-      setPage(page - 1);
+    if (pagination.pageIndex > 0) {
+      setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex - 1 }));
     }
   };
   const tabs = [
@@ -78,7 +98,8 @@ export default function ClientScholarship() {
       indicator: meta.counts.BLOCKED ? meta.counts.BLOCKED : null,
     },
   ];
-
+  const loadingState = query.isLoading;
+  const data = query.data?.applications ?? [];
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:py-10  py-4">
@@ -129,7 +150,17 @@ export default function ClientScholarship() {
               value={search}
               className="max-w-sm w-full text-sm"
             />
-            <Select value={order} onValueChange={(e) => setOrder(e)}>
+            <Select
+              value={sorting[0].desc ? "desc" : "asc"}
+              onValueChange={(e) =>
+                setSorting([
+                  {
+                    id: "dateCreated",
+                    desc: e === "desc",
+                  },
+                ])
+              }
+            >
               <SelectTrigger className="text-sm">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>

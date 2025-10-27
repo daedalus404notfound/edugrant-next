@@ -34,6 +34,7 @@ import {
   ApplicationFormData,
   UpdatedApplicationFormData,
 } from "@/hooks/zod/application";
+import { GetApplicationFormData } from "@/hooks/zod/getApplicationZod";
 
 export const createFormSchema = (documents: documentFormData[]) => {
   const schemaShape: Record<string, z.ZodType<any>> = {};
@@ -62,7 +63,7 @@ export const createFormSchema = (documents: documentFormData[]) => {
 };
 
 type EditApplicationTypes = {
-  data: ApplicationFormData | null;
+  data: GetApplicationFormData | null;
   setEdit: (edit: boolean) => void;
   // setUpdateDocument: (update: UpdatedApplicationFormData | null) => void;
 };
@@ -259,12 +260,12 @@ EditApplicationTypes) {
                             onFilesChange={(files) =>
                               handleFilesChange(doc.label, files)
                             }
-                            initialImageUrl={
-                              data?.submittedDocuments?.[lastPhaseKey]?.find(
-                                (submittedDoc) =>
-                                  submittedDoc.document === doc.label
-                              )?.fileUrl
-                            }
+                            // initialImageUrl={
+                            //   data?.submittedDocuments?.[lastPhaseKey]?.find(
+                            //     (submittedDoc) =>
+                            //       submittedDoc.document === doc.label
+                            //   )?.fileUrl
+                            // }
                           />
                         </FormControl>
                         <FormMessage />

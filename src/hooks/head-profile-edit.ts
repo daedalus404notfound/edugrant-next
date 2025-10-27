@@ -8,7 +8,7 @@ import { format } from "date-fns";
 export const ISPSU_Head = z.object({
   dateCreated: z.string(),
   fName: z.string(),
-  address: z.string(),
+
   headId: z.number(),
   lName: z.string(),
   mName: z.string(),
@@ -23,7 +23,7 @@ export const ISPSU_Head = z.object({
 export const ISPSU_Staff = z.object({
   dateCreated: z.string(),
   fName: z.string(),
-  address: z.string(),
+
   headId: z.number(),
   lName: z.string(),
   mName: z.string(),
@@ -58,7 +58,7 @@ export function useAdminProfileForm(data?: AdminProfileFormData | null) {
       dateCreated: data?.ISPSU_Head
         ? format(data?.ISPSU_Head?.dateCreated, "yyyy-MM-dd")
         : "",
-      address: data?.ISPSU_Head?.address || "",
+
       profileImg: {
         publicUrl: data?.ISPSU_Head?.profileImg?.publicUrl,
         path: data?.ISPSU_Head?.profileImg?.path,
@@ -73,7 +73,7 @@ export function useAdminProfileForm(data?: AdminProfileFormData | null) {
       dateCreated: data?.ISPSU_Staff
         ? format(data?.ISPSU_Staff?.dateCreated, "yyyy-MM-dd")
         : "",
-      address: data?.ISPSU_Staff?.address || "",
+
       profileImg: {
         publicUrl: data?.ISPSU_Head?.profileImg?.publicUrl,
         path: data?.ISPSU_Head?.profileImg?.path,

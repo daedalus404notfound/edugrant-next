@@ -21,8 +21,8 @@ export default function TitleReusable({
       <div className="flex gap-3 items-center">
         <motion.span
           className={`bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] 
-            bg-[length:200%_100%] bg-clip-text 
-            ${textColor} font-semibold flex items-center gap-1.5 ${titleSize}`}
+            bg-[length:200%_100%] bg-clip-text capitalize
+            ${textColor} font-semibold tracking-wide  flex items-center gap-1.5 ${titleSize}`}
           initial={{ backgroundPosition: "200% 0" }}
           animate={{ backgroundPosition: "-200% 0" }}
           transition={{

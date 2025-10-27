@@ -29,9 +29,10 @@ type ApiError = AxiosError<ApiErrorResponse>;
 
 const sendAuthCodeApi = async (data: changePassFormData) => {
   const response = await axios.post<AuthCodeTypes>(
-    `${process.env.NEXT_PUBLIC_USER_URL}/sendAuthCodeForgetPass`,
+    `${process.env.NEXT_PUBLIC_USER_URL}/forgotPasswordSendAuthCode`,
     {
       email: data.email,
+      schoolId: data.schoolId,
     },
     {
       withCredentials: true,
@@ -50,7 +51,7 @@ const verifyLoginApi = async ({
   otpData,
 }: verifyChangePasswordData) => {
   const response = await axios.post(
-    `${process.env.NEXT_PUBLIC_USER_URL}/forgetPass`,
+    `${process.env.NEXT_PUBLIC_USER_URL}/forgotPassword`,
     {
       email: loginData.email,
       newPassword: otpData.password,
@@ -76,13 +77,62 @@ export const useSendAuthCode = () => {
       });
     },
     onError: (error: ApiError) => {
-      console.error("Add scholarship error:", error);
-      if (error.response?.data.message) {
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        const status = error.response?.status;
+        const message = error.response?.data?.message;
+
+        if (!error.response) {
+          StyledToast({
+            status: "error",
+            title: "Network Error",
+            description:
+              "No internet connection or the server is unreachable. Please check your connection and try again.",
+          });
+        } else if (status === 400) {
+          StyledToast({
+            status: "error",
+            title: "Bad Request",
+            description: message ?? "Invalid request. Please check your input.",
+          });
+        } else if (status === 401) {
+          StyledToast({
+            status: "error",
+            title: "Unauthorized",
+            description:
+              message ?? "You are not authorized. Please log in again.",
+          });
+        } else if (status === 403) {
+          StyledToast({
+            status: "error",
+            title: "Forbidden",
+            description:
+              message ?? "You do not have permission to perform this action.",
+          });
+        } else if (status === 404) {
+          StyledToast({
+            status: "warning",
+            title: "No data found",
+            description: message ?? "There are no records found.",
+          });
+        } else if (status === 500) {
+          StyledToast({
+            status: "error",
+            title: "Server Error",
+            description:
+              message ?? "Internal server error. Please try again later.",
+          });
+        } else {
+          StyledToast({
+            status: "error",
+            title: message ?? "Export CSV error occurred.",
+            description: "Cannot process your request.",
+          });
+        }
+      } else {
         StyledToast({
           status: "error",
-          title: error.response.data.message,
-          duration: 10000,
-          description: "Cannot process your request.",
+          title: "Unexpected Error",
+          description: "Something went wrong. Please try again later.",
         });
       }
     },
@@ -95,8 +145,8 @@ export const useVerifyLogin = () => {
     onSuccess: () => {
       StyledToast({
         status: "success",
-        title: "Logged In successfully",
-        description: "Redirecting to your dashboard...",
+        title: "Change password successfully",
+        description: "Redirecting to your login...",
       });
       // console.log("login:", data);
     },
@@ -159,9 +209,9 @@ export const useLandingChangePassword = () => {
         loginData: LoginData,
         otpData,
       });
-      if (result.success === true) {
+      if (result.success) {
         setOpen(false);
-        router.replace("/user/home");
+        router.replace("/user/login");
       }
     } catch (error) {
       // Error toast is already handled in useVerifyLogin onError

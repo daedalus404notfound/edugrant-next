@@ -85,12 +85,12 @@ export default function Profile() {
   } = useProfileUserChangePassword();
   console.log(form);
   const tabs = [
-    { id: "personal", label: "Head Information", indicator: null },
+    { id: "personal", label: "Staff Information", indicator: null },
     { id: "security", label: "Account Security", indicator: null },
   ];
 
   return (
-    <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+    <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-85px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:py-10  py-4">
         <TitleReusable
           title="Profile Settings"

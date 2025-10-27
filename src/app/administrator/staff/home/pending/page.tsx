@@ -1,6 +1,6 @@
 "use client";
 import "ldrs/react/Ring.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DataTable } from "@/app/table-components/data-table";
 import { columns } from "../staff-application-table-components/columns";
 import {
@@ -10,9 +10,10 @@ import {
 } from "@tanstack/react-table";
 import DataTableToolbar from "../staff-application-table-components/data-table-toolbar";
 import { ApplicationFormData } from "@/hooks/zod/application";
-import useApplicationData from "@/hooks/admin/getApplicant";
+
 import useApplicationDataStaff from "@/hooks/staff/getApplicationStaff";
 import TitleReusable from "@/components/ui/title";
+import { Clock, Hourglass } from "lucide-react";
 
 export default function PendingStaffApplication() {
   const [columnVisibility, setColumnVisibility] = useState<
@@ -40,11 +41,12 @@ export default function PendingStaffApplication() {
   });
 
   return (
-    <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+    <div className="lg:px-4 lg:min-h-[calc(100vh-85px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <TitleReusable
           title="Pending Applications"
           textColor="text-yellow-700/70"
+          Icon={Clock}
           description="Applicants currently waiting for review."
         />
 
@@ -55,7 +57,7 @@ export default function PendingStaffApplication() {
             meta={meta}
             pagination={pagination}
             setPagination={setPagination}
-            getRowId={(row) => row.scholarshipId}
+            getRowId={(row) => row.scholarshipId.toString()}
             loading={isLoading}
             search={search}
             setSearch={setSearch}
@@ -68,6 +70,8 @@ export default function PendingStaffApplication() {
             toolbar={DataTableToolbar}
             columnVisibility={columnVisibility} // <-- pass visibility
             setColumnVisibility={setColumnVisibility} // <-- pass setter
+            customLink={true}
+            setLink="/administrator/staff/home/application"
           />
         </div>
       </div>

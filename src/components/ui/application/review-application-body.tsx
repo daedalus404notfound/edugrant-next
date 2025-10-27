@@ -10,6 +10,11 @@ import { Tabs } from "@/components/ui/vercel-tabs";
 import { Separator } from "@/components/ui/separator";
 import DocumentSection from "@/components/ui/application/documents-section";
 import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -21,6 +26,7 @@ import StudentStaff from "@/components/ui/application/student";
 import FamilyStaff from "@/components/ui/application/family";
 import { useState } from "react";
 import ScholarshipModal from "../scholarship-modal";
+import { GetApplicationFormData } from "@/hooks/zod/getApplicationZod";
 const navigationTabs = [
   { id: "documents", label: "Documents", indicator: null },
   { id: "student", label: "Student Info", indicator: null },
@@ -33,7 +39,7 @@ export default function ReviewBody({
   reviewData,
   updateReviewData,
 }: {
-  data: ApplicationFormData | null;
+  data: GetApplicationFormData | null;
   loading: boolean;
   reviewData: Record<string, { comment: string; status: string }>;
   updateReviewData: (
@@ -44,9 +50,30 @@ export default function ReviewBody({
 }) {
   const [activeSection, setActiveSection] = useState("documents");
   const reviewDetails = data?.Interview_Decision || data?.Application_Decision;
+  // OBJECT PARA PWEDE IMAP
+  const submittedDocuments = Object.keys(data?.submittedDocuments || {});
+  // KUKUNIN ILAN LAHAT NG PHASE
+  const phaseLength = submittedDocuments.length;
+  // KUKUNIN LAST PHASE KEY
+  const getLastPhase = phaseLength > 0 ? submittedDocuments.at(-1) : undefined;
+  // SETTER NG PHASE KEY
+
+  // KUKUNIN APPLICATION DECISION SA NAPILING PHASE
+  const phaseDecision = getLastPhase
+    ? data?.submittedDocuments?.[getLastPhase]?.Application_Decision
+    : null;
+
+  const allPhaseDecision = submittedDocuments.map(
+    (phaseKey) => data?.submittedDocuments?.[phaseKey]?.Application_Decision
+  );
+
+  // KUKUNIN DATA SA NAPILING PHASE - FIXED: Access the documents array
+  const allphaseData = submittedDocuments.map(
+    (phaseKey) => data?.submittedDocuments?.[phaseKey]?.documents
+  );
   return (
-    <div className="overflow-auto h-full no-scrollbar bg-background rounded-lg">
-      <div className="flex-1">
+    <div className="overflow-auto h-full bg-background rounded-lg">
+      <div className="flex-1 space-y-3">
         <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-md overflow-hidden ">
           {/* Header Section */}
           <div className="relative flex  lg:items-end items-center  py-8 px-4">
@@ -142,64 +169,160 @@ export default function ReviewBody({
                 </span>
               )}
             </div>
-            <div className="space-y-1.5 border-l-2 pl-4">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-                <h1 className="text-xs text-muted-foreground">
-                  Application Date
-                </h1>
-              </div>
-              {loading ? (
-                <Skeleton className="h-5 w-full" />
-              ) : (
-                <p className="font-medium text-foreground">
-                  {data?.dateCreated && format(data?.dateCreated, "PPP p")}
-                </p>
-              )}
-            </div>
-            <div className="space-y-1.5  border-l-2 pl-4">
-              <div className="flex items-center gap-2">
-                <UserRoundCheck className="w-3.5 h-3.5 text-muted-foreground" />
-                <h1 className="text-xs text-muted-foreground">Reviewed By</h1>
-              </div>
-              {loading ? (
-                <Skeleton className="h-5 w-20" />
-              ) : reviewDetails ? (
-                <p className="font-medium text-foreground">
-                  {reviewDetails?.ISPSU_Staff.fName}{" "}
-                  {reviewDetails?.ISPSU_Staff.lName}
-                </p>
-              ) : (
-                "N/A"
-              )}
-            </div>
 
-            <div className="space-y-1.5  border-l-2 pl-4">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-                <h1 className="text-xs text-muted-foreground">
-                  Processed Date
-                </h1>
-              </div>
-              {loading ? (
-                <Skeleton className="h-5 w-full" />
-              ) : reviewDetails ? (
-                <p className="font-medium text-foreground">
-                  {reviewDetails && format(reviewDetails.dateCreated, "PPP p")}
-                </p>
-              ) : (
-                "N/A"
-              )}
-            </div>
+            <HoverCard>
+              <HoverCardTrigger asChild className="cursor-pointer">
+                <div className="space-y-1.5 border-l-2 pl-4">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+                    <h1 className="text-xs text-muted-foreground">
+                      Application Date
+                    </h1>
+                  </div>
+                  {loading ? (
+                    <Skeleton className="h-5 w-full" />
+                  ) : (
+                    <p className="font-medium text-foreground">
+                      {(data?.dateCreated &&
+                        format(data?.dateCreated, "PPP p")) ||
+                        "N/A"}
+                    </p>
+                  )}
+                </div>
+              </HoverCardTrigger>
+              <HoverCardContent className="space-y-1 p-2">
+                {allPhaseDecision.map((decision, index) => {
+                  const isLastPhase = index === allPhaseDecision.length - 1;
+                  return (
+                    <div
+                      key={index}
+                      className={`flex justify-between items-center ${
+                        isLastPhase
+                          ? "font-semibold text-foreground"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      <span>
+                        Phase {decision?.scholarshipPhase ?? index + 1}
+                      </span>
+                      <span>
+                        {decision?.dateCreated
+                          ? format(new Date(decision?.dateCreated), "PPP ")
+                          : "N/A"}
+                      </span>
+                    </div>
+                  );
+                })}
+              </HoverCardContent>
+            </HoverCard>
+            <HoverCard>
+              <HoverCardTrigger asChild className="cursor-pointer">
+                <div className="space-y-1.5  border-l-2 pl-4">
+                  <div className="flex items-center gap-2">
+                    <UserRoundCheck className="w-3.5 h-3.5 text-muted-foreground" />
+                    <h1 className="text-xs text-muted-foreground">
+                      Reviewed By
+                    </h1>
+                  </div>
+                  {loading ? (
+                    <Skeleton className="h-5 w-20" />
+                  ) : reviewDetails ? (
+                    <p className="font-medium text-foreground">
+                      {phaseDecision?.ISPSU_Staff?.fName
+                        ? `${phaseDecision?.ISPSU_Staff?.fName}
+                      ${phaseDecision?.ISPSU_Staff?.mName}
+                      ${phaseDecision?.ISPSU_Staff?.lName}`
+                        : "N/A"}
+                    </p>
+                  ) : (
+                    "N/A"
+                  )}
+                </div>
+              </HoverCardTrigger>
+              <HoverCardContent className="space-y-1 p-2">
+                {allPhaseDecision.map((decision, index) => {
+                  const isLastPhase = index === allPhaseDecision.length - 1;
+                  return (
+                    <div
+                      key={index}
+                      className={`flex justify-between items-center ${
+                        isLastPhase
+                          ? "font-semibold text-foreground"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      <span>
+                        Phase {decision?.scholarshipPhase ?? index + 1}
+                      </span>
+                      <span>
+                        {decision?.ISPSU_Staff
+                          ? decision.ISPSU_Staff.fName
+                          : "N/A"}
+                      </span>
+                    </div>
+                  );
+                })}
+              </HoverCardContent>
+            </HoverCard>
+
+            <HoverCard>
+              <HoverCardTrigger asChild className="cursor-pointer">
+                <div className="space-y-1.5  border-l-2 pl-4">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+                    <h1 className="text-xs text-muted-foreground">
+                      Processed Date
+                    </h1>
+                  </div>
+                  {loading ? (
+                    <Skeleton className="h-5 w-full" />
+                  ) : reviewDetails ? (
+                    <p className="font-medium text-foreground">
+                      {phaseDecision?.dateCreated
+                        ? format(phaseDecision?.dateCreated, "PPP p")
+                        : "N/A"}
+                    </p>
+                  ) : (
+                    "N/A"
+                  )}
+                </div>
+              </HoverCardTrigger>
+              <HoverCardContent className="space-y-1 p-2">
+                {allPhaseDecision.map((decision, index) => {
+                  const isLastPhase = index === allPhaseDecision.length - 1;
+                  return (
+                    <div
+                      key={index}
+                      className={`flex justify-between items-center ${
+                        isLastPhase
+                          ? "font-semibold text-foreground"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      <span>
+                        Phase {decision?.scholarshipPhase ?? index + 1}
+                      </span>
+                      <span>
+                        {decision?.dateCreated
+                          ? format(new Date(decision.dateCreated), "PPP ")
+                          : "N/A"}
+                      </span>
+                    </div>
+                  );
+                })}
+              </HoverCardContent>
+            </HoverCard>
           </div>
         </div>
 
         <div className="p-4 space-y-8">
-          <Tabs
-            tabs={navigationTabs}
-            onTabChange={(tabId) => setActiveSection(tabId)}
-            className=""
-          />
+          <div className="border-b pb-1.5">
+            <Tabs
+              tabs={navigationTabs}
+              onTabChange={(tabId) => setActiveSection(tabId)}
+              className=""
+            />
+          </div>
           {/* Documents Section */}
           {activeSection === "documents" && (
             <DocumentSection

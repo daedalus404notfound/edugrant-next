@@ -10,12 +10,13 @@ import {
   getAcademicInformation,
 } from "./details";
 import { ApplicationFormData } from "@/hooks/zod/application";
+import { GetApplicationFormData } from "@/hooks/zod/getApplicationZod";
 
 export default function FamilyStaff({
   data,
   loading,
 }: {
-  data: ApplicationFormData | null;
+  data: GetApplicationFormData | null;
   loading: boolean;
 }) {
   const fatherDetails = getFatherDetails(data);

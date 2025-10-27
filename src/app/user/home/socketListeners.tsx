@@ -16,6 +16,8 @@ import { NotificationPage } from "@/hooks/user/getNotfications";
 import confetti from "canvas-confetti";
 import { MetaTypes } from "@/hooks/zodMeta";
 import { AnnouncementFormDataGet } from "@/hooks/zod/announcement";
+import { defaultMeta } from "@/store/scholarshipUserStore";
+import { defaultMeta as defaultMetaApplication } from "@/store/applicationUsetStore";
 interface ClientApplicationsData {
   applications: ApplicationFormData[];
   meta: MetaWithCounts;
@@ -24,6 +26,7 @@ interface ClientScholarshipsData {
   data: scholarshipFormData[];
   meta: MetaWithCountsScholarship;
 }
+
 interface ClientAnnouncementsData {
   annoucements: AnnouncementFormDataGet[];
   meta: MetaTypes;
@@ -31,6 +34,7 @@ interface ClientAnnouncementsData {
 
 export default function SocketListener() {
   const queryClient = useQueryClient();
+  const cache = queryClient.getQueryCache();
   console.log(
     "All cached keys:",
     queryClient
@@ -38,17 +42,6 @@ export default function SocketListener() {
       .getAll()
       .map((q) => q.queryKey)
   );
-  const {
-    search,
-    page,
-    sortBy,
-    status,
-    order,
-    pageSize,
-    meta,
-    setCounts,
-    setStatus1,
-  } = useApplicationStore();
   type BlockedApplication = {
     applicationId: number;
     scholarshipId: number;
@@ -56,84 +49,129 @@ export default function SocketListener() {
     status: string;
     supabasePath: string[];
   };
-  const {
-    search: searchScholarship,
-    page: pageScholarship,
-    sortBy: sortByScholarship,
-    order: orderScholarship,
-    pageSize: pageSizeScholarship,
-    meta: metaScholarship,
-    setCounts: setCountsScholarship,
-    status: statusScholarship,
-    setStatus1: setStatus1Scholarship,
-    incrementActive,
-    incrementExpired,
-    incrementRenew,
-  } = useScholarshipUserStore();
 
+  const paginationDefault06 = {
+    pageIndex: 0,
+    pageSize: 6,
+  };
+  const sortDefault = [{ id: "dateCreated", desc: true }];
   const { incrementNotifications } = useNotificationStore();
-
+  const queryKeyScholarshipActive = [
+    "scholarshipData",
+    paginationDefault06,
+    sortDefault,
+    [],
+    "ACTIVE",
+    "",
+  ];
+  const queryKeyScholarshipRenew = [
+    "scholarshipData",
+    paginationDefault06,
+    sortDefault,
+    [],
+    "RENEW",
+    "",
+  ];
+  const queryKeyScholarshipExpired = [
+    "scholarshipData",
+    paginationDefault06,
+    sortDefault,
+    [],
+    "EXPIRED",
+    "",
+  ];
+  const queryKeyScholarshipAll = ["scholarshipData"];
+  const queryKeyApplicationAll = ["clientApplications"];
+  const queryKeyApplicationPending = [
+    "clientApplications",
+    paginationDefault06,
+    sortDefault,
+    [],
+    "PENDING",
+    "",
+  ];
+  const queryKeyApplicationApproved = [
+    "clientApplications",
+    paginationDefault06,
+    sortDefault,
+    [],
+    "APPROVED",
+    "",
+  ];
+  const queryKeyApplicationDeclined = [
+    "clientApplications",
+    paginationDefault06,
+    sortDefault,
+    [],
+    "DECLINED",
+    "",
+  ];
+  const queryKeyApplicationInterview = [
+    "clientApplications",
+    paginationDefault06,
+    sortDefault,
+    [],
+    "INTERVIEW",
+    "",
+  ];
   useEffect(() => {
+    socket.on("endScholarship", (data) => {
+      const endedId = data.endedScholarship.scholarshipId;
+      console.log("ended scholarship received:", data);
+      cache.findAll({ queryKey: queryKeyScholarshipAll }).forEach((query) =>
+        queryClient.setQueryData<ClientScholarshipsData>(
+          query.queryKey,
+          (old) => {
+            if (!old?.data) return old;
+            return {
+              ...old,
+              data: old.data.filter((item) => item.scholarshipId !== endedId),
+            };
+          }
+        )
+      );
+      playNotificationSound();
+    });
     socket.on("applyScholarship", (data) => {
       console.log("you applied:", data);
       const pending = data.newApplication;
+      const applicationId = data.newApplication.applicationId;
       const scholarshipId = pending.Scholarship.scholarshipId;
       const scholarshipData = pending.Scholarship;
       console.log("scholarshipData", scholarshipData);
       //APPLY TO PENDING
       queryClient.setQueryData<ClientApplicationsData>(
-        [
-          "clientApplications",
-          page,
-          pageSize,
-          sortBy,
-          order,
-          "PENDING",
-          search,
-        ],
+        queryKeyApplicationPending,
         (old) => {
-          if (!old) return old;
-
+          if (!old)
+            return { applications: [pending], meta: defaultMetaApplication };
+          console.log("lopit");
           return {
             ...old,
             applications: [pending, ...old.applications],
-            meta: {
-              ...old.meta,
-              counts: {
-                ...old.meta.counts,
-                PENDING: old.meta.counts.PENDING + 1,
-              },
-            },
           };
         }
       );
 
       //SUBMITTED SIGN
-      queryClient.setQueryData<ClientScholarshipsData>(
-        [
-          "scholarshipData",
-          pageScholarship,
-          pageSizeScholarship,
-          sortByScholarship,
-          orderScholarship,
-          "ACTIVE",
-          searchScholarship,
-        ],
-        (old) => {
-          if (!old) return old;
-          console.log("Scholarship cache snapshot:", old.data);
-          const exists = old.data.some(
-            (s) => s.scholarshipId === scholarshipId
-          );
-          console.log("exists", exists);
-          const updatedData = exists
-            ? old.data.map((s) =>
-                s.scholarshipId === scholarshipId ? scholarshipData : s
-              )
-            : [scholarshipData, ...old.data];
-          console.log("updatedData", updatedData);
-          return { ...old, data: updatedData }; // Change 'scholarships' to 'data'
-        }
+      cache.findAll({ queryKey: queryKeyScholarshipAll }).forEach((query) =>
+        queryClient.setQueryData<ClientScholarshipsData>(
+          query.queryKey,
+          (old) => {
+            if (!old) return old;
+            const exists = old.data.some(
+              (s) => s.scholarshipId === scholarshipId
+            );
+            console.log("exists", exists);
+            const updatedData = exists
+              ? old.data.map((s) =>
+                  s.scholarshipId === scholarshipId ? scholarshipData : s
+                )
+              : [scholarshipData, ...old.data];
+            console.log("updatedData", updatedData);
+            return { ...old, data: updatedData }; // Change 'scholarships' to 'data'
+          }
+        )
       );
 
       //AAPEND SA ID
@@ -144,22 +182,38 @@ export default function SocketListener() {
           return { ...old, scholarship: scholarshipData }; // only update `scholarship`
         }
       );
+
+      queryClient.setQueryData<ApplicatioByIdResponse>(
+        ["application", applicationId],
+        (old) => {
+          if (!old) return { application: pending }; // do nothing if cache is empty
+          return { ...old, application: pending }; // only update `scholarship`
+        }
+      );
+
+      queryClient.invalidateQueries({
+        queryKey: queryKeyScholarshipAll,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: queryKeyApplicationAll,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["scholarship", scholarshipId],
+        exact: true,
+      });
     });
     //AAPEND BAGONG POST NA SCHOLARSHIP
     socket.on("adminAddScholarships", (data) => {
       const scholarshipNew = data.newScholarship;
+      const scholarshipId = data.newScholarship.scholarshipId;
+      console.log(data);
       queryClient.setQueryData<ClientScholarshipsData>(
-        [
-          "scholarshipData",
-          1,
-          pageSizeScholarship,
-          sortByScholarship,
-          orderScholarship,
-          "ACTIVE",
-          searchScholarship,
-        ],
+        queryKeyScholarshipActive,
         (old) => {
-          if (!old) return old;
+          if (!old) {
+            return { data: [scholarshipNew], meta: defaultMeta };
+          }
 
           return {
             ...old,
@@ -168,83 +222,132 @@ export default function SocketListener() {
         }
       );
 
+      queryClient.setQueryData<ScholarshipByIdResponse>(
+        ["scholarship", scholarshipId],
+        (old) => {
+          if (!old) {
+            return { scholarship: scholarshipNew, inGovScholar: true };
+          }
+          return { ...old, scholarship: scholarshipNew };
+        }
+      );
+
+      queryClient.invalidateQueries({
+        queryKey: queryKeyScholarshipActive,
+        exact: true,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["scholarship", scholarshipId],
+        exact: true,
+      });
+
       StyledToast({
         status: "success",
         title: "New Scholarship Posted",
         description: `Visit scholarship page to view details.`,
       });
-      incrementActive();
     });
+
     //DELETE SCHOLARSHIP
     socket.on("deleteScholarship", (data) => {
       console.log("🎓 deleted:", data.deletedScholarship.scholarshipId);
       const deletedId = data.deletedScholarship.scholarshipId;
-
-      queryClient.setQueryData<ClientScholarshipsData>(
-        [
-          "scholarshipData",
-          pageScholarship,
-          pageSizeScholarship,
-          sortByScholarship,
-          orderScholarship,
-          statusScholarship,
-          searchScholarship,
-        ],
-        (old) => {
-          if (!old) return old;
-
-          return {
-            ...old,
-            data: old.data.filter((item) => item.scholarshipId !== deletedId),
-          };
-        }
+      cache.findAll({ queryKey: queryKeyScholarshipAll }).forEach((query) =>
+        queryClient.setQueryData<ClientScholarshipsData>(
+          query.queryKey,
+          (old) => {
+            if (!old?.data) return old;
+            return {
+              ...old,
+              data: old.data.filter((item) => item.scholarshipId !== deletedId),
+            };
+          }
+        )
       );
+      queryClient.invalidateQueries({
+        queryKey: queryKeyScholarshipAll,
+      });
     });
     //EDIT SCHOLARSHIP UPDATE
     socket.on("updateScholarship", (data) => {
       console.log("edited:", data);
       const editedData = data.update;
       const editedId = editedData.scholarshipId;
-      queryClient.setQueryData<ClientScholarshipsData>(
-        [
-          "scholarshipData",
-          pageScholarship,
-          pageSizeScholarship,
-          sortByScholarship,
-          orderScholarship,
-          "ACTIVE",
-          searchScholarship,
-        ],
-        (old) => {
-          if (!old) return old;
-          console.log("Scholarship cache snapshot:", old.data);
-          const exists = old.data.some((s) => s.scholarshipId === editedId);
-          console.log("exists", exists);
-          const updatedData = exists
-            ? old.data.map((s) =>
-                s.scholarshipId === editedId ? editedData : s
-              )
-            : [editedData, ...old.data];
-          console.log("updatedData", updatedData);
-          return { ...old, data: updatedData }; // Change 'scholarships' to 'data'
-        }
-      );
 
-      //UPDATE SCHOLARSHIPBYIDD
+      // 1️⃣ Update scholarship lists
+      cache.findAll({ queryKey: queryKeyScholarshipAll }).forEach((query) => {
+        queryClient.setQueryData<ClientScholarshipsData>(
+          query.queryKey,
+          (old) => {
+            if (!old) return old;
 
+            const updatedData = old.data.map((s) =>
+              s.scholarshipId === editedId ? editedData : s
+            );
+
+            return { ...old, data: updatedData };
+          }
+        );
+      });
+
+      // 2️⃣ Update single scholarship cache
       queryClient.setQueryData<ScholarshipByIdResponse>(
         ["scholarship", editedId],
-        (old) => {
-          if (!old) return old; // do nothing if cache is empty
-          return { ...old, scholarship: editedData }; // only update `scholarship`
-        }
+        (old) => (old ? { ...old, scholarship: editedData } : old)
       );
+
+      // 3️⃣ Update applications referencing this scholarship
+      cache.findAll({ queryKey: queryKeyApplicationAll }).forEach((query) => {
+        queryClient.setQueryData<ClientApplicationsData>(
+          query.queryKey,
+          (old) => {
+            if (!old) return old;
+
+            const updatedApplications = old.applications.map((app) =>
+              app.Scholarship.scholarshipId === editedId
+                ? { ...app, Scholarship: editedData }
+                : app
+            );
+
+            return { ...old, applications: updatedApplications };
+          }
+        );
+      });
+
+      cache.findAll({ queryKey: ["application"] }).forEach((query) => {
+        queryClient.setQueryData<ApplicatioByIdResponse>(
+          query.queryKey,
+          (old) => {
+            if (!old) return old;
+
+            const applicationScholarshipId = old.application.scholarshipId;
+
+            // Update the Scholarship field only if IDs match
+            const updatedApplication =
+              applicationScholarshipId === editedId
+                ? { ...old.application, Scholarship: editedData }
+                : old.application;
+
+            return { ...old, application: updatedApplication };
+          }
+        );
+      });
+
+      // 4️⃣ Invalidate only caches that need refetching
+      queryClient.invalidateQueries({ queryKey: queryKeyScholarshipAll });
+      queryClient.invalidateQueries({ queryKey: queryKeyApplicationAll });
+      queryClient.invalidateQueries({
+        queryKey: ["scholarship", editedId],
+        exact: true,
+      });
+
       StyledToast({
         status: "success",
         title: "Scholarship updated",
         description: `Scholarship "${editedData.title}" was updated successfully.`,
       });
     });
+
     //RENEWAL
     socket.on("renewScholarship", (data) => {
       const renewData = data.renewScholar;
@@ -252,16 +355,21 @@ export default function SocketListener() {
       console.log("renew scholarship received:", data);
       console.log("ID:", renewData);
       console.log("ID:", renewId);
+
+      cache.findAll({ queryKey: queryKeyScholarshipAll }).forEach((query) =>
+        queryClient.setQueryData<ClientScholarshipsData>(
+          query.queryKey,
+          (old) => {
+            if (!old?.data) return old;
+            return {
+              ...old,
+              data: old.data.filter((item) => item.scholarshipId !== renewId),
+            };
+          }
+        )
+      );
       queryClient.setQueryData<ClientScholarshipsData>(
-        [
-          "scholarshipData",
-          1,
-          pageSizeScholarship,
-          sortByScholarship,
-          orderScholarship,
-          "RENEW",
-          searchScholarship,
-        ],
+        queryKeyScholarshipRenew,
         (old) => {
           if (!old) return old;
 
@@ -272,25 +380,16 @@ export default function SocketListener() {
         }
       );
 
-      queryClient.setQueryData<ClientScholarshipsData>(
-        [
-          "scholarshipData",
-          1,
-          pageSizeScholarship,
-          sortByScholarship,
-          orderScholarship,
-          "EXPIRED",
-          searchScholarship,
-        ],
+      queryClient.setQueryData<ScholarshipByIdResponse>(
+        ["scholarship", renewId],
         (old) => {
-          if (!old) return old;
-
-          return {
-            ...old,
-            data: old.data.filter((item) => item.scholarshipId !== renewId),
-          };
+          if (!old) {
+            return { scholarship: renewData, inGovScholar: true };
+          }
+          return { ...old, scholarship: renewData };
         }
       );
+      queryClient.invalidateQueries({ queryKey: queryKeyScholarshipAll });
     });
 
     socket.on("approveApplication", (data) => {
@@ -301,70 +400,36 @@ export default function SocketListener() {
         data.BlockedApplications?.map(
           (item: BlockedApplication) => item.applicationId
         ) || [];
-
-      console.log("approveData scholarship received:", data);
-      // 1. Add to APPROVED list
+      // 1. Remove from all list
+      cache.findAll({ queryKey: queryKeyScholarshipAll }).forEach((query) =>
+        queryClient.setQueryData<ClientApplicationsData>(
+          query.queryKey,
+          (old) => {
+            if (!old) return old;
+            return {
+              ...old,
+              applications: old.applications.filter(
+                (item) =>
+                  item.applicationId !== approvedId &&
+                  !blockedWhenApproved.includes(item.applicationId)
+              ),
+            };
+          }
+        )
+      );
+      // 2. Add to APPROVED list
       queryClient.setQueryData<ClientApplicationsData>(
-        [
-          "clientApplications",
-          page,
-          pageSize,
-          sortBy,
-          order,
-          "APPROVED",
-          search,
-        ],
+        queryKeyApplicationApproved,
         (old) => {
-          if (!old) return old;
+          if (!old)
+            return {
+              applications: [approveData],
+              meta: defaultMetaApplication,
+            };
 
           return {
             ...old,
             applications: [approveData, ...old.applications],
-          };
-        }
-      );
-      // 2. Remove from PENDING list
-      queryClient.setQueryData<ClientApplicationsData>(
-        [
-          "clientApplications",
-          page,
-          pageSize,
-          sortBy,
-          order,
-          "PENDING",
-          search,
-        ],
-        (old) => {
-          if (!old) return old;
-
-          return {
-            ...old,
-            applications: old.applications.filter(
-              (item) =>
-                item.applicationId !== approvedId &&
-                !blockedWhenApproved.includes(item.applicationId)
-            ),
-          };
-        }
-      );
-      queryClient.setQueryData<ClientApplicationsData>(
-        [
-          "clientApplications",
-          page,
-          pageSize,
-          sortBy,
-          order,
-          "INTERVIEW",
-          search,
-        ],
-        (old) => {
-          if (!old) return old;
-
-          return {
-            ...old,
-            applications: old.applications.filter(
-              (item) => item.applicationId !== approvedId
-            ),
           };
         }
       );
@@ -373,8 +438,6 @@ export default function SocketListener() {
         ["notifications", 10],
         (old) => {
           if (!old) return old;
-
-          console.log("🟢 Found existing notifications — prepending new one");
 
           return {
             ...old,
@@ -396,8 +459,8 @@ export default function SocketListener() {
       queryClient.setQueryData<ApplicatioByIdResponse>(
         ["application", approvedId],
         (old) => {
-          if (!old) return old; // do nothing if cache is empty
-          return { ...old, application: approveData }; // only update `scholarship`
+          if (!old) return { application: approveData };
+          return { ...old, application: approveData };
         }
       );
 
@@ -406,6 +469,7 @@ export default function SocketListener() {
         title: "1 new notification recieved",
         description: "",
       });
+
       incrementNotifications(1);
       playNotificationSound();
       triggerConfetti();
@@ -416,11 +480,30 @@ export default function SocketListener() {
       const declinedId = declinedData.applicationId;
       const notificationData = data.notification;
 
+      cache.findAll({ queryKey: queryKeyScholarshipAll }).forEach((query) =>
+        //REMOVE ALL
+        queryClient.setQueryData<ClientApplicationsData>(
+          query.queryKey,
+          (old) => {
+            if (!old) return old;
+            return {
+              ...old,
+              applications: old.applications.filter(
+                (item) => item.applicationId !== declinedId
+              ),
+            };
+          }
+        )
+      );
       // 1. Add to declinedD list
       queryClient.setQueryData<ClientApplicationsData>(
-        ["clientApplications", 1, pageSize, sortBy, order, "DECLINED", search],
+        queryKeyApplicationDeclined,
         (old) => {
-          if (!old) return old;
+          if (!old)
+            return {
+              applications: [declinedData],
+              meta: defaultMetaApplication,
+            };
 
           return {
             ...old,
@@ -428,50 +511,8 @@ export default function SocketListener() {
           };
         }
       );
-      // 2. Remove from PENDING list
-      queryClient.setQueryData<ClientApplicationsData>(
-        [
-          "clientApplications",
-          page,
-          pageSize,
-          sortBy,
-          order,
-          "PENDING",
-          search,
-        ],
-        (old) => {
-          if (!old) return old;
 
-          return {
-            ...old,
-            applications: old.applications.filter(
-              (item) => item.applicationId !== declinedId
-            ),
-          };
-        }
-      );
-      queryClient.setQueryData<ClientApplicationsData>(
-        [
-          "clientApplications",
-          page,
-          pageSize,
-          sortBy,
-          order,
-          "INTERVIEW",
-          search,
-        ],
-        (old) => {
-          if (!old) return old;
-
-          return {
-            ...old,
-            applications: old.applications.filter(
-              (item) => item.applicationId !== declinedId
-            ),
-          };
-        }
-      );
-
+      //NOTIFICATION
       queryClient.setQueryData<InfiniteData<NotificationPage>>(
         ["notifications", 10],
         (old) => {
@@ -495,15 +536,15 @@ export default function SocketListener() {
           };
         }
       );
-
+      //uupdate by id
       queryClient.setQueryData<ApplicatioByIdResponse>(
         ["application", declinedId],
         (old) => {
-          if (!old) return old; // do nothing if cache is empty
+          if (!old) return { application: declinedData }; // do nothing if cache is empty
           return { ...old, application: declinedData }; // only update `scholarship`
         }
       );
-
+      queryClient.invalidateQueries({ queryKey: queryKeyApplicationAll });
       StyledToast({
         status: "success",
         title: "1 new notification recieved",
@@ -512,16 +553,37 @@ export default function SocketListener() {
       incrementNotifications(1);
       playNotificationSound();
     });
+
     socket.on("forInterview", (data) => {
       const interviewData = data.interviewApplication;
       const interviewId = interviewData.applicationId;
       const notificationData = data.notification;
       console.log("interviewData scholarship received:", data);
+
+      cache.findAll({ queryKey: queryKeyScholarshipAll }).forEach((query) =>
+        queryClient.setQueryData<ClientApplicationsData>(
+          query.queryKey,
+          (old) => {
+            if (!old?.applications) return old;
+            return {
+              ...old,
+              data: old.applications.filter(
+                (item) => item.applicationId !== interviewId
+              ),
+            };
+          }
+        )
+      );
       // 1. Add to interviewD list
+
       queryClient.setQueryData<ClientApplicationsData>(
-        ["clientApplications", 1, pageSize, sortBy, order, "INTERVIEW", search],
+        queryKeyApplicationInterview,
         (old) => {
-          if (!old) return old;
+          if (!old)
+            return {
+              applications: [interviewData],
+              meta: defaultMetaApplication,
+            };
 
           return {
             ...old,
@@ -530,45 +592,6 @@ export default function SocketListener() {
         }
       );
 
-      queryClient.setQueryData<InfiniteData<NotificationPage>>(
-        ["notifications", pageSize],
-        (old) => {
-          if (!old) return old;
-          return {
-            ...old,
-            pages: old.pages.map((page, index) =>
-              index === 0
-                ? {
-                    ...page,
-                    notification: [notificationData, ...page.notification],
-                  }
-                : page
-            ),
-          };
-        }
-      );
-      // 2. Remove from PENDING list
-      queryClient.setQueryData<ClientApplicationsData>(
-        [
-          "clientApplications",
-          page,
-          pageSize,
-          sortBy,
-          order,
-          "PENDING",
-          search,
-        ],
-        (old) => {
-          if (!old) return old;
-
-          return {
-            ...old,
-            applications: old.applications.filter(
-              (item) => item.applicationId !== interviewId
-            ),
-          };
-        }
-      );
       queryClient.setQueryData<InfiniteData<NotificationPage>>(
         ["notifications", 10],
         (old) => {
@@ -595,10 +618,11 @@ export default function SocketListener() {
       queryClient.setQueryData<ApplicatioByIdResponse>(
         ["application", interviewId],
         (old) => {
-          if (!old) return old; // do nothing if cache is empty
+          if (!old) return { application: interviewData }; // do nothing if cache is empty
           return { ...old, application: interviewData }; // only update `scholarship`
         }
       );
+      queryClient.invalidateQueries({ queryKey: queryKeyApplicationAll });
       StyledToast({
         status: "success",
         title: "1 new notification recieved",
@@ -613,7 +637,7 @@ export default function SocketListener() {
       console.log("announcement received:", data);
 
       queryClient.setQueryData<ClientAnnouncementsData>(
-        ["announcements", 1, pageSize, sortBy, order, search],
+        ["announcements", 1, 6, "dateCreated", "desc", ""],
         (old) => {
           if (!old) return old;
           console.log("meow");
@@ -632,57 +656,6 @@ export default function SocketListener() {
       playNotificationSound();
     });
 
-    socket.on("endScholarship", (data) => {
-      console.log("ended scholarship received:", data);
-      // // 1. Add to APPROVED list
-      // queryClient.setQueryData<ClientApplicationsData>(
-      //   [
-      //     "clientApplications",
-      //     page,
-      //     pageSize,
-      //     sortBy,
-      //     order,
-      //     "APPROVED",
-      //     search,
-      //   ],
-      //   (old) => {
-      //     if (!old) return old;
-
-      //     return {
-      //       ...old,
-      //       applications: [approveData, ...old.applications],
-      //     };
-      //   }
-      // );
-      // // 2. Remove from PENDING list
-      // queryClient.setQueryData<ClientApplicationsData>(
-      //   [
-      //     "clientApplications",
-      //     page,
-      //     pageSize,
-      //     sortBy,
-      //     order,
-      //     "PENDING",
-      //     search,
-      //   ],
-      //   (old) => {
-      //     if (!old) return old;
-
-      //     return {
-      //       ...old,
-      //       applications: old.applications.filter(
-      //         (item) =>
-      //           item.applicationId !== approvedId &&
-      //           !blockedWhenApproved.includes(item.applicationId)
-      //       ),
-      //     };
-      //   }
-      // );
-
-      playNotificationSound();
-    
-    });
-
     return () => {
       socket.off("applyScholarship");
       socket.off("adminAddScholarships");
@@ -697,14 +670,7 @@ export default function SocketListener() {
     };
   }, [
     queryClient,
-    page,
-    pageSize,
-    sortBy,
-    order,
-    search,
-    setCounts,
-    status,
-    statusScholarship,
+
     // id,
   ]);
 

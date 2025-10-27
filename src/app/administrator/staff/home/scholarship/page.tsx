@@ -1,8 +1,11 @@
 "use client";
 import {
   ArrowRight,
+  Calendar,
+  CalendarX,
   ChevronLeft,
   ChevronRight,
+  RefreshCcw,
   TextSearch,
 } from "lucide-react";
 import TitleReusable from "@/components/ui/title";
@@ -112,11 +115,35 @@ export default function Manage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.2, delay: 0.4 }}
         >
-          <TitleReusable
-            title="Available Scholarships"
-            description="View the list of scholarships currently open for application."
-            Icon={TextSearch}
-          />
+          {status === "ACTIVE" ? (
+            <TitleReusable
+              title="Available Scholarships"
+              description="Browse scholarships that are currently accepting applications."
+              Icon={TextSearch}
+              textColor="text-green-700/70"
+            />
+          ) : status === "RENEW" ? (
+            <TitleReusable
+              title="Renewal Scholarships"
+              description="View scholarships eligible for renewal or continuation."
+              Icon={RefreshCcw}
+              textColor="text-blue-700/70"
+            />
+          ) : status === "EXPIRED" ? (
+            <TitleReusable
+              title="Expired Scholarships"
+              description="These scholarships have expired and are no longer available."
+              Icon={CalendarX}
+              textColor="text-red-700/70"
+            />
+          ) : (
+            <TitleReusable
+              title="Ended Scholarships"
+              description="Scholarships that have concluded and are no longer active."
+              Icon={CalendarX}
+              textColor="text-gray-700/70"
+            />
+          )}
         </motion.div>
         <motion.div
           initial={{ opacity: 0, x: -30 }}

@@ -27,25 +27,18 @@ const DecisionMessageSchema = z.record(
   })
 );
 
+const ApplicationDecisionSchema = z.object({
+  ISPSU_Staff: StaffSchema,
+  dateCreated: z.date(),
+  decisionId: z.number(),
+  status: z.string(),
+  message: DecisionMessageSchema.optional(),
+});
 const ApplicationSchema = z.object({
   Scholarship: displayScholarshipSchema, // field name = Scholarship
   Student: StudentSchema, // field name = Student
-  Application_Decision: z.object({
-    ISPSU_Staff: StaffSchema,
-    dateCreated: z.date(),
-    decisionId: z.number(),
-    status: z.string(),
-    message: DecisionMessageSchema.optional(),
-  }),
-  Interview_Decision: z.object({
-    ISPSU_Staff: StaffSchema,
-    dateCreated: z.date(),
-    interviewId: z.number(),
-    staffId: z.number(),
-    status: z.string(),
-    message: DecisionMessageSchema.optional(),
-  }),
-
+  Application_Decision: z.array(ApplicationDecisionSchema),
+  Interview_Decision: z.array(ApplicationDecisionSchema),
   applicationId: z.number(),
   dateCreated: z.string(),
   interviewId: z.string(),

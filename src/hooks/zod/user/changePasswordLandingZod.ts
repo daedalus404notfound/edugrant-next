@@ -5,7 +5,7 @@ import z from "zod";
 
 const changePassSchema = z.object({
   email: z.email().min(1, "Required"),
-
+  schoolId: z.string().min(1, "Required"),
 });
 
 const changePassOtpSchema = z
@@ -31,7 +31,7 @@ export function useChangePasswordLanding() {
     mode: "onChange",
     defaultValues: {
       email: "",
-      
+      schoolId: "",
     },
   });
   const LoginData = changePasswordForm.watch();

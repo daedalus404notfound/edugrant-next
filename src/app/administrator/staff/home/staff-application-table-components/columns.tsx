@@ -6,7 +6,7 @@ import { DataTableColumnHeader } from "@/app/table-components/data-table-column-
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Clock } from "lucide-react";
+import { Ban, CheckCircle, Clock, MessageSquare, X } from "lucide-react";
 import { getPhaseLabel } from "@/lib/phaseLevel";
 import { format } from "date-fns";
 
@@ -176,15 +176,20 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     enableHiding: true,
   },
   {
-    accessorFn: (row) => row.Application_Decision?.dateCreated,
+    accessorFn: (row) => row.Application_Decision[0].dateCreated,
     id: "processedDate",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Processed Date" />
     ),
     cell: ({ row }) => (
-      <span className="">
-        {row.original.Application_Decision?.dateCreated
-          ? format(row.getValue("processedDate"), "PPP p")
+      <span>
+        {row.original.Application_Decision?.length
+          ? format(
+              row.original.Application_Decision[
+                row.original.Application_Decision.length - 1
+              ].dateCreated,
+              "PPP p"
+            )
           : "N/A"}
       </span>
     ),
@@ -200,20 +205,30 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     cell: ({ row }) => {
       return (
         <Badge
-          className={
+          className={`tracking-wide text-gray-200 ${
             row.getValue("status") === "PENDING"
-              ? "bg-yellow-500/10 text-yellow-500"
+              ? "bg-gradient-to-br to-yellow-950 from-yellow-900"
               : row.getValue("status") === "DECLINED"
-              ? "bg-red-500/10 text-red-500"
+              ? "bg-gradient-to-br to-red-950 from-red-900 "
               : row.getValue("status") === "INTERVIEW"
-              ? "bg-indigo-500/10 text-indigo-500"
+              ? "bg-gradient-to-br to-indigo-950 from-indigo-900"
               : row.getValue("status") === "APPROVED"
-              ? "bg-green-500/10 text-green-500"
-              : "bg-gray-500/10 text-gray-500"
-          }
+              ? "bg-gradient-to-br to-green-950 from-green-900"
+              : "bg-gradient-to-br to-gray-950 from-gray-900"
+          }`}
         >
-          <Clock />
           {row.getValue("status")}
+          {row.getValue("status") === "PENDING" ? (
+            <Clock />
+          ) : row.getValue("status") === "DECLINED" ? (
+            <X />
+          ) : row.getValue("status") === "INTERVIEW" ? (
+            <MessageSquare />
+          ) : row.getValue("status") === "APPROVED" ? (
+            <CheckCircle />
+          ) : (
+            <Ban />
+          )}
         </Badge>
       );
     },
@@ -221,8 +236,8 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     enableHiding: true,
   },
 
-  {
-    id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
-  },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => <DataTableRowActions row={row} />,
+  // },
 ];

@@ -16,8 +16,6 @@ interface ApiErrorResponse {
 type ApiError = AxiosError<ApiErrorResponse>;
 const updateUserApi = async (data: AdminProfileFormData) => {
   const formData = new FormData();
-
-  formData.append("address", data.ISPSU_Head.address);
   formData.append("firstName", data.ISPSU_Head.fName);
   formData.append("gender", data.ISPSU_Head.gender);
   formData.append("lastName", data.ISPSU_Head.lName);
@@ -51,18 +49,66 @@ export const useProfile = () => {
       setAdmin(resData.updatedHead);
     },
     onError: (error: ApiError) => {
-      console.error("Profile update error:", error);
-      if (error.response?.data.message) {
+      if (axios.isAxiosError<ApiErrorResponse>(error)) {
+        const status = error.response?.status;
+        const message = error.response?.data?.message;
+
+        if (!error.response) {
+          StyledToast({
+            status: "error",
+            title: "Network Error",
+            description:
+              "No internet connection or the server is unreachable. Please check your connection and try again.",
+          });
+        } else if (status === 400) {
+          StyledToast({
+            status: "error",
+            title: "Bad Request",
+            description: message ?? "Invalid request. Please check your input.",
+          });
+        } else if (status === 401) {
+          StyledToast({
+            status: "error",
+            title: "Unauthorized",
+            description:
+              message ?? "You are not authorized. Please log in again.",
+          });
+        } else if (status === 403) {
+          StyledToast({
+            status: "error",
+            title: "Forbidden",
+            description:
+              message ?? "You do not have permission to perform this action.",
+          });
+        } else if (status === 404) {
+          StyledToast({
+            status: "warning",
+            title: "No data found",
+            description: message ?? "There are no records found.",
+          });
+        } else if (status === 500) {
+          StyledToast({
+            status: "error",
+            title: "Server Error",
+            description:
+              message ?? "Internal server error. Please try again later.",
+          });
+        } else {
+          StyledToast({
+            status: "error",
+            title: message ?? "Export CSV error occurred.",
+            description: "Cannot process your request.",
+          });
+        }
+      } else {
         StyledToast({
           status: "error",
-          title: error.response.data.message,
-          duration: 10000,
-          description: "Cannot process your profile update request.",
+          title: "Unexpected Error",
+          description: "Something went wrong. Please try again later.",
         });
       }
     },
-    retry: 1,
-    retryDelay: 1000,
+    
   });
 };
 
