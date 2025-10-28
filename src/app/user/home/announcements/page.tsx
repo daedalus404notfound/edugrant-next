@@ -8,9 +8,13 @@ import {
   ArrowRightIcon,
   X,
   Clock,
+  GraduationCap,
+  ChevronRight,
+  ChevronLeft,
 } from "lucide-react";
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AnimatePresence, motion } from "motion/react";
 import logo from "@/assets/basclogo.png";
 import { Button } from "@/components/ui/button";
 import TitleReusable from "@/components/ui/title";
@@ -42,76 +46,100 @@ import useGetAnnouncementByIdUser from "@/hooks/user/getAnnouncementsById";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { TipTapViewer } from "@/components/ui/tiptap-viewer";
+import useAnnouncementData from "@/hooks/user/getAnnouncement";
+import {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+} from "@tanstack/react-table";
+import Link from "next/link";
 export default function AdminAnnouncement() {
-  const { meta, page, setOrder, order, search, setSearch, setPage } =
-    useAnnouncementUserStore();
+  const [search, setSearch] = useState("");
+
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 6,
+  });
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: "dateCreated",
+      desc: true,
+    },
+  ]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [id, setId] = useState(0);
   const { fullData, loading, refetch } = useGetAnnouncementByIdUser(id);
-  const { data, isLoading } = useAnnouncementFetchUser();
   const [open, setOpen] = useState(false);
-
+  const { query, meta } = useAnnouncementData({
+    pagination,
+    sorting,
+    columnFilters,
+    search,
+  });
   const handleNext = () => {
-    if (meta && meta.page < meta.totalPage) {
-      setPage(page + 1);
-    }
-  };
-  const handlePrev = () => {
-    if (meta.page > 1) {
-      setPage(page - 1);
+    if (meta && pagination.pageIndex + 1 < meta.totalPage) {
+      setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex + 1 }));
     }
   };
 
-  const AnnouncementSkeleton = () => (
-    <div className="dark:bg-card bg-card/30 rounded-md shadow pt-6 px-6 pb-8">
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <Skeleton className="h-6 lg:w-64 w-48" />
-          <div className="flex flex-wrap gap-2 ml-3">
-            <Skeleton className="h-5 w-20" />
-          </div>
-        </div>
-        <Skeleton className="h-9 w-9 rounded-md" />
-      </div>
-      <Skeleton className="h-4 w-32 mt-1" />
-      <Skeleton className="h-4 w-3/4 mt-3" />
-      <Skeleton className="h-4 w-2/3 mt-2" />
-    </div>
-  );
+  const handlePrev = () => {
+    if (pagination.pageIndex > 0) {
+      setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex - 1 }));
+    }
+  };
+  const loadingState = query.isLoading;
+  const data = query.data?.annoucements ?? [];
 
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:py-10  py-4">
-        <div className="pb-6 border-b">
+        <motion.div
+          className="flex justify-between items-end"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.3, delay: 0.3 }}
+        >
           <TitleReusable
             title="Announcements"
-            description="Here's what's new! Stay tuned for the latest updates."
+            description="THere's what's new! Stay tuned for the latest updates."
             Icon={Megaphone}
           />
-        </div>
-        <div className="mt-15 lg:w-[80%] md:min-w-5xl w-full mx-auto space-y-3">
-          <div className="flex justify-between">
-            <div className="relative max-w-lg w-full">
-              <Input
-                placeholder="Search announcement..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full peer ps-9 pe-9"
-                type="search"
-              />
+        </motion.div>
 
-              <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3 text-muted-foreground/80 peer-disabled:opacity-50">
-                <SearchIcon size={16} />
-              </div>
-              <button
-                className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground/80 transition-[color,box-shadow] outline-none hover:text-foreground focus:z-10 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
-                aria-label="Submit search"
-                type="submit"
-              >
-                <ArrowRightIcon size={16} />
-              </button>
-            </div>
-            <Select value={order} onValueChange={(value) => setOrder(value)}>
-              <SelectTrigger className="w-[150px]">
+        {/* <div className="flex gap-2 mt-5">
+          <div className="flex-1">
+            <Input placeholder="Search..." />
+          </div>
+          <Button variant="secondary">
+            <MoreHorizontal />
+          </Button>
+        </div> */}
+
+        <div className="mt-15 lg:w-[80%] md:min-w-5xl w-full mx-auto space-y-8">
+          <motion.div
+            className="flex justify-between items-center gap-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: 0.4 }}
+          >
+            <Input
+              placeholder="Search Announcement..."
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+              className="max-w-sm w-full text-sm"
+            />
+            <Select
+              value={sorting[0].desc ? "desc" : "asc"}
+              onValueChange={(e) =>
+                setSorting([
+                  {
+                    id: "dateCreated",
+                    desc: e === "desc",
+                  },
+                ])
+              }
+            >
+              <SelectTrigger className="text-sm">
                 <SelectValue placeholder="Sort" />
               </SelectTrigger>
               <SelectContent>
@@ -119,106 +147,221 @@ export default function AdminAnnouncement() {
                 <SelectItem value="asc">Oldest</SelectItem>
               </SelectContent>
             </Select>
-          </div>
-          <div className="flex flex-col gap-3">
-            {isLoading ? (
-              <>
-                {[...Array(3)].map((_, i) => (
-                  <AnnouncementSkeleton key={i} />
-                ))}
-              </>
-            ) : data.length === 0 ? (
-              <NoDataFound />
-            ) : (
-              data.slice(0, 6).map((item) => (
+          </motion.div>
+
+          {search ? (
+            <p className="text-sm">
+              Showing search result for{" "}
+              <strong className="underline">{search}</strong>{" "}
+            </p>
+          ) : (
+            ""
+          )}
+          <div className="grid grid-cols-1  gap-4">
+            {loadingState ? (
+              [...Array(2)].map((_, index) => (
                 <div
-                  key={item.announcementId}
-                  onClick={() => {
-                    setId(item.announcementId);
-
-                    setOpen(true);
-                  }}
-                  className="block bg-card hover:bg-gray-200 dark:bg-card/80 dark:hover:bg-card rounded-lg shadow pt-6 px-6 pb-8 transition-all duration-200"
+                  key={index}
+                  className="bg-card relative rounded-lg p-4 md:p-6 shadow-sm space-y-4 md:space-y-6"
                 >
-                  <div className=" ">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex items-center gap-3">
-                        <h2 className="lg:text-lg text-base font-semibold tracking-tight text-foreground  text-balance ">
-                          {item.title}
-                        </h2>{" "}
+                  {/* Header Section Skeleton */}
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="flex items-center gap-3 flex-1">
+                      <Skeleton className="w-10 h-10 rounded-full flex-shrink-0" />
+                      <div className="space-y-2 flex-1 min-w-0">
+                        <Skeleton className="h-4 w-full max-w-xs" />
+                        <Skeleton className="h-3 w-full max-w-sm" />
                       </div>
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      <Skeleton className="h-6 w-20" />
+                      <Skeleton className="h-6 w-24" />
+                    </div>
+                  </div>
 
-                      <Button size="sm" variant="ghost">
-                        <ArrowRight />
-                      </Button>
-                    </div>{" "}
-                    <p
-                      className="line-clamp-2 text-sm leading-relaxed text-foreground/80 text-pretty w-3/4 mt-3  max-w-none"
-                      dangerouslySetInnerHTML={{ __html: item.description }}
-                    />
-                    <div className="flex justify-between items-center">
-                      {item.tags.data.length > 0 && (
-                        <div className=" flex flex-wrap gap-2 mt-5">
-                          {item.tags.data.map((tag, i) => (
-                            <p
-                              className="pl-3 border-l text-sm font-medium text-green-700 "
-                              key={i}
-                            >
-                              {tag}
-                            </p>
-                          ))}
-                        </div>
-                      )}
-                      <time className=" text-xs text-foreground/70 flex items-center gap-1.5 jakarta tracking-wide mt-1">
-                        <Calendar className="h-3 w-3" />{" "}
-                        {item.dateCreated && format(item.dateCreated, "PPP p")}
-                      </time>
+                  {/* Separator Skeleton */}
+                  <Skeleton className="h-px w-full" />
+
+                  {/* Info Grid Skeleton */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+                    {/* Application Date */}
+                    <div className="space-y-2 sm:pl-4">
+                      <Skeleton className="h-3 w-24" />
+                      <Skeleton className="h-5 w-32" />
+                    </div>
+
+                    {/* Scholarship Deadline */}
+                    <div className="space-y-2 sm:border-l sm:pl-4">
+                      <Skeleton className="h-3 w-28" />
+                      <Skeleton className="h-5 w-32" />
+                    </div>
+
+                    {/* Status */}
+                    <div className="space-y-2 sm:border-l sm:pl-4">
+                      <Skeleton className="h-3 w-16" />
+                      <Skeleton className="h-5 w-20" />
                     </div>
                   </div>
                 </div>
               ))
+            ) : data.length === 0 ? (
+              <NoDataFound />
+            ) : (
+              data.slice(0, 6).map((meow, index) => (
+                <motion.div
+                  key={meow.announcementId}
+                  initial={{ y: 50, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{
+                    duration: 0.2,
+                    delay: index * 0.1,
+                    ease: "easeOut",
+                  }}
+                  className="bg-gradient-to-br dark:to-card/70 to-card/50 dark:from-card/50 from-card/30 rounded-lg overflow-hidden relative"
+                >
+                  {/* Header Section */}
+                  {/* <img
+                    className=" w-full object-cover "
+                    src={meow.Scholarship.cover || "/placeholder.svg"}
+                    alt=""
+                  /> */}
+                  <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 items-start lg:p-6 p-4">
+                    <div className="flex  ">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        {/* <Avatar className="size-10 flex-shrink-0">
+                          <AvatarImage
+                            className="object-cover"
+                            src={meow.Scholarship.logo || "/placeholder.svg"}
+                          />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar> */}
+                        <div className="min-w-0 flex-1">
+                          <div className="flex lg:gap-6 gap-4 flex-col lg:flex-row">
+                            <h3 className="font-semibold text-base line-clamp-1">
+                              {meow.title || "Unknown Provider"}
+                            </h3>
+                            <div className="flex gap-2 flex-wrap">
+                              {meow.tags.data.map((meow, index) => (
+                                <Badge
+                                  key={`${meow}-${index}`}
+                                  className="bg-indigo-800 text-gray-200 text-xs"
+                                >
+                                  {meow}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                          <p
+                            className="line-clamp-2 text-sm leading-relaxed text-foreground/80 text-pretty w-[90%] mt-3  max-w-none"
+                            dangerouslySetInnerHTML={{
+                              __html: meow.description,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+
+                  {/* Info Grid - Responsive */}
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 py-4 md:py-6 px-4 md:px-6 bg-card/50 relative z-10">
+                    {/* Application Date */}
+                    <div className="space-y-1.5 sm:pl-4 border-l hidden lg:block">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                        <h1 className="text-xs text-muted-foreground">
+                          Published Date
+                        </h1>
+                      </div>
+                      <p className="font-medium text-sm text-foreground">
+                        {meow?.dateCreated &&
+                          format(meow?.dateCreated, "yyyy/MM/dd")}
+                      </p>
+                    </div>
+
+                    {/* Scholarship Deadline */}
+                    <div className="space-y-1.5 sm:pl-4 border-l hidden lg:block">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                        <h1 className="text-xs text-muted-foreground">
+                          Published Time
+                        </h1>
+                      </div>
+                      <p className="font-medium text-sm text-foreground">
+                        {meow?.dateCreated && format(meow?.dateCreated, "p")}
+                      </p>
+                    </div>
+
+                    {/* Status */}
+                    <div className="flex justify-end  items-end col-span-2 lg:col-span-1">
+                      <Button
+                        className="w-full lg:w-auto"
+                        size="sm"
+                        onClick={() => {
+                          setOpen(true);
+                          setId(meow.announcementId);
+                        }}
+                      >
+                        View Details <ArrowRight className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
+              ))
             )}
           </div>
 
-          <div className="flex items-center justify-between gap-3">
-            <p
-              className="grow text-sm text-muted-foreground"
-              aria-live="polite"
+          {meta.totalRows > 6 && (
+            <motion.div
+              className="flex items-center justify-between gap-3"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.4 }}
             >
-              Page <span className="text-foreground">{meta.page}</span> of{" "}
-              <span className="text-foreground">{meta.totalPage}</span>
-            </p>
+              <p
+                className="grow text-sm text-muted-foreground"
+                aria-live="polite"
+              >
+                Page <span className="text-foreground">{meta.page}</span> of{" "}
+                <span className="text-foreground">{meta.totalPage}</span>
+              </p>
 
-            <Pagination className="w-auto">
-              <PaginationContent className="gap-3">
-                <PaginationItem>
-                  <Button
-                    variant="outline"
-                    disabled={page === 1}
-                    onClick={handlePrev}
-                  >
-                    Previous
-                  </Button>
-                </PaginationItem>
-                <PaginationItem>
-                  <Button
-                    variant="outline"
-                    disabled={page === meta.totalPage || meta.totalPage === 0}
-                    onClick={handleNext}
-                  >
-                    Next
-                  </Button>
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
+              <Pagination className="w-auto">
+                <PaginationContent className="gap-3">
+                  <PaginationItem>
+                    <Button
+                      variant="outline"
+                      disabled={meta.page === 1 || loadingState}
+                      onClick={handlePrev}
+                    >
+                      <ChevronLeft /> Previous
+                    </Button>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <Button
+                      variant="outline"
+                      disabled={
+                        meta.page === meta.totalPage ||
+                        meta.totalPage === 0 ||
+                        loadingState
+                      }
+                      onClick={handleNext}
+                    >
+                      Next
+                      <ChevronRight />
+                    </Button>
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </motion.div>
+          )}
         </div>
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
           showCloseButton={false}
-          className="max-w-5xl overflow-hidden  gap-0 p-1 border-0"
+          className="max-w-5xl lg:w-full w-[98%]  gap-0 p-1 border-0"
         >
           <DialogHeader className="sr-only">
             <DialogTitle>Announcement Details</DialogTitle>
@@ -236,117 +379,178 @@ export default function AdminAnnouncement() {
               </Button>
             </div>
             <div className="flex items-center gap-2">
-              <Button className="ghost" variant="ghost" size="sm">
+              <Button
+                className="ghost"
+                variant="ghost"
+                size="sm"
+                onClick={() => setOpen(false)}
+              >
                 <X />
               </Button>
             </div>
           </div>
 
-          <div className="bg-background rounded-t-md max-h-[90vh]  overflow-auto">
-            <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-b-lg overflow-hidden ">
-              {/* Header Section */}
-              <div className="relative flex lg:flex-row flex-col lg:items-end items-center  py-8 px-4">
-                <img
-                  className="lg:w-70 w-50 absolute right-0 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-15 "
-                  src={logo.src}
-                  alt=""
-                />
-                <div className="flex-1 px-4 py-2 z-10 space-y-3">
-                  <h1 className="text-base lg:text-xl font-medium text-foreground capitalize line-clamp-1">
-                    {fullData?.title}
-                  </h1>
-
-                  {/* <p className="font-medium font-mono text-base tracking-wide">
-                        {fullData?.Scholarship_Provider.name}
-                      </p>{" "} */}
-                  <div>
-                    {fullData?.tags?.data && fullData.tags.data.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {fullData.tags.data.map((tag, i) => (
-                          <Badge key={i} variant="secondary">
-                            {tag}
-                          </Badge>
-                        ))}
+          {loading ? (
+            <AnnouncementSkeleton />
+          ) : (
+            <div className="bg-background rounded-t-md ">
+              <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-b-lg overflow-hidden ">
+                {/* Header Section */}
+                <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 items-start lg:p-6 p-4">
+                  <div className="flex  ">
+                    <div className="flex items-center gap-3 flex-1 min-w-0">
+                      {/* <Avatar className="size-10 flex-shrink-0">
+                          <AvatarImage
+                            className="object-cover"
+                            src={meow.Scholarship.logo || "/placeholder.svg"}
+                          />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar> */}
+                      <div className="min-w-0 flex-1">
+                        <div className="flex lg:gap-6 gap-4 flex-wrap">
+                          <h3 className="font-semibold text-xl line-clamp-1">
+                            {fullData?.title || "Unknown Title"}
+                          </h3>
+                          <div className="flex gap-2 flex-wrap">
+                            {fullData?.tags.data.map((meow, index) => (
+                              <Badge
+                                key={`${meow}-${index}`}
+                                className="bg-indigo-800 text-gray-200 text-xs"
+                              >
+                                {meow}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
                       </div>
-                    )}
+                    </div>
                   </div>
                 </div>
+                <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+                {/* Info Grid */}
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 py-4 md:py-6 px-4 md:px-6 bg-card/50 relative z-10">
+                  {/* Application Date */}
+                  <div className="space-y-1.5 pl-4 border-l ">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                      <h1 className="text-xs text-muted-foreground">
+                        Published Date
+                      </h1>
+                    </div>
+                    <p className="font-medium text-sm text-foreground">
+                      {fullData?.dateCreated &&
+                        format(fullData?.dateCreated, "yyyy/MM/dd")}
+                    </p>
+                  </div>
+
+                  {/* Scholarship Deadline */}
+                  <div className="space-y-1.5 pl-4 border-l ">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                      <h1 className="text-xs text-muted-foreground">
+                        Published Time
+                      </h1>
+                    </div>
+                    <p className="font-medium text-sm text-foreground">
+                      {fullData?.dateCreated &&
+                        format(fullData?.dateCreated, "p")}
+                    </p>
+                  </div>
+
+                  {/* Status */}
+                </div>
               </div>
-              <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-              {/* Info Grid */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 py-6 px-4 bg-card relative z-10">
-                <div className="space-y-1.5 border-l-2 pl-4">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-                    <h1 className="text-xs text-muted-foreground">
-                      Published Date
-                    </h1>
-                  </div>
 
-                  <p className="font-medium text-foreground">
-                    {fullData?.dateCreated &&
-                      format(fullData.dateCreated, "PPP")}
-                  </p>
-                </div>{" "}
-                <div className="space-y-1.5  border-l-2 pl-4">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-3.5 h-3.5 text-muted-foreground" />
-                    <h1 className="text-xs text-muted-foreground">
-                      Published Time
-                    </h1>
-                  </div>
+              <TipTapViewer
+                content={fullData?.description || ""}
+                className="lg:p-6 p-4"
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+function AnnouncementSkeleton() {
+  return (
+    <div className="space-y-0">
+      {/* Header Section */}
 
-                  <span className="font-medium text-foreground">
-                    {fullData?.dateCreated && format(fullData.dateCreated, "p")}
-                  </span>
+      {/* Main Content Container */}
+      <div className="bg-background rounded-t-md">
+        <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30 rounded-b-lg overflow-hidden">
+          {/* Title and Tags Section */}
+          <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 items-start lg:p-6 p-4">
+            <div className="flex w-full">
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
+                  <div className="flex lg:gap-6 gap-4 flex-wrap">
+                    {/* Title Skeleton */}
+                    <Skeleton className="h-7 w-64 sm:w-80" />
+                    {/* Tags Skeleton */}
+                    <div className="flex gap-2 flex-wrap">
+                      <Skeleton className="h-6 w-20" />
+                      <Skeleton className="h-6 w-24" />
+                      <Skeleton className="h-6 w-16" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-
-            {loading ? (
-              <div className="p-6 space-y-6">
-                <div className="space-y-4">
-                  <Skeleton className="h-10 w-3/4 rounded-lg" />
-                  <div className="flex items-center gap-4">
-                    <Skeleton className="h-5 w-5 rounded" />
-                    <Skeleton className="h-5 w-48 rounded-lg" />
-                    <Skeleton className="h-5 w-5 rounded" />
-                    <Skeleton className="h-5 w-32 rounded-lg" />
-                  </div>
-                </div>
-
-                <Separator className="bg-border/40" />
-
-                <div className="space-y-4">
-                  <div className="flex gap-2">
-                    <Skeleton className="h-7 w-24 rounded-full" />
-                    <Skeleton className="h-7 w-28 rounded-full" />
-                    <Skeleton className="h-7 w-20 rounded-full" />
-                  </div>
-
-                  <div className="space-y-3 pt-2">
-                    <Skeleton className="h-4 w-full rounded" />
-                    <Skeleton className="h-4 w-full rounded" />
-                    <Skeleton className="h-4 w-5/6 rounded" />
-                    <Skeleton className="h-4 w-full rounded" />
-                    <Skeleton className="h-4 w-4/5 rounded" />
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <Skeleton className="h-9 flex-1" />{" "}
-                  <Skeleton className="h-9 flex-1" />
-                </div>
-              </div>
-            ) : (
-              <TipTapViewer
-                content={fullData?.description || ""}
-                className="p-6"
-              />
-            )}
           </div>
-        </DialogContent>
-      </Dialog>
+
+          {/* Separator */}
+          <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent" />
+
+          {/* Info Grid Section */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 py-4 md:py-6 px-4 md:px-6 bg-card/50 relative z-10">
+            {/* Published Date */}
+            <div className="space-y-1.5 pl-4 border-l border-border">
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-3.5 w-3.5 rounded-full" />
+                <Skeleton className="h-3 w-24" />
+              </div>
+              <Skeleton className="h-4 w-32" />
+            </div>
+
+            {/* Published Time */}
+            <div className="space-y-1.5 pl-4 border-l border-border">
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-3.5 w-3.5 rounded-full" />
+                <Skeleton className="h-3 w-20" />
+              </div>
+              <Skeleton className="h-4 w-28" />
+            </div>
+
+            {/* Status (optional third column on lg) */}
+            <div className="hidden lg:block space-y-1.5 sm:pl-4 border-l border-border">
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-3.5 w-3.5 rounded-full" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+              <Skeleton className="h-4 w-24" />
+            </div>
+          </div>
+        </div>
+
+        {/* Description Content Section */}
+        <div className="lg:p-6 p-4 space-y-3">
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-5/6" />
+          <div className="pt-2 space-y-3">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-4/5" />
+          </div>
+          <div className="pt-2 space-y-3">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

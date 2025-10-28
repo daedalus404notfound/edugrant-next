@@ -137,30 +137,30 @@ export default function ScholarshipModal({
         </div>
         <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
         {/* Info Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-8 gap-6 lg:py-6 py-4 lg:px-4 px-2 bg-card relative z-10 ">
-          <div className="space-y-1.5 lg:border-l-2 lg:pl-4">
+        <div className="grid grid-cols-2 lg:grid-cols-3 bg-card relative z-10 p-4 lg:p-6">
+          <div className="space-y-1.5 lg:border-l lg:pl-4">
             <div className="flex items-center gap-2">
               <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
               <h1 className="text-xs text-muted-foreground">Posted on</h1>
             </div>
 
-            <p className="font-medium lg:text-base text-sm text-foreground">
-              {data?.dateCreated && format(data?.dateCreated, "PPP p")}
+            <p className="font-medium lg:text-base text-sm text-foreground lg:border-l-0 border-l lg:pl-0 pl-5">
+              {data?.dateCreated
+                ? format(data?.dateCreated, "yyyy/MM/dd")
+                : "—"}
             </p>
           </div>{" "}
-          <div className="space-y-1.5 lg:border-l-2 lg:pl-4">
+          <div className="space-y-1.5 lg:border-l lg:pl-4">
             <div className="flex items-center gap-2">
               <GraduationCap className="w-3.5 h-3.5 text-muted-foreground" />
-              <h1 className="text-xs text-muted-foreground">
-                Scholarship Deadline
-              </h1>
+              <h1 className="text-xs text-muted-foreground">Deadline</h1>
             </div>
 
-            <span className="font-medium lg:text-base text-sm  text-foreground">
-              {data?.deadline ? format(data?.deadline, "PPP p") : "—"}
+            <span className="font-medium lg:text-base text-sm  text-foreground lg:border-l-0 border-l lg:pl-0 pl-5">
+              {data?.deadline ? format(data?.deadline, "yyyy/MM/dd") : "—"}
             </span>
           </div>
-          <div className="space-y-1.5 lg:border-l-2 lg:pl-4">
+          <div className="space-y-1.5 lg:border-l lg:pl-4 hidden lg:block">
             <div className="flex items-center gap-2">
               <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
               <h1 className="text-xs text-muted-foreground">
@@ -168,7 +168,7 @@ export default function ScholarshipModal({
               </h1>
             </div>
 
-            <p className="font-medium lg:text-base text-sm  text-foreground">
+            <p className="font-medium lg:text-base text-sm  text-foreground lg:border-l-0 border-l lg:pl-0 pl-5">
               {data.interview ? "Interview Required" : "No Interview Needed"}
             </p>
           </div>
@@ -180,7 +180,7 @@ export default function ScholarshipModal({
           <p className="whitespace-pre-line">{data?.description}</p>
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-2">
           <p className="text-xs uppercase text-muted-foreground">
             Full Scholarship Details
           </p>

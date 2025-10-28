@@ -256,7 +256,7 @@ export default function ClientScholarship() {
                     alt=""
                   /> */}
                   <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 items-start py-6 md:py-8 px-4 md:px-6">
-                    <div className="flex gap-6 items-start">
+                    <div className="flex gap-6 items-start w-full lg:w-auto">
                       <div className="flex items-center gap-3 flex-1 min-w-0">
                         <Avatar className="size-10 flex-shrink-0">
                           <AvatarImage

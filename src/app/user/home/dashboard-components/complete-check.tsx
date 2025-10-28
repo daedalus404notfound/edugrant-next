@@ -13,7 +13,7 @@ export default function CompleteChecker() {
           <div className="flex grow flex-col justify-between gap-2 md:flex-row md:items-center">
             <p className="text-sm font-medium">
               Complete family composition in profile details first to access
-              apply scholarship feature
+              apply scholarship feature.
             </p>
           </div>
         </div>

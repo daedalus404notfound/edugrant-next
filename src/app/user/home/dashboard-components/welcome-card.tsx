@@ -1,88 +1,57 @@
 import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  GraduationCap,
-  LayoutTemplate,
-  Map,
-  Sparkles,
-} from "lucide-react";
-import logo from "@/assets/edugrant-logo.png";
+import { ArrowRight, Map } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
-export default function WelcomeCard({
-  loading,
-  pending,
-  application,
-}: {
-  loading: boolean;
-  pending: number;
-  application: number;
-}) {
+import { useUserStore } from "@/store/useUserStore";
+import TitleReusable from "@/components/ui/title";
+export default function WelcomeCard({ loading }: { loading: boolean }) {
+  const { user } = useUserStore();
   return (
-    <div className="dark:border relative overflow-hidden flex flex-col justify-between gap-4 h-70  bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30 p-6 rounded-lg">
-      <img
+    <div className=" relative overflow-hidden flex flex-col gap-12  px-2">
+      {/* <img
         className="absolute object-contain shadow lg:-right-8 -right-20 lg:h-full h-3/4 lg:-bottom-15 -bottom-0 opacity-20"
         src={logo.src || "/placeholder.svg"}
         alt=""
-      />
+      /> */}
+      <div>
+        <TitleReusable
+          title={` Welcome back,${
+            loading ? " —" : ` ${user?.Student.fName} ${user?.Student.lName}!`
+          }`}
+          description=""
+          titleSize="text-base"
+        />
 
-      {loading ? (
-        <>
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <Skeleton className="h-4 w-4 rounded" />
-              <Skeleton className="h-4 w-24" />
-            </div>
-
-            <Skeleton className="h-8 w-3/4 mb-2" />
-
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-4 w-2/3" />
-            </div>
-          </div>
-
-          <div className="flex flex-wrap gap-3">
-            <Skeleton className="h-10 w-48" />
-            <Skeleton className="h-10 w-44" />
-          </div>
-        </>
-      ) : (
-        <>
-          <div>
-            <div className="flex items-center gap-2 mb-2">
-              <GraduationCap className="h-4 w-4 text-primary" />
-              <span className="text-sm font-bold text-primary jakarta">
-                Welcome back
-              </span>
-            </div>
-
-            <h2 className="text-xl md:text-3xl font-bold text-foreground mb-2 text-balance jakarta">
-              Ready to find a scholarship?
-            </h2>
-
-            <p className="text-muted-foreground text-balance text-sm lg:text-base">
-              You currently have <strong>{application}</strong> applications in
-              progress and <strong>{pending}</strong> pending applications
-              awaiting review.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap gap-3 z-10">
-            <Link href={`/user/home/scholarships`} className="flex-1 md:flex-0">
-              <Button className="w-full">
-                Browse Scholarships
-                <ArrowRight />
-              </Button>
-            </Link>
-            <Link href={`/user/home/applications`} className="flex-1 md:flex-0">
-              <Button className="w-full" variant="secondary">
-                Track Applications <Map />
-              </Button>
-            </Link>
-          </div>
-        </>
-      )}
+        <h2 className="lg:text-4xl text-3xl font-extrabold tracking-wide text-foreground mb-2 text-balance montserrat">
+          Ready to find a <span className="text-emerald-700">scholarship</span>?
+        </h2>
+      </div>
+      <div className="  gap-3 z-10 hidden lg:flex">
+        <Link href={`/user/home/scholarships`} className="flex-1 md:flex-0">
+          <Button className="w-full">
+            Browse Scholarships
+            <ArrowRight />
+          </Button>
+        </Link>
+        <Link href={`/user/home/applications`} className="flex-1 md:flex-0">
+          <Button className="w-full" variant="secondary">
+            Track Applications <Map />
+          </Button>
+        </Link>
+      </div>{" "}
+      <div className="flex  gap-3 z-10 lg:hidden">
+        <Link href={`/user/home/scholarships`} className="flex-1 md:flex-0">
+          <Button className="w-full">
+            Browse
+            <ArrowRight />
+          </Button>
+        </Link>
+        <Link href={`/user/home/applications`} className="flex-1 md:flex-0">
+          <Button className="w-full" variant="secondary">
+            Track <Map />
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 }

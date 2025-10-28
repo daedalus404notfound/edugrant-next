@@ -253,7 +253,7 @@ export default function Notification() {
         >
           <Bell className="w-5 h-5" />
           {(unreadNotifications ?? 0) > 0 && (
-            <span className="absolute flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-semibold -top-1 -right-1 bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg animate-pulse">
+            <span className="absolute flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-[10px] font-medium -top-1 -right-1 bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg ">
               {(unreadNotifications ?? 0) > 99 ? "99+" : unreadNotifications}
             </span>
           )}

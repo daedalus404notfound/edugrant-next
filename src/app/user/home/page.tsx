@@ -23,6 +23,7 @@ import RecentApplicationDashboard from "./dashboard-components/recent-applicatio
 import CompleteChecker from "./dashboard-components/complete-check";
 import { ProfileCompletion } from "./dashboard-components/profile-progress-2";
 import { ApplicationStats } from "./dashboard-components/stats";
+import { SummaryCardUser } from "@/components/ui/summary-user";
 
 export default function AdminDashboard() {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -31,6 +32,7 @@ export default function AdminDashboard() {
   const schoolId = user?.schoolId;
   const { completed } = getFamilyBackgroundProgress(user?.Student);
 
+  const { data, loading } = usefetchUserDashboard(accountId, schoolId);
   const summaryCards: SummaryCardProps[] = [
     {
       label: "Total Application",
@@ -60,67 +62,40 @@ export default function AdminDashboard() {
       color: "red",
       todayIncrement: 0,
     },
-    {
-      label: "Pending Application",
-      data: user?.Student.Application
-        ? user?.Student.Application.filter((meow) => meow.status === "PENDING")
-            .length
-        : 0,
-      icon: <GraduationCap />,
-      color: "yellow",
-      todayIncrement: 0,
-    },
   ];
-
-  const { data, loading } = usefetchUserDashboard(accountId, schoolId);
-
   const loadingState = loading || loadingUser;
   return (
     <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className="py-6 lg:px-5 px-2 space-y-5">
+      <div className="py-6 lg:px-5 px-2 space-y-12">
         {!loadingState && !completed && <CompleteChecker />}
-        <div className="grid lg:grid-cols-3 grid-cols-1 gap-8 ">
-          <div className="  lg:col-span-3 lg:grid-cols-4 grid-cols-2 lg:gap-5 gap-3 grid">
-            {summaryCards.map((card, index) => (
-              <SummaryCard key={index} {...card} loading={loadingState} />
-            ))}
+        <div className="lg:grid grid-cols-3 flex flex-col gap-8">
+          <div className="col-span-2">
+            <WelcomeCard loading={loadingState} />
           </div>
-          <div className="space-y-10 lg:col-span-2">
-            <WelcomeCard
-              pending={data?.pendingApplicationCount ?? 0}
-              application={data?.totalApplicationsCount ?? 0}
-              loading={loadingState}
-            />
-            <div className="block lg:hidden">
-              <ProfileCompletion loading={loadingState} />
-            </div>
-            <div className="block lg:hidden">
-              <Announcements
-                announcement={data?.announcements ?? []}
-                loading={loadingState}
-              />
+
+          <ProfileCompletion loading={loadingState} />
+        </div>
+        <div className="lg:grid grid-cols-3 gap-8">
+          <div className="col-span-2 space-y-12">
+            <div className="lg:grid grid-cols-3 lg:gap-5 gap-3 flex flex-col">
+              {summaryCards.map((card, index) => (
+                <SummaryCardUser key={index} {...card} loading={loadingState} />
+              ))}
             </div>
             <RecentApplicationDashboard
               application={data?.recentApplications ?? []}
               loading={loadingState}
             />
-            <div className="hidden lg:block">
-              <Announcements
-                announcement={data?.announcements ?? []}
-                loading={loadingState}
-              />
-            </div>
+            <Announcements
+              announcement={data?.announcements ?? []}
+              loading={loading}
+            />
           </div>
-          <div className="space-y-12">
-            <div className="hidden lg:block">
-              <ProfileCompletion loading={loadingState} />
-            </div>
-            {completed && (
-              <OngoingScholarshipDashboard
-                scholarship={data?.onGoingScholarships ?? []}
-                loading={loadingState}
-              />
-            )}
+          <div className="space-y-8">
+            <OngoingScholarshipDashboard
+              scholarship={data?.onGoingScholarships ?? []}
+              loading={loadingState}
+            />
             <Calendar
               mode="single"
               selected={date}
@@ -134,6 +109,54 @@ export default function AdminDashboard() {
   );
 }
 
+//  <div className="grid grid-cols-3 w-full">
+//           <div className="cols-pan-2">
+//
+//             <RecentApplicationDashboard
+//               application={data?.recentApplications ?? []}
+//               loading={loadingState}
+//             />
+//           </div>
+//           <div>
+//
+//             <OngoingScholarshipDashboard
+//               scholarship={data?.onGoingScholarships ?? []}
+//               loading={loadingState}
+//             />
+//           </div>
+//         </div>
+//         <div className="grid grid-cols-3">
+//           <div className="col-span-2 p-4 space-y-15">
+//
+//             <WelcomeCard
+//               pending={data?.pendingApplicationCount ?? 0}
+//               application={data?.totalApplicationsCount ?? 0}
+//               loading={loadingState}
+//             />
+//             <div className="grid grid-cols-3 gap-6">
+//               {summaryCards.map((card, index) => (
+//                 <SummaryCard key={index} {...card} loading={loadingState} />
+//               ))}
+//             </div>
+//             <Announcements
+//               announcement={data?.announcements ?? []}
+//               loading={loadingState}
+//             />
+//           </div>
+//           <div className="p-4 space-y-15">
+//
+//             <ProfileCompletion loading={loadingState} />
+//             <div>
+//               <h1>Keep on track</h1>
+//               <Calendar
+//                 mode="single"
+//                 selected={date}
+//                 onSelect={setDate}
+//                 className="rounded-md p-6 shadow-sm w-full bg-gradient-to-br to-card from-card/50"
+//               />
+//             </div>
+//           </div>
+//         </div>
 //  <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
 //    <div className="lg:py-8 py-4 lg:px-5 px-2 space-y-5">
 //      {/* {!completed && <CompleteChecker />} */}

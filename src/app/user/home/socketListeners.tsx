@@ -652,12 +652,14 @@ export default function SocketListener() {
 
     socket.on("createAnnouncement", (data) => {
       const announcementData = data.newAnnouncement;
+      const announcementId = announcementData.announcementId;
       console.log("announcement received:", data);
 
       queryClient.setQueryData<ClientAnnouncementsData>(
-        ["announcements", 1, 6, "dateCreated", "desc", ""],
+        ["announcements", paginationDefault06, sortDefault, [], ""],
         (old) => {
-          if (!old) return old;
+          if (!old)
+            return { annoucements: [announcementData], meta: defaultMeta };
           console.log("meow");
           return {
             ...old,
@@ -666,6 +668,18 @@ export default function SocketListener() {
         }
       );
 
+      queryClient.setQueryData<ClientAnnouncementsData>(
+        ["announcementById", announcementId],
+        (old) => {
+          if (!old) return announcementData;
+          console.log("meowww");
+          return announcementData;
+        }
+      );
+
+      queryClient.invalidateQueries({
+        queryKey: ["announcements", paginationDefault06, sortDefault, [], ""],
+      });
       StyledToast({
         status: "success",
         title: "1 new announcement just posted",

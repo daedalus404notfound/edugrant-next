@@ -14,11 +14,20 @@
   font-weight: normal;
   font-style: normal;
 }
+@font-face {
+  font-family: "Montserrat";
+  src: url("/Raleway-VariableFont_wght.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 html {
   scroll-behavior: smooth;
 }
 .havelock {
   font-family: "CustomFont";
+}
+.montserrat {
+  font-family: "Montserrat";
 }
 .gradient {
   background-image: radial-gradient(
