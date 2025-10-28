@@ -344,10 +344,10 @@ export default function ClientScholarship() {
                       </p>
                     </div>
                   </div>
-                  <div className="p-3">
+                  <div className="p-3 lg:hidden">
                     <Link
                       href={`/user/home/scholarships/${meow.scholarshipId}`}
-                      className="w-full sm:w-auto lg:hidden"
+                      className="w-full sm:w-auto "
                     >
                       <Button className="w-full sm:w-auto" size="sm">
                         View Details <ArrowRight className="w-4 h-4" />
