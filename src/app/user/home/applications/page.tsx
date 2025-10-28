@@ -255,8 +255,8 @@ export default function ClientScholarship() {
                     src={meow.Scholarship.cover || "/placeholder.svg"}
                     alt=""
                   /> */}
-                  <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-6 md:py-8 px-4 md:px-6">
-                    <div className="flex flex-col sm:flex-row gap-4 sm:items-start flex-1 min-w-0">
+                  <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 items-start py-6 md:py-8 px-4 md:px-6">
+                    <div className="flex gap-6 items-start">
                       <div className="flex items-center gap-3 flex-1 min-w-0">
                         <Avatar className="size-10 flex-shrink-0">
                           <AvatarImage
@@ -291,7 +291,7 @@ export default function ClientScholarship() {
                       className="w-full sm:w-auto hidden lg:block"
                     >
                       <Button className="w-full sm:w-auto" size="sm">
-                        <ArrowRight className="w-4 h-4" />
+                        View Details <ArrowRight className="w-4 h-4" />
                       </Button>
                     </Link>
                   </div>
