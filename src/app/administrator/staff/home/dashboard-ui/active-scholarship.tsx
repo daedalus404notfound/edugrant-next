@@ -5,6 +5,7 @@ import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { format } from "date-fns";
+import NoDataFound from "@/components/ui/nodata";
 
 export function ActiveScholarships({
   data,
@@ -42,7 +43,7 @@ export function ActiveScholarships({
             </motion.div>
           ))
         ) : data?.length === 0 ? (
-          <>No scholarship found.</>
+          <NoDataFound />
         ) : (
           data?.slice(0, 4).map((meow) => (
             <div

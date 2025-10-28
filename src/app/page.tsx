@@ -265,6 +265,7 @@ export default function DesktopLandingPage() {
               Login <LogInIcon />
             </Button>
           </Link>
+
           <ModeToggle />
         </span>
       </header>
@@ -373,7 +374,19 @@ export default function DesktopLandingPage() {
                 height={35}
               />
             </div>
-            <ModeToggle />
+            <div className="flex items-center gap-3">
+              <Link
+                href={"/public-announcement"}
+                prefetch={true}
+                scroll={false}
+              >
+                <Button className="rounded-full" size="icon">
+                  <Megaphone />
+                </Button>
+              </Link>
+
+              <ModeToggle />
+            </div>
           </motion.header>
           <div className="text-center py-10">
             <motion.div
@@ -442,7 +455,7 @@ export default function DesktopLandingPage() {
           </motion.div>
         </div>
         <div className="mx-auto xl:w-3/4 p-4">
-          <div id="features" className="hidden lg:block">
+          <div id="features" className="">
             <AppSection />
           </div>
           <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />

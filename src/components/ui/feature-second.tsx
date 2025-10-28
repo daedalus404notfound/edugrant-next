@@ -170,7 +170,7 @@ const AppSection = () => {
                     className="lg:p-8 p-4 rounded-lg space-y-4
                       border shadow-sm dark:border-green-800/20
                       dark:bg-green-950/20
-                      w-full max-w-sm"
+                      w-full lg:max-w-sm"
                   >
                     <Icon className="h-4 w-4 lg:h-8 lg:w-8" />
                     <h3 className="text-base font-medium">{feature.title}</h3>

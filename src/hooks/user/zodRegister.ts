@@ -8,7 +8,7 @@ const personalDetailsSchema = z.object({
   lastName: z.string().min(1, "Required"),
   contactNumber: z
     .string()
-    .regex(/^\+63\d{10}$/, "Must be a valid phone number"),
+    .regex(/^\+639\d{9}$/, "Must be a valid phone number"),
 
   gender: z.string().min(1, "Required"),
   indigenous: z.string().optional(),

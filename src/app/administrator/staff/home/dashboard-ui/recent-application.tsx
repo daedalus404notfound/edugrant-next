@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import NoDataFound from "@/components/ui/nodata";
 export function RecentApplications({
   data,
   loading,
@@ -44,7 +45,7 @@ export function RecentApplications({
             </motion.div>
           ))
         ) : data?.applications.length === 0 ? (
-          <>No scholarship found.</>
+          <NoDataFound />
         ) : (
           data?.applications.slice(0, 3).map((meow) => (
             <div

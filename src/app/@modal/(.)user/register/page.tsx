@@ -317,18 +317,18 @@ export default function RegisterStudent() {
                             <div className="flex">
                               {/* Fixed +639 prefix */}
                               <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
-                                +63
+                                +639
                               </span>
                               <Input
                                 type="text"
                                 placeholder=""
                                 maxLength={10}
-                                value={field.value?.replace("+63", "") || ""}
+                                value={field.value?.replace("+639", "") || ""}
                                 onChange={(e) => {
                                   const val = e.target.value
                                     .replace(/\D/g, "")
-                                    .slice(0, 10);
-                                  field.onChange(`+63${val}`);
+                                    .slice(0, 9);
+                                  field.onChange(`+639${val}`);
                                 }}
                                 disabled={sendAuthCode.isLoading}
                                 className="rounded-l-none"
@@ -808,26 +808,80 @@ export default function RegisterStudent() {
                                 <SelectValue placeholder="Select Course" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="BSIT">
-                                  BSIT - Information Technology
+                                <SelectItem value="BSAGRI-ANSCI">
+                                  BS in Agriculture (Animal Science)
                                 </SelectItem>
-                                <SelectItem value="BSCS">
-                                  BSCS - Computer Science
+                                <SelectItem value="BSAGRI-HORTI">
+                                  BS in Agriculture (CRSC-Horti)
+                                </SelectItem>
+                                <SelectItem value="BSAGRI-AGRONOMY">
+                                  BS in Agriculture (CRSC-Agronomy)
+                                </SelectItem>
+                                <SelectItem value="BSAGRI-AGEX">
+                                  BS in Agriculture (AgEx)
+                                </SelectItem>
+                                <SelectItem value="BSAGRI-CROP">
+                                  BS in Agriculture (Crop Science)
+                                </SelectItem>
+                                <SelectItem value="CAS">
+                                  Certificate of Agricultural Sciences
+                                </SelectItem>
+                                <SelectItem value="BSAGRO">
+                                  BS in Agroforestry
+                                </SelectItem>
+                                <SelectItem value="DVM">
+                                  Doctor of Veterinary Medicine
+                                </SelectItem>
+                                <SelectItem value="BSABE">
+                                  BS in Agricultural and Biosystems Engineering
                                 </SelectItem>
                                 <SelectItem value="BSGE">
-                                  BSGE - Geodetic Engineering
+                                  BS in Geodetic Engineering
+                                </SelectItem>
+                                <SelectItem value="BSIT">
+                                  BS in Information Technology
                                 </SelectItem>
                                 <SelectItem value="BSFT">
-                                  BSFT - Food Technology
+                                  BS in Food Technology
                                 </SelectItem>
-                                <SelectItem value="BSABEN">
-                                  BSABEN - Agricultural Engineering
+                                <SelectItem value="BEED">
+                                  Bachelor of Elementary Education
                                 </SelectItem>
-                                <SelectItem value="BSED">
-                                  BSED - Secondary Education
+                                <SelectItem value="BSED-ENGLISH">
+                                  Bachelor of Secondary Education (English)
+                                </SelectItem>
+                                <SelectItem value="BSED-SCIENCE">
+                                  Bachelor of Secondary Education (Science)
+                                </SelectItem>
+                                <SelectItem value="BSAB">
+                                  BS in Agribusiness
                                 </SelectItem>
                                 <SelectItem value="BSBA">
-                                  BSBA - Business Administration
+                                  BS in Business Administration
+                                </SelectItem>
+                                <SelectItem value="BSABM">
+                                  BS in Agribusiness Management
+                                </SelectItem>
+                                <SelectItem value="BSHM">
+                                  BS in Hospitality Management
+                                </SelectItem>
+                                <SelectItem value="BSDC">
+                                  BS in Development Communication
+                                </SelectItem>
+                                <SelectItem value="MSAGRI">
+                                  Master of Science in Agriculture
+                                </SelectItem>
+                                <SelectItem value="MAED">
+                                  Master of Arts in Education
+                                </SelectItem>
+                                <SelectItem value="PHD-AGRI">
+                                  Doctor of Philosophy in Agricultural Sciences
+                                </SelectItem>
+                                <SelectItem value="PHD-EDMAN">
+                                  Doctor of Philosophy in Educational Management
+                                </SelectItem>
+                                <SelectItem value="TECC">
+                                  Teacher Education Certificate Course
                                 </SelectItem>
                               </SelectContent>
                             </Select>
@@ -873,6 +927,18 @@ export default function RegisterStudent() {
                                 <SelectItem value="4th Year">
                                   4th Year
                                 </SelectItem>
+                                <SelectItem value="5th Year">
+                                  5th Year
+                                </SelectItem>
+                                <SelectItem value="6th Year">
+                                  6th Year
+                                </SelectItem>
+                                <SelectItem value="7th Year">
+                                  7th Year
+                                </SelectItem>
+                                <SelectItem value="8th Year">
+                                  8th Year
+                                </SelectItem>
                               </SelectContent>
                             </Select>
 
@@ -908,11 +974,16 @@ export default function RegisterStudent() {
                                 <SelectValue placeholder="Select Section" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="A">A</SelectItem>
-                                <SelectItem value="B">B</SelectItem>
-                                <SelectItem value="C">C</SelectItem>
-                                <SelectItem value="D">D</SelectItem>
-                                <SelectItem value="E">E</SelectItem>
+                                <SelectItem value="A">Section A</SelectItem>
+                                <SelectItem value="B">Section B</SelectItem>
+                                <SelectItem value="C">Section C</SelectItem>
+                                <SelectItem value="D">Section D</SelectItem>
+                                <SelectItem value="E">Section E</SelectItem>
+                                <SelectItem value="F">Section F</SelectItem>
+                                <SelectItem value="G">Section G</SelectItem>
+                                <SelectItem value="H">Section H</SelectItem>
+                                <SelectItem value="I">Section I</SelectItem>
+                                <SelectItem value="J">Section J</SelectItem>
                               </SelectContent>
                             </Select>
                             <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
