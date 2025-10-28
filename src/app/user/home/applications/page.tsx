@@ -287,7 +287,7 @@ export default function ClientScholarship() {
                       </div>
                     </div>
                     <Link
-                      href={`/user/home/applications/${meow.scholarshipId}`}
+                      href={`/user/home/applications/${meow.applicationId}`}
                       className="w-full sm:w-auto hidden lg:block"
                     >
                       <Button className="w-full sm:w-auto" size="sm">
@@ -346,7 +346,7 @@ export default function ClientScholarship() {
                   </div>
                   <div className="p-3 lg:hidden">
                     <Link
-                      href={`/user/home/applications/${meow.scholarshipId}`}
+                      href={`/user/home/applications/${meow.applicationId}`}
                       className="w-full sm:w-auto "
                     >
                       <Button className="w-full sm:w-auto" size="sm">
