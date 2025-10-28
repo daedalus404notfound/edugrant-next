@@ -202,48 +202,50 @@ export default function ClientScholarship() {
             )}
           </div>
 
-          <motion.div
-            className="flex items-center justify-between gap-3"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.2, delay: 0.4 }}
-          >
-            <p
-              className="grow text-sm text-muted-foreground"
-              aria-live="polite"
+          {meta.totalRows > 6 && (
+            <motion.div
+              className="flex items-center justify-between gap-3"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.4 }}
             >
-              Page <span className="text-foreground">{meta.page}</span> of{" "}
-              <span className="text-foreground">{meta.totalPage}</span>
-            </p>
+              <p
+                className="grow text-sm text-muted-foreground"
+                aria-live="polite"
+              >
+                Page <span className="text-foreground">{meta.page}</span> of{" "}
+                <span className="text-foreground">{meta.totalPage}</span>
+              </p>
 
-            <Pagination className="w-auto">
-              <PaginationContent className="gap-3">
-                <PaginationItem>
-                  <Button
-                    variant="outline"
-                    disabled={meta.page === 1 || loadingState}
-                    onClick={handlePrev}
-                  >
-                    <ChevronLeft /> Previous
-                  </Button>
-                </PaginationItem>
-                <PaginationItem>
-                  <Button
-                    variant="outline"
-                    disabled={
-                      meta.page === meta.totalPage ||
-                      meta.totalPage === 0 ||
-                      loadingState
-                    }
-                    onClick={handleNext}
-                  >
-                    Next
-                    <ChevronRight />
-                  </Button>
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </motion.div>
+              <Pagination className="w-auto">
+                <PaginationContent className="gap-3">
+                  <PaginationItem>
+                    <Button
+                      variant="outline"
+                      disabled={meta.page === 1 || loadingState}
+                      onClick={handlePrev}
+                    >
+                      <ChevronLeft /> Previous
+                    </Button>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <Button
+                      variant="outline"
+                      disabled={
+                        meta.page === meta.totalPage ||
+                        meta.totalPage === 0 ||
+                        loadingState
+                      }
+                      onClick={handleNext}
+                    >
+                      Next
+                      <ChevronRight />
+                    </Button>
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </motion.div>
+          )}
         </div>
       </div>
     </div>

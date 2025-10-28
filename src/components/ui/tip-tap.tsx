@@ -28,6 +28,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Color, TextStyle } from "@tiptap/extension-text-style";
+import { useEffect } from "react";
 
 interface TipTapEditorProps {
   value: string;
@@ -66,7 +67,11 @@ export function TipTapEditor({
       },
     },
   });
-
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value || "");
+    }
+  }, [value, editor]);
   if (!editor) {
     return null;
   }
