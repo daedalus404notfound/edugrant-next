@@ -250,11 +250,11 @@ export default function ClientScholarship() {
                   className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30 rounded-lg overflow-hidden relative"
                 >
                   {/* Header Section */}
-                  <img
-                    className="h-30 absolute w-full object-cover right-0 opacity-0"
+                  {/* <img
+                    className=" w-full object-cover "
                     src={meow.Scholarship.cover || "/placeholder.svg"}
                     alt=""
-                  />
+                  /> */}
                   <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 py-6 md:py-8 px-4 md:px-6">
                     <div className="flex flex-col sm:flex-row gap-4 sm:items-start flex-1 min-w-0">
                       <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -286,14 +286,14 @@ export default function ClientScholarship() {
                         </Badge>
                       </div>
                     </div>
-                    {/* <Link
-                        href={`/user/home/scholarships/${meow.scholarshipId}`}
-                        className="w-full sm:w-auto hidden lg:block"
-                      >
-                        <Button className="w-full sm:w-auto" size="sm">
-                          <ArrowRight className="w-4 h-4" />
-                        </Button>
-                      </Link> */}
+                    <Link
+                      href={`/user/home/scholarships/${meow.scholarshipId}`}
+                      className="w-full sm:w-auto hidden lg:block"
+                    >
+                      <Button className="w-full sm:w-auto" size="sm">
+                        <ArrowRight className="w-4 h-4" />
+                      </Button>
+                    </Link>
                   </div>
                   <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
 
@@ -308,8 +308,7 @@ export default function ClientScholarship() {
                         </h1>
                       </div>
                       <p className="font-medium text-sm text-foreground">
-                        {meow?.dateCreated &&
-                          format(meow?.dateCreated, "PPP p")}
+                        {meow?.dateCreated && format(meow?.dateCreated, "PPP")}
                       </p>
                     </div>
 
@@ -323,7 +322,7 @@ export default function ClientScholarship() {
                       </div>
                       <span className="font-medium text-sm text-foreground">
                         {meow?.Scholarship.deadline
-                          ? format(meow?.Scholarship.deadline, "PPP p")
+                          ? format(meow?.Scholarship.deadline, "PPP")
                           : "—"}
                       </span>
                     </div>
@@ -345,14 +344,16 @@ export default function ClientScholarship() {
                       </p>
                     </div>
                   </div>
-                  {/* <Link
+                  <div className="p-3">
+                    <Link
                       href={`/user/home/scholarships/${meow.scholarshipId}`}
-                      className="w-full sm:w-auto "
+                      className="w-full sm:w-auto lg:hidden"
                     >
                       <Button className="w-full sm:w-auto" size="sm">
-                        <ArrowRight className="w-4 h-4" />
+                        View Details <ArrowRight className="w-4 h-4" />
                       </Button>
-                    </Link> */}
+                    </Link>
+                  </div>
                 </motion.div>
               ))
             )}
