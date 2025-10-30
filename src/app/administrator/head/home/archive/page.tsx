@@ -15,7 +15,23 @@ import {
   SortingState,
 } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
+import { useTourStore } from "@/store/useTourStore";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { TourTrigger } from "@/components/tour-2/tour-trigger";
 export default function Manage() {
+  const {
+    openEditScholarship,
+    setOpenEditScholarship,
+    openRenewScholarship,
+    setOpenRenewScholarship,
+  } = useTourStore();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -58,6 +74,53 @@ export default function Manage() {
   const data = query.data?.data ?? [];
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+      {" "}
+      <Dialog
+        open={openRenewScholarship}
+        onOpenChange={setOpenRenewScholarship}
+      >
+        <DialogContent
+          className="!bg-card w-lg p-6"
+          onInteractOutside={(e) => {
+            e.preventDefault();
+          }}
+          onEscapeKeyDown={(e) => {
+            e.preventDefault();
+          }}
+          showCloseButton={false}
+        >
+          <DialogHeader>
+            <DialogTitle>
+              <TitleReusable title="Post scholarship guide" description="" />
+            </DialogTitle>
+            <DialogDescription className="mt-3">
+              Begin managing scholarship programs. You can take a quick tour to
+              learn the process, or skip it and start right away.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex gap-3 mt-3">
+            <Button
+              className="flex-1"
+              variant="secondary"
+              onClick={() => setOpenRenewScholarship(false)}
+            >
+              Skip for Now
+            </Button>
+            <div
+              onClick={() => {
+                setOpenRenewScholarship(false);
+              }}
+              className="flex-1 "
+            >
+              <TourTrigger
+                tourName="renewScholarship"
+                className="h-9 !bg-green-900 !text-gray-200 !border-0 w-full"
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
       <div className="mx-auto w-[95%] lg:py-10  py-4">
         {status === "EXPIRED" ? (
           <TitleReusable

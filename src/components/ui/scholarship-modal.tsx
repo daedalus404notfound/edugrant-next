@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import logo from "@/assets/edugrant-logo.png";
 import { getPhaseLabel } from "@/lib/phaseLevel";
-import { motion } from "motion/react";
+
 import { Button } from "@/components/ui/button";
 import AnimatedNumberCountdown from "@/components/ui/countdown";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -24,9 +24,8 @@ import { format } from "date-fns";
 import Link from "next/link";
 import { displayScholarshipFormData } from "@/hooks/admin/displayScholarshipData";
 import { formatPHP } from "@/lib/formatPHP";
-import { Skeleton } from "./skeleton";
 import { Separator } from "./separator";
-
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 export default function ScholarshipModal({
   data,
 }: {
@@ -40,7 +39,7 @@ export default function ScholarshipModal({
   const lastPhase = data?.documents?.[lastPhaseKey] ?? [];
   const lastPhaseLength = Object.keys(lastPhase).length;
   return (
-    <div className="relative h-full w-full flex flex-col">
+    <ScrollArea className="h-[80vh] bg-background rounded-t-lg">
       {data.dateEnded && (
         <div className=" p-3  sticky bg-muted top-0 z-30 flex items-center justify-center">
           <p className="text-sm">
@@ -137,7 +136,7 @@ export default function ScholarshipModal({
         </div>
         <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
         {/* Info Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 bg-card relative z-10 p-4 lg:p-6">
+        <div className="grid grid-cols-2 lg:grid-cols-3 bg-card relative p-4 lg:p-6">
           <div className="space-y-1.5 lg:border-l lg:pl-4">
             <div className="flex items-center gap-2">
               <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
@@ -326,6 +325,7 @@ export default function ScholarshipModal({
           </div>
         </div>
       </div>
-    </div>
+      <ScrollBar orientation="vertical" className="z-30"></ScrollBar>
+    </ScrollArea>
   );
 }

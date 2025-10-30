@@ -37,7 +37,7 @@ import { Button } from "@/components/ui/button";
 export const description =
   "Scholarship applications vs approvals by scholarship name";
 
-export function ChartBarMultiple({ data }: { data: DashboardData | null }) {
+export function ChartBarMultiple({ data }: { data: DashboardData | undefined }) {
   const chartData =
     data?.scholarship?.map((s) => ({
       scholarship: s.title,

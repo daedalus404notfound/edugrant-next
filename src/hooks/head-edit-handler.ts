@@ -1,11 +1,9 @@
 import axios, { AxiosError } from "axios";
 import { useAdminProfileForm } from "./head-profile-edit";
 import { AdminProfileFormData } from "./head-profile-edit";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
-import { useAdminStore } from "@/store/adminUserStore";
-import { headers } from "next/headers";
 
 interface ApiErrorResponse {
   message?: string;
@@ -37,7 +35,8 @@ const updateUserApi = async (data: AdminProfileFormData) => {
 };
 
 export const useProfile = () => {
-  const { setAdmin } = useAdminStore();
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: updateUserApi,
     onSuccess: (resData) => {
@@ -46,7 +45,14 @@ export const useProfile = () => {
         title: "Profile Updated",
         description: "Your profile information has been successfully saved.",
       });
-      setAdmin(resData.updatedHead);
+      queryClient.setQueryData(["authenticated-user"], (old) => {
+        if (!old) return old;
+
+        return {
+          ...old,
+          safeData: resData.updatedHead,
+        };
+      });
     },
     onError: (error: ApiError) => {
       if (axios.isAxiosError<ApiErrorResponse>(error)) {
@@ -108,7 +114,6 @@ export const useProfile = () => {
         });
       }
     },
-    
   });
 };
 

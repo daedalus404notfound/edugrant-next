@@ -1,5 +1,8 @@
 "use client";
 
+import { triggerUserAction } from "@/hooks/admin/postSetTour";
+import { AuthTypes } from "@/hooks/head/getTokenAuthentication";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 export interface TourStep {
@@ -18,7 +21,7 @@ export function useTour(tourConfig: TourConfig) {
   const [currentStep, setCurrentStep] = useState(0);
   const [isActive, setIsActive] = useState(false);
   const [activeTourName, setActiveTourName] = useState<string | null>(null);
-
+  const queryClient = useQueryClient();
   const startTour = (tourName: string) => {
     if (tourConfig[tourName]) {
       setActiveTourName(tourName);
@@ -61,6 +64,24 @@ export function useTour(tourConfig: TourConfig) {
     setCurrentStep(0);
     setIsActive(false);
     setActiveTourName(null);
+    if (activeTourName === "edugrantDashboard") {
+      triggerUserAction();
+      // or maybe fetch api
+      queryClient.setQueryData(["authenticated-user"], (old: AuthTypes) => {
+        if (!old) return old;
+
+        return {
+          ...old,
+          safeData: {
+            ...old.safeData,
+            webTours: {
+              ...old.safeData.webTours,
+              dashboardTour: true, // ✅ toggle it
+            },
+          },
+        };
+      });
+    }
   };
 
   const currentStepData = activeSteps[currentStep - 1];

@@ -47,12 +47,6 @@ export const tourConfigs: TourConfig = {
   ],
   postScholarship: [
     {
-      id: "post-scholarship",
-      title: "Post Scholarship",
-      description:
-        "Learn how to create and publish a new scholarship opportunity.",
-    },
-    {
       id: "text-forms",
       title: "Welcome to Post Scholarship",
       description:
@@ -78,6 +72,155 @@ export const tourConfigs: TourConfig = {
     },
     {
       id: "submit-forms",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+  ],
+  postAnnouncement: [
+    {
+      id: "1",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "2",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "3",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+  ],
+
+  editScholarship: [
+    {
+      id: "1",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "2",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "3",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "4",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "5",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "6",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+  ],
+  renewScholarship: [
+    {
+      id: "renew-1",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "renew-2",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "renew-3",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "renew-4",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+  ],
+  generateReport: [
+    {
+      id: "generate-1",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "generate-2",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "generate-3",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "generate-4",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "generate-5",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "generate-6",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "generate-7",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+  ],
+  addStaff: [
+    {
+      id: "staff-1",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "staff-2",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "staff-3",
       title: "Welcome to Post Scholarship",
       description:
         "This guide will walk you through the scholarship posting process step by step.",

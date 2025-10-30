@@ -1,7 +1,8 @@
 "use client";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit, Edit2, RefreshCcw, Trash2 } from "lucide-react";
 
 import { useModeStore } from "@/store/scholarshipModalStore";
+
 import {
   Drawer,
   DrawerContent,
@@ -25,10 +26,12 @@ import ScholarshipModal from "@/components/ui/scholarship-modal";
 import ModalHeader from "@/components/ui/modal-header";
 import { useAdminStore } from "@/store/adminUserStore";
 import { useUpdateScholarshipStore } from "@/store/editScholarStore";
+import { useTourContext } from "@/components/tour-2/tour-provider";
+import { TourStep } from "@/components/tour-2/tour-step";
 
 export default function InterceptManageScholarship() {
   const [openAlert, setOpenAlert] = useState(false);
-
+  const { isActive, activeTourName, currentStep } = useTourContext();
   const { admin } = useAdminStore();
   const router = useRouter();
   const params = useParams();
@@ -41,13 +44,13 @@ export default function InterceptManageScholarship() {
   const documentPhases = Object.keys(data?.documents ?? {}).filter((key) =>
     key.startsWith("phase")
   );
-
+  console.log(isActive, activeTourName, currentStep);
   const documentPhasesLength = documentPhases.length;
   const lastPhaseKey = documentPhases[documentPhasesLength - 1];
   const lastPhase = data?.documents?.[lastPhaseKey] ?? [];
   const lastPhaseLength = Object.keys(lastPhase).length;
+  const [mode, setMode] = useState("details");
 
-  const { mode, setMode } = useModeStore();
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
@@ -77,83 +80,92 @@ export default function InterceptManageScholarship() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="max-w-[1000px] w-full mx-auto max-h-[90vh] outline-0 border-0 p-1">
+      <DrawerContent
+        onInteractOutside={(e) => {
+          isActive ? e.preventDefault() : "";
+        }}
+        onEscapeKeyDown={(e) => {
+          isActive ? e.preventDefault() : "";
+        }}
+        className="max-w-[1100px] w-full mx-auto outline-0 border-0 p-1"
+      >
         <DrawerHeader className="sr-only">
           <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
         <ModalHeader HandleCloseDrawer={HandleCloseDrawer} />
-        <div className="relative h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md flex flex-col">
-          {mode === "edit" ? (
-            loading ? (
-              <ScholarshipModalLoading />
-            ) : (
-              data && (
-                <EditScholarship
-                  data={data}
-                  HandleCloseDrawer={HandleCloseDrawer}
-                />
-              )
-            )
-          ) : mode === "details" ? (
-            loading ? (
-              <ScholarshipModalLoading />
-            ) : (
-              data && (
-                <div>
-                  <ScholarshipModal data={data} />
-                  <div className="p-4 sticky bottom-0 bg-card border-t">
-                    <div className="flex gap-3">
-                      <Button
-                        onClick={() => setMode("edit")}
-                        className="flex-1"
-                        disabled={
-                          data?.deadline &&
-                          new Date(data.deadline).getTime() < Date.now()
-                        }
-                      >
-                        <Edit /> Edit
-                      </Button>
 
-                      <DeleteDialog
-                        open={openAlert}
-                        onOpenChange={setOpenAlert}
-                        onConfirm={onSubmit}
-                        loading={deleteLoading}
-                        title="Delete application?"
-                        description="This will permanently delete scholarship and cannot be undone."
-                        confirmText="Delete"
-                        cancelText="Keep"
-                        trigger={
-                          <Button
-                            className="flex-1"
-                            variant="destructive"
-                            onClick={() => setOpenAlert(true)}
-                          >
-                            <Trash2 /> Delete
-                          </Button>
-                        }
-                      />
-                    </div>
-                  </div>
-                </div>
-              )
-            )
-          ) : mode === "renewal" ? (
-            loading ? (
-              <ScholarshipModalLoading />
-            ) : (
-              data && (
-                <RedeployScholarship
-                  data={data}
-                  HandleCloseDrawer={HandleCloseDrawer}
-                />
-              )
-            )
-          ) : (
-            ""
-          )}
-        </div>
+        {loading ? (
+          <ScholarshipModalLoading />
+        ) : mode === "details" ? (
+          data && (
+            <div className="relative ">
+              {" "}
+              {isActive && (
+                <div className="absolute z-20 inset-0 bg-black/70 backdrop-blur-sm"></div>
+              )}
+              <ScholarshipModal data={data} />
+              <div className="flex p-4  relative z-50  bg-gradient-to-b backdrop-blur-sm to-card from-card/50 gap-3">
+                <TourStep
+                  setter={setMode}
+                  setterValue="edit"
+                  className="flex-1"
+                  stepId="2"
+                  setterPrev={HandleCloseDrawer}
+                  setterValuePrev={false}
+                >
+                  <Button
+                    size="lg"
+                    className="w-full"
+                    onClick={() => setMode("edit")}
+                  >
+                    <Edit2 /> Edit
+                  </Button>
+                </TourStep>
+                {new Date(data.deadline) < new Date() && (
+                  <TourStep
+                    setter={setMode}
+                    setterValue="renewal"
+                    className="flex-1"
+                    stepId="renew-2"
+                    setterPrev={HandleCloseDrawer}
+                    setterValuePrev={false}
+                  >
+                    <Button
+                      size="lg"
+                      className="w-full"
+                      variant="secondary"
+                      onClick={() => setMode("renewal")}
+                    >
+                      <RefreshCcw /> Renewal
+                    </Button>
+                  </TourStep>
+                )}
+                <Button size="lg" className="flex-1" variant="destructive">
+                  <Trash2 /> Delete
+                </Button>
+              </div>
+            </div>
+          )
+        ) : mode === "edit" ? (
+          data && (
+            <EditScholarship
+              data={data}
+              setMode={setMode}
+              HandleCloseDrawer={HandleCloseDrawer}
+            />
+          )
+        ) : mode === "renewal" ? (
+          data && (
+            <RedeployScholarship
+              data={data}
+              setMode={setMode}
+              HandleCloseDrawer={HandleCloseDrawer}
+            />
+          )
+        ) : (
+          ""
+        )}
       </DrawerContent>
     </Drawer>
   );

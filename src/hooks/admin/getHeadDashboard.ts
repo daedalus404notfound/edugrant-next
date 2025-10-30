@@ -1,9 +1,8 @@
 "use client";
+import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useEffect, useState } from "react";
-
-import { ApiErrorResponse } from "./postReviewedHandler";
 import StyledToast from "@/components/ui/toast-styled";
+import { ApiErrorResponse } from "./postReviewedHandler";
 import { scholarshipFormData } from "./zodUpdateScholarship";
 import { ApplicationFormData } from "../zod/application";
 
@@ -29,26 +28,14 @@ type InstitteCountTypes = {
   applicationCount: number;
 };
 
-export default function usefetchHeadDashboard(accountId?: number) {
-  const [data, setData] = useState<DashboardData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(function () {
-    async function fetchHeadDashboard() {
-      setLoading(true);
-      try {
-        const res = await axios.get<DashboardData>(
-          `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/headDashboard${
-            accountId ? `?accountId=${accountId}` : ""
-          }`,
-
-          { withCredentials: true }
-        );
-        if (res.status === 200) {
-          setData(res.data);
-        }
-      } catch (error) {
+async function fetchHeadDashboard(): Promise<DashboardData> {
+  try {
+    const res = await axios.get<DashboardData>(
+      `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/headDashboard`,
+      { withCredentials: true }
+    );
+    return res.data;
+  } catch (error) {
     if (axios.isAxiosError<ApiErrorResponse>(error)) {
       const status = error.response?.status;
       const message = error.response?.data?.message;
@@ -107,14 +94,24 @@ export default function usefetchHeadDashboard(accountId?: number) {
         description: "Something went wrong. Please try again later.",
       });
     }
+
     throw error;
-      } finally {
-        setLoading(false);
-      }
-    }
+  }
+}
 
-    fetchHeadDashboard();
-  }, []);
+export default function useFetchHeadDashboard() {
+  const query = useQuery({
+    queryKey: ["headDashboard"],
+    queryFn: () => fetchHeadDashboard(),
+    refetchOnMount: true, // ✅ Refetch every time component remounts
+    refetchOnWindowFocus: false, // Optional: disable refetch when window regains focus
+    staleTime: 1000 * 60, // Optional: 1 minute cache
+  });
 
-  return { data, loading, error };
+  return {
+    data: query.data,
+    loading: query.isLoading,
+    error: query.error,
+    refetch: query.refetch,
+  };
 }

@@ -8,6 +8,11 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
@@ -20,21 +25,20 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Badge } from "../ui/badge";
+import { count } from "console";
 
 export function NavMain({
   items,
 }: {
   items: {
     title: string;
-
     url: string;
     icon?: LucideIcon;
     isActive?: boolean;
-
+    count?: number;
     items?: {
       title: string;
       url: string;
-      indicator?: number;
     }[];
   }[];
 }) {
@@ -56,7 +60,25 @@ export function NavMain({
                   {item.icon && <item.icon />}
                   <span>{item.title}</span>
 
-                  <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                  <div className=" ml-auto  flex gap-2">
+                    {item.title === "Scholarships" && (item.count ?? 0) > 0 && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Badge
+                            className="dark:bg-indigo-800 bg-indigo-300 "
+                            variant="secondary"
+                          >
+                            {item.count}
+                          </Badge>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          This month: <strong>{item.count}</strong>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+
+                    <ChevronRight className="transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                  </div>
                 </SidebarMenuButton>
               </CollapsibleTrigger>
               <CollapsibleContent>
@@ -73,11 +95,6 @@ export function NavMain({
                             className="flex justify-between"
                           >
                             <span>{subItem.title}</span>
-                            {subItem.indicator && (
-                              <Badge variant="outline">
-                                {subItem.indicator}
-                              </Badge>
-                            )}
                           </Link>
                         </SidebarMenuSubButton>
                       </SidebarMenuSubItem>

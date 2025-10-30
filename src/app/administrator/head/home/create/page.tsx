@@ -59,6 +59,9 @@ import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { TourStep } from "@/components/tour-2/tour-step";
 import socket from "@/lib/socketLib";
+import { useTourStore } from "@/store/useTourStore";
+import Link from "next/link";
+import { TourTrigger } from "@/components/tour-2/tour-trigger";
 
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
@@ -81,24 +84,68 @@ export default function Create() {
     reset,
     setReset,
   } = useCreateScholarship();
-
-  const [openGuide, setOpenGuide] = useState(true);
+  const {
+    openScholarship,
+    openAnnouncement,
+    setOpenScholarship,
+    setOpenAnnouncement,
+  } = useTourStore();
 
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className="mx-auto w-[95%] lg:py-10  py-4">
-        <TourStep
-          stepId="post-scholarship"
-          className="bg-background p-4 rounded-md"
+      {" "}
+      <Dialog open={openScholarship} onOpenChange={setOpenScholarship}>
+        <DialogContent
+          className="!bg-card w-lg p-6"
+          onInteractOutside={(e) => {
+            e.preventDefault();
+          }}
+          onEscapeKeyDown={(e) => {
+            e.preventDefault();
+          }}
+          showCloseButton={false}
         >
-          <TitleReusable
-            title=" Post Scholarship"
-            description="Fill out the form below to post a new scholarship."
-            Icon={PenLine}
-          />
-        </TourStep>
+          <DialogHeader>
+            <DialogTitle>
+              <TitleReusable title="Post scholarship guide" description="" />
+            </DialogTitle>
+            <DialogDescription className="mt-3">
+              Begin managing scholarship programs. You can take a quick tour to
+              learn the process, or skip it and start right away.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex gap-3 mt-3">
+            <Button
+              className="flex-1"
+              variant="secondary"
+              onClick={() => setOpenScholarship(false)}
+            >
+              Skip for Now
+            </Button>
+            <div
+              onClick={() => {
+                setOpenScholarship(false);
+              }}
+              className="flex-1 "
+            >
+              <TourTrigger
+                tourName="postScholarship"
+                className="h-9 !bg-green-900 !text-gray-200 !border-0 w-full"
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+      <div className="mx-auto w-[95%] lg:py-10  py-4">
+        <TitleReusable
+          title=" Post Scholarship"
+          description="Fill out the form below to post a new scholarship."
+          Icon={PenLine}
+        />
+
         <Separator className="mt-2" />
-        <div className="mt-10 max-w-5xl w-full mx-auto">
+        <div className="mt-10 max-w-4xl w-full mx-auto">
           <Form {...form}>
             <TourStep className="mt-10" stepId="text-forms">
               <div className="grid grid-cols-3 gap-x-5 gap-y-10 bg-card/40 dark:bg-gradient-to-br to-card from-card/50 p-6 rounded-md ">

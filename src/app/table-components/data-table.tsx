@@ -127,7 +127,7 @@ export function DataTable<TData, TValue>({
                 ? "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/60 dark:text-indigo-300"
                 : status === "EXPIRED"
                 ? "bg-orange-100 text-red-800 dark:bg-red-900/60 dark:text-red-300"
-                : "bg-gray-100 text-gray-800 dark:bg-gray-900/60 dark:text-gray-300"
+                : "bg-card"
             } text-sm font-medium px-3 py-1 rounded-full transition-colors duration-200`}
           >
             {table.getHeaderGroups().map((headerGroup) => (

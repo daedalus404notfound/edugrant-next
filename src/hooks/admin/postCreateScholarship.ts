@@ -11,7 +11,6 @@ interface ApiErrorResponse {
   statusCode?: number;
 }
 import { useAdminStore } from "@/store/adminUserStore";
-import socket from "@/lib/socketLib";
 type ApiError = AxiosError<ApiErrorResponse>;
 const today = new Date().toISOString().split("T")[0];
 const addScholarshipApi = async (data: scholarshipFormData) => {

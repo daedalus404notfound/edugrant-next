@@ -22,10 +22,12 @@ import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
 import { Button } from "../ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
+import useAuthenticatedUser from "@/hooks/head/getTokenAuthentication";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const { admin, loading } = useAdminStore();
+  // const { admin, loading } = useAdminStore();
+  const { data, success, loading, isError } = useAuthenticatedUser();
   const {
     handleLogout,
     loading: loadingLogout,
@@ -63,13 +65,13 @@ export function NavUser() {
                 <AvatarImage
                   className="object-cover"
                   src={
-                    admin?.ISPSU_Head?.profileImg?.publicUrl ||
+                    data?.safeData?.ISPSU_Head?.profileImg?.publicUrl ||
                     "https://github.com/shadcn.png" ||
                     "/placeholder.svg"
                   }
                   alt={
-                    admin?.ISPSU_Head
-                      ? `${admin.ISPSU_Head?.fName} ${admin.ISPSU_Head?.lName}`
+                    data?.safeData?.ISPSU_Head
+                      ? `${data.safeData.ISPSU_Head?.fName} ${data.safeData.ISPSU_Head?.lName}`
                       : "Admin"
                   }
                 />
@@ -77,12 +79,14 @@ export function NavUser() {
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
-                  {admin?.ISPSU_Head
-                    ? `${admin.ISPSU_Head?.fName} ${admin.ISPSU_Head?.lName}`
+                  {data?.safeData?.ISPSU_Head
+                    ? `${data?.safeData.ISPSU_Head?.fName} ${data?.safeData.ISPSU_Head?.lName}`
                     : "Admin"}
                 </span>
 
-                <span className="truncate text-xs">{admin?.email}</span>
+                <span className="truncate text-xs">
+                  {data?.safeData?.email}
+                </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -102,13 +106,13 @@ export function NavUser() {
                   <AvatarImage
                     className="object-cover"
                     src={
-                      admin?.ISPSU_Head?.profileImg?.publicUrl ||
+                      data?.safeData?.ISPSU_Head?.profileImg?.publicUrl ||
                       "https://github.com/shadcn.png" ||
                       "/placeholder.svg"
                     }
                     alt={
-                      admin?.ISPSU_Head
-                        ? `${admin.ISPSU_Head?.fName} ${admin.ISPSU_Head?.lName}`
+                      data?.safeData?.ISPSU_Head
+                        ? `${data.safeData.ISPSU_Head?.fName} ${data.safeData.ISPSU_Head?.lName}`
                         : "Admin"
                     }
                   />
@@ -116,12 +120,12 @@ export function NavUser() {
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
-                    {admin?.ISPSU_Head
-                      ? `${admin.ISPSU_Head?.fName} ${admin.ISPSU_Head?.lName}`
+                    {data?.safeData?.ISPSU_Head
+                      ? `${data.safeData.ISPSU_Head?.fName} ${data.safeData.ISPSU_Head?.lName}`
                       : "Admin"}
                   </span>
                   <span className="truncate text-xs">
-                    {admin?.role || "Unknown Role"}
+                    {data?.safeData?.role || "Unknown Role"}
                   </span>
                 </div>
               </Link>

@@ -18,6 +18,9 @@ import {
   TriangleAlert,
 } from "lucide-react";
 import { getPhaseLabel } from "@/lib/phaseLevel";
+import { TourStep } from "@/components/tour-2/tour-step";
+import Link from "next/link";
+import { useTourContext } from "@/components/tour-2/tour-provider";
 export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
   // {
   //   accessorKey: "title",
@@ -45,21 +48,32 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
     accessorFn: (row) => row.title,
     id: "title",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Scholarship" className="" />
+      <DataTableColumnHeader
+        column={column}
+        title="Scholarship"
+        className="pl-4"
+      />
     ),
     cell: ({ row }) => {
       const scholarship = row.original;
-      return (
-        <div className="flex gap-2 items-center">
+      const { isActive, activeTourName } = useTourContext();
+
+      const content = (
+        <Link
+          href={`/administrator/head/home/manage/${scholarship.scholarshipId}`}
+          className="pl-4 flex gap-2 items-center"
+        >
           <Avatar>
-            <AvatarImage src={scholarship.logo} />
+            <AvatarImage className="object-cover" src={scholarship.logo} />
             <AvatarFallback className="uppercase">
               {scholarship.Scholarship_Provider?.name.charAt(0)}
             </AvatarFallback>
           </Avatar>
-          <div className="flex items-center gap-2">
+          <div className="flex items-start gap-2">
             <div>
-              <div className="font-medium capitalize">{scholarship.title}</div>
+              <div className="font-medium capitalize underline">
+                {scholarship.title}
+              </div>
               <p className="text-xs text-muted-foreground">
                 {scholarship.Scholarship_Provider?.name}
               </p>
@@ -68,8 +82,22 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
               {getPhaseLabel(scholarship.phase)}
             </Badge>
           </div>
-        </div>
+        </Link>
       );
+
+      // ✅ Only the first row gets TourStep if the tour is active
+      if (isActive && row.index === 0) {
+        return (
+          <TourStep
+            link={`/administrator/head/home/manage/${scholarship.scholarshipId}`}
+            stepId={activeTourName === "editScholarship" ? "1" : "renew-1"}
+          >
+            {content}
+          </TourStep>
+        );
+      }
+
+      return content;
     },
     enableSorting: true,
     enableHiding: true,
@@ -107,7 +135,7 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
         <Badge
           className={`${
             status === "ACTIVE"
-              ? "bg-green-500/10 text-green-700"
+              ? "bg-emerald-500/10 text-emerald-700"
               : status === "EXPIRED"
               ? "bg-red-600/10 text-red-700"
               : status === "RENEW"
@@ -221,8 +249,4 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
   //     return value.includes(row.getValue(id));
   //   },
   // },
-  {
-    id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} status={status} />,
-  },
 ];

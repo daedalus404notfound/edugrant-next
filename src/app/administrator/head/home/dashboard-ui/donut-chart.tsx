@@ -50,7 +50,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function DonutPieDonut({ data }: { data: DashboardData | null }) {
+export function DonutPieDonut({ data }: { data: DashboardData | undefined }) {
   const chartData = [
     {
       group: "Persons with Disability",

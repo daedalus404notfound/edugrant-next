@@ -18,7 +18,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Button } from "@/components/ui/button";
-import { Activity, LogOut, PenLine, UserRoundPlus } from "lucide-react";
+import {
+  Activity,
+  HelpCircle,
+  LogOut,
+  PenLine,
+  UserRoundPlus,
+} from "lucide-react";
 
 import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
 
@@ -36,6 +42,8 @@ import TitleReusable from "@/components/ui/title";
 import { TourTrigger } from "@/components/tour-2/tour-trigger";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useTourStore } from "@/store/useTourStore";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -55,8 +63,14 @@ export default function DynamicHeaderAdmin({
     open: openLogout,
     setOpen: setOpenLogout,
   } = useAdminLogout();
-  const [openGuide, setOpenGuide] = useState(false);
-  const router = useRouter();
+  const {
+    setOpenScholarship,
+    setOpenAnnouncement,
+    setOpenEditScholarship,
+    setOpenRenewScholarship,
+    setOpenGenerate,
+    setOpenStaff,
+  } = useTourStore();
   return (
     <header className="flex w-full z-30 items-center justify-between  p-4 rounded-lg">
       <div className="flex  shrink-0 items-center gap-2">
@@ -87,24 +101,45 @@ export default function DynamicHeaderAdmin({
         <TourStep stepId="guide">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button>Guide (Soon)</Button>
+              <Button>
+                <HelpCircle />
+                Help
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuLabel>Guides available</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => setOpenGuide(true)}>
-                <PenLine /> Post Scholarship
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <PenLine /> Post Announcement
-              </DropdownMenuItem>{" "}
-              <DropdownMenuItem>
-                <UserRoundPlus /> Add Staff
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Activity />
-                Generate Report
-              </DropdownMenuItem>
+              <DropdownMenuSeparator />{" "}
+              <Link href="/administrator/head/home/create">
+                <DropdownMenuItem onClick={() => setOpenScholarship(true)}>
+                  <PenLine /> Post Scholarship
+                </DropdownMenuItem>
+              </Link>{" "}
+              <Link href="/administrator/head/home/manage">
+                <DropdownMenuItem onClick={() => setOpenEditScholarship(true)}>
+                  <PenLine /> Edit Scholarship
+                </DropdownMenuItem>
+              </Link>
+              <Link href="/administrator/head/home/archive">
+                <DropdownMenuItem onClick={() => setOpenRenewScholarship(true)}>
+                  <PenLine /> Renew Scholarship
+                </DropdownMenuItem>
+              </Link>
+              <Link href="/administrator/head/home/post-announcement">
+                <DropdownMenuItem onClick={() => setOpenAnnouncement(true)}>
+                  <PenLine /> Post Announcement
+                </DropdownMenuItem>{" "}
+              </Link>{" "}
+              <Link href="/administrator/head/home/generate-report">
+                <DropdownMenuItem onClick={() => setOpenGenerate(true)}>
+                  <Activity />
+                  Generate Report
+                </DropdownMenuItem>
+              </Link>{" "}
+              <Link href="/administrator/head/home/add">
+                <DropdownMenuItem onClick={() => setOpenStaff(true)}>
+                  <UserRoundPlus /> Add Staff
+                </DropdownMenuItem>
+              </Link>
               <DropdownMenuSeparator />
             </DropdownMenuContent>
           </DropdownMenu>
@@ -132,54 +167,6 @@ export default function DynamicHeaderAdmin({
           }
         />
       </div>
-
-      <Dialog open={openGuide} onOpenChange={setOpenGuide}>
-        <DialogContent
-          className="!bg-card w-lg p-6"
-          onInteractOutside={(e) => {
-            e.preventDefault();
-          }}
-          onEscapeKeyDown={(e) => {
-            e.preventDefault();
-          }}
-          showCloseButton={false}
-        >
-          <DialogHeader>
-            <DialogTitle>
-              <TitleReusable
-                title="Welcome to POST SCHOLARSHIP"
-                description=""
-              />
-            </DialogTitle>
-            <DialogDescription className="mt-3">
-              Begin managing scholarship programs. You can take a quick tour to
-              learn the process, or skip it and start right away.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="flex gap-3 mt-3">
-            <Button
-              className="flex-1"
-              variant="secondary"
-              onClick={() => setOpenGuide(false)}
-            >
-              Skip for Now
-            </Button>
-            <div
-              onClick={() => {
-                setOpenGuide(false);
-                router.push("/administrator/head/home/create");
-              }}
-              className="flex-1 "
-            >
-              <TourTrigger
-                tourName="postScholarship"
-                className="h-9 !bg-green-900 !text-gray-200 !border-0 w-full"
-              />
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </header>
   );
 }

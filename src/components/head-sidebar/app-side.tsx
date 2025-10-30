@@ -50,109 +50,8 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Badge } from "../ui/badge";
-import usefetchHeadDashboard from "@/hooks/admin/getHeadDashboard";
-const dataa = {
-  user: {
-    name: "Admin User",
-    email: "admin@example.com",
-    avatar: "/avatars/admin.jpg",
-  },
-  navMain: [
-    {
-      title: "Scholarships",
-      url: "/administrator/home/scholarships",
-      icon: GraduationCap,
-      isActive: false,
-      items: [
-        {
-          title: "Add New Scholarship",
-          url: "/administrator/home/scholarships/create",
-        },
-        {
-          title: "Manage Scholarships",
-          url: "/administrator/home/scholarships/manage",
-        },
-        {
-          title: "Archived Scholarships",
-          url: "/administrator/home/scholarships/archived",
-        },
-      ],
-    },
-    {
-      title: "Applicants",
-      url: "/administrator/home/applicants",
-      icon: Bot,
-      items: [
-        {
-          title: "Pending Applications",
-          url: "/administrator/home/applicants/pending",
-        },
-        {
-          title: "For Interview",
-          url: "/administrator/home/applicants/interview",
-        },
-        {
-          title: "Approved Applications",
-          url: "/administrator/home/applicants/approved",
-        },
-        {
-          title: "Applicants for Interview",
-          url: "/administrator/home/applicants/reviewed",
-          sa: true,
-        },
-        {
-          title: "Declined Applications",
-          url: "/administrator/home/applicants/rejected",
-        },
-      ],
-    },
+import useAuthenticatedUser from "@/hooks/head/getTokenAuthentication";
 
-    {
-      title: "Announcements",
-      url: "/administrator/home/announcements",
-      icon: Megaphone,
-      items: [
-        {
-          title: "Post Announcement",
-          url: "/administrator/home/announcements/create",
-        },
-        {
-          title: "Manage Announcements",
-          url: "/administrator/home/announcements/manage",
-        },
-      ],
-    },
-  ],
-};
-const sidebarData = [
-  {
-    title: "Dashboard",
-    url: "/administrator/head/home",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "Profile Settings",
-    url: "/administrator/head/home/profile",
-    icon: UserRoundCog,
-  },
-];
-const usersData = [
-  {
-    title: "All Student",
-    url: "/administrator/head/home/all-application",
-    icon: UsersRound,
-  },
-  {
-    title: "Generate Report",
-    url: "/administrator/head/home/generate-report",
-    icon: Activity,
-  },
-  {
-    title: "Staff Logs",
-    url: "/administrator/head/home/staff-logs",
-    icon: FileSpreadsheet,
-  },
-];
 // const sidebarScholar = [
 //   {
 //     title: "Post Scholarship",
@@ -207,31 +106,32 @@ const usersData = [
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   const { open } = useSidebar();
-  const { data, loading } = usefetchHeadDashboard();
+  const {
+    data,
+    success,
+    loading: loadingHead,
+    isError,
+  } = useAuthenticatedUser();
   const sidebarApplication = [
     {
       title: "Pending Application",
       url: "/administrator/head/home/pending",
       icon: Hourglass,
-      indicator: data?.pendingApplcationCount,
     },
     {
       title: "Approved Application",
       url: "/administrator/head/home/approved",
       icon: CheckCheck,
-      indicator: data?.approvedApplcationCount,
     },
     {
       title: "Rejected Application",
       url: "/administrator/head/home/rejected",
       icon: UserRoundX,
-      indicator: data?.approvedApplcationCount,
     },
     {
       title: "Blocked Application",
       url: "/administrator/head/home/blocked",
       icon: X,
-      indicator: data?.approvedApplcationCount,
     },
   ];
 
@@ -247,6 +147,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         url: "/administrator/home/scholarships",
         icon: GraduationCap,
         isActive: false,
+        count: data?.availableScholarshipCount,
         items: [
           {
             title: "Post Scholarship",
@@ -274,31 +175,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             title: "Pending Application",
             url: "/administrator/head/home/pending",
             icon: Hourglass,
-            indicator: data?.pendingApplcationCount,
           },
           {
             title: "For Interview",
             url: "/administrator/head/home/interview",
             icon: CheckCheck,
-            indicator: data?.approvedApplcationCount,
           },
           {
             title: "Approved Application",
             url: "/administrator/head/home/approved",
             icon: CheckCheck,
-            indicator: data?.approvedApplcationCount,
           },
           {
             title: "Rejected Application",
             url: "/administrator/head/home/rejected",
             icon: UserRoundX,
-            indicator: data?.approvedApplcationCount,
           },
           {
             title: "Blocked Application",
             url: "/administrator/head/home/blocked",
             icon: X,
-            indicator: data?.approvedApplcationCount,
           },
         ],
       },
@@ -341,6 +237,35 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     ],
   };
 
+  const sidebarData = [
+    {
+      title: "Dashboard",
+      url: "/administrator/head/home",
+      icon: LayoutDashboard,
+    },
+    {
+      title: "Profile Settings",
+      url: "/administrator/head/home/profile",
+      icon: UserRoundCog,
+    },
+  ];
+  const usersData = [
+    {
+      title: "All Student",
+      url: "/administrator/head/home/all-application",
+      icon: UsersRound,
+    },
+    {
+      title: "Generate Report",
+      url: "/administrator/head/home/generate-report",
+      icon: Activity,
+    },
+    {
+      title: "Staff Logs",
+      url: "/administrator/head/home/staff-logs",
+      icon: FileSpreadsheet,
+    },
+  ];
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

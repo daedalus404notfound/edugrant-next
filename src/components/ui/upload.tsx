@@ -75,7 +75,7 @@ export function DragAndDropArea({
             ${
               isDragActive && uploadedFiles.length === 0
                 ? "border-primary bg-accent/30"
-                : "border-card hover:bg-background/20"
+                : "border-card hover:bg-card/60"
             }
           `}
         >

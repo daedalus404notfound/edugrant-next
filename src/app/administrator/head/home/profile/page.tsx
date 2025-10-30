@@ -20,13 +20,7 @@ import {
   VenusAndMars,
   XIcon,
 } from "lucide-react";
-import logo from "@/assets/edugrant-logo.png";
-import {
-  Timeline,
-  TimelineContent,
-  TimelineDate,
-  TimelineItem,
-} from "@/components/ui/timeline";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -64,6 +58,7 @@ import {
 import { useAdminStore } from "@/store/adminUserStore";
 import { useUpdateProfileAdmin } from "@/hooks/head-edit-handler";
 import { useProfileUserChangePassword } from "@/hooks/user/profileUserChangePassword";
+
 import {
   InputOTP,
   InputOTPGroup,
@@ -72,12 +67,18 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { DragAndDropAreaProfile } from "@/components/ui/upload-profile";
 import { useProfileUserChangePasswordd } from "@/hooks/user/headChangePassword";
+import useAuthenticatedUser from "@/hooks/head/getTokenAuthentication";
 export default function Profile() {
-  const { admin, loading: loadingAdmin } = useAdminStore();
+  const {
+    data,
+    success,
+    loading: loadingHead,
+    isError,
+  } = useAuthenticatedUser();
   const [openCalendar, setOpenCalendar] = useState(false);
 
   const { form, handleSubmit, loading, isChanged, reset, setReset } =
-    useUpdateProfileAdmin(admin);
+    useUpdateProfileAdmin(data?.safeData);
   const [tab, setTab] = useState("personal");
 
   const {
@@ -133,13 +134,14 @@ export default function Profile() {
                                   label="backdrop image"
                                   accept={["image/png", "image/jpeg"]}
                                   initialImageUrl={
-                                    admin?.ISPSU_Head.profileImg?.publicUrl
+                                    data?.safeData?.ISPSU_Head.profileImg
+                                      ?.publicUrl
                                   }
                                   onFilesChange={(files) =>
                                     field.onChange(
                                       files[0]
                                         ? files[0]
-                                        : admin?.ISPSU_Head.profileImg
+                                        : data?.safeData?.ISPSU_Head.profileImg
                                             ?.publicUrl
                                     )
                                   } // Single file
@@ -151,12 +153,12 @@ export default function Profile() {
 
                         <div>
                           <h1 className="text-lg font-medium">
-                            {admin?.ISPSU_Head?.lName || ""},{" "}
-                            {admin?.ISPSU_Head?.fName || ""}{" "}
-                            {admin?.ISPSU_Head?.mName || ""}
+                            {data?.safeData?.ISPSU_Head?.lName || ""},{" "}
+                            {data?.safeData?.ISPSU_Head?.fName || ""}{" "}
+                            {data?.safeData?.ISPSU_Head?.mName || ""}
                           </h1>
                           <p className="text-muted-foreground text-sm">
-                            {admin?.email}
+                            {data?.safeData?.email}
                           </p>
                         </div>
                       </div>

@@ -6,6 +6,7 @@ import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
 import { StudentUserFormData } from "@/hooks/user/zodUserProfile";
+import Link from "next/link";
 export const columns: ColumnDef<StudentUserFormData>[] = [
   {
     accessorFn: (row) => row.fName,
@@ -16,7 +17,10 @@ export const columns: ColumnDef<StudentUserFormData>[] = [
     cell: ({ row }) => {
       const student = row.original;
       return (
-        <div className="flex gap-2 items-center pl-4">
+        <Link
+          className="flex gap-2 items-center pl-4 "
+          href={`/administrator/head/home/all-application/${student.studentId}`}
+        >
           <Avatar>
             <AvatarImage
               className="object-cover"
@@ -30,14 +34,14 @@ export const columns: ColumnDef<StudentUserFormData>[] = [
             </AvatarFallback>
           </Avatar>
           <div>
-            <div className="font-medium capitalize">
-              {student.fName} {student.mName} {student.lName}
+            <div className="font-medium capitalize underline">
+              {student.lName}, {student.fName} {student.mName}
             </div>
             <p className="text-xs text-muted-foreground">
               {student.Account?.email}
             </p>
           </div>
-        </div>
+        </Link>
       );
     },
     enableSorting: true,
@@ -54,7 +58,16 @@ export const columns: ColumnDef<StudentUserFormData>[] = [
     enableSorting: true,
     enableHiding: true,
   },
-
+  {
+    accessorFn: (row) => row.gender,
+    id: "gender",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Gender" />
+    ),
+    cell: ({ row }) => <span className="">{row.getValue("gender")}</span>,
+    enableSorting: true,
+    enableHiding: true,
+  },
   {
     accessorFn: (row) => row.institute,
     id: "institute",
@@ -126,8 +139,8 @@ export const columns: ColumnDef<StudentUserFormData>[] = [
     enableSorting: true,
     enableHiding: true,
   },
-  {
-    id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
-  },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => <DataTableRowActions row={row} />,
+  // },
 ];

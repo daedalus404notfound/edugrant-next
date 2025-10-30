@@ -73,7 +73,7 @@
 // }
 "use client";
 
-import type { ReactNode } from "react";
+import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { useEffect, useRef } from "react";
 import {
   Popover,
@@ -82,14 +82,29 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { useTourContext } from "./tour-provider";
+import Link from "next/link";
 
-interface TourStepProps {
+interface TourStepProps<T = any> {
   stepId: string;
   children: ReactNode;
   className?: string;
+  link?: string;
+  setter?: Dispatch<SetStateAction<T>>;
+  setterPrev?: Dispatch<SetStateAction<T>>;
+  setterValue?: string | boolean | null;
+  setterValuePrev?: string | boolean | null;
 }
 
-export function TourStep({ stepId, children, className }: TourStepProps) {
+export function TourStep({
+  stepId,
+  children,
+  className,
+  link,
+  setter,
+  setterPrev,
+  setterValue,
+  setterValuePrev,
+}: TourStepProps) {
   const {
     currentStep,
     isActive,
@@ -145,14 +160,45 @@ export function TourStep({ stepId, children, className }: TourStepProps) {
             </Button>
 
             <div className="flex gap-2">
-              {!isFirstStep && (
-                <Button variant="outline" size="sm" onClick={previousStep}>
-                  Previous
+              {setterPrev
+                ? !isFirstStep && (
+                    <Button
+                      onClick={() => {
+                        setterPrev(setterValuePrev || "");
+                        previousStep();
+                      }}
+                      variant="outline"
+                      size="sm"
+                    >
+                      Previous
+                    </Button>
+                  )
+                : !isFirstStep && (
+                    <Button variant="outline" size="sm" onClick={previousStep}>
+                      Previous
+                    </Button>
+                  )}
+              {link ? (
+                <Link href={link}>
+                  <Button size="sm" onClick={nextStep}>
+                    {isLastStep ? "Finish" : "Next"}
+                  </Button>
+                </Link>
+              ) : setter ? (
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    nextStep();
+                    setter(setterValue || "");
+                  }}
+                >
+                  {isLastStep ? "Finish" : "Next"}
+                </Button>
+              ) : (
+                <Button size="sm" onClick={nextStep}>
+                  {isLastStep ? "Finish" : "Next"}
                 </Button>
               )}
-              <Button size="sm" onClick={nextStep}>
-                {isLastStep ? "Finish" : "Next"}
-              </Button>
             </div>
           </div>
         </div>

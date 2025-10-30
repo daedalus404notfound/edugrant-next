@@ -23,12 +23,12 @@ import {
 } from "@/components/ui/dialog";
 import TitleReusable from "@/components/ui/title";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import useSocketConnection from "@/hooks/head/useSocketConnection";
+import { useEffect, useState } from "react";
+import useAuthenticatedUser from "@/hooks/head/getTokenAuthentication";
 
 export default function AdminDashboard() {
-
   const { data, loading } = usefetchHeadDashboard();
+  const { data: data2 } = useAuthenticatedUser();
   const summaryCards: SummaryCardProps[] = [
     {
       label: "Total Applicants",
@@ -59,7 +59,15 @@ export default function AdminDashboard() {
       todayIncrement: data?.applicationPendingToday,
     },
   ];
-  const [openGuide, setOpenGuide] = useState(true);
+
+  const [openGuide, setOpenGuide] = useState(false);
+
+  useEffect(() => {
+    if (data2?.safeData?.webTours?.dashboardTour) {
+      // reverse the boolean: false → true, true → false
+      setOpenGuide(!data2.safeData.webTours.dashboardTour);
+    }
+  }, [data2]);
 
   return (
     <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
@@ -105,18 +113,9 @@ export default function AdminDashboard() {
         <TourStep stepId="summary">
           {" "}
           <div className="grid grid-cols-4  gap-6">
-            {loading ? (
-              <>
-                <Skeleton className="h-30 w-full" />
-                <Skeleton className="h-30 w-full" />
-                <Skeleton className="h-30 w-full" />
-                <Skeleton className="h-30 w-full" />
-              </>
-            ) : (
-              summaryCards.map((card, index) => (
-                <SummaryCard key={index} {...card} />
-              ))
-            )}
+            {summaryCards.map((card, index) => (
+              <SummaryCard loading={loading} key={index} {...card} />
+            ))}
           </div>
         </TourStep>
 

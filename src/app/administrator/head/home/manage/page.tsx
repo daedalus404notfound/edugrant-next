@@ -3,6 +3,13 @@ import { GraduationCap, RefreshCcw } from "lucide-react";
 import { columns } from "./manage-table-components/columns";
 import DataTableToolbar from "./manage-table-components/data-table-toolbar";
 import TitleReusable from "@/components/ui/title";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import useScholarshipData from "@/hooks/admin/getScholarship";
@@ -14,6 +21,10 @@ import {
   SortingState,
 } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
+import { TourTrigger } from "@/components/tour-2/tour-trigger";
+import { useTourStore } from "@/store/useTourStore";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 export default function Manage() {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -35,17 +46,18 @@ export default function Manage() {
     columnFilters,
     search,
   });
-
+  const { openEditScholarship, setOpenEditScholarship, openRenewScholarship, setOpenRenewScholarship } = useTourStore();
+  console.log(openEditScholarship);
   const tabs = [
     {
       id: "ACTIVE",
       label: "Active",
-      indicator: meta.count?.countActive,
+      indicator: meta.count?.countActive ? meta.count?.countActive : null,
     },
     {
       id: "RENEW",
       label: "Renewals",
-      indicator: meta.count?.countRenew,
+      indicator: meta.count?.countRenew ? meta.count?.countRenew : null,
     },
   ];
   useEffect(() => {
@@ -55,7 +67,50 @@ export default function Manage() {
   const isLoading = query.isLoading;
   const data = query.data?.data ?? [];
   return (
-    <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+    <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-85px)] min-h-[calc(100dvh-134px)] ">
+      <Dialog open={openEditScholarship} onOpenChange={setOpenEditScholarship}>
+        <DialogContent
+          className="!bg-card w-lg p-6"
+          onInteractOutside={(e) => {
+            e.preventDefault();
+          }}
+          onEscapeKeyDown={(e) => {
+            e.preventDefault();
+          }}
+          showCloseButton={false}
+        >
+          <DialogHeader>
+            <DialogTitle>
+              <TitleReusable title="Post scholarship guide" description="" />
+            </DialogTitle>
+            <DialogDescription className="mt-3">
+              Begin managing scholarship programs. You can take a quick tour to
+              learn the process, or skip it and start right away.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex gap-3 mt-3">
+            <Button
+              className="flex-1"
+              variant="secondary"
+              onClick={() => setOpenEditScholarship(false)}
+            >
+              Skip for Now
+            </Button>
+            <div
+              onClick={() => {
+                setOpenEditScholarship(false);
+              }}
+              className="flex-1 "
+            >
+              <TourTrigger
+                tourName="editScholarship"
+                className="h-9 !bg-green-900 !text-gray-200 !border-0 w-full"
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
       <div className="mx-auto w-[95%] lg:py-10  py-4">
         {status === "ACTIVE" ? (
           <TitleReusable
@@ -97,6 +152,8 @@ export default function Manage() {
             columnFilters={columnFilters}
             setColumnFilters={setColumnFilters}
             toolbar={DataTableToolbar}
+            // customLink={true}
+            // setLink="/administrator/head/home/manage"
           />
         </div>
       </div>
