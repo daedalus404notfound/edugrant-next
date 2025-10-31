@@ -35,15 +35,6 @@ export function DataTableRowActions<TData>({
 }: DataTableRowActionsProps<TData>) {
   const rowData = row.original as scholarshipFormData;
   const [openAlert, setOpenAlert] = useState(false);
-  const { onSubmit, isSuccess, deleteLoading } = useDeleteScholarship({
-    scholarshipId: rowData.scholarshipId,
-  });
-
-  useEffect(() => {
-    if (isSuccess) {
-      setOpenAlert(false);
-    }
-  }, [isSuccess]);
 
   return (
     <Popover>
