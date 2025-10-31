@@ -60,7 +60,7 @@ import { useAdminProfileForm } from "@/hooks/head-profile-edit";
 import useUpdateProfileStaff from "@/hooks/updateStaffProfile";
 import useGetStaffById from "@/hooks/admin/getStaffByHeadById";
 
-export default function InterceptManageScholarship() {
+export default function InterceptManageStaff() {
   const { isActive } = useTourContext();
   const router = useRouter();
   const params = useParams();

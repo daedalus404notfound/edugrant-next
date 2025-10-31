@@ -1,5 +1,7 @@
 // "use client";
 
+import InterceptManageStaff from "../../@modal/(.)manage-staff/[id]/page";
+
 // import { Ring } from "ldrs/react";
 // import "ldrs/react/Ring.css";
 // import { GitCompare, GitFork, GitMerge, GitPullRequest } from "lucide-react";
@@ -670,3 +672,6 @@
 // //     )}
 // //   </div>
 // // </div>;
+export default function InterceptedManageStaff() {
+  return <InterceptManageStaff />;
+}

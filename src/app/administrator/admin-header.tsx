@@ -20,9 +20,12 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Activity,
+  Edit,
   HelpCircle,
   LogOut,
+  Megaphone,
   PenLine,
+  RefreshCcw,
   UserRoundPlus,
 } from "lucide-react";
 
@@ -108,99 +111,89 @@ export default function DynamicHeaderAdmin({
           <Popover>
             <PopoverTrigger asChild>
               <Button>
-                <HelpCircle className="mr-2 h-4 w-4" />
                 Help
+                <HelpCircle />
               </Button>
             </PopoverTrigger>
 
             <PopoverContent
               align="end"
               sideOffset={8}
-              className="w-80 p-4 mr-2 rounded-xl shadow-md border bg-background"
+              className="w-md p-2 mr-2 rounded-xl shadow-md border-border/50 bg-background"
             >
-              <h4 className="mb-3 text-sm font-semibold text-muted-foreground">
-                Guides Available
-              </h4>
-
               <div className="grid grid-cols-2 gap-3">
                 <Link href="/administrator/head/home/create">
-                  <Button
-                    variant="outline"
+                  <div
                     onClick={() => setOpenScholarship(true)}
-                    className="flex w-full items-center justify-start gap-2 text-sm rounded-sm"
+                    className="relative bg-card/60 overflow-hidden px-4 py-6 flex items-center gap-4 text-sm rounded-sm  justify-between hover:underline"
                   >
-                    <PenLine className="h-4 w-4 text-primary" />
-                    Post
-                  </Button>
+                    Post Scholarship
+                    <PenLine className="absolute -right-1 -bottom-1 size-10 opacity-40 text-primary" />
+                  </div>
                 </Link>
 
                 <Link href="/administrator/head/home/manage">
-                  <Button
-                    variant="outline"
+                  <div
                     onClick={() => setOpenEditScholarship(true)}
-                    className="flex w-full items-center justify-start gap-2 text-sm rounded-sm"
+                    className="relative bg-card/60 overflow-hidden px-4 py-6 flex items-center gap-4 text-sm rounded-sm  justify-between hover:underline"
                   >
-                    <PenLine className="h-4 w-4 text-primary" />
-                    Edit
-                  </Button>
+                    Edit Scholarship
+                    <Edit className="absolute -right-1 -bottom-1 size-10 opacity-20 text-primary" />
+                  </div>
                 </Link>
 
                 <Link href="/administrator/head/home/archive">
-                  <Button
-                    variant="outline"
+                  <div
                     onClick={() => setOpenRenewScholarship(true)}
-                    className="flex w-full items-center justify-start gap-2 text-sm rounded-sm"
+                    className="relative bg-card/60 overflow-hidden px-4 py-6 flex items-center gap-4 text-sm rounded-sm  justify-between hover:underline"
                   >
-                    <PenLine className="h-4 w-4 text-primary" />
-                    Renew
-                  </Button>
+                    Renew Scholarship
+                    <RefreshCcw className="absolute -right-1 -bottom-1 size-10 opacity-20 text-primary" />
+                  </div>
                 </Link>
 
                 <Link href="/administrator/head/home/post-announcement">
-                  <Button
-                    variant="outline"
+                  <div
                     onClick={() => setOpenAnnouncement(true)}
-                    className="flex w-full items-center justify-start gap-2 text-sm rounded-sm"
+                    className="relative bg-card/60 overflow-hidden px-4 py-6 flex items-center gap-4 text-sm rounded-sm  justify-between hover:underline"
                   >
-                    <PenLine className="h-4 w-4 text-primary" />
-                    Announce
-                  </Button>
+                    {" "}
+                    Post Announcement
+                    <Megaphone className="absolute -right-1 -bottom-1 size-10 opacity-20 text-primary" />
+                  </div>
                 </Link>
 
                 <Link href="/administrator/head/home/generate-report">
-                  <Button
-                    variant="outline"
+                  <div
                     onClick={() => setOpenGenerate(true)}
-                    className="flex w-full items-center justify-start gap-2 text-sm rounded-sm"
+                    className="relative bg-card/60 overflow-hidden px-4 py-6 flex items-center gap-4 text-sm rounded-sm  justify-between hover:underline"
                   >
-                    <Activity className="h-4 w-4 text-primary" />
-                    Report
-                  </Button>
+                    Generate Report
+                    <Activity className="absolute -right-1 -bottom-1 size-10 opacity-20 text-primary" />
+                  </div>
                 </Link>
 
                 <Link href="/administrator/head/home/add">
-                  <Button
-                    variant="outline"
+                  <div
                     onClick={() => setOpenStaff(true)}
-                    className="flex w-full items-center justify-start gap-2 text-sm rounded-sm"
+                    className="relative bg-card/60 overflow-hidden px-4 py-6 flex items-center gap-4 text-sm rounded-sm  justify-between hover:underline"
                   >
-                    <UserRoundPlus className="h-4 w-4 text-primary" />
                     Add Staff
-                  </Button>
+                    <UserRoundPlus className="absolute -right-1 -bottom-1 size-10 opacity-20 text-primary" />
+                  </div>
                 </Link>
 
                 <Link
                   href="/administrator/head/home/manage-staff"
                   className="col-span-2"
                 >
-                  <Button
-                    variant="outline"
+                  <div
                     onClick={() => setActivateStaff(true)}
-                    className="flex w-full items-center justify-center gap-2 text-sm "
+                    className="relative bg-card/60 overflow-hidden px-4 py-6 flex items-center gap-4 text-sm rounded-sm  justify-between hover:underline"
                   >
-                    <UserRoundPlus className="h-4 w-4 text-primary" />
                     Activate Staff
-                  </Button>
+                    <UserRoundPlus className="absolute -right-1 -bottom-1 size-10 opacity-20 text-primary" />
+                  </div>
                 </Link>
               </div>
             </PopoverContent>
