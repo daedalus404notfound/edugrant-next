@@ -37,11 +37,7 @@ export function DataTableRowActions<TData>({
   const rowData = row.original as scholarshipFormData;
   const { mode, setMode, resetMode } = useModeStore();
   const { admin } = useAdminStore();
-  const { onSubmit, deleteLoading, openDelete, setOpenDelete } =
-    useDeleteScholarship({
-      scholarshipId: rowData.scholarshipId,
-      accountId: admin?.accountId,
-    });
+
   const {
     onSubmit: onSubmitArchive,
     openArchive,
@@ -129,26 +125,6 @@ export function DataTableRowActions<TData>({
         ) : (
           ""
         )}
-
-        <DeleteDialog
-          open={openDelete}
-          onOpenChange={setOpenDelete}
-          onConfirm={onSubmit}
-          loading={deleteLoading}
-          title="Delete Scholarship?"
-          description="Are you sure you want to delete this scholarship?"
-          cancelText="Keep"
-          trigger={
-            <Button
-              onClick={() => setOpenDelete(true)}
-              size="lg"
-              variant="red"
-              className="justify-start"
-            >
-              <Trash2 /> Delete
-            </Button>
-          }
-        />
       </PopoverContent>
     </Popover>
   );
