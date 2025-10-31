@@ -123,11 +123,15 @@ import { ApiErrorResponse } from "../admin/postReviewedHandler";
 import { AdminProfileFormData } from "../head-profile-edit";
 
 export interface AuthTypes {
-  availableScholarshipCount: number;
+  availableScholarshipCount: {
+    ISPSU_StaffCount: number;
+    announcementCount: number;
+    applicationCount: number;
+    availableScholarshipCount: number;
+  };
   message: string;
   safeData: AdminProfileFormData;
   success: boolean;
-  
 }
 
 export default function useAuthenticatedUser() {

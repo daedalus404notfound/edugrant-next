@@ -8,6 +8,8 @@ interface ModalState {
   openRenewScholarship: boolean;
   openGenerate: boolean;
   openStaff: boolean;
+  activateStaff: boolean;
+  setActivateStaff: (value: boolean) => void;
   setOpenStaff: (value: boolean) => void;
   setOpenGenerate: (value: boolean) => void;
   setOpenScholarship: (value: boolean) => void;
@@ -23,6 +25,8 @@ export const useTourStore = create<ModalState>((set) => ({
   openRenewScholarship: false,
   openGenerate: false,
   openStaff: false,
+  activateStaff: false,
+  setActivateStaff: (value) => set({ activateStaff: value }),
   setOpenStaff: (value) => set({ openStaff: value }),
   setOpenGenerate: (value) => set({ openGenerate: value }),
   setOpenScholarship: (value) => set({ openScholarship: value }),

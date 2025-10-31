@@ -106,12 +106,12 @@ import useAuthenticatedUser from "@/hooks/head/getTokenAuthentication";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   const { open } = useSidebar();
-  const {
-    data,
-    success,
-    loading: loadingHead,
-    isError,
-  } = useAuthenticatedUser();
+  const { data } = useAuthenticatedUser();
+  const applicationCount = data?.availableScholarshipCount.applicationCount;
+  const scholarshipCount =
+    data?.availableScholarshipCount.availableScholarshipCount;
+  const staffCount = data?.availableScholarshipCount.ISPSU_StaffCount;
+  const announcementCount = data?.availableScholarshipCount.announcementCount;
   const sidebarApplication = [
     {
       title: "Pending Application",
@@ -147,7 +147,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         url: "/administrator/home/scholarships",
         icon: GraduationCap,
         isActive: false,
-        count: data?.availableScholarshipCount,
+        count: scholarshipCount,
         items: [
           {
             title: "Post Scholarship",
@@ -170,6 +170,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: "Applications",
         url: "/administrator/home/applicants",
         icon: UsersRound,
+        count: applicationCount,
         items: [
           {
             title: "Pending Application",
@@ -203,6 +204,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: "Announcements",
         url: "/administrator/home/announcements",
         icon: Megaphone,
+        count: announcementCount,
         items: [
           {
             title: "Post announcement",
@@ -221,6 +223,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         title: "Manage Staff",
         url: "/administrator/home/announcements",
         icon: UsersRound,
+        count: staffCount,
         items: [
           {
             title: "Add New Staff",

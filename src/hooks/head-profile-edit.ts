@@ -33,6 +33,7 @@ export const ISPSU_Staff = z.object({
       path: z.string().optional(),
     })
     .optional(),
+  validated: z.string().optional(),
 });
 
 export const HeadSchema = z.object({
@@ -77,6 +78,7 @@ export function useAdminProfileForm(data?: AdminProfileFormData | null) {
           publicUrl: data?.ISPSU_Staff?.profileImg?.publicUrl || "",
           path: data?.ISPSU_Staff?.profileImg?.path || "",
         },
+        validated: data?.ISPSU_Staff?.validated || "",
       },
       accountId: data?.accountId || 0,
       dateCreated: data?.dateCreated || format(new Date(), "yyyy-MM-dd"),

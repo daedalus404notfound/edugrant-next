@@ -251,7 +251,10 @@ export function TipTapEditor({
       </div>
 
       {/* Editor Content */}
-      <EditorContent className="bg-card" editor={editor} />
+      <EditorContent
+        className="dark:bg-input/30 bg-transparent shadow-xs border overflow-hidden rounded-md"
+        editor={editor}
+      />
     </div>
   );
 }

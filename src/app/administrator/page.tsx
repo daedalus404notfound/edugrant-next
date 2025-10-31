@@ -47,6 +47,8 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import useRememberAdminStore from "@/store/rememberMe-admin";
 import Link from "next/link";
+import Lamp from "@/components/ui/lamp";
+import { Separator } from "@/components/ui/separator";
 
 export default function LoginAdmin() {
   const [isVisible, setIsVisible] = useState<boolean>(false);
@@ -72,60 +74,55 @@ export default function LoginAdmin() {
 
   const { remember, setRemember } = useRememberAdminStore();
   return (
-    <div className="relative flex justify-center items-center min-h-[100dvh] overflow-hidden bg-card dark:bg-black">
-      <div
-        className="absolute inset-0 z-0 hidden dark:block"
-        style={{
-          background:
-            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(16, 185, 129, 0.25), transparent 70%), #000000",
-        }}
-      />
+    <div className="relative flex justify-center items-center min-h-[100dvh] overflow-hidden bg-background">
+      <Lamp />
       <div className="absolute top-8 right-8">
         <ModeToggle />
       </div>
       <div className="absolute top-8 left-8 flex items-center">
-        <img className="object-contain size-10" src={logo.src} alt="" />
-        <motion.span
-          className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-primary/70 
-  text-2xl  havelock tracking-[-3px]  
-  "
-          initial={{ backgroundPosition: "200% 0" }}
-          animate={{ backgroundPosition: "-200% 0" }}
-          transition={{
-            repeat: Infinity,
-            repeatType: "loop",
-            duration: 7,
-            ease: "linear",
-          }}
-        >
-          Edugrant
-        </motion.span>
+        <img className="object-contain size-13" src={logo.src} alt="" />
       </div>
-      <div className="flex gap-4  max-w-md w-full px-8 pt-10 pb-12  dark:bg-white/5 bg-background shadow  border rounded-lg z-10">
+      <div className="flex gap-4  max-w-md w-full z-10">
         {step === "login" && (
           <div className="w-full">
             <form
               onSubmit={LoginForm.handleSubmit(handleLogin)}
-              className="space-y-12"
+              className="space-y-8"
             >
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="flex flex-col  gap-2"
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="flex flex-col  gap-2 text-center space-y-3"
               >
-                <h1 className="text-lg font-semibold">Login to your account</h1>
-                <p className="text-muted-foreground text-sm text-balance">
-                  Enter your email below to login to your account
-                </p>
+                <h1 className="text-lg font-semibold">
+                  Sign In to Administrator
+                </h1>
+                <div className="flex justify-center items-center gap-3">
+                  <Separator className="flex-1" />
+                  <p className=" text-sm">or</p>
+                  <Separator className="flex-1" />
+                </div>
+                <Link className="w-full" href="/">
+                  <Button className="w-full" variant="outline">
+                    Login as student <ArrowRight />
+                  </Button>
+                </Link>
               </motion.div>
-
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="text-muted-foreground text-sm text-balance text-center"
+              >
+                Enter your credentials below to login your account.
+              </motion.p>
               <div className="space-y-8">
                 <Form {...LoginForm}>
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
+                    transition={{ duration: 0.6, delay: 0.7 }}
                     className="flex flex-col  gap-2"
                   >
                     <FormField
@@ -151,7 +148,7 @@ export default function LoginAdmin() {
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
+                    transition={{ duration: 0.6, delay: 0.8 }}
                     className="flex flex-col  gap-2"
                   >
                     <FormField
@@ -199,7 +196,7 @@ export default function LoginAdmin() {
                     <motion.div
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4, delay: 0.6 }}
+                      transition={{ duration: 0.4, delay: 0.9 }}
                       className="flex justify-between items-center mt-3"
                     >
                       <span className="flex gap-1.5 items-center ">
@@ -236,7 +233,10 @@ export default function LoginAdmin() {
                       <Loader className="animate-spin" />
                     </>
                   ) : (
-                    "Login"
+                    <>
+                      Continue
+                      <ArrowRight />
+                    </>
                   )}
                 </Button>
               </motion.div>

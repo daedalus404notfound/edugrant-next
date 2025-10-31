@@ -9,7 +9,6 @@ import { useEffect } from "react";
 export function useUpdateAnnouncementZod(
   data?: AnnouncementFormDataPost | null
 ) {
-  console.log("aaaaid", data?.description);
   const form = useForm<AnnouncementFormDataPost>({
     resolver: zodResolver(AnnouncementSchemaPost),
     defaultValues: {

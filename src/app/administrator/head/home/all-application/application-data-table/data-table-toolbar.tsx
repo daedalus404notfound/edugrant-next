@@ -3,14 +3,21 @@ import {
   ArrowRightIcon,
   Building,
   GraduationCap,
+  RefreshCcw,
   SearchIcon,
   Trash2,
   X,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { useQueryClient, useIsFetching } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "@/app/table-components/data-table-view-options";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { DataTableFacetedFilter } from "@/app/table-components/data-table-faceted-filter";
 import useGetFilter from "@/hooks/admin/getDynamicFilter";
 import { useEffect, useState } from "react";
@@ -72,7 +79,8 @@ export default function DataTableToolbar<TData extends { studentId: number }>({
       setOpenAlert(false);
     }
   }, [isSuccess, table]);
-
+  const isFetching = useIsFetching({ queryKey: ["studentsDataHead"] }) > 0;
+  const queryClient = useQueryClient();
   return (
     <div className="flex items-center justify-between gap-1.5">
       <div className="flex flex-1 items-center space-x-2">
@@ -150,7 +158,28 @@ export default function DataTableToolbar<TData extends { studentId: number }>({
           }
         />
       )}
-
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            size="sm"
+            variant={isFetching ? "outline" : "default"}
+            onClick={() =>
+              queryClient.invalidateQueries({
+                queryKey: ["studentsDataHead"],
+              })
+            }
+          >
+            <RefreshCcw
+              className={`transition-transform ${
+                isFetching ? "spin-reverse" : ""
+              }`}
+            />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{isFetching ? "Refreshing..." : "Refresh table"}</p>
+        </TooltipContent>
+      </Tooltip>
       <DataTableViewOptions table={table} />
     </div>
   );

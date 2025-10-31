@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 const adminProfileSchema = z
   .object({
-    email: z.string().min(1, "Required"),
+    email: z.email().min(1, "Required"),
     firstName: z.string().min(1, "Required"),
     middleName: z.string().optional(),
     lastName: z.string().min(1, "Required"),

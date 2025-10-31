@@ -3,6 +3,7 @@ import {
   ArrowRightIcon,
   Building,
   GraduationCap,
+  RefreshCcw,
   SearchIcon,
   Trash2,
   X,
@@ -11,11 +12,16 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "@/app/table-components/data-table-view-options";
+import { useQueryClient, useIsFetching } from "@tanstack/react-query";
 import { DataTableFacetedFilter } from "@/app/table-components/data-table-faceted-filter";
 import useGetFilter from "@/hooks/admin/getDynamicFilter";
 import { useEffect, useState } from "react";
 import useDeleteApplication from "@/hooks/admin/postDeleteApplications";
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { ToolbarProps } from "@/app/table-components/data-table";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import useFetchApplications from "@/hooks/admin/getApplicant";
@@ -66,7 +72,8 @@ export default function DataTableToolbar<
       setOpenAlert(false);
     }
   }, [isSuccess, table]);
-
+  const isFetching = useIsFetching({ queryKey: ["adminApplicationData"] }) > 0;
+  const queryClient = useQueryClient();
   return (
     <div className="flex items-center justify-between gap-1.5">
       <div className="flex flex-1 items-center space-x-2">
@@ -152,7 +159,28 @@ export default function DataTableToolbar<
       )} */}
 
       {/* <ExportCsvScholarship status={status} filters={table.getState().columnFilters} /> */}
-
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            size="sm"
+            variant={isFetching ? "outline" : "default"}
+            onClick={() =>
+              queryClient.invalidateQueries({
+                queryKey: ["adminApplicationData"],
+              })
+            }
+          >
+            <RefreshCcw
+              className={`transition-transform ${
+                isFetching ? "spin-reverse" : ""
+              }`}
+            />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{isFetching ? "Refreshing..." : "Refresh table"}</p>
+        </TooltipContent>
+      </Tooltip>
       <DataTableViewOptions table={table} />
     </div>
   );

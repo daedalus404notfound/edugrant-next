@@ -24,6 +24,7 @@ import { MetaTypes } from "@/hooks/zodMeta";
 import { DataTablePagination } from "./data-table-pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
+import { QueryObserverResult } from "@tanstack/react-query";
 export interface ToolbarProps<TData> {
   table: TanstackTable<TData>;
   getRowId?: (row: TData) => string | number;
@@ -53,6 +54,7 @@ interface DataTableProps<TData, TValue> {
   setColumnVisibility?: OnChangeFn<Record<string, boolean>>; // <-- added
   customLink?: boolean;
   setLink?: string;
+  refetch?: () => Promise<QueryObserverResult<TData[], Error>>;
 }
 
 export function DataTable<TData, TValue>({
@@ -112,22 +114,22 @@ export function DataTable<TData, TValue>({
           <TableHeader
             className={`${
               status === "ACTIVE"
-                ? "bg-emerald-100 text-emerald-800 dark:bg-emerald-900/60 dark:text-emerald-300"
+                ? "bg-emerald-100  dark:bg-emerald-900/60 "
                 : status === "ARCHIVED"
-                ? "bg-gray-100 text-gray-800 dark:bg-gray-900/60 dark:text-gray-300"
+                ? "bg-gray-100  dark:bg-gray-900/60 "
                 : status === "PENDING"
-                ? "bg-amber-100 text-amber-800 dark:bg-amber-900/60 dark:text-amber-300"
+                ? "bg-amber-100 dark:bg-amber-900/60 "
                 : status === "DECLINED"
-                ? "bg-red-100 text-red-700 dark:bg-red-800/60 dark:text-red-300"
+                ? "bg-red-100  dark:bg-red-800/60 "
                 : status === "APPROVED"
-                ? "bg-card text-green-700 dark:bg-gradient-to-br to-green-950 from-green-900 dark:text-green-300"
+                ? "bg-emerald-100  dark:bg-emerald-900/60 "
                 : status === "RENEW"
-                ? "bg-blue-100 text-blue-800 dark:bg-blue-900/60 dark:text-blue-300"
+                ? "bg-blue-100  dark:bg-blue-900/60 "
                 : status === "INTERVIEW"
-                ? "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/60 dark:text-indigo-300"
+                ? "bg-indigo-100  dark:bg-indigo-900/60 "
                 : status === "EXPIRED"
-                ? "bg-orange-100 text-red-800 dark:bg-red-900/60 dark:text-red-300"
-                : "bg-card"
+                ? "bg-red-100  dark:bg-red-900/60 "
+                : "bg-emerald-100  dark:bg-emerald-900/60"
             } text-sm font-medium px-3 py-1 rounded-full transition-colors duration-200`}
           >
             {table.getHeaderGroups().map((headerGroup) => (

@@ -1,5 +1,5 @@
 "use client";
-import { Archive, Clock, GraduationCap } from "lucide-react";
+import { Archive, Clock, GraduationCap, RefreshCcw } from "lucide-react";
 import { columns } from "../manage/manage-table-components/columns";
 import DataTableToolbar from "../manage/manage-table-components/data-table-toolbar";
 import TitleReusable from "@/components/ui/title";
@@ -23,6 +23,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import logo from "@/assets/renewal.svg";
 import { Button } from "@/components/ui/button";
 import { TourTrigger } from "@/components/tour-2/tour-trigger";
 export default function Manage() {
@@ -73,7 +74,7 @@ export default function Manage() {
   const isLoading = query.isLoading;
   const data = query.data?.data ?? [];
   return (
-    <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+    <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-85px)] min-h-[calc(100dvh-134px)] ">
       {" "}
       <Dialog
         open={openRenewScholarship}
@@ -91,11 +92,13 @@ export default function Manage() {
         >
           <DialogHeader>
             <DialogTitle>
-              <TitleReusable title="Post scholarship guide" description="" />
+              <TitleReusable title="Renew Scholarship Tour" description="" />
             </DialogTitle>
+
             <DialogDescription className="mt-3">
-              Begin managing scholarship programs. You can take a quick tour to
-              learn the process, or skip it and start right away.
+              Explore how to renew and manage your scholarship programs
+              efficiently. Take a quick guided tour to understand each step, or
+              skip it to proceed immediately.
             </DialogDescription>
           </DialogHeader>
 

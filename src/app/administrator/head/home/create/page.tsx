@@ -9,11 +9,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-
 import {
   ArrowRight,
   Building2,
@@ -23,7 +21,6 @@ import {
   MessagesSquare,
   PenLine,
   Plus,
-  RefreshCcw,
   Trash2,
 } from "lucide-react";
 import {
@@ -50,18 +47,19 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { DragAndDropArea } from "@/components/ui/upload";
-import { useCreateScholarship } from "@/hooks/admin/postCreateScholarship";
+import logo from "@/assets/popost.svg";
+import { useAddScholarship } from "@/hooks/admin/postCreateScholarship";
 import { Label } from "@/components/ui/label";
 import { DeleteDialog } from "@/components/ui/delete-dialog";
 import TitleReusable from "@/components/ui/title";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useEffect, useState } from "react";
 import { Separator } from "@/components/ui/separator";
 import { TourStep } from "@/components/tour-2/tour-step";
-import socket from "@/lib/socketLib";
 import { useTourStore } from "@/store/useTourStore";
-import Link from "next/link";
 import { TourTrigger } from "@/components/tour-2/tour-trigger";
+import { useCreateScholarshipZod } from "@/hooks/admin/zodCreateScholarship";
+import { useEffect, useState } from "react";
+import StyledToast from "@/components/ui/toast-styled";
 
 const options: Option[] = [
   { label: "PDF", value: "application/pdf" },
@@ -70,27 +68,29 @@ const options: Option[] = [
 ];
 
 export default function Create() {
-  const {
-    open,
-    setOpen,
-    handleSubmit,
-    loading,
-    resetCreateState,
-    form,
-    fields,
-    append,
-    handleTriggerClick,
-    remove,
-    reset,
-    setReset,
-  } = useCreateScholarship();
-  const {
-    openScholarship,
-    openAnnouncement,
-    setOpenScholarship,
-    setOpenAnnouncement,
-  } = useTourStore();
+  const mutation = useAddScholarship();
+  const [open, setOpen] = useState(false);
+  const { openScholarship, setOpenScholarship } = useTourStore();
+  const { form, fields, append, remove } = useCreateScholarshipZod();
+  useEffect(() => {
+    if (mutation.isSuccess) {
+      form.reset();
+      setOpen(false);
+    }
+  }, [mutation.isSuccess]);
 
+  const handleTriggerClick = async () => {
+    const isValid = await form.trigger();
+    if (!isValid) {
+      StyledToast({
+        status: "error",
+        title: "Validation Error",
+        description: "Please fill in all required fields correctly.",
+      });
+      return;
+    }
+    setOpen(true);
+  };
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       {" "}
@@ -109,6 +109,9 @@ export default function Create() {
             <DialogTitle>
               <TitleReusable title="Post scholarship guide" description="" />
             </DialogTitle>
+            <div className="aspect-[16/8] overflow-hidden flex justify-center items-center rounded-md">
+              <img className="w-full" src={logo.src} alt="" />
+            </div>
             <DialogDescription className="mt-3">
               Begin managing scholarship programs. You can take a quick tour to
               learn the process, or skip it and start right away.
@@ -148,7 +151,7 @@ export default function Create() {
         <div className="mt-10 max-w-4xl w-full mx-auto">
           <Form {...form}>
             <TourStep className="mt-10" stepId="text-forms">
-              <div className="grid grid-cols-3 gap-x-5 gap-y-10 bg-card/40 dark:bg-gradient-to-br to-card from-card/50 p-6 rounded-md ">
+              <div className="grid grid-cols-3 gap-x-5 gap-y-10  ">
                 <FormField
                   control={form.control}
                   name="type"
@@ -171,7 +174,7 @@ export default function Create() {
                           className="gap-3 flex"
                         >
                           {/* Radio card #1 */}
-                          <div className="border-input has-data-[state=checked]:border-primary/50 relative flex flex-1 bg-card items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
+                          <div className="border-input/30 dark:has-data-[state=checked]:!bg-primary-second relative flex flex-1 dark:bg-input/30 items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
                             <RadioGroupItem
                               value="government"
                               className="order-1 after:absolute after:inset-0"
@@ -184,7 +187,7 @@ export default function Create() {
                           </div>
 
                           {/* Radio card #2 */}
-                          <div className="border-input has-data-[state=checked]:border-primary/50 relative flex flex-1 bg-card items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
+                          <div className="border-input/30 dark:has-data-[state=checked]:!bg-primary-second relative flex flex-1 dark:bg-input/30 items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
                             <RadioGroupItem
                               value="private"
                               className="order-1 after:absolute after:inset-0"
@@ -446,7 +449,7 @@ export default function Create() {
               </div>
             </TourStep>
             <TourStep className="mt-10" stepId="image-forms">
-              <div className="space-y-8 bg-card/40 dark:bg-gradient-to-br to-card from-card/50 p-6 rounded-md">
+              <div className="space-y-8 ">
                 <div className="w-full flex gap-5">
                   {/* Backdrop Image */}
                   <div className="flex flex-col flex-1 gap-2">
@@ -465,8 +468,7 @@ export default function Create() {
                           </FormLabel>
                           <FormControl>
                             <DragAndDropArea
-                              reset={reset}
-                              setReset={setReset}
+                              reset={mutation.isSuccess}
                               label="backdrop image"
                               accept={["image/png", "image/jpeg"]}
                               onFilesChange={(files) =>
@@ -496,8 +498,7 @@ export default function Create() {
                           </FormLabel>
                           <FormControl>
                             <DragAndDropArea
-                              reset={reset}
-                              setReset={setReset}
+                              reset={mutation.isSuccess}
                               label="sponsor logo"
                               accept={["image/png", "image/jpeg"]}
                               onFilesChange={(files) =>
@@ -522,8 +523,7 @@ export default function Create() {
                         </FormLabel>
                         <FormControl>
                           <DragAndDropArea
-                            reset={reset}
-                            setReset={setReset}
+                            reset={mutation.isSuccess}
                             label="scholarship form"
                             accept={[
                               "application/pdf",
@@ -681,27 +681,25 @@ export default function Create() {
             </TourStep>
             <TourStep className="mt-" stepId="submit-forms">
               <div className="flex gap-3 p-6 ">
-                <Button
-                  className="flex-1"
-                  variant="secondary"
-                  onClick={resetCreateState}
-                >
-                  <RefreshCcw />
-                  Clear Form
-                </Button>
                 <DeleteDialog
                   red={false}
                   open={open}
                   onOpenChange={setOpen}
-                  onConfirm={form.handleSubmit(handleSubmit)}
-                  loading={loading}
+                  onConfirm={form.handleSubmit((value) =>
+                    mutation.mutate(value)
+                  )}
+                  loading={mutation.isPending}
                   title="Confirm Submission"
                   description="  Are you sure you want to submit this scholarship?"
                   confirmText="Submit"
                   confirmTextLoading="Submitting..."
                   cancelText="Cancel"
                   trigger={
-                    <Button className="flex-1" onClick={handleTriggerClick}>
+                    <Button
+                      disabled={mutation.isPending}
+                      className="flex-1"
+                      onClick={handleTriggerClick}
+                    >
                       Submit Scholarship <ArrowRight />
                     </Button>
                   }

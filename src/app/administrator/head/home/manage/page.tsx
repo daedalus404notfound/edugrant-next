@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import logo from "@/assets/post-undraw.svg";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import { scholarshipFormData } from "@/hooks/admin/zodUpdateScholarship";
 import useScholarshipData from "@/hooks/admin/getScholarship";
@@ -46,7 +47,12 @@ export default function Manage() {
     columnFilters,
     search,
   });
-  const { openEditScholarship, setOpenEditScholarship, openRenewScholarship, setOpenRenewScholarship } = useTourStore();
+  const {
+    openEditScholarship,
+    setOpenEditScholarship,
+    openRenewScholarship,
+    setOpenRenewScholarship,
+  } = useTourStore();
   console.log(openEditScholarship);
   const tabs = [
     {
@@ -81,11 +87,12 @@ export default function Manage() {
         >
           <DialogHeader>
             <DialogTitle>
-              <TitleReusable title="Post scholarship guide" description="" />
+              <TitleReusable title="Edit Scholarship Tour" description="" />
             </DialogTitle>
             <DialogDescription className="mt-3">
-              Begin managing scholarship programs. You can take a quick tour to
-              learn the process, or skip it and start right away.
+              Learn how to efficiently update and manage your scholarship
+              details. Take a quick guided tour to understand each editing step,
+              or skip it to begin making changes right away.
             </DialogDescription>
           </DialogHeader>
 

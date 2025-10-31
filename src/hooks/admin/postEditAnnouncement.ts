@@ -1,10 +1,11 @@
 import axios, { AxiosError } from "axios";
 import { AnnouncementFormDataPost } from "../zod/announcement";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
 import { useAdminStore } from "@/store/adminUserStore";
 import { useUpdateAnnouncementZod } from "../zodUpdateAnnouncement";
+import { GetAnnouncementTypes } from "./getAnnouncement";
 
 interface ApiErrorResponse {
   message?: string;
@@ -37,14 +38,43 @@ const updateAnnouncementApi = async (data: AnnouncementFormDataPost) => {
 };
 
 export const useUpdateAnnouncementMutation = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: updateAnnouncementApi,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const newData = data.announcement;
+      const id = newData.announcementId;
       StyledToast({
         status: "success",
         title: "Announcement Updated",
         description: "The announcement has been successfully updated.",
       });
+
+      queryClient.setQueryData(["getAnnouncementById", id], (old) => {
+        if (!old) return old;
+
+        return newData;
+      });
+      queryClient.setQueryData(
+        [
+          "adminAnnouncement",
+          { pageIndex: 0, pageSize: 6 },
+          [{ id: "dateCreated", desc: true }],
+          [],
+          "",
+        ],
+        (old: GetAnnouncementTypes) => {
+          if (!old) return old;
+          console.log("newData", old);
+
+          return {
+            ...old,
+            announcements: old.announcements.map((announcement) =>
+              announcement.announcementId === id ? newData : announcement
+            ),
+          };
+        }
+      );
     },
     onError: (error: ApiError) => {
       if (axios.isAxiosError<ApiErrorResponse>(error)) {
@@ -105,7 +135,6 @@ export const useUpdateAnnouncementMutation = () => {
           description: "Something went wrong. Please try again later.",
         });
       }
-     
     },
   });
 };

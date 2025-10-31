@@ -4,10 +4,7 @@ import z from "zod";
 import useRememberAdminStore from "@/store/rememberMe-admin";
 import { useEffect } from "react";
 const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email is required.")
-    .email({ message: "Please enter a vali email." }),
+  email: z.email().min(1, "Email is required."),
   password: z
     .string()
     .min(1, "Password is required.")

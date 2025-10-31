@@ -101,67 +101,81 @@ export const tourConfigs: TourConfig = {
   editScholarship: [
     {
       id: "1",
-      title: "Welcome to Post Scholarship",
+      title: "Select Scholarship to Edit",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Choose the scholarship you wish to modify from the available list.",
     },
     {
       id: "2",
-      title: "Welcome to Post Scholarship",
+      title: "Edit Scholarship Button",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Click this button to open the editing panel for the selected scholarship.",
     },
     {
       id: "3",
-      title: "Welcome to Post Scholarship",
+      title: "Welcome to Edit Scholarship",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "This guide will help you navigate through the process of editing an existing scholarship.",
     },
     {
       id: "4",
-      title: "Welcome to Post Scholarship",
+      title: "Edit Scholarship Information Form",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Update key details such as title, description, eligibility, and application deadlines.",
     },
     {
       id: "5",
-      title: "Welcome to Post Scholarship",
+      title: "Edit Scholarship Images Form",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Replace or update the images associated with the scholarship post.",
     },
     {
       id: "6",
-      title: "Welcome to Post Scholarship",
+      title: "Edit Scholarship Documents Form",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Upload or update the required documents for the scholarship application.",
+    },
+    {
+      id: "7",
+      title: "Save Changes Button",
+      description:
+        "Click this button to save your updates and apply the changes to the scholarship.",
     },
   ],
+
+  //DONE
   renewScholarship: [
     {
       id: "renew-1",
-      title: "Welcome to Post Scholarship",
+      title: "Select Scholarship",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Choose an expired scholarship that you would like to renew.",
     },
     {
       id: "renew-2",
-      title: "Welcome to Post Scholarship",
-      description:
-        "This guide will walk you through the scholarship posting process step by step.",
+      title: "Renewal Button",
+      description: "This button will appear when a scholarship has expired.",
     },
     {
       id: "renew-3",
-      title: "Welcome to Post Scholarship",
+      title: "Welcome to Scholarship Renewal",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "This guide will walk you through the scholarship renewal process step by step.",
     },
     {
       id: "renew-4",
-      title: "Welcome to Post Scholarship",
+      title: "Renewal Form",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Provide the required renewal details and documents to continue.",
+    },
+    {
+      id: "renew-5",
+      title: "Submit Renewal",
+      description:
+        "Click this button to save your changes and renew the scholarship.",
     },
   ],
+
   generateReport: [
     {
       id: "generate-1",
@@ -221,6 +235,26 @@ export const tourConfigs: TourConfig = {
     },
     {
       id: "staff-3",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+  ],
+  activateStaff: [
+    {
+      id: "activate-1",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "activate-2",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "activate-3",
       title: "Welcome to Post Scholarship",
       description:
         "This guide will walk you through the scholarship posting process step by step.",

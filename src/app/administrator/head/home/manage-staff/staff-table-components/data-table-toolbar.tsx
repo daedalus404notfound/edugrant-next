@@ -1,6 +1,14 @@
 "use client";
 
-import { ArrowRightIcon, Loader, SearchIcon, Trash2, X } from "lucide-react";
+import {
+  ArrowRightIcon,
+  Loader,
+  RefreshCcw,
+  RefreshCcwDot,
+  SearchIcon,
+  Trash2,
+  X,
+} from "lucide-react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -11,6 +19,11 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "@/app/table-components/data-table-view-options";
@@ -18,6 +31,7 @@ import { useEffect, useState } from "react";
 import useDeleteAdmin from "@/hooks/admin/postDeleteAdmin";
 
 import { ToolbarProps } from "@/app/table-components/data-table";
+import { useQueryClient, useIsFetching } from "@tanstack/react-query";
 export default function DataTableToolbar<TData>({
   table,
   getRowId,
@@ -31,7 +45,7 @@ export default function DataTableToolbar<TData>({
     getRowId ? getRowId(row.original) : row.id
   );
   console.log(adminId);
-
+  const queryClient = useQueryClient();
   const [openAlert, setOpenAlert] = useState(false);
   const { onSubmit, isSuccess, loading } = useDeleteAdmin({
     adminId,
@@ -43,7 +57,7 @@ export default function DataTableToolbar<TData>({
       setOpenAlert(false);
     }
   }, [isSuccess, table]);
-
+  const isFetching = useIsFetching({ queryKey: ["adminStaffData"] }) > 0;
   return (
     <div className="flex items-center justify-between gap-1.5">
       <div className="flex flex-1 items-center space-x-2">
@@ -118,6 +132,27 @@ export default function DataTableToolbar<TData>({
           </AlertDialogContent>
         </AlertDialog>
       )}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            size="sm"
+            variant={isFetching ? "outline" : "default"}
+            onClick={() =>
+              queryClient.invalidateQueries({ queryKey: ["adminStaffData"] })
+            }
+          >
+            <RefreshCcw
+              className={`transition-transform ${
+                isFetching ? "spin-reverse" : ""
+              }`}
+            />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{isFetching ? "Refreshing..." : "Refresh table"}</p>
+        </TooltipContent>
+      </Tooltip>
+
       <DataTableViewOptions table={table} />
     </div>
   );

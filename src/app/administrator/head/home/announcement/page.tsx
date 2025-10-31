@@ -6,6 +6,12 @@ import {
   ChevronRight,
   Calendar,
   Bell,
+  Clock,
+  ArrowRight,
+  Megaphone,
+  X,
+  Edit,
+  Trash2,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
@@ -45,8 +51,14 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import TitleReusable from "@/components/ui/title";
 
-import EditAnnouncementt from "../@modal/(.)announcement/[id]/edit-announcement";
-import DisplayAnnouncement from "../@modal/(.)announcement/[id]/display-announcement";
+import EditAnnouncementt from "./edit-announcement";
+import DisplayAnnouncement from "./display-announcement";
+import { TipTapViewer } from "@/components/ui/tiptap-viewer";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import ModalHeader from "@/components/ui/modal-header";
+import { AnnouncementSkeleton } from "./skeleton";
+import useDeleteAnnouncement from "@/hooks/admin/postDeleteAnnouncement";
+import { DeleteDialog } from "@/components/ui/delete-dialog";
 
 export default function AdminAnnouncement() {
   const [pagination, setPagination] = useState<PaginationState>({
@@ -71,6 +83,13 @@ export default function AdminAnnouncement() {
   });
 
   const [id, setId] = useState<null | number>(null);
+  const {
+    deleteAnnouncement,
+    isLoading: isLoadingDelete,
+    isSuccess,
+    isError,
+  } = useDeleteAnnouncement({ id });
+  const [openDelete, setOpenDelete] = useState(false);
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const { fullData, loading, refetch } = useGetAnnouncementByIdAdmin(id);
@@ -88,26 +107,21 @@ export default function AdminAnnouncement() {
 
   const isLoading = query.isLoading;
   const data = query.data?.announcements ?? [];
-
+  const HandleCloseDrawer = () => {
+    if (open) {
+      setOpen(false);
+    }
+  };
   useEffect(() => {
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   }, [sorting, search, columnFilters]);
-
-  const AnnouncementSkeleton = () => (
-    <div className="flex gap-6 pb-8">
-      <div className="flex-shrink-0 w-24">
-        <Skeleton className="h-12 w-full rounded-lg" />
-      </div>
-      <div className="flex-1 space-y-3">
-        <Skeleton className="h-6 w-2/3 rounded-lg" />
-        <Skeleton className="h-4 w-full rounded-lg" />
-        <Skeleton className="h-4 w-4/5 rounded-lg" />
-      </div>
-    </div>
-  );
-
+  useEffect(() => {
+    if (isSuccess) {
+      HandleCloseDrawer();
+    }
+  }, [isSuccess]);
   return (
-    <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+    <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-85px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto w-[95%] lg:py-10  py-4">
         {" "}
         <motion.div
@@ -119,7 +133,7 @@ export default function AdminAnnouncement() {
           <TitleReusable
             title="Announcements"
             description="View the list of scholarships currently open for application."
-            Icon={Bell}
+            Icon={Megaphone}
           />
         </motion.div>{" "}
         <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent mt-6" />
@@ -151,77 +165,157 @@ export default function AdminAnnouncement() {
               </Select>
             </div>
           </div>
-          <div className="space-y-0">
+          <div className="grid grid-cols-1  gap-4">
             {isLoading ? (
-              <>
-                {[...Array(3)].map((_, i) => (
-                  <AnnouncementSkeleton key={i} />
-                ))}
-              </>
+              [...Array(2)].map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-card relative rounded-lg p-4 md:p-6 shadow-sm space-y-4 md:space-y-6"
+                >
+                  {/* Header Section Skeleton */}
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="flex items-center gap-3 flex-1">
+                      <Skeleton className="w-10 h-10 rounded-full flex-shrink-0" />
+                      <div className="space-y-2 flex-1 min-w-0">
+                        <Skeleton className="h-4 w-full max-w-xs" />
+                        <Skeleton className="h-3 w-full max-w-sm" />
+                      </div>
+                    </div>
+                    <div className="flex gap-2 flex-wrap">
+                      <Skeleton className="h-6 w-20" />
+                      <Skeleton className="h-6 w-24" />
+                    </div>
+                  </div>
+
+                  {/* Separator Skeleton */}
+                  <Skeleton className="h-px w-full" />
+
+                  {/* Info Grid Skeleton */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+                    {/* Application Date */}
+                    <div className="space-y-2 sm:pl-4">
+                      <Skeleton className="h-3 w-24" />
+                      <Skeleton className="h-5 w-32" />
+                    </div>
+
+                    {/* Scholarship Deadline */}
+                    <div className="space-y-2 sm:border-l sm:pl-4">
+                      <Skeleton className="h-3 w-28" />
+                      <Skeleton className="h-5 w-32" />
+                    </div>
+
+                    {/* Status */}
+                    <div className="space-y-2 sm:border-l sm:pl-4">
+                      <Skeleton className="h-3 w-16" />
+                      <Skeleton className="h-5 w-20" />
+                    </div>
+                  </div>
+                </div>
+              ))
             ) : data.length === 0 ? (
               <NoDataFound />
             ) : (
-              <div className="space-y-4">
-                {data.slice(0, 6).map((item, index) => (
-                  <div
-                    key={item.announcementId}
-                    className="flex gap-6 pb-8 relative p-5 bg-card rounded-lg "
-                  >
-                    {/* Announcement Card */}
-                    <div
-                      onClick={() => {
-                        setId(item.announcementId);
-                        setOpen(true);
-                      }}
-                      className="flex-1"
-                    >
-                      <div className="space-y-3">
-                        {/* Title */}
-                        <h3 className="text-base font-semibold  text-foreground group-hover:text-primary transition-colors duration-200 line-clamp-2 jakarta tracking-wide">
-                          {item.title}
-                        </h3>
-
-                        {/* Description */}
-                        <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground text-pretty">
-                          <span
+              data.slice(0, 6).map((meow, index) => (
+                <motion.div
+                  key={meow.announcementId}
+                  initial={{ y: 50, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{
+                    duration: 0.2,
+                    delay: index * 0.1,
+                    ease: "easeOut",
+                  }}
+                  className="bg-gradient-to-br dark:to-card/70 to-card/50 dark:from-card/50 from-card/30 rounded-lg overflow-hidden relative"
+                >
+                  {/* Header Section */}
+                  {/* <img
+                    className=" w-full object-cover "
+                    src={meow.Scholarship.cover || "/placeholder.svg"}
+                    alt=""
+                  /> */}
+                  <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 items-start lg:p-6 p-4">
+                    <div className="flex  ">
+                      <div className="flex items-center gap-3 flex-1 min-w-0">
+                        {/* <Avatar className="size-10 flex-shrink-0">
+                          <AvatarImage
+                            className="object-cover"
+                            src={meow.Scholarship.logo || "/placeholder.svg"}
+                          />
+                          <AvatarFallback>CN</AvatarFallback>
+                        </Avatar> */}
+                        <div className="min-w-0 flex-1">
+                          <div className="flex lg:gap-6 gap-4 flex-col lg:flex-row">
+                            <h3 className="font-semibold text-base line-clamp-1">
+                              {meow.title || "Unknown Provider"}
+                            </h3>
+                            <div className="flex gap-2 flex-wrap">
+                              {meow.tags.data.map((meow, index) => (
+                                <Badge
+                                  key={`${meow}-${index}`}
+                                  className="bg-indigo-800 text-gray-200 text-xs"
+                                >
+                                  {meow}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                          <p
+                            className="line-clamp-2 text-sm leading-relaxed text-foreground/80 text-pretty w-[90%] mt-3  max-w-none"
                             dangerouslySetInnerHTML={{
-                              __html: item.description,
+                              __html: meow.description,
                             }}
                           />
-                        </p>
-
-                        {/* Tags */}
-                        {item.tags.data.length > 0 && (
-                          <div className="flex flex-wrap gap-2 pt-2">
-                            {item.tags.data.slice(0, 2).map((tag, i) => (
-                              <Badge
-                                key={i}
-                                variant="secondary"
-                                className="text-xs font-medium"
-                              >
-                                {tag}
-                              </Badge>
-                            ))}
-                            {item.tags.data.length > 2 && (
-                              <Badge variant="outline" className="text-xs">
-                                +{item.tags.data.length - 2}
-                              </Badge>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className=" font-semibold havelock  uppercase tracking-tighter">
-                        {item.dateCreated && format(item.dateCreated, "MMM dd")}
-                      </div>
-                      <div className="text-sm  mt-1">
-                        {item.dateCreated && format(item.dateCreated, "yyyy")}
+                        </div>
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+
+                  {/* Info Grid - Responsive */}
+                  <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 py-4 md:py-6 px-4 md:px-6 bg-card/50 relative z-10">
+                    {/* Application Date */}
+                    <div className="space-y-1.5 sm:pl-4 border-l hidden lg:block">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                        <h1 className="text-xs text-muted-foreground">
+                          Published Date
+                        </h1>
+                      </div>
+                      <p className="font-medium text-sm text-foreground">
+                        {meow?.dateCreated &&
+                          format(meow?.dateCreated, "yyyy/MM/dd")}
+                      </p>
+                    </div>
+
+                    {/* Scholarship Deadline */}
+                    <div className="space-y-1.5 sm:pl-4 border-l hidden lg:block">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                        <h1 className="text-xs text-muted-foreground">
+                          Published Time
+                        </h1>
+                      </div>
+                      <p className="font-medium text-sm text-foreground">
+                        {meow?.dateCreated && format(meow?.dateCreated, "p")}
+                      </p>
+                    </div>
+
+                    {/* Status */}
+                    <div className="flex justify-end  items-end col-span-2 lg:col-span-1">
+                      <Button
+                        className="w-full lg:w-auto"
+                        size="sm"
+                        onClick={() => {
+                          setOpen(true);
+                          setId(meow.announcementId);
+                        }}
+                      >
+                        View Details <ArrowRight className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
+              ))
             )}
           </div>
           <motion.div
@@ -273,86 +367,119 @@ export default function AdminAnnouncement() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
           showCloseButton={false}
-          className="max-w-4xl  gap-0 p-0 border-0"
+          className="max-w-5xl lg:w-full w-[98%]  gap-0 p-1 border-0"
         >
           <DialogHeader className="sr-only">
             <DialogTitle>Announcement Details</DialogTitle>
-            <DialogDescription>View announcement details</DialogDescription>
+            <DialogDescription>View and manage announcement</DialogDescription>
           </DialogHeader>
+          <ModalHeader
+            text="Announcement Details"
+            HandleCloseDrawer={HandleCloseDrawer}
+          />{" "}
+          {loading ? (
+            <AnnouncementSkeleton />
+          ) : (
+            <>
+              {" "}
+              <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-b-lg overflow-hidden ">
+                {/* Info Grid */}
+                <div className="grid grid-cols-4 gap-4 md:gap-8 py-4 md:py-6 px-4 md:px-6 bg-card/50 relative z-10">
+                  <div className="col-span-2">
+                    {" "}
+                    <div className="">
+                      <h3 className="font-semibold text-xl line-clamp-1">
+                        {fullData?.title || "Unknown Title"}
+                      </h3>
+                      <div className="flex gap-2 flex-wrap mt-2">
+                        {fullData?.tags.data.map((meow, index) => (
+                          <Badge
+                            key={`${meow}-${index}`}
+                            className="bg-indigo-800 text-gray-200 text-xs"
+                          >
+                            {meow}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  {/* Application Date */}
+                  <div className="space-y-1.5 pl-4 border-l ">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                      <h1 className="text-xs text-muted-foreground">
+                        Published Date
+                      </h1>
+                    </div>
+                    <p className="font-medium text-sm text-foreground">
+                      {fullData?.dateCreated &&
+                        format(fullData?.dateCreated, "yyyy/MM/dd")}
+                    </p>
+                  </div>
 
-          {/* Modal Header */}
+                  {/* Scholarship Deadline */}
+                  <div className="space-y-1.5 pl-4 border-l ">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                      <h1 className="text-xs text-muted-foreground">
+                        Published Time
+                      </h1>
+                    </div>
+                    <p className="font-medium text-sm text-foreground">
+                      {fullData?.dateCreated &&
+                        format(fullData?.dateCreated, "p")}
+                    </p>
+                  </div>
 
-          {/* Modal Content */}
-          <div className=" bg-card">
-            {/* Header Section */}
-            <div className="border-b border-border/50 bg-gradient-to-br from-card/50 to-card/30 p-6 rounded-b-lg">
-              <div className="space-y-4">
-                <h1 className="text-2xl font-bold tracking-tight text-foreground line-clamp-2">
-                  {fullData?.title}
-                </h1>
-
-                {/* Tags */}
-                {fullData?.tags?.data && fullData.tags.data.length > 0 && (
-                  <div className="flex flex-wrap gap-2 text-sm">
-                    {fullData.tags.data.map((tag, i) => (
-                      <span className="" key={i}>
-                        {tag}
-                      </span>
-                    ))}
+                  {/* Status */}
+                </div>
+                <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+              </div>
+              <ScrollArea className="max-h-[75dvh] h-full bg-background  rounded-md ">
+                {edit ? (
+                  <EditAnnouncementt data={fullData} setEdit={setEdit} />
+                ) : (
+                  <div>
+                    <TipTapViewer
+                      content={fullData?.description || ""}
+                      className="lg:p-6 p-4"
+                    />
+                    <div className="flex gap-3 p-4 sticky bottom-0 bg-card rounded-t-md">
+                      {" "}
+                      <Button className="flex-1" onClick={() => setEdit(true)}>
+                        <Edit />
+                        Edit
+                      </Button>
+                      <DeleteDialog
+                        open={openDelete}
+                        onOpenChange={setOpenDelete}
+                        onConfirm={() => deleteAnnouncement()}
+                        loading={isLoadingDelete}
+                        red={false}
+                        title="Delete announcment?"
+                        description="This will be saved to database."
+                        confirmTextLoading="Deleting..."
+                        confirmText="Delete"
+                        cancelText="Cancel"
+                        trigger={
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            className="cursor-pointer flex-1"
+                            disabled={isLoadingDelete}
+                            onClick={() => setOpenDelete(true)}
+                          >
+                            <Trash2 />
+                            Delete
+                          </Button>
+                        }
+                      />
+                    </div>
                   </div>
                 )}
-
-                {/* Meta Info */}
-                <div className="grid grid-cols-2 gap-4 pt-2">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Calendar className="h-3.5 w-3.5" />
-                      Published Date
-                    </div>
-                    <p className="font-medium text-foreground">
-                      {fullData?.dateCreated &&
-                        format(fullData.dateCreated, "PPP")}
-                    </p>
-                  </div>
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Calendar className="h-3.5 w-3.5" />
-                      Published Time
-                    </div>
-                    <p className="font-medium text-foreground">
-                      {fullData?.dateCreated &&
-                        format(fullData.dateCreated, "p")}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Content */}
-            {loading ? (
-              <div className="p-6 space-y-6 lg:p-8">
-                <div className="space-y-4">
-                  <Skeleton className="h-10 w-3/4 rounded-lg" />
-                  <Skeleton className="h-5 w-full rounded-lg" />
-                  <Skeleton className="h-5 w-5/6 rounded-lg" />
-                </div>
-                <Separator className="bg-border/40" />
-                <div className="space-y-3">
-                  <Skeleton className="h-4 w-full rounded" />
-                  <Skeleton className="h-4 w-full rounded" />
-                  <Skeleton className="h-4 w-4/5 rounded" />
-                </div>
-              </div>
-            ) : edit ? (
-              <EditAnnouncementt setEdit={setEdit} data={fullData} />
-            ) : (
-              <DisplayAnnouncement
-                setEdit={setEdit}
-                HandleCloseDrawer={setOpen}
-                data={fullData}
-              />
-            )}
-          </div>
+              </ScrollArea>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </div>

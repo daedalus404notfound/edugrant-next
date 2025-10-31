@@ -1,108 +1,121 @@
-import axios, { AxiosError } from "axios";
-import { getStaffFormData, useUpdateStaffByHead } from "./zod/head/getStaffZod";
-import { useMutation } from "@tanstack/react-query";
+"use client";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 import StyledToast from "@/components/ui/toast-styled";
-import { useState } from "react";
+import { ApiErrorResponse } from "./admin/postReviewedHandler";
+import { AdminProfileFormData } from "./head-profile-edit";
+import { StaffFormDataTypes } from "./admin/getAdmins";
+import { GetStaffByHead } from "./admin/getStaffByHeadById";
 
-interface ApiErrorResponse {
-  message?: string;
-  error?: string;
-  statusCode?: number;
-}
+export default function useUpdateProfileStaff() {
+  const queryClient = useQueryClient();
+  const cache = queryClient.getQueryCache();
 
-type ApiError = AxiosError<ApiErrorResponse>;
-const updateUserApi = async (data: getStaffFormData) => {
-  const formData = new FormData();
+  const mutation = useMutation({
+    mutationFn: async (data: AdminProfileFormData) => {
+      const formDataToSend = new FormData();
 
-  formData.append("fName", data.fName);
-  formData.append("lName", data.lName);
-  formData.append("mName", data.mName);
+      formDataToSend.append("fName", data.ISPSU_Staff.fName);
+      formDataToSend.append("lName", data.ISPSU_Staff.lName);
+      formDataToSend.append("mName", data.ISPSU_Staff.mName);
+      formDataToSend.append("email", data.email);
+      formDataToSend.append("ownerId", String(data.accountId));
 
-  formData.append("email", data.Account.email);
-  formData.append("ownerId", String(data.staffId));
-  if (data.validated) {
-    formData.append("validate", data.validated);
-  }
-  if (data.profileImg?.publicUrl) {
-    formData.append("profileImg", data.profileImg.publicUrl);
-  }
+      if (data.ISPSU_Staff.validated !== undefined) {
+        formDataToSend.append("validate", String(data.ISPSU_Staff.validated));
+      }
+      if (data.ISPSU_Staff.profileImg?.publicUrl) {
+        formDataToSend.append(
+          "profileImg",
+          data.ISPSU_Staff.profileImg.publicUrl
+        );
+      }
 
-  const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/editStaff`,
-    formData,
-    {
-      withCredentials: true,
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/editStaff`,
+        formDataToSend,
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
-  return res.data;
-};
+      return res.data;
+    },
 
-export const useProfile = () => {
-  return useMutation({
-    mutationFn: updateUserApi,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const newData = data.updatedStaff;
+      const accountId = newData.accountId;
       StyledToast({
         status: "success",
         title: "Staff Profile Updated",
-        description: "Staff information has been successfully saved.",
+        description: "The staff profile has been successfully updated.",
       });
+      cache.findAll({ queryKey: ["adminStaffData"] }).forEach((query) => {
+        queryClient.setQueryData<StaffFormDataTypes>(query.queryKey, (old) => {
+          if (!old?.data) return old;
+          const exists = old.data.some((s) => s.accountId === accountId);
+          const updatedData = exists
+            ? old.data.map((s) => (s.accountId === accountId ? newData : s))
+            : [newData, ...old.data];
+          return { ...old, data: updatedData };
+        });
+      });
+
+      queryClient.setQueryData<GetStaffByHead>(
+        ["manageStaff", String(accountId)],
+        (old) => {
+          console.log("Old manageStaff cache:", old);
+          return {
+            ...old, // preserve success
+            safeData: newData,
+          };
+        }
+      );
     },
-    onError: (error: ApiError) => {
+
+    onError: (error) => {
       if (axios.isAxiosError<ApiErrorResponse>(error)) {
         const status = error.response?.status;
         const message = error.response?.data?.message;
 
-        if (!error.response) {
-          StyledToast({
-            status: "error",
-            title: "Network Error",
-            description:
-              "No internet connection or the server is unreachable. Please check your connection and try again.",
-          });
-        } else if (status === 400) {
-          StyledToast({
-            status: "error",
-            title: "Bad Request",
-            description: message ?? "Invalid request. Please check your input.",
-          });
-        } else if (status === 401) {
-          StyledToast({
-            status: "error",
-            title: "Unauthorized",
-            description:
-              message ?? "You are not authorized. Please log in again.",
-          });
-        } else if (status === 403) {
-          StyledToast({
-            status: "error",
-            title: "Forbidden",
-            description:
-              message ?? "You do not have permission to perform this action.",
-          });
-        } else if (status === 404) {
-          StyledToast({
-            status: "warning",
-            title: "No data found",
-            description: message ?? "There are no records found.",
-          });
-        } else if (status === 500) {
-          StyledToast({
-            status: "error",
-            title: "Server Error",
-            description:
-              message ?? "Internal server error. Please try again later.",
-          });
-        } else {
-          StyledToast({
-            status: "error",
-            title: message ?? "Export CSV error occurred.",
-            description: "Cannot process your request.",
-          });
+        const toastConfig = {
+          status: "error" as const,
+          title: "",
+          description: "",
+        };
+
+        switch (status) {
+          case 400:
+            toastConfig.title = "Bad Request";
+            toastConfig.description = message ?? "Invalid request data.";
+            break;
+          case 401:
+            toastConfig.title = "Unauthorized";
+            toastConfig.description = message ?? "Please log in again.";
+            break;
+          case 403:
+            toastConfig.title = "Forbidden";
+            toastConfig.description =
+              message ?? "You don’t have permission for this action.";
+            break;
+          case 404:
+            toastConfig.title = "Not Found";
+            toastConfig.description = message ?? "Staff record not found.";
+            break;
+          case 500:
+            toastConfig.title = "Server Error";
+            toastConfig.description =
+              message ?? "Internal server error. Please try again later.";
+            break;
+          default:
+            toastConfig.title = "Unexpected Error";
+            toastConfig.description =
+              message ?? "Something went wrong. Please try again.";
         }
+
+        StyledToast(toastConfig);
       } else {
         StyledToast({
           status: "error",
@@ -112,66 +125,6 @@ export const useProfile = () => {
       }
     },
   });
-};
 
-export const useUpdateProfileStaff = (data?: getStaffFormData | null) => {
-  const { form, isChanged } = useUpdateStaffByHead(data);
-  const profileUpdate = useProfile();
-  const [open, setOpen] = useState(false);
-  const [reset, setReset] = useState(false);
-
-  const handleSubmit = async (data: getStaffFormData) => {
-    try {
-      const result = await profileUpdate.mutateAsync(data);
-
-      if (result) {
-        setOpen(false);
-        setReset(true);
-        profileUpdate.reset();
-        form.reset();
-      }
-    } catch (error) {
-      console.error("Update Error:", error);
-    }
-  };
-
-  const handleTriggerClick = async () => {
-    // Trigger form validation
-    const isValid = await form.trigger(); // This validates all fields
-
-    if (isValid) {
-      setOpen(true); // Only open dialog if validation passes
-    } else {
-      // Optionally show a toast for validation errors
-      setOpen(false);
-      StyledToast({
-        status: "error",
-        title: "Validation Error",
-        description: "Please fill in all required fields correctly.",
-      });
-    }
-  };
-
-  const resetCreateState = () => {
-    profileUpdate.reset();
-    form.reset();
-    setReset(true);
-    StyledToast({
-      status: "success",
-      title: "Form Reset",
-      description: "Form has been cleared and ready for new scholarship entry.",
-    });
-  };
-  return {
-    open,
-    setOpen,
-    loading: profileUpdate.isPending,
-    handleSubmit,
-    handleTriggerClick,
-    resetCreateState,
-    reset,
-    setReset,
-    form,
-    isChanged,
-  };
-};
+  return mutation;
+}

@@ -2,9 +2,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import deepEqual from "fast-deep-equal";
+import isEqual from "lodash.isequal"; // ✅ replaced fast-deep-equal
+
 export const AccountSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email().min(1, "Required"),
 });
 
 export const StaffLogSchema = z.object({
@@ -20,8 +21,8 @@ export const StaffLogSchema = z.object({
 export const getStaffSchema = z.object({
   Account: AccountSchema,
   Staff_Logs: z.array(StaffLogSchema),
-  fName: z.string(),
-  lName: z.string(),
+  fName: z.string().min(1, "Required"),
+  lName: z.string().min(1, "Required"),
   dateCreated: z.string(),
   mName: z.string(),
   gender: z.string(),
@@ -58,11 +59,11 @@ export function useUpdateStaffByHead(data?: getStaffFormData | null) {
 
   const form = useForm<getStaffFormData>({
     resolver: zodResolver(getStaffSchema),
-    defaultValues, // pass here
+    defaultValues,
   });
 
   const [isChanged, setIsChanged] = useState(false);
-
+  console.log(isChanged);
   useEffect(() => {
     if (data) {
       form.reset(defaultValues);
@@ -71,7 +72,8 @@ export function useUpdateStaffByHead(data?: getStaffFormData | null) {
 
   useEffect(() => {
     const subscription = form.watch((values) => {
-      const hasChanged = !deepEqual(defaultValues, values); // ✅ compare against saved defaultValues
+      const hasChanged = !isEqual(defaultValues, values);
+
       setIsChanged(hasChanged);
     });
     return () => subscription.unsubscribe();

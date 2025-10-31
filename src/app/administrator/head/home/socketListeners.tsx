@@ -1,11 +1,13 @@
-
 "use client";
 import { useEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import socket from "@/lib/socketLib";
 import { displayScholarshipFormData } from "@/hooks/admin/displayScholarshipData";
 import StyledToast from "@/components/ui/toast-styled";
-import { GetScholarshopTypes } from "@/hooks/staff/getScholarshipStaff";
+import {
+  defaultMeta,
+  GetScholarshopTypes,
+} from "@/hooks/staff/getScholarshipStaff";
 import { StaffApplicationsDataTypes } from "@/hooks/staff/getApplicationStaff";
 import { GetAnnouncementTypes } from "@/hooks/admin/getAnnouncement";
 
@@ -110,189 +112,39 @@ export default function SocketListener() {
     //AAPEND BAGONG POST NA SCHOLARSHIP
     socket.on("adminAddScholarships", (data) => {
       const scholarshipNew = data.newScholarship;
-      const isNewExpired = new Date(scholarshipNew.deadline) < new Date();
-      console.log(data);
-      if (isNewExpired) {
-        queryClient.setQueryData<GetScholarshopTypes>(
-          [
-            "adminScholarshipData",
-            "EXPIRED",
-            paginationDefault,
-            sortDefault,
-            [],
-            "",
-          ],
-          (old) => {
-            if (!old) return old;
-            console.log("gomana lopit EXPRIRED");
-            return {
-              ...old,
-              data: [scholarshipNew, ...old.data],
-            };
-          }
-        );
-        cache
-          .findAll({ queryKey: ["adminScholarshipData"] })
-          .forEach((query) => {
-            queryClient.setQueryData<GetScholarshopTypes>(
-              query.queryKey,
-              (old) => {
-                if (!old?.data) return old;
-                return {
-                  ...old,
-                  meta: {
-                    ...old.meta,
-                    count: {
-                      ...old.meta.count,
-                      countExpired:
-                        old.meta.count.countExpired > 0
-                          ? old.meta.count.countExpired + 1
-                          : old.meta.count.countExpired,
-                    },
-                  },
-                };
-              }
-            );
-          });
-      } else {
-        queryClient.setQueryData<GetScholarshopTypes>(
-          [
-            "adminScholarshipData",
-            "ACTIVE",
-            paginationDefault,
-            sortDefault,
-            [],
-            "",
-          ],
-          (old) => {
-            if (!old) return old;
-
-            console.log("gomana lopit");
-            return {
-              ...old,
-              data: [scholarshipNew, ...old.data],
-            };
-          }
-        );
-        cache
-          .findAll({ queryKey: ["adminScholarshipData"] })
-          .forEach((query) => {
-            queryClient.setQueryData<GetScholarshopTypes>(
-              query.queryKey,
-              (old) => {
-                if (!old?.data) return old;
-                return {
-                  ...old,
-                  meta: {
-                    ...old.meta,
-                    count: {
-                      ...old.meta.count,
-                      countActive:
-                        old.meta.count.countActive > 0
-                          ? old.meta.count.countActive + 1
-                          : old.meta.count.countActive,
-                    },
-                  },
-                };
-              }
-            );
-          });
-      }
-      // playNotificationSound();
-    });
-
-    socket.on("deleteScholarship", (data) => {
-      console.log("🎓 deleted:", data.deletedScholarship.scholarshipId);
-      const deletedId = data.deletedScholarship.scholarshipId;
-      cache.findAll({ queryKey: ["adminScholarshipData"] }).forEach((query) => {
-        queryClient.setQueryData<GetScholarshopTypes>(query.queryKey, (old) => {
-          if (!old?.data) return old;
+      const scholarshipId = data.newScholarship.scholarshipId;
+      queryClient.setQueryData<GetScholarshopTypes>(
+        [
+          "adminScholarshipData",
+          "ACTIVE",
+          paginationDefault,
+          sortDefault,
+          [],
+          "",
+        ],
+        (old) => {
+          if (!old) return { data: [scholarshipNew], meta: defaultMeta };
 
           return {
             ...old,
-            data: old.data.filter((item) => item.scholarshipId !== deletedId),
+            data: [scholarshipNew, ...old.data],
           };
-        });
-      });
-    });
-
-    // //EDIT SCHOLARSHIP UPDATE
-    socket.on("updateScholarship", (data) => {
-      console.log("edited:", data);
-      const editedData = data.update;
-      const editedId = editedData.scholarshipId;
-      const isNewExpired = new Date(editedData.deadline) < new Date();
-      console.log("isNewExpired", isNewExpired);
-      console.log("editedId", editedId);
-
-      //UUPDATE PAG NAKITA SA CACHE
-      cache.findAll({ queryKey: ["adminScholarshipData"] }).forEach((query) => {
-        queryClient.setQueryData<GetScholarshopTypes>(query.queryKey, (old) => {
-          if (!old?.data) return old;
-          const exists = old.data.some((s) => s.scholarshipId === editedId);
-          const updatedData = exists
-            ? old.data.map((s) =>
-                s.scholarshipId === editedId ? editedData : s
-              )
-            : [editedData, ...old.data];
-          return { ...old, data: updatedData };
-        });
-      });
-
-      //AALISIN SA LAHAT IAAPPEND SA EXPIRED
-      if (isNewExpired) {
-        cache
-          .findAll({ queryKey: ["adminScholarshipData"] })
-          .forEach((query) => {
-            queryClient.setQueryData<GetScholarshopTypes>(
-              query.queryKey,
-              (old) => {
-                if (!old?.data) return old;
-                return {
-                  ...old,
-                  data: old.data.filter(
-                    (item) => item.scholarshipId !== editedId
-                  ),
-                  meta: {
-                    ...old.meta,
-                    count: {
-                      ...old.meta.count,
-                      countExpired:
-                        old.meta.count.countExpired > 0
-                          ? old.meta.count.countExpired + 1
-                          : old.meta.count.countExpired,
-                    },
-                  },
-                };
-              }
-            );
-          });
-
-        queryClient.setQueryData<GetScholarshopTypes>(
-          [
-            "adminScholarshipData",
-            "EXPIRED",
-            paginationDefault,
-            sortDefault,
-            [],
-            "",
-          ],
-          (old) => old && { ...old, data: [editedData, ...old.data] }
-        );
-      }
-
-      //UPDATE SCHOLARSHIPBYIDD
-
-      queryClient.setQueryData<displayScholarshipFormData>(
-        ["adminScholarship", editedId],
-        (old) => {
-          if (!old) return old; // do nothing if cache is empty
-          console.log("lopit");
-          return editedData;
         }
       );
+      queryClient.setQueryData<GetScholarshopTypes>(
+        ["adminScholarship", scholarshipId],
+        (old) => {
+          if (!old) return scholarshipNew;
+          return {
+            ...old,
+            data: scholarshipNew,
+          };
+        }
+      );
+
+      queryClient.invalidateQueries({ queryKey: ["adminScholarshipData"] });
+      playNotificationSound();
     });
-    // //RENEWAL
 
     socket.on("renewScholarship", (data) => {
       const renewData = data.renewScholar;

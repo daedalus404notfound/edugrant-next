@@ -24,14 +24,12 @@ export function DragAndDropArea({
   onFilesChange,
   initialImageUrl,
   reset,
-  setReset,
 }: {
   label: string;
   accept: string[];
   onFilesChange: (files: File[]) => void;
   initialImageUrl?: string;
   reset?: boolean;
-  setReset?: (reset: boolean) => void;
 }) {
   const {
     uploadedFiles,
@@ -48,12 +46,12 @@ export function DragAndDropArea({
   });
 
   useEffect(() => {
-    if (reset && uploadedFiles.length > 0) {
-      clearAllFiles();
-    } else {
-      setReset?.(false); // ✅ safe optional call
+    if (reset) {
+      if (reset && uploadedFiles.length > 0) {
+        clearAllFiles();
+      }
     }
-  }, [reset, uploadedFiles, clearAllFiles, setReset]);
+  }, [reset]);
   const mimeToLabelMap: Record<string, string> = {
     "application/pdf": "PDF",
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document":

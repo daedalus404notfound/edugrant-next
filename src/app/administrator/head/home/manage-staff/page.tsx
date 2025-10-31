@@ -85,10 +85,19 @@ import TitleReusable from "@/components/ui/title";
 import { Loader, Users2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { columns } from "./staff-table-components/columns";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import DataTableToolbar from "./staff-table-components/data-table-toolbar";
 import useAdminData from "@/hooks/admin/getAdmins";
 import { StaffFormData } from "@/hooks/zod/staff";
+import { useTourStore } from "@/store/useTourStore";
+import { TourTrigger } from "@/components/tour-2/tour-trigger";
+import { AdminProfileFormData } from "@/hooks/head-profile-edit";
 export default function PendingStaffApplication() {
   const [columnVisibility, setColumnVisibility] = useState<
     Record<string, boolean>
@@ -111,32 +120,68 @@ export default function PendingStaffApplication() {
     columnFilters,
     search,
   });
-
+  const { activateStaff, setActivateStaff } = useTourStore();
   return (
-    <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+    <div className="lg:px-4 lg:min-h-[calc(100vh-85px)] min-h-[calc(100dvh-134px)] ">
+      {" "}
+      <Dialog open={activateStaff} onOpenChange={setActivateStaff}>
+        <DialogContent
+          className="!bg-card w-lg p-6"
+          onInteractOutside={(e) => {
+            e.preventDefault();
+          }}
+          onEscapeKeyDown={(e) => {
+            e.preventDefault();
+          }}
+          showCloseButton={false}
+        >
+          <DialogHeader>
+            <DialogTitle>
+              <TitleReusable title="Post scholarship guide" description="" />
+            </DialogTitle>
+            <DialogDescription className="mt-3">
+              Begin managing scholarship programs. You can take a quick tour to
+              learn the process, or skip it and start right away.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex gap-3 mt-3">
+            <Button
+              className="flex-1"
+              variant="secondary"
+              onClick={() => setActivateStaff(false)}
+            >
+              Skip for Now
+            </Button>
+            <div
+              onClick={() => {
+                setActivateStaff(false);
+              }}
+              className="flex-1 "
+            >
+              <TourTrigger
+                tourName="activateStaff"
+                className="h-9 !bg-green-900 !text-gray-200 !border-0 w-full"
+              />
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <TitleReusable
-          title="Staff Activity Logs"
+          title="Manage Staff"
           Icon={Users2}
           description="Monitor, review, and manage all staff activities and actions recorded in the system."
         />
 
         <div className="py-8 space-y-5">
-          {!isLoading && isFetching && (
-            <div className="text-center">
-              <Button variant="ghost">
-                Refreshing List...
-                <Loader className="animate-spin" />
-              </Button>
-            </div>
-          )}
-          <DataTable<StaffFormData, unknown>
+          <DataTable<AdminProfileFormData, unknown>
             data={data}
             columns={columns}
             meta={meta}
             pagination={pagination}
             setPagination={setPagination}
-            getRowId={(row) => row.staffId}
+            getRowId={(row) => String(row.accountId)}
             loading={isLoading}
             search={search}
             setSearch={setSearch}

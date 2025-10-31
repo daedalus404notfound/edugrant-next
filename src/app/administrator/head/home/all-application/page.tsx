@@ -41,7 +41,7 @@ export default function PendingStaffApplication() {
   });
 
   return (
-    <div className="lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
+    <div className="lg:px-4 lg:min-h-[calc(100vh-85px)] min-h-[calc(100dvh-134px)] ">
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <TitleReusable
           title="Registered Students"
@@ -50,14 +50,6 @@ export default function PendingStaffApplication() {
         />
 
         <div className="py-8 space-y-5">
-          {!isLoading && isFetching && (
-            <div className="text-center">
-              <Button variant="ghost">
-                Refreshing List...
-                <Loader className="animate-spin" />
-              </Button>
-            </div>
-          )}
           <DataTable<StudentUserFormData, unknown>
             data={data}
             columns={columns}

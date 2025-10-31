@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightIcon, SearchIcon, X } from "lucide-react";
+import { ArrowRightIcon, RefreshCcw, SearchIcon, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,6 +9,12 @@ import { DataTableFacetedFilter } from "@/app/table-components/data-table-facete
 import useGetFilter from "@/hooks/admin/getDynamicFilter";
 import { useState } from "react";
 import { ToolbarProps } from "@/app/table-components/data-table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useQueryClient, useIsFetching } from "@tanstack/react-query";
 
 export default function DataTableToolbar<TData>({
   table,
@@ -32,7 +38,8 @@ export default function DataTableToolbar<TData>({
     })) || [];
   const selectedRows = table.getSelectedRowModel().rows;
   const [openAlert, setOpenAlert] = useState(false);
-
+  const isFetching = useIsFetching({ queryKey: ["adminScholarshipData"] }) > 0;
+  const queryClient = useQueryClient();
   return (
     <div className="flex items-center justify-between gap-1.5">
       <div className="flex flex-1 items-center space-x-2">
@@ -84,7 +91,28 @@ export default function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            size="sm"
+            variant={isFetching ? "outline" : "default"}
+            onClick={() =>
+              queryClient.invalidateQueries({
+                queryKey: ["adminScholarshipData"],
+              })
+            }
+          >
+            <RefreshCcw
+              className={`transition-transform ${
+                isFetching ? "spin-reverse" : ""
+              }`}
+            />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{isFetching ? "Refreshing..." : "Refresh table"}</p>
+        </TooltipContent>
+      </Tooltip>
       <DataTableViewOptions table={table} />
     </div>
   );

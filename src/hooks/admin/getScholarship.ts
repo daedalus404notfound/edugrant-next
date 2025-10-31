@@ -127,7 +127,10 @@ type HeadScholarshipMetaTypes = {
   columnFilters: ColumnFiltersState;
   search?: string;
 };
-
+export interface ScholarshipGetTypes {
+  data: scholarshipFormData[];
+  meta: MetaWithCountsScholarship;
+}
 export default function useScholarshipData({
   status,
   pagination,
@@ -174,10 +177,9 @@ export default function useScholarshipData({
       console.log("Fetching (admin):", endpoint);
 
       try {
-        const res = await axios.get<{
-          data: scholarshipFormData[];
-          meta: MetaWithCountsScholarship;
-        }>(endpoint, { withCredentials: true });
+        const res = await axios.get<ScholarshipGetTypes>(endpoint, {
+          withCredentials: true,
+        });
 
         return res.data;
       } catch (error) {
@@ -246,7 +248,6 @@ export default function useScholarshipData({
     retry: false,
     staleTime: 1000 * 60 * 5,
   });
-
 
   useEffect(() => {
     if (query.isSuccess && query.data?.meta) {

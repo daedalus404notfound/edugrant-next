@@ -15,9 +15,11 @@ import { tourConfigs } from "@/lib/tour-config";
 import useSocketConnection from "@/hooks/head/useSocketConnection";
 import SocketListener from "./socketListeners";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ScrollArea } from "@/components/ui/scroll-area";
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
-  useSocketConnection();
+  const { connected } = useSocketConnection();
+  console.log("socket connected?: ", connected);
   const path = usePathname();
   const segmentedPath = path.split("/");
   const [queryClient] = useState(() => new QueryClient());
@@ -34,13 +36,13 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
         <TourProvider tours={tourConfigs}>
           <AppSidebar variant="inset" />
           <SidebarInset>
-            <div className="relative">
+            <div>
               <DynamicHeaderAdmin
                 first={segmentedPath[2]}
                 second={segmentedPath[3]}
                 third={segmentedPath[4]}
               />
-              {/* <div className="fixed your-class h-screen w-full pointer-events-none "></div> */}
+
               {children}
               {modal}
               <SocketListener />

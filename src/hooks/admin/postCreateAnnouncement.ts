@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { AnnouncementFormDataPost } from "../zod/announcement";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
 import { useState } from "react";
 import socket from "@/lib/socketLib";
@@ -36,6 +36,7 @@ const addAnnouncementApi = async (data: AnnouncementFormDataPost) => {
 };
 
 export const useAnnouncement = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: addAnnouncementApi,
     onSuccess: (data) => {
@@ -45,12 +46,7 @@ export const useAnnouncement = () => {
         description: "Your announcement has been successfully posted.",
       });
 
-      if (socket.connected) {
-        socket.emit("newAnnouncement", data); // 🔥 real-time update
-        console.log("📡 Broadcasted new announcement:", data);
-      } else {
-        console.warn("⚠️ Socket not connected — unable to broadcast");
-      }
+      queryClient.invalidateQueries({ queryKey: ["authenticated-user"] });
     },
     onError: (error: ApiError) => {
       if (axios.isAxiosError<ApiErrorResponse>(error)) {
@@ -111,7 +107,6 @@ export const useAnnouncement = () => {
           description: "Something went wrong. Please try again later.",
         });
       }
-   
     },
   });
 };

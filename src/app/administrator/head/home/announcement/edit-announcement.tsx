@@ -56,7 +56,7 @@ export default function EditAnnouncementt({
     formWatch,
   } = useUpdateAnnouncement(data);
   return (
-    <div className="">
+    <div className="bg-background">
       <div className="p-6 space-y-8">
         <Form {...form}>
           <FormField

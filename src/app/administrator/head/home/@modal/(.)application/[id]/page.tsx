@@ -408,7 +408,7 @@ export default function InterceptReviewApplicants() {
     const isRequired = doc.requirementType?.trim() === "required";
     return isRequired && (hasExistingStatus || hasNewReviewStatus);
   }).length;
-  
+
   const isThereRejected = lastPhaseDocuments.some((doc) => {
     const isRequired = doc.requirementType?.trim() === "required";
     const existingStatus = doc.rejectMessage?.status === "REJECTED";
@@ -526,7 +526,7 @@ export default function InterceptReviewApplicants() {
           <DrawerDescription></DrawerDescription>
         </DrawerHeader>
         <ModalHeader
-          scholarship={false}
+          text="Application Details"
           HandleCloseDrawer={HandleCloseDrawer}
         />
         <ReviewBody

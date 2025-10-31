@@ -91,6 +91,7 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
           <TourStep
             link={`/administrator/head/home/manage/${scholarship.scholarshipId}`}
             stepId={activeTourName === "editScholarship" ? "1" : "renew-1"}
+            className={isActive ? "bg-background p-2 rounded-md" : ""}
           >
             {content}
           </TourStep>

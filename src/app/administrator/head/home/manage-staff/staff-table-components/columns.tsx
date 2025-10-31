@@ -7,50 +7,59 @@ import { DataTableColumnHeader } from "@/app/table-components/data-table-column-
 import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
+import Link from "next/link";
+import { useTourContext } from "@/components/tour-2/tour-provider";
+import { TourStep } from "@/components/tour-2/tour-step";
+import { AdminProfileFormData } from "@/hooks/head-profile-edit";
 
-export const columns: ColumnDef<StaffFormData>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <div className="pl-4">
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-          className="translate-y-[2px]"
-        />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="pl-4">
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-          className="translate-y-[2px]"
-        />
-      </div>
-    ),
-    enableSorting: true,
-    enableHiding: false,
-  },
+export const columns: ColumnDef<AdminProfileFormData>[] = [
+  // {
+  //   id: "select",
+  //   header: ({ table }) => (
+  //     <div className="pl-4">
+  //       <Checkbox
+  //         checked={
+  //           table.getIsAllPageRowsSelected() ||
+  //           (table.getIsSomePageRowsSelected() && "indeterminate")
+  //         }
+  //         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+  //         aria-label="Select all"
+  //         className="translate-y-[2px]"
+  //       />
+  //     </div>
+  //   ),
+  //   cell: ({ row }) => (
+  //     <div className="pl-4">
+  //       <Checkbox
+  //         checked={row.getIsSelected()}
+  //         onCheckedChange={(value) => row.toggleSelected(!!value)}
+  //         aria-label="Select row"
+  //         className="translate-y-[2px]"
+  //       />
+  //     </div>
+  //   ),
+  //   enableSorting: true,
+  //   enableHiding: false,
+  // },
 
   {
-    accessorFn: (row) => row.fName,
+    accessorFn: (row) => row.ISPSU_Staff.fName,
     id: "fName",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Student" className="pl-4" />
     ),
     cell: ({ row }) => {
-      const first = row.original.fName;
-      const middle = row.original.mName;
-      const last = row.original.lName;
-      const profile = row.original.profileImg?.publicUrl;
-      return (
-        <div className="flex gap-2 items-center pl-4">
+      const { isActive, activeTourName } = useTourContext();
+      const first = row.original.ISPSU_Staff?.fName;
+      const middle = row.original.ISPSU_Staff?.mName;
+      const last = row.original.ISPSU_Staff?.lName;
+      const email = row.original.email;
+      const profile = row.original.ISPSU_Staff?.profileImg?.publicUrl;
+      const content = (
+        <Link
+          href={`/administrator/head/home/manage-staff/${row.original.accountId}`}
+          className="flex gap-2 items-center pl-4"
+        >
           <Avatar>
             <AvatarImage
               className="object-cover"
@@ -62,13 +71,26 @@ export const columns: ColumnDef<StaffFormData>[] = [
             </AvatarFallback>
           </Avatar>
           <div>
-            <div className="font-medium capitalize">
+            <div className="font-medium capitalize underline">
               {first} {middle} {last}
             </div>
-            <p className="text-xs text-muted-foreground">{}</p>
+            <p className="text-xs text-muted-foreground">{email}</p>
           </div>
-        </div>
+        </Link>
       );
+
+      if (isActive && row.index === 0) {
+        return (
+          <TourStep
+            link={`/administrator/head/home/manage-staff/${row.original.accountId}`}
+            stepId="activate-1"
+          >
+            {content}
+          </TourStep>
+        );
+      }
+
+      return content;
     },
     enableSorting: true,
     enableHiding: true,
@@ -124,8 +146,8 @@ export const columns: ColumnDef<StaffFormData>[] = [
   //   enableSorting: true,
   //   enableHiding: true,
   // },
-  {
-    id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
-  },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => <DataTableRowActions row={row} />,
+  // },
 ];

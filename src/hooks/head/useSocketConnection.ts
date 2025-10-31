@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import socket from "@/lib/socketLib";
 
 import { useAdminStore } from "@/store/adminUserStore";
+import useAuthenticatedUser from "./getTokenAuthentication";
 
 export default function useSocketConnection() {
-  const { admin } = useAdminStore(); // make sure this store holds admin info after login
   const [connected, setConnected] = useState(false);
-
+  const { data } = useAuthenticatedUser();
+  const admin = data?.safeData;
   useEffect(() => {
     // Only connect when admin info is available
     if (!admin?.accountId || !admin?.role) return;

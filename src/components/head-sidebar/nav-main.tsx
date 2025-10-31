@@ -61,11 +61,11 @@ export function NavMain({
                   <span>{item.title}</span>
 
                   <div className=" ml-auto  flex gap-2">
-                    {item.title === "Scholarships" && (item.count ?? 0) > 0 && (
+                    {(item.count ?? 0) > 0 && (
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Badge
-                            className="dark:bg-indigo-800 bg-indigo-300 "
+                            className="text-gray-200 bg-emerald-900"
                             variant="secondary"
                           >
                             {item.count}

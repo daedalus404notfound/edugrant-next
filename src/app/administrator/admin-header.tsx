@@ -44,6 +44,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTourStore } from "@/store/useTourStore";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -70,6 +75,7 @@ export default function DynamicHeaderAdmin({
     setOpenRenewScholarship,
     setOpenGenerate,
     setOpenStaff,
+    setActivateStaff,
   } = useTourStore();
   return (
     <header className="flex w-full z-30 items-center justify-between  p-4 rounded-lg">
@@ -99,50 +105,106 @@ export default function DynamicHeaderAdmin({
       </div>
       <div className="flex items-center gap-3">
         <TourStep stepId="guide">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+          <Popover>
+            <PopoverTrigger asChild>
               <Button>
-                <HelpCircle />
+                <HelpCircle className="mr-2 h-4 w-4" />
                 Help
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel>Guides available</DropdownMenuLabel>
-              <DropdownMenuSeparator />{" "}
-              <Link href="/administrator/head/home/create">
-                <DropdownMenuItem onClick={() => setOpenScholarship(true)}>
-                  <PenLine /> Post Scholarship
-                </DropdownMenuItem>
-              </Link>{" "}
-              <Link href="/administrator/head/home/manage">
-                <DropdownMenuItem onClick={() => setOpenEditScholarship(true)}>
-                  <PenLine /> Edit Scholarship
-                </DropdownMenuItem>
-              </Link>
-              <Link href="/administrator/head/home/archive">
-                <DropdownMenuItem onClick={() => setOpenRenewScholarship(true)}>
-                  <PenLine /> Renew Scholarship
-                </DropdownMenuItem>
-              </Link>
-              <Link href="/administrator/head/home/post-announcement">
-                <DropdownMenuItem onClick={() => setOpenAnnouncement(true)}>
-                  <PenLine /> Post Announcement
-                </DropdownMenuItem>{" "}
-              </Link>{" "}
-              <Link href="/administrator/head/home/generate-report">
-                <DropdownMenuItem onClick={() => setOpenGenerate(true)}>
-                  <Activity />
-                  Generate Report
-                </DropdownMenuItem>
-              </Link>{" "}
-              <Link href="/administrator/head/home/add">
-                <DropdownMenuItem onClick={() => setOpenStaff(true)}>
-                  <UserRoundPlus /> Add Staff
-                </DropdownMenuItem>
-              </Link>
-              <DropdownMenuSeparator />
-            </DropdownMenuContent>
-          </DropdownMenu>
+            </PopoverTrigger>
+
+            <PopoverContent
+              align="end"
+              sideOffset={8}
+              className="w-80 p-4 mr-2 rounded-xl shadow-md border bg-background"
+            >
+              <h4 className="mb-3 text-sm font-semibold text-muted-foreground">
+                Guides Available
+              </h4>
+
+              <div className="grid grid-cols-2 gap-3">
+                <Link href="/administrator/head/home/create">
+                  <Button
+                    variant="outline"
+                    onClick={() => setOpenScholarship(true)}
+                    className="flex w-full items-center justify-start gap-2 text-sm rounded-sm"
+                  >
+                    <PenLine className="h-4 w-4 text-primary" />
+                    Post
+                  </Button>
+                </Link>
+
+                <Link href="/administrator/head/home/manage">
+                  <Button
+                    variant="outline"
+                    onClick={() => setOpenEditScholarship(true)}
+                    className="flex w-full items-center justify-start gap-2 text-sm rounded-sm"
+                  >
+                    <PenLine className="h-4 w-4 text-primary" />
+                    Edit
+                  </Button>
+                </Link>
+
+                <Link href="/administrator/head/home/archive">
+                  <Button
+                    variant="outline"
+                    onClick={() => setOpenRenewScholarship(true)}
+                    className="flex w-full items-center justify-start gap-2 text-sm rounded-sm"
+                  >
+                    <PenLine className="h-4 w-4 text-primary" />
+                    Renew
+                  </Button>
+                </Link>
+
+                <Link href="/administrator/head/home/post-announcement">
+                  <Button
+                    variant="outline"
+                    onClick={() => setOpenAnnouncement(true)}
+                    className="flex w-full items-center justify-start gap-2 text-sm rounded-sm"
+                  >
+                    <PenLine className="h-4 w-4 text-primary" />
+                    Announce
+                  </Button>
+                </Link>
+
+                <Link href="/administrator/head/home/generate-report">
+                  <Button
+                    variant="outline"
+                    onClick={() => setOpenGenerate(true)}
+                    className="flex w-full items-center justify-start gap-2 text-sm rounded-sm"
+                  >
+                    <Activity className="h-4 w-4 text-primary" />
+                    Report
+                  </Button>
+                </Link>
+
+                <Link href="/administrator/head/home/add">
+                  <Button
+                    variant="outline"
+                    onClick={() => setOpenStaff(true)}
+                    className="flex w-full items-center justify-start gap-2 text-sm rounded-sm"
+                  >
+                    <UserRoundPlus className="h-4 w-4 text-primary" />
+                    Add Staff
+                  </Button>
+                </Link>
+
+                <Link
+                  href="/administrator/head/home/manage-staff"
+                  className="col-span-2"
+                >
+                  <Button
+                    variant="outline"
+                    onClick={() => setActivateStaff(true)}
+                    className="flex w-full items-center justify-center gap-2 text-sm "
+                  >
+                    <UserRoundPlus className="h-4 w-4 text-primary" />
+                    Activate Staff
+                  </Button>
+                </Link>
+              </div>
+            </PopoverContent>
+          </Popover>
         </TourStep>
         <ModeToggle />
         <DeleteDialog

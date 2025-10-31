@@ -30,7 +30,6 @@ import { useTourContext } from "@/components/tour-2/tour-provider";
 import { TourStep } from "@/components/tour-2/tour-step";
 
 export default function InterceptManageScholarship() {
-  const [openAlert, setOpenAlert] = useState(false);
   const { isActive, activeTourName, currentStep } = useTourContext();
   const { admin } = useAdminStore();
   const router = useRouter();
@@ -50,7 +49,7 @@ export default function InterceptManageScholarship() {
   const lastPhase = data?.documents?.[lastPhaseKey] ?? [];
   const lastPhaseLength = Object.keys(lastPhase).length;
   const [mode, setMode] = useState("details");
-
+  const [openDelete, setOpenDelete] = useState(false);
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
@@ -61,14 +60,13 @@ export default function InterceptManageScholarship() {
       }, 250);
     }
   };
-  const { onSubmit, isSuccess, deleteLoading } = useDeleteScholarship({
-    scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
-    accountId: admin?.accountId,
+  const { deleteScholarship, deleteLoading, isSuccess } = useDeleteScholarship({
+    id,
   });
 
   useEffect(() => {
     if (isSuccess) {
-      setOpenAlert(false);
+      setOpenDelete(false);
       HandleCloseDrawer(false);
     }
   }, [isSuccess]);
@@ -93,23 +91,28 @@ export default function InterceptManageScholarship() {
           <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
-        <ModalHeader HandleCloseDrawer={HandleCloseDrawer} />
+        <ModalHeader
+          text="Scholarship Details"
+          HandleCloseDrawer={HandleCloseDrawer}
+        />
 
         {loading ? (
           <ScholarshipModalLoading />
         ) : mode === "details" ? (
           data && (
             <div className="relative ">
-              {" "}
               {isActive && (
-                <div className="absolute z-20 inset-0 bg-black/70 backdrop-blur-sm"></div>
+                <div className="absolute z-20 inset-0 bg-background/70 backdrop-blur-xs rounded-t-lg"></div>
               )}
               <ScholarshipModal data={data} />
-              <div className="flex p-4  relative z-50  bg-gradient-to-b backdrop-blur-sm to-card from-card/50 gap-3">
+              <div className=" flex p-4  relative z-50  bg-gradient-to-b backdrop-blur-sm to-card from-card/50 gap-3">
+                {isActive && (
+                  <div className="absolute z-20 inset-0 bg-background/70 backdrop-blur-xs"></div>
+                )}
                 <TourStep
                   setter={setMode}
                   setterValue="edit"
-                  className="flex-1"
+                  className={`flex-1 ${isActive ? "pointer-events-none" : ""}`}
                   stepId="2"
                   setterPrev={HandleCloseDrawer}
                   setterValuePrev={false}
@@ -126,14 +129,18 @@ export default function InterceptManageScholarship() {
                   <TourStep
                     setter={setMode}
                     setterValue="renewal"
-                    className="flex-1"
+                    className={`flex-1 ${
+                      isActive ? "pointer-events-none" : ""
+                    }`}
                     stepId="renew-2"
                     setterPrev={HandleCloseDrawer}
                     setterValuePrev={false}
                   >
                     <Button
                       size="lg"
-                      className="w-full"
+                      className={`w-full ${
+                        isActive ? "pointer-events-none" : ""
+                      }`}
                       variant="secondary"
                       onClick={() => setMode("renewal")}
                     >
@@ -141,9 +148,30 @@ export default function InterceptManageScholarship() {
                     </Button>
                   </TourStep>
                 )}
-                <Button size="lg" className="flex-1" variant="destructive">
-                  <Trash2 /> Delete
-                </Button>
+                <DeleteDialog
+                  open={openDelete}
+                  onOpenChange={setOpenDelete}
+                  onConfirm={() => deleteScholarship()}
+                  loading={deleteLoading}
+                  red={true}
+                  title="Delete scholarship?"
+                  description="This will be saved to database."
+                  confirmTextLoading="Deleting..."
+                  confirmText="Delete"
+                  cancelText="Cancel"
+                  trigger={
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      className="cursor-pointer flex-1"
+                      disabled={deleteLoading}
+                      onClick={() => setOpenDelete(true)}
+                    >
+                      <Trash2 />
+                      Delete
+                    </Button>
+                  }
+                />
               </div>
             </div>
           )
