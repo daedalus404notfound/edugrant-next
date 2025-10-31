@@ -76,7 +76,10 @@ export default function InterceptManageScholarshipClient() {
           <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
-        <ModalHeader HandleCloseDrawer={HandleCloseDrawer} />
+        <ModalHeader
+          text="Scholarship Details"
+          HandleCloseDrawer={HandleCloseDrawer}
+        />
         <div className="relative h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md">
           {applying === true ? (
             data && (

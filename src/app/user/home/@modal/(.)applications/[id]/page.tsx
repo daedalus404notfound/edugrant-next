@@ -111,7 +111,7 @@ export default function InterceptManageApplicationClient() {
         </DrawerHeader>
         <ModalHeader
           HandleCloseDrawer={HandleCloseDrawer}
-          scholarship={false}
+          text="Application Details"
         />
         <div className=" h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md">
           {edit ? (

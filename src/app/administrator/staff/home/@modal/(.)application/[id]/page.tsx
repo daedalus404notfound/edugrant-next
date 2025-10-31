@@ -199,7 +199,7 @@ export default function InterceptReviewApplicants() {
           <DrawerDescription></DrawerDescription>
         </DrawerHeader>
         <ModalHeader
-          scholarship={false}
+          text="Application Details"
           HandleCloseDrawer={HandleCloseDrawer}
         />
         <ReviewBody
