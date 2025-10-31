@@ -52,7 +52,6 @@ import { Badge } from "@/components/ui/badge";
 import TitleReusable from "@/components/ui/title";
 
 import EditAnnouncementt from "./edit-announcement";
-import DisplayAnnouncement from "./display-announcement";
 import { TipTapViewer } from "@/components/ui/tiptap-viewer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ModalHeader from "@/components/ui/modal-header";
