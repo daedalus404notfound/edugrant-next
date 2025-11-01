@@ -6,22 +6,17 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useUserStore } from "@/store/useUserStore";
 import { Tabs } from "@/components/ui/vercel-tabs";
-import { useUpdateProfile } from "@/hooks/user/postProfileUpdate";
+import { useEditUserProfile } from "@/hooks/user/postProfileUpdate";
 import PersonalProfile from "./personal";
 import FamilyForm from "./family";
 import SecurityForm from "./security";
 import TitleReusable from "@/components/ui/title";
+import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
+import { useProfileForm } from "@/hooks/user/zodUserProfile";
 export default function Profile() {
-  const { user, loadingUser: useLoading } = useUserStore();
-  const {
-    form,
-    siblings,
-    handleSubmit,
-    loading,
-    isChanged,
-    isSuccess,
-    setIsSuccess,
-  } = useUpdateProfile(user);
+  const { data } = useAuthenticatedUser();
+  const mutation = useEditUserProfile();
+  const { form, siblings, isChanged } = useProfileForm(data?.userData);
   const [tab, setTab] = useState("personal");
 
   const tabs = [
@@ -42,13 +37,11 @@ export default function Profile() {
         </div>
         <div className="mt-15 lg:w-[60%] lg:min-w-5xl w-full mx-auto">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)}>
+            <form
+              onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
+            >
               {tab === "personal" && (
-                <PersonalProfile
-                  form={form}
-                  isSuccess={isSuccess}
-                  setIsSuccess={setIsSuccess}
-                />
+                <PersonalProfile form={form} isSuccess={mutation.isSuccess} />
               )}
 
               {tab === "family" && (
@@ -75,11 +68,13 @@ export default function Profile() {
                             size="lg"
                             className="cursor-pointer"
                             type="submit"
-                            disabled={loading}
+                            disabled={mutation.isPending}
                           >
                             <Check />
-                            {loading ? "Saving..." : "Save Changes"}
-                            {loading && <Loader className="animate-spin" />}
+                            {mutation.isPending ? "Saving..." : "Save Changes"}
+                            {mutation.isPending && (
+                              <Loader className="animate-spin" />
+                            )}
                           </Button>
                         </motion.div>
                       </motion.div>

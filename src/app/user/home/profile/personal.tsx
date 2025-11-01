@@ -52,25 +52,28 @@ import {
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { DragAndDropAreaProfile } from "@/components/ui/upload-profile";
+import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Separator } from "@/components/ui/separator";
 export default function PersonalProfile({
   form,
   isSuccess,
-  setIsSuccess,
 }: {
   form: UseFormReturn<UserFormData>;
   isSuccess: boolean;
-  setIsSuccess: (reset: boolean) => void;
 }) {
-  const { user, loadingUser: useLoading } = useUserStore();
+  const { data, loading } = useAuthenticatedUser();
   const [openCalendar, setOpenCalendar] = useState(false);
   const [isIndigenousChecked, setIsIndigenousChecked] = useState(
-    !!user?.Student.indigenous
+    !!data?.userData?.Student.indigenous
   );
-  const [isPWDChecked, setIsPWDChecked] = useState(!!user?.Student.PWD);
+  const [isPWDChecked, setIsPWDChecked] = useState(
+    !!data?.userData?.Student.PWD
+  );
 
   return (
     <div className=" w-full space-y-12">
-      <div className="space-y-6 bg-card/40 dark:bg-gradient-to-br to-card from-card/50  px-6 pb-8 pt-4 rounded-lg">
+      {/* <div className="space-y-6 bg-card/40 dark:bg-gradient-to-br to-card from-card/50  px-6 pb-8 pt-4 rounded-lg">
         <div className="flex">
           <div className="relative flex items-end gap-4">
             <FormField
@@ -84,15 +87,16 @@ export default function PersonalProfile({
                   <FormControl>
                     <DragAndDropAreaProfile
                       isSuccess={isSuccess}
-                      setIsSuccess={setIsSuccess}
                       label="backdrop image"
                       accept={["image/png", "image/jpeg"]}
-                      initialImageUrl={user?.Student.profileImg?.publicUrl}
+                      initialImageUrl={
+                        data?.userData?.Student.profileImg?.publicUrl
+                      }
                       onFilesChange={(files) =>
                         field.onChange(
                           files[0]
                             ? files[0]
-                            : user?.Student.profileImg?.publicUrl
+                            : data?.userData?.Student.profileImg?.publicUrl
                         )
                       } // Single file
                     />
@@ -102,21 +106,135 @@ export default function PersonalProfile({
             />
 
             <div>
-              <h1 className="text-xl font-medium">{`${user?.Student.lName}, ${user?.Student.fName} ${user?.Student.mName}`}</h1>
-              <p className="text-muted-foreground">{user?.schoolId}</p>
+              <h1 className="text-xl font-medium">{`${
+                data?.userData?.Student.lName
+              }, ${data?.userData?.Student.fName} ${
+                data?.userData?.Student.mName
+                  ? data?.userData?.Student.mName
+                  : ""
+              }`}</h1>
+              <p className="text-muted-foreground">
+                {data?.userData?.schoolId}
+              </p>
             </div>
+          </div>
+        </div>
+      </div> */}
+
+      <div className="bg-gradient-to-br dark:to-card to-card/20 dark:from-card/50 from-card/10 shadow rounded-md overflow-hidden border-border/50 border dark:border-0">
+        {/* Header Section */}
+        <div className="relative flex  items-end  py-8 px-6  gap-4">
+          {/* <img
+                          className="lg:w-70 w-50 absolute right-0 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-20 "
+                          src={logo.src}
+                          alt=""
+                        /> */}
+
+          <FormField
+            control={form.control}
+            name="Student.profileImg.publicUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="flex justify-between items-center">
+                  <FormMessage />
+                </FormLabel>
+                <FormControl>
+                  <DragAndDropAreaProfile
+                    isSuccess={isSuccess}
+                    label="backdrop image"
+                    accept={["image/png", "image/jpeg"]}
+                    initialImageUrl={
+                      data?.userData.Student?.profileImg?.publicUrl ||
+                      "https://github.com/shadcn.png"
+                    }
+                    onFilesChange={(files) =>
+                      field.onChange(
+                        files[0]
+                          ? files[0]
+                          : data?.userData.Student?.profileImg?.publicUrl ||
+                              "https://github.com/shadcn.png"
+                      )
+                    } // Single file
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <div>
+            {loading ? (
+              <div className="flex flex-col gap-2 flex-1 px-4">
+                <Skeleton className="h-6 w-64" />
+                <Skeleton className="h-4 w-32" />
+              </div>
+            ) : (
+              <div className="space-y-1.5 py-2">
+                <h1 className="text-xl font-semibold text-foreground jakarta tracking-wide">
+                  {data?.userData.Student?.lName},{" "}
+                  {data?.userData.Student?.fName}{" "}
+                  {data?.userData.Student?.mName}
+                </h1>
+
+                <p className="text-muted-foreground text-sm">
+                  {data?.userData.email}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+        <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+        {/* Info Grid */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 py-6 px-4  dark:bg-card bg-card/30 relative   border-border/50 border-t">
+          <div className="space-y-1.5  border-l pl-6 hidden lg:block">
+            <div className="flex items-center gap-2">
+              <UserRoundCheck className="w-3.5 h-3.5 text-muted-foreground" />
+              <h1 className="text-xs text-muted-foreground">User Role</h1>
+            </div>
+            {loading ? (
+              <Skeleton className="h-5 w-20" />
+            ) : (
+              <p className="font-medium text-foreground">
+                {data?.userData?.role}
+              </p>
+            )}
+          </div>
+          <div className="space-y-1.5  border-l pl-6">
+            <div className="flex items-center gap-2">
+              <VenusAndMars className="w-3.5 h-3.5 text-muted-foreground" />
+              <h1 className="text-xs text-muted-foreground">Gender</h1>
+            </div>
+            {loading ? (
+              <Skeleton className="h-5 w-full" />
+            ) : (
+              <p className="font-medium text-foreground">
+                {data?.userData?.Student.gender || "—"}
+              </p>
+            )}
+          </div>{" "}
+          <div className="space-y-1.5 border-l pl-6">
+            <div className="flex items-center gap-2">
+              <Calendar1 className="w-3.5 h-3.5 text-muted-foreground" />
+              <h1 className="text-xs text-muted-foreground">Account Created</h1>
+            </div>
+            {loading ? (
+              <Skeleton className="h-5 w-full" />
+            ) : (
+              <p className="font-medium text-foreground">
+                {(data?.userData.Student?.dateCreated &&
+                  format(data?.userData.Student?.dateCreated, "PPP")) ||
+                  "N/A"}
+              </p>
+            )}
           </div>
         </div>
       </div>
 
-      <div className="space-y-6 bg-card/40 dark:bg-gradient-to-br to-card from-card/50  px-6 pb-8 pt-4 rounded-lg">
-        <div className="">
-          <h3 className="text-base font-medium flex gap-2 items-center py-3">
-            <UserRoundCog className="h-4.5 w-4.5" /> Personal Information
-          </h3>
-          <div className="w-full h-[2px] flex-1 bg-gradient-to-r from-border to-transparent" />
-        </div>
-        <div className="grid lg:grid-cols-2 grid-cols-1 gap-10">
+      <div className="space-y-1">
+        <h3 className="text-base font-medium flex gap-2 items-center py-3">
+          <UserRoundCog className="h-4.5 w-4.5" /> Personal Information
+        </h3>
+
+        <div className="grid lg:grid-cols-2 grid-cols-1 gap-10 p-6 bg-card/30 shadow dark:bg-card rounded-md">
           <FormField
             control={form.control}
             name="Student.fName"
@@ -420,17 +538,15 @@ export default function PersonalProfile({
         </div>
       </div>
 
-      <div className="space-y-6 bg-card/40 dark:bg-gradient-to-br to-card from-card/50 px-6 pb-8 pt-4 rounded-lg">
+      <div className="space-y-1">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center gap-3 mb-4">
-          <h3 className="text-base font-medium flex gap-2 items-center py-2">
-            <Mail className="h-4.5 w-4.5" /> Account Information
-          </h3>
-          <div className="w-full lg:flex-1 h-[2px] bg-gradient-to-r from-border to-transparent" />
-        </div>
+
+        <h3 className="text-base font-medium flex gap-2 items-center py-2">
+          <Mail className="h-4.5 w-4.5" /> Account Information
+        </h3>
 
         {/* Form Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 bg-card/30 shadow dark:bg-card rounded-md">
           {/* Student ID */}
           <FormField
             control={form.control}
