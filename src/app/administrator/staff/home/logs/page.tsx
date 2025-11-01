@@ -50,14 +50,6 @@ export default function PendingStaffApplication() {
         />
 
         <div className="py-8 space-y-5">
-          {!isLoading && isFetching && (
-            <div className="text-center">
-              <Button variant="ghost">
-                Refreshing List...
-                <Loader className="animate-spin" />
-              </Button>
-            </div>
-          )}
           <DataTable<AllStaffLogsType, unknown>
             data={data}
             columns={columns}

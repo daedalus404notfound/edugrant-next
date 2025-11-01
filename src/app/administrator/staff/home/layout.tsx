@@ -13,7 +13,8 @@ import DynamicHeaderAdmin from "./staff-header2";
 import useSocketConnection from "@/hooks/head/useSocketConnection";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import SocketListener from "./socketListeners";
-
+import { TourProvider } from "@/components/tour-2/tour-provider";
+import { tourConfigs } from "@/lib/tour-config";
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
   useSocketConnection();
@@ -31,20 +32,23 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
           } as React.CSSProperties
         }
       >
-        <AppSidebar variant="inset" />
-        <SidebarInset>
-          <div className="relative">
-            <DynamicHeaderAdmin
-              first={segmentedPath[2]}
-              second={segmentedPath[3]}
-              third={segmentedPath[4]}
-            />
-            {children}
-            {modal}
-            <SocketListener />
-          </div>
-        </SidebarInset>
-        <Toaster />
+        {" "}
+        <TourProvider tours={tourConfigs}>
+          <AppSidebar variant="inset" />
+          <SidebarInset>
+            <div className="relative">
+              <DynamicHeaderAdmin
+                first={segmentedPath[2]}
+                second={segmentedPath[3]}
+                third={segmentedPath[4]}
+              />
+              {children}
+              {modal}
+              <SocketListener />
+            </div>
+          </SidebarInset>
+          <Toaster />{" "}
+        </TourProvider>
       </SidebarProvider>
     </QueryClientProvider>
   );

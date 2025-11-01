@@ -16,7 +16,8 @@ import useSocketConnection from "@/hooks/user/useSocketConnection";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useApplicationStore } from "@/store/applicationUsetStore";
 import SocketListener from "./socketListeners";
-
+import { TourProvider } from "@/components/tour-2/tour-provider";
+import { tourConfigs } from "@/lib/tour-config";
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
   useSocketConnection();
@@ -35,22 +36,24 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
           } as React.CSSProperties
         }
       >
-        <AppSidebar variant="inset" />
-        <SidebarInset>
-          <div className="relative">
-            <DynamicHeaderUser
-              first={segmentedPath[2]}
-              second={segmentedPath[3]}
-              third={segmentedPath[4]}
-            />
-            <MobHeader />
-            {children} {modal}
-            
-            <SocketListener />
-            <MobDock />
-          </div>
-        </SidebarInset>
-        <Toaster />
+        {" "}
+        <TourProvider tours={tourConfigs}>
+          <AppSidebar variant="inset" />
+          <SidebarInset>
+            <div className="relative">
+              <DynamicHeaderUser
+                first={segmentedPath[2]}
+                second={segmentedPath[3]}
+                third={segmentedPath[4]}
+              />
+              <MobHeader />
+              {children} {modal}
+              <SocketListener />
+              <MobDock />
+            </div>
+          </SidebarInset>
+          <Toaster />
+        </TourProvider>
       </SidebarProvider>
     </QueryClientProvider>
   );

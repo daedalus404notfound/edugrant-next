@@ -40,6 +40,7 @@ import { useEffect, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { GetApplicationFormData } from "@/hooks/zod/getApplicationZod";
 import TitleReusable from "../title";
+import useDownloadDocument from "@/hooks/admin/postDownloadDocument";
 const mimeToLabelMap: Record<string, string> = {
   "application/pdf": "PDF",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
@@ -89,7 +90,8 @@ export default function DocumentSection({
   useEffect(() => {
     setPhaseSelector(getLastPhase);
   }, [getLastPhase]);
-
+  const applicationId = data?.applicationId;
+  const { onSubmit, isLoading } = useDownloadDocument(applicationId);
   return (
     <div className="space-y-10">
       <div className="space-y-3">
@@ -109,13 +111,13 @@ export default function DocumentSection({
                 variant="outline"
                 role="combobox"
                 aria-expanded={open}
-                className="w-[200px] justify-between"
+                className=" justify-between capitalize"
               >
                 {phaseSelector || "Select phase..."}
                 <ChevronsUpDown className="opacity-50" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
+            <PopoverContent className=" p-0">
               <Command>
                 <CommandInput placeholder="Search Phase..." className="h-9" />
                 <CommandList>
@@ -207,10 +209,12 @@ export default function DocumentSection({
                             </div>
                           </div>
                         </div>
-                        <Button variant="secondary" asChild>
-                          <a href={doc.supabasePath} download>
-                            <Download />
-                          </a>
+                        <Button
+                          variant="secondary"
+                          onClick={() => onSubmit(doc.supabasePath)}
+                          disabled={isLoading}
+                        >
+                          <Download />
                         </Button>
                       </div>
                     ) : (

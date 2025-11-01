@@ -56,7 +56,7 @@ export function ChartBarMultiple({ data }: { data: DashboardData | null }) {
     },
   } satisfies ChartConfig;
   return (
-    <Card className="flex flex-col  shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+    <Card className="flex flex-col  shadow hover:shadow-lg transition-all duration-300 hover:-translate-y-1  border-border/50 border">
       <CardHeader className="text-center">
         <CardTitle>Scholarship - Applications vs Approved</CardTitle>
         <CardDescription>By Scholarship Name</CardDescription>

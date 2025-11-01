@@ -68,9 +68,7 @@ export default function InterceptManageScholarshipClient() {
       }}
     >
       <DrawerContent
-        className={`lg:w-[56%] w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 lg:p-1 bg-card ${
-          loading ? " lg:h-[75dvh] h-[68dvh]" : " lg:h-[95dvh] h-[90dvh]"
-        }`}
+        className={`lg:w-[56%] w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 lg:p-1`}
       >
         <DrawerHeader className="sr-only">
           <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
@@ -80,7 +78,7 @@ export default function InterceptManageScholarshipClient() {
           text="Scholarship Details"
           HandleCloseDrawer={HandleCloseDrawer}
         />
-        <div className="relative h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md">
+        <div className="relative">
           {applying === true ? (
             data && (
               <UploadDocs
@@ -96,46 +94,43 @@ export default function InterceptManageScholarshipClient() {
           ) : (
             <div>
               {data && <ScholarshipModal data={data} />}
-              <div className=" sticky bottom-0">
-                <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-                <div className="lg:px-6 lg:py-6 px-2 py-4 flex gap-3  bg-background">
-                  <Button
-                    className="flex-1"
-                    onClick={() => setApplying(true)}
-                    disabled={isExpired || isSubmitted || isGov}
-                    variant={
-                      isGov
-                        ? "destructive"
-                        : isSubmitted
-                        ? "destructive"
-                        : isExpired
-                        ? "destructive"
-                        : "default"
-                    }
-                  >
-                    {isGov ? (
-                      <>
-                        <Ban />
-                        <p> You have an APPROVED government already.</p>
-                      </>
-                    ) : isSubmitted ? (
-                      <>
-                        <Ban />
-                        <p>Already Applied</p>
-                      </>
-                    ) : isExpired ? (
-                      <>
-                        <Ban />
-                        <p>Scholarship Expired</p>
-                      </>
-                    ) : (
-                      <>
-                        <Upload />
-                        <p> Apply Scholarship</p>
-                      </>
-                    )}
-                  </Button>
-                </div>
+              <div className="p-6 flex gap-3  bg-background">
+                <Button
+                  className="flex-1"
+                  onClick={() => setApplying(true)}
+                  disabled={isExpired || isSubmitted || isGov}
+                  variant={
+                    isGov
+                      ? "destructive"
+                      : isSubmitted
+                      ? "destructive"
+                      : isExpired
+                      ? "destructive"
+                      : "default"
+                  }
+                >
+                  {isGov ? (
+                    <>
+                      <Ban />
+                      <p> You have an APPROVED government already.</p>
+                    </>
+                  ) : isSubmitted ? (
+                    <>
+                      <Ban />
+                      <p>Already Applied</p>
+                    </>
+                  ) : isExpired ? (
+                    <>
+                      <Ban />
+                      <p>Scholarship Expired</p>
+                    </>
+                  ) : (
+                    <>
+                      <Upload />
+                      <p> Apply Scholarship</p>
+                    </>
+                  )}
+                </Button>
               </div>
             </div>
           )}

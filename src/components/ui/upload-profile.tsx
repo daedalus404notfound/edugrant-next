@@ -125,12 +125,12 @@ export function DragAndDropAreaProfile({
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </DialogTrigger>
-        <DialogContent className="lg:max-w-5xl w-full !p-0 overflow-hidden">
+        <DialogContent className="w-auto !p-0 overflow-hidden">
           <DialogHeader className="sr-only">
             <DialogTitle>Are you absolutely sure?</DialogTitle>
             <DialogDescription></DialogDescription>
           </DialogHeader>
-          <img src={previewUrl} alt="" />
+          <img className="aspect-square object-cover" src={previewUrl} alt="" />
         </DialogContent>
       </Dialog>
 

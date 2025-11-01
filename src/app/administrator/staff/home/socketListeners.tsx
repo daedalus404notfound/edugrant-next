@@ -81,6 +81,8 @@ export default function SocketListener() {
     socket.on("applyScholarship", (data) => {
       console.log("you applied:", data);
       const pendingData = data.newApplication;
+      console.log(data);
+      const applicationId = data.newApplication.applicationId;
       const scholarshipId = pendingData.Scholarship.scholarshipId;
       const scholarshipData = pendingData.Scholarship;
       console.log("scholarshipData", scholarshipData);
@@ -103,7 +105,9 @@ export default function SocketListener() {
           };
         }
       );
-
+      queryClient.setQueryData(["adminApplication", applicationId], (old) => {
+        if (!old) return pendingData;
+      });
       if (cache.findAll({ queryKey: ["staffScholarshipData"] }).length > 0) {
         queryClient.invalidateQueries({ queryKey: ["staffScholarshipData"] });
       }

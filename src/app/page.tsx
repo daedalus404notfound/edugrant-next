@@ -232,49 +232,81 @@ export default function DesktopLandingPage() {
   console.log(pathname);
   const HeaderComponent = () => {
     return (
-      <header className="py-7 w-[95%] mx-auto  lg:flex justify-between items-center hidden">
+      <motion.header
+        className="py-7 w-[95%] mx-auto  lg:flex justify-between items-center hidden"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+      >
         <span className="flex items-center gap-5 h-15 py-3">
-          <span className="flex items-center gap-2">
+          <motion.span
+            className="flex items-center gap-2"
+            initial={{ x: -20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             <img className="h-10 w-10" src={bascLogo.src} alt="" />
             <img className="h-10 w-10" src={osas.src} alt="" />
             <img className="h-10 w-10" src={edugrant.src} alt="" />
-          </span>
+          </motion.span>
           <Separator orientation="vertical" />
           <ul className="flex gap-2">
             {navItems.map((item, index) => (
-              <li key={index} className="flex items-center">
+              <motion.li
+                key={index}
+                className="flex items-center"
+                initial={{ y: -10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <Button variant="ghost" className="cursor-pointer" asChild>
                   <Link href={`#${item.href}`}>
                     <item.icon className="w-4 h-4" />
                     {item.label}
                   </Link>
                 </Button>
-              </li>
+              </motion.li>
             ))}
           </ul>
         </span>
-        <span className="flex gap-3 items-center">
+        <motion.span
+          className="flex gap-3 items-center"
+          initial={{ x: 20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
           <Link href={"/public-announcement"} prefetch={true} scroll={false}>
-            <Button>
-              <Megaphone />
-              Announcements
-            </Button>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button>
+                <Megaphone />
+                Announcements
+              </Button>
+            </motion.div>
           </Link>
           <Link href={"/user/login"} prefetch={true} scroll={false}>
-            <Button variant="secondary">
-              Login <LogInIcon />
-            </Button>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Button variant="secondary">
+                Login <LogInIcon />
+              </Button>
+            </motion.div>
           </Link>
 
           <ModeToggle />
-        </span>
-      </header>
+        </motion.span>
+      </motion.header>
     );
   };
 
   return (
     <>
-      <div className="gradient absolute inset-0 z-10 hidden dark:block h-[88dvh]"></div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.5 }}
+        transition={{ duration: 0.2 }}
+        className="gradient absolute inset-0 z-10 hidden dark:block h-[88dvh]"
+      ></motion.div>
       <div
         className="absolute inset-0 z-0 dark:hidden lg:hidden h-100"
         style={{
@@ -294,29 +326,35 @@ export default function DesktopLandingPage() {
         <HeaderComponent />
         <AnimatePresence mode="wait">
           <motion.div
-            key="hero"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2, ease: "easeInOut" }}
+            transition={{ duration: 0.3, delay: 0.2 }}
             className="relative min-h-[75vh]  mx-auto w-[95%]   rounded-3xl overflow-hidden hidden lg:flex items-center dark:bg-primary-second/50  bg-green-800 shadow "
           >
             <div className="absolute inset-0 h-full w-full flex items-center rounded-3xl x">
-              <img
+              <motion.img
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 0.05, x: 0 }}
+                transition={{ duration: 0.3, delay: 0.6 }}
                 className="absolute opacity-3 h-[120%] [mask-image:linear-gradient(to_right,transparent,black_30%)] pointer-events-none left-10"
                 src={bascLogo.src}
                 alt=""
               />
-              <img
+              <motion.img
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: 0.8 }}
                 className="h-full w-[40%] object-cover absolute right-0 [mask-image:linear-gradient(to_right,transparent,black_80%)] z-10 opacity-90"
                 src={bascImage.src}
                 alt=""
               />
             </div>
-
-            <div className="absolute z-10 left-15 h-full w-full flex flex-col justify-center">
+            {/* <div className="absolute z-10 left-15 h-full w-full flex flex-col justify-center">
               <Link href={`https://basc.edu.ph/`} target="_blank">
-                <Badge variant="secondary">
+                <Badge variant="outline" className="hidden dark:flex">
+                  Bulacan Agricultural State College <ArrowRight />
+                </Badge>
+                <Badge variant="secondary" className="dark:hidden">
                   Bulacan Agricultural State College <ArrowRight />
                 </Badge>
               </Link>
@@ -348,16 +386,79 @@ export default function DesktopLandingPage() {
                   Get started <ArrowRight />
                 </Button>
               </Link>
-            </div>
+            </div> */}{" "}
+            <motion.div
+              className="absolute z-10 left-15 h-full w-full flex flex-col justify-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3, delay: 0.9 }}
+            >
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.3, delay: 1.0 }}
+              >
+                <Link href={`https://basc.edu.ph/`} target="_blank">
+                  <Badge variant="outline" className="hidden dark:flex">
+                    Bulacan Agricultural State College <ArrowRight />
+                  </Badge>
+                  <Badge variant="secondary" className="dark:hidden">
+                    Bulacan Agricultural State College <ArrowRight />
+                  </Badge>
+                </Link>
+              </motion.div>
+
+              <motion.span
+                className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  dark:text-primary/70 text-gray-200
+  text-6xl  havelock tracking-[-8px] py-5 -translate-x-2 
+  "
+                initial={{ backgroundPosition: "200% 0", opacity: 0, y: 20 }}
+                animate={{ backgroundPosition: "-200% 0", opacity: 1, y: 0 }}
+                transition={{
+                  backgroundPosition: {
+                    repeat: Number.POSITIVE_INFINITY,
+                    repeatType: "loop",
+                    duration: 7,
+                    ease: "linear",
+                  },
+                  opacity: { duration: 0.4, delay: 1.1 },
+                  y: { duration: 0.4, delay: 1.1 },
+                }}
+              >
+                Edugrant
+              </motion.span>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 1.2 }}
+              >
+                <BlurText
+                  text="Online scholarship application portal for BASC students."
+                  delay={150}
+                  animateBy="words"
+                  direction="top"
+                  className="text-2xl  text-white"
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 1.3 }}
+                className="mt-8"
+              >
+                <Link href={"/user/register"} prefetch={true}>
+                  <Button variant="outline">
+                    Get started <ArrowRight />
+                  </Button>
+                </Link>
+              </motion.div>
+            </motion.div>
           </motion.div>
         </AnimatePresence>
         <div className="p-4 lg:hidden">
-          <motion.header
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className=" flex justify-between items-center"
-          >
+          <header className=" flex justify-between items-center">
             <div className="flex items-center gap-2">
               <Image
                 src={bascLogo.src}
@@ -387,55 +488,28 @@ export default function DesktopLandingPage() {
 
               <ModeToggle />
             </div>
-          </motion.header>
+          </header>
           <div className="text-center py-10">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
+            <div>
               <Badge variant="outline">
                 Bulacan Agricultural State College
               </Badge>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="text-center mt-8"
-            >
-              <motion.span
+            </div>
+            <div className="text-center mt-8">
+              <span
                 className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-500/70
   text-4xl havelock tracking-[-3px]  font-bold 
   "
-                initial={{ backgroundPosition: "200% 0" }}
-                animate={{ backgroundPosition: "-200% 0" }}
-                transition={{
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  duration: 7,
-                  ease: "linear",
-                }}
               >
                 EDUGRANT
-              </motion.span>
-            </motion.div>
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.5 }}
-              className="mt-4 text-center"
-            >
+              </span>
+            </div>
+            <p className="mt-4 text-center">
               Apply for scholarships, track your progress, and unlock
               opportunities for your future at BASC.
-            </motion.p>
+            </p>
           </div>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="grid grid-cols-2 gap-3 mt-10 w-full"
-          >
+          <div className="grid grid-cols-2 gap-3 mt-10 w-full">
             <Link className="col-span-2" href={`/user/login`}>
               <Button size="lg" className="w-full">
                 <GraduationCap />
@@ -452,7 +526,7 @@ export default function DesktopLandingPage() {
                 Register
               </Button>
             </Link>
-          </motion.div>
+          </div>
         </div>
         <div className="mx-auto xl:w-3/4 p-4">
           <div id="features" className="">

@@ -44,7 +44,6 @@ export default function PendingStaffApplication() {
       <div className="mx-auto lg:w-[95%]  w-[95%] py-10">
         <TitleReusable
           title="Blocked Applications"
-          textColor="text-gray-700/70"
           Icon={Ban}
           description="Applicants currently waiting for review."
         />
@@ -69,8 +68,6 @@ export default function PendingStaffApplication() {
             toolbar={DataTableToolbar}
             columnVisibility={columnVisibility} // <-- pass visibility
             setColumnVisibility={setColumnVisibility} // <-- pass setter
-            customLink={true}
-            setLink="/administrator/staff/home/application"
           />
         </div>
       </div>

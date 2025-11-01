@@ -78,7 +78,9 @@ export function useAdminProfileForm(data?: AdminProfileFormData | null) {
           publicUrl: data?.ISPSU_Staff?.profileImg?.publicUrl || "",
           path: data?.ISPSU_Staff?.profileImg?.path || "",
         },
-        validated: data?.ISPSU_Staff?.validated || "",
+        validated: data?.ISPSU_Staff?.validated
+          ? String(data.ISPSU_Staff.validated)
+          : "false",
       },
       accountId: data?.accountId || 0,
       dateCreated: data?.dateCreated || format(new Date(), "yyyy-MM-dd"),

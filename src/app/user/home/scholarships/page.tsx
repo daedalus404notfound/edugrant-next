@@ -214,7 +214,10 @@ export default function ClientScholarship() {
             ) : (
               data.slice(0, 6).map((meow, index) => {
                 return (
-                  <Link href={`/user/home/scholarships/${meow.scholarshipId}`}>
+                  <Link
+                    key={meow.scholarshipId}
+                    href={`/user/home/scholarships/${meow.scholarshipId}`}
+                  >
                     {" "}
                     <motion.div
                       key={meow.scholarshipId}

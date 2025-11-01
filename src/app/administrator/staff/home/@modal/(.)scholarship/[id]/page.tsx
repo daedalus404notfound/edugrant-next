@@ -37,7 +37,7 @@ export default function InterceptManageScholarship() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className="max-w-[1000px] w-full mx-auto h-[95vh] outline-0 border-0 p-1">
+      <DrawerContent className="max-w-[1000px] w-full mx-auto outline-0 border-0 p-1">
         <DrawerHeader className="sr-only">
           <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>

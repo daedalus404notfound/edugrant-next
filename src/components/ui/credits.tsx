@@ -93,9 +93,9 @@ const AboutTheTeam = () => {
     },
     {
       name: "Mikko Dela Pena",
-      role: "Full Stack Developer",
+      role: "Documentation Specialist", // corrected role
       description:
-        "Mikko is a problem-solver who thrives in both frontend and backend development. He loves building scalable solutions, tackling tough challenges, and making sure the product works flawlessly end to end.",
+        "Mikko ensures that every detail of the project is well-documented and easy to understand. His eye for clarity and structure helps the team maintain consistency and accuracy throughout the workflow.",
       image: pena.src,
       socialLinks: {
         twitter: "#",
@@ -104,15 +104,16 @@ const AboutTheTeam = () => {
     },
     {
       name: "Joemar Ferraren",
-      role: "Documentation Specialist",
+      role: "Tester", // corrected role
       description:
-        "Joemar ensures that every detail of the project is well-documented and easy to understand. His eye for clarity and structure helps the team maintain consistency and accuracy throughout the workflow.",
+        "Joemar is responsible for testing the product to ensure quality and functionality. He identifies bugs, validates features, and helps maintain the reliability of the project.",
       image: ferraren.src,
       socialLinks: {
         twitter: "#",
         linkedin: "#",
       },
     },
+
     {
       name: "Neal Eleazar Ramos",
       role: "Backend Developer / Database Engineer",

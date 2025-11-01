@@ -120,7 +120,8 @@ export const columns: ColumnDef<AdminProfileFormData>[] = [
       <DataTableColumnHeader column={column} title="Account status" />
     ),
     cell: ({ row }) => {
-      const validated = row.getValue("validated") as boolean;
+      const validated = row.original.ISPSU_Staff?.validated;
+
       return (
         <span className="max-w-[500px] truncate">
           {validated ? "Active" : "Inactive"}

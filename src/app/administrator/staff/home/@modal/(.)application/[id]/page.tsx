@@ -190,9 +190,7 @@ export default function InterceptReviewApplicants() {
       }}
     >
       <DrawerContent
-        className={`lg:w-[68%] bg-card w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 lg:p-1  ${
-          loading ? " lg:h-[75dvh] h-[68dvh]" : "h-[98dvh] "
-        }`}
+        className={`lg:w-[68%] bg-card w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 lg:p-1 `}
       >
         <DrawerHeader className="sr-only">
           <DrawerTitle></DrawerTitle>
@@ -221,14 +219,14 @@ export default function InterceptReviewApplicants() {
 
               {forInterviewButton ? (
                 <DeleteDialog
-                  open={openApprove}
-                  onOpenChange={setOpenApprove}
-                  onConfirm={handleApprove}
-                  loading={loadingApprove}
-                  title="Approve Application"
+                  open={openInterview}
+                  onOpenChange={setOpenInterview}
+                  onConfirm={handleInterview}
+                  loading={loadingInterview}
+                  title="Approve Application for Interview"
                   red={false} // make it visually destructive since this is a rejection
                   description="This will approve the application and notify the student. This action cannot be undone."
-                  confirmText="Approve"
+                  confirmText="Approve for Interview"
                   confirmTextLoading="Approving..."
                   cancelText="Cancel"
                   trigger={
@@ -236,7 +234,7 @@ export default function InterceptReviewApplicants() {
                       disabled={reviewCheckpoint || isThereRejected}
                       onClick={() => setOpenApprove(true)}
                     >
-                      <UserRoundCheck /> Approve Application
+                      <UserRoundCheck /> Approve for Interview
                     </Button>
                   }
                 />

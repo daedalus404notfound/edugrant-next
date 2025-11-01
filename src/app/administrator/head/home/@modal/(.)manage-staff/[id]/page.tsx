@@ -66,7 +66,6 @@ export default function InterceptManageStaff() {
   const params = useParams();
   const [openDrawer, setOpenDrawer] = useState(true);
   const [open, setOpen] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
   const staffId = params.id as string;
   const { data: rawData, isLoading } = useGetStaffById(staffId);
   const data = rawData?.safeData;

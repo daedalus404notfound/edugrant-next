@@ -79,8 +79,8 @@ export function SummaryCard({
   loading,
 }: SummaryCardProps) {
   return (
-    <div className="dark:border bg-background rounded-lg hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-      <div className=" bg-gradient-to-br dark:to-card to-card/50 dark:from-card/50 from-card/30 shadow z-10 flex flex-col justify-between rounded-lg  lg:p-6 p-4 lg:gap-2 ">
+    <div className="border-border/50 border bg-background rounded-lg hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+      <div className=" bg-gradient-to-br dark:to-card to-card/50 dark:from-card/90 from-card/30 shadow z-10 flex flex-col justify-between rounded-lg  lg:p-6 p-4 lg:gap-2 ">
         <p className=" text-xs line-clamp-1 jakarta lg:hidden block mb-2">
           {label}
         </p>

@@ -40,6 +40,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAdminStore } from "@/store/adminUserStore";
 import useGetDocument from "@/hooks/user/postOpenDocument";
 import { Ring } from "ldrs/react";
+import useAuthenticatedUser from "@/hooks/head/getTokenAuthentication";
 
 interface UserDocument {
   document: string;
@@ -69,7 +70,7 @@ export default function ApplicationViewer({
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const { onGetDocument, filePath, loading } = useGetDocument(true);
   console.log(loading);
-  const { admin } = useAdminStore();
+  const { data } = useAuthenticatedUser();
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
@@ -149,7 +150,7 @@ export default function ApplicationViewer({
                 </div>
 
                 <span className="flex gap-3 items-center justify-end">
-                  {admin?.role === "ISPSU_Staff" && (
+                  {data?.safeData.role === "ISPSU_Staff" && (
                     <>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>

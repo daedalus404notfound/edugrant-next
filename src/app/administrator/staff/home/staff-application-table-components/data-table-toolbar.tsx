@@ -3,6 +3,7 @@ import {
   ArrowRightIcon,
   Building,
   GraduationCap,
+  RefreshCcw,
   SearchIcon,
   Trash2,
   X,
@@ -10,6 +11,12 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useQueryClient, useIsFetching } from "@tanstack/react-query";
 import { DataTableViewOptions } from "@/app/table-components/data-table-view-options";
 import { DataTableFacetedFilter } from "@/app/table-components/data-table-faceted-filter";
 import useGetFilter from "@/hooks/admin/getDynamicFilter";
@@ -74,7 +81,8 @@ export default function DataTableToolbar<
       setOpenAlert(false);
     }
   }, [isSuccess, table]);
-
+  const isFetching = useIsFetching({ queryKey: ["staffApplicationData"] }) > 0;
+  const queryClient = useQueryClient();
   return (
     <div className="flex items-center justify-between gap-1.5">
       <div className="flex flex-1 items-center space-x-2">
@@ -164,7 +172,28 @@ export default function DataTableToolbar<
           }
         />
       )}
-
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            size="sm"
+            variant={isFetching ? "outline" : "default"}
+            onClick={() =>
+              queryClient.invalidateQueries({
+                queryKey: ["staffApplicationData"],
+              })
+            }
+          >
+            <RefreshCcw
+              className={`transition-transform ${
+                isFetching ? "spin-reverse" : ""
+              }`}
+            />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{isFetching ? "Refreshing..." : "Refresh table"}</p>
+        </TooltipContent>
+      </Tooltip>
       <DataTableViewOptions table={table} />
     </div>
   );

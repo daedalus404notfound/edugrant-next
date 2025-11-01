@@ -69,11 +69,10 @@ export function DonutPieDonut({ data }: { data: DashboardData | null }) {
     },
   ];
   return (
-    <Card className="flex flex-col  shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+    <Card className="flex flex-col  shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border/50 border">
       <CardHeader className="items-center pb-0 text-center">
         <CardTitle>Scholarship Applicants</CardTitle>
         <CardDescription>By Group (PWD, Indigenous, General)</CardDescription>
-       
       </CardHeader>
 
       <CardContent className="flex-1 pb-0">

@@ -58,7 +58,9 @@ export const columns: ColumnDef<AllStaffLogsType>[] = [
           <Avatar>
             <AvatarImage
               className="object-cover"
-              src={student.profileImg?.publicUrl || ""}
+              src={
+                student.profileImg?.publicUrl || "https://github.com/shadcn.png"
+              }
             />
             <AvatarFallback className="uppercase">
               {student.fName.charAt(0)}

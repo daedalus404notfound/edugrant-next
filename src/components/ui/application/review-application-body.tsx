@@ -27,6 +27,7 @@ import FamilyStaff from "@/components/ui/application/family";
 import { useState } from "react";
 import ScholarshipModal from "../scholarship-modal";
 import { GetApplicationFormData } from "@/hooks/zod/getApplicationZod";
+import { ScrollArea } from "../scroll-area";
 const navigationTabs = [
   { id: "documents", label: "Documents", indicator: null },
   { id: "student", label: "Student Info", indicator: null },
@@ -72,7 +73,7 @@ export default function ReviewBody({
     (phaseKey) => data?.submittedDocuments?.[phaseKey]?.documents
   );
   return (
-    <div className="overflow-auto h-full bg-background rounded-lg">
+    <ScrollArea className="h-[80vh] bg-background rounded-lg">
       <div className="flex-1 space-y-3">
         <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-md overflow-hidden ">
           {/* Header Section */}
@@ -87,7 +88,10 @@ export default function ReviewBody({
                 <DialogTrigger asChild className="cursor-pointer">
                   <Avatar className="size-25">
                     <AvatarImage
-                      src={data?.Student.profileImg?.publicUrl || ""}
+                      src={
+                        data?.Student?.profileImg?.publicUrl ||
+                        "https://github.com/shadcn.png"
+                      }
                       className="rounded-full object-cover"
                     />
                     <AvatarFallback
@@ -95,8 +99,8 @@ export default function ReviewBody({
                bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 
                dark:from-emerald-900 dark:via-teal-900 dark:to-cyan-900"
                     >
-                      {data?.Student.lName.slice(0, 1)}
-                      {data?.Student.fName.slice(0, 1)}
+                      {data?.Student?.lName.slice(0, 1)}
+                      {data?.Student?.fName.slice(0, 1)}
                     </AvatarFallback>
                   </Avatar>
                 </DialogTrigger>
@@ -105,12 +109,15 @@ export default function ReviewBody({
                     <DialogTitle>Are you absolutely sure?</DialogTitle>
                     <DialogDescription></DialogDescription>
                   </DialogHeader>
-                  <img src={data?.Student.profileImg?.publicUrl || ""} alt="" />
+                  <img
+                    src={data?.Student?.profileImg?.publicUrl || ""}
+                    alt=""
+                  />
                 </DialogContent>
               </Dialog>
               <div className="absolute   flex items-center justify-center flex-col">
-                {data?.Student.PWD && <Badge variant="secondary">PWD</Badge>}
-                {data?.Student.indigenous && (
+                {data?.Student?.PWD && <Badge variant="secondary">PWD</Badge>}
+                {data?.Student?.indigenous && (
                   <Badge variant="secondary">INDIGENOUS</Badge>
                 )}
               </div>
@@ -125,34 +132,34 @@ export default function ReviewBody({
               <div className="flex-1 px-4 py-2 z-10">
                 <div className="flex items-center gap-3">
                   <h1 className="text-xl font-medium text-foreground">
-                    {data?.Student.lName}, {data?.Student.fName}{" "}
-                    {data?.Student.mName}
+                    {data?.Student?.lName}, {data?.Student?.fName}{" "}
+                    {data?.Student?.mName}
                   </h1>
                   <div className="space-x-1.5">
                     <Badge variant="outline" className="mt-2 uppercase">
-                      {data?.Student.institute}
+                      {data?.Student?.institute}
                     </Badge>
                     <Badge variant="outline" className="mt-2 uppercase">
-                      {data?.Student.course}-{data?.Student.year.slice(0, 1)}
-                      {data?.Student.section}
+                      {data?.Student?.course}-{data?.Student?.year.slice(0, 1)}
+                      {data?.Student?.section}
                     </Badge>
                     <Badge variant="outline" className="mt-2 uppercase">
-                      {data?.Student.gender}
+                      {data?.Student?.gender}
                     </Badge>
                   </div>
                 </div>
                 <p className="font-medium font-mono text-base tracking-wide">
-                  {data?.Student.Account.schoolId}
+                  {data?.Student?.Account?.schoolId}
                 </p>{" "}
                 <p className="text-muted-foreground text-sm">
-                  {data?.Student.Account.email}
+                  {data?.Student?.Account?.email}
                 </p>
               </div>
             )}
           </div>
           <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
           {/* Info Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-6 px-4 bg-card relative z-10">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-6 px-4 bg-card relative">
             <div className="space-y-1.5  border-l-2 pl-4">
               <div className="flex items-center gap-2">
                 <GraduationCap className="w-3.5 h-3.5 text-muted-foreground" />
@@ -162,9 +169,9 @@ export default function ReviewBody({
                 <Skeleton className="h-5 w-full" />
               ) : (
                 <span className="font-medium text-foreground line-clamp-1">
-                  {data?.Scholarship.title}{" "}
+                  {data?.Scholarship?.title}{" "}
                   <Badge className="bg-blue-800 text-gray-200">
-                    PHASE {data?.Scholarship.phase}
+                    PHASE {data?.Scholarship?.phase}
                   </Badge>
                 </span>
               )}
@@ -356,6 +363,6 @@ export default function ReviewBody({
             ))}
         </div>
       </div>
-    </div>
+    </ScrollArea>
   );
 }

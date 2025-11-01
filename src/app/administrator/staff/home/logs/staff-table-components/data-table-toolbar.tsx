@@ -1,6 +1,13 @@
 "use client";
 
-import { ArrowRightIcon, Loader, SearchIcon, Trash2, X } from "lucide-react";
+import {
+  ArrowRightIcon,
+  Loader,
+  RefreshCcw,
+  SearchIcon,
+  Trash2,
+  X,
+} from "lucide-react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -16,7 +23,12 @@ import { Input } from "@/components/ui/input";
 import { DataTableViewOptions } from "@/app/table-components/data-table-view-options";
 import { useEffect, useState } from "react";
 import useDeleteAdmin from "@/hooks/admin/postDeleteAdmin";
-
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useQueryClient, useIsFetching } from "@tanstack/react-query";
 import { ToolbarProps } from "@/app/table-components/data-table";
 export default function DataTableToolbar<TData>({
   table,
@@ -43,7 +55,8 @@ export default function DataTableToolbar<TData>({
       setOpenAlert(false);
     }
   }, [isSuccess, table]);
-
+  const isFetching = useIsFetching({ queryKey: ["staffLogsData"] }) > 0;
+  const queryClient = useQueryClient();
   return (
     <div className="flex items-center justify-between gap-1.5">
       <div className="flex flex-1 items-center space-x-2">
@@ -117,7 +130,29 @@ export default function DataTableToolbar<TData>({
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      )}
+      )}{" "}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            size="sm"
+            variant={isFetching ? "outline" : "default"}
+            onClick={() =>
+              queryClient.invalidateQueries({
+                queryKey: ["staffLogsData"],
+              })
+            }
+          >
+            <RefreshCcw
+              className={`transition-transform ${
+                isFetching ? "spin-reverse" : ""
+              }`}
+            />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{isFetching ? "Refreshing..." : "Refresh table"}</p>
+        </TooltipContent>
+      </Tooltip>
       <DataTableViewOptions table={table} />
     </div>
   );

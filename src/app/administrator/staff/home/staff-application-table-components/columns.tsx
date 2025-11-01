@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Ban, CheckCircle, Clock, MessageSquare, X } from "lucide-react";
 import { getPhaseLabel } from "@/lib/phaseLevel";
 import { format } from "date-fns";
+import Link from "next/link";
 
 export const columns: ColumnDef<ApplicationFormData>[] = [
   {
@@ -20,11 +21,16 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     cell: ({ row }) => {
       const student = row.original.Student;
       return (
-        <div className="flex gap-2 items-center pl-4   ">
+        <Link
+          href={`/administrator/staff/home/application/${row.original.applicationId}`}
+          className="flex gap-2 items-center pl-4   "
+        >
           <Avatar>
             <AvatarImage
               className="object-cover"
-              src={student.profileImg?.publicUrl || ""}
+              src={
+                student.profileImg?.publicUrl || "https://github.com/shadcn.png"
+              }
             />
             <AvatarFallback className="uppercase">
               {student.fName.charAt(0)}
@@ -32,14 +38,14 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
             </AvatarFallback>
           </Avatar>
           <div>
-            <div className="font-medium capitalize">
+            <div className="font-medium capitalize underline">
               {student.fName} {student.mName} {student.lName}
             </div>
             <p className="text-xs text-muted-foreground">
               {student.Account?.schoolId}
             </p>
           </div>
-        </div>
+        </Link>
       );
     },
     enableSorting: true,
@@ -207,7 +213,7 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
         <Badge
           className={`tracking-wide text-gray-200 ${
             row.getValue("status") === "PENDING"
-              ? "bg-gradient-to-br to-yellow-950 from-yellow-900"
+              ? "bg-yellow-800 "
               : row.getValue("status") === "DECLINED"
               ? "bg-gradient-to-br to-red-950 from-red-900 "
               : row.getValue("status") === "INTERVIEW"

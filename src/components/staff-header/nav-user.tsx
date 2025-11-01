@@ -21,10 +21,11 @@ import { useAdminStore } from "@/store/adminUserStore";
 import { DeleteDialog } from "../ui/delete-dialog";
 import { useAdminLogout } from "@/hooks/admin/postAdminLogout";
 import { Button } from "../ui/button";
+import useAuthenticatedUser from "@/hooks/head/getTokenAuthentication";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const { admin } = useAdminStore();
+  const { data, success, loading, isError } = useAuthenticatedUser();
   const {
     handleLogout,
     loading: loadingLogout,
@@ -43,25 +44,27 @@ export function NavUser() {
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage
                   src={
-                    admin?.ISPSU_Staff?.profileImg?.publicUrl ||
+                    data?.safeData?.ISPSU_Staff?.profileImg?.publicUrl ||
                     "https://github.com/shadcn.png"
                   }
                   alt={
-                    admin?.ISPSU_Staff
-                      ? `${admin.ISPSU_Staff.fName} ${admin.ISPSU_Staff.lName}`
-                      : "Admin"
+                    data?.safeData?.ISPSU_Staff
+                      ? `${data.safeData?.ISPSU_Staff?.fName} ${data.safeData?.ISPSU_Staff?.lName}`
+                      : "N/A"
                   }
                 />
                 <AvatarFallback className="rounded-lg">CN</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">
-                  {admin?.ISPSU_Staff
-                    ? `${admin.ISPSU_Staff.fName} ${admin.ISPSU_Staff.lName}`
-                    : "Admin"}
+                  {data?.safeData?.ISPSU_Staff
+                    ? `${data.safeData?.ISPSU_Staff?.fName} ${data.safeData?.ISPSU_Staff?.lName}`
+                    : "N/A"}
                 </span>
 
-                <span className="truncate text-xs">{admin?.email}</span>
+                <span className="truncate text-xs">
+                  {data?.safeData?.email}
+                </span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
@@ -78,8 +81,8 @@ export function NavUser() {
                   <AvatarImage
                     src={``}
                     alt={
-                      admin?.ISPSU_Staff
-                        ? `${admin.ISPSU_Staff.fName} ${admin.ISPSU_Staff.lName}`
+                      data?.safeData?.ISPSU_Staff
+                        ? `${data.safeData?.ISPSU_Staff?.fName} ${data.safeData?.ISPSU_Staff?.lName}`
                         : "Admin"
                     }
                   />
@@ -87,11 +90,13 @@ export function NavUser() {
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
-                    {admin?.ISPSU_Staff
-                      ? `${admin.ISPSU_Staff.fName} ${admin.ISPSU_Staff.lName}`
+                    {data?.safeData?.ISPSU_Staff
+                      ? `${data.safeData?.ISPSU_Staff?.fName} ${data.safeData?.ISPSU_Staff?.lName}`
                       : "Admin"}
                   </span>
-                  <span className="truncate text-xs">{admin?.email}</span>
+                  <span className="truncate text-xs">
+                    {data?.safeData?.email}
+                  </span>
                 </div>
               </div>
             </DropdownMenuLabel>

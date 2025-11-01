@@ -148,8 +148,8 @@ export const useVerifyLogin = () => {
     onSuccess: () => {
       StyledToast({
         status: "success",
-        title: "Logged In successfully",
-        description: "Redirecting to your dashboard...",
+        title: "Success",
+        description: "Password changed successfully...",
       });
       // console.log("login:", data);
     },
@@ -210,8 +210,10 @@ export const useProfileUserChangePassword = () => {
         loginData: LoginData,
         otpData,
       });
-      if (result.success === true) {
+      if (!result.success) {
         setOpen(false);
+        setStep("email");
+        changePasswordForm.reset();
         // router.replace("/user/home");
       }
     } catch (error) {

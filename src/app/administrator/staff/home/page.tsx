@@ -72,7 +72,7 @@ export default function AdminDashboard() {
           <ChartBarMixed data={data} />
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-8">
           {loading ? (
             <div className="p-4 border rounded-lg space-y-6">
               <div>

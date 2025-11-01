@@ -68,7 +68,7 @@ export function ChartBarMixed({ data }: { data: DashboardData | null }) {
     })) || [];
 
   return (
-    <Card className="flex flex-col  shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+    <Card className="flex flex-col  shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 border-border/50 border">
       <CardHeader className="text-center">
         <CardTitle>Application by Institute</CardTitle>
         <CardDescription>Number of Application per Institute</CardDescription>

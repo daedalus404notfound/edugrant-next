@@ -70,8 +70,6 @@ export default function PendingStaffApplication() {
             toolbar={DataTableToolbar}
             columnVisibility={columnVisibility} // <-- pass visibility
             setColumnVisibility={setColumnVisibility} // <-- pass setter
-            customLink={true}
-            setLink="/administrator/staff/home/application"
           />
         </div>
       </div>
