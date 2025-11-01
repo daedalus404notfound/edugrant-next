@@ -31,6 +31,8 @@ import TitleReusable from "@/components/ui/title";
 import { ApiErrorResponse } from "@/hooks/admin/postReviewedHandler";
 import { downloadFile } from "@/lib/downloadUtils";
 import { displayScholarshipFormData } from "@/hooks/admin/displayScholarshipData";
+import useDownloadForm from "@/hooks/admin/postDownloadForm";
+import { ScrollArea } from "@/components/ui/scroll-area";
 const sanitizeLabel = (label: string): string => {
   return label.replace(/['\s]/g, "_").replace(/[^a-zA-Z0-9_]/g, "");
 };
@@ -239,9 +241,9 @@ export default function UploadDocs({
       }
     }
   };
-
+  const { onSubmit: onDownload, isLoading } = useDownloadForm(1);
   return (
-    <div className="h-full bg-background flex flex-col rounded-t-lg">
+    <ScrollArea className="h-[88vh] bg-background flex flex-col rounded-t-lg">
       <div className="flex-1 lg:p-4 p-2 space-y-10">
         <div className="space-y-8">
           <div>
@@ -278,7 +280,9 @@ export default function UploadDocs({
                 size="sm"
                 className=""
                 onClick={() =>
-                  downloadFile(data.form, `${data.title} Scholarship Form.pdf`)
+                  onDownload(
+                    data.supabasePath?.form ? data.supabasePath?.form : ""
+                  )
                 }
               >
                 <DownloadIcon
@@ -431,6 +435,6 @@ export default function UploadDocs({
           </div>
         </div>
       </div>
-    </div>
+    </ScrollArea>
   );
 }

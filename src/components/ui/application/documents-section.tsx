@@ -150,7 +150,7 @@ export default function DocumentSection({
             </PopoverContent>
           </Popover>
         </div>
-        <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-3">
+        <div className="grid xl:grid-cols-2 lg:grid-cols-2 gap-6">
           {loading ? (
             <div className="col-span-3 grid grid-cols-3 gap-6 w-full">
               {Array.from({ length: 3 }).map((_, i) => (
@@ -368,7 +368,7 @@ export default function DocumentSection({
             description=""
             titleSize="text-base"
           />
-          <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-3">
+          <div className="grid xl:grid-cols-2 lg:grid-cols-2 gap-6">
             {loading ? (
               <div className="col-span-3 grid grid-cols-3 gap-6 w-full">
                 {Array.from({ length: 3 }).map((_, i) => (

@@ -179,7 +179,7 @@ export default function ScholarshipModal({
           <p className="whitespace-pre-line">{data?.description}</p>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-1">
           <p className="text-xs uppercase text-muted-foreground">
             Full Scholarship Details
           </p>
@@ -277,51 +277,50 @@ export default function ScholarshipModal({
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="space-y-6">
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <h3 className="text-xs uppercase font-medium text-muted-foreground  tracking-wide">
-                  Phase {documentPhasesLength} Required Documents
-                </h3>
-                <p className="font-medium text-lg">{lastPhaseLength}</p>
-              </div>
-              <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-              <div className=" divide-y">
-                {Object.values(lastPhase).map((doc, index) => (
-                  <div
-                    className="flex justify-between items-center py-5"
-                    key={doc.label}
-                  >
-                    <div>
-                      <span> {index + 1}. </span>
-                      {doc.label}
-                    </div>
-                    <Badge
-                      className={`${
-                        doc.requirementType === "required"
-                          ? "bg-red-700/20 text-red-700"
-                          : doc.requirementType === "optional"
-                          ? "bg-blue-700/20 text-blue-700"
-                          : ""
-                      } capitalize tracking-wide `}
-                    >
-                      {doc.requirementType}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </div>
+        <div className="space-y-1">
+          <div className="flex justify-between items-center">
+            <h3 className="text-xs uppercase font-medium text-muted-foreground  tracking-wide">
+              Phase {documentPhasesLength} Required Documents
+            </h3>
+            <p className="font-medium text-lg">{lastPhaseLength}</p>
           </div>
-          <div className="lg:p-4 p-2 bg-card rounded-md mb-5">
-            <h1 className="text-center text-sm font-medium">
-              Hurry before it ends
-            </h1>
-            <div className="transform scale-85 lg:scale-100">
-              {data?.deadline && (
-                <AnimatedNumberCountdown endDate={new Date(data?.deadline)} />
-              )}
-            </div>
+          <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+          <div className=" divide-y">
+            {Object.values(lastPhase).map((doc, index) => (
+              <div
+                className="flex justify-between items-center py-5"
+                key={doc.label}
+              >
+                <div>
+                  <span> {index + 1}. </span>
+                  {doc.label}
+                </div>
+                <Badge
+                  className={`${
+                    doc.requirementType === "required"
+                      ? "bg-red-700/20 text-red-700"
+                      : doc.requirementType === "optional"
+                      ? "bg-blue-700/20 text-blue-700"
+                      : ""
+                  } capitalize tracking-wide `}
+                >
+                  {doc.requirementType}
+                </Badge>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="lg:p-4 p-2 bg-card rounded-md mb-5">
+          <h1 className="text-center text-sm font-medium">
+            Hurry before it ends
+          </h1>
+          <div className="transform scale-85 lg:scale-100">
+            {data?.deadline && (
+              <AnimatedNumberCountdown endDate={new Date(data?.deadline)} />
+            )}
           </div>
         </div>
       </div>

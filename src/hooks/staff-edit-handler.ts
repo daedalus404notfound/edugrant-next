@@ -186,21 +186,28 @@ import { ApiErrorResponse } from "./admin/postReviewedHandler";
 
 type ApiError = AxiosError<ApiErrorResponse>;
 
-const addScholarshipApi = async (data: AdminProfileFormData) => {
+export const addScholarshipApi = async (data: AdminProfileFormData) => {
   const formDataToSend = new FormData();
-  formDataToSend.append("fName", data.ISPSU_Staff.fName);
-  if (data.ISPSU_Staff.gender) {
-    formDataToSend.append("gender", data.ISPSU_Staff.gender);
+  const roleData =
+    data.role === "ISPSU_Head" ? data.ISPSU_Head : data.ISPSU_Staff;
+
+  if (!roleData) {
+    throw new Error("Invalid role data provided");
   }
-  formDataToSend.append("lName", data.ISPSU_Staff.lName);
-  if (data.ISPSU_Staff.mName) {
-    formDataToSend.append("mName", data.ISPSU_Staff.mName);
+
+  formDataToSend.append("fName", roleData.fName);
+  formDataToSend.append("lName", roleData.lName);
+
+  if (roleData.mName) formDataToSend.append("mName", roleData.mName);
+  if (roleData.gender) formDataToSend.append("gender", roleData.gender);
+  if (roleData.profileImg?.publicUrl) {
+    formDataToSend.append("profileImg", roleData.profileImg.publicUrl);
   }
-  if (data.ISPSU_Staff.profileImg?.publicUrl) {
-    formDataToSend.append("profileImg", data.ISPSU_Staff.profileImg.publicUrl);
-  }
+
+  const endpoint = data.role === "ISPSU_Head" ? "editHead" : "editStaffAccount";
+
   const res = await axios.post(
-    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/editStaffAccount`,
+    `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/${endpoint}`,
     formDataToSend,
     {
       withCredentials: true,
@@ -218,7 +225,9 @@ export function useEditAdministrator() {
     mutationFn: addScholarshipApi,
 
     onSuccess: (data) => {
-      const newData = data.updatedStaffInfo;
+      const newData = data.updatedHead ?? data.updatedStaffInfo;
+
+      console.log("newData", newData);
       StyledToast({
         status: "success",
         title: "Success",

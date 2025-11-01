@@ -71,6 +71,8 @@ export default function ApplicationViewer({
   const { onGetDocument, filePath, loading } = useGetDocument(true);
   console.log(loading);
   const { data } = useAuthenticatedUser();
+
+  console.log("3232323", data?.safeData);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger

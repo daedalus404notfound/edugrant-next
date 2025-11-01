@@ -190,7 +190,7 @@ export default function InterceptReviewApplicants() {
       }}
     >
       <DrawerContent
-        className={`lg:w-[68%] bg-card w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 lg:p-1 `}
+        className={`lg:w-[68%] bg-card w-[98%] max-w-[1100px] mx-auto outline-0 border-0 lg:p-1 `}
       >
         <DrawerHeader className="sr-only">
           <DrawerTitle></DrawerTitle>
@@ -207,7 +207,7 @@ export default function InterceptReviewApplicants() {
           loading={loading}
         />
 
-        <DrawerFooter className="bg-card px-0 py-4">
+        <DrawerFooter className="bg-card px-0 p-4">
           {loading ? (
             <div className="grid grid-cols-2 gap-3">
               <Skeleton className="h-11 flex-1 rounded-lg" />

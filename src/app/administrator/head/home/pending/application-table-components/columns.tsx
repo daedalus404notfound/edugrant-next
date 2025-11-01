@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 
 import { getPhaseLabel } from "@/lib/phaseLevel";
 import { format } from "date-fns";
+import Link from "next/link";
 
 export const columns: ColumnDef<ApplicationFormData>[] = [
   {
@@ -21,7 +22,10 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     cell: ({ row }) => {
       const student = row.original.Student;
       return (
-        <div className="flex gap-2 items-center pl-4">
+        <Link
+          href={`/administrator/head/home/application/${row.original.applicationId}`}
+          className="flex gap-2 items-center pl-4"
+        >
           <Avatar>
             <AvatarImage
               className="object-cover"
@@ -33,14 +37,14 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
             </AvatarFallback>
           </Avatar>
           <div>
-            <div className="font-medium capitalize">
+            <div className="font-medium capitalize underline">
               {student.fName} {student.mName} {student.lName}
             </div>
             <p className="text-xs text-muted-foreground">
               {student.Account?.email}
             </p>
           </div>
-        </div>
+        </Link>
       );
     },
     enableSorting: true,
@@ -184,13 +188,18 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Processed Date" />
     ),
-    cell: ({ row }) => (
-      <span className="">
-        {row.original?.dateCreated
-          ? format(row.getValue("processedDate"), "PPP p")
-          : "N/A"}
-      </span>
-    ),
+    cell: ({ row }) => {
+      const currentPhase = row.original.Scholarship.phase - 1;
+      const approved =
+        row.original.Application_Decision[currentPhase]?.dateCreated;
+      const interview =
+        row.original.Interview_Decision[currentPhase]?.dateCreated;
+
+      const status = row.original.status === "INTERVIEW" ? interview : approved;
+      return (
+        <span className="">{status ? format(status, "PPP p") : "N/A"}</span>
+      );
+    },
     enableSorting: true,
     enableHiding: true,
   },
@@ -239,8 +248,8 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
   //   enableHiding: true,
   // },
 
-  {
-    id: "actions",
-    cell: ({ row }) => <DataTableRowActions row={row} />,
-  },
+  // {
+  //   id: "actions",
+  //   cell: ({ row }) => <DataTableRowActions row={row} />,
+  // },
 ];

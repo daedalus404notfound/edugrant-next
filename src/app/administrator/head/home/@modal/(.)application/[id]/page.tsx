@@ -432,65 +432,65 @@ export default function InterceptReviewApplicants() {
     }
   };
 
-  const {
-    handleInterview,
-    loadingInterview,
-    setOpenInterview,
-    openInterview,
-    isSuccessInterview,
-  } = useInterviewdHandler({
-    id,
-    adminId: admin?.accountId,
-    documentUpdate: reviewData,
-    scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
-  });
+  // const {
+  //   handleInterview,
+  //   loadingInterview,
+  //   setOpenInterview,
+  //   openInterview,
+  //   isSuccessInterview,
+  // } = useInterviewdHandler({
+  //   id,
+  //   adminId: admin?.accountId,
+  //   documentUpdate: reviewData,
+  //   scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
+  // });
 
-  const {
-    handleApprove,
-    loadingApprove,
-    setOpenApprove,
-    openApprove,
-    isSuccessApprove,
-  } = useApprovedHandler({
-    id,
-    adminId: admin?.accountId,
-    documentUpdate: reviewData,
-    scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
-  });
+  // const {
+  //   handleApprove,
+  //   loadingApprove,
+  //   setOpenApprove,
+  //   openApprove,
+  //   isSuccessApprove,
+  // } = useApprovedHandler({
+  //   id,
+  //   adminId: admin?.accountId,
+  //   documentUpdate: reviewData,
+  //   scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
+  // });
 
-  const {
-    handleReject,
-    loadingReject,
-    openReject,
-    setOpenReject,
-    isSuccessReject,
-  } = useRecjectHandler({
-    id,
-    adminId: admin?.accountId,
-    documentUpdate: reviewData,
-    scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
-  });
+  // const {
+  //   handleReject,
+  //   loadingReject,
+  //   openReject,
+  //   setOpenReject,
+  //   isSuccessReject,
+  // } = useRecjectHandler({
+  //   id,
+  //   adminId: admin?.accountId,
+  //   documentUpdate: reviewData,
+  //   scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
+  // });
 
-  // Close drawer when interview is successful
-  useEffect(() => {
-    if (isSuccessInterview) {
-      HandleCloseDrawer(false);
-    }
-  }, [isSuccessInterview]);
+  // // Close drawer when interview is successful
+  // useEffect(() => {
+  //   if (isSuccessInterview) {
+  //     HandleCloseDrawer(false);
+  //   }
+  // }, [isSuccessInterview]);
 
-  // Close drawer when approval is successful
-  useEffect(() => {
-    if (isSuccessApprove) {
-      HandleCloseDrawer(false);
-    }
-  }, [isSuccessApprove]);
+  // // Close drawer when approval is successful
+  // useEffect(() => {
+  //   if (isSuccessApprove) {
+  //     HandleCloseDrawer(false);
+  //   }
+  // }, [isSuccessApprove]);
 
-  // Close drawer when reject is successful
-  useEffect(() => {
-    if (isSuccessReject) {
-      HandleCloseDrawer(false);
-    }
-  }, [isSuccessReject]);
+  // // Close drawer when reject is successful
+  // useEffect(() => {
+  //   if (isSuccessReject) {
+  //     HandleCloseDrawer(false);
+  //   }
+  // }, [isSuccessReject]);
 
   const navigationTabs = [
     { id: "documents", label: "Documents", indicator: null },
@@ -517,9 +517,7 @@ export default function InterceptReviewApplicants() {
       }}
     >
       <DrawerContent
-        className={`lg:w-[68%] bg-card w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 lg:p-1  ${
-          loading ? " lg:h-[75dvh] h-[68dvh]" : "h-[98dvh] "
-        }`}
+        className={` bg-card w-full max-w-[1100px] mx-auto outline-0 border-0 lg:p-1 `}
       >
         <DrawerHeader className="sr-only">
           <DrawerTitle></DrawerTitle>
@@ -536,7 +534,7 @@ export default function InterceptReviewApplicants() {
           loading={loading}
         />
 
-        <DrawerFooter className="bg-card px-0 py-4">
+        {/* <DrawerFooter className="bg-card px-0 py-4">
           {loading ? (
             <div className="grid grid-cols-2 gap-3">
               <Skeleton className="h-11 flex-1 rounded-lg" />
@@ -544,7 +542,7 @@ export default function InterceptReviewApplicants() {
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-3">
-              {/* Approve Button */}
+           
               {approveButton && (
                 <DeleteDialog
                   open={openApprove}
@@ -590,7 +588,7 @@ export default function InterceptReviewApplicants() {
                 />
               )}
 
-              {/* Approve for Interview Button */}
+            
               {approveForInterview && (
                 <DeleteDialog
                   open={openInterview}
@@ -614,7 +612,7 @@ export default function InterceptReviewApplicants() {
                 />
               )}
 
-              {/* Decline Button */}
+            
 
               {deleteButton && (
                 <DeleteDialog
@@ -645,7 +643,7 @@ export default function InterceptReviewApplicants() {
               )}
             </div>
           )}
-        </DrawerFooter>
+        </DrawerFooter> */}
       </DrawerContent>
     </Drawer>
   );
