@@ -35,6 +35,7 @@ import {
   UpdatedApplicationFormData,
 } from "@/hooks/zod/application";
 import { GetApplicationFormData } from "@/hooks/zod/getApplicationZod";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const createFormSchema = (documents: documentFormData[]) => {
   const schemaShape: Record<string, z.ZodType<any>> = {};
@@ -179,106 +180,108 @@ EditApplicationTypes) {
   };
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="flex-1 lg:p-4 p-2 space-y-10">
-        {data?.Scholarship.form && (
-          <div className="bg-muted px-4 py-3 md:py-2 rounded-md">
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-              <p className="text-sm">{data?.Scholarship.title} Form</p>
+    <div>
+      <ScrollArea className="max-h-[80vh] h-full bg-background rounded-t-lg">
+        <div className="flex-1 lg:p-4 p-2 space-y-10">
+          {data?.Scholarship.form && (
+            <div className="bg-muted px-4 py-3 md:py-2 rounded-md">
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+                <p className="text-sm">{data?.Scholarship.title} Form</p>
 
-              <Button
-                size="sm"
-                variant="outline"
-                className="min-w-24"
-                onClick={() =>
-                  downloadFile(
-                    data?.Scholarship.form,
-                    `${data?.Scholarship.title} Scholarship Form.pdf`
-                  )
-                }
-              >
-                <DownloadIcon
-                  size={16}
-                  className="-ms-0.5"
-                  aria-hidden="true"
-                />
-                Download
-              </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="min-w-24"
+                  onClick={() =>
+                    downloadFile(
+                      data?.Scholarship.form,
+                      `${data?.Scholarship.title} Scholarship Form.pdf`
+                    )
+                  }
+                >
+                  <DownloadIcon
+                    size={16}
+                    className="-ms-0.5"
+                    aria-hidden="true"
+                  />
+                  Download
+                </Button>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" /> */}
-        <div className="space-y-8">
-          <TitleReusable
-            title="Update Documents"
-            description="Update your documents before scholarship expired"
-          />
+          {/* <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" /> */}
+          <div className="space-y-8">
+            <TitleReusable
+              title="Update Documents"
+              description="Update your documents before scholarship expired"
+            />
 
-          <Form {...form}>
-            <div className=" grid lg:grid-cols-2 grid-cols-1 gap-8">
-              {lastPhase.map((doc, index) => (
-                <FormField
-                  key={`required-${index}`}
-                  control={form.control}
-                  name={doc.label}
-                  render={() => (
-                    <FormItem>
-                      <div className="space-y-4 rounded-md ">
-                        <div className="space-y-1">
-                          <FormLabel className="flex items-center justify-between">
-                            <span className="text-base font-medium">
-                              {doc.label}{" "}
-                              {doc.requirementType === "required" && (
-                                <span className="text-red-700">*</span>
-                              )}
-                            </span>
-                            <Badge
-                              className={`text-xs capitalize ${
-                                doc.requirementType === "required"
-                                  ? "bg-red-800/20 text-red-700"
-                                  : doc.requirementType === "optional"
-                                  ? "bg-blue-800/20 text-blue-700"
-                                  : " "
-                              }`}
-                            >
-                              {doc.requirementType}
-                            </Badge>
-                          </FormLabel>
-                          {/* <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Form {...form}>
+              <div className=" grid lg:grid-cols-2 grid-cols-1 gap-8">
+                {lastPhase.map((doc, index) => (
+                  <FormField
+                    key={`required-${index}`}
+                    control={form.control}
+                    name={doc.label}
+                    render={() => (
+                      <FormItem>
+                        <div className="space-y-4 rounded-md ">
+                          <div className="space-y-1">
+                            <FormLabel className="flex items-center justify-between">
+                              <span className="text-base font-medium">
+                                {doc.label}{" "}
+                                {doc.requirementType === "required" && (
+                                  <span className="text-red-700">*</span>
+                                )}
+                              </span>
+                              <Badge
+                                className={`text-xs capitalize ${
+                                  doc.requirementType === "required"
+                                    ? "bg-red-800/20 text-red-700"
+                                    : doc.requirementType === "optional"
+                                    ? "bg-blue-800/20 text-blue-700"
+                                    : " "
+                                }`}
+                              >
+                                {doc.requirementType}
+                              </Badge>
+                            </FormLabel>
+                            {/* <div className="flex items-center gap-2 text-xs text-muted-foreground">
                             {doc.formats.map((format, formatIndex) => (
                               <p key={formatIndex} className="text-xs">
                                 {mimeToLabelMap[format] || format}
                               </p>
                             ))}
                           </div> */}
+                          </div>
+                          <FormControl>
+                            <DragAndDropArea
+                              label={doc.label}
+                              accept={doc.formats}
+                              onFilesChange={(files) =>
+                                handleFilesChange(doc.label, files)
+                              }
+                              // initialImageUrl={
+                              //   data?.submittedDocuments?.[lastPhaseKey]?.find(
+                              //     (submittedDoc) =>
+                              //       submittedDoc.document === doc.label
+                              //   )?.fileUrl
+                              // }
+                            />
+                          </FormControl>
+                          <FormMessage />
                         </div>
-                        <FormControl>
-                          <DragAndDropArea
-                            label={doc.label}
-                            accept={doc.formats}
-                            onFilesChange={(files) =>
-                              handleFilesChange(doc.label, files)
-                            }
-                            // initialImageUrl={
-                            //   data?.submittedDocuments?.[lastPhaseKey]?.find(
-                            //     (submittedDoc) =>
-                            //       submittedDoc.document === doc.label
-                            //   )?.fileUrl
-                            // }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              ))}
-            </div>
-          </Form>
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </div>
+            </Form>
+          </div>
         </div>
-      </div>
-      <div className="sticky bottom-0 ">
+      </ScrollArea>
+      <div className=" ">
         <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
         <div className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60  lg:p-4 p-2">
           <div className="flex flex-col lg:flex-row gap-3">

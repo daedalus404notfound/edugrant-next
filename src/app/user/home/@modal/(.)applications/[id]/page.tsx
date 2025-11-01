@@ -43,6 +43,7 @@ import { StatusAlertIndicator } from "@/app/administrator/head/home/@modal/(.)ap
 import { format } from "date-fns";
 import { getPhaseLabel } from "@/lib/phaseLevel";
 import useApplicationUserById from "@/hooks/user/getApplicationData";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function InterceptManageApplicationClient() {
   const [activeSection, setActiveSection] = useState("documents");
@@ -99,9 +100,7 @@ export default function InterceptManageApplicationClient() {
       }}
     >
       <DrawerContent
-        className={`lg:w-[56%] bg-card w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 lg:p-1  ${
-          loading ? " lg:h-[75dvh] h-[68dvh]" : "h-[90dvh] "
-        }`}
+        className={`lg:w-[56%] bg-card w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 lg:p-1 `}
       >
         <DrawerHeader className="p-0">
           <div className="sr-only">
@@ -113,15 +112,16 @@ export default function InterceptManageApplicationClient() {
           HandleCloseDrawer={HandleCloseDrawer}
           text="Application Details"
         />
-        <div className=" h-full w-full overflow-auto no-scrollbar  bg-background rounded-t-md">
-          {edit ? (
-            <EditApplication
-              data={data}
-              setEdit={setEdit}
-              // setUpdateDocument={setUpdateDocument}
-            />
-          ) : (
-            <div>
+
+        {edit ? (
+          <EditApplication
+            data={data}
+            setEdit={setEdit}
+            // setUpdateDocument={setUpdateDocument}
+          />
+        ) : (
+          <div>
+            <ScrollArea className="h-[80vh] bg-background rounded-t-lg">
               <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-md overflow-hidden ">
                 {/* Header Section */}
                 <div className="relative flex  lg:items-end items-center  py-8 px-4">
@@ -202,7 +202,7 @@ export default function InterceptManageApplicationClient() {
                 </div>
                 <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
                 {/* Info Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:py-6 py-4 lg:px-4 px-2 bg-card relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:py-6 py-4 lg:px-4 px-2 bg-card relative ">
                   <div className="space-y-1.5 border-l-2 pl-4">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
@@ -290,41 +290,39 @@ export default function InterceptManageApplicationClient() {
                   ""
                 )}
 
-                {data?.status === "PENDING" &&
-                  Date.now() <=
-                    new Date(data.Scholarship.deadline).getTime() && (
-                    <div className="flex justify-between items-center">
-                      <p className="text-sm text-muted-foreground">
-                        Edit document will be disabled after scholarship
-                        expired.
-                      </p>
+                {/* {data?.status === "PENDING" &&
+                Date.now() <= new Date(data.Scholarship.deadline).getTime() && (
+                  <div className="flex justify-between items-center">
+                    <p className="text-sm text-muted-foreground">
+                      Edit document will be disabled after scholarship expired.
+                    </p>
 
-                      <Button
-                        className="underline"
-                        variant="ghost"
-                        onClick={() => setEdit(true)}
-                      >
-                        <PenLine /> Edit Documents
-                      </Button>
-                    </div>
-                  )}
+                    <Button
+                      className="underline"
+                      variant="ghost"
+                      onClick={() => setEdit(true)}
+                    >
+                      <PenLine /> Edit Documents
+                    </Button>
+                  </div>
+                )} */}
                 <DocsStudent data={data} loading={loading} />
               </div>
-              {/* <div className="sticky bottom-0 z-50">
-                <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-                <div className="flex gap-3 bg-background lg:p-4 p-2">
-                  <Button
-                    className="flex-1"
-                    onClick={() => setEdit(true)}
-                    disabled={data?.status !== "PENDING"}
-                  >
-                    <PenLine /> Edit Documents
-                  </Button>
-                </div>
-              </div> */}
+            </ScrollArea>
+            <div className="">
+              <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+              <div className="flex gap-3  lg:p-4 p-2">
+                <Button
+                  className="flex-1"
+                  onClick={() => setEdit(true)}
+                  disabled={data?.status !== "PENDING"}
+                >
+                  <PenLine /> Edit Documents
+                </Button>
+              </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </DrawerContent>
     </Drawer>
   );

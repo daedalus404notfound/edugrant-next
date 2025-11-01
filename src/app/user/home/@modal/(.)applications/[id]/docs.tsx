@@ -74,7 +74,7 @@ export default function DocsStudent({ data, loading }: DocsStudentProps) {
   }, [getLastPhase]);
 
   return (
-    <div>
+    <div className="space-y-6">
       <div className="flex justify-between items-center relative">
         <TitleReusable
           title={
