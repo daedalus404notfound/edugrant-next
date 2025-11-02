@@ -157,14 +157,14 @@ export default function FamilyForm({
               </div>
               <FormControl>
                 <div className="flex">
-                  {/* Fixed +639 prefix */}
+                  {/* Fixed +63 prefix */}
                   <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
-                    +639
+                    +63
                   </span>
                   <Input
                     type="text"
                     placeholder=""
-                    maxLength={9}
+                    maxLength={10}
                     {...field}
                     // value={field.value?.replace("+63", "") || ""}
                     // onChange={(e) => {
@@ -370,14 +370,14 @@ export default function FamilyForm({
               </div>
               <FormControl>
                 <div className="flex">
-                  {/* Fixed +639 prefix */}
+                  {/* Fixed +63 prefix */}
                   <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
-                    +639
+                    +63
                   </span>
                   <Input
                     type="text"
                     placeholder=""
-                    maxLength={9}
+                    maxLength={10}
                     {...field}
                     className="rounded-l-none"
                   />
@@ -541,14 +541,14 @@ export default function FamilyForm({
               </div>
               <FormControl>
                 <div className="flex">
-                  {/* Fixed +639 prefix */}
+                  {/* Fixed +63 prefix */}
                   <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
-                    +639
+                    +63
                   </span>
                   <Input
                     type="text"
                     placeholder=""
-                    maxLength={9}
+                    maxLength={10}
                     {...field}
                     className="rounded-l-none"
                   />

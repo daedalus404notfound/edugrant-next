@@ -41,7 +41,7 @@ export const StudentSchema = z.object({
   address: z.string(),
   contactNumber: z
     .string()
-    .regex(/^\+63\d{10}$/, "Must be a valid phone number"),
+    .regex(/^\+639\d{9}$/, "Must be a valid phone number"),
   course: z.string(),
   dateCreated: z.string(),
   dateOfBirth: z

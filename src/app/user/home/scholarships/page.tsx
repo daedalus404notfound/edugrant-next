@@ -41,6 +41,7 @@ import {
   PaginationState,
   SortingState,
 } from "@tanstack/react-table";
+import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 export default function ClientScholarship() {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -56,7 +57,7 @@ export default function ClientScholarship() {
   const [status, setStatus] = useState("ACTIVE");
   const [search, setSearch] = useState("");
 
-  const { user } = useUserStore();
+  const { data: user } = useAuthenticatedUser();
   const { query, meta } = useScholarshipData({
     pagination,
     sorting,
@@ -64,7 +65,7 @@ export default function ClientScholarship() {
     status,
     search,
   });
-  const { completed } = getFamilyBackgroundProgress(user?.Student);
+  const { completed } = getFamilyBackgroundProgress(user?.userData?.Student);
 
   const handleNext = () => {
     if (meta && pagination.pageIndex + 1 < meta.totalPage) {
