@@ -43,7 +43,7 @@ import TitleReusable from "@/components/ui/title";
 import AboutTheTeam from "@/components/ui/credits";
 
 import Image from "next/image";
-import PublicAnnouncement from "./@modal/public-announcement/public";
+import PublicAnnouncement from "./public";
 import { useEffect, useState } from "react";
 const navItems = [
   { label: "Announcements", icon: Megaphone, href: "home" },
