@@ -219,7 +219,7 @@ export default function Create() {
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder="eg. Kuya Wally Scholarship"
+                          placeholder="eg. Scholarship Program"
                         />
                       </FormControl>
                     </FormItem>
@@ -240,7 +240,7 @@ export default function Create() {
                         <FormMessage />
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} placeholder="eg. Wally" />
+                        <Input {...field} placeholder="eg. Sponsor Name" />
                       </FormControl>
                     </FormItem>
                   )}
