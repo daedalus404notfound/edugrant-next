@@ -28,6 +28,8 @@ import { useState } from "react";
 import ScholarshipModal from "../scholarship-modal";
 import { GetApplicationFormData } from "@/hooks/zod/getApplicationZod";
 import { ScrollArea } from "../scroll-area";
+import { useTourContext } from "@/components/tour-2/tour-provider";
+import { TourStep } from "@/components/tour-2/tour-step";
 const navigationTabs = [
   { id: "documents", label: "Documents", indicator: null },
   { id: "student", label: "Student Info", indicator: null },
@@ -72,264 +74,273 @@ export default function ReviewBody({
   const allphaseData = submittedDocuments.map(
     (phaseKey) => data?.submittedDocuments?.[phaseKey]?.documents
   );
+  const { isActive, activeTourName } = useTourContext();
   return (
-    <ScrollArea className="h-[80vh] bg-background rounded-lg">
+    <ScrollArea
+      className={` bg-background rounded-lg ${
+        isActive ? "h-[70vh]" : "h-[80vh]"
+      }`}
+    >
       <div className="flex-1 space-y-3">
-        <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-md overflow-hidden ">
-          {/* Header Section */}
-          <div className="relative flex  lg:items-end items-center  py-8 px-4">
-            <img
-              className="lg:w-70 w-50 absolute right-0 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-20 "
-              src={logo.src}
-              alt=""
-            />
-            <div className=" flex items-end justify-center">
-              <Dialog>
-                <DialogTrigger asChild className="cursor-pointer">
-                  <Avatar className="size-25">
-                    <AvatarImage
-                      src={
-                        data?.Student?.profileImg?.publicUrl ||
-                        "https://github.com/shadcn.png"
-                      }
-                      className="rounded-full object-cover"
-                    />
-                    <AvatarFallback
-                      className="rounded-full text-white font-semibold flex items-center justify-center 
+        <TourStep stepId="review-3">
+          <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-md overflow-hidden ">
+            {/* Header Section */}
+            <div className="relative flex  lg:items-end items-center  py-8 px-4">
+              <img
+                className="lg:w-70 w-50 absolute right-0 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-20 "
+                src={logo.src}
+                alt=""
+              />
+              <div className=" flex items-end justify-center">
+                <Dialog>
+                  <DialogTrigger asChild className="cursor-pointer">
+                    <Avatar className="size-25">
+                      <AvatarImage
+                        src={
+                          data?.Student?.profileImg?.publicUrl ||
+                          "https://github.com/shadcn.png"
+                        }
+                        className="rounded-full object-cover"
+                      />
+                      <AvatarFallback
+                        className="rounded-full text-white font-semibold flex items-center justify-center 
                bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-500 
                dark:from-emerald-900 dark:via-teal-900 dark:to-cyan-900"
-                    >
-                      {data?.Student?.lName.slice(0, 1)}
-                      {data?.Student?.fName.slice(0, 1)}
-                    </AvatarFallback>
-                  </Avatar>
-                </DialogTrigger>
-                <DialogContent className="lg:max-w-5xl w-full !p-0 overflow-hidden">
-                  <DialogHeader className="sr-only">
-                    <DialogTitle>Are you absolutely sure?</DialogTitle>
-                    <DialogDescription></DialogDescription>
-                  </DialogHeader>
-                  <img
-                    src={data?.Student?.profileImg?.publicUrl || ""}
-                    alt=""
-                  />
-                </DialogContent>
-              </Dialog>
-              <div className="absolute   flex items-center justify-center flex-col">
-                {data?.Student?.PWD && <Badge variant="secondary">PWD</Badge>}
-                {data?.Student?.indigenous && (
-                  <Badge variant="secondary">INDIGENOUS</Badge>
-                )}
-              </div>
-            </div>
-
-            {loading ? (
-              <div className="flex flex-col gap-2 flex-1 px-4">
-                <Skeleton className="h-6 w-64" />
-                <Skeleton className="h-4 w-32" />
-              </div>
-            ) : (
-              <div className="flex-1 px-4 py-2 z-10">
-                <div className="flex items-center gap-3">
-                  <h1 className="text-xl font-medium text-foreground">
-                    {data?.Student?.lName}, {data?.Student?.fName}{" "}
-                    {data?.Student?.mName}
-                  </h1>
-                  <div className="space-x-1.5">
-                    <Badge variant="outline" className="mt-2 uppercase">
-                      {data?.Student?.institute}
-                    </Badge>
-                    <Badge variant="outline" className="mt-2 uppercase">
-                      {data?.Student?.course}-{data?.Student?.year.slice(0, 1)}
-                      {data?.Student?.section}
-                    </Badge>
-                    <Badge variant="outline" className="mt-2 uppercase">
-                      {data?.Student?.gender}
-                    </Badge>
-                  </div>
+                      >
+                        {data?.Student?.lName.slice(0, 1)}
+                        {data?.Student?.fName.slice(0, 1)}
+                      </AvatarFallback>
+                    </Avatar>
+                  </DialogTrigger>
+                  <DialogContent className="lg:max-w-5xl w-full !p-0 overflow-hidden">
+                    <DialogHeader className="sr-only">
+                      <DialogTitle>Are you absolutely sure?</DialogTitle>
+                      <DialogDescription></DialogDescription>
+                    </DialogHeader>
+                    <img
+                      src={data?.Student?.profileImg?.publicUrl || ""}
+                      alt=""
+                    />
+                  </DialogContent>
+                </Dialog>
+                <div className="absolute   flex items-center justify-center flex-col">
+                  {data?.Student?.PWD && <Badge variant="secondary">PWD</Badge>}
+                  {data?.Student?.indigenous && (
+                    <Badge variant="secondary">INDIGENOUS</Badge>
+                  )}
                 </div>
-                <p className="font-medium font-mono text-base tracking-wide">
-                  {data?.Student?.Account?.schoolId}
-                </p>{" "}
-                <p className="text-muted-foreground text-sm">
-                  {data?.Student?.Account?.email}
-                </p>
               </div>
-            )}
-          </div>
-          <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-          {/* Info Grid */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-6 px-4 bg-card relative">
-            <div className="space-y-1.5  border-l-2 pl-4">
-              <div className="flex items-center gap-2">
-                <GraduationCap className="w-3.5 h-3.5 text-muted-foreground" />
-                <h1 className="text-xs text-muted-foreground">Scholarship</h1>
-              </div>
+
               {loading ? (
-                <Skeleton className="h-5 w-full" />
+                <div className="flex flex-col gap-2 flex-1 px-4">
+                  <Skeleton className="h-6 w-64" />
+                  <Skeleton className="h-4 w-32" />
+                </div>
               ) : (
-                <span className="font-medium text-foreground line-clamp-1">
-                  {data?.Scholarship?.title}{" "}
-                  <Badge className="bg-blue-800 text-gray-200">
-                    PHASE {data?.Scholarship?.phase}
-                  </Badge>
-                </span>
+                <div className="flex-1 px-4 py-2 z-10">
+                  <div className="flex items-center gap-3">
+                    <h1 className="text-xl font-medium text-foreground">
+                      {data?.Student?.lName}, {data?.Student?.fName}{" "}
+                      {data?.Student?.mName}
+                    </h1>
+                    <div className="space-x-1.5">
+                      <Badge variant="outline" className="mt-2 uppercase">
+                        {data?.Student?.institute}
+                      </Badge>
+                      <Badge variant="outline" className="mt-2 uppercase">
+                        {data?.Student?.course}-
+                        {data?.Student?.year.slice(0, 1)}
+                        {data?.Student?.section}
+                      </Badge>
+                      <Badge variant="outline" className="mt-2 uppercase">
+                        {data?.Student?.gender}
+                      </Badge>
+                    </div>
+                  </div>
+                  <p className="font-medium font-mono text-base tracking-wide">
+                    {data?.Student?.Account?.schoolId}
+                  </p>{" "}
+                  <p className="text-muted-foreground text-sm">
+                    {data?.Student?.Account?.email}
+                  </p>
+                </div>
               )}
             </div>
-
-            <HoverCard>
-              <HoverCardTrigger asChild className="cursor-pointer">
-                <div className="space-y-1.5 border-l-2 pl-4">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-                    <h1 className="text-xs text-muted-foreground">
-                      Application Date
-                    </h1>
-                  </div>
-                  {loading ? (
-                    <Skeleton className="h-5 w-full" />
-                  ) : (
-                    <p className="font-medium text-foreground">
-                      {(data?.dateCreated &&
-                        format(data?.dateCreated, "PPP p")) ||
-                        "N/A"}
-                    </p>
-                  )}
+            <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+            {/* Info Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 py-6 px-4 bg-card relative">
+              <div className="space-y-1.5  border-l-2 pl-4">
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="w-3.5 h-3.5 text-muted-foreground" />
+                  <h1 className="text-xs text-muted-foreground">Scholarship</h1>
                 </div>
-              </HoverCardTrigger>
-              <HoverCardContent className="space-y-1 p-2">
-                {allPhaseDecision.map((decision, index) => {
-                  const isLastPhase = index === allPhaseDecision.length - 1;
-                  return (
-                    <div
-                      key={index}
-                      className={`flex justify-between items-center ${
-                        isLastPhase
-                          ? "font-semibold text-foreground"
-                          : "text-muted-foreground"
-                      }`}
-                    >
-                      <span>
-                        Phase {decision?.scholarshipPhase ?? index + 1}
-                      </span>
-                      <span>
-                        {decision?.dateCreated
-                          ? format(new Date(decision?.dateCreated), "PPP ")
-                          : "N/A"}
-                      </span>
+                {loading ? (
+                  <Skeleton className="h-5 w-full" />
+                ) : (
+                  <span className="font-medium text-foreground line-clamp-1">
+                    {data?.Scholarship?.title}{" "}
+                    <Badge className="bg-blue-800 text-gray-200">
+                      PHASE {data?.Scholarship?.phase}
+                    </Badge>
+                  </span>
+                )}
+              </div>
+
+              <HoverCard>
+                <HoverCardTrigger asChild className="cursor-pointer">
+                  <div className="space-y-1.5 border-l-2 pl-4">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+                      <h1 className="text-xs text-muted-foreground">
+                        Application Date
+                      </h1>
                     </div>
-                  );
-                })}
-              </HoverCardContent>
-            </HoverCard>
-            <HoverCard>
-              <HoverCardTrigger asChild className="cursor-pointer">
-                <div className="space-y-1.5  border-l-2 pl-4">
-                  <div className="flex items-center gap-2">
-                    <UserRoundCheck className="w-3.5 h-3.5 text-muted-foreground" />
-                    <h1 className="text-xs text-muted-foreground">
-                      Reviewed By
-                    </h1>
+                    {loading ? (
+                      <Skeleton className="h-5 w-full" />
+                    ) : (
+                      <p className="font-medium text-foreground">
+                        {(data?.dateCreated &&
+                          format(data?.dateCreated, "PPP p")) ||
+                          "N/A"}
+                      </p>
+                    )}
                   </div>
-                  {loading ? (
-                    <Skeleton className="h-5 w-20" />
-                  ) : reviewDetails ? (
-                    <p className="font-medium text-foreground">
-                      {phaseDecision?.ISPSU_Staff?.fName
-                        ? `${phaseDecision?.ISPSU_Staff?.fName}
+                </HoverCardTrigger>
+                <HoverCardContent className="space-y-1 p-2">
+                  {allPhaseDecision.map((decision, index) => {
+                    const isLastPhase = index === allPhaseDecision.length - 1;
+                    return (
+                      <div
+                        key={index}
+                        className={`flex justify-between items-center ${
+                          isLastPhase
+                            ? "font-semibold text-foreground"
+                            : "text-muted-foreground"
+                        }`}
+                      >
+                        <span>
+                          Phase {decision?.scholarshipPhase ?? index + 1}
+                        </span>
+                        <span>
+                          {decision?.dateCreated
+                            ? format(new Date(decision?.dateCreated), "PPP ")
+                            : "N/A"}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </HoverCardContent>
+              </HoverCard>
+              <HoverCard>
+                <HoverCardTrigger asChild className="cursor-pointer">
+                  <div className="space-y-1.5  border-l-2 pl-4">
+                    <div className="flex items-center gap-2">
+                      <UserRoundCheck className="w-3.5 h-3.5 text-muted-foreground" />
+                      <h1 className="text-xs text-muted-foreground">
+                        Reviewed By
+                      </h1>
+                    </div>
+                    {loading ? (
+                      <Skeleton className="h-5 w-20" />
+                    ) : reviewDetails ? (
+                      <p className="font-medium text-foreground">
+                        {phaseDecision?.ISPSU_Staff?.fName
+                          ? `${phaseDecision?.ISPSU_Staff?.fName}
                       ${phaseDecision?.ISPSU_Staff?.mName}
                       ${phaseDecision?.ISPSU_Staff?.lName}`
-                        : "N/A"}
-                    </p>
-                  ) : (
-                    "N/A"
-                  )}
-                </div>
-              </HoverCardTrigger>
-              <HoverCardContent className="space-y-1 p-2">
-                {allPhaseDecision.map((decision, index) => {
-                  const isLastPhase = index === allPhaseDecision.length - 1;
-                  return (
-                    <div
-                      key={index}
-                      className={`flex justify-between items-center ${
-                        isLastPhase
-                          ? "font-semibold text-foreground"
-                          : "text-muted-foreground"
-                      }`}
-                    >
-                      <span>
-                        Phase {decision?.scholarshipPhase ?? index + 1}
-                      </span>
-                      <span>
-                        {decision?.ISPSU_Staff
-                          ? decision.ISPSU_Staff.fName
                           : "N/A"}
-                      </span>
-                    </div>
-                  );
-                })}
-              </HoverCardContent>
-            </HoverCard>
-
-            <HoverCard>
-              <HoverCardTrigger asChild className="cursor-pointer">
-                <div className="space-y-1.5  border-l-2 pl-4">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
-                    <h1 className="text-xs text-muted-foreground">
-                      Processed Date
-                    </h1>
+                      </p>
+                    ) : (
+                      "N/A"
+                    )}
                   </div>
-                  {loading ? (
-                    <Skeleton className="h-5 w-full" />
-                  ) : reviewDetails ? (
-                    <p className="font-medium text-foreground">
-                      {phaseDecision?.dateCreated
-                        ? format(phaseDecision?.dateCreated, "PPP p")
-                        : "N/A"}
-                    </p>
-                  ) : (
-                    "N/A"
-                  )}
-                </div>
-              </HoverCardTrigger>
-              <HoverCardContent className="space-y-1 p-2">
-                {allPhaseDecision.map((decision, index) => {
-                  const isLastPhase = index === allPhaseDecision.length - 1;
-                  return (
-                    <div
-                      key={index}
-                      className={`flex justify-between items-center ${
-                        isLastPhase
-                          ? "font-semibold text-foreground"
-                          : "text-muted-foreground"
-                      }`}
-                    >
-                      <span>
-                        Phase {decision?.scholarshipPhase ?? index + 1}
-                      </span>
-                      <span>
-                        {decision?.dateCreated
-                          ? format(new Date(decision.dateCreated), "PPP ")
-                          : "N/A"}
-                      </span>
-                    </div>
-                  );
-                })}
-              </HoverCardContent>
-            </HoverCard>
-          </div>
-        </div>
+                </HoverCardTrigger>
+                <HoverCardContent className="space-y-1 p-2">
+                  {allPhaseDecision.map((decision, index) => {
+                    const isLastPhase = index === allPhaseDecision.length - 1;
+                    return (
+                      <div
+                        key={index}
+                        className={`flex justify-between items-center ${
+                          isLastPhase
+                            ? "font-semibold text-foreground"
+                            : "text-muted-foreground"
+                        }`}
+                      >
+                        <span>
+                          Phase {decision?.scholarshipPhase ?? index + 1}
+                        </span>
+                        <span>
+                          {decision?.ISPSU_Staff
+                            ? decision.ISPSU_Staff.fName
+                            : "N/A"}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </HoverCardContent>
+              </HoverCard>
 
-        <div className="p-4 space-y-8">
-          <div className="border-b pb-1.5">
-            <Tabs
-              tabs={navigationTabs}
-              onTabChange={(tabId) => setActiveSection(tabId)}
-              className=""
-            />
+              <HoverCard>
+                <HoverCardTrigger asChild className="cursor-pointer">
+                  <div className="space-y-1.5  border-l-2 pl-4">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
+                      <h1 className="text-xs text-muted-foreground">
+                        Processed Date
+                      </h1>
+                    </div>
+                    {loading ? (
+                      <Skeleton className="h-5 w-full" />
+                    ) : reviewDetails ? (
+                      <p className="font-medium text-foreground">
+                        {phaseDecision?.dateCreated
+                          ? format(phaseDecision?.dateCreated, "PPP p")
+                          : "N/A"}
+                      </p>
+                    ) : (
+                      "N/A"
+                    )}
+                  </div>
+                </HoverCardTrigger>
+                <HoverCardContent className="space-y-1 p-2">
+                  {allPhaseDecision.map((decision, index) => {
+                    const isLastPhase = index === allPhaseDecision.length - 1;
+                    return (
+                      <div
+                        key={index}
+                        className={`flex justify-between items-center ${
+                          isLastPhase
+                            ? "font-semibold text-foreground"
+                            : "text-muted-foreground"
+                        }`}
+                      >
+                        <span>
+                          Phase {decision?.scholarshipPhase ?? index + 1}
+                        </span>
+                        <span>
+                          {decision?.dateCreated
+                            ? format(new Date(decision.dateCreated), "PPP ")
+                            : "N/A"}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </HoverCardContent>
+              </HoverCard>
+            </div>
           </div>
+        </TourStep>
+        <div className="p-4 space-y-8">
+          <TourStep stepId="review-4">
+            <div className="border-b pb-1.5">
+              <Tabs
+                tabs={navigationTabs}
+                onTabChange={(tabId) => setActiveSection(tabId)}
+                className={isActive ? "pointer-events-none" : ""}
+              />
+            </div>
+          </TourStep>
           {/* Documents Section */}
           {activeSection === "documents" && (
             <DocumentSection

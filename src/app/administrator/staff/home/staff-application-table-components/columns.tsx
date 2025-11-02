@@ -10,6 +10,8 @@ import { Ban, CheckCircle, Clock, MessageSquare, X } from "lucide-react";
 import { getPhaseLabel } from "@/lib/phaseLevel";
 import { format } from "date-fns";
 import Link from "next/link";
+import { useTourContext } from "@/components/tour-2/tour-provider";
+import { TourStep } from "@/components/tour-2/tour-step";
 
 export const columns: ColumnDef<ApplicationFormData>[] = [
   {
@@ -20,7 +22,8 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
     ),
     cell: ({ row }) => {
       const student = row.original.Student;
-      return (
+      const { isActive, activeTourName } = useTourContext();
+      const content = (
         <Link
           href={`/administrator/staff/home/application/${row.original.applicationId}`}
           className="flex gap-2 items-center pl-4   "
@@ -47,6 +50,20 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
           </div>
         </Link>
       );
+
+      if (isActive && row.index === 0) {
+        return (
+          <TourStep
+            link={`/administrator/staff/home/application/${row.original.applicationId}`}
+            stepId="review-1"
+            className={isActive ? "bg-background p-2 rounded-md" : ""}
+          >
+            {content}
+          </TourStep>
+        );
+      }
+
+      return content;
     },
     enableSorting: true,
     enableHiding: true,

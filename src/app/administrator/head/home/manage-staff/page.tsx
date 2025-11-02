@@ -159,10 +159,14 @@ export default function PendingStaffApplication() {
               }}
               className="flex-1 "
             >
-              <TourTrigger
-                tourName="activateStaff"
-                className="h-9 !bg-green-900 !text-gray-200 !border-0 w-full"
-              />
+              {data.length === 0 ? (
+                <Button disabled>No data for demonstration</Button>
+              ) : (
+                <TourTrigger
+                  tourName="activateStaff"
+                  className="h-9 !bg-green-900 !text-gray-200 !border-0 w-full"
+                />
+              )}
             </div>
           </div>
         </DialogContent>

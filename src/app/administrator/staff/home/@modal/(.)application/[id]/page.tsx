@@ -24,6 +24,8 @@ import { DeleteDialog } from "@/components/ui/delete-dialog";
 import ModalHeader from "@/components/ui/modal-header";
 
 import ReviewBody from "../../../../../../../components/ui/application/review-application-body";
+import { TourStep } from "@/components/tour-2/tour-step";
+import { useTourContext } from "@/components/tour-2/tour-provider";
 
 export default function InterceptReviewApplicants() {
   const router = useRouter();
@@ -173,7 +175,7 @@ export default function InterceptReviewApplicants() {
     { id: "student", label: "Student Info", indicator: null },
     { id: "family", label: "Family Background", indicator: null },
   ];
-
+  const { isActive, activeTourName } = useTourContext();
   //BUTTON LOGIC
   const approveButton = data?.status === "PENDING";
   const forInterviewButton =
@@ -200,99 +202,106 @@ export default function InterceptReviewApplicants() {
           text="Application Details"
           HandleCloseDrawer={HandleCloseDrawer}
         />
-        <ReviewBody
-          reviewData={reviewData}
-          updateReviewData={updateReviewData}
-          data={data}
-          loading={loading}
-        />
+        {isActive && (
+          <div className="absolute z-20 inset-0 bg-background/70 backdrop-blur-xs rounded-t-lg"></div>
+        )}
+        <TourStep stepId="review-2">
+          <ReviewBody
+            reviewData={reviewData}
+            updateReviewData={updateReviewData}
+            data={data}
+            loading={loading}
+          />
 
-        <DrawerFooter className="bg-card px-0 p-4">
-          {loading ? (
-            <div className="grid grid-cols-2 gap-3">
-              <Skeleton className="h-11 flex-1 rounded-lg" />
-              <Skeleton className="h-11 flex-1 rounded-lg" />
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 gap-3">
-              {/* Approve Button */}
-
-              {forInterviewButton ? (
-                <DeleteDialog
-                  open={openInterview}
-                  onOpenChange={setOpenInterview}
-                  onConfirm={handleInterview}
-                  loading={loadingInterview}
-                  title="Approve Application for Interview"
-                  red={false} // make it visually destructive since this is a rejection
-                  description="This will approve the application and notify the student. This action cannot be undone."
-                  confirmText="Approve for Interview"
-                  confirmTextLoading="Approving..."
-                  cancelText="Cancel"
-                  trigger={
-                    <Button
-                      disabled={reviewCheckpoint || isThereRejected}
-                      onClick={() => setOpenApprove(true)}
-                    >
-                      <UserRoundCheck /> Approve for Interview
-                    </Button>
-                  }
-                />
+          <TourStep stepId="review-8">
+            <DrawerFooter className="bg-card px-0 p-4">
+              {loading ? (
+                <div className="grid grid-cols-2 gap-3">
+                  <Skeleton className="h-11 flex-1 rounded-lg" />
+                  <Skeleton className="h-11 flex-1 rounded-lg" />
+                </div>
               ) : (
-                <DeleteDialog
-                  open={openApprove}
-                  onOpenChange={setOpenApprove}
-                  onConfirm={handleApprove}
-                  loading={loadingApprove}
-                  title="Approve Application"
-                  red={false} // make it visually destructive since this is a rejection
-                  description="This will approve the application and notify the student. This action cannot be undone."
-                  confirmText="Approve"
-                  confirmTextLoading="Approving..."
-                  cancelText="Cancel"
-                  trigger={
-                    <Button
-                      disabled={reviewCheckpoint || isThereRejected}
-                      onClick={() => setOpenApprove(true)}
-                    >
-                      <UserRoundCheck /> Approve Application
-                    </Button>
-                  }
-                />
-              )}
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Approve Button */}
 
-              {/* Decline Button */}
-
-              {deleteButton && (
-                <DeleteDialog
-                  open={openReject}
-                  onOpenChange={setOpenReject}
-                  onConfirm={handleReject}
-                  loading={loadingReject}
-                  title="Reject Application"
-                  red={true}
-                  description="This will reject the application and notify the student. This action cannot be undone."
-                  confirmText="Reject"
-                  confirmTextLoading="Rejecting..."
-                  cancelText="Cancel"
-                  trigger={
-                    <Button
-                      disabled={
-                        data?.status === "APPROVED" ||
-                        data?.status === "DECLINED" ||
-                        reviewCheckpoint
+                  {forInterviewButton ? (
+                    <DeleteDialog
+                      open={openInterview}
+                      onOpenChange={setOpenInterview}
+                      onConfirm={handleInterview}
+                      loading={loadingInterview}
+                      title="Approve Application for Interview"
+                      red={false} // make it visually destructive since this is a rejection
+                      description="This will approve the application and notify the student. This action cannot be undone."
+                      confirmText="Approve for Interview"
+                      confirmTextLoading="Approving..."
+                      cancelText="Cancel"
+                      trigger={
+                        <Button
+                          disabled={reviewCheckpoint || isThereRejected}
+                          onClick={() => setOpenApprove(true)}
+                        >
+                          <UserRoundCheck /> Approve for Interview
+                        </Button>
                       }
-                      onClick={() => setOpenReject(true)}
-                      variant="destructive"
-                    >
-                      <UserRoundX /> Reject Application
-                    </Button>
-                  }
-                />
+                    />
+                  ) : (
+                    <DeleteDialog
+                      open={openApprove}
+                      onOpenChange={setOpenApprove}
+                      onConfirm={handleApprove}
+                      loading={loadingApprove}
+                      title="Approve Application"
+                      red={false} // make it visually destructive since this is a rejection
+                      description="This will approve the application and notify the student. This action cannot be undone."
+                      confirmText="Approve"
+                      confirmTextLoading="Approving..."
+                      cancelText="Cancel"
+                      trigger={
+                        <Button
+                          disabled={reviewCheckpoint || isThereRejected}
+                          onClick={() => setOpenApprove(true)}
+                        >
+                          <UserRoundCheck /> Approve Application
+                        </Button>
+                      }
+                    />
+                  )}
+
+                  {/* Decline Button */}
+
+                  {deleteButton && (
+                    <DeleteDialog
+                      open={openReject}
+                      onOpenChange={setOpenReject}
+                      onConfirm={handleReject}
+                      loading={loadingReject}
+                      title="Reject Application"
+                      red={true}
+                      description="This will reject the application and notify the student. This action cannot be undone."
+                      confirmText="Reject"
+                      confirmTextLoading="Rejecting..."
+                      cancelText="Cancel"
+                      trigger={
+                        <Button
+                          disabled={
+                            data?.status === "APPROVED" ||
+                            data?.status === "DECLINED" ||
+                            reviewCheckpoint
+                          }
+                          onClick={() => setOpenReject(true)}
+                          variant="destructive"
+                        >
+                          <UserRoundX /> Reject Application
+                        </Button>
+                      }
+                    />
+                  )}
+                </div>
               )}
-            </div>
-          )}
-        </DrawerFooter>
+            </DrawerFooter>
+          </TourStep>
+        </TourStep>
       </DrawerContent>
     </Drawer>
   );

@@ -9,6 +9,8 @@ interface ModalState {
   openGenerate: boolean;
   openStaff: boolean;
   activateStaff: boolean;
+  reviewPending: boolean;
+  setReviewPending: (value: boolean) => void;
   setActivateStaff: (value: boolean) => void;
   setOpenStaff: (value: boolean) => void;
   setOpenGenerate: (value: boolean) => void;
@@ -26,6 +28,8 @@ export const useTourStore = create<ModalState>((set) => ({
   openGenerate: false,
   openStaff: false,
   activateStaff: false,
+  reviewPending: false,
+  setReviewPending: (value) => set({ reviewPending: value }),
   setActivateStaff: (value) => set({ activateStaff: value }),
   setOpenStaff: (value) => set({ openStaff: value }),
   setOpenGenerate: (value) => set({ openGenerate: value }),

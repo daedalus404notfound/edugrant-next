@@ -81,7 +81,7 @@ export default function ApplicationViewer({
       >
         <GlassFolder color="amber" />
         <Badge
-          className={`absolute bottom-0 right-0 z-60 uppercase  text-gray-200 ${
+          className={`absolute bottom-0 right-0 z-10 uppercase  text-gray-200 ${
             requirementType === "required" ? "bg-green-900" : "bg-blue-900"
           }`}
           variant="secondary"

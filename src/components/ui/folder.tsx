@@ -70,7 +70,7 @@ const GlassFolder: React.FC<GlassFolderProps> = ({
         className
       )}
     >
-      <div className="relative w-60 h-40 cursor-pointer origin-bottom [perspective:1500px] z-50">
+      <div className="relative w-60 h-40 cursor-pointer origin-bottom [perspective:1500px] z-10">
         {/* Top tab */}
         <div
           className={cn(

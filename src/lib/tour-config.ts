@@ -260,4 +260,55 @@ export const tourConfigs: TourConfig = {
         "This guide will walk you through the scholarship posting process step by step.",
     },
   ],
+
+  reviewApplication: [
+    {
+      id: "review-1",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "review-2",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "review-3",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "review-4",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "review-5",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "review-6",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "review-7",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+    {
+      id: "review-8",
+      title: "Welcome to Post Scholarship",
+      description:
+        "This guide will walk you through the scholarship posting process step by step.",
+    },
+  ],
 };
