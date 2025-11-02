@@ -4,11 +4,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getFamilyBackgroundProgress } from "@/lib/isFamilyComplete";
 import { useUserStore } from "@/store/useUserStore";
 import Link from "next/link";
+import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 
 export function ProfileCompletion({ loading }: { loading: boolean }) {
-  const { user } = useUserStore();
+  const { data } = useAuthenticatedUser();
 
-  const { percentage, completed } = getFamilyBackgroundProgress(user?.Student);
+  const { percentage, completed } = getFamilyBackgroundProgress(
+    data?.userData.Student
+  );
   const getProgressBarColor = (percentage: number) => {
     if (percentage < 30) return "bg-red-500";
     if (percentage < 70) return "bg-yellow-500";
