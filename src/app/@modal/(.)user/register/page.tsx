@@ -158,7 +158,7 @@ export default function RegisterStudent() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className=" lg:w-1/2 w-[98%] h-auto !max-h-[90dvh]  mx-auto  !border-0 bg-background/80 backdrop-blur-lg overflow-hidden p-1 outline-0 lg:min-w-4xl">
+      <DrawerContent className=" lg:w-1/2 w-[98%] h-auto !max-h-[90dvh]  mx-auto  !border-0 bg-background backdrop-blur-lg overflow-hidden p-1 outline-0 lg:min-w-4xl">
         <DrawerHeader className="sr-only">
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>
@@ -169,7 +169,7 @@ export default function RegisterStudent() {
         <Stepper
           defaultValue={1}
           value={stepper}
-          className="items-start gap-3  lg:pt-8 lg:pb-6 lg:px-8 px-2 py-4 bg-card/50  shadow rounded-md"
+          className="items-start gap-3  lg:pt-8 lg:pb-6 lg:px-8 px-2 py-4 "
         >
           {steps.map(({ step, title }) => (
             <StepperItem key={step} step={step} className="flex-1">
@@ -224,7 +224,7 @@ export default function RegisterStudent() {
                                 {...field}
                                 disabled={sendAuthCode.isLoading}
                               />
-                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                              <span className="flex items-center  border rounded-r-md text-sm">
                                 <Button variant="ghost">
                                   <UserRound />
                                 </Button>
@@ -256,7 +256,7 @@ export default function RegisterStudent() {
                                 className="rounded-r-none"
                                 disabled={sendAuthCode.isLoading}
                               />
-                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                              <span className="flex items-center  border rounded-r-md text-sm">
                                 <Button variant="ghost">
                                   <CircleUserRound />
                                 </Button>
@@ -288,7 +288,7 @@ export default function RegisterStudent() {
                                 {...field}
                                 disabled={sendAuthCode.isLoading}
                               />
-                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                              <span className="flex items-center  border rounded-r-md text-sm">
                                 <Button variant="ghost">
                                   <UserRoundCheck />
                                 </Button>
@@ -316,7 +316,7 @@ export default function RegisterStudent() {
                           <FormControl>
                             <div className="flex">
                               {/* Fixed +639 prefix */}
-                              <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
+                              <span className="flex items-center px-4 border rounded-l-md text-sm">
                                 +639
                               </span>
                               <Input
@@ -367,7 +367,7 @@ export default function RegisterStudent() {
                                   <SelectItem value="Female">Female</SelectItem>
                                 </SelectContent>
                               </Select>
-                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                              <span className="flex items-center  border rounded-r-md text-sm">
                                 <Button variant="ghost">
                                   <VenusAndMars />
                                 </Button>
@@ -394,7 +394,7 @@ export default function RegisterStudent() {
                           </FormLabel>
                           <FormControl>
                             <div className="flex items-center">
-                              <span className="flex items-center  border border-input border-r-0 rounded-l-md text-sm">
+                              <span className="flex items-center border rounded-l-md text-sm">
                                 <Popover
                                   open={openCalendar}
                                   onOpenChange={setOpenCalendar}
@@ -462,7 +462,7 @@ export default function RegisterStudent() {
                                 {...field}
                                 disabled={sendAuthCode.isLoading}
                               />
-                              <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                              <span className="flex items-center  border rounded-r-md text-sm">
                                 <Button variant="ghost">
                                   <MapPinHouse />
                                 </Button>
@@ -511,7 +511,7 @@ export default function RegisterStudent() {
                                   !isIndigenousChecked || sendAuthCode.isLoading
                                 }
                               />
-                              <span className="flex items-center border border-input border-l-0 rounded-r-md text-sm">
+                              <span className="flex items-center border rounded-r-md text-sm">
                                 <Button variant="ghost">
                                   <Feather />
                                 </Button>
@@ -561,7 +561,7 @@ export default function RegisterStudent() {
                                   !isPWDChecked || sendAuthCode.isLoading
                                 }
                               />
-                              <span className="flex items-center border border-input border-l-0 rounded-r-md text-sm">
+                              <span className="flex items-center border rounded-r-md text-sm">
                                 <Button variant="ghost">
                                   <Accessibility />
                                 </Button>
@@ -694,7 +694,7 @@ export default function RegisterStudent() {
                               {...field}
                               disabled={sendAuthCode.isLoading}
                             />
-                            <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                            <span className="flex items-center  border rounded-r-md text-sm">
                               <Button variant="ghost">
                                 <IdCard />
                               </Button>
@@ -722,7 +722,7 @@ export default function RegisterStudent() {
                               {...field}
                               disabled={sendAuthCode.isLoading}
                             />
-                            <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                            <span className="flex items-center  border rounded-r-md text-sm">
                               <Button variant="ghost">
                                 <MailIcon />
                               </Button>
@@ -776,7 +776,7 @@ export default function RegisterStudent() {
                                 </SelectItem>
                               </SelectContent>
                             </Select>
-                            <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                            <span className="flex items-center  border rounded-r-md text-sm">
                               <Button variant="ghost">
                                 <School />
                               </Button>
@@ -885,7 +885,7 @@ export default function RegisterStudent() {
                                 </SelectItem>
                               </SelectContent>
                             </Select>
-                            <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                            <span className="flex items-center  border rounded-r-md text-sm">
                               <Button variant="ghost">
                                 <GraduationCap />
                               </Button>
@@ -942,7 +942,7 @@ export default function RegisterStudent() {
                               </SelectContent>
                             </Select>
 
-                            <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                            <span className="flex items-center  border rounded-r-md text-sm">
                               <Button variant="ghost">
                                 <BookMarked />
                               </Button>
@@ -986,7 +986,7 @@ export default function RegisterStudent() {
                                 <SelectItem value="J">Section J</SelectItem>
                               </SelectContent>
                             </Select>
-                            <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
+                            <span className="flex items-center  border rounded-r-md text-sm">
                               <Button variant="ghost">
                                 <LayoutPanelTop />
                               </Button>

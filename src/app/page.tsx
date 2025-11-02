@@ -43,8 +43,10 @@ import TitleReusable from "@/components/ui/title";
 import AboutTheTeam from "@/components/ui/credits";
 
 import Image from "next/image";
+import PublicAnnouncement from "./@modal/public-announcement/page";
+import { useEffect, useState } from "react";
 const navItems = [
-  { label: "Home", icon: Home, href: "home" },
+  { label: "Announcements", icon: Megaphone, href: "home" },
   { label: "Features", icon: Zap, href: "features" },
   { label: "How it works", icon: Settings, href: "how-it-works" },
   { label: "Contact", icon: Mail, href: "contact" },
@@ -229,75 +231,14 @@ const FaqsComponent = () => {
 
 export default function DesktopLandingPage() {
   const pathname = usePathname();
-  console.log(pathname);
-  const HeaderComponent = () => {
-    return (
-      <motion.header
-        className="py-7 w-[95%] mx-auto  lg:flex justify-between items-center hidden"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-      >
-        <span className="flex items-center gap-5 h-15 py-3">
-          <motion.span
-            className="flex items-center gap-2"
-            initial={{ x: -20, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <img className="h-10 w-10" src={bascLogo.src} alt="" />
-            <img className="h-10 w-10" src={osas.src} alt="" />
-            <img className="h-10 w-10" src={edugrant.src} alt="" />
-          </motion.span>
-          <Separator orientation="vertical" />
-          <ul className="flex gap-2">
-            {navItems.map((item, index) => (
-              <motion.li
-                key={index}
-                className="flex items-center"
-                initial={{ y: -10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Button variant="ghost" className="cursor-pointer" asChild>
-                  <Link href={`#${item.href}`}>
-                    <item.icon className="w-4 h-4" />
-                    {item.label}
-                  </Link>
-                </Button>
-              </motion.li>
-            ))}
-          </ul>
-        </span>
-        <motion.span
-          className="flex gap-3 items-center"
-          initial={{ x: 20, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <Link href={"/public-announcement"} prefetch={true} scroll={false}>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button>
-                <Megaphone />
-                Announcements
-              </Button>
-            </motion.div>
-          </Link>
-          <Link href={"/user/login"} prefetch={true} scroll={false}>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button variant="secondary">
-                Login <LogInIcon />
-              </Button>
-            </motion.div>
-          </Link>
+  const [openAnnouncement, setOpenAnnouncement] = useState(false);
 
-          <ModeToggle />
-        </motion.span>
-      </motion.header>
-    );
-  };
+  useEffect(() => {
+    setTimeout(() => {
+      setOpenAnnouncement(true);
+    }, 3000);
+  }, []);
+  console.log(pathname);
 
   return (
     <>
@@ -323,7 +264,74 @@ export default function DesktopLandingPage() {
         }}
       />
       <div className="relative w-full z-10 overflow-x-hidden">
-        <HeaderComponent />
+        <motion.header
+          className="py-7 w-[95%] mx-auto  lg:flex justify-between items-center hidden"
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
+        >
+          <span className="flex items-center gap-5 h-15 py-3">
+            <motion.span
+              className="flex items-center gap-2"
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <img className="h-10 w-10" src={bascLogo.src} alt="" />
+              <img className="h-10 w-10" src={osas.src} alt="" />
+              <img className="h-10 w-10" src={edugrant.src} alt="" />
+            </motion.span>
+            <Separator orientation="vertical" />
+            <ul className="flex gap-2">
+              {navItems.map((item, index) => (
+                <motion.li
+                  key={index}
+                  className="flex items-center"
+                  initial={{ y: -10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ duration: 0.3, delay: 0.3 + index * 0.1 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    onClick={() => {
+                      if (item.label === "Announcements") {
+                        setOpenAnnouncement(true);
+                      }
+                    }}
+                    variant="ghost"
+                    className="cursor-pointer"
+                    asChild
+                  >
+                    <Link href={`#${item.href}`}>
+                      <item.icon className="w-4 h-4" />
+                      {item.label}
+                    </Link>
+                  </Button>
+                </motion.li>
+              ))}
+            </ul>
+          </span>
+          <motion.span
+            className="flex gap-3 items-center"
+            initial={{ x: 20, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            <Link href={"/user/login"} prefetch={true} scroll={false}>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button variant="secondary">
+                  Login <LogInIcon />
+                </Button>
+              </motion.div>
+            </Link>
+
+            <ModeToggle />
+          </motion.span>
+        </motion.header>
         <AnimatePresence mode="wait">
           <motion.div
             initial={{ opacity: 0 }}
@@ -476,15 +484,13 @@ export default function DesktopLandingPage() {
               />
             </div>
             <div className="flex items-center gap-3">
-              <Link
-                href={"/public-announcement"}
-                prefetch={true}
-                scroll={false}
+              <Button
+                className="rounded-full"
+                size="icon"
+                onClick={() => setOpenAnnouncement(true)}
               >
-                <Button className="rounded-full" size="icon">
-                  <Megaphone />
-                </Button>
-              </Link>
+                <Megaphone />
+              </Button>
 
               <ModeToggle />
             </div>
@@ -549,6 +555,11 @@ export default function DesktopLandingPage() {
           </div>
           <AboutTheTeam />
           <Footer />
+
+          <PublicAnnouncement
+            open={openAnnouncement}
+            setOpen={setOpenAnnouncement}
+          />
         </div>
       </div>
     </>

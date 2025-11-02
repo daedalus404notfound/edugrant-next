@@ -22,6 +22,8 @@ import {
   ArrowRight,
   ArrowRightIcon,
   Calendar,
+  ChevronLeft,
+  ChevronRight,
   Clock,
   Megaphone,
   SearchIcon,
@@ -48,9 +50,15 @@ import {
 } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function PublicAnnouncement() {
-  const [open, setOpen] = useState(true);
+export default function PublicAnnouncement({
+  open = false,
+  setOpen,
+}: {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}) {
   const [full, setFull] = useState(false);
 
   const [announce, setAnnounce] = useState<AnnouncementFormDataGet>({
@@ -74,14 +82,14 @@ export default function PublicAnnouncement() {
   };
 
   const handleNext = () => {
-    if (meta && page < meta.totalPage) {
-      setPage((prev) => prev + 1);
+    if (meta && pagination.pageIndex + 1 < meta.totalPage) {
+      setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex + 1 }));
     }
   };
 
   const handlePrev = () => {
-    if (page > 1) {
-      setPage((prev) => prev - 1);
+    if (pagination.pageIndex > 0) {
+      setPagination((prev) => ({ ...prev, pageIndex: prev.pageIndex - 1 }));
     }
   };
 
@@ -89,7 +97,7 @@ export default function PublicAnnouncement() {
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 6,
+    pageSize: 3,
   });
   const [sorting, setSorting] = useState<SortingState>([
     {
@@ -124,20 +132,20 @@ export default function PublicAnnouncement() {
     </div>
   );
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(value) => {
-        HandleCloseDrawer(value);
-      }}
-    >
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
         showCloseButton={false}
         className="max-w-4xl border-0 rounded-lg gap-0  p-1"
       >
-        <div className="flex items-center justify-between pb-2 sticky top ">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2, delay: 0.4 }}
+          className="flex items-center justify-between pb-2 sticky top "
+        >
           <div className="flex items-center gap-3">
             <Button
-              className="relative justify-start"
+              className="relative justify-start "
               variant="ghost"
               size="sm"
             >
@@ -150,17 +158,18 @@ export default function PublicAnnouncement() {
               className="ghost"
               variant="ghost"
               size="sm"
-              onClick={() => HandleCloseDrawer(false)}
+              onClick={() => setOpen(false)}
             >
               <X />
             </Button>
           </div>
-        </div>
-        <div className=" bg-background p-4 rounded-md space-y-6 ">
-          <DialogHeader className="sr-only">
-            <DialogTitle className=" font-semibold">Announcements</DialogTitle>
-          </DialogHeader>
+        </motion.div>
 
+        <DialogHeader className="sr-only">
+          <DialogTitle className=" font-semibold">Announcements</DialogTitle>
+        </DialogHeader>
+
+        <ScrollArea className="max-h-[80dvh] lg:p-4 p-2 bg-background/80 lg:rounded-lg rounded-md  ">
           {full ? (
             <div className="">
               <div className="flex justify-between items-center">
@@ -175,18 +184,22 @@ export default function PublicAnnouncement() {
                       dateCreated: new Date(),
                     });
                   }}
+                  variant="ghost"
                 >
                   <ArrowLeft />
                   Back
                 </Button>
-                <p className="text-sm text-muted-foreground ">
+                {/* <p className="text-sm text-muted-foreground ">
                   Published:{" "}
                   {announce.dateCreated &&
                     format(announce.dateCreated, "PPP p")}
-                </p>
+                </p> */}
               </div>
 
-              <TipTapViewer content={announce?.description} className="p-6" />
+              <TipTapViewer
+                content={announce?.description}
+                className="lg:p-4 p-2"
+              />
             </div>
           ) : (
             <div className="flex  flex-col gap-3">
@@ -199,7 +212,7 @@ export default function PublicAnnouncement() {
               ) : data.length === 0 ? (
                 <NoDataFound />
               ) : (
-                data.slice(0, 6).map((meow, index) => (
+                data.map((meow, index) => (
                   <motion.div
                     key={meow.announcementId}
                     initial={{ y: 50, opacity: 0 }}
@@ -303,46 +316,51 @@ export default function PublicAnnouncement() {
               )}
             </div>
           )}
+        </ScrollArea>
+        {meta.totalRows > 3 && !full && (
+          <motion.div
+            className="flex items-center justify-between gap-3 p-2"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2, delay: 0.4 }}
+          >
+            <p
+              className="grow text-sm text-muted-foreground"
+              aria-live="polite"
+            >
+              Page <span className="text-foreground">{meta.page}</span> of{" "}
+              <span className="text-foreground">{meta.totalPage}</span>
+            </p>
 
-          {!full && (
-            <DialogFooter>
-              <div className="flex items-center justify-between gap-3">
-                <p
-                  className="grow text-sm text-muted-foreground"
-                  aria-live="polite"
-                >
-                  Page <span className="text-foreground">{meta.page}</span> of{" "}
-                  <span className="text-foreground">{meta.totalPage}</span>
-                </p>
-
-                <Pagination className="w-auto">
-                  <PaginationContent className="gap-3">
-                    <PaginationItem>
-                      <Button
-                        variant="outline"
-                        disabled={page === 1}
-                        onClick={handlePrev}
-                      >
-                        Previous
-                      </Button>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <Button
-                        variant="outline"
-                        disabled={
-                          page === meta.totalPage || meta.totalPage === 0
-                        }
-                        onClick={handleNext}
-                      >
-                        Next
-                      </Button>
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </div>
-            </DialogFooter>
-          )}
-        </div>
+            <Pagination className="w-auto">
+              <PaginationContent className="gap-3">
+                <PaginationItem>
+                  <Button
+                    variant="outline"
+                    disabled={meta.page === 1 || loadingState}
+                    onClick={handlePrev}
+                  >
+                    <ChevronLeft /> Previous
+                  </Button>
+                </PaginationItem>
+                <PaginationItem>
+                  <Button
+                    variant="outline"
+                    disabled={
+                      meta.page === meta.totalPage ||
+                      meta.totalPage === 0 ||
+                      loadingState
+                    }
+                    onClick={handleNext}
+                  >
+                    Next
+                    <ChevronRight />
+                  </Button>
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </motion.div>
+        )}
       </DialogContent>
     </Dialog>
   );
