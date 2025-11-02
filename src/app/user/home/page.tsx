@@ -24,28 +24,32 @@ import CompleteChecker from "./dashboard-components/complete-check";
 import { ProfileCompletion } from "./dashboard-components/profile-progress-2";
 import { ApplicationStats } from "./dashboard-components/stats";
 import { SummaryCardUser } from "@/components/ui/summary-user";
+import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 
 export default function AdminDashboard() {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const { user, loadingUser } = useUserStore();
-  const accountId = user?.accountId;
-  const schoolId = user?.schoolId;
-  const { completed } = getFamilyBackgroundProgress(user?.Student);
+  const { data: user, loading: isLoading } = useAuthenticatedUser();
+  const accountId = user?.userData?.accountId;
+  const schoolId = user?.userData?.schoolId;
+  const { completed } = getFamilyBackgroundProgress(user?.userData?.Student);
 
   const { data, loading } = usefetchUserDashboard(accountId, schoolId);
   const summaryCards: SummaryCardProps[] = [
     {
       label: "Total Application",
-      data: user?.Student.Application ? user?.Student.Application.length : 0,
+      data: user?.userData?.Student.Application
+        ? user?.userData?.Student.Application.length
+        : 0,
       icon: <TrendingUp />,
       color: "blue",
       todayIncrement: 0,
     },
     {
       label: "Approved Application",
-      data: user?.Student.Application
-        ? user?.Student.Application.filter((meow) => meow.status === "APPROVED")
-            .length
+      data: user?.userData?.Student.Application
+        ? user?.userData?.Student.Application.filter(
+            (meow) => meow.status === "APPROVED"
+          ).length
         : 0,
       icon: <CheckCheck />,
       color: "green",
@@ -53,8 +57,8 @@ export default function AdminDashboard() {
     },
     {
       label: "For Interview",
-      data: user?.Student.Application
-        ? user?.Student.Application.filter(
+      data: user?.userData?.Student.Application
+        ? user?.userData?.Student.Application.filter(
             (meow) => meow.status === "INTERVIEW"
           ).length
         : 0,
@@ -63,7 +67,7 @@ export default function AdminDashboard() {
       todayIncrement: 0,
     },
   ];
-  const loadingState = loading || loadingUser;
+  const loadingState = loading || isLoading;
   return (
     <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
       <div className="py-6 lg:px-5 px-2 space-y-12">
