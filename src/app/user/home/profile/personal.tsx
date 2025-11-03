@@ -445,7 +445,7 @@ export default function PersonalProfile({
                     <Input
                       type="text"
                       placeholder=""
-                      maxLength={9}
+                      maxLength={10}
                       value={field.value?.replace("+63", "") || ""}
                       onChange={(e) => {
                         const val = e.target.value
