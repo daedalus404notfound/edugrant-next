@@ -10,7 +10,8 @@ interface UseFileUploadOptions {
 
 export function useFileUpload({
   accept,
-  maxSize = 2 * 1024 * 1024, // 2MB default
+  maxSize = 5 * 1024 * 1024,
+
   onFilesChange,
 }: UseFileUploadOptions) {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
