@@ -130,6 +130,13 @@ export interface AuthTypes {
   message: string;
   safeData: AdminProfileFormData;
   success: boolean;
+  applicationCountPerStatus: {
+    PENDING: number;
+    APPROVED: number;
+    INTERVIEW: number;
+    BLOCKED: number;
+    DECLINED: number;
+  };
 }
 
 export default function useAuthenticatedUser() {

@@ -36,6 +36,8 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import useAuthenticatedUser from "@/hooks/head/getTokenAuthentication";
+import { Badge } from "../ui/badge";
 
 const sidebarData = [
   {
@@ -59,44 +61,52 @@ const sidebarData = [
     icon: Activity,
   },
 ];
-const sidebarScholar = [
-  {
-    title: "Active Scholarship",
-    url: "/administrator/staff/home/scholarship",
-    icon: GraduationCap,
-  },
-];
 
-const sidebarApplication = [
-  {
-    title: "Pending Application",
-    url: "/administrator/staff/home/pending",
-    icon: UsersRound,
-  },
-  {
-    title: "For Interview",
-    url: "/administrator/staff/home/for-interview",
-    icon: MessagesSquare,
-  },
-];
-const sidebarApplicationProcessed = [
-  {
-    title: "Approved Application",
-    url: "/administrator/staff/home/approved",
-    icon: CheckCheck,
-  },
-  {
-    title: "Declined Application",
-    url: "/administrator/staff/home/rejected",
-    icon: X,
-  },
-  {
-    title: "Blocked Application",
-    url: "/administrator/staff/home/blocked",
-    icon: Ban,
-  },
-];
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data } = useAuthenticatedUser();
+  const sidebarApplication = [
+    {
+      title: "Pending Application",
+      url: "/administrator/staff/home/pending",
+      icon: UsersRound,
+      indicator: data?.applicationCountPerStatus.PENDING,
+    },
+    {
+      title: "For Interview",
+      url: "/administrator/staff/home/for-interview",
+      icon: MessagesSquare,
+      indicator: data?.applicationCountPerStatus.INTERVIEW,
+    },
+  ];
+
+  const sidebarApplicationProcessed = [
+    {
+      title: "Approved Application",
+      url: "/administrator/staff/home/approved",
+      icon: CheckCheck,
+      indicator: data?.applicationCountPerStatus.APPROVED,
+    },
+    {
+      title: "Declined Application",
+      url: "/administrator/staff/home/rejected",
+      icon: X,
+      indicator: data?.applicationCountPerStatus.DECLINED,
+    },
+    {
+      title: "Blocked Application",
+      url: "/administrator/staff/home/blocked",
+      icon: Ban,
+      indicator: data?.applicationCountPerStatus.BLOCKED,
+    },
+  ];
+  const sidebarScholar = [
+    {
+      title: "Active Scholarship",
+      url: "/administrator/staff/home/scholarship",
+      icon: GraduationCap,
+      indicator: data?.availableScholarshipCount,
+    },
+  ];
   const pathname = usePathname();
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -173,7 +183,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         href={meow.url}
                       >
                         <meow.icon className="w-4 h-4" />
-                        {meow.title}
+                        {meow.title}{" "}
+                        {(meow.indicator ?? 0) > 0 && (
+                          <Badge className="absolute right-0" variant="outline">
+                            {meow.indicator}
+                          </Badge>
+                        )}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -194,11 +209,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <Link
                         prefetch
                         scroll={false}
-                        className="flex items-center gap-2 cursor-pointer"
+                        className="relative flex items-center gap-2 cursor-pointer"
                         href={meow.url}
                       >
                         <meow.icon className="w-4 h-4" />
                         {meow.title}
+                        {(meow.indicator ?? 0) > 0 && (
+                          <Badge className="absolute right-0" variant="outline">
+                            {meow.indicator}
+                          </Badge>
+                        )}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -220,11 +240,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <Link
                         prefetch
                         scroll={false}
-                        className="flex items-center gap-2 cursor-pointer"
+                        className="relative flex items-center gap-2 cursor-pointer"
                         href={meow.url}
                       >
                         <meow.icon className="w-4 h-4" />
                         {meow.title}
+                        {(meow.indicator ?? 0) > 0 && (
+                          <Badge className="absolute right-0" variant="outline">
+                            {meow.indicator}
+                          </Badge>
+                        )}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
