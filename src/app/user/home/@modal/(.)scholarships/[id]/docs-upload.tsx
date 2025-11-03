@@ -262,7 +262,7 @@ export default function UploadDocs({
               <p>
                 • Only upload files in accepted formats (PDF, DOCX, JPG, PNG)
               </p>
-              <p>• Each file must not exceed 2MB in size</p>
+              <p>• Each file must not exceed 5MB in size</p>
 
               <p>
                 • Optional documents aren't required but may strengthen your
