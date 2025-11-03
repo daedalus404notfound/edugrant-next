@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { getFamilyBackgroundProgress } from "@/lib/isFamilyComplete";
 import { SummaryCard, SummaryCardProps } from "@/components/ui/summary";
-import { useUserStore } from "@/store/useUserStore";
 import usefetchUserDashboard from "@/hooks/user/getUserDashboard";
 import WelcomeCard from "./dashboard-components/welcome-card";
 import Announcements from "./dashboard-components/announcement";

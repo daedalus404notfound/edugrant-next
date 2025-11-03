@@ -3,7 +3,7 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 export default function ScholarshipModalLoading() {
   return (
-    <ScrollArea className="h-[80vh] bg-background rounded-t-lg">
+    <ScrollArea className="lg:h-[80dvh] h-[70dvh]  bg-background rounded-t-lg">
       {/* Cover Image Skeleton */}
       <div className="relative flex justify-center items-center">
         <Skeleton className="w-full lg:aspect-[16/4] aspect-[16/7] rounded-t-lg" />
@@ -36,7 +36,10 @@ export default function ScholarshipModalLoading() {
         {/* Info Grid Skeleton */}
         <div className="grid grid-cols-2 lg:grid-cols-3 bg-card relative p-4 lg:p-6 gap-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="space-y-2">
+            <div
+              key={i}
+              className={`space-y-2 ${i === 3 ? "hidden lg:block" : ""}`}
+            >
               <Skeleton className="h-4 w-16" />
               <Skeleton className="h-5 w-24" />
             </div>

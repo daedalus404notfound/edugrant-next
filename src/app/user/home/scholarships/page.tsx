@@ -33,9 +33,7 @@ import {
   PaginationContent,
   PaginationItem,
 } from "@/components/ui/pagination";
-import { useApplicationStore } from "@/store/applicationUsetStore";
-import { useScholarshipUserStore } from "@/store/scholarshipUserStore";
-import { useUserStore } from "@/store/useUserStore";
+
 import {
   ColumnFiltersState,
   PaginationState,
@@ -216,6 +214,8 @@ export default function ClientScholarship() {
               data.slice(0, 6).map((meow, index) => {
                 return (
                   <Link
+                    scroll={false}
+                    prefetch={true}
                     key={meow.scholarshipId}
                     href={`/user/home/scholarships/${meow.scholarshipId}`}
                   >

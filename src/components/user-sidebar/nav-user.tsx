@@ -17,10 +17,12 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { useUserStore } from "@/store/useUserStore";
+import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
-  const { user } = useUserStore();
+  const { data } = useAuthenticatedUser();
+  const user = data?.userData;
   return (
     <SidebarMenu>
       <SidebarMenuItem>

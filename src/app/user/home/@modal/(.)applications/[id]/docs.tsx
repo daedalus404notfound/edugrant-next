@@ -91,13 +91,13 @@ export default function DocsStudent({ data, loading }: DocsStudentProps) {
               variant="outline"
               role="combobox"
               aria-expanded={open}
-              className="w-[200px] justify-between"
+              className="lg:w-[200px] justify-between"
             >
               {phaseSelector || "Select phase..."}
               <ChevronsUpDown className="opacity-50" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-0">
+          <PopoverContent className="lg:w-[200px] p-0">
             <Command>
               <CommandInput placeholder="Search Phase..." className="h-9" />
               <CommandList>

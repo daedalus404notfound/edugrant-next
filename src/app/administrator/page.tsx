@@ -104,7 +104,7 @@ export default function LoginAdmin() {
                   <Separator className="flex-1" />
                 </div>
                 <Link className="w-full" href="/">
-                  <Button className="w-full" variant="outline">
+                  <Button type="button" className="w-full" variant="outline">
                     Login as student <ArrowRight />
                   </Button>
                 </Link>

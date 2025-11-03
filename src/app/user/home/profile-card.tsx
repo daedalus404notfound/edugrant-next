@@ -7,7 +7,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Separator } from "@/components/ui/separator";
-import { useUserStore } from "@/store/useUserStore";
+import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 import {
   ChevronDown,
   LogOut,
@@ -19,7 +19,8 @@ import {
 } from "lucide-react";
 
 export default function ProfileCard() {
-  const { user, loadingUser } = useUserStore();
+  const { data } = useAuthenticatedUser();
+  const user = data?.userData;
 
   return (
     <Popover>

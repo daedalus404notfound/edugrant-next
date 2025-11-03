@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from "react";
 import socket from "@/lib/socketLib";
-import { useUserStore } from "@/store/useUserStore";
+import useAuthenticatedUser from "./getTokenAuthentication";
 
 export default function useSocketConnection() {
-  const { user } = useUserStore(); // make sure this store holds user info after login
+  const { data } = useAuthenticatedUser();
   const [connected, setConnected] = useState(false);
-
+  const user = data?.userData;
   useEffect(() => {
     // Only connect when user info is available
     if (!user?.accountId || !user?.role) return;

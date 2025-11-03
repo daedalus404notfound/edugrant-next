@@ -18,7 +18,7 @@ import {
   documentFormData,
   scholarshipFormData,
 } from "@/hooks/admin/zodUpdateScholarship";
-import { useUserStore } from "@/store/useUserStore";
+
 import { DragAndDropArea } from "@/components/ui/upload";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
@@ -36,6 +36,7 @@ import {
 } from "@/hooks/zod/application";
 import { GetApplicationFormData } from "@/hooks/zod/getApplicationZod";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const createFormSchema = (documents: documentFormData[]) => {
   const schemaShape: Record<string, z.ZodType<any>> = {};
@@ -73,10 +74,8 @@ export default function EditApplication({
   setEdit,
 }: // setUpdateDocument,
 EditApplicationTypes) {
-  const { addApplication } = useUserStore.getState();
-  const user = useUserStore((state) => state.user);
-  const userId = user?.accountId;
   const scholarId = data?.scholarshipId || 0;
+  const queryClient = useQueryClient();
   const applicationId = data?.applicationId;
   const [completedCount, setCompletedCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -131,7 +130,6 @@ EditApplicationTypes) {
       setLoading(true);
       setDisable(true);
       const formData = new FormData();
-      formData.append("accountId", String(userId));
       formData.append("scholarshipId", String(scholarId));
       formData.append("applicationId", String(applicationId));
 
@@ -156,7 +154,9 @@ EditApplicationTypes) {
       );
 
       if (res.status === 200) {
-        addApplication(scholarId, "PENDING");
+        const newData = res.data.updatedApplication;
+        const editedId = newData.applicationId;
+        console.log("qqq", editedId);
         StyledToast({
           status: "success",
           title: "Upload successful!",
@@ -165,6 +165,13 @@ EditApplicationTypes) {
         // setUpdateDocument(res.data.updatedApplication);
         setEdit(false);
         setLoading(false);
+        queryClient.setQueryData(["application", applicationId], (old) => {
+          console.log("🧩 Old cached data:", old);
+          console.log("🆕 New updated data:", newData);
+
+          if (!old) return { application: newData };
+          return { ...old, application: newData };
+        });
       }
     } catch (error) {
       if (axios.isAxiosError<ApiErrorResponse>(error)) {
@@ -181,7 +188,7 @@ EditApplicationTypes) {
 
   return (
     <div>
-      <ScrollArea className="max-h-[80vh] h-full bg-background rounded-t-lg">
+      <ScrollArea className="lg:h-[80dvh] h-[70dvh] bg-background rounded-t-lg">
         <div className="flex-1 lg:p-4 p-2 space-y-10">
           {data?.Scholarship.form && (
             <div className="bg-muted px-4 py-3 md:py-2 rounded-md">

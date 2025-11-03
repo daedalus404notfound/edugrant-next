@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { useHistoryStore } from "@/store/historyUserStore";
 
 export default function useClientHistoryApplications() {
-  const { loadingUser } = useUserStore();
+
   const { meta, setMeta, resetPage, search, sortBy, order, page, pageSize } =
     useHistoryStore();
 
@@ -111,7 +111,7 @@ export default function useClientHistoryApplications() {
       }
     },
     staleTime: 1000 * 60 * 5,
-    enabled: !loadingUser,
+  
   });
 
   const data = query.data?.applications ?? [];
@@ -123,7 +123,7 @@ export default function useClientHistoryApplications() {
   return {
     data,
     meta,
-    isLoading: query.isLoading || loadingUser,
+    isLoading: query.isLoading,
     isError: query.isError,
     refetch: query.refetch,
   };

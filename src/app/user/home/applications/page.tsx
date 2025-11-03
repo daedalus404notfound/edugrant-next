@@ -288,6 +288,8 @@ export default function ClientScholarship() {
                     </div>
                     <Link
                       href={`/user/home/applications/${meow.applicationId}`}
+                      scroll={false}
+                      prefetch={true}
                       className="w-full sm:w-auto hidden lg:block"
                     >
                       <Button className="w-full sm:w-auto" size="sm">
@@ -348,6 +350,8 @@ export default function ClientScholarship() {
                     <Link
                       href={`/user/home/applications/${meow.applicationId}`}
                       className="w-full sm:w-auto "
+                      scroll={false}
+                      prefetch={true}
                     >
                       <Button className="w-full sm:w-auto" size="sm">
                         View Details <ArrowRight className="w-4 h-4" />

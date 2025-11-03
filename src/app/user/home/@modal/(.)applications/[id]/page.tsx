@@ -9,34 +9,19 @@ import {
 } from "@/components/ui/drawer";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useEffect, useState } from "react";
+
 import { Button } from "@/components/ui/button";
-import useClientApplications from "@/hooks/user/getApplications";
+
 import logo from "@/assets/edugrant-logo.png";
-import TitleReusable from "@/components/ui/title";
-import {
-  Ban,
-  Calendar,
-  CircleAlert,
-  CircleCheck,
-  Clock,
-  GraduationCap,
-  PenLine,
-  UserRoundCheck,
-  X,
-} from "lucide-react";
+import { Calendar, GraduationCap, PenLine } from "lucide-react";
 
 import { Separator } from "@/components/ui/separator";
-
-import { useUserStore } from "@/store/useUserStore";
-import { Tabs } from "@/components/ui/vercel-tabs";
 import DocsStudent from "./docs";
 import EditApplication from "./update-application-docs";
 import { Skeleton } from "@/components/ui/skeleton";
-import ScholarshipModal from "@/components/ui/scholarship-modal";
+
 import ModalHeader from "@/components/ui/modal-header";
-import ScholarshipModalLoading from "@/components/ui/scholarship-modal-loading";
+
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { StatusAlertIndicator } from "@/app/administrator/head/home/@modal/(.)application/[id]/status-indicator";
@@ -44,17 +29,16 @@ import { format } from "date-fns";
 import { getPhaseLabel } from "@/lib/phaseLevel";
 import useApplicationUserById from "@/hooks/user/getApplicationData";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useState } from "react";
+import ScholarshipModalLoading from "@/components/ui/scholarship-modal-loading";
 
 export default function InterceptManageApplicationClient() {
-  const [activeSection, setActiveSection] = useState("documents");
   const [edit, setEdit] = useState(false);
   const router = useRouter();
   const params = useParams();
   const [open, setOpen] = useState(true);
   const id = Number(params.id);
 
-  const user = useUserStore((state) => state.user);
-  const userId = user?.accountId;
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
@@ -113,7 +97,9 @@ export default function InterceptManageApplicationClient() {
           text="Application Details"
         />
 
-        {edit ? (
+        {loading ? (
+          <ScholarshipModalLoading />
+        ) : edit ? (
           <EditApplication
             data={data}
             setEdit={setEdit}
@@ -121,12 +107,12 @@ export default function InterceptManageApplicationClient() {
           />
         ) : (
           <div>
-            <ScrollArea className="h-[80vh] bg-background rounded-t-lg">
+            <ScrollArea className="lg:h-[80dvh] h-[70dvh] bg-background rounded-t-lg">
               <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-md overflow-hidden ">
                 {/* Header Section */}
                 <div className="relative flex  lg:items-end items-center  py-8 px-4">
                   <img
-                    className="lg:w-70 w-50 absolute right-0 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-20 "
+                    className="lg:w-70 w-43 absolute lg:right-0 -right-18 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-20 "
                     src={logo.src}
                     alt=""
                   />
@@ -202,7 +188,7 @@ export default function InterceptManageApplicationClient() {
                 </div>
                 <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
                 {/* Info Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:py-6 py-4 lg:px-4 px-2 bg-card relative ">
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 lg:py-6 py-4 lg:px-4 px-2 bg-card relative ">
                   <div className="space-y-1.5 border-l-2 pl-4">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
@@ -215,7 +201,7 @@ export default function InterceptManageApplicationClient() {
                     ) : (
                       <p className="font-medium text-foreground">
                         {data?.dateCreated &&
-                          format(data?.dateCreated, "PPP p")}
+                          format(data?.dateCreated, "yyyy/MM/dd")}
                       </p>
                     )}
                   </div>{" "}
@@ -223,7 +209,7 @@ export default function InterceptManageApplicationClient() {
                     <div className="flex items-center gap-2">
                       <GraduationCap className="w-3.5 h-3.5 text-muted-foreground" />
                       <h1 className="text-xs text-muted-foreground">
-                        Scholarship Deadline
+                        Deadline
                       </h1>
                     </div>
                     {loading ? (
@@ -231,12 +217,12 @@ export default function InterceptManageApplicationClient() {
                     ) : (
                       <span className="font-medium text-foreground">
                         {data?.Scholarship.deadline
-                          ? format(data?.Scholarship.deadline, "PPP p")
+                          ? format(data?.Scholarship.deadline, "yyyy/MM/dd")
                           : "—"}
                       </span>
                     )}
                   </div>
-                  <div className="space-y-1.5  border-l-2 pl-4">
+                  <div className="space-y-1.5  border-l-2 pl-4 hidden lg:block">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-3.5 h-3.5 text-muted-foreground" />
                       <h1 className="text-xs text-muted-foreground">
@@ -255,7 +241,7 @@ export default function InterceptManageApplicationClient() {
                   </div>
                 </div>
               </div>
-              <div className="lg:p-4 p-4 space-y-6">
+              <div className="lg:p-4 p-2   space-y-6">
                 {data?.status === "PENDING" ? (
                   <StatusAlertIndicator
                     status="PENDING"
@@ -311,7 +297,7 @@ export default function InterceptManageApplicationClient() {
             </ScrollArea>
             <div className="">
               <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-              <div className="flex gap-3  lg:p-4 p-2">
+              <div className="flex gap-3  lg:p-4 p-2 pb-4">
                 <Button
                   className="flex-1"
                   onClick={() => setEdit(true)}

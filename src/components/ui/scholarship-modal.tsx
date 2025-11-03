@@ -39,7 +39,7 @@ export default function ScholarshipModal({
   const lastPhase = data?.documents?.[lastPhaseKey] ?? [];
   const lastPhaseLength = Object.keys(lastPhase).length;
   return (
-    <ScrollArea className="h-[80vh] bg-background rounded-t-lg">
+    <ScrollArea className="lg:h-[80dvh] h-[70dvh]  bg-background rounded-t-lg">
       {data.dateEnded && (
         <div className=" p-3  sticky bg-muted top-0 z-30 flex items-center justify-center">
           <p className="text-sm">
@@ -176,7 +176,9 @@ export default function ScholarshipModal({
       <div className="flex-1 pt-10 lg:px-6 px-2 space-y-8">
         <div className="space-y-1">
           <p className="text-xs uppercase text-muted-foreground">About</p>
-          <p className="whitespace-pre-line">{data?.description}</p>
+          <p className="whitespace-pre-line lg:text-base text-sm">
+            {data?.description}
+          </p>
         </div>
 
         <div className="space-y-1">
@@ -194,7 +196,7 @@ export default function ScholarshipModal({
                   <p className="text-muted-foreground text-sm">
                     Interview Required
                   </p>
-                  <h1 className="text-lg font-medium tracking-wider">
+                  <h1 className="lg:text-base text-sm font-medium tracking-wider">
                     {data.interview
                       ? "Interview Required"
                       : "No Interview Needed"}
@@ -212,7 +214,7 @@ export default function ScholarshipModal({
                   <p className="text-muted-foreground text-sm">
                     Scholarship Amount
                   </p>
-                  <h1 className="text-lg font-medium tracking-wider">
+                  <h1 className="lg:text-base text-sm font-medium tracking-wider">
                     {formatPHP(Number(data?.amount))}
                   </h1>
                 </div>
@@ -228,7 +230,7 @@ export default function ScholarshipModal({
                   <p className="text-muted-foreground text-sm">
                     Scholarship Limit
                   </p>
-                  <h1 className="text-lg font-medium tracking-wider">
+                  <h1 className="lg:text-base text-sm font-medium tracking-wider">
                     {data?.limit}
                   </h1>
                 </div>
@@ -242,7 +244,7 @@ export default function ScholarshipModal({
                 </div>
                 <div className="flex flex-col">
                   <p className="text-muted-foreground text-sm">Required GWA</p>
-                  <h1 className="text-lg font-medium tracking-wider">
+                  <h1 className="lg:text-base text-sm font-medium tracking-wider">
                     {data?.requiredGWA}
                   </h1>
                 </div>
@@ -257,7 +259,9 @@ export default function ScholarshipModal({
                 <p className="text-muted-foreground text-sm">
                   Scholarship Type
                 </p>
-                <h1 className="text-lg font-medium capitalize">{data?.type}</h1>
+                <h1 className="lg:text-base text-sm font-medium capitalize">
+                  {data?.type}
+                </h1>
               </div>
             </div>
 
@@ -269,7 +273,7 @@ export default function ScholarshipModal({
                 <p className="text-muted-foreground text-sm">
                   Scholarship Deadline
                 </p>
-                <h1 className="text-lg font-medium">
+                <h1 className="lg:text-base text-sm font-medium">
                   {data?.deadline
                     ? format(new Date(data?.deadline), "PPP")
                     : "No deadline"}
@@ -284,7 +288,7 @@ export default function ScholarshipModal({
             <h3 className="text-xs uppercase font-medium text-muted-foreground  tracking-wide">
               Phase {documentPhasesLength} Required Documents
             </h3>
-            <p className="font-medium text-lg">{lastPhaseLength}</p>
+            <p className="font-medium text-sm">{lastPhaseLength}</p>
           </div>
           <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
           <div className=" divide-y">
@@ -293,7 +297,7 @@ export default function ScholarshipModal({
                 className="flex justify-between items-center py-5"
                 key={doc.label}
               >
-                <div>
+                <div className="text-sm lg:text-base">
                   <span> {index + 1}. </span>
                   {doc.label}
                 </div>
@@ -314,7 +318,7 @@ export default function ScholarshipModal({
         </div>
 
         <div className="lg:p-4 p-2 bg-card rounded-md mb-5">
-          <h1 className="text-center text-sm font-medium">
+          <h1 className="text-center lg:text-base text-sm font-medium">
             Hurry before it ends
           </h1>
           <div className="transform scale-85 lg:scale-100">

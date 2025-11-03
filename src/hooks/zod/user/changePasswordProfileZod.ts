@@ -1,3 +1,4 @@
+import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 import { useUserStore } from "@/store/useUserStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
@@ -29,7 +30,8 @@ export type changePassFormData = z.infer<typeof changePassSchema>;
 export type changePassOtpFormData = z.infer<typeof changePassOtpSchema>;
 
 export function useChangePasswordProfileUser() {
-  const { user } = useUserStore();
+  const { data } = useAuthenticatedUser();
+  const user = data?.userData;
   console.log("user", user?.accountId);
   const changePasswordForm = useForm<changePassFormData>({
     resolver: zodResolver(changePassSchema),

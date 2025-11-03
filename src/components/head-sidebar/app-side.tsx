@@ -107,11 +107,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   const { open } = useSidebar();
   const { data } = useAuthenticatedUser();
-  const applicationCount = data?.availableScholarshipCount.applicationCount;
-  const scholarshipCount =
-    data?.availableScholarshipCount.availableScholarshipCount;
-  const staffCount = data?.availableScholarshipCount.ISPSU_StaffCount;
-  const announcementCount = data?.availableScholarshipCount.announcementCount;
+  const applicationCount = data?.applicationCount;
+  const scholarshipCount = data?.availableScholarshipCount;
+  const staffCount = data?.ISPSU_StaffCount;
+  const announcementCount = data?.announcementCount;
   const sidebarApplication = [
     {
       title: "Pending Application",

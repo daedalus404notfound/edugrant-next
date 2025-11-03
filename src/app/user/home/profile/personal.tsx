@@ -30,9 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { UserFormData } from "@/hooks/user/zodUserProfile";
-import { useUserStore } from "@/store/useUserStore";
 import { format } from "date-fns";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Accessibility,
   BookMarked,

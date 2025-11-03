@@ -1,3 +1,4 @@
+import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 import { useUserStore } from "@/store/useUserStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
@@ -22,7 +23,8 @@ export type changeEmailFormData = z.infer<typeof changeEmailSchema>;
 export type changeEmailOtpFormData = z.infer<typeof changeEmailOtpSchema>;
 
 export function useChangeEmailProfileUser() {
-  const { user } = useUserStore();
+  const { data } = useAuthenticatedUser();
+  const user = data?.userData
   const changeEmailForm = useForm<changeEmailFormData>({
     resolver: zodResolver(changeEmailSchema),
     mode: "onChange",

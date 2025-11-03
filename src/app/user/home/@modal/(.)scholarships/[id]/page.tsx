@@ -16,7 +16,7 @@ import UploadDocs from "./docs-upload";
 
 import { Separator } from "@/components/ui/separator";
 
-import { useUserStore } from "@/store/useUserStore";
+
 import ScholarshipModalLoading from "@/components/ui/scholarship-modal-loading";
 import ModalHeader from "@/components/ui/modal-header";
 import ScholarshipModal from "@/components/ui/scholarship-modal";
@@ -42,7 +42,7 @@ export default function InterceptManageScholarshipClient() {
       }, 300);
     }
   };
-  const { user } = useUserStore();
+
   // const findMatch = user?.Student.Application.find(
   //   (meow) => meow.scholarshipId === data?.scholarshipId
   // );
@@ -94,7 +94,7 @@ export default function InterceptManageScholarshipClient() {
           ) : (
             <div>
               {data && <ScholarshipModal data={data} />}
-              <div className="p-6 flex gap-3  bg-background">
+              <div className="lg:p-6 p-2 pb-4 flex gap-3  bg-background">
                 <Button
                   className="flex-1"
                   onClick={() => setApplying(true)}

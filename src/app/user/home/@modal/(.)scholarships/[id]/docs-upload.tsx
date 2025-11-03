@@ -18,7 +18,6 @@ import {
   documentFormData,
   scholarshipFormData,
 } from "@/hooks/admin/zodUpdateScholarship";
-import { useUserStore } from "@/store/useUserStore";
 import { DragAndDropArea } from "@/components/ui/upload";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
@@ -33,6 +32,7 @@ import { downloadFile } from "@/lib/downloadUtils";
 import { displayScholarshipFormData } from "@/hooks/admin/displayScholarshipData";
 import useDownloadForm from "@/hooks/admin/postDownloadForm";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useQueryClient } from "@tanstack/react-query";
 const sanitizeLabel = (label: string): string => {
   return label.replace(/['\s]/g, "_").replace(/[^a-zA-Z0-9_]/g, "");
 };
@@ -76,9 +76,6 @@ export default function UploadDocs({
   setApplying: (applying: boolean) => void;
   HandleCloseDrawer: (close: boolean) => void;
 }) {
-  const { addApplication } = useUserStore.getState();
-  const user = useUserStore((state) => state.user);
-  const userId = user?.accountId;
   const scholarId = data.scholarshipId;
   const [completedCount, setCompletedCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -131,11 +128,11 @@ export default function UploadDocs({
   };
 
   const onSubmit = async (data: FormData) => {
+    const queryClient = useQueryClient();
     try {
       setLoading(true);
       setDisable(true);
       const formData = new FormData();
-      formData.append("accountId", String(userId));
       formData.append("scholarshipId", String(scholarId));
 
       Object.entries(data).forEach(([sanitizedKey, files]) => {
@@ -164,7 +161,6 @@ export default function UploadDocs({
       );
 
       if (res.status === 200) {
-        addApplication(scholarId, "PENDING");
         StyledToast({
           status: "success",
           title: "Upload successful!",
@@ -173,6 +169,9 @@ export default function UploadDocs({
         setApplying(false);
         setLoading(false);
         HandleCloseDrawer(false);
+        queryClient.invalidateQueries({
+          queryKey: ["scholarshipData"],
+        });
       }
     } catch (error) {
       if (axios.isAxiosError<ApiErrorResponse>(error)) {
@@ -191,7 +190,7 @@ export default function UploadDocs({
       setLoading(true);
       setDisable(true);
       const formData = new FormData();
-      formData.append("accountId", String(userId));
+
       formData.append("scholarshipId", String(scholarId));
 
       Object.entries(data).forEach(([sanitizedKey, files]) => {
@@ -219,7 +218,6 @@ export default function UploadDocs({
       );
 
       if (res.status === 200) {
-        addApplication(scholarId, "PENDING");
         StyledToast({
           status: "success",
           title: "Upload successful!",
@@ -241,9 +239,9 @@ export default function UploadDocs({
       }
     }
   };
-  const { onSubmit: onDownload, isLoading } = useDownloadForm(1);
+  const { onSubmit: onDownload, isLoading } = useDownloadForm(data.scholarshipId);
   return (
-    <ScrollArea className="h-[88vh] bg-background flex flex-col rounded-t-lg">
+    <ScrollArea className="h-[88dvh] bg-background flex flex-col rounded-t-lg">
       <div className="flex-1 lg:p-4 p-2 space-y-10">
         <div className="space-y-8">
           <div>

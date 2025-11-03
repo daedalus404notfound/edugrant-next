@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getFamilyBackgroundProgress } from "@/lib/isFamilyComplete";
-import { useUserStore } from "@/store/useUserStore";
 import Link from "next/link";
 import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 

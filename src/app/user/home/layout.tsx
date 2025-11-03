@@ -20,7 +20,8 @@ import { TourProvider } from "@/components/tour-2/tour-provider";
 import { tourConfigs } from "@/lib/tour-config";
 export default function Home({ children, modal }: DashboardLayoutProps) {
   useAuthenticatedUser();
-  useSocketConnection();
+  const { connected } = useSocketConnection();
+  console.log("user connnected?", connected);
   // Persistent QueryClient across renders
   const [queryClient] = useState(() => new QueryClient());
   const path = usePathname();

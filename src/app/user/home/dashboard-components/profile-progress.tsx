@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
+import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 import { getFamilyBackgroundProgress } from "@/lib/isFamilyComplete";
-import { useUserStore } from "@/store/useUserStore";
+
 import { UserRoundCog } from "lucide-react";
 import Link from "next/link";
 
 export default function ProfileProgress() {
-  const { user } = useUserStore();
-
+  const { data } = useAuthenticatedUser();
+  const user = data?.userData;
   const { percentage, completed } = getFamilyBackgroundProgress(user?.Student);
   const getProgressBarColor = (percentage: number) => {
     if (percentage < 30) return "bg-red-500";

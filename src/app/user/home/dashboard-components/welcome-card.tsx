@@ -2,10 +2,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Map } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
-import { useUserStore } from "@/store/useUserStore";
 import TitleReusable from "@/components/ui/title";
+import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 export default function WelcomeCard({ loading }: { loading: boolean }) {
-  const { user } = useUserStore();
+  const { data } = useAuthenticatedUser();
+  const user = data?.userData;
   return (
     <div className=" relative overflow-hidden flex flex-col gap-12  px-2">
       {/* <img

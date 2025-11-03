@@ -4,7 +4,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { Check, Loader, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { useUserStore } from "@/store/useUserStore";
 import { Tabs } from "@/components/ui/vercel-tabs";
 import { useEditUserProfile } from "@/hooks/user/postProfileUpdate";
 import PersonalProfile from "./personal";

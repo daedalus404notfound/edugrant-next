@@ -128,7 +128,7 @@ export const useUpdateUserByHead = (data?: StudentUserFormData | null) => {
   const profileUpdate = useProfile();
   const [open, setOpen] = useState(false);
   const [reset, setReset] = useState(false);
-  const { setUser } = useUserStore();
+
   const handleSubmit = async (data: StudentUserFormData) => {
     console.log("111", data);
     try {
