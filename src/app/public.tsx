@@ -135,7 +135,7 @@ export default function PublicAnnouncement({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
         showCloseButton={false}
-        className="lg:max-w-4xl w-[98%] mx-auto border-0 rounded-lg gap-0  p-1"
+        className="max-w-4xl border-0 rounded-lg gap-0  p-1"
       >
         <motion.div
           initial={{ opacity: 0, y: 20 }}

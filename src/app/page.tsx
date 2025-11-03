@@ -45,6 +45,7 @@ import AboutTheTeam from "@/components/ui/credits";
 import Image from "next/image";
 import PublicAnnouncement from "./public";
 import { useEffect, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 const navItems = [
   { label: "Announcements", icon: Megaphone, href: "home" },
   { label: "Features", icon: Zap, href: "features" },
@@ -232,12 +233,19 @@ const FaqsComponent = () => {
 export default function DesktopLandingPage() {
   const pathname = usePathname();
   const [openAnnouncement, setOpenAnnouncement] = useState(false);
-
+  const isMobile = useIsMobile();
   useEffect(() => {
-    setTimeout(() => {
-      setOpenAnnouncement(true);
-    }, 3000);
-  }, []);
+    if (isMobile === undefined) return; // ✅ Wait for detection
+
+    if (!isMobile) {
+      const timer = setTimeout(() => {
+        setOpenAnnouncement(true);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isMobile]);
+
   console.log(pathname);
 
   return (
