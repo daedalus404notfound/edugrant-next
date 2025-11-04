@@ -135,7 +135,7 @@ export default function PublicAnnouncement({
   );
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerContent className="w-[95%] max-w-4xl mx-auto">
+      <DrawerContent className="w-[98%] max-w-4xl mx-auto">
         <DrawerHeader className="hidden">
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>

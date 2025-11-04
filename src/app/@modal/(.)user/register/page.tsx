@@ -191,7 +191,7 @@ export default function RegisterStudent() {
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
+                  transition={{ duration: 0.3, delay: 0.3 }}
                   className="lg:pt-8 lg:px-8 pt-6 px-2"
                 >
                   <h1 className="text-lg font-semibold">
@@ -205,7 +205,7 @@ export default function RegisterStudent() {
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
+                    transition={{ duration: 0.3, delay: 0.3 }}
                   >
                     <FormField
                       control={personalForm.control}
@@ -238,7 +238,7 @@ export default function RegisterStudent() {
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
+                    transition={{ duration: 0.3, delay: 0.3 }}
                   >
                     <FormField
                       control={personalForm.control}
@@ -270,7 +270,7 @@ export default function RegisterStudent() {
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.5 }}
+                    transition={{ duration: 0.3, delay: 0.3 }}
                   >
                     <FormField
                       control={personalForm.control}
@@ -303,7 +303,7 @@ export default function RegisterStudent() {
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.6 }}
+                    transition={{ duration: 0.3, delay: 0.3 }}
                   >
                     <FormField
                       control={personalForm.control}
@@ -343,7 +343,7 @@ export default function RegisterStudent() {
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.7 }}
+                    transition={{ duration: 0.3, delay: 0.3 }}
                   >
                     <FormField
                       control={personalForm.control}
@@ -382,7 +382,7 @@ export default function RegisterStudent() {
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.8 }}
+                    transition={{ duration: 0.3, delay: 0.3 }}
                   >
                     <FormField
                       control={personalForm.control}
@@ -442,7 +442,7 @@ export default function RegisterStudent() {
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.9 }}
+                    transition={{ duration: 0.3, delay: 0.3 }}
                     className="lg:col-span-2"
                   >
                     <FormField
@@ -477,7 +477,7 @@ export default function RegisterStudent() {
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 1 }}
+                    transition={{ duration: 0.3, delay: 0.3 }}
                   >
                     <FormField
                       control={personalForm.control}
@@ -527,7 +527,7 @@ export default function RegisterStudent() {
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 1.1 }}
+                    transition={{ duration: 0.3, delay: 0.3 }}
                   >
                     <FormField
                       control={personalForm.control}
@@ -644,7 +644,7 @@ export default function RegisterStudent() {
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
+                  transition={{ duration: 0.3, delay: 0.3 }}
                   className="w-full sticky bottom-0 lg:px-8 lg:py-6 py-4 px-2 border-t bg-background/50 "
                 >
                   <Button
