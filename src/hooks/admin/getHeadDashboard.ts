@@ -106,6 +106,7 @@ export default function useFetchHeadDashboard() {
     refetchOnMount: true, // ✅ Refetch every time component remounts
     refetchOnWindowFocus: false, // Optional: disable refetch when window regains focus
     staleTime: 1000 * 60, // Optional: 1 minute cache
+    retry: false,
   });
 
   return {
