@@ -247,7 +247,7 @@ export default function ClientScholarship() {
                     delay: index * 0.1,
                     ease: "easeOut",
                   }}
-                  className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30 rounded-lg overflow-hidden relative"
+                  className="bg-gradient-to-br shadow dark:to-card/90 to-card/70 dark:from-card/50 from-card/30 rounded-lg overflow-hidden relative"
                 >
                   {/* Header Section */}
                   {/* <img
@@ -255,7 +255,7 @@ export default function ClientScholarship() {
                     src={meow.Scholarship.cover || "/placeholder.svg"}
                     alt=""
                   /> */}
-                  <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 items-start py-6 md:py-8 px-4 md:px-6">
+                  <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 items-start lg:py-6 py-4 lg:px-4 px-2">
                     <div className="flex gap-6 items-start w-full lg:w-auto">
                       <div className="flex items-center gap-3 flex-1 min-w-0">
                         <Avatar className="size-10 flex-shrink-0">
@@ -300,9 +300,9 @@ export default function ClientScholarship() {
                   <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
 
                   {/* Info Grid - Responsive */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 py-4 md:py-6 px-4 md:px-6 bg-card relative z-10">
+                  <div className="grid grid-cols-2  lg:grid-cols-3 gap-4 md:gap-8 py-4 lg:px-4 px-2  bg-card/30 relative z-10">
                     {/* Application Date */}
-                    <div className="space-y-1.5 sm:pl-4">
+                    <div className="space-y-1.5 border-l pl-4">
                       <div className="flex items-center gap-2">
                         <Calendar className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
                         <h1 className="text-xs text-muted-foreground">
@@ -315,7 +315,7 @@ export default function ClientScholarship() {
                     </div>
 
                     {/* Scholarship Deadline */}
-                    <div className="space-y-1.5 sm:border-l sm:pl-4">
+                    <div className="space-y-1.5 border-l pl-4 lg:block hidden">
                       <div className="flex items-center gap-2">
                         <GraduationCap className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
                         <h1 className="text-xs text-muted-foreground">
@@ -330,7 +330,7 @@ export default function ClientScholarship() {
                     </div>
 
                     {/* Status */}
-                    <div className="space-y-1.5 sm:border-l sm:pl-4">
+                    <div className="space-y-1.5 border-l pl-4">
                       <div className="flex items-center gap-2">
                         <Clock className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
                         <h1 className="text-xs text-muted-foreground">
@@ -346,7 +346,7 @@ export default function ClientScholarship() {
                       </p>
                     </div>
                   </div>
-                  <div className="p-3 lg:hidden">
+                  <div className="lg:p-3 p-2 lg:hidden">
                     <Link
                       href={`/user/home/applications/${meow.applicationId}`}
                       className="w-full sm:w-auto "

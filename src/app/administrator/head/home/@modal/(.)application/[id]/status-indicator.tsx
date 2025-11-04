@@ -1,3 +1,4 @@
+import TitleReusable from "@/components/ui/title";
 import { Check, X, Ban, MessageSquare } from "lucide-react";
 
 interface StatusAlertProps {
@@ -13,38 +14,34 @@ export const StatusAlertIndicator = ({
 }: StatusAlertProps) => {
   const statusConfig = {
     APPROVED: {
-      icon: <Check className="opacity-80" size={16} />,
-      bgColor:
-        "dark:bg-gradient-to-br to-green-950 from-green-900 bg-green-100",
-      bgColorIcon: "dark:bg-green-950 bg-green-300",
+      icon: <Check className="opacity-80 size-4" />,
+      color: "text-green-700/70",
+      bgColorIcon: "dark:bg-green-800 bg-green-300",
     },
     DECLINED: {
-      icon: <X className="opacity-80" size={16} />,
-      bgColor: "dark:bg-gradient-to-br to-red-950 from-red-900 bg-red-100",
-      bgColorIcon: "dark:bg-red-950 bg-red-300",
+      icon: <X className="opacity-80 size-4" />,
+      color: "text-red-700/70",
+      bgColorIcon: "dark:bg-red-800 bg-red-300",
     },
     BLOCKED: {
-      icon: <Ban className="opacity-80" size={16} />,
-      bgColor: "dark:bg-gradient-to-br to-gray-950 from-gray-900 bg-gray-100",
-      bgColorIcon: "dark:bg-gray-950 bg-gray-300",
+      icon: <Ban className="opacity-80 size-4" />,
+      color: "text-gray-700/70",
+      bgColorIcon: "dark:bg-gray-800 bg-gray-300",
     },
     INTERVIEW: {
-      icon: <MessageSquare className="opacity-80" size={16} />,
-      bgColor: "dark:bg-gradient-to-br to-blue-950 from-blue-900 bg-blue-100",
-      bgColorIcon: "dark:bg-blue-950 bg-blue-300",
+      icon: <MessageSquare className="opacity-80 size-4" />,
+      color: "text-blue-700/70",
+      bgColorIcon: "dark:bg-blue-800 bg-blue-300",
     },
     PENDING: {
-      icon: <MessageSquare className="opacity-80" size={16} />,
-      bgColor:
-        "dark:bg-gradient-to-br to-yellow-950 from-yellow-900 bg-yellow-100",
-      bgColorIcon: "dark:bg-yellow-950 bg-yellow-300",
+      icon: <MessageSquare className="opacity-80 size-4" />,
+      color: "text-yellow-700/70",
+      bgColorIcon: "dark:bg-yellow-800 bg-yellow-300",
     },
   }[status];
 
   return (
-    <div
-      className={`${statusConfig.bgColor}  text-foreground px-4 py-3 rounded-md`}
-    >
+    <div className="bg-card text-foreground lg:px-4 px-2 py-3 rounded-md">
       <div className="flex grow gap-3 md:items-center">
         <div
           className={`${statusConfig.bgColorIcon} flex size-9 shrink-0 items-center justify-center rounded-full max-md:mt-0.5`}
@@ -52,12 +49,13 @@ export const StatusAlertIndicator = ({
         >
           {statusConfig.icon}
         </div>
-        <div className="flex grow flex-col justify-between gap-3 md:flex-row md:items-center">
-          <div className="space-y-0.5">
-            <p className="text-sm font-medium">{title}</p>
-            <p className="text-muted-foreground text-sm">{description}</p>
-          </div>
-        </div>
+
+        <TitleReusable
+          title={title}
+          description={description}
+          textColor={statusConfig.color}
+          titleSize="lg:text-base text-sm"
+        />
       </div>
     </div>
   );

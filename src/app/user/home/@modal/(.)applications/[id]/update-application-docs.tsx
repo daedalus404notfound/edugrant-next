@@ -53,8 +53,8 @@ export const createFormSchema = (documents: documentFormData[]) => {
       .refine(
         (files) =>
           files.length === 0 ||
-          files.every((file) => file.size <= 2 * 1024 * 1024),
-        `File size must be less than 2MB for ${doc.label}`
+          files.every((file) => file.size <= 5 * 1024 * 1024),
+        `File size must be less than 5MB for ${doc.label}`
       )
       .default([]); // Make all fields optional
 

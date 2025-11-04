@@ -77,11 +77,7 @@ export default function DocsStudent({ data, loading }: DocsStudentProps) {
     <div className="space-y-6">
       <div className="flex justify-between items-center relative">
         <TitleReusable
-          title={
-            phaseSelector
-              ? `${phaseSelector} Required Documents`
-              : "Phase Documents"
-          }
+          title={phaseSelector ? `Required Documents` : "Phase Documents"}
           description=""
           titleSize="text-base"
         />
@@ -135,7 +131,7 @@ export default function DocsStudent({ data, loading }: DocsStudentProps) {
           ? Array.from({ length: 2 }).map((_, i) => (
               <div
                 key={i}
-                className="bg-card w-full rounded-md p-4 flex flex-col space-y-4"
+                className="bg-card w-full rounded-md lg:p-4 p-2 flex flex-col space-y-4"
               >
                 <div className="flex gap-3 items-center">
                   <Skeleton className="h-9 flex-1" />
@@ -167,7 +163,7 @@ export default function DocsStudent({ data, loading }: DocsStudentProps) {
               return (
                 <div
                   key={meow.document}
-                  className="bg-gradient-to-br to-card from-card/80 p-4 rounded-md"
+                  className="bg-gradient-to-br to-card from-card/80 lg:p-4 p-2 rounded-md"
                 >
                   <div>
                     {decisionMessage?.status === "REJECTED" ? (
@@ -212,7 +208,7 @@ export default function DocsStudent({ data, loading }: DocsStudentProps) {
                       </div>
                     ) : null}
                   </div>
-                  <div className="pb-6 pt-8 flex">
+                  <div className="pb-6 pt-8 ">
                     <ApplicationViewer
                       fileFormat={mimeToLabelMap[meow.fileFormat]}
                       resourceType={meow.resourceType}
@@ -235,11 +231,11 @@ export default function DocsStudent({ data, loading }: DocsStudentProps) {
                       <p className="font-medium lg:text-base text-sm">
                         {meow.document}
                       </p>
-                      <div className="flex items-center gap-6">
-                        <p className="border-l pl-3 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-6 lg:text-sm text-xs">
+                        <p className="border-l pl-3  text-muted-foreground">
                           {meow.fileFormat}
                         </p>{" "}
-                        <p className="border-l pl-3 text-sm text-muted-foreground">
+                        <p className="border-l pl-3  text-muted-foreground">
                           {meow.requirementType}
                         </p>
                       </div>

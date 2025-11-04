@@ -49,9 +49,7 @@ export default function ApplicationViewer({
       >
         <GlassFolder color="amber" />
         <Badge
-          className={`absolute bottom-0 right-0 z-60 uppercase  text-gray-200 ${
-            requirementType === "required" ? "bg-green-900" : "bg-blue-900"
-          }`}
+          className={`absolute bottom-0 right-0 z-60 uppercase`}
           variant="secondary"
         >
           {requirementType}
@@ -76,7 +74,7 @@ export default function ApplicationViewer({
         >
           {({ zoomIn, zoomOut, resetTransform }) => (
             <div className=" rounded-md  flex flex-col gap-3 bg-background  lg:p-4 p-2">
-              <div className="grid grid-cols-3 rounded-md ">
+              <div className="lg:grid grid-cols-3 rounded-md flex justify-between">
                 <div className="  flex gap-2  rounded-lg">
                   <Button
                     variant="secondary"
@@ -112,7 +110,7 @@ export default function ApplicationViewer({
                     <RefreshCw />
                   </Button>
                 </div>
-                <div className="flex gap-2 justify-center items-center">
+                <div className=" gap-2 justify-center items-center hidden lg:flex">
                   <p className="uppercase tracking-wide font-medium">
                     {document}
                   </p>
@@ -124,7 +122,7 @@ export default function ApplicationViewer({
                     variant="secondary"
                     onClick={() => setOpen(false)}
                   >
-                    Close <X />
+                    <X />
                   </Button>
                 </span>
               </div>

@@ -38,7 +38,11 @@ export default function TitleReusable({
         {/* <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" /> */}
       </div>
 
-      <p className={`${descriptionSize} text-gray-500 mt-1`}>{description}</p>
+      <p
+        className={`${descriptionSize} text-gray-500 mt-1 lg:text-base text-xs`}
+      >
+        {description}
+      </p>
     </div>
   );
 }
