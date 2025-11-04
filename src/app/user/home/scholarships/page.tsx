@@ -231,7 +231,7 @@ export default function ClientScholarship() {
                         ease: "easeOut",
                       }}
                       // className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
-                      className="shadow-sm transition-all duration-300 rounded-lg  bg-card overflow-hidden group hover:-translate-y-2 hover:shadow-xl border border-card/50"
+                      className="shadow-sm transition-all duration-300 rounded-lg p-0.5 bg-card overflow-hidden group hover:-translate-y-2 hover:shadow-xl border border-card/50"
                     >
                       {/* <Link
                       href={`/user/home/applications/${meow.applicationId}`}
@@ -248,10 +248,10 @@ export default function ClientScholarship() {
                           alt=""
                         />
                         <div className="relative z-10">
-                          <div className="relative aspect-[16/8.5] w-full rounded-md overflow-hidden">
+                          <div className="relative lg:aspect-[16/8.5] aspect-[16/5] w-full rounded-md overflow-hidden">
                             <div className="absolute inset-0 bg-background opacity-0 z-10 group-hover:opacity-30 transition-opacity duration-300"></div>
                             {meow.Application?.length! > 0 && (
-                              <div className="absolute inset-0 bg-zinc-900/50 z-10"></div>
+                              <div className="absolute inset-0 bg-background/50 z-10"></div>
                             )}
                             {meow.Application?.length! > 0 && (
                               <div className="absolute top-0 -left-2 flex items-center z-20">
@@ -281,7 +281,7 @@ export default function ClientScholarship() {
                             />
                           </div>
 
-                          <div className="px-4 py-6 space-y-6">
+                          <div className="lg:px-4 px-2 lg:py-6 py-4 space-y-6">
                             <div className="flex justify-between items-start">
                               <div className="flex items-center gap-3">
                                 {meow ? (

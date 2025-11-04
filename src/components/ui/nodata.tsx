@@ -19,7 +19,7 @@ export default function NoDataFound() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1, duration: 0.3 }}
-        className="lg:text-lg text-sm font-semibold"
+        className="lg:text-lg text-base font-semibold"
       >
         No Data Available
       </motion.h1>
@@ -28,7 +28,7 @@ export default function NoDataFound() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2, duration: 0.3 }}
-        className="lg:text-sm text-xs text-muted-foreground max-w-sm px-2"
+        className="text-sm text-muted-foreground max-w-sm px-2"
       >
         We couldn’t find any records to display. Please refresh the page or
         check back later

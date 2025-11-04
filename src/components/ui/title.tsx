@@ -39,7 +39,7 @@ export default function TitleReusable({
       </div>
 
       <p
-        className={`${descriptionSize} text-gray-500 mt-1 lg:text-base text-xs`}
+        className={`${descriptionSize} text-gray-500 mt-1 lg:text-base text-sm`}
       >
         {description}
       </p>
