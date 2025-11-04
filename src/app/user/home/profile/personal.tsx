@@ -70,7 +70,7 @@ export default function PersonalProfile({
   );
 
   return (
-    <div className=" w-full space-y-12">
+    <div className=" w-full lg:space-y-12 space-y-6">
       {/* <div className="space-y-6 bg-card/40 dark:bg-gradient-to-br to-card from-card/50  px-6 pb-8 pt-4 rounded-lg">
         <div className="flex">
           <div className="relative flex items-end gap-4">
@@ -121,7 +121,7 @@ export default function PersonalProfile({
 
       <div className="bg-gradient-to-br dark:to-card to-card/20 dark:from-card/50 from-card/10 shadow rounded-md overflow-hidden border-border/50 border dark:border-0">
         {/* Header Section */}
-        <div className="relative flex  items-end  py-8 px-6  gap-4">
+        <div className="relative flex flex-col lg:flex-row  lg:items-end items-center  lg:py-8 py-2 lg:px-6 px-2  lg:gap-4 gap-2">
           {/* <img
                           className="lg:w-70 w-50 absolute right-0 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-20 "
                           src={logo.src}
@@ -167,7 +167,7 @@ export default function PersonalProfile({
               </div>
             ) : (
               <div className="space-y-1.5 py-2">
-                <h1 className="text-xl font-semibold text-foreground jakarta tracking-wide">
+                <h1 className="lg:text-xl  font-semibold text-foreground jakarta tracking-wide">
                   {data?.userData.Student?.lName},{" "}
                   {data?.userData.Student?.fName}{" "}
                   {data?.userData.Student?.mName}
@@ -182,8 +182,8 @@ export default function PersonalProfile({
         </div>
         <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
         {/* Info Grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 py-6 px-4  dark:bg-card bg-card/30 relative   border-border/50 border-t">
-          <div className="space-y-1.5  border-l pl-6 hidden lg:block">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-8 lg:py-6 py-4 lg:px-4 px-2  dark:bg-card bg-card/30 relative   border-border/50 border-t">
+          <div className="space-y-1.5  border-l lg:pl-6 pl-4 hidden lg:block">
             <div className="flex items-center gap-2">
               <UserRoundCheck className="w-3.5 h-3.5 text-muted-foreground" />
               <h1 className="text-xs text-muted-foreground">User Role</h1>
@@ -191,12 +191,12 @@ export default function PersonalProfile({
             {loading ? (
               <Skeleton className="h-5 w-20" />
             ) : (
-              <p className="font-medium text-foreground">
+              <p className="font-medium text-foreground  line-clamp-1 lg:text-base text-sm">
                 {data?.userData?.role}
               </p>
             )}
           </div>
-          <div className="space-y-1.5  border-l pl-6">
+          <div className="space-y-1.5  border-l lg:pl-6 pl-4">
             <div className="flex items-center gap-2">
               <VenusAndMars className="w-3.5 h-3.5 text-muted-foreground" />
               <h1 className="text-xs text-muted-foreground">Gender</h1>
@@ -204,12 +204,12 @@ export default function PersonalProfile({
             {loading ? (
               <Skeleton className="h-5 w-full" />
             ) : (
-              <p className="font-medium text-foreground">
+              <p className="font-medium text-foreground  line-clamp-1 lg:text-base text-sm">
                 {data?.userData?.Student.gender || "—"}
               </p>
             )}
           </div>{" "}
-          <div className="space-y-1.5 border-l pl-6">
+          <div className="space-y-1.5 border-l lg:pl-6 pl-4">
             <div className="flex items-center gap-2">
               <Calendar1 className="w-3.5 h-3.5 text-muted-foreground" />
               <h1 className="text-xs text-muted-foreground">Account Created</h1>
@@ -217,7 +217,7 @@ export default function PersonalProfile({
             {loading ? (
               <Skeleton className="h-5 w-full" />
             ) : (
-              <p className="font-medium text-foreground">
+              <p className="font-medium text-foreground  line-clamp-1 lg:text-base text-sm">
                 {(data?.userData.Student?.dateCreated &&
                   format(data?.userData.Student?.dateCreated, "PPP")) ||
                   "N/A"}
@@ -232,7 +232,7 @@ export default function PersonalProfile({
           <UserRoundCog className="h-4.5 w-4.5" /> Personal Information
         </h3>
 
-        <div className="grid lg:grid-cols-2 grid-cols-1 gap-10 p-6 bg-card/30 shadow dark:bg-card rounded-md">
+        <div className="grid lg:grid-cols-2 grid-cols-1 lg:gap-10 gap-6 lg:p-6 py-4 px-2 bg-card/30 shadow dark:bg-card rounded-md">
           <FormField
             control={form.control}
             name="Student.fName"
@@ -544,7 +544,7 @@ export default function PersonalProfile({
         </h3>
 
         {/* Form Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 bg-card/30 shadow dark:bg-card rounded-md">
+        <div className="grid lg:grid-cols-2 grid-cols-1 lg:gap-10 gap-6 lg:p-6 py-4 px-2 bg-card/30 shadow dark:bg-card rounded-md">
           {/* Student ID */}
           <FormField
             control={form.control}

@@ -85,7 +85,7 @@ export default function SecurityForm() {
           <AlertDialogTrigger asChild>
             <Button>Change</Button>
           </AlertDialogTrigger>
-          <AlertDialogContent>
+          <AlertDialogContent className="lg:p-4 p-2">
             <AlertDialogHeader>
               <AlertDialogTitle>Change Password</AlertDialogTitle>
               <AlertDialogDescription>
@@ -97,7 +97,7 @@ export default function SecurityForm() {
             {step === "email" && (
               <Form {...changePasswordForm}>
                 <form
-                  className="space-y-6"
+                  className="lg:space-y-6 space-y-4"
                   onSubmit={changePasswordForm.handleSubmit(handleSendCode)}
                 >
                   <FormField

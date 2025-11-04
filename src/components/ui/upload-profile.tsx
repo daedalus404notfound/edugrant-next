@@ -120,7 +120,7 @@ export function DragAndDropAreaProfile({
     <div className="relative">
       <Dialog>
         <DialogTrigger className="cursor-pointer" asChild>
-          <Avatar className="size-26 border-2 border-background">
+          <Avatar className="lg:size-26 size-20 border-2 border-background">
             <AvatarImage className="object-cover" src={previewUrl} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
