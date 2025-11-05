@@ -28,45 +28,57 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const userSidebarData = [
-  {
-    title: "Dashboard",
-    url: "/user/home",
-    icon: Home,
-  },
-  {
-    title: "Profile Settings",
-    url: "/user/home/profile",
-    icon: UserRoundCog,
-  },
-
-  {
-    title: "Announcements",
-    url: "/user/home/announcements",
-    icon: Megaphone,
-  },
-];
-const scholar = [
-  {
-    title: "Available Scholarships",
-    url: "/user/home/scholarships",
-    icon: GraduationCap,
-  },
-  {
-    title: "My Applications",
-    url: "/user/home/applications",
-    icon: Grid2X2,
-  },
-  {
-    title: "Application History",
-    url: "/user/home/history",
-    icon: GalleryVerticalEnd,
-  },
-];
+import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
+import { Badge } from "../ui/badge";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  const { data } = useAuthenticatedUser();
+  const scholarship = data?.availableScholarshipCount;
+  const announcement = data?.announcementCount;
+  const application = data?.applicationCountPerStatus.PENDING;
+  const userSidebarData = [
+    {
+      title: "Dashboard",
+      url: "/user/home",
+      icon: Home,
+    },
+    {
+      title: "Profile Settings",
+      url: "/user/home/profile",
+      icon: UserRoundCog,
+    },
+
+    {
+      title: "Announcements",
+      url: "/user/home/announcements",
+      icon: Megaphone,
+      indicator: scholarship,
+    },
+  ];
+  const scholar = [
+    {
+      title: "Available Scholarships",
+      url: "/user/home/scholarships",
+
+      icon: GraduationCap,
+      indicator: scholarship,
+    },
+    {
+      title: "My Applications",
+      url: "/user/home/applications",
+
+      icon: Grid2X2,
+      indicator: application,
+    },
+    {
+      title: "Application History",
+      url: "/user/home/history",
+
+      icon: GalleryVerticalEnd,
+      indicator: 0,
+    },
+  ];
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -113,15 +125,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <Link
                         prefetch
                         scroll={false}
-                        className={
+                        className={`relative ${
                           isActive
                             ? "dark:!bg-emerald-700/20  !bg-emerald-800 !text-gray-200"
                             : ""
-                        }
+                        }`}
                         href={meow.url}
                       >
                         <meow.icon className="w-4 h-4" />
                         {meow.title}
+                        {(announcement ?? 0) > 0 &&
+                          meow.title === "Announcements" && (
+                            <Badge
+                              variant="secondary"
+                              className="absolute right-2"
+                            >
+                              {meow.indicator}
+                            </Badge>
+                          )}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -150,11 +171,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <Link
                         prefetch
                         scroll={false}
-                        className="flex items-center gap-2 cursor-pointer"
+                        className="relative flex items-center gap-2 cursor-pointer"
                         href={meow.url}
                       >
                         <meow.icon className="w-4 h-4" />
                         {meow.title}
+                        {(meow.indicator ?? 0) > 0 && (
+                          <Badge
+                            variant="secondary"
+                            className="absolute right-2"
+                          >
+                            {meow.indicator}
+                          </Badge>
+                        )}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

@@ -12,10 +12,8 @@ import SecurityForm from "./security";
 import TitleReusable from "@/components/ui/title";
 import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 import { useProfileForm } from "@/hooks/user/zodUserProfile";
+import { useFamilyBackgroundForm } from "@/hooks/user/zodFamilyBackground";
 export default function Profile() {
-  const { data } = useAuthenticatedUser();
-  const mutation = useEditUserProfile();
-  const { form, siblings, isChanged } = useProfileForm(data?.userData);
   const [tab, setTab] = useState("personal");
 
   const tabs = [
@@ -35,54 +33,9 @@ export default function Profile() {
           <Tabs tabs={tabs} onTabChange={(tabId) => setTab(tabId)} />
         </div>
         <div className="mt-15 lg:w-[60%] lg:min-w-5xl w-full mx-auto">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit((values) => mutation.mutate(values))}
-            >
-              {tab === "personal" && (
-                <PersonalProfile form={form} isSuccess={mutation.isSuccess} />
-              )}
+          {tab === "personal" && <PersonalProfile />}
 
-              {tab === "family" && (
-                <FamilyForm form={form} siblings={siblings} />
-              )}
-              {(tab === "personal" || tab === "family") && (
-                <AnimatePresence>
-                  {isChanged && (
-                    <div className="sticky bottom-16 lg:bottom-0 ">
-                      <motion.div
-                        className="bg-gradient-to-t from-background via-background/50 to-transparent w-full flex justify-center items-center py-8"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <motion.div
-                          initial={{ opacity: 0, y: 30 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 30 }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          <Button
-                            size="lg"
-                            className="cursor-pointer"
-                            type="submit"
-                            disabled={mutation.isPending}
-                          >
-                            <Check />
-                            {mutation.isPending ? "Saving..." : "Save Changes"}
-                            {mutation.isPending && (
-                              <Loader className="animate-spin" />
-                            )}
-                          </Button>
-                        </motion.div>
-                      </motion.div>
-                    </div>
-                  )}
-                </AnimatePresence>
-              )}
-            </form>
-          </Form>
+          {tab === "family" && <FamilyForm />}
 
           {tab === "security" && <SecurityForm />}
         </div>

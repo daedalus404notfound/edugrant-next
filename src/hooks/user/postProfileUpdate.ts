@@ -269,78 +269,6 @@ import { ApiErrorResponse } from "../admin/postReviewedHandler";
 type ApiError = AxiosError<ApiErrorResponse>;
 
 export const addScholarshipApi = async (data: UserFormData) => {
-  const familyBackground = {
-    ...(data.Student.familyBackground.fatherFullName && {
-      fatherFullName: data.Student.familyBackground.fatherFullName,
-    }),
-    ...(data.Student.familyBackground.fatherAddress && {
-      fatherAddress: data.Student.familyBackground.fatherAddress,
-    }),
-    ...(data.Student.familyBackground.fatherContactNumber && {
-      fatherContactNumber: data.Student.familyBackground.fatherContactNumber,
-    }),
-    ...(data.Student.familyBackground.fatherOccupation && {
-      fatherOccupation: data.Student.familyBackground.fatherOccupation,
-    }),
-    ...(data.Student.familyBackground.fatherHighestEducation && {
-      fatherHighestEducation:
-        data.Student.familyBackground.fatherHighestEducation,
-    }),
-    ...(data.Student.familyBackground.fatherStatus && {
-      fatherStatus: data.Student.familyBackground.fatherStatus,
-    }),
-    ...(data.Student.familyBackground.fatherTotalParentsTaxableIncome && {
-      fatherTotalParentsTaxableIncome:
-        data.Student.familyBackground.fatherTotalParentsTaxableIncome,
-    }),
-
-    ...(data.Student.familyBackground.motherFullName && {
-      motherFullName: data.Student.familyBackground.motherFullName,
-    }),
-    ...(data.Student.familyBackground.motherAddress && {
-      motherAddress: data.Student.familyBackground.motherAddress,
-    }),
-    ...(data.Student.familyBackground.motherContactNumber && {
-      motherContactNumber: data.Student.familyBackground.motherContactNumber,
-    }),
-    ...(data.Student.familyBackground.motherOccupation && {
-      motherOccupation: data.Student.familyBackground.motherOccupation,
-    }),
-    ...(data.Student.familyBackground.motherHighestEducation && {
-      motherHighestEducation:
-        data.Student.familyBackground.motherHighestEducation,
-    }),
-    ...(data.Student.familyBackground.motherStatus && {
-      motherStatus: data.Student.familyBackground.motherStatus,
-    }),
-    ...(data.Student.familyBackground.motherTotalParentsTaxableIncome && {
-      motherTotalParentsTaxableIncome:
-        data.Student.familyBackground.motherTotalParentsTaxableIncome,
-    }),
-
-    ...(data.Student.familyBackground.guardianFullName && {
-      guardianFullName: data.Student.familyBackground.guardianFullName,
-    }),
-    ...(data.Student.familyBackground.guardianAddress && {
-      guardianAddress: data.Student.familyBackground.guardianAddress,
-    }),
-    ...(data.Student.familyBackground.guardianContactNumber && {
-      guardianContactNumber:
-        data.Student.familyBackground.guardianContactNumber,
-    }),
-    ...(data.Student.familyBackground.guardianOccupation && {
-      guardianOccupation: data.Student.familyBackground.guardianOccupation,
-    }),
-    ...(data.Student.familyBackground.guardianHighestEducation && {
-      guardianHighestEducation:
-        data.Student.familyBackground.guardianHighestEducation,
-    }),
-
-    ...(data.Student.familyBackground.siblings &&
-      data.Student.familyBackground.siblings.length > 0 && {
-        siblings: data.Student.familyBackground.siblings,
-      }),
-  };
   const formData = new FormData();
 
   formData.append("address", data.Student.address);
@@ -353,22 +281,19 @@ export const addScholarshipApi = async (data: UserFormData) => {
   if (data.Student.mName) {
     formData.append("middleName", data.Student.mName);
   }
-  if (data.Student.indigenous) {
-    formData.append("indigenous", data.Student.indigenous);
+  if ("indigenous" in data.Student) {
+    formData.append("indigenous", data.Student.indigenous ?? "");
   }
-  if (data.Student.PWD) {
-    formData.append("pwd", data.Student.PWD);
+
+  if ("PWD" in data.Student) {
+    formData.append("pwd", data.Student.PWD ?? "");
   }
+
   formData.append("section", data.Student.section);
   formData.append("studentId", String(data.Student.studentId));
   formData.append("accountId", String(data.accountId));
   formData.append("year", data.Student.year);
 
-  const hasFamilyBackground = Object.keys(familyBackground).length > 0;
-  formData.append(
-    "familyBackground",
-    hasFamilyBackground ? JSON.stringify(familyBackground) : JSON.stringify({})
-  );
   if (data.Student.profileImg) {
     formData.append("profileImg", data.Student.profileImg.publicUrl);
   }
