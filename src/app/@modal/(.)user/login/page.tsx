@@ -64,6 +64,7 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import ModalHeader from "@/components/ui/modal-header";
 
 export default function LoginClientModal() {
   const router = useRouter();
@@ -110,7 +111,9 @@ export default function LoginClientModal() {
         onEscapeKeyDown={(e) => {
           if (verifyLoading || authLoading) e.preventDefault();
         }}
-        className="w-full !bg-transparent lg:p-2 p-1 !border-0 !outline-0"
+        className={`  lg:p-2 p-1 !border-0 !outline-0 ${
+          isMobile ? "!bg-card mx-auto w-[98%]" : "!bg-transparent w-full"
+        }`}
       >
         <DrawerHeader className="sr-only">
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
@@ -119,6 +122,9 @@ export default function LoginClientModal() {
             account and remove your data from our servers.
           </DrawerDescription>
         </DrawerHeader>
+        {isMobile && (
+          <ModalHeader text="Login" HandleCloseDrawer={HandleCloseDrawer} />
+        )}
         <div className="relative z-10 flex justify-center items-center w-full  h-full lg:p-4 pt-4 rounded-2xl bg-background  dark:bg-card backdrop-blur-md">
           {/* <Button
             className="absolute top-6 left-6"
