@@ -32,7 +32,6 @@ export default function Home({ children, modal }: DashboardLayoutProps) {
           } as React.CSSProperties
         }
       >
-        {" "}
         <TourProvider tours={tourConfigs}>
           <AppSidebar variant="inset" />
           <SidebarInset>

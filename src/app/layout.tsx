@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import QueryProvider from "./queryProvider";
 import { Toaster } from "sonner";
+import { TourProvider } from "@/components/tour-2/tour-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,7 +20,7 @@ export const metadata: Metadata = {
   title: "BASC | Edugrant",
   description: "Online scholarship portal for BASC students.",
 };
-
+import { tourConfigs } from "@/lib/tour-config";
 export default function RootLayout({
   children,
   modal,
@@ -33,17 +34,19 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-            themes={["light", "dark"]}
-          >
-            {children}
-            {modal}
-            <Toaster />
-          </ThemeProvider>
+          <TourProvider tours={tourConfigs}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+              themes={["light", "dark"]}
+            >
+              {children}
+              {modal}
+              <Toaster />
+            </ThemeProvider>
+          </TourProvider>
         </QueryProvider>
       </body>
     </html>
