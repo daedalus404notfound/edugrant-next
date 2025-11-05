@@ -144,12 +144,12 @@ export default function PublicAnnouncement({
         <ModalHeader text="Announcements" HandleCloseDrawer={setOpen} />
         {full ? (
           <ScrollArea className=" max-h-[70dvh] h-full">
-            <div className="bg-card p-4 rounded-md">
+            <div className="bg-card/30 p-4 rounded-md">
               <TipTapViewer content={selectedAnnouncement?.description} />
             </div>
           </ScrollArea>
         ) : (
-          <div className="space-y-4">
+          <div className="lg:space-y-4 space-y-2">
             {isLoading ? (
               <>
                 {[...Array(3)].map((_, i) => (
@@ -167,7 +167,7 @@ export default function PublicAnnouncement({
                 >
                   <div className="p-4">
                     <div className="flex justify-between items-start gap-3">
-                      <h3 className="line-clamp-2 group-hover:text-green-700  transition-all duration-200">
+                      <h3 className="line-clamp-2 group-hover:text-green-700  transition-all duration-200 font-medium">
                         {announcement.title || "Untitled Announcement"}
                       </h3>
                       <div className="flex items-center gap-1.5">
