@@ -52,7 +52,7 @@ export default function MobDock() {
   ];
 
   return (
-    <div className="sticky bottom-0 w-full left-0 z-30 bg-card dark:bg-zinc-950 backdrop-blur-sm flex justify-center p-2 gap-2 border-t lg:hidden items-center rounded-t-sm">
+    <div className="sticky bottom-0 w-full left-0 z-30 bg-card dark:bg-zinc-950/90 backdrop-blur-sm flex justify-center p-2 gap-2 border-t lg:hidden items-center rounded-t-sm">
       {navItems.map(({ href, label, icon: Icon, exact }) => {
         const isActive = exact
           ? pathname === href
@@ -64,29 +64,16 @@ export default function MobDock() {
             href={href}
             className={cn(
               "flex justify-center gap-1 flex-col items-center px-2 py-0.5 w-15 transition-colors",
-              isActive ? "text-primary" : "text-muted-foreground",
-              label === "Browse"
-                ? "border border-white dark:border-card  bg-card dark:bg-zinc-950  rounded-full size-15 -translate-y-6"
-                : ""
+              isActive ? "text-primary" : "text-muted-foreground"
             )}
           >
-            <Icon size={label === "Browse" ? 28 : 23} />
-            <p className={cn("text-xs", label === "Browse" ? "hidden" : "")}>
-              {label}
-            </p>
+            <Icon size={23} />
+            <p className="text-xs">{label}</p>
             {!isActive && (
-              <span
-                className={`h-[2px] w-6 bg-primary rounded-full opacity-0 ${
-                  label === "Browse" ? "hidden" : ""
-                }`}
-              ></span>
+              <span className="h-[2px] w-6 bg-primary rounded-full opacity-0"></span>
             )}
             {isActive && (
-              <span
-                className={`h-[2px] w-8 bg-primary rounded-full  ${
-                  label === "Browse" ? "hidden" : ""
-                }`}
-              ></span>
+              <span className="h-[2px] w-8 bg-primary rounded-full"></span>
             )}
           </Link>
         );

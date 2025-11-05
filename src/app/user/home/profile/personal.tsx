@@ -47,7 +47,7 @@ import {
   UserRoundCog,
   VenusAndMars,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { DragAndDropAreaProfile } from "@/components/ui/upload-profile";
 import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
@@ -69,6 +69,19 @@ export default function PersonalProfile({
     !!data?.userData?.Student.PWD
   );
 
+  const indigenous = data?.userData.Student.indigenous;
+  const pwd = data?.userData.Student.PWD;
+  useEffect(() => {
+    if (indigenous) {
+      setIsIndigenousChecked(true);
+    }
+  }, [indigenous]);
+
+  useEffect(() => {
+    if (pwd) {
+      setIsPWDChecked(true);
+    }
+  }, [pwd]);
   return (
     <div className=" w-full lg:space-y-12 space-y-6">
       {/* <div className="space-y-6 bg-card/40 dark:bg-gradient-to-br to-card from-card/50  px-6 pb-8 pt-4 rounded-lg">

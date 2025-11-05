@@ -353,6 +353,12 @@ export const addScholarshipApi = async (data: UserFormData) => {
   if (data.Student.mName) {
     formData.append("middleName", data.Student.mName);
   }
+  if (data.Student.indigenous) {
+    formData.append("indigenous", data.Student.indigenous);
+  }
+  if (data.Student.PWD) {
+    formData.append("pwd", data.Student.PWD);
+  }
   formData.append("section", data.Student.section);
   formData.append("studentId", String(data.Student.studentId));
   formData.append("accountId", String(data.accountId));
