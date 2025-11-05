@@ -358,7 +358,7 @@ export default function DesktopLandingPage() {
               />
               <motion.img
                 initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
+                animate={{ opacity: 0.9, x: 0 }}
                 transition={{ duration: 0.3, delay: 0.8 }}
                 className="h-full w-[40%] object-cover absolute right-0 [mask-image:linear-gradient(to_right,transparent,black_80%)] z-10 opacity-90"
                 src={bascImage.src}
@@ -409,12 +409,16 @@ export default function DesktopLandingPage() {
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3, delay: 0.9 }}
             >
-              <motion.div
+              {/* <motion.div
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.3, delay: 1.0 }}
               >
-                <Link href={`https://basc.edu.ph/`} target="_blank">
+                <Link
+                  href={`https://basc.edu.ph/`}
+                  target="_blank"
+                  className="bg-amber-300"
+                >
                   <Badge variant="outline" className="hidden dark:flex">
                     Bulacan Agricultural State College <ArrowRight />
                   </Badge>
@@ -422,27 +426,37 @@ export default function DesktopLandingPage() {
                     Bulacan Agricultural State College <ArrowRight />
                   </Badge>
                 </Link>
-              </motion.div>
+              </motion.div> */}
 
-              <motion.span
-                className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  dark:text-primary/70 text-gray-200
-  text-6xl  havelock tracking-[-8px] py-5 -translate-x-2 
+              <div className="flex">
+                <motion.span
+                  className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text dark:text-primary/70 text-green-500/70 
+  text-6xl  havelock tracking-[-8px] py-5 -translate-x-2   drop-shadow-[1px_1px_3px_rgba(0,0,0,0.3)]
   "
-                initial={{ backgroundPosition: "200% 0", opacity: 0, y: 20 }}
-                animate={{ backgroundPosition: "-200% 0", opacity: 1, y: 0 }}
-                transition={{
-                  backgroundPosition: {
-                    repeat: Number.POSITIVE_INFINITY,
-                    repeatType: "loop",
-                    duration: 7,
-                    ease: "linear",
-                  },
-                  opacity: { duration: 0.4, delay: 1.1 },
-                  y: { duration: 0.4, delay: 1.1 },
-                }}
-              >
-                Edugrant
-              </motion.span>
+                  initial={{ backgroundPosition: "200% 0", opacity: 0, y: 20 }}
+                  animate={{ backgroundPosition: "-200% 0", opacity: 1, y: 0 }}
+                  transition={{
+                    backgroundPosition: {
+                      repeat: Number.POSITIVE_INFINITY,
+                      repeatType: "loop",
+                      duration: 7,
+                      ease: "linear",
+                    },
+                    opacity: { duration: 0.4, delay: 1.1 },
+                    y: { duration: 0.4, delay: 1.1 },
+                  }}
+                >
+                  Edugrant
+                </motion.span>
+                <motion.p
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: 1.3 }}
+                  className="mt-6 font-medium tracking-wide text-white"
+                >
+                  BASC
+                </motion.p>
+              </div>
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
