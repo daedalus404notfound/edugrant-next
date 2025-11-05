@@ -534,7 +534,7 @@ export default function DesktopLandingPage() {
             <div className="text-left mt-8">
               <span
                 className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-500/70
-  text-4xl havelock tracking-[-3px]  font-bold 
+  text-4xl havelock tracking-[-3px]  font-bold  
   "
               >
                 EDUGRANT
