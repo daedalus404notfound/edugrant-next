@@ -516,6 +516,7 @@ export default function DesktopLandingPage() {
               <Button
                 className="rounded-full"
                 size="icon"
+                variant="outline"
                 onClick={() => setOpenAnnouncement(true)}
               >
                 <Megaphone />
