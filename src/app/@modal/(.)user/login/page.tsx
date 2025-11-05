@@ -383,6 +383,11 @@ export default function LoginClientModal() {
                                   value={field.value}
                                   onChange={(value) => {
                                     field.onChange(value);
+                                    if (value.length === 6) {
+                                      loginOtpForm.handleSubmit(
+                                        handleOtpVerification
+                                      )();
+                                    }
                                   }}
                                 >
                                   <InputOTPGroup>
@@ -442,7 +447,7 @@ export default function LoginClientModal() {
                           Resend Now
                         </span>
                       </Label> */}
-                      <Button
+                      {/* <Button
                         variant="link"
                         size="sm"
                         type="button"
@@ -452,8 +457,21 @@ export default function LoginClientModal() {
                         {resendTimer > 0
                           ? `Resend in ${resendTimer}s`
                           : "Resend Code"}
-                      </Button>
-
+                      </Button> */}
+                      <p className="text-sm text-muted-foreground">
+                        Didn't recieve the code?{" "}
+                        <button
+                          className="underline text-foreground cursor-pointer"
+                          onClick={requestNewCode}
+                          disabled={
+                            resendTimer > 0 || authLoading || verifyLoading
+                          }
+                        >
+                          {resendTimer > 0
+                            ? `Resend in ${resendTimer}s`
+                            : "Resend Now"}
+                        </button>
+                      </p>
                       <div className=" border-b flex-1"></div>
                     </motion.div>
                     {/* {expiresAt && Date.now() > expiresAt && (

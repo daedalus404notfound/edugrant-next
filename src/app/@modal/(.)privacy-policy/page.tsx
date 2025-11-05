@@ -8,6 +8,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
+import ModalHeader from "@/components/ui/modal-header";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function PrivacyPolicy() {
   const [open, setOpen] = useState(true);
@@ -28,7 +30,10 @@ export default function PrivacyPolicy() {
         HandleCloseDrawer(value);
       }}
     >
-      <DialogContent className="max-w-4xl h-[85vh] p-0 border-0 rounded-lg overflow-hidden">
+      <DialogContent
+        showCloseButton={false}
+        className="max-w-4xl w-[98%] mx-auto p-1 border-0 outline-0"
+      >
         <DialogHeader className="sr-only">
           <DialogTitle className="text-2xl font-semibold">
             Privacy Policy
@@ -42,41 +47,35 @@ export default function PrivacyPolicy() {
             })}
           </p>
         </DialogHeader>
+        <ModalHeader
+          text="Privacy Policy"
+          HandleCloseDrawer={HandleCloseDrawer}
+        />
 
-        <div className="sticky top-0 z-10 bg-gradient-to-br to-background/40 from-background/80 px-8 py-6 rounded-lg">
-          <h1 className="text-3xl font-semibold tracking-tight text-balance">
-            Privacy Policy
-          </h1>
-          <p className="text-sm text-muted-foreground mt-2">
-            Last updated:{" "}
-            {new Date().toLocaleDateString("en-US", {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            })}
-          </p>
-        </div>
-
-        <div className="px-6 py-6 space-y-8 overflow-auto">
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold">1. Introduction</h2>
-            <p className="text-muted-foreground leading-relaxed">
+        <ScrollArea className="p-4 max-h-[80dvh] bg-background rounded-md">
+          <div className="space-y-3 mt-8">
+            <h2 className="lg:text-xl text-base font-semibold">
+              1. Introduction
+            </h2>
+            <p className="text-muted-foreground leading-relaxed lg:text-base text-sm">
               EduGrant values your privacy and is committed to protecting your
               personal data. This Privacy Policy explains how we collect, use,
               store, and safeguard your personal information in compliance with
               Republic Act No. 10173 (Data Privacy Act of 2012), the BASC Data
               Privacy Manual, and other applicable laws.
             </p>
-            <p className="text-muted-foreground leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed lg:text-base text-sm">
               By using the EduGrant website or continuing to fill out our forms,
               you consent to the collection, processing, and storage of your
               personal information as described in this policy.
             </p>
-          </section>
+          </div>
 
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold">2. Information We Collect</h2>
-            <p className="text-muted-foreground leading-relaxed">
+          <div className="space-y-3 mt-8">
+            <h2 className="lg:text-xl text-base font-semibold">
+              2. Information We Collect
+            </h2>
+            <p className="text-muted-foreground leading-relaxed lg:text-base text-sm">
               EduGrant collects only the necessary personal information to
               process your scholarship application. This may include, but is not
               limited to:
@@ -91,17 +90,17 @@ export default function PrivacyPolicy() {
                 income)
               </li>
             </ul>
-            <p className="text-muted-foreground leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed lg:text-base text-sm">
               All collected information will be used solely for scholarship
               processing and related legal purposes.
             </p>
-          </section>
+          </div>
 
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold">
+          <div className="space-y-3 mt-8">
+            <h2 className="lg:text-xl text-base font-semibold">
               3. Purpose of Data Collection
             </h2>
-            <p className="text-muted-foreground leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed lg:text-base text-sm">
               Your personal data is collected and processed for the following
               purposes:
             </p>
@@ -124,10 +123,10 @@ export default function PrivacyPolicy() {
                 regulations
               </li>
             </ul>
-          </section>
+          </div>
 
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold">
+          <div className="space-y-3 mt-8">
+            <h2 className="lg:text-xl text-base font-semibold">
               4. Data Protection and Confidentiality
             </h2>
             <ul className="space-y-2 text-muted-foreground leading-relaxed ml-6">
@@ -145,13 +144,13 @@ export default function PrivacyPolicy() {
                 access, disclosure, alteration, or destruction.
               </li>
             </ul>
-          </section>
+          </div>
 
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold">
+          <div className="space-y-3 mt-8">
+            <h2 className="lg:text-xl text-base font-semibold">
               5. Data Sharing and Disclosure
             </h2>
-            <p className="text-muted-foreground leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed lg:text-base text-sm">
               EduGrant does not share your personal information with third
               parties unless:
             </p>
@@ -164,14 +163,14 @@ export default function PrivacyPolicy() {
               </li>
               <li className="list-disc">With your express consent.</li>
             </ul>
-            <p className="text-muted-foreground leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed lg:text-base text-sm">
               All disclosures are made in accordance with the Data Privacy Act
               and the BASC Data Privacy Manual.
             </p>
-          </section>
+          </div>
 
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold">
+          <div className="space-y-3 mt-8">
+            <h2 className="lg:text-xl text-base font-semibold">
               6. Data Retention and Disposal
             </h2>
             <ul className="space-y-2 text-muted-foreground leading-relaxed ml-6">
@@ -186,13 +185,13 @@ export default function PrivacyPolicy() {
                 retention and disposal policies.
               </li>
             </ul>
-          </section>
+          </div>
 
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold">
+          <div className="space-y-3 mt-8">
+            <h2 className="lg:text-xl text-base font-semibold">
               7. Your Rights as a Data Subject
             </h2>
-            <p className="text-muted-foreground leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed lg:text-base text-sm">
               Under the Data Privacy Act of 2012, you have the right to:
             </p>
             <ul className="space-y-2 text-muted-foreground leading-relaxed ml-6">
@@ -212,15 +211,17 @@ export default function PrivacyPolicy() {
                 File a complaint in case of any data privacy violation.
               </li>
             </ul>
-            <p className="text-muted-foreground leading-relaxed">
+            <p className="text-muted-foreground leading-relaxed lg:text-base text-sm">
               Requests regarding your data may be addressed to the BASC Data
               Protection Officer.
             </p>
-          </section>
+          </div>
 
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold">8. Contact Information</h2>
-            <p className="text-muted-foreground leading-relaxed">
+          <div className="space-y-3 mt-8">
+            <h2 className="lg:text-xl text-base font-semibold">
+              8. Contact Information
+            </h2>
+            <p className="text-muted-foreground leading-relaxed lg:text-base text-sm">
               For concerns or inquiries regarding data privacy, you may contact:
             </p>
             <div className="bg-muted/50 rounded-lg p-4 space-y-1">
@@ -238,17 +239,19 @@ export default function PrivacyPolicy() {
                 Phone: [Insert contact number]
               </p>
             </div>
-          </section>
+          </div>
 
-          <section className="space-y-3">
-            <h2 className="text-xl font-semibold">9. Policy Updates</h2>
-            <p className="text-muted-foreground leading-relaxed">
+          <div className="space-y-3 mt-8">
+            <h2 className="lg:text-xl text-base font-semibold">
+              9. Policy Updates
+            </h2>
+            <p className="text-muted-foreground leading-relaxed lg:text-base text-sm">
               EduGrant reserves the right to update or amend this Privacy Policy
               as needed to comply with changes in regulations or institutional
               requirements. Any updates will be posted on the EduGrant website.
             </p>
-          </section>
-        </div>
+          </div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
