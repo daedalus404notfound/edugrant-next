@@ -319,20 +319,20 @@ export default function RegisterStudent() {
                             </FormLabel>
                             <FormControl>
                               <div className="flex">
-                                {/* Fixed +63 prefix */}
+                                {/* Fixed +639 prefix */}
                                 <span className="flex items-center px-4 border rounded-l-md text-sm">
-                                  +63
+                                  +639
                                 </span>
                                 <Input
                                   type="text"
-                                  placeholder="9xxx"
-                                  maxLength={10}
-                                  value={field.value?.replace("+63", "") || ""}
+                                  placeholder="xxx"
+                                  maxLength={9}
+                                  value={field.value?.replace("+639", "") || ""}
                                   onChange={(e) => {
                                     const val = e.target.value
                                       .replace(/\D/g, "")
-                                      .slice(0, 10);
-                                    field.onChange(`+63${val}`);
+                                      .slice(0, 9);
+                                    field.onChange(`+639${val}`);
                                   }}
                                   disabled={sendAuthCode.isLoading}
                                   className="rounded-l-none"
