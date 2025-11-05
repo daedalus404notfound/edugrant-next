@@ -125,7 +125,7 @@ export default function LoginClientModal() {
         {isMobile && (
           <ModalHeader text="Login" HandleCloseDrawer={HandleCloseDrawer} />
         )}
-        <div className="relative z-10 flex justify-center items-center w-full  h-full lg:p-4 pt-4 rounded-2xl bg-background  dark:bg-card backdrop-blur-md">
+        <div className="relative z-10 flex justify-center items-center w-full  h-full lg:p-4 pt-4 rounded-2xl bg-background  backdrop-blur-md">
           {/* <Button
             className="absolute top-6 left-6"
             onClick={() => setOpen(false)}
