@@ -4,39 +4,63 @@ import { useEffect, useMemo, useState } from "react";
 import deepEqual from "fast-deep-equal";
 import z from "zod";
 
-export const familyBackgroundSchema = z.object({
-  fatherFullName: z.string().min(1, "Required"),
-  fatherAddress: z.string().min(1, "Required"),
-  fatherContactNumber: z.string().min(1, "Required"),
-  fatherOccupation: z.string().min(1, "Required"),
-  fatherHighestEducation: z.string().min(1, "Required"),
-  fatherStatus: z.string().min(1, "Required"),
-  fatherTotalParentsTaxableIncome: z.string().min(1, "Required"),
+export const familyBackgroundSchema = z
+  .object({
+    fatherFullName: z.string().min(1, "Required"),
+    fatherAddress: z.string().min(1, "Required"),
+    fatherContactNumber: z.string().min(1, "Required"),
+    fatherOccupation: z.string().min(1, "Required"),
+    fatherHighestEducation: z.string().min(1, "Required"),
+    fatherStatus: z.string().min(1, "Required"),
+    fatherTotalParentsTaxableIncome: z.string().min(1, "Required"),
 
-  motherFullName: z.string().min(1, "Required"),
-  motherAddress: z.string().min(1, "Required"),
-  motherContactNumber: z.string().min(1, "Required"),
-  motherOccupation: z.string().min(1, "Required"),
-  motherHighestEducation: z.string().min(1, "Required"),
-  motherStatus: z.string().min(1, "Required"),
-  motherTotalParentsTaxableIncome: z.string().min(1, "Required"),
+    motherFullName: z.string().min(1, "Required"),
+    motherAddress: z.string().min(1, "Required"),
+    motherContactNumber: z.string().min(1, "Required"),
+    motherOccupation: z.string().min(1, "Required"),
+    motherHighestEducation: z.string().min(1, "Required"),
+    motherStatus: z.string().min(1, "Required"),
+    motherTotalParentsTaxableIncome: z.string().min(1, "Required"),
 
-  guardianFullName: z.string().min(1, "Required"),
-  guardianAddress: z.string().min(1, "Required"),
-  guardianContactNumber: z.string().min(1, "Required"),
-  guardianOccupation: z.string().min(1, "Required"),
-  guardianHighestEducation: z.string().min(1, "Required"),
+    guardianFullName: z.string().optional(),
+    guardianAddress: z.string().optional(),
+    guardianContactNumber: z.string().optional(),
+    guardianOccupation: z.string().optional(),
+    guardianHighestEducation: z.string().optional(),
 
-  siblings: z
-    .array(
-      z.object({
-        fullName: z.string().min(1, "Required"),
-        age: z.string().min(1, "Required").regex(/^\d+$/, "Only numbers"),
-        occupation: z.string().min(1, "Required"),
-      })
-    )
-    .optional(),
-});
+    siblings: z
+      .array(
+        z.object({
+          fullName: z.string().min(1, "Required"),
+          age: z.string().min(1, "Required").regex(/^\d+$/, "Only numbers"),
+          occupation: z.string().min(1, "Required"),
+        })
+      )
+      .optional(),
+  })
+  .refine(
+    (data) => {
+      const fatherUnavailable =
+        data.fatherStatus === "Deceased" || data.fatherStatus === "Unknown";
+      const motherUnavailable =
+        data.motherStatus === "Deceased" || data.motherStatus === "Unknown";
+
+      if (fatherUnavailable && motherUnavailable) {
+        return (
+          data.guardianFullName &&
+          data.guardianAddress &&
+          data.guardianContactNumber &&
+          data.guardianOccupation &&
+          data.guardianHighestEducation
+        );
+      }
+      return true; // valid if at least one parent is available
+    },
+    {
+      message: "Required",
+      path: ["guardianFullName"], // show error near guardian
+    }
+  );
 
 export type FamilyBackgroundFormData = z.infer<typeof familyBackgroundSchema>;
 

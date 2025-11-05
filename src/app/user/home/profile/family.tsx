@@ -46,6 +46,8 @@ import { AnimatePresence, motion } from "motion/react";
 import { useEditUserProfile } from "@/hooks/user/postProfileUpdate";
 import { useEditUserProfileFamilyBackground } from "@/hooks/user/postProfileFamilyUpdatye";
 import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
+import { useEffect, useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function FamilyForm() {
   const mutation = useEditUserProfileFamilyBackground();
@@ -53,192 +55,282 @@ export default function FamilyForm() {
   const familyBackground = data?.userData.Student.familyBackground;
   const { fbForm, fbIsChanged, siblings } =
     useFamilyBackgroundForm(familyBackground);
+  const [checked, setChecked] = useState(false);
+  const fatherStatus = fbForm.watch("fatherStatus");
+  const motherStatus = fbForm.watch("motherStatus");
+  const fatherFormDisable =
+    fatherStatus === "Deceased" || fatherStatus === "Unknown";
+  const motherFormDisable =
+    motherStatus === "Deceased" || motherStatus === "Unknown";
+
+  useEffect(() => {
+    if (fatherFormDisable) {
+      fbForm.setValue("fatherFullName", "N/A");
+      fbForm.setValue("fatherAddress", "N/A");
+      fbForm.setValue("fatherContactNumber", "N/A");
+      fbForm.setValue("fatherOccupation", "N/A");
+      fbForm.setValue("fatherHighestEducation", "N/A");
+      fbForm.setValue("fatherTotalParentsTaxableIncome", "N/A");
+    } else {
+      // Reset to empty or previous data if available
+      fbForm.setValue(
+        "fatherFullName",
+        data?.userData.Student.familyBackground.fatherFullName ?? ""
+      );
+      fbForm.setValue(
+        "fatherAddress",
+        data?.userData.Student.familyBackground.fatherAddress ?? ""
+      );
+      fbForm.setValue(
+        "fatherContactNumber",
+        data?.userData.Student.familyBackground.fatherContactNumber ?? ""
+      );
+      fbForm.setValue(
+        "fatherOccupation",
+        data?.userData.Student.familyBackground.fatherOccupation ?? ""
+      );
+      fbForm.setValue(
+        "fatherHighestEducation",
+        data?.userData.Student.familyBackground.fatherHighestEducation ?? ""
+      );
+      fbForm.setValue(
+        "fatherTotalParentsTaxableIncome",
+        data?.userData.Student.familyBackground
+          .fatherTotalParentsTaxableIncome ?? ""
+      );
+    }
+  }, [fatherStatus, fbForm, data]);
+  useEffect(() => {
+    if (motherFormDisable) {
+      fbForm.setValue("motherFullName", "N/A");
+      fbForm.setValue("motherAddress", "N/A");
+      fbForm.setValue("motherContactNumber", "N/A");
+      fbForm.setValue("motherOccupation", "N/A");
+      fbForm.setValue("motherHighestEducation", "N/A");
+      fbForm.setValue("motherTotalParentsTaxableIncome", "N/A");
+    } else {
+      fbForm.setValue(
+        "motherFullName",
+        data?.userData.Student.familyBackground.motherFullName ?? ""
+      );
+      fbForm.setValue(
+        "motherAddress",
+        data?.userData.Student.familyBackground.motherAddress ?? ""
+      );
+      fbForm.setValue(
+        "motherContactNumber",
+        data?.userData.Student.familyBackground.motherContactNumber ?? ""
+      );
+      fbForm.setValue(
+        "motherOccupation",
+        data?.userData.Student.familyBackground.motherOccupation ?? ""
+      );
+      fbForm.setValue(
+        "motherHighestEducation",
+        data?.userData.Student.familyBackground.motherHighestEducation ?? ""
+      );
+      fbForm.setValue(
+        "motherTotalParentsTaxableIncome",
+        data?.userData.Student.familyBackground
+          .motherTotalParentsTaxableIncome ?? ""
+      );
+    }
+  }, [motherFormDisable, fbForm, data]);
+
+  useEffect(() => {
+    if (checked) {
+      fbForm.setValue("guardianFullName", "N/A");
+      fbForm.setValue("guardianAddress", "N/A");
+      fbForm.setValue("guardianContactNumber", "N/A");
+      fbForm.setValue("guardianOccupation", "N/A");
+      fbForm.setValue("guardianHighestEducation", "N/A");
+    } else {
+      // Reset to empty or previous data if available
+      fbForm.setValue(
+        "guardianFullName",
+        data?.userData.Student.familyBackground.guardianFullName ?? ""
+      );
+      fbForm.setValue(
+        "guardianAddress",
+        data?.userData.Student.familyBackground.guardianAddress ?? ""
+      );
+      fbForm.setValue(
+        "guardianContactNumber",
+        data?.userData.Student.familyBackground.guardianContactNumber ?? ""
+      );
+      fbForm.setValue(
+        "guardianOccupation",
+        data?.userData.Student.familyBackground.guardianOccupation ?? ""
+      );
+      fbForm.setValue(
+        "guardianHighestEducation",
+        data?.userData.Student.familyBackground.guardianHighestEducation ?? ""
+      );
+    }
+  }, [checked, fbForm, data]);
+
+  useEffect(() => {
+    if (fatherFormDisable && motherFormDisable) {
+      setChecked(false);
+    } else {
+      setChecked(false);
+    }
+  }, [fatherFormDisable, motherFormDisable]);
   return (
     <div className=" w-full space-y-6">
-      {" "}
-      <p className="text-sm  p-4 dark:bg-blue-900 bg-blue-200 col-span-2 rounded-md flex gap-2 items-center">
-        <AlertCircle size={15} /> If no information available, type{" "}
-        <span className="font-medium">N/A.</span>
-      </p>
       <Form {...fbForm}>
         <form
           onSubmit={fbForm.handleSubmit((values) => mutation.mutate(values))}
+          className="space-y-8"
         >
-          <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-card/40 dark:bg-gradient-to-br to-card from-card/50 lg:p-6 p-4 rounded-lg">
-            <div className="lg:col-span-2 col-span-1 space-y-4">
-              <div className="flex items-center gap-3 flex-col lg:flex-row">
-                <h3 className="text-base font-medium flex gap-2 items-center">
-                  Father Information
-                </h3>
-                <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-                <Controller
-                  control={fbForm.control}
-                  name="fatherStatus" // matches Zod schema
-                  // default status
-                  render={({ field }) => (
-                    <RadioGroup
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      className="flex lg:p-0 p-2 w-full lg:w-[unset] justify-between"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="Separated"
-                          id="fatherStatus-separated"
-                        />
-                        <Label htmlFor="fatherStatus-separated">
-                          Separated
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="Living"
-                          id="fatherStatus-living"
-                        />
-                        <Label htmlFor="fatherStatus-living">Living</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="Deceased"
-                          id="fatherStatus-deceased"
-                        />
-                        <Label htmlFor="fatherStatus-deceased">Deceased</Label>
-                      </div>
-                    </RadioGroup>
-                  )}
-                />
-              </div>
+          {fatherFormDisable && motherFormDisable && (
+            <div className="bg-blue-900 rounded-md p-4 flex justify-between text-sm">
+              <p className="text-center  ">
+                Guardian information is required if both parents are deceased or
+                unknown.
+              </p>
+              <span className="flex gap-1.5">
+                <Checkbox
+                  id="meow"
+                  checked={checked}
+                  onCheckedChange={(value) => setChecked(value === true)}
+                  className="translate-y-0.5"
+                />{" "}
+                <label htmlFor="meow">
+                  {" "}
+                  I do not have a parent or guardian available
+                </label>
+              </span>
             </div>
-
-            {/* Father Full Name */}
-            <FormField
-              control={fbForm.control}
-              name="fatherFullName"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex justify-between items-center">
-                    <FormLabel className="text-muted-foreground">
-                      Full Name
-                    </FormLabel>
+          )}
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 ">
+              <h3 className="text-base font-medium flex gap-2 items-center">
+                Father Information
+              </h3>
+              <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+              <FormField
+                control={fbForm.control}
+                name="fatherStatus"
+                render={({ field }) => (
+                  <FormItem>
+                    {/* <FormLabel>Mother Status</FormLabel> */}
+                    <FormControl>
+                      <Select
+                        value={field.value || ""}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="w-full lg:w-[unset]">
+                          <SelectValue placeholder="Select Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Separated">Separated</SelectItem>
+                          <SelectItem value="Living">Living</SelectItem>
+                          <SelectItem value="Deceased">Deceased</SelectItem>
+                          <SelectItem value="Unknown">Unknown</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
                     <FormMessage />
-                  </div>
-                  <FormControl>
-                    <div className="flex items-center">
-                      <Input {...field} className="rounded-r-none" />
-                      <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                        <Button variant="ghost">
-                          <UserRound />
-                        </Button>
-                      </span>
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-card/40 dark:bg-gradient-to-br to-card from-card/50 lg:p-6 p-4 rounded-lg">
+              {/* Father Full Name */}
+              <FormField
+                control={fbForm.control}
+                name="fatherFullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex justify-between items-center">
+                      <FormLabel className="text-muted-foreground">
+                        Full Name
+                      </FormLabel>
+                      <FormMessage />
                     </div>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+                    <FormControl>
+                      <Input {...field} disabled={fatherFormDisable} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
-            {/* Father Address */}
-            <FormField
-              control={fbForm.control}
-              name="fatherAddress"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-muted-foreground">
-                    Address
-                  </FormLabel>
-                  <FormControl>
-                    <div className="flex items-center">
-                      <Input {...field} className="rounded-r-none" />
-                      <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                        <Button variant="ghost">
-                          <Map />
-                        </Button>
-                      </span>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Father Contact Number */}
-            <FormField
-              control={fbForm.control}
-              name="fatherContactNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex justify-between items-center">
+              {/* Father Address */}
+              <FormField
+                control={fbForm.control}
+                name="fatherAddress"
+                render={({ field }) => (
+                  <FormItem>
                     <FormLabel className="text-muted-foreground">
-                      Contact Number
+                      Address
                     </FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={fatherFormDisable} />
+                    </FormControl>
                     <FormMessage />
-                  </div>
-                  <FormControl>
-                    <div className="flex">
-                      {/* Fixed +63 prefix */}
-                      <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
-                        +63
-                      </span>
+                  </FormItem>
+                )}
+              />
+
+              {/* Father Contact Number */}
+              <FormField
+                control={fbForm.control}
+                name="fatherContactNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex justify-between items-center">
+                      <FormLabel className="text-muted-foreground">
+                        Contact Number
+                      </FormLabel>
+                      <FormMessage />
+                    </div>
+                    <FormControl>
                       <Input
                         type="text"
-                        placeholder=""
-                        maxLength={10}
+                        // maxLength={10}
                         {...field}
-                        // value={field.value?.replace("+63", "") || ""}
-                        // onChange={(e) => {
-                        //   const val = e.target.value
-                        //     .replace(/\D/g, "")
-                        //     .slice(0, 10);
-                        //   field.onChange(`+63${val}`);
-                        // }}
-                        className="rounded-l-none"
+                        disabled={fatherFormDisable}
                       />
-                    </div>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
-            {/* Father Occupation */}
-            <FormField
-              control={fbForm.control}
-              name="fatherOccupation"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-muted-foreground">
-                    Occupation
-                  </FormLabel>
-                  <FormControl>
-                    <div className="flex items-center">
-                      <Input {...field} className="rounded-r-none" />
-                      <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                        <Button variant="ghost">
-                          <Briefcase />
-                        </Button>
-                      </span>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              {/* Father Occupation */}
+              <FormField
+                control={fbForm.control}
+                name="fatherOccupation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-muted-foreground">
+                      Occupation
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={fatherFormDisable} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {/* Father Highest Education */}
+              {/* Father Highest Education */}
 
-            <FormField
-              control={fbForm.control}
-              name="fatherHighestEducation"
-              render={({ field }) => (
-                <FormItem className="">
-                  <FormLabel className="text-muted-foreground">
-                    Highest Education Attainment
-                  </FormLabel>
-                  <FormControl>
-                    <div className="flex items-center">
+              <FormField
+                control={fbForm.control}
+                name="fatherHighestEducation"
+                render={({ field }) => (
+                  <FormItem className="">
+                    <FormLabel className="text-muted-foreground">
+                      Highest Education Attainment
+                    </FormLabel>
+                    <FormControl>
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
+                        disabled={fatherFormDisable}
                       >
-                        <SelectTrigger className="rounded-r-none w-full">
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent>
@@ -256,202 +348,152 @@ export default function FamilyForm() {
                           <SelectItem value="N/A">N/A</SelectItem>
                         </SelectContent>
                       </Select>
-                      <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                        <Button variant="ghost">
-                          <GraduationCap />
-                        </Button>
-                      </span>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {/* Father Taxable Income */}
+              {/* Father Taxable Income */}
 
-            <FormField
-              control={fbForm.control}
-              name="fatherTotalParentsTaxableIncome"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-muted-foreground">
-                    Taxable Income
-                  </FormLabel>
-                  <FormControl>
-                    <div className="flex items-center">
-                      <Input {...field} className="rounded-r-none" />
-                      <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                        <Button variant="ghost">
-                          <PhilippinePeso />
-                        </Button>
-                      </span>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={fbForm.control}
+                name="fatherTotalParentsTaxableIncome"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-muted-foreground">
+                      Taxable Income
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={fatherFormDisable} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
-          <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-gradient-to-br to-card from-card/50 lg:p-6 p-4  rounded-lg">
-            <div className="lg:col-span-2 col-span-1 space-y-4">
-              <div className="flex items-center gap-3 flex-col lg:flex-row">
-                <h3 className="text-base font-medium flex gap-2 items-center">
-                  Mother Information
-                </h3>
-                <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-                <Controller
-                  control={fbForm.control}
-                  name="motherStatus"
-                  render={({ field }) => (
-                    <RadioGroup
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      className="flex lg:p-0 p-2 w-full lg:w-[unset] justify-between"
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="Separated"
-                          id="motherStatus-separated"
-                        />
-                        <Label htmlFor="motherStatus-separated">
-                          Separated
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="Living"
-                          id="motherStatus-living"
-                        />
-                        <Label htmlFor="motherStatus-living">Living</Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="Deceased"
-                          id="motherStatus-deceased"
-                        />
-                        <Label htmlFor="motherStatus-deceased">Deceased</Label>
-                      </div>
-                    </RadioGroup>
-                  )}
-                />
-              </div>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 ">
+              <h3 className="text-base font-medium flex gap-2 items-center">
+                Mother Information
+              </h3>
+              <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+              <FormField
+                control={fbForm.control}
+                name="motherStatus"
+                render={({ field }) => (
+                  <FormItem>
+                    {/* <FormLabel>Mother Status</FormLabel> */}
+                    <FormControl>
+                      <Select
+                        value={field.value || ""}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="w-full lg:w-[unset]">
+                          <SelectValue placeholder="Select Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Separated">Separated</SelectItem>
+                          <SelectItem value="Living">Living</SelectItem>
+                          <SelectItem value="Deceased">Deceased</SelectItem>
+                          <SelectItem value="Unknown">Unknown</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
-            <FormField
-              control={fbForm.control}
-              name="motherFullName"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex justify-between items-center">
-                    <FormLabel className="text-muted-foreground">
-                      Full Name
-                    </FormLabel>
-                    <FormMessage />
-                  </div>
-                  <FormControl>
-                    <div className="flex items-center">
-                      <Input {...field} className="rounded-r-none" />
-                      <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                        <Button variant="ghost">
-                          <UserRound />
-                        </Button>
-                      </span>
+            <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-gradient-to-br to-card from-card/50 lg:p-6 p-4  rounded-lg">
+              <FormField
+                control={fbForm.control}
+                name="motherFullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex justify-between items-center">
+                      <FormLabel className="text-muted-foreground">
+                        Full Name
+                      </FormLabel>
+                      <FormMessage />
                     </div>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+                    <FormControl>
+                      <Input {...field} disabled={motherFormDisable} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={fbForm.control}
-              name="motherAddress"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-muted-foreground">
-                    Address
-                  </FormLabel>
-                  <FormControl>
-                    <div className="flex items-center">
-                      <Input {...field} className="rounded-r-none" />
-                      <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                        <Button variant="ghost">
-                          <Map />
-                        </Button>
-                      </span>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={fbForm.control}
-              name="motherContactNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex justify-between items-center">
+              <FormField
+                control={fbForm.control}
+                name="motherAddress"
+                render={({ field }) => (
+                  <FormItem>
                     <FormLabel className="text-muted-foreground">
-                      Contact Number
+                      Address
                     </FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={motherFormDisable} />
+                    </FormControl>
                     <FormMessage />
-                  </div>
-                  <FormControl>
-                    <div className="flex">
-                      {/* Fixed +63 prefix */}
-                      <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
-                        +63
-                      </span>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={fbForm.control}
+                name="motherContactNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex justify-between items-center">
+                      <FormLabel className="text-muted-foreground">
+                        Contact Number
+                      </FormLabel>
+                      <FormMessage />
+                    </div>
+                    <FormControl>
                       <Input
                         type="text"
                         placeholder=""
-                        maxLength={10}
                         {...field}
-                        className="rounded-l-none"
+                        disabled={motherFormDisable}
                       />
-                    </div>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={fbForm.control}
-              name="motherOccupation"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-muted-foreground">
-                    Occupation
-                  </FormLabel>
-                  <FormControl>
-                    <div className="flex items-center">
-                      <Input {...field} className="rounded-r-none" />
-                      <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                        <Button variant="ghost">
-                          <Briefcase />
-                        </Button>
-                      </span>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={fbForm.control}
+                name="motherOccupation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-muted-foreground">
+                      Occupation
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={motherFormDisable} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={fbForm.control}
-              name="motherHighestEducation"
-              render={({ field }) => (
-                <FormItem className="">
-                  <FormLabel className="text-muted-foreground">
-                    Highest Education Attainment
-                  </FormLabel>
-                  <FormControl>
-                    <div className="flex items-center">
+              <FormField
+                control={fbForm.control}
+                name="motherHighestEducation"
+                render={({ field }) => (
+                  <FormItem className="">
+                    <FormLabel className="text-muted-foreground">
+                      Highest Education Attainment
+                    </FormLabel>
+                    <FormControl>
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
+                        disabled={motherFormDisable}
                       >
                         <SelectTrigger className="rounded-r-none w-full">
                           <SelectValue placeholder="Select" />
@@ -471,167 +513,125 @@ export default function FamilyForm() {
                           <SelectItem value="N/A">N/A</SelectItem>
                         </SelectContent>
                       </Select>
-                      <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                        <Button variant="ghost">
-                          <GraduationCap />
-                        </Button>
-                      </span>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={fbForm.control}
-              name="motherTotalParentsTaxableIncome"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-muted-foreground">
-                    Taxable Income
-                  </FormLabel>
-                  <FormControl>
-                    <div className="flex items-center">
-                      <Input {...field} className="rounded-r-none" />
-                      <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                        <Button variant="ghost">
-                          <PhilippinePeso />
-                        </Button>
-                      </span>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={fbForm.control}
+                name="motherTotalParentsTaxableIncome"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-muted-foreground">
+                      Taxable Income
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={motherFormDisable} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
-          <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-gradient-to-br to-card from-card/50 lg:p-6 p-4  rounded-lg">
-            <div className="lg:col-span-2 col-span-1 space-y-4">
-              <div className="flex items-center gap-3 flex-col lg:flex-row">
-                <h3 className="text-base font-medium flex gap-2 items-center">
-                  Guardian Information
-                </h3>
-                <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-              </div>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 ">
+              <h3 className="text-base font-medium flex gap-2 items-center">
+                Guardian Information
+              </h3>
+              <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
             </div>
-
-            <FormField
-              control={fbForm.control}
-              name="guardianFullName"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex justify-between items-center">
-                    <FormLabel className="text-muted-foreground">
-                      Full Name
-                    </FormLabel>
-                    <FormMessage />
-                  </div>
-                  <FormControl>
-                    <div className="flex items-center">
-                      <Input {...field} className="rounded-r-none" />
-                      <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                        <Button variant="ghost">
-                          <UserRound />
-                        </Button>
-                      </span>
+            <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-gradient-to-br to-card from-card/50 lg:p-6 p-4  rounded-lg">
+              <FormField
+                control={fbForm.control}
+                name="guardianFullName"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex justify-between items-center">
+                      <FormLabel className="text-muted-foreground">
+                        Full Name
+                      </FormLabel>
+                      <FormMessage />
                     </div>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+                    <FormControl>
+                      <Input {...field} disabled={checked} />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={fbForm.control}
-              name="guardianAddress"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-muted-foreground">
-                    Address
-                  </FormLabel>
-                  <FormControl>
-                    <div className="flex items-center">
-                      <Input {...field} className="rounded-r-none" />
-                      <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                        <Button variant="ghost">
-                          <Map />
-                        </Button>
-                      </span>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={fbForm.control}
-              name="guardianContactNumber"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex justify-between items-center">
+              <FormField
+                control={fbForm.control}
+                name="guardianAddress"
+                render={({ field }) => (
+                  <FormItem>
                     <FormLabel className="text-muted-foreground">
-                      Contact Number
+                      Address
                     </FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={checked} />
+                    </FormControl>
                     <FormMessage />
-                  </div>
-                  <FormControl>
-                    <div className="flex">
-                      {/* Fixed +63 prefix */}
-                      <span className="flex items-center px-4  border border-input border-r-0 rounded-l-md text-sm">
-                        +63
-                      </span>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={fbForm.control}
+                name="guardianContactNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex justify-between items-center">
+                      <FormLabel className="text-muted-foreground">
+                        Contact Number
+                      </FormLabel>
+                      <FormMessage />
+                    </div>
+                    <FormControl>
                       <Input
                         type="text"
                         placeholder=""
-                        maxLength={10}
                         {...field}
-                        className="rounded-l-none"
+                        disabled={checked}
                       />
-                    </div>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={fbForm.control}
-              name="guardianOccupation"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-muted-foreground">
-                    Occupation
-                  </FormLabel>
-                  <FormControl>
-                    <div className="flex items-center">
-                      <Input {...field} className="rounded-r-none" />
-                      <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                        <Button variant="ghost">
-                          <Briefcase />
-                        </Button>
-                      </span>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={fbForm.control}
+                name="guardianOccupation"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-muted-foreground">
+                      Occupation
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={checked} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={fbForm.control}
-              name="guardianHighestEducation"
-              render={({ field }) => (
-                <FormItem className="">
-                  <FormLabel className="text-muted-foreground">
-                    Highest Education Attainment
-                  </FormLabel>
-                  <FormControl>
-                    <div className="flex items-center">
+              <FormField
+                control={fbForm.control}
+                name="guardianHighestEducation"
+                render={({ field }) => (
+                  <FormItem className="">
+                    <FormLabel className="text-muted-foreground">
+                      Highest Education Attainment
+                    </FormLabel>
+                    <FormControl>
                       <Select
                         onValueChange={field.onChange}
                         value={field.value}
+                        disabled={checked}
                       >
-                        <SelectTrigger className="rounded-r-none w-full">
+                        <SelectTrigger className=" w-full">
                           <SelectValue placeholder="Select" />
                         </SelectTrigger>
                         <SelectContent>
@@ -649,30 +649,25 @@ export default function FamilyForm() {
                           <SelectItem value="N/A">N/A</SelectItem>
                         </SelectContent>
                       </Select>
-                      <span className="flex items-center  border border-input border-l-0 rounded-r-md text-sm">
-                        <Button variant="ghost">
-                          <GraduationCap />
-                        </Button>
-                      </span>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </div>
           <div className="w-full">
             {/* Header */}
-            <div className="flex flex-col lg:flex-row lg:items-center gap-4 mb-4">
-              <h3 className="text-lg font-medium flex items-center gap-2">
-                Sibling(s) Information
-              </h3>
-
-              <div className="flex-1 h-px bg-gradient-to-r from-border to-transparent" />
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg font-medium">Sibling(s) Information</h3>
+                <div className="hidden sm:block flex-1 h-px bg-gradient-to-r from-border to-transparent" />
+              </div>
 
               <Button
                 size="sm"
                 type="button"
+                className="w-full sm:w-auto"
                 onClick={() =>
                   siblings.append({ fullName: "", age: "", occupation: "" })
                 }
@@ -695,71 +690,74 @@ export default function FamilyForm() {
                 ) => (
                   <div
                     key={item.id}
-                    className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-6 bg-gradient-to-br from-card/50 to-card p-4 lg:p-6 rounded-lg items-start"
+                    className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 bg-card/30 p-3 rounded-lg"
                   >
-                    {/* Full Name */}
-                    <FormField
-                      control={fbForm.control}
-                      name={`siblings.${index}.fullName`}
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col w-full">
-                          <FormLabel className="text-muted-foreground">
-                            Full Name
-                          </FormLabel>
-                          <FormControl>
-                            <Input {...field} className="w-full bg-card" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    {/* Inputs wrapper */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
+                      {/* Full Name */}
+                      <FormField
+                        control={fbForm.control}
+                        name={`siblings.${index}.fullName`}
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col w-full">
+                            <FormControl>
+                              <Input
+                                placeholder="Full name"
+                                {...field}
+                                className="w-full bg-card"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    {/* Age */}
-                    <FormField
-                      control={fbForm.control}
-                      name={`siblings.${index}.age`}
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col w-full">
-                          <FormLabel className="text-muted-foreground">
-                            Age
-                          </FormLabel>
-                          <FormControl>
-                            <Input {...field} className="w-full bg-card" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      {/* Age */}
+                      <FormField
+                        control={fbForm.control}
+                        name={`siblings.${index}.age`}
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col w-full">
+                            <FormControl>
+                              <Input
+                                placeholder="Age"
+                                {...field}
+                                className="w-full bg-card"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                    {/* Occupation */}
-                    <FormField
-                      control={fbForm.control}
-                      name={`siblings.${index}.occupation`}
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col w-full">
-                          <FormLabel className="text-muted-foreground">
-                            Occupation
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              className="w-full bg-card"
-                              placeholder="Type N/A if not provided"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                      {/* Occupation */}
+                      <FormField
+                        control={fbForm.control}
+                        name={`siblings.${index}.occupation`}
+                        render={({ field }) => (
+                          <FormItem className="flex flex-col w-full">
+                            <FormControl>
+                              <Input
+                                {...field}
+                                className="w-full bg-card"
+                                placeholder="Occupation"
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
 
-                    {/* Delete Button */}
-                    <div className="flex items-start justify-end">
+                    {/* Remove button */}
+                    <div className="flex justify-end sm:justify-center sm:items-center">
                       <Button
                         size="sm"
                         variant="destructive"
+                        className="w-full sm:w-auto"
                         onClick={() => siblings.remove(index)}
                       >
-                        <Trash2 />
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
                   </div>
@@ -767,6 +765,7 @@ export default function FamilyForm() {
               )}
             </div>
           </div>
+
           <AnimatePresence>
             {fbIsChanged && (
               <div className="sticky bottom-16 lg:bottom-0 ">
