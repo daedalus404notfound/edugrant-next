@@ -40,18 +40,19 @@ export default function MobDock() {
   const [open, setOpen] = useState(false);
   const navItems = [
     { href: "/user/home", label: "Home", icon: Home, exact: true },
+    { href: "/user/home/profile", label: "Profile", icon: UserRound },
     { href: "/user/home/scholarships", label: "Browse", icon: GraduationCap },
+    // { href: "/user/home/announcements", label: "Announce", icon: Megaphone },
+
     {
       href: "/user/home/applications",
       label: "Track",
       icon: GalleryVerticalEnd,
     },
-    // { href: "/user/home/announcements", label: "Announce", icon: Megaphone },
-    { href: "/user/home/profile", label: "Profile", icon: UserRound },
   ];
 
   return (
-    <div className="sticky bottom-0 w-full left-0 z-30 bg-card dark:bg-zinc-950/90 backdrop-blur-sm flex justify-center p-2 gap-2 border-t lg:hidden items-center rounded-t-sm">
+    <div className="sticky bottom-0 w-full left-0 z-30 bg-card backdrop-blur-sm flex justify-center pt-1 gap-2 border-t lg:hidden items-center rounded-t-sm">
       {navItems.map(({ href, label, icon: Icon, exact }) => {
         const isActive = exact
           ? pathname === href
@@ -62,16 +63,22 @@ export default function MobDock() {
             key={href}
             href={href}
             className={cn(
-              "flex justify-center gap-1 flex-col items-center px-2 py-0.5 w-15 transition-colors",
-              isActive ? "text-primary" : "text-muted-foreground"
+              "flex justify-center gap-0.5 flex-col items-center px-2 pt-0.5 pb-1 w-15 transition-colors",
+              isActive ? "text-primary" : "text-muted-foreground",
+              label === "Browse"
+                ? "border-2 border-white bg-card rounded-full size-13 -translate-y-5"
+                : ""
             )}
           >
-            <Icon size={23} />
-            <p className="text-xs">{label}</p>
-            {!isActive && (
+            <Icon size={label === "Browse" ? 26 : 23} />
+            <p className={cn("text-xs", label === "Browse" ? "hidden" : "")}>
+              {label}
+            </p>
+            {isActive && label !== "Browse" && (
               <span className="h-[2px] w-6 bg-primary rounded-full opacity-0"></span>
             )}
-            {isActive && (
+
+            {isActive && label !== "Browse" && (
               <span className="h-[2px] w-8 bg-primary rounded-full"></span>
             )}
           </Link>
