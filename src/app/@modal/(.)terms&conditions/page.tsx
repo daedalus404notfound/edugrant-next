@@ -60,7 +60,7 @@ export default function Termss() {
           </p>
         </div> */}
 
-        <ScrollArea className="h-[80dvh] bg-background p-4">
+        <ScrollArea className="h-[80dvh] bg-background lg:p-4 p-2 rounded-md">
           <div className="space-y-4 mt-8">
             <h2 className="lg:text-xl text-base font-semibold tracking-tight">
               1. Introduction

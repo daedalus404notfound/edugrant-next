@@ -52,7 +52,7 @@ export default function PrivacyPolicy() {
           HandleCloseDrawer={HandleCloseDrawer}
         />
 
-        <ScrollArea className="p-4 max-h-[80dvh] bg-background rounded-md">
+        <ScrollArea className="lg:p-4 p-2 max-h-[80dvh] bg-background rounded-md">
           <div className="space-y-3 mt-8">
             <h2 className="lg:text-xl text-base font-semibold">
               1. Introduction
