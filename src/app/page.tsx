@@ -526,12 +526,21 @@ export default function DesktopLandingPage() {
             </div>
           </header>
           <div className="text-left py-10">
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
+            >
               <Badge variant="outline">
                 Bulacan Agricultural State College
               </Badge>
-            </div>
-            <div className="text-left mt-8">
+            </motion.div>
+            <motion.div
+              className="text-left mt-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.1 }}
+            >
               <span
                 className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-500/70
   text-4xl havelock tracking-[-3px]  font-bold  
@@ -539,30 +548,56 @@ export default function DesktopLandingPage() {
               >
                 EDUGRANT
               </span>
-            </div>
-            <p className="mt-4 text-left">
+            </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.2 }}
+              className="mt-4 text-left"
+            >
               Apply for scholarships, track your progress, and unlock
               opportunities for your future at BASC.
-            </p>
+            </motion.p>
           </div>
           {/* <img className="aspect-video object-contain" src={logoo.src} alt="" /> */}
           <div className="grid grid-cols-2 gap-3 mt-10 w-full">
-            <Link className="col-span-2" href={`/user/login`}>
-              <Button size="lg" className="w-full">
-                <GraduationCap />
-                Apply for Scholarship <ChevronRight />
-              </Button>
-            </Link>
-            <Link className="" href={`/user/login`}>
-              <Button className="w-full" size="lg" variant="outline">
-                Login
-              </Button>
-            </Link>
-            <Link className="" href={`/user/register`}>
-              <Button className="w-full" size="lg" variant="outline">
-                Register
-              </Button>
-            </Link>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.3 }}
+              className="col-span-2"
+            >
+              {" "}
+              <Link href={`/user/login`}>
+                <Button size="lg" className="w-full">
+                  <GraduationCap />
+                  Apply for Scholarship <ChevronRight />
+                </Button>
+              </Link>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.4 }}
+            >
+              <Link className="" href={`/user/login`}>
+                <Button className="w-full" size="lg" variant="outline">
+                  Login
+                </Button>
+              </Link>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2, delay: 0.4 }}
+            >
+              <Link className="" href={`/user/register`}>
+                <Button className="w-full" size="lg" variant="outline">
+                  Register
+                </Button>
+              </Link>
+            </motion.div>
           </div>
         </div>
         <div className="mx-auto xl:w-3/4 p-4">

@@ -1,4 +1,4 @@
-import { GraduationCap, Info, Table, X } from "lucide-react";
+import { AppWindow, GraduationCap, Info, Table, X } from "lucide-react";
 import { Button } from "./button";
 import { useTourContext } from "../tour-2/tour-provider";
 
@@ -14,7 +14,7 @@ export default function ModalHeader({
     <div className="flex items-center justify-between lg:pb-2 ">
       <div className="flex items-center gap-3">
         <Button className="relative justify-start" variant="ghost" size="sm">
-          <Table />
+          <AppWindow />
           {text}
         </Button>
       </div>

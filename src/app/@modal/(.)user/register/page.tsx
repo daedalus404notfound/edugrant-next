@@ -160,7 +160,7 @@ export default function RegisterStudent() {
         HandleCloseDrawer(value);
       }}
     >
-      <DrawerContent className=" lg:w-1/2 w-[98%]  mx-auto  !border-0 bg-background dark:bg-card backdrop-blur-lg overflow-hidden p-1 outline-0 lg:min-w-4xl">
+      <DrawerContent className=" lg:w-1/2 w-[98%]  mx-auto  !border-0 bg-card backdrop-blur-lg overflow-hidden  outline-0 lg:min-w-4xl">
         <DrawerHeader className="sr-only">
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>
