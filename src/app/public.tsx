@@ -284,7 +284,6 @@ export default function PublicAnnouncement({
                   <PaginationItem>
                     <Button
                       size="sm"
-                      variant="outline"
                       disabled={
                         meta.page === meta.totalPage ||
                         meta.totalPage === 0 ||
@@ -301,7 +300,7 @@ export default function PublicAnnouncement({
             </div>
           )}
           {full && (
-            <Button size="sm" onClick={handleBackToList} variant="secondary">
+            <Button size="sm" onClick={handleBackToList}>
               <ArrowLeft />
               Back
             </Button>

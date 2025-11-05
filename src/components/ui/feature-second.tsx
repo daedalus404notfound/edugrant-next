@@ -79,7 +79,7 @@
 // export default AppSection;
 "use client";
 
-import { GlobeLock, Zap, Map, Sparkles } from "lucide-react";
+import { GlobeLock, Zap, Map, Sparkles, Settings } from "lucide-react";
 import SpotlightBorderWrapper from "./border";
 import { ShineBorder } from "./shine-border";
 import { useTheme } from "next-themes";
@@ -127,11 +127,10 @@ const AppSection = () => {
       {/* Header */}
       <motion.div className="flex flex-col items-center text-center">
         <h2 className="lg:text-3xl text-xl font-semibold flex gap-3 items-center">
-          Features <Sparkles className="h-4 w-4 lg:h-6 lg:w-6" />
+          Features <Settings className="h-4 w-4 lg:h-6 lg:w-6" />
         </h2>
         <p className="mt-2 lg:text-base text-sm text-muted-foreground max-w-3xl">
-          Edugrant provides a straightforward and secure way for students to
-          submit applications and check their status at any time.
+          Simple, secure, and convenient scholarship management for students.
         </p>
       </motion.div>
 

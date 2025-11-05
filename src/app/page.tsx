@@ -21,11 +21,14 @@ import {
   GraduationCap,
   ChevronRight,
   Megaphone,
+  Sparkles,
+  CircleQuestionMark,
 } from "lucide-react";
 import bascLogo from "@/assets/basclogo.png";
 import osas from "@/assets/osasa.png";
 import bascImage from "@/assets/BASCjf5989_03 copy.jpg";
 import { AnimatePresence, motion } from "motion/react";
+import logoo from "@/assets/edugrant-logo.png";
 import {
   Accordion,
   AccordionContent,
@@ -126,13 +129,15 @@ const HowitworksComponent = () => {
     visible: { opacity: 1, y: 0 },
   };
   return (
-    <div className="w-full space-y-12 py-20 px-6">
-      <div className="relative z-10">
-        <TitleReusable
-          description="Follow these four simple steps to apply for scholarships seamlessly."
-          title="How it works"
-          Icon={Milestone}
-        />
+    <div className="w-full space-y-12 py-20 lg:px-6">
+      <div>
+        <h2 className="lg:text-3xl text-xl font-semibold flex gap-3 items-center">
+          How it works <CircleQuestionMark className="h-4 w-4 lg:h-6 lg:w-6" />
+        </h2>
+        <p className="mt-2 lg:text-base text-sm text-muted-foreground max-w-3xl">
+          Edugrant lets students easily apply and track their applications in
+          one secure place.
+        </p>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8">
@@ -150,8 +155,8 @@ const HowitworksComponent = () => {
             }}
           >
             <SpotlightBorderWrapper>
-              <div className="flex border dark:border-green-900/30 flex-col sm:flex-row items-start gap-6 p-6 shadow-sm dark:bg-green-950/20 rounded-lg">
-                <div className="w-3/4 aspect-[16/8.5] min-h-40 overflow-hidden rounded-md dark:bg-transparent">
+              <div className="flex  dark:bg-white/5 flex-col sm:flex-row items-start gap-6 lg:p-6 p-4 shadow-sm  rounded-lg">
+                <div className="lg:w-3/4 w-full aspect-[16/8.5] min-h-40 overflow-hidden rounded-md dark:bg-transparent">
                   <img
                     src={step.image}
                     alt={step.title}
@@ -159,7 +164,9 @@ const HowitworksComponent = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium">{step.title}</h3>
+                  <h3 className="lg:text-lg text-sm font-medium">
+                    {step.title}
+                  </h3>
                   <p className="text-sm mt-1 text-muted-foreground">
                     {step.description}
                   </p>
@@ -517,13 +524,13 @@ export default function DesktopLandingPage() {
               <ModeToggle />
             </div>
           </header>
-          <div className="text-center py-10">
+          <div className="text-left py-10">
             <div>
               <Badge variant="outline">
                 Bulacan Agricultural State College
               </Badge>
             </div>
-            <div className="text-center mt-8">
+            <div className="text-left mt-8">
               <span
                 className="bg-[linear-gradient(110deg,#404040,35%,#fff,50%,#404040,75%,#404040)] bg-[length:200%_100%] bg-clip-text  text-emerald-500/70
   text-4xl havelock tracking-[-3px]  font-bold 
@@ -532,11 +539,12 @@ export default function DesktopLandingPage() {
                 EDUGRANT
               </span>
             </div>
-            <p className="mt-4 text-center">
+            <p className="mt-4 text-left">
               Apply for scholarships, track your progress, and unlock
               opportunities for your future at BASC.
             </p>
           </div>
+          {/* <img className="aspect-video object-contain" src={logoo.src} alt="" /> */}
           <div className="grid grid-cols-2 gap-3 mt-10 w-full">
             <Link className="col-span-2" href={`/user/login`}>
               <Button size="lg" className="w-full">
@@ -561,12 +569,11 @@ export default function DesktopLandingPage() {
             <AppSection />
           </div>
           <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-          <div id="how-it-works" className="hidden lg:block">
+
+          <div id="howitworks">
             <HowitworksComponent />
           </div>
-          <div className="block lg:hidden">
-            <HowitworksComponentMobile />
-          </div>
+
           <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
           <div id="contact">
             <ContactSection />
