@@ -144,9 +144,9 @@ const HowitworksComponent = () => {
             whileInView="visible"
             viewport={{ once: false, amount: 0.3 }}
             transition={{
-              duration: 0.5,
+              duration: 0.2,
               ease: "easeOut",
-              delay: index * 0.2, // stagger effect
+              delay: index * 0.1, // stagger effect
             }}
           >
             <SpotlightBorderWrapper>

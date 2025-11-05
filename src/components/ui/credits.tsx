@@ -25,25 +25,26 @@ const TeamMember = ({
   image,
   socialLinks,
 }: TeamMemberProps) => (
-  <Card className=" dark:border-green-800/10 dark:bg-green-900/10 p-0 overflow-hidden">
-    <div className="flex flex-col md:flex-row">
-      <div className="relative md:w-48 h-64 md:h-auto flex-shrink-0">
-        <Image
-          src={image}
-          alt={name}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, 192px"
-        />
-      </div>
-      <div className="lg:p-6 p-4 flex-1">
-        <div className="space-y-4">
+  <div className="dark:bg-card bg-card/30 p-1 rounded-md overflow-hidden">
+    <div className="flex flex-col ">
+      <img
+        src={image}
+        alt={name}
+        className="object-cover rounded-md aspect-square lg:aspect-video "
+      />
+
+      <div className="lg:p-4 p-2 flex-1">
+        <div className="flex flex-col gap-3">
           <div>
-            <h3 className="text-xl font-semibold ">{name}</h3>
-            <p className="text-muted-foreground text-sm">{role}</p>
+            <h3 className="lg:text-xl text-sm font-semibold line-clamp-1">
+              {name}
+            </h3>
+            <p className="text-muted-foreground lg:text-sm text-xs">{role}</p>
           </div>
-          <p className=" leading-relaxed text-sm">{description}</p>
-          <div className="flex gap-2">
+          <p className=" leading-relaxed text-sm hidden lg:block">
+            {description}
+          </p>
+          {/* <div className="flex gap-2">
             {socialLinks.twitter && (
               <Button
                 variant="ghost"
@@ -71,11 +72,11 @@ const TeamMember = ({
                 </a>
               </Button>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
-  </Card>
+  </div>
 );
 
 const AboutTheTeam = () => {
@@ -116,7 +117,7 @@ const AboutTheTeam = () => {
 
     {
       name: "Neal Eleazar Ramos",
-      role: "Backend Developer / Database Engineer",
+      role: "Backend Developer",
       description:
         "Neal is the backbone of the system. He designs and maintains databases, optimizes server performance, and ensures everything runs smoothly behind the scenes to support the team’s applications.",
       image: ramos.src,
@@ -127,7 +128,7 @@ const AboutTheTeam = () => {
     },
     {
       name: "Jerome Tecson",
-      role: "Frontend Developer / UI Designer",
+      role: "Frontend Developer",
       description:
         "Jerome focuses on creating clean, responsive, and user-friendly interfaces. With an eye for design and detail, he brings concepts to life and ensures users enjoy a seamless digital experience.",
       image: tecson.src,
@@ -139,16 +140,16 @@ const AboutTheTeam = () => {
   ];
 
   return (
-    <div className="py-25  lg:px-6 flex flex-col lg:flex-row">
-      <div className="mb-16">
-        <h2 className="text-2xl md:text-5xl font-bold  mb-6">About the team</h2>
-        <p className="text-lg max-w-md leading-relaxed">
+    <div className=" lg:p-6 space-y-6">
+      <div className="">
+        <h2 className="text-lg lg:text-4xl font-medium">About the team</h2>
+        <p className="text-muted-foreground leading-relaxed lg:text-base text-sm">
           We're a dynamic group of individuals who are passionate about what we
           do and dedicated to delivering the best results for our clients.
         </p>
       </div>
 
-      <div className="space-y-8 flex-1">
+      <div className="grid lg:grid-cols-3 grid-cols-2  lg:gap-6 gap-3">
         {teamMembers.map((member, index) => (
           <TeamMember
             key={index}
