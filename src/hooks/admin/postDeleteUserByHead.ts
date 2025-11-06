@@ -1,43 +1,39 @@
-import StyledToast from "@/components/ui/toast-styled";
+"use client";
 
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { useState } from "react";
+import StyledToast from "@/components/ui/toast-styled";
 import { ApiErrorResponse } from "./postReviewedHandler";
 
 type DeleteTypes = {
   id: number;
-  accountId?: number;
 };
 
-export default function useDeleteStudent({ id, accountId }: DeleteTypes) {
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
-  const [deleteLoading, setLoading] = useState(false);
-  const onSubmit = async () => {
-    try {
-      setLoading(true);
-
+export default function useDeleteStudent({ id }: DeleteTypes) {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: async () => {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/deleteStudent`,
         {
-          studentId: id,
-          accountId: accountId,
+          ownerId: id,
         },
         { withCredentials: true }
       );
+      return res.data;
+    },
 
-      if (res.status === 200) {
-        StyledToast({
-          status: "success",
-          title: "Announcement Deleted",
-          description:
-            "The announcement has been successfully removed from the system.",
-        });
-        setIsSuccess(true);
-        setOpenDelete(false);
-        setLoading(false);
-      }
-    } catch (error) {
+    onSuccess: () => {
+      StyledToast({
+        status: "success",
+        title: "Student Account Deleted",
+        description:
+          "The student account has been successfully removed from the system.",
+      });
+      queryClient.invalidateQueries({ queryKey: ["studentsDataHead"] });
+    },
+
+    onError: (error) => {
       if (axios.isAxiosError<ApiErrorResponse>(error)) {
         const status = error.response?.status;
         const message = error.response?.data?.message;
@@ -96,12 +92,14 @@ export default function useDeleteStudent({ id, accountId }: DeleteTypes) {
           description: "Something went wrong. Please try again later.",
         });
       }
-      setIsSuccess(false);
-      setLoading(false);
-      setOpenDelete(false);
-   
-    }
-  };
+    },
+  });
 
-  return { onSubmit, isSuccess, deleteLoading, openDelete, setOpenDelete };
+  return {
+    deleteStudent: mutation.mutate,
+    deleteAsync: mutation.mutateAsync, // async version if needed
+    isLoading: mutation.isPending,
+    isSuccess: mutation.isSuccess,
+    isError: mutation.isError,
+  };
 }

@@ -125,9 +125,11 @@ export function zodUpdateUserByHead(data?: StudentUserFormData | null) {
   const [isChanged, setIsChanged] = useState(false);
   useEffect(() => {
     if (data) {
-      form.reset(defaultValues);
+      setTimeout(() => {
+        form.reset(defaultValues);
+      }, 100);
     }
-  }, [data, form]);
+  }, [data]);
   useEffect(() => {
     const subscription = form.watch((values) => {
       const hasChanged = !deepEqual(defaultValues, values); // ✅ compare against saved defaultValues

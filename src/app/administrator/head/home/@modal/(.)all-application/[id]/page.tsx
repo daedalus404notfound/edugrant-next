@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/drawer";
 import "ldrs/react/Ring.css";
 import { useParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Mail,
@@ -75,14 +75,15 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { zodUpdateUserByHead } from "@/hooks/user/zodUpdateUserByHead";
 import { useEditUserByAdministrator } from "@/hooks/head/allstudentById";
+import useGetStudentsById from "@/hooks/admin/getStudentById";
 
-export default function InterceptManageScholarshipp() {
+export default function InterceptManageScholarship() {
   const { isActive } = useTourContext();
   const router = useRouter();
   const params = useParams();
+  const [open, setOpen] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(true);
   const [openCalendar, setOpenCalendar] = useState(false);
-  const [status, setStatus] = useState("info");
   const id = Number(params.id);
   const HandleCloseDrawer = (value: boolean) => {
     setOpenDrawer(value);
@@ -92,22 +93,31 @@ export default function InterceptManageScholarshipp() {
       }, 200);
     }
   };
-  const { data, isLoading: loading } = useStudentById(id);
-  console.log("1212", data?.Account.schoolId);
-  const { onSubmit, deleteLoading, openDelete, setOpenDelete } =
-    useDeleteStudent({ id });
-  const mutation = useEditUserByAdministrator();
+  const query = useGetStudentsById(id);
+  const data = query.data ?? null;
+  const loading = query.isLoading;
 
+  const { deleteStudent, isLoading, isSuccess } = useDeleteStudent({ id });
+  const mutation = useEditUserByAdministrator();
   const { form, isChanged } = zodUpdateUserByHead(data);
-  const tabs = [
-    { id: "info", label: "Personal Information", indicator: null },
-    { id: "account", label: "Account Details", indicator: null },
-  ];
+
   const [isIndigenousChecked, setIsIndigenousChecked] = useState(
     !!data?.indigenous
   );
   const [isPWDChecked, setIsPWDChecked] = useState(!!data?.PWD);
+  useEffect(() => {
+    if (data) {
+      setIsIndigenousChecked(!!data?.indigenous);
+      setIsPWDChecked(!!data?.PWD);
+    }
+  }, [data]); // Remove 'form' from dependencies
 
+  useEffect(() => {
+    if (isSuccess) {
+      HandleCloseDrawer(false);
+      setOpen(false);
+    }
+  }, [isSuccess]); // Remove 'form' from dependencies
   return (
     <Drawer
       open={openDrawer}
@@ -758,7 +768,6 @@ export default function InterceptManageScholarshipp() {
                         </FormItem>
                       )}
                     />
-
                     <FormField
                       control={form.control}
                       name="institute"
@@ -813,7 +822,7 @@ export default function InterceptManageScholarshipp() {
                       control={form.control}
                       name="Account.email"
                       render={({ field }) => (
-                        <FormItem className="">
+                        <FormItem>
                           <FormLabel className="text-muted-foreground">
                             Email
                           </FormLabel>
@@ -949,17 +958,17 @@ export default function InterceptManageScholarshipp() {
                   {mutation.isPending && <Loader className="animate-spin" />}
                 </Button>
                 <DeleteDialog
-                  open={openDelete}
-                  onOpenChange={setOpenDelete}
-                  onConfirm={onSubmit}
-                  loading={deleteLoading}
+                  open={open}
+                  onOpenChange={setOpen}
+                  onConfirm={deleteStudent}
+                  loading={isLoading}
                   title="Delete Account?"
                   description="This will permanently delete account and cannot be undone."
                   confirmText="Delete"
                   cancelText="Keep Account"
                   trigger={
                     <Button
-                      onClick={() => setOpenDelete(true)}
+                      onClick={() => setOpen(true)}
                       type="button"
                       variant="destructive"
                       className="flex-1"
