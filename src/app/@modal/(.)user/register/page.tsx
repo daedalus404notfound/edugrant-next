@@ -435,10 +435,32 @@ export default function RegisterStudent() {
                                   </Popover>
                                 </span>
                                 <Input
-                                  value={field.value ? field.value : ""}
-                                  onChange={(e) =>
-                                    field.onChange(e.target.value)
-                                  }
+                                  value={field.value ?? ""}
+                                  onChange={(e) => {
+                                    let value = e.target.value.replace(
+                                      /\D/g,
+                                      ""
+                                    ); // remove non-digits
+
+                                    // auto-insert hyphens
+                                    if (value.length > 4 && value.length <= 6) {
+                                      value = `${value.slice(
+                                        0,
+                                        4
+                                      )}-${value.slice(4)}`;
+                                    } else if (value.length > 6) {
+                                      value = `${value.slice(
+                                        0,
+                                        4
+                                      )}-${value.slice(4, 6)}-${value.slice(
+                                        6,
+                                        8
+                                      )}`;
+                                    }
+
+                                    field.onChange(value);
+                                  }}
+                                  maxLength={10}
                                   className="rounded-l-none"
                                   placeholder="YYYY-MM-DD"
                                 />

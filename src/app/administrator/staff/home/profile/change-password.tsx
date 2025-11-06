@@ -36,6 +36,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useProfileAdminChangePassword } from "@/hooks/head/profileUAdminChangePassword";
 
 export default function ChangePassword() {
   const {
@@ -51,7 +52,7 @@ export default function ChangePassword() {
     verifyLoading,
     requestNewCode,
     resendTimer,
-  } = useProfileUserChangePassword();
+  } = useProfileAdminChangePassword();
   return (
     <div className="space-y-1 mt-8">
       <h3 className="text-base font-medium flex gap-2 items-center py-3">

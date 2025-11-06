@@ -8,6 +8,7 @@ import {
   changePassOtpFormData,
 } from "../zod/user/changePasswordProfileZod";
 import StyledToast from "@/components/ui/toast-styled";
+import { useChangePasswordProfileAdmin } from "../zod/head/changePasswordProfileZod";
 
 // Type definitions for API responses
 interface ApiErrorResponse {
@@ -167,12 +168,12 @@ export const useVerifyLogin = () => {
 };
 
 // Main Login Handler Hook
-export const useProfileUserChangePassword = () => {
+export const useProfileAdminChangePassword = () => {
   const router = useRouter();
   const [step, setStep] = useState<"email" | "otp">("email");
   const [open, setOpen] = useState(false);
   const { changePasswordForm, LoginData, changePasswordOtpForm } =
-    useChangePasswordProfileUser();
+    useChangePasswordProfileAdmin();
   const [resendTimer, setResendTimer] = useState<number>(0);
   const [expiresAt, setExpiresAt] = useState<number | null>(null);
   const sendAuthCode = useSendAuthCode();
