@@ -239,120 +239,129 @@ export default function UploadDocs({
       }
     }
   };
-  const { onSubmit: onDownload, isLoading } = useDownloadForm(data.scholarshipId);
+  const { onSubmit: onDownload, isLoading } = useDownloadForm(
+    data.scholarshipId
+  );
+  console.log("data", data);
   return (
-    <ScrollArea className="h-[88dvh] bg-background flex flex-col rounded-t-lg">
-      <div className="flex-1 lg:p-4 p-2 space-y-10">
-        <div className="space-y-8">
-          <div>
-            <div className=" pb-4">
-              <TitleReusable
-                title={`Upload Documents for Phase ${documentPhasesLength}`}
-                description={` Complete your application for ${data.title}`}
-              />
-            </div>
-            <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
-          </div>
-          <div className="">
-            <h2 className="text-lg font-semibold mb-4">Before you start</h2>
-            <div className="grid gap-3 text-sm text-muted-foreground">
-              <p>• Ensure all documents are clear, readable, and valid</p>
-              <p>
-                • Only upload files in accepted formats (PDF, DOCX, JPG, PNG)
-              </p>
-              <p>• Each file must not exceed 5MB in size</p>
-
-              <p>
-                • Optional documents aren't required but may strengthen your
-                application.
-              </p>
-            </div>
-          </div>
-          <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-          {/* {data.form && ( */}
-          <div className="bg-card lg:px-4   px-2 py-3 md:py-2 rounded-md ">
-            <div className="flex  items-center justify-center gap-x-4 gap-y-2">
-              <p className="text-sm font-semibold flex-1">{data.title} Form</p>
-
-              <Button
-                size="sm"
-                className=""
-                onClick={() =>
-                  onDownload(
-                    data.supabasePath?.form ? data.supabasePath?.form : ""
-                  )
-                }
-              >
-                <DownloadIcon
-                  size={16}
-                  className="-ms-0.5"
-                  aria-hidden="true"
+    <div>
+      <ScrollArea className="max-h-[calc(100dvh-200px)] bg-background flex flex-col rounded-t-lg">
+        <div className="flex-1 lg:p-4 p-2 space-y-10">
+          <div className="space-y-8">
+            {/* <div>
+              <div className=" pb-4">
+                <TitleReusable
+                  title={`Upload Documents for Phase ${documentPhasesLength}`}
+                  description={` Complete your application for ${data.title}`}
                 />
-                Download
-              </Button>
+              </div>
+              <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+            </div> */}
+            <div className="">
+              <h2 className="text-lg font-semibold mb-4">Before you start</h2>
+              <div className="grid gap-3 text-sm text-muted-foreground">
+                <p>• Ensure all documents are clear, readable, and valid</p>
+                <p>
+                  • Only upload files in accepted formats (PDF, DOCX, JPG, PNG)
+                </p>
+                <p>• Each file must not exceed 5MB in size</p>
+
+                <p>
+                  • Optional documents aren't required but may strengthen your
+                  application.
+                </p>
+              </div>
             </div>
-          </div>
-          {/* )} */}
-          <Form {...form}>
-            <div className=" grid lg:grid-cols-2 grid-cols-1 gap-8">
-              {Object.values(lastPhase).map((doc, index) => (
-                <FormField
-                  key={`required-${index}`}
-                  control={form.control}
-                  name={sanitizeLabel(doc.label) as keyof FormData}
-                  render={() => (
-                    <FormItem>
-                      <div className="space-y-4 rounded-md ">
-                        <div className="space-y-1">
-                          <FormLabel className="flex items-center justify-between">
-                            <span className="text-base font-medium">
-                              {doc.label}{" "}
-                              {doc.requirementType === "required" && (
-                                <span className="text-red-700">*</span>
-                              )}
-                            </span>
-                            <Badge
-                              className={`text-xs capitalize ${
-                                doc.requirementType === "required"
-                                  ? "bg-red-800/20 text-red-700"
-                                  : doc.requirementType === "optional"
-                                  ? "bg-blue-800/20 text-blue-700"
-                                  : " "
-                              }`}
-                            >
-                              {doc.requirementType}
-                            </Badge>
-                          </FormLabel>
-                          {/* <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+            {/* {data.form && ( */}
+            {data.supabasePath?.form && (
+              <div className="bg-card lg:px-4   px-2 py-3 md:py-2 rounded-md ">
+                <div className="flex  items-center justify-center gap-x-4 gap-y-2">
+                  <p className="text-sm font-semibold flex-1">
+                    {data.title} Form
+                  </p>
+
+                  <Button
+                    size="sm"
+                    className=""
+                    onClick={() =>
+                      onDownload(
+                        data.supabasePath?.form ? data.supabasePath?.form : ""
+                      )
+                    }
+                  >
+                    <DownloadIcon
+                      size={16}
+                      className="-ms-0.5"
+                      aria-hidden="true"
+                    />
+                    Download
+                  </Button>
+                </div>
+              </div>
+            )}
+            {/* )} */}
+            <Form {...form}>
+              <div className=" grid lg:grid-cols-2 grid-cols-1 gap-8">
+                {Object.values(lastPhase).map((doc, index) => (
+                  <FormField
+                    key={`required-${index}`}
+                    control={form.control}
+                    name={sanitizeLabel(doc.label) as keyof FormData}
+                    render={() => (
+                      <FormItem>
+                        <div className="space-y-4 rounded-md ">
+                          <div className="space-y-1">
+                            <FormLabel className="flex items-center justify-between">
+                              <span className="text-base font-medium">
+                                {doc.label}{" "}
+                                {doc.requirementType === "required" && (
+                                  <span className="text-red-700">*</span>
+                                )}
+                              </span>
+                              <Badge
+                                className={`text-xs capitalize ${
+                                  doc.requirementType === "required"
+                                    ? "bg-red-800/20 text-red-700"
+                                    : doc.requirementType === "optional"
+                                    ? "bg-blue-800/20 text-blue-700"
+                                    : " "
+                                }`}
+                              >
+                                {doc.requirementType}
+                              </Badge>
+                            </FormLabel>
+                            {/* <div className="flex items-center gap-2 text-xs text-muted-foreground">
                             {doc.formats.map((format, formatIndex) => (
                               <p key={formatIndex} className="text-xs">
                                 {mimeToLabelMap[format] || format}
                               </p>
                             ))}
                           </div> */}
+                          </div>
+                          <FormControl>
+                            <DragAndDropArea
+                              label={doc.label}
+                              accept={doc.formats}
+                              onFilesChange={(files) =>
+                                handleFilesChange(doc.label, files)
+                              }
+                            />
+                          </FormControl>
+                          <FormMessage />
                         </div>
-                        <FormControl>
-                          <DragAndDropArea
-                            label={doc.label}
-                            accept={doc.formats}
-                            onFilesChange={(files) =>
-                              handleFilesChange(doc.label, files)
-                            }
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </div>
-                    </FormItem>
-                  )}
-                />
-              ))}
-            </div>
-          </Form>
+                      </FormItem>
+                    )}
+                  />
+                ))}
+              </div>
+            </Form>
+          </div>
         </div>
-      </div>
-      <div className="sticky bottom-0 ">
+      </ScrollArea>
+      <div>
         <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
-        <div className="bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60  lg:p-4 p-2">
+        <div className="lg:p-6 p-2 pb-4   bg-background">
           <div className="flex items-center gap-4 mb-6">
             <div className="flex-1">
               <div className="flex items-center justify-between text-sm mb-2">
@@ -368,7 +377,7 @@ export default function UploadDocs({
             </div>
           </div>
 
-          <div className="flex flex-col lg:flex-row gap-3">
+          <div className="flex gap-3">
             {data.phase > 1 ? (
               <DeleteDialog
                 open={openAlert}
@@ -389,7 +398,7 @@ export default function UploadDocs({
                     }
                     className="flex-1"
                   >
-                    <Upload className="h-4 w-4 mr-2" />
+                    <Upload />
                     Submit Renewal Application
                   </Button>
                 }
@@ -414,8 +423,8 @@ export default function UploadDocs({
                     }
                     className="flex-1"
                   >
-                    <Upload className="h-4 w-4 mr-2" />
-                    Submit Application
+                    <Upload />
+                    Submit
                   </Button>
                 }
               />
@@ -433,6 +442,6 @@ export default function UploadDocs({
           </div>
         </div>
       </div>
-    </ScrollArea>
+    </div>
   );
 }

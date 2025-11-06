@@ -1267,6 +1267,9 @@ export default function RegisterStudent() {
                               disabled={verifyRegister.isLoading}
                               onChange={(value) => {
                                 field.onChange(value);
+                                if (value.length === 6) {
+                                  otpForm.handleSubmit(HandleOtpVerification)();
+                                }
                               }}
                             >
                               <InputOTPGroup>

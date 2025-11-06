@@ -117,11 +117,11 @@ export function DragAndDropAreaProfile({
   }, [isSuccess, initialImageUrl]);
 
   return (
-    <div className="relative">
+    <span className="relative lg:size-30 size-28">
       <Dialog>
         <DialogTrigger className="cursor-pointer" asChild>
-          <Avatar className="lg:size-26 size-20 border-2 border-background">
-            <AvatarImage className="object-cover" src={previewUrl} />
+          <Avatar className="lg:size-30 size-28  border-3 border-background">
+            <AvatarImage className="object-cover " src={previewUrl} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </DialogTrigger>
@@ -231,6 +231,6 @@ export function DragAndDropAreaProfile({
           </AlertDialogContent>
         </AlertDialog>
       )}
-    </div>
+    </span>
   );
 }

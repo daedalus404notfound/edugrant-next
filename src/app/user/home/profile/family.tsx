@@ -184,7 +184,7 @@ export default function FamilyForm() {
           className="space-y-8"
         >
           {fatherFormDisable && motherFormDisable && (
-            <div className="bg-blue-900 rounded-md p-4 flex justify-between text-sm">
+            <div className="dark:bg-blue-900 bg-blue-300 rounded-md p-4 flex justify-between text-sm">
               <p className="text-center  ">
                 Guardian information is required if both parents are deceased or
                 unknown.

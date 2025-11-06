@@ -40,6 +40,7 @@ import {
   SortingState,
 } from "@tanstack/react-table";
 import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 export default function ClientScholarship() {
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
@@ -231,7 +232,7 @@ export default function ClientScholarship() {
                         ease: "easeOut",
                       }}
                       // className="shadow-sm hover:shadow-md transition-all duration-200 p-1  rounded-lg border bg-card"
-                      className="shadow-sm transition-all duration-300 rounded-lg p-0.5 bg-card overflow-hidden group hover:-translate-y-2 hover:shadow-xl border border-card/50"
+                      className="shadow-sm transition-all duration-300 rounded-lg bg-card overflow-hidden group hover:-translate-y-2 hover:shadow-xl border border-card/50"
                     >
                       {/* <Link
                       href={`/user/home/applications/${meow.applicationId}`}
@@ -241,14 +242,14 @@ export default function ClientScholarship() {
                     > */}
                       <div className="relative rounded-lg bg-background overflow-hidden">
                         <img
-                          className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15   mask-gradient blur-xs ${
+                          className={`absolute h-full w-full left-0 top-0 object-cover -z-0 opacity-15  hidden lg:dark:block  mask-gradient blur-xs ${
                             status === "EXPIRED" ? "" : ""
                           }`}
                           src={meow.cover}
                           alt=""
                         />
-                        <div className="relative z-10">
-                          <div className="relative lg:aspect-[16/8.5] aspect-[16/5] w-full rounded-md overflow-hidden">
+                        <div className="relative z-10 p-1">
+                          <div className="relative lg:aspect-[16/8.5] aspect-[16/8] w-full rounded-md overflow-hidden">
                             <div className="absolute inset-0 bg-background opacity-0 z-10 group-hover:opacity-30 transition-opacity duration-300"></div>
                             {meow.Application?.length! > 0 && (
                               <div className="absolute inset-0 bg-background/50 z-10"></div>
@@ -266,13 +267,6 @@ export default function ClientScholarship() {
                                 </div>
                               </div>
                             )}
-                            <Button
-                              size="sm"
-                              className="absolute z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-                              variant="secondary"
-                            >
-                              View Details <ArrowRight />
-                            </Button>
 
                             <img
                               className="h-full w-full object-cover group-hover:scale-106 transition-transform duration-300"
@@ -281,15 +275,17 @@ export default function ClientScholarship() {
                             />
                           </div>
 
-                          <div className="lg:px-4 px-2 lg:py-6 py-4 space-y-6">
+                          <div className="lg:p-3 p-2 flex flex-col lg:gap-6 gap-3">
                             <div className="flex justify-between items-start">
                               <div className="flex items-center gap-3">
                                 {meow ? (
-                                  <img
-                                    src={meow?.logo}
-                                    alt={meow?.title}
-                                    className="w-10 h-10 rounded-full object-cover border"
-                                  />
+                                  <Avatar className="size-12">
+                                    <AvatarImage
+                                      className="object-cover"
+                                      src={meow?.logo}
+                                    />
+                                    <AvatarFallback>CN</AvatarFallback>
+                                  </Avatar>
                                 ) : (
                                   <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-sm text-muted-foreground">
                                     No Logo
@@ -305,16 +301,6 @@ export default function ClientScholarship() {
                                       "Unknown Provider"}
                                   </p>
                                 </div>
-                              </div>
-                              <div className="flex gap-2">
-                                {meow.phase > 1 && (
-                                  <Badge className="bg-blue-800 text-gray-200">
-                                    RENEWAL
-                                  </Badge>
-                                )}
-                                <Badge className="bg-blue-800 text-gray-200 uppercase">
-                                  {getPhaseLabel(meow.phase)}
-                                </Badge>
                               </div>
                             </div>
 
@@ -337,6 +323,10 @@ export default function ClientScholarship() {
                                 </span>
                               </div>
                             </div>
+
+                            <Button className="w-full ">
+                              View Details <ArrowRight />
+                            </Button>
                           </div>
                         </div>
                       </div>

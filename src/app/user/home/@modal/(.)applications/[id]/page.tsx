@@ -107,7 +107,7 @@ export default function InterceptManageApplicationClient() {
           />
         ) : (
           <div>
-            <ScrollArea className="lg:h-[80dvh] h-[70dvh] bg-background rounded-t-lg">
+            <ScrollArea className="max-h-[80dvh] bg-background rounded-t-lg">
               <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-md overflow-hidden ">
                 {/* Header Section */}
                 <div className="relative flex flex-col lg:flex-row  lg:items-end items-center  lg:py-8 py-4 lg:px-4 px-2">
@@ -241,7 +241,7 @@ export default function InterceptManageApplicationClient() {
                   </div>
                 </div>
               </div>
-              <div className="lg:p-4 p-2   space-y-6 mt-6">
+              <div className="lg:p-4 p-2   space-y-6">
                 {data?.status === "PENDING" ? (
                   <StatusAlertIndicator
                     status="PENDING"

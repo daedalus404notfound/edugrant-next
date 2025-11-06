@@ -6,7 +6,7 @@ import z from "zod";
 
 const loginSchema = z.object({
   studentId: z.string().min(1, "Required"),
-  password: z.string().min(1, "Required").max(20, "Too short"),
+  password: z.string().min(1, "Required").max(20, "Too long"),
 });
 
 const loginOtpSchema = z.object({

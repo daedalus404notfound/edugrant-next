@@ -1,430 +1,291 @@
 "use client";
-import "ldrs/react/Ring.css";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { AnimatePresence, motion } from "motion/react";
-import { useIsMobile } from "@/hooks/use-mobile";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import useClientApplications from "@/hooks/user/getApplications";
-import GlassFolder from "@/components/ui/folder";
-
+import { ApplicationFormData } from "@/hooks/zod/application";
 import ApplicationViewer from "./viewer";
 import { Badge } from "@/components/ui/badge";
-
 import {
-  Timeline,
-  TimelineContent,
-  TimelineDate,
-  TimelineHeader,
-  TimelineIndicator,
-  TimelineItem,
-  TimelineSeparator,
-  TimelineTitle,
-} from "@/components/ui/timeline";
-import TitleReusable from "@/components/ui/title";
-import {
-  ArrowRight,
-  ArrowRightIcon,
-  Building,
-  Calendar,
   Check,
-  CheckCircle,
-  CircleAlert,
-  CircleCheck,
+  ChevronsUpDown,
   CircleCheckIcon,
-  CircleX,
   Clock,
-  Download,
-  Edit,
-  Eye,
-  GraduationCap,
-  Inbox,
-  Info,
-  Link,
-  Maximize,
-  MoreHorizontal,
-  MoreVertical,
-  Pen,
-  PhilippinePeso,
-  StickyNote,
-  TableOfContents,
   TriangleAlert,
-  UserRound,
-  X,
+  TriangleAlertIcon,
 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Stepper,
-  StepperDescription,
-  StepperIndicator,
-  StepperItem,
-  StepperSeparator,
-  StepperTitle,
-  StepperTrigger,
-} from "@/components/ui/stepper";
-import { format } from "date-fns";
-import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { Doc } from "zod/v4/core";
-import { useUserStore } from "@/store/useUserStore";
-import { Tabs } from "@/components/ui/vercel-tabs";
-import DocsStudent from "./docs";
-import ScholarDetails from "./scholarship";
-import EditApplication from "./edi-application";
+import { Skeleton } from "@/components/ui/skeleton";
+import { GetApplicationFormData } from "@/hooks/zod/getApplicationZod";
+import TitleReusable from "@/components/ui/title";
+import { useEffect, useState } from "react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { cn } from "@/lib/utils";
 
-export default function InterceptManageApplicationClient() {
-  const [activeSection, setActiveSection] = useState("documents");
-  const [edit, setEdit] = useState(false);
-  const router = useRouter();
-  const params = useParams();
-  const [open, setOpen] = useState(true);
-  const id = params.id as string;
-  const isMobile = useIsMobile();
-  const user = useUserStore((state) => state.user);
-  const userId = user?.accountId;
+type DocsStudentProps = {
+  data: GetApplicationFormData | null;
+  loading: boolean;
+};
 
-  const HandleCloseDrawer = (value: boolean) => {
-    setOpen(value);
-    if (!value) {
-      setTimeout(() => {
-        router.back();
-      }, 300);
-    }
+export default function DocsStudent({ data, loading }: DocsStudentProps) {
+  const mimeToLabelMap: Record<string, string> = {
+    "application/pdf": "PDF",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+      "DOCX",
+    "image/jpeg": "JPG",
+    "image/png": "PNG",
   };
 
-  const { data, loading } = useClientApplications({
-    applicationId: id,
-    userId: userId?.toString(),
-  });
+  // OBJECT PARA PWEDE IMAP
+  const submittedDocuments = Object.keys(data?.submittedDocuments || {});
+  // KUKUNIN ILAN LAHAT NG PHASE
+  const phaseLength = submittedDocuments.length;
+  // KUKUNIN LAST PHASE KEY
+  const getLastPhase = phaseLength > 0 ? submittedDocuments.at(-1) : undefined;
+  // SETTER NG PHASE KEY
+  const [phaseSelector, setPhaseSelector] = useState<string | undefined>(
+    getLastPhase
+  );
 
-  const navigationTabs = [
-    { id: "documents", label: "Documents", indicator: null },
-    { id: "scholarship", label: "Scholarship Details", indicator: null },
-  ];
+  // KUKUNIN DATA SA NAPILING PHASE - FIXED: Access the documents array
+  const phaseData = phaseSelector
+    ? data?.submittedDocuments?.[phaseSelector]?.documents || []
+    : [];
 
-  // Status configuration for better UX
-  const getStatusConfig = (status: string) => {
-    switch (status?.toLowerCase()) {
-      case "rejected":
-        return {
-          color: "bg-red-950/50 border-red-900/50 text-red-400",
-          icon: CircleX,
-          message: "Your Application has been rejected",
-          iconColor: "text-red-500",
-        };
-      case "approved":
-        return {
-          color: "bg-green-950/50 border-green-900/50 text-green-400",
-          icon: CheckCircle,
-          message: "Your Application has been approved",
-          iconColor: "text-green-500",
-        };
-      case "pending":
-        return {
-          color: "bg-yellow-950/50 border-yellow-900/50 text-yellow-400",
-          icon: Clock,
-          message: "Your Application is under review",
-          iconColor: "text-yellow-500",
-        };
-      default:
-        return {
-          color: "bg-gray-950/50 border-gray-800/50 text-gray-400",
-          icon: Info,
-          message: "Application status unknown",
-          iconColor: "text-gray-500",
-        };
-    }
-  };
+  // KUKUNIN APPLICATION DECISION SA NAPILING PHASE
+  const phaseDecision = phaseSelector
+    ? data?.submittedDocuments?.[phaseSelector]?.Application_Decision
+    : null;
 
-  const statusConfig = getStatusConfig(data[0]?.status || "pending");
-  const StatusIcon = statusConfig.icon;
+  const [open, setOpen] = useState(false);
 
-  if (loading) {
-    return (
-      <Drawer open={open} onOpenChange={HandleCloseDrawer}>
-        <DrawerContent className="lg:w-[56%] w-[98%] mx-auto lg:h-[95dvh] h-[90dvh] outline-0 border-0 bg-gray-950">
-          <div className="flex items-center justify-center h-full">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-          </div>
-        </DrawerContent>
-      </Drawer>
-    );
-  }
+  // PARA MAGREFLECT PHASE SA COMBOBOX
+  useEffect(() => {
+    setPhaseSelector(getLastPhase);
+  }, [getLastPhase]);
 
   return (
-    <Drawer open={open} onOpenChange={HandleCloseDrawer}>
-      <DrawerContent className="lg:w-[56%] w-[98%] mx-auto lg:h-[95dvh] h-[90dvh] outline-0 border-gray-800 bg-gray-950 lg:p-1">
-        <DrawerHeader className="p-0">
-          <div className="sr-only">
-            <DrawerTitle className="text-2xl">Application Details</DrawerTitle>
-            <DrawerDescription>
-              Manage your scholarship application
-            </DrawerDescription>
-          </div>
-        </DrawerHeader>
-
-        {/* Enhanced Header */}
-        <motion.div
-          className="flex items-center justify-between p-4 border-b border-gray-800/50"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-blue-950/30 border border-blue-900/30">
-              <GraduationCap className="h-5 w-5 text-blue-400" />
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold text-gray-100">
-                Application Details
-              </h2>
-              <p className="text-sm text-gray-400">ID: {id.slice(-8)}</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
+    <div className="space-y-6">
+      <div className="flex justify-between items-center relative">
+        <TitleReusable
+          title={phaseSelector ? `Required Documents` : "Phase Documents"}
+          description=""
+          titleSize="text-base"
+        />
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger className="absolute right-0" asChild>
             <Button
-              variant="ghost"
-              size="sm"
-              className="text-gray-400 hover:text-gray-100 hover:bg-gray-800"
-              onClick={() => HandleCloseDrawer(false)}
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="lg:w-[200px] justify-between"
             >
-              <X className="h-4 w-4" />
+              {phaseSelector || "Select phase..."}
+              <ChevronsUpDown className="opacity-50" />
             </Button>
-          </div>
-        </motion.div>
-
-        {edit ? (
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <EditApplication data={data[0]} setEdit={setEdit} />
-          </motion.div>
-        ) : (
-          <AnimatePresence mode="wait">
-            <motion.div
-              key="view-mode"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="flex-1 flex flex-col overflow-hidden"
-            >
-              {/* Content Area */}
-              <div className="flex-1 overflow-auto bg-gray-950">
-                <div className="p-6 space-y-6">
-                  {/* Enhanced Status Alert */}
-                  <motion.div
-                    className={`rounded-xl border p-4 ${statusConfig.color} backdrop-blur-sm`}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.1 }}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="flex-shrink-0">
-                        <StatusIcon
-                          className={`h-5 w-5 ${statusConfig.iconColor}`}
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium">
-                          {statusConfig.message}
-                        </p>
-                        {data[0]?.Application_Decision?.dateCreated && (
-                          <p className="text-xs opacity-80 mt-1">
-                            Reviewed on{" "}
-                            {format(
-                              new Date(
-                                data[0].Application_Decision.dateCreated
-                              ),
-                              "PPP"
-                            )}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  {/* Enhanced Scholarship Header */}
-                  <motion.div
-                    className="flex items-start gap-4 p-6 rounded-xl bg-gray-900/50 border border-gray-800/50 backdrop-blur-sm"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    <Avatar className="lg:size-16 size-14 border-gray-700 border-2 shadow-xl ring-2 ring-gray-800/50">
-                      <AvatarImage
-                        className="object-cover"
-                        src={data[0]?.Scholarship.logo}
-                      />
-                      <AvatarFallback className="bg-gray-800 text-gray-300 text-lg font-semibold">
-                        {data[0]?.Scholarship.Scholarship_Provider?.name.slice(
-                          0,
-                          2
-                        )}
-                      </AvatarFallback>
-                    </Avatar>
-
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-xl font-bold text-gray-100 mb-2 leading-tight">
-                        {data[0]?.Scholarship.title}
-                      </h3>
-                      <div className="flex items-center gap-2 text-gray-400 mb-3">
-                        <Building className="h-4 w-4" />
-                        <span className="text-sm">
-                          {data[0]?.Scholarship.Scholarship_Provider?.name ||
-                            "Unknown Provider"}
-                        </span>
-                      </div>
-
-                      {/* Application Status Badge */}
-                      <Badge
-                        variant={
-                          data[0]?.status === "APPROVED"
-                            ? "default"
-                            : data[0]?.status === "REJECTED"
-                            ? "destructive"
-                            : "secondary"
-                        }
-                        className="uppercase tracking-wide text-xs"
-                      >
-                        {data[0]?.status || "PENDING"}
-                      </Badge>
-                    </div>
-                  </motion.div>
-
-                  {/* Enhanced Navigation */}
-                  <motion.div
-                    className="sticky top-0 z-10 bg-gray-950/95 backdrop-blur-sm border-b border-gray-800/50 p-4 -mx-6 mb-6"
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                  >
-                    <div className="flex justify-between items-center">
-                      <Tabs
-                        tabs={navigationTabs}
-                        onTabChange={(tabId) => setActiveSection(tabId)}
-                      />
-                      {data[0]?.Application_Decision?.dateCreated && (
-                        <div className="flex items-center gap-2 text-xs text-gray-400">
-                          <Calendar className="h-3 w-3" />
-                          <span>
-                            Reviewed{" "}
-                            {format(
-                              new Date(
-                                data[0].Application_Decision.dateCreated
-                              ),
-                              "PPP"
-                            )}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-
-                  {/* Content Sections with Animation */}
-                  <AnimatePresence mode="wait">
-                    {activeSection === "documents" && (
-                      <motion.div
-                        key="documents"
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <DocsStudent data={data[0]} />
-                      </motion.div>
-                    )}
-                    {activeSection === "scholarship" && (
-                      <motion.div
-                        key="scholarship"
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <ScholarDetails data={data[0]} />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
-
-              {/* Enhanced Footer */}
-              <motion.div
-                className="border-t border-gray-800/50 bg-gray-950/95 backdrop-blur-sm p-4"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4 }}
-              >
-                <div className="flex gap-3">
-                  <Button
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white border-0 shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                    onClick={() => setEdit(true)}
-                    disabled={data[0]?.status !== "PENDING"}
-                  >
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit Documents
-                  </Button>
-
-                  {data[0]?.status !== "PENDING" && (
-                    <Button
-                      variant="outline"
-                      className="border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-gray-100"
-                      onClick={() => {
-                        /* Add download functionality */
+          </PopoverTrigger>
+          <PopoverContent className="lg:w-[200px] p-0">
+            <Command>
+              <CommandInput placeholder="Search Phase..." className="h-9" />
+              <CommandList>
+                <CommandEmpty>No phase found.</CommandEmpty>
+                <CommandGroup>
+                  {submittedDocuments.map((submitted) => (
+                    <CommandItem
+                      key={submitted}
+                      value={submitted}
+                      className="capitalize"
+                      onSelect={() => {
+                        setPhaseSelector(submitted);
+                        setOpen(false);
                       }}
                     >
-                      <Download className="h-4 w-4 mr-2" />
-                      Export
-                    </Button>
-                  )}
+                      {submitted}
+                      <Check
+                        className={cn(
+                          "ml-auto",
+                          phaseSelector === submitted
+                            ? "opacity-100"
+                            : "opacity-0"
+                        )}
+                      />
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </CommandList>
+            </Command>
+          </PopoverContent>
+        </Popover>
+      </div>
+      <div className=" grid lg:grid-cols-2 gap-6">
+        {loading
+          ? Array.from({ length: 2 }).map((_, i) => (
+              <div
+                key={i}
+                className="bg-card w-full rounded-md lg:p-4 p-2 flex flex-col space-y-4"
+              >
+                <div className="flex gap-3 items-center">
+                  <Skeleton className="h-9 flex-1" />
+                  <Skeleton className="h-9 w-9" />
                 </div>
 
-                {data[0]?.status !== "PENDING" && (
-                  <p className="text-xs text-gray-500 mt-2 text-center">
-                    This application can no longer be edited as it has been{" "}
-                    {data[0]?.status?.toLowerCase()}
-                  </p>
-                )}
-              </motion.div>
-            </motion.div>
-          </AnimatePresence>
-        )}
-      </DrawerContent>
-    </Drawer>
+                <Skeleton className="h-30 w-full" />
+
+                <div className="flex-1 grid grid-cols-2 gap-3">
+                  <Skeleton className="h-9 flex-1" />
+                  <Skeleton className="h-9 flex-1" />
+                  <Skeleton className="min-h-10 col-span-2" />
+                </div>
+              </div>
+            ))
+          : phaseData &&
+            phaseData.map((meow) => {
+              // const decisionMessage =
+              //   data?.Interview_Decision[0]?.message?.[meow.document] ||
+              //   data?.Application_Decision[0]?.message?.[meow.document] ||
+              //   null;
+
+              const decisionMessage = phaseDecision?.message?.[meow.document];
+              const currentStatus =
+                meow.rejectMessage?.status || decisionMessage?.status || "";
+              const currentComment =
+                meow.rejectMessage?.comment || decisionMessage?.comment || "";
+              console.log("meow", decisionMessage);
+              return (
+                <div
+                  key={meow.document}
+                  className="bg-gradient-to-br to-card from-card/80 lg:p-4 p-2 rounded-md"
+                >
+                  <div>
+                    {decisionMessage?.status === "REJECTED" ? (
+                      <div className="rounded-md px-4 py-3 bg-red-500/10">
+                        <p className="text-sm line-clamp-1 ">
+                          <TriangleAlert
+                            className="me-3 -mt-0.5 inline-flex text-red-500"
+                            size={16}
+                          />
+                          Document has been rejected
+                        </p>
+                      </div>
+                    ) : decisionMessage?.status === "APPROVED" ? (
+                      <div className="rounded-md px-4 py-3 bg-green-500/10">
+                        <p className="text-sm line-clamp-1 ">
+                          <CircleCheckIcon
+                            className="me-3 -mt-0.5 inline-flex text-emerald-500"
+                            size={16}
+                          />
+                          Document has been approved
+                        </p>
+                      </div>
+                    ) : !meow.supabasePath ? (
+                      <div className="rounded-md px-4 py-3 bg-red-500/10">
+                        <p className="text-sm line-clamp-1 ">
+                          <TriangleAlertIcon
+                            className="me-3 -mt-0.5 inline-flex text-red-500"
+                            size={16}
+                          />
+                          Failed to submit
+                        </p>
+                      </div>
+                    ) : data?.status === "PENDING" && meow.supabasePath ? (
+                      <div className="rounded-md px-4 py-3 bg-amber-500/10">
+                        <p className="text-sm line-clamp-1 ">
+                          <Clock
+                            className="me-3 -mt-0.5 inline-flex text-amber-500"
+                            size={16}
+                          />
+                          Your document is awaiting verification.
+                        </p>
+                      </div>
+                    ) : null}
+                  </div>
+                  <div className="pb-6 pt-8 ">
+                    <ApplicationViewer
+                      fileFormat={mimeToLabelMap[meow.fileFormat]}
+                      resourceType={meow.resourceType}
+                      document={meow.document}
+                      supabasePath={meow.supabasePath}
+                      requirementType={meow.requirementType}
+                      status={
+                        decisionMessage?.status
+                          ? decisionMessage?.status
+                          : "PENDING"
+                      }
+                      applicationId={data?.applicationId || 0}
+                    />
+                    {/* <div className="flex-1 flex items-center justify-center">
+                  <p className="text-sm">Download</p>
+                </div> */}
+                  </div>{" "}
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <p className="font-medium lg:text-base text-sm">
+                        {meow.document}
+                      </p>
+                      <div className="flex items-center gap-6 lg:text-sm text-xs">
+                        <p className="border-l pl-3  text-muted-foreground">
+                          {meow.fileFormat}
+                        </p>{" "}
+                        <p className="border-l pl-3  text-muted-foreground">
+                          {meow.requirementType}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Textarea
+                      placeholder="Remarks"
+                      value={decisionMessage?.comment}
+                      readOnly
+                      disabled={!decisionMessage?.comment}
+                      className="border-0 bg-background"
+                    />
+                  </div>
+                </div>
+              );
+            })}
+      </div>
+    </div>
   );
 }
+
+//  <div key={meow.document} className="">
+//    <div className="flex-1 flex flex-col lg:justify-end justify-between gap-5 relative">
+//      <div className="flex gap-3">
+//        <ApplicationViewer
+//          fileFormat={mimeToLabelMap[meow.fileFormat]}
+//          resourceType={meow.resourceType}
+//          fileUrl={meow.fileUrl}
+//          document={meow.document}
+//          supabasePath={meow.supabasePath}
+//          requirementType={meow.requirementType}
+//          status={decisionMessage?.status ? decisionMessage?.status : "PENDING"}
+//        />
+//        <div className="flex-1">
+//          <div className="flex gap-3 items-center  capitalize">
+//            <p className="font-medium lg:text-base text-sm">{meow.document}</p>
+
+//            <div className="flex gap-1.5 items-center">
+//              {decisionMessage && (
+//                <Badge className="hidden lg:block tracking-wide uppercase bg-green-800/20 text-green-600">
+//                  {decisionMessage.status}
+//                </Badge>
+//              )}
+//            </div>
+//          </div>
+//          <p className="uppercase lg:text-sm text-xs text-muted-foreground lg:mt-1">
+//            {meow.fileFormat ? meow.fileFormat : "N/A"}
+//          </p>
+//        </div>
+//      </div>
+
+//    </div>
+//  </div>;
