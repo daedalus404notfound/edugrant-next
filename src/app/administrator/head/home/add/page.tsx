@@ -68,10 +68,10 @@ export default function CreateStaffAccountPanel() {
         >
           <DialogHeader>
             <DialogTitle>
-              <TitleReusable title="Post scholarship guide" description="" />
+              <TitleReusable title="Add Staff Tour" description="" />
             </DialogTitle>
             <DialogDescription className="mt-3">
-              Begin managing scholarship programs. You can take a quick tour to
+              Begin adding new staff. You can take a quick tour to
               learn the process, or skip it and start right away.
             </DialogDescription>
           </DialogHeader>

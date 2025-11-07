@@ -48,53 +48,61 @@ export const tourConfigs: TourConfig = {
   postScholarship: [
     {
       id: "text-forms",
-      title: "Welcome to Post Scholarship",
+      title: "Text Form",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Provide the scholarship details, including title, description, and other essential information.",
     },
+
     {
       id: "interview-form",
-      title: "Welcome to Post Scholarship",
+      title: "For Interview Checkbox",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Enable this option if the scholarship requires applicants to undergo an interview.",
     },
     {
       id: "image-forms",
-      title: "Welcome to Post Scholarship",
+      title: "Image Forms",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Upload the sponsor’s logo, cover image, and any related scholarship forms or visual materials.",
     },
     {
       id: "document-forms",
-      title: "Welcome to Post Scholarship",
+      title: "Required Documents",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "List all the necessary documents. You can specify labels, formats, and whether each document is required or optional.",
     },
     {
       id: "submit-forms",
-      title: "Welcome to Post Scholarship",
+      title: "Post Scholarship Button",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Once all information is complete, click this button to publish your scholarship post.",
     },
   ],
+
   postAnnouncement: [
     {
-      id: "1",
-      title: "Welcome to Post Scholarship",
+      id: "post-1",
+      title: "Announcement Title",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Enter a clear and concise title for your announcement to quickly inform readers of its purpose.",
     },
     {
-      id: "2",
-      title: "Welcome to Post Scholarship",
+      id: "post-2",
+      title: "Tags",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Add relevant tags to help categorize and organize your announcement for easier searching and filtering.",
     },
     {
-      id: "3",
-      title: "Welcome to Post Scholarship",
+      id: "post-3",
+      title: "Description",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Write a detailed description explaining the announcement, including important information and instructions.",
+    },
+    {
+      id: "post-4",
+      title: "Post Announcement Button",
+      description:
+        "Once all details are filled in, click this button to publish your announcement for everyone to see.",
     },
   ],
 
@@ -223,41 +231,41 @@ export const tourConfigs: TourConfig = {
   addStaff: [
     {
       id: "staff-1",
-      title: "Welcome to Post Scholarship",
+      title: "Personal Information",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Fill out the staff member’s first, middle, and last name accurately to ensure proper identification.",
     },
     {
       id: "staff-2",
-      title: "Welcome to Post Scholarship",
+      title: "Contact Information",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Provide a valid email address and phone number so the staff member can receive important updates and notifications.",
     },
     {
       id: "staff-3",
-      title: "Welcome to Post Scholarship",
+      title: "Account Security",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Set a strong password and confirm it to secure the staff member’s account before proceeding.",
     },
   ],
   activateStaff: [
     {
       id: "activate-1",
-      title: "Welcome to Post Scholarship",
+      title: "Choose Staff",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Select the staff member you want to activate from the table.",
     },
     {
       id: "activate-2",
-      title: "Welcome to Post Scholarship",
+      title: "Select Activate",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Click on the activation option to enable the selected staff member.",
     },
     {
       id: "activate-3",
-      title: "Welcome to Post Scholarship",
+      title: "Save Changes",
       description:
-        "This guide will walk you through the scholarship posting process step by step.",
+        "Review your selection and click 'Save Changes' to complete the activation process.",
     },
   ],
 
