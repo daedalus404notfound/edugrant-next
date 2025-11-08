@@ -43,18 +43,25 @@ import { useTourStore } from "@/store/useTourStore";
 import { TourTrigger } from "@/components/tour-2/tour-trigger";
 
 export default function GenerateReport() {
-  const { data, loading } = useFetchApplicationCSVShit();
   const [selectedDataSelections, setSelectedDataSelections] = useState<
     string[]
   >([]);
   const { openGenerate, setOpenGenerate } = useTourStore();
-  console.log(openGenerate);
+  // console.log(openGenerate);
   const [selectedFilters, setSelectedFilters] = useState<
     { id: string; value: string[] }[]
   >([]);
   const [selectAll, setSelectAll] = useState(false);
-  console.log(selectedDataSelections);
-  console.log(data?.dataSelections);
+  // console.log("11", selectedDataSelections);
+  // console.log(data?.dataSelections);
+  const query = useFetchApplicationCSVShit(selectedFilters);
+  const data = query.data ?? null;
+  const loading = query.isLoading;
+  // Only show skeleton on initial load, not on refetches
+  const showSkeleton = query.isLoading && !query.data;
+
+  // Optional: Show a subtle loading indicator during refetch
+  const isRefetching = query.isFetching && query.data;
   useEffect(() => {
     if (!data?.dataSelections) return;
     const allSelected =
@@ -72,7 +79,7 @@ export default function GenerateReport() {
         "Select one or more scholarship programs you want to include in the report.",
       headers: data?.filters.scholarshipTitles,
       icon: GraduationCap,
-      headerLabel: "title",
+      headerLabel: "scholarship",
     },
     {
       id: 2,
@@ -80,9 +87,9 @@ export default function GenerateReport() {
       title: "Select Application Status",
       description:
         "Filter applicants by their current application status, such as Pending, Approved, or Rejected.",
-      headers: data?.filters.applicationStatus,
+      headers: data?.filters.applicationStatuses,
       icon: Layers,
-      headerLabel: "status",
+      headerLabel: "applicationStatus",
     },
     {
       id: 3,
@@ -90,9 +97,9 @@ export default function GenerateReport() {
       title: "Select Institute",
       description:
         "Choose the institute or campus from which the applicants are enrolled.",
-      headers: data?.filters.institute,
+      headers: data?.filters.institutes,
       icon: Building2,
-      headerLabel: "institute",
+      headerLabel: "studentInstitute",
     },
     {
       id: 4,
@@ -100,9 +107,9 @@ export default function GenerateReport() {
       title: "Select Course",
       description:
         "Select specific courses or degree programs to narrow down the report results.",
-      headers: data?.filters.course,
+      headers: data?.filters.courses,
       icon: BookOpen,
-      headerLabel: "course",
+      headerLabel: "studentCourse",
     },
     {
       id: 5,
@@ -110,9 +117,9 @@ export default function GenerateReport() {
       title: "Select Year",
       description:
         "Filter applicants by their academic year or level, such as 1st Year, 2nd Year, etc.",
-      headers: data?.filters.year,
+      headers: data?.filters.years,
       icon: Calendar,
-      headerLabel: "year",
+      headerLabel: "studentYear",
     },
     {
       id: 6,
@@ -120,9 +127,9 @@ export default function GenerateReport() {
       title: "Select Section",
       description:
         "Choose the specific section or class group you want to include in the report.",
-      headers: data?.filters.section,
+      headers: data?.filters.sections,
       icon: Layers,
-      headerLabel: "section",
+      headerLabel: "studentSection",
     },
     {
       id: 7,
@@ -130,7 +137,10 @@ export default function GenerateReport() {
       title: "Choose Student Information",
       description:
         "Select which student details (e.g., name, email, course, address) should appear in the generated report.",
-      headers: data?.dataSelections,
+      headers: data?.dataSelections.map((label: string) => ({
+        label,
+        count: 0,
+      })),
       icon: UserRound,
       headerLabel: "",
     },
@@ -145,8 +155,8 @@ export default function GenerateReport() {
     filters: JSON.stringify(selectedFilters),
   });
 
-  console.log(selectedDataSelections);
-  console.log(selectedFilters);
+  console.log("selectedDataSelections", selectedDataSelections);
+  console.log("selectedFilters", selectedFilters);
   const handleCheckboxToggle = (value: string) => {
     setSelectedDataSelections((prev) => {
       if (prev.includes(value)) {
@@ -185,6 +195,54 @@ export default function GenerateReport() {
       }
     });
   };
+
+  const skolar = selectedFilters.find((meow) => meow.id === "scholarship");
+  const decline = selectedFilters.find(
+    (meow) => meow.id === "applicationStatus"
+  );
+  useEffect(() => {
+    const filterHierarchy = [
+      "scholarship",
+      "applicationStatus",
+      "studentInstitute",
+      "studentCourse",
+      "studentYear",
+      "studentSection",
+    ];
+
+    // Check which filters currently exist
+    const existingFilterIds = selectedFilters.map((f) => f.id);
+
+    // Find the highest level filter that's missing
+    let resetFromIndex = -1;
+    for (let i = 0; i < filterHierarchy.length; i++) {
+      if (!existingFilterIds.includes(filterHierarchy[i])) {
+        resetFromIndex = i;
+        break;
+      }
+    }
+
+    // If a higher-level filter is missing, remove all filters below it
+    if (resetFromIndex >= 0) {
+      const filtersToKeep = filterHierarchy.slice(0, resetFromIndex);
+      const shouldUpdate = selectedFilters.some(
+        (filter) => !filtersToKeep.includes(filter.id)
+      );
+
+      if (shouldUpdate) {
+        setSelectedFilters((prev) =>
+          prev.filter((filter) => filtersToKeep.includes(filter.id))
+        );
+      }
+    }
+  }, [
+    selectedFilters.find((f) => f.id === "scholarship"),
+    selectedFilters.find((f) => f.id === "applicationStatus"),
+    selectedFilters.find((f) => f.id === "studentInstitute"),
+    selectedFilters.find((f) => f.id === "studentCourse"),
+    selectedFilters.find((f) => f.id === "studentYear"),
+    selectedFilters.find((f) => f.id === "studentSection"),
+  ]);
   const [step, setStep] = useState(0);
   return (
     <div className=" z-10 bg-background lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
@@ -274,54 +332,70 @@ export default function GenerateReport() {
                       </span>
                     )}
                   </TimelineContent>
-                  {loading ? (
+                  {showSkeleton ? (
                     <div className="grid grid-cols-5 gap-3 mt-4">
                       {[1, 2, 3, 4, 5].map((card) => (
                         <Skeleton key={card} className="h-22 rounded-md" />
                       ))}
                     </div>
                   ) : (
-                    <div className="grid grid-cols-5 gap-3 mt-5">
-                      {item.headers?.map((meow) => {
-                        const Icon = item.icon;
-                        const isStepSeven = item.id === 7;
+                    <div className="relative">
+                      {/* Subtle loading overlay during refetch - NOW OUTSIDE skeleton condition */}
 
-                        const isChecked = isStepSeven
-                          ? selectedDataSelections.includes(meow)
-                          : selectedFilters
-                              .find((filter) => filter.id === item.headerLabel)
-                              ?.value.includes(meow) || false;
-                        return (
-                          <div key={meow} onClick={() => setStep(index + 1)}>
-                            <div className="relative bg-card  flex w-full items-start gap-2 rounded-md  p-6 shadow-xs outline-none dark:has-data-[state=checked]:bg-green-950 ">
-                              <Checkbox
-                                id="meow"
-                                disabled={loadingCSV}
-                                checked={isChecked}
-                                onCheckedChange={() => {
-                                  if (item.id === 7) {
-                                    handleCheckboxToggle(meow);
-                                  } else {
-                                    handleFilterToggle(item.headerLabel, meow);
-                                  }
-                                }}
-                                className="order-1 after:absolute after:inset-0  !border-0"
-                              />
-                              <div className="flex grow items-center gap-3">
-                                <Icon className="h-5 min-w-5" />
-                                <div className="grid gap-2">
-                                  <Label
-                                    htmlFor="meow"
-                                    className="line-clamp-1 capitalize"
-                                  >
-                                    {meow}
-                                  </Label>
+                      <div className="grid grid-cols-4 gap-3 mt-5">
+                        {item.headers?.map((meow, index) => {
+                          const Icon = item.icon;
+                          const isStepSeven = item.id === 7;
+                          const count = meow.count;
+                          const label = meow.label;
+                          const isChecked = isStepSeven
+                            ? selectedDataSelections.includes(label)
+                            : selectedFilters
+                                .find(
+                                  (filter) => filter.id === item.headerLabel
+                                )
+                                ?.value.includes(label) || false;
+                          return (
+                            <div key={index} onClick={() => setStep(index + 1)}>
+                              <div className="relative bg-card flex w-full items-start gap-2 rounded-md p-6 shadow-xs outline-none dark:has-data-[state=checked]:bg-green-950">
+                                <Checkbox
+                                  id={`checkbox-${item.id}-${index}`}
+                                  disabled={loadingCSV}
+                                  checked={isChecked}
+                                  onCheckedChange={() => {
+                                    if (item.id === 7) {
+                                      handleCheckboxToggle(label);
+                                    } else {
+                                      handleFilterToggle(
+                                        item.headerLabel,
+                                        label
+                                      );
+                                    }
+                                  }}
+                                  className="order-1 after:absolute after:inset-0 !border-0"
+                                />
+                                <div className="flex grow items-center gap-5">
+                                  {isRefetching ? (
+                                    <Loader className="animate-spin size-5" />
+                                  ) : (
+                                    <Icon className="size-5" />
+                                  )}
+
+                                  <div className="grid gap-2">
+                                    <Label
+                                      htmlFor={`checkbox-${item.id}-${index}`}
+                                      className="capitalize line-clamp-1"
+                                    >
+                                      {label}{" "}
+                                      {count > 0 && <span>({count})</span>}
+                                    </Label>
+                                  </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                        );
-                      })}
+                          );
+                        })}
+                      </div>
                     </div>
                   )}
                 </TourStep>

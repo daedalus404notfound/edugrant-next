@@ -185,7 +185,6 @@ export const useLoginHandler = () => {
       if (remember) {
         setStudentId(data.studentId);
       } else {
-        // If remember me is not checked, clear any saved studentId
         clearStudentId();
       }
       if (result.success === true) {
