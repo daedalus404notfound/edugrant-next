@@ -4,6 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 type InterviewTypes = {
   id: number;
+  adminId?: number;
   scholarshipId: number;
   documentUpdate: Record<string, { comment: string; status: string }>;
 };
@@ -14,6 +15,7 @@ export interface ApiErrorResponse {
 }
 export function useInterviewdHandler({
   id,
+  adminId,
   scholarshipId,
   documentUpdate,
 }: InterviewTypes) {
@@ -29,6 +31,7 @@ export function useInterviewdHandler({
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/forInterview`,
         {
           applicationId: id,
+          accountId: 10,
           scholarshipId: scholarshipId,
           rejectMessage: JSON.stringify(documentUpdate),
         },

@@ -315,7 +315,16 @@ export default function SocketListener() {
           };
         }
       );
-
+      queryClient.invalidateQueries({
+        queryKey: [
+          "staffApplicationData",
+          paginationDefaultApplication,
+          [],
+          [],
+          "APPROVED",
+          "",
+        ],
+      });
       playNotificationSound();
     });
 
@@ -357,6 +366,16 @@ export default function SocketListener() {
           };
         }
       );
+      queryClient.invalidateQueries({
+        queryKey: [
+          "staffApplicationData",
+          paginationDefaultApplication,
+          [],
+          [],
+          "DECLINED",
+          "",
+        ],
+      });
     });
     socket.on("forInterview", (data) => {
       const interviewData = data.interviewApplication;
@@ -398,7 +417,16 @@ export default function SocketListener() {
           };
         }
       );
-
+      queryClient.invalidateQueries({
+        queryKey: [
+          "staffApplicationData",
+          paginationDefaultApplication,
+          [],
+          [],
+          "INTERVIEW",
+          "",
+        ],
+      });
       playNotificationSound();
     });
 

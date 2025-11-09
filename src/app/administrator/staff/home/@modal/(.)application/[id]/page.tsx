@@ -143,7 +143,7 @@ export default function InterceptReviewApplicants() {
     isSuccessReject,
   } = useRecjectHandler({
     id,
-   
+
     documentUpdate: reviewData,
     scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
   });
@@ -176,7 +176,9 @@ export default function InterceptReviewApplicants() {
   ];
   const { isActive, activeTourName } = useTourContext();
   //BUTTON LOGIC
-  const approveButton = data?.status === "PENDING";
+  const approveButton =
+    data?.status === "PENDING" ||
+    (data?.Scholarship.interview === true && data.status === "INTERVIEW");
   const forInterviewButton =
     data?.status === "PENDING" && data.Scholarship.interview === true;
   const deleteButton =
@@ -245,26 +247,28 @@ export default function InterceptReviewApplicants() {
                       }
                     />
                   ) : (
-                    <DeleteDialog
-                      open={openApprove}
-                      onOpenChange={setOpenApprove}
-                      onConfirm={handleApprove}
-                      loading={loadingApprove}
-                      title="Approve Application"
-                      red={false} // make it visually destructive since this is a rejection
-                      description="This will approve the application and notify the student. This action cannot be undone."
-                      confirmText="Approve"
-                      confirmTextLoading="Approving..."
-                      cancelText="Cancel"
-                      trigger={
-                        <Button
-                          disabled={reviewCheckpoint || isThereRejected}
-                          onClick={() => setOpenApprove(true)}
-                        >
-                          <UserRoundCheck /> Approve Application
-                        </Button>
-                      }
-                    />
+                    approveButton && (
+                      <DeleteDialog
+                        open={openApprove}
+                        onOpenChange={setOpenApprove}
+                        onConfirm={handleApprove}
+                        loading={loadingApprove}
+                        title="Approve Application"
+                        red={false} // make it visually destructive since this is a rejection
+                        description="This will approve the application and notify the student. This action cannot be undone."
+                        confirmText="Approve"
+                        confirmTextLoading="Approving..."
+                        cancelText="Cancel"
+                        trigger={
+                          <Button
+                            disabled={reviewCheckpoint || isThereRejected}
+                            onClick={() => setOpenApprove(true)}
+                          >
+                            <UserRoundCheck /> Approve Application
+                          </Button>
+                        }
+                      />
+                    )
                   )}
 
                   {/* Decline Button */}
