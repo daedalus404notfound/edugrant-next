@@ -315,6 +315,11 @@ export default function SocketListener() {
           };
         }
       );
+
+      queryClient.invalidateQueries({
+        queryKey: ["adminApplication"],
+      });
+
       queryClient.invalidateQueries({
         queryKey: [
           "staffApplicationData",
@@ -376,6 +381,10 @@ export default function SocketListener() {
           "",
         ],
       });
+
+      queryClient.invalidateQueries({
+        queryKey: ["adminApplication"],
+      });
     });
     socket.on("forInterview", (data) => {
       const interviewData = data.interviewApplication;
@@ -426,6 +435,10 @@ export default function SocketListener() {
           "INTERVIEW",
           "",
         ],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ["adminApplication"],
       });
       playNotificationSound();
     });
