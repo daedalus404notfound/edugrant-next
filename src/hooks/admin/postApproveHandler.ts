@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 type ApproveTypes = {
   id: number;
-  adminId?: number;
+
   scholarshipId: number;
   documentUpdate: Record<string, { comment: string; status: string }>;
 };
@@ -15,7 +15,7 @@ interface ApiErrorResponse {
 }
 export function useApprovedHandler({
   id,
-  adminId,
+
   scholarshipId,
   documentUpdate,
 }: ApproveTypes) {
@@ -31,7 +31,7 @@ export function useApprovedHandler({
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/approveApplication`,
         {
           applicationId: id,
-          adminId: adminId,
+       
           scholarshipId: scholarshipId,
           rejectMessage: JSON.stringify(documentUpdate),
         },

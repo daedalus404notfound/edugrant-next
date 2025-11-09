@@ -69,14 +69,14 @@ import { useState } from "react";
 import { ApiErrorResponse } from "./postReviewedHandler";
 type RecjectTypes = {
   id: number;
-  adminId?: number;
+
   scholarshipId: number;
   documentUpdate: Record<string, { comment: string; status: string }>;
 };
 
 export function useRecjectHandler({
   id,
-  adminId,
+
   scholarshipId,
   documentUpdate,
 }: RecjectTypes) {
@@ -92,7 +92,7 @@ export function useRecjectHandler({
         `${process.env.NEXT_PUBLIC_ADMINISTRATOR_URL}/declineApplication`,
         {
           applicationId: id,
-          adminId: adminId,
+
           scholarshipId: scholarshipId,
           rejectMessage: JSON.stringify(documentUpdate),
         },
@@ -171,7 +171,6 @@ export function useRecjectHandler({
       setLoadingReject(false);
       setOpenReject(false);
       setIsSuccessReject(false);
-     
     } finally {
       setLoadingReject(false);
     }

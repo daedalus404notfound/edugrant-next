@@ -118,7 +118,6 @@ export default function InterceptReviewApplicants() {
     isSuccessInterview,
   } = useInterviewdHandler({
     id,
-    adminId: admin?.accountId,
     documentUpdate: reviewData,
     scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
   });
@@ -131,7 +130,7 @@ export default function InterceptReviewApplicants() {
     isSuccessApprove,
   } = useApprovedHandler({
     id,
-    adminId: admin?.accountId,
+
     documentUpdate: reviewData,
     scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
   });
@@ -144,7 +143,7 @@ export default function InterceptReviewApplicants() {
     isSuccessReject,
   } = useRecjectHandler({
     id,
-    adminId: admin?.accountId,
+   
     documentUpdate: reviewData,
     scholarshipId: data?.scholarshipId ? data?.scholarshipId : 0,
   });
@@ -239,7 +238,7 @@ export default function InterceptReviewApplicants() {
                       trigger={
                         <Button
                           disabled={reviewCheckpoint || isThereRejected}
-                          onClick={() => setOpenApprove(true)}
+                          onClick={() => setOpenInterview(true)}
                         >
                           <UserRoundCheck /> Approve for Interview
                         </Button>

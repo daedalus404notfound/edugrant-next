@@ -76,6 +76,7 @@ export default function UploadDocs({
   setApplying: (applying: boolean) => void;
   HandleCloseDrawer: (close: boolean) => void;
 }) {
+    const queryClient = useQueryClient();
   const scholarId = data.scholarshipId;
   const [completedCount, setCompletedCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -128,7 +129,7 @@ export default function UploadDocs({
   };
 
   const onSubmit = async (data: FormData) => {
-    const queryClient = useQueryClient();
+  
     try {
       setLoading(true);
       setDisable(true);
