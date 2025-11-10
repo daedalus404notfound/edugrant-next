@@ -209,7 +209,7 @@ export const useLandingChangePassword = () => {
       });
       if (result.success) {
         setOpen(false);
-        router.replace("/user/login");
+        router.replace("/adminstrator");
       }
     } catch (error) {
       // Error toast is already handled in useVerifyLogin onError
