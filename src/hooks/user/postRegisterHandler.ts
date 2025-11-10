@@ -30,32 +30,36 @@ type AuthCodeTypes = {
   ttl: number;
 };
 const sendAuthApi = async ({ personalData, accountData }: sendAuthData) => {
+  const payload = {
+    studentFirstName: personalData.firstName,
+    ...(personalData.middleName && {
+      studentMiddleName: personalData.middleName,
+    }),
+    studentLastName: personalData.lastName,
+    indigenous: personalData.indigenous,
+    pwd: personalData.pwd,
+    studentContact: personalData.contactNumber,
+    studentGender: personalData.gender,
+    studentDateofBirth: personalData.dateOfBirth,
+    studentAddress: personalData.address,
+    studentId: accountData.studentId,
+    studentEmail: accountData.email,
+    studentPassword: accountData.password,
+    institute: accountData.institute,
+    course: accountData.course,
+    year: accountData.yearLevel,
+    section: accountData.section,
+  };
+
   const response = await axios.post<AuthCodeTypes>(
     `${process.env.NEXT_PUBLIC_USER_URL}/sendAuthCodeRegister`,
-    {
-      studentFirstName: personalData.firstName,
-      studentMiddleName: personalData.middleName,
-      studentLastName: personalData.lastName,
-      indigenous: personalData.indigenous,
-      pwd: personalData.pwd,
-      studentContact: personalData.contactNumber,
-      studentGender: personalData.gender,
-      studentDateofBirth: personalData.dateOfBirth,
-      studentAddress: personalData.address,
-      studentId: accountData.studentId,
-      studentEmail: accountData.email,
-      studentPassword: accountData.password,
-      institute: accountData.institute,
-      course: accountData.course,
-      year: accountData.yearLevel,
-      section: accountData.section,
-    },
-    {
-      withCredentials: true,
-    }
+    payload,
+    { withCredentials: true }
   );
+
   return response.data;
 };
+
 interface VerifyRegisterData {
   data: otpFormData;
   personalData: personalFormData;
