@@ -70,31 +70,34 @@ const verifyRegisterApi = async ({
   personalData,
   accountData,
 }: VerifyRegisterData) => {
+  const payload = {
+    verificationCode: data.otp,
+    studentFirstName: personalData.firstName,
+    ...(personalData.middleName && {
+      studentMiddleName: personalData.middleName,
+    }),
+    studentLastName: personalData.lastName,
+    indigenous: personalData.indigenous,
+    pwd: personalData.pwd,
+    studentContact: personalData.contactNumber,
+    studentGender: personalData.gender,
+    studentDateofBirth: personalData.dateOfBirth,
+    studentAddress: personalData.address,
+    studentId: accountData.studentId,
+    studentEmail: accountData.email,
+    studentPassword: accountData.password,
+    institute: accountData.institute,
+    course: accountData.course,
+    year: accountData.yearLevel,
+    section: accountData.section,
+  };
+
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_USER_URL}/registerAccount`,
-    {
-      verificationCode: data.otp,
-      studentFirstName: personalData.firstName,
-      studentMiddleName: personalData.middleName,
-      indigenous: personalData.indigenous,
-      pwd: personalData.pwd,
-      institute: accountData.institute,
-      studentLastName: personalData.lastName,
-      studentContact: personalData.contactNumber,
-      studentGender: personalData.gender,
-      studentDateofBirth: personalData.dateOfBirth,
-      studentAddress: personalData.address,
-      studentId: accountData.studentId,
-      studentEmail: accountData.email,
-      studentPassword: accountData.password,
-      course: accountData.course,
-      year: accountData.yearLevel,
-      section: accountData.section,
-    },
-    {
-      withCredentials: true,
-    }
+    payload,
+    { withCredentials: true }
   );
+
   return response.data;
 };
 
