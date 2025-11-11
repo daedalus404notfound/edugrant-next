@@ -82,7 +82,7 @@ export default function Notification() {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className="w-md mr-13 mt-3 p-0 bg-background/90 backdrop-blur-2xl"
+        className="lg:w-md w-xs lg:mr-13 mr-3  lg:mt-3 p-0 bg-background/90 backdrop-blur-2xl"
         align="center"
       >
         <h2 className="text-base font-semibold p-4">Notifications</h2>
