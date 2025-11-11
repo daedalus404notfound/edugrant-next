@@ -38,6 +38,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import NoDataFound from "@/components/ui/nodata";
 import { useQueryClient } from "@tanstack/react-query";
 import { paginationDefault06, sortDefault } from "@/lib/socket-constants";
+import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 
 export default function Notification() {
   const queryClient = useQueryClient();
@@ -60,7 +61,8 @@ export default function Notification() {
   ]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const markMutation = useMarkAsRead();
-  console.log("existing", existing);
+  const queryUser = useAuthenticatedUser();
+  const count = queryUser.data?.unreadNotifications;
   const markAllMutation = useMarkAllAsRead();
   const { query, meta } = useGetNotifications({
     pagination,
@@ -68,16 +70,21 @@ export default function Notification() {
     columnFilters,
   });
   const data = query.data?.notification;
-  console.log("data", data);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          className="rounded-full relative"
+          className="relative rounded-full"
           variant="secondary"
           size="icon"
         >
           <Bell className="w-5 h-5" />
+
+          {(count ?? 0) > 0 && (
+            <span className="absolute -top-1 -right-2 min-w-[1.25rem] h-5 px-1 bg-red-800 text-white text-xs font-semibold rounded-full grid place-items-center animate-pulse">
+              {(count ?? 0) > 99 ? "99+" : count}
+            </span>
+          )}
         </Button>
       </DropdownMenuTrigger>
 

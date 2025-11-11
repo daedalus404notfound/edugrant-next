@@ -17,8 +17,7 @@ export default function useSocketConnection() {
     socket.on("connect", () => {
       console.log("✅ Connected to socket:", socket.id);
       setConnected(true);
-      console.log(user.role);
-      // Register user with backend socket
+
       socket.emit("register", {
         role: user.role,
         id: user.accountId,

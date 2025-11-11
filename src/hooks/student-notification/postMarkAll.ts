@@ -5,6 +5,7 @@ import axios from "axios";
 import { handleApiError } from "@/lib/handleApiError";
 import { paginationDefault06, sortDefault } from "@/lib/socket-constants";
 import { NotificationDataTypes, NotificationTypes } from "./getNotfications";
+import { AuthTypes } from "../user/getTokenAuthentication";
 
 export default function useMarkAllAsRead() {
   const queryClient = useQueryClient();
@@ -40,7 +41,16 @@ export default function useMarkAllAsRead() {
           };
         }
       );
-
+      queryClient.setQueryData(
+        ["authenticated-user-student"],
+        (old: AuthTypes) => {
+          if (!old) return old;
+          return {
+            ...old,
+            unreadNotifications: 0,
+          };
+        }
+      );
       return { previous };
     },
     onError: (error, _, context) => {

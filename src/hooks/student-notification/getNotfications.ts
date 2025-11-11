@@ -54,7 +54,7 @@ export default function useGetNotifications({
 
         return res.data;
       } catch (error) {
-        handleApiError(error);
+        handleApiError(error, true);
       }
     },
     retry: false,

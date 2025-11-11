@@ -1,11 +1,13 @@
 import StyledToast from "@/components/ui/toast-styled";
 import axios from "axios";
+
 export interface ApiErrorResponse {
   message?: string;
   error?: string;
   statusCode?: number;
 }
-export function handleApiError(error: unknown) {
+
+export function handleApiError(error: unknown, shouldThrow = false) {
   if (axios.isAxiosError<ApiErrorResponse>(error)) {
     const status = error.response?.status;
     const message = error.response?.data?.message;
@@ -69,5 +71,7 @@ export function handleApiError(error: unknown) {
       description: "An unexpected issue occurred. Please try again later.",
     });
   }
-  throw error;
+
+  // Only throw if requested
+  if (shouldThrow) throw error;
 }
