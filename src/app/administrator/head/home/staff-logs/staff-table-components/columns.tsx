@@ -70,7 +70,9 @@ export const columns: ColumnDef<AllStaffLogsType>[] = [
             <div className="font-medium capitalize">
               {staff.fName} {staff.mName} {staff.lName}
             </div>
-            <p className="text-xs text-muted-foreground">email@here.com</p>
+            <p className="text-xs text-muted-foreground">
+              {staff.validated ? "VALIDATED" : "INACTIVE"}
+            </p>
           </div>
         </div>
       );
@@ -104,7 +106,7 @@ export const columns: ColumnDef<AllStaffLogsType>[] = [
               {student.fName} {student.mName} {student.lName}
             </div>
             <p className="text-xs text-muted-foreground">
-              walang res na student id
+              {student.Account.schoolId}
             </p>
           </div>
         </div>
