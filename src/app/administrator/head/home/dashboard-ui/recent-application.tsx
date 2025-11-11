@@ -12,7 +12,7 @@ export function RecentApplications({
   data,
   loading,
 }: {
-  data: DashboardData | undefined;
+  data: DashboardData | null;
   loading: boolean;
 }) {
   return (
