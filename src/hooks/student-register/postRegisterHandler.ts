@@ -29,7 +29,9 @@ export const sendCodeApi = async ({
     `${process.env.NEXT_PUBLIC_USER_URL}/sendAuthCodeRegister`,
     {
       studentFirstName: personalData.firstName,
-      studentMiddleName: personalData.middleName,
+      ...(personalData.middleName && {
+        studentMiddleName: personalData.middleName,
+      }),
       studentLastName: personalData.lastName,
       indigenous: personalData.indigenous,
       pwd: personalData.pwd,
@@ -67,7 +69,9 @@ export const verifyCodeApi = async ({
     {
       verificationCode: otp.otp,
       studentFirstName: personalData.firstName,
-      studentMiddleName: personalData.middleName,
+      ...(personalData.middleName && {
+        studentMiddleName: personalData.middleName,
+      }),
       indigenous: personalData.indigenous,
       pwd: personalData.pwd,
       institute: accountData.institute,
