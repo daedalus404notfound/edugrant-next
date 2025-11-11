@@ -41,7 +41,11 @@ export default function LogoutDialog() {
           >
             Stay logged in
           </Button>
-          <Button className="flex-1 lg:flex-none" onClick={handleLogout}>
+          <Button
+            className="flex-1 lg:flex-none"
+            onClick={handleLogout}
+            disabled={loadingLogout}
+          >
             {loadingLogout ? (
               <>
                 Logging out...
