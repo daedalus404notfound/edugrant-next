@@ -27,7 +27,7 @@ export default function OngoingScholarshipDashboard({
           </Button>
         </Link>
       </div>
-      <div className=" grid grid-cols-1 lg:gap-5 gap-2">
+      <div className=" grid lg:grid-cols-2 grid-cols-1 lg:gap-5 gap-2">
         {loading ? (
           [...Array(3)].map((_, index) => (
             <motion.div

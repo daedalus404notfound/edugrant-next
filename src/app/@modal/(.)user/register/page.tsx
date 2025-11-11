@@ -120,7 +120,7 @@ export default function RegisterStudent() {
 
   useEffect(() => {
     if (verifyCode.isSuccess && open) {
-      router.push("/login");
+      router.push("/user/login");
     }
   }, [verifyCode.isSuccess, open]);
   return (

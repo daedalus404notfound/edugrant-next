@@ -69,7 +69,7 @@ export default function AdminDashboard() {
   const loadingState = loading || isLoading;
   return (
     <div className=" z-10  lg:px-4 lg:min-h-[calc(100vh-80px)] min-h-[calc(100dvh-134px)] ">
-      <div className="py-6 lg:px-5 px-2 space-y-12">
+      <div className="py-6 lg:px-5 px-2 space-y-8">
         {!loadingState && !completed && <CompleteChecker />}
         <div className="lg:grid grid-cols-3 flex flex-col gap-8">
           <div className="col-span-2">
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
           <ProfileCompletion loading={loadingState} />
         </div>
         <div className="lg:grid grid-cols-3 gap-8">
-          <div className="col-span-2 space-y-12">
+          <div className="col-span-2 space-y-8">
             <div className="lg:grid grid-cols-3 lg:gap-5 gap-3 flex flex-col">
               {summaryCards.map((card, index) => (
                 <SummaryCardUser key={index} {...card} loading={loadingState} />
@@ -88,23 +88,25 @@ export default function AdminDashboard() {
             <RecentApplicationDashboard
               application={data?.recentApplications ?? []}
               loading={loadingState}
-            />
+            />{" "}
+            {completed && (
+              <OngoingScholarshipDashboard
+                scholarship={data?.onGoingScholarships ?? []}
+                loading={loadingState}
+              />
+            )}
+          </div>
+          <div className="space-y-8">
             <Announcements
               announcement={data?.announcements ?? []}
               loading={loading}
-            />
-          </div>
-          <div className="space-y-8">
-            <OngoingScholarshipDashboard
-              scholarship={data?.onGoingScholarships ?? []}
-              loading={loadingState}
             />
             <Calendar
               mode="single"
               selected={date}
               onSelect={setDate}
               className="rounded-md p-6 shadow-sm w-full bg-gradient-to-br to-card from-card/50"
-            />
+            />{" "}
           </div>
         </div>
       </div>

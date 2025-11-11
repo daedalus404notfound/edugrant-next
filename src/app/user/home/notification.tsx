@@ -1,211 +1,5 @@
-// "use client";
-// import { Button } from "@/components/ui/button";
-// import { Label } from "@/components/ui/label";
-// import {
-//   Popover,
-//   PopoverContent,
-//   PopoverTrigger,
-// } from "@/components/ui/popover";
-// import { Separator } from "@/components/ui/separator";
-// import { Badge } from "@/components/ui/badge";
-// import useMarkAllAsRead from "@/hooks/admin/postMarkAllAsRead";
-// import usefetchNotifications from "@/hooks/user/getNotfications";
-// import { useNotificationStore } from "@/store/userNotificationStore";
-// import { formatDistanceToNow } from "date-fns";
-// import { Bell, Check, Clock, X, MessageSquare, CheckCheck } from "lucide-react";
-// import useMarkAsReadNotification from "@/hooks/admin/patchReadNotification";
-// import Link from "next/link";
-// import { cn } from "@/lib/utils";
-// import { useApplicationStore } from "@/store/applicationUsetStore";
-
-// export default function Notification() {
-//   //STORE
-//   const { unreadNotifications } = useNotificationStore();
-//   const { setStatus, status } = useApplicationStore();
-
-//   //API
-//   const { data, isLoading, meta, isFetchingMore } = usefetchNotifications({
-//     page: 1,
-//     pageSize: 5,
-//   });
-//   const { onSubmit, markAllAsReadLoading } = useMarkAllAsRead();
-//   const { markReadLoading, markReadSubmit } = useMarkAsReadNotification();
-
-//   const hasUnread = data.some((notif) => !notif.read);
-
-//   console.log(status);
-//   return (
-//     <Popover>
-//       <PopoverTrigger asChild>
-//         <Button
-//           className="rounded-full relative"
-//           variant="secondary"
-//           size="icon"
-//         >
-//           <Bell className="w-5 h-5" />
-//           {(unreadNotifications ?? 0) > 0 && (
-//             <span className="absolute flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-xs font-semibold -top-1 -right-1 bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg animate-pulse">
-//               {(unreadNotifications ?? 0) > 99 ? "99+" : unreadNotifications}
-//             </span>
-//           )}
-//         </Button>
-//       </PopoverTrigger>
-
-//       <PopoverContent
-//         className="lg:w-lg w-xs p-0 overflow-hidden lg:mr-6 mr-2"
-//         align="center"
-//         sideOffset={8}
-//       >
-//         {/* Header */}
-//         <div className="flex items-center justify-between p-2 bg-muted/30 border-b">
-//           <div className="flex-1 flex justify-start items-center">
-//             <Button variant="ghost">
-//               <Bell />
-//             </Button>
-//           </div>
-//           <div className="flex-1 flex items-center justify-center gap-2">
-//             <h2 className="text-base font-semibold">Notifications</h2>
-//             {(unreadNotifications ?? 0) > 0 && (
-//               <Badge variant="secondary" className="rounded-full px-2 py-0">
-//                 {unreadNotifications}
-//               </Badge>
-//             )}
-//           </div>
-//           <div className="flex-1 flex justify-end items-center">
-//             <Button
-//               variant="ghost"
-//               size="sm"
-//               className="gap-2 h-8 text-xs"
-//               onClick={onSubmit}
-//               disabled={markAllAsReadLoading || !hasUnread}
-//             >
-//               <Check className="w-3.5 h-3.5" />
-//               Mark all read
-//             </Button>
-//           </div>
-//         </div>
-
-//         {/* Notifications List */}
-//         <div className="lg:h-115 h-80 overflow-auto">
-//           {data.length === 0 ? (
-//             <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
-//               <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mb-3">
-//                 <Bell className="w-8 h-8 text-muted-foreground/50" />
-//               </div>
-//               <p className="text-sm font-medium text-foreground mb-1">
-//                 No notifications yet
-//               </p>
-//               <p className="text-xs text-muted-foreground">
-//                 We'll notify you when something new arrives
-//               </p>
-//             </div>
-//           ) : (
-//             <div className="divide-y">
-//               {data.map((notification, index) => (
-//                 <Link
-//                   href={`/user/home/applications`}
-//                   key={notification.notificationId}
-//                   className={cn(
-//                     "flex gap-3 p-4 transition-colors relative group",
-//                     "hover:bg-muted/50 active:bg-muted",
-//                     !notification.read && "bg-primary/5 dark:bg-primary/10"
-//                   )}
-//                   onClick={() => {
-//                     setStatus(notification.title);
-//                     if (!notification.read) {
-//                       markReadSubmit(notification.notificationId);
-
-//                       // setData((prev) =>
-//                       //   prev.map((notif) =>
-//                       //     notif.notificationId === notification.notificationId
-//                       //       ? { ...notif, read: true }
-//                       //       : notif
-//                       //   )
-//                       // );
-//                     }
-//                   }}
-//                 >
-//                   {/* Unread indicator */}
-//                   {!notification.read && (
-//                     <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-full bg-primary-second rounded-r-full" />
-//                   )}
-
-//                   {/* Icon */}
-//                   <div className="flex-shrink-0 pt-1">
-//                     <div
-//                       className={cn(
-//                         "w-10 h-10 rounded-full flex items-center justify-center",
-//                         !notification.read ? "bg-primary/10" : "bg-muted"
-//                       )}
-//                     >
-//                       {notification.title === "APPROVED" ? (
-//                         <CheckCheck className="text-green-600" />
-//                       ) : notification.title === "DECLINED" ? (
-//                         <X className="text-red-600" />
-//                       ) : (
-//                         <MessageSquare className="text-blue-600" />
-//                       )}
-//                     </div>
-//                   </div>
-
-//                   {/* Content */}
-//                   <div className="flex-1 min-w-0">
-//                     <div className="flex items-start justify-between gap-2 mb-1">
-//                       <h4
-//                         className={cn(
-//                           "text-sm font-semibold line-clamp-1",
-//                           !notification.read && "text-foreground"
-//                         )}
-//                       >
-//                         {notification.title}
-//                       </h4>
-//                       {!notification.read && (
-//                         <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-1.5" />
-//                       )}
-//                     </div>
-
-//                     <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 mb-2">
-//                       {notification.description}
-//                     </p>
-
-//                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
-//                       <Clock className="w-3 h-3" />
-//                       <span>
-//                         {formatDistanceToNow(
-//                           new Date(notification.dateCreated),
-//                           {
-//                             addSuffix: true,
-//                           }
-//                         )}
-//                       </span>
-//                     </div>
-//                   </div>
-//                 </Link>
-//               ))}
-//             </div>
-//           )}
-//         </div>
-
-//         {/* Footer */}
-//         {data.length > 0 && (
-//           <>
-//             <Separator />
-//             <Link href="/user/administrator/notifications">
-//               <div className="p-3 flex justify-center items-center bg-muted/30 hover:bg-muted/50 transition-colors cursor-pointer">
-//                 <Label className="text-sm font-medium text-primary cursor-pointer">
-//                   View all notifications
-//                 </Label>
-//               </div>
-//             </Link>
-//           </>
-//         )}
-//       </PopoverContent>
-//     </Popover>
-//   );
-// }
 "use client";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -214,35 +8,67 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import useMarkAllAsRead from "@/hooks/admin/postMarkAllAsRead";
-import useFetchNotifications from "@/hooks/user/getNotfications";
-import { useNotificationStore } from "@/store/userNotificationStore";
+import useMarkAllAsRead from "@/hooks/student-notification/postMarkAll";
+import useGetNotifications from "@/hooks/student-notification/getNotfications";
 import { formatDistanceToNow } from "date-fns";
-import { Bell, Check, Clock, X, MessageSquare, CheckCheck } from "lucide-react";
-import useMarkAsReadNotification from "@/hooks/admin/patchReadNotification";
+import {
+  Bell,
+  Check,
+  Clock,
+  X,
+  MessageSquare,
+  CheckCheck,
+  Calendar,
+  ArrowRight,
+  Ban,
+  MessageCircle,
+} from "lucide-react";
+import useMarkAsRead from "@/hooks/student-notification/postMark";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { useApplicationStore } from "@/store/applicationUsetStore";
-import { useInView } from "react-intersection-observer";
-import { useEffect } from "react";
+import { useState } from "react";
+import {
+  ColumnFiltersState,
+  PaginationState,
+  SortingState,
+} from "@tanstack/react-table";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
+import NoDataFound from "@/components/ui/nodata";
+import { useQueryClient } from "@tanstack/react-query";
+import { paginationDefault06, sortDefault } from "@/lib/socket-constants";
 
 export default function Notification() {
-  // STORE
-  const { unreadNotifications } = useNotificationStore();
-  const { setStatus } = useApplicationStore();
+  const queryClient = useQueryClient();
+  const [pagination, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 6,
+  });
+  const [sorting, setSorting] = useState<SortingState>([
+    {
+      id: "dateCreated",
+      desc: true,
+    },
+  ]);
 
-  // API
-  const { data, isLoading, ref, hasNextPage, isFetchingNextPage } =
-    useFetchNotifications({
-      pageSize: 10,
-    });
-  const { onSubmit, markAllAsReadLoading } = useMarkAllAsRead();
-  const { markReadSubmit } = useMarkAsReadNotification();
-
-  const hasUnread = data.some((notif) => !notif.read);
-
+  const existing = queryClient.getQueryData([
+    "notifications",
+    paginationDefault06,
+    sortDefault,
+    [],
+  ]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const markMutation = useMarkAsRead();
+  console.log("existing", existing);
+  const markAllMutation = useMarkAllAsRead();
+  const { query, meta } = useGetNotifications({
+    pagination,
+    sorting,
+    columnFilters,
+  });
+  const data = query.data?.notification;
+  console.log("data", data);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -252,154 +78,119 @@ export default function Notification() {
           size="icon"
         >
           <Bell className="w-5 h-5" />
-          {(unreadNotifications ?? 0) > 0 && (
-            <span className="absolute flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full text-[10px] font-medium -top-1 -right-1 bg-gradient-to-br from-red-500 to-red-600 text-white shadow-lg ">
-              {(unreadNotifications ?? 0) > 99 ? "99+" : unreadNotifications}
-            </span>
-          )}
         </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        className=" lg:w-md w-xs lg:mr-8 p-0"
+        className="w-md mr-13 mt-3 p-0 bg-background/90 backdrop-blur-2xl"
         align="center"
-        sideOffset={8}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between p-2 bg-muted/30 border-b">
-          <div className="flex-1 flex justify-start items-center">
-            <Button variant="ghost" size="icon">
-              <Bell className="w-4 h-4" />
-            </Button>
-          </div>
-          <div className="flex-1 flex items-center justify-center gap-2">
-            <h2 className="text-base font-semibold">Notifications</h2>
-            {(unreadNotifications ?? 0) > 0 && (
-              <Badge variant="secondary" className="rounded-full px-2 py-0">
-                {unreadNotifications}
-              </Badge>
-            )}
-          </div>
-          <div className="flex-1 flex justify-end items-center">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-2 h-8 text-xs"
-              onClick={onSubmit}
-              disabled={markAllAsReadLoading || !hasUnread}
-            >
-              <Check className="w-3.5 h-3.5" />
-              Mark all read
-            </Button>
-          </div>
-        </div>
-
+        <h2 className="text-base font-semibold p-4">Notifications</h2>
         {/* Notifications List */}
-        <div className="max-h-[70dvh] overflow-auto">
-          {isLoading ? (
-            <div className="p-6 text-center text-muted-foreground">
-              Loading notifications...
-            </div>
-          ) : data.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 px-6 text-center">
-              <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mb-3">
-                <Bell className="w-8 h-8 text-muted-foreground/50" />
+        <ScrollArea className="px-4 max-h-122">
+          <div className="grid gap-2">
+            {query.isLoading ? (
+              <div className="space-y-2">
+                <Skeleton className="h-20 w-full" />
+                <Skeleton className="h-20 w-full" />
+                <Skeleton className="h-20 w-full" />
               </div>
-              <p className="text-sm font-medium text-foreground mb-1">
-                No notifications yet
-              </p>
-              <p className="text-xs text-muted-foreground">
-                We'll notify you when something new arrives
-              </p>
-            </div>
-          ) : (
-            <div className="divide-y">
-              {data.map((notification) => (
-                <DropdownMenuItem
-                  key={notification.notificationId}
-                  className={cn(
-                    "flex gap-3 p-4 transition-colors relative group cursor-pointer focus:bg-muted/50",
-                    !notification.read && "bg-primary/5 dark:bg-primary/10"
-                  )}
-                  onSelect={() => {
-                    setStatus(notification.status);
-                    if (!notification.read) {
-                      markReadSubmit(notification.notificationId);
+            ) : query.data?.notification.length === 0 ? (
+              <NoDataFound />
+            ) : (
+              data?.map((notification) => {
+                const approved = notification.status === "APPROVED";
+
+                const declined = notification.status === "DECLINED";
+                const interview = notification.status === "INTERVIEW";
+                const blocked = notification.status === "BLOCKED";
+                return (
+                  <DropdownMenuItem
+                    key={notification.notificationId}
+                    className={`border  ${notification.read ? "" : "bg-card"}`}
+                    asChild
+                    onClick={() =>
+                      markMutation.mutate(notification.notificationId)
                     }
-                  }}
-                  asChild
-                >
-                  <Link href={`/user/home/applications`}>
-                    {!notification.read && (
-                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-full bg-primary-second rounded-r-full" />
-                    )}
-
-                    <div className="flex-shrink-0 pt-1">
-                      <div
-                        className={cn(
-                          "w-10 h-10 rounded-full flex items-center justify-center",
-                          !notification.read ? "bg-primary/10" : "bg-muted"
-                        )}
-                      >
-                        {notification.title === "APPROVED" ? (
-                          <CheckCheck className="text-green-600" />
-                        ) : notification.title === "DECLINED" ? (
-                          <X className="text-red-600" />
-                        ) : (
-                          <MessageSquare className="text-blue-600" />
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2 mb-1">
-                        <h4
-                          className={cn(
-                            "text-sm font-semibold line-clamp-1",
-                            !notification.read && "text-foreground"
-                          )}
+                  >
+                    <Link href={`/user/home/applications`}>
+                      <div className="p-2 flex items-start gap-4">
+                        <span
+                          className={`rounded-md ${
+                            approved
+                              ? "bg-green-200 dark:bg-green-800/50 p-2"
+                              : declined
+                              ? "bg-red-200 dark:bg-red-800/50 p-2"
+                              : interview
+                              ? "bg-blue-200 dark:bg-blue-800/50 p-2"
+                              : blocked
+                              ? "bg-gray-200 dark:bg-gray-800/50 p-2"
+                              : ""
+                          }`}
                         >
-                          {notification.title}
-                        </h4>
-                        {!notification.read && (
-                          <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0 mt-1.5" />
-                        )}
-                      </div>
-
-                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 mb-2">
-                        {notification.description}
-                      </p>
-
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Clock className="w-3 h-3" />
-                        <span>
-                          {formatDistanceToNow(
-                            new Date(notification.dateCreated),
-                            {
-                              addSuffix: true,
-                            }
+                          {approved ? (
+                            <CheckCheck />
+                          ) : declined ? (
+                            <X />
+                          ) : interview ? (
+                            <MessageCircle />
+                          ) : blocked ? (
+                            <Ban />
+                          ) : (
+                            ""
                           )}
                         </span>
+                        <div>
+                          <div className="flex justify-between items-center">
+                            <h1 className="font-medium leading-4">
+                              {notification.title}
+                            </h1>
+                            <span className="flex items-center gap-1">
+                              <Calendar />
+                              <p className="text-xs text-muted-foreground">
+                                {formatDistanceToNow(
+                                  new Date(notification.dateCreated),
+                                  {
+                                    addSuffix: true,
+                                  }
+                                )}
+                              </p>
+                            </span>
+                          </div>
+                          <p className="text-muted-foreground mt-2 line-clamp-3 leading-5">
+                            {notification.description}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-              ))}
-
-              {/* Infinite Scroll Trigger */}
-              <div
-                ref={ref}
-                className="text-center py-3 text-xs text-muted-foreground px-4"
-              >
-                {isFetchingNextPage
-                  ? "Loading more..."
-                  : hasNextPage
-                  ? "Scroll to load more"
-                  : "No more notifications"}
-              </div>
-            </div>
-          )}
-        </div>
+                    </Link>
+                  </DropdownMenuItem>
+                );
+              })
+            )}
+          </div>
+          {/* {meta.totalRows > 4 && (
+            <span className="flex items-center justify-end gap-2 py-3 hover:underline cursor-pointer">
+              <p className=" text-sm text-muted-foreground">See more</p>
+              <ArrowRight className="size-4 text-muted-foreground" />
+            </span>
+          )} */}
+        </ScrollArea>{" "}
+        <h2
+          onClick={() => markAllMutation.mutate()}
+          className={`text-sm text-center p-2 hover:underline cursor-pointer border-t bg-card ${
+            markAllMutation.isPending ||
+            markAllMutation.isSuccess ||
+            (query.data?.notification.length ?? 0) === 0
+              ? "pointer-events-none text-muted-foreground"
+              : ""
+          }`}
+        >
+          {markAllMutation.isPending
+            ? "Marking..."
+            : markAllMutation.isSuccess
+            ? "Marked"
+            : "Mark all as read"}
+        </h2>
       </DropdownMenuContent>
     </DropdownMenu>
   );
