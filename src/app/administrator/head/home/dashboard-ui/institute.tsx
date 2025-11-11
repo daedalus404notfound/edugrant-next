@@ -131,7 +131,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ChartBarMixed({ data }: { data: DashboardData | undefined }) {
+export function ChartBarMixed({ data }: { data: DashboardData | null }) {
   const chartData =
     data?.applicationCountPerInsti?.map((item) => ({
       institute: item.institute,

@@ -50,7 +50,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function DonutPieDonut({ data }: { data: DashboardData | undefined }) {
+export function DonutPieDonut({ data }: { data: DashboardData | null }) {
   const chartData = [
     {
       group: "Persons with Disability",
@@ -74,7 +74,6 @@ export function DonutPieDonut({ data }: { data: DashboardData | undefined }) {
         <CardHeader className="items-center pb-0 text-center">
           <CardTitle>Scholarship Applicants</CardTitle>
           <CardDescription>By Group (PWD, Indigenous, General)</CardDescription>
-         
         </CardHeader>
 
         <CardContent className="flex-1 pb-0">
