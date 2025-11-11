@@ -38,6 +38,7 @@ export default function LogoutDialog() {
             className="flex-1 lg:flex-none"
             onClick={() => setOpenLogout(false)}
             variant="outline"
+            disabled={loadingLogout}
           >
             Stay logged in
           </Button>
