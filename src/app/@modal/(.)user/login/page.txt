@@ -1,15 +1,33 @@
 "use client";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  ArrowLeft,
   ArrowRight,
   Eye,
   EyeClosed,
   IdCard,
   Loader,
-  Lock,
   LockOpen,
   MailCheck,
-  UserRound,
 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import Link from "next/link";
 import {
   Form,
@@ -25,8 +43,13 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { useLoginHandler } from "@/hooks/user/postLoginHandler";
+import { ModeToggle } from "@/components/ui/dark-mode";
+
 import { Checkbox } from "@/components/ui/checkbox";
+
 import useRememberStore from "@/store/rememberMe";
+import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -39,18 +62,28 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
-
-import { loginUserHandler } from "@/hooks/student-login/postLoginHandler";
-import { useLoginUser } from "@/hooks/student-login/userLoginZod";
-import { useCountdown } from "@/hooks/useCountdown";
-import { FormInputField } from "@/components/input-components/reusable-input";
+import ModalHeader from "@/components/ui/modal-header";
 
 export default function LoginClientModal() {
   const router = useRouter();
-  const [open, setOpen] = useState(true);
-  const [step, setStep] = useState<"login" | "otp">("login");
+
+  const {
+    open,
+    setOpen,
+    step,
+    LoginForm,
+    loginOtpForm,
+    handleLogin,
+    handleOtpVerification,
+    authLoading,
+    verifyLoading,
+    requestNewCode,
+
+    resendTimer,
+    expiresAt,
+  } = useLoginHandler();
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
@@ -60,33 +93,8 @@ export default function LoginClientModal() {
     }
   };
   const { remember, setRemember } = useRememberStore();
-  const { timeLeft, start } = useCountdown();
   const [hidden, setHidden] = useState(true);
   const isMobile = useIsMobile();
-  const { sendCodeForm, verifyOtpForm } = useLoginUser();
-  const { sendCode, verifyCode, resendCode } = loginUserHandler();
-
-  useEffect(() => {
-    if (sendCode.isSuccess) {
-      setStep("otp");
-    }
-  }, [sendCode.isSuccess]);
-  useEffect(() => {
-    if (verifyCode.isSuccess && open) {
-      setOpen(false);
-      router.replace("/user/home");
-    }
-  }, [verifyCode.isSuccess, open]);
-  useEffect(() => {
-    if (sendCode.isSuccess && sendCode.data?.resendAvailableIn) {
-      start(sendCode.data.resendAvailableIn);
-    }
-  }, [sendCode.isSuccess]);
-  useEffect(() => {
-    if (resendCode.isSuccess && resendCode.data?.resendAvailableIn) {
-      start(resendCode.data.resendAvailableIn);
-    }
-  }, [resendCode.isSuccess]);
 
   return (
     <Drawer
@@ -95,16 +103,17 @@ export default function LoginClientModal() {
       onOpenChange={(value) => {
         HandleCloseDrawer(value);
       }}
+      repositionInputs={false}
     >
       <DrawerContent
         onInteractOutside={(e) => {
-          if (verifyCode.isPending || sendCode.isPending) e.preventDefault();
+          if (verifyLoading || authLoading) e.preventDefault();
         }}
         onEscapeKeyDown={(e) => {
-          if (verifyCode.isPending || sendCode.isPending) e.preventDefault();
+          if (verifyLoading || authLoading) e.preventDefault();
         }}
-        className={`  lg:p-2 border-0! outline-0! ${
-          isMobile ? "bg-card! mx-auto w-[98%]" : "bg-transparent! w-full"
+        className={`  lg:p-2 !border-0 !outline-0 ${
+          isMobile ? "!bg-card mx-auto w-[98%]" : "!bg-transparent w-full"
         }`}
       >
         <DrawerHeader className="sr-only">
@@ -114,15 +123,24 @@ export default function LoginClientModal() {
             account and remove your data from our servers.
           </DrawerDescription>
         </DrawerHeader>
-
+        {isMobile && (
+          <ModalHeader text="Login" HandleCloseDrawer={HandleCloseDrawer} />
+        )}
         <div className="relative z-10 flex justify-center items-center w-full  h-full lg:p-4 pt-4 rounded-2xl bg-background  backdrop-blur-md">
+          {/* <Button
+            className="absolute top-6 left-6"
+            onClick={() => setOpen(false)}
+          >
+            <ArrowLeft />
+          </Button> */}
+
           {step === "login" && (
             <div className="overflow-hidden w-full flex justify-center items-center flex-col p-4">
-              <div className="  max-w-md w-full space-y-5">
+              <div className="  max-w-md w-full">
                 <motion.div
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
                   className="flex flex-col gap-4 justify-center"
                 >
                   <h1 className="text-xl font-semibold text-center">
@@ -138,7 +156,7 @@ export default function LoginClientModal() {
                     <Button
                       variant="outline"
                       className="w-full"
-                      disabled={sendCode.isPending}
+                      disabled={authLoading}
                     >
                       Sign up
                     </Button>
@@ -148,56 +166,67 @@ export default function LoginClientModal() {
                 <motion.p
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.2 }}
-                  className="text-sm text-muted-foreground text-center"
+                  transition={{ duration: 0.5, delay: 0.4 }}
+                  className="text-sm text-muted-foreground text-center mt-7"
                 >
                   Welcome back! Please sign in to continue.
                 </motion.p>
-                <Form {...sendCodeForm}>
-                  <form
-                    onSubmit={sendCodeForm.handleSubmit((values) =>
-                      sendCode.mutate(values)
-                    )}
-                  >
-                    <FormInputField
-                      control={sendCodeForm.control}
-                      name="studentId"
-                      label="Student ID"
-                      type="number"
-                      icon={UserRound}
-                      disabled={sendCode.isPending}
-                      placeholder="Enter your student ID"
-                      motionProps={{
-                        transition: { duration: 0.3, delay: 0.3 },
-                      }}
-                    />
+                <Form {...LoginForm}>
+                  <form onSubmit={LoginForm.handleSubmit(handleLogin)}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.5 }}
+                    >
+                      <FormField
+                        control={LoginForm.control}
+                        name="studentId"
+                        render={({ field }) => (
+                          <FormItem className="mt-5">
+                            <FormLabel className="flex justify-between items-center">
+                              <span className="flex items-center gap-1.5">
+                                <IdCard className="h-6" /> Student ID
+                              </span>{" "}
+                              <FormMessage />
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                type="text"
+                                placeholder=""
+                                {...field}
+                                aria-invalid={undefined}
+                                disabled={authLoading}
+                              />
+                            </FormControl>
+                          </FormItem>
+                        )}
+                      />
+                    </motion.div>
 
                     <motion.div
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.4 }}
+                      transition={{ duration: 0.4, delay: 0.6 }}
                     >
                       <FormField
-                        control={sendCodeForm.control}
+                        control={LoginForm.control}
                         name="password"
                         render={({ field }) => (
                           <FormItem className="mt-5">
                             <FormLabel className="flex justify-between items-center">
-                              Password
+                              <span className="flex items-center gap-1.5">
+                                <LockOpen className="h-5" /> Password
+                              </span>
                               <FormMessage />
                             </FormLabel>
                             <FormControl>
-                              <div className="relative flex items-center">
-                                <span className="absolute px-2 border-r">
-                                  <Lock className="size-4 opacity-50" />
-                                </span>
+                              <div className="relative">
                                 <Input
                                   type={hidden ? "password" : "text"}
-                                  className="pl-10"
                                   placeholder=""
                                   {...field}
-                                  disabled={sendCode.isPending}
-                                />{" "}
+                                  disabled={authLoading}
+                                />
                                 <Button
                                   className="absolute right-0 top-0"
                                   variant="ghost"
@@ -216,13 +245,13 @@ export default function LoginClientModal() {
                     <motion.div
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.5 }}
+                      transition={{ duration: 0.4, delay: 0.6 }}
                       className="flex justify-between items-center mt-3"
                     >
                       <span className="flex gap-1.5 items-center ">
                         <Checkbox
                           id="remember"
-                          disabled={sendCode.isPending}
+                          disabled={authLoading}
                           checked={remember}
                           onCheckedChange={(checked: boolean) =>
                             setRemember(checked)
@@ -261,16 +290,16 @@ export default function LoginClientModal() {
                     <motion.div
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.6 }}
+                      transition={{ duration: 0.3, delay: 0.7 }}
                       className="mt-7"
                     >
                       <Button
                         className="w-full"
                         type="submit"
-                        disabled={sendCode.isPending}
-                        variant={sendCode.isPending ? "outline" : "default"}
+                        disabled={authLoading}
+                        variant={authLoading ? "outline" : "default"}
                       >
-                        {sendCode.isPending ? (
+                        {authLoading ? (
                           <>
                             Verifying...
                             <Loader
@@ -321,10 +350,10 @@ export default function LoginClientModal() {
             <div className="overflow-hidden w-full flex justify-center items-center flex-col p-4">
               <div className="   max-w-md w-full ">
                 <motion.div
-                  className="flex justify-between items-start"
+                  className="flex justify-between items-center"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
                 >
                   <div>
                     <h1 className="text-xl font-semibold">
@@ -334,25 +363,20 @@ export default function LoginClientModal() {
                       Enter 6-digit verification code sent to your email.
                     </p>
                   </div>
-                  <MailCheck />
+                  <MailCheck size={40} strokeWidth={1.5} />
                 </motion.div>
 
-                <Form {...verifyOtpForm}>
+                <Form {...loginOtpForm}>
                   <form
-                    onSubmit={verifyOtpForm.handleSubmit((otpValues) =>
-                      verifyCode.mutate({
-                        loginData: sendCodeForm.getValues(),
-                        otpData: otpValues,
-                      })
-                    )}
+                    onSubmit={loginOtpForm.handleSubmit(handleOtpVerification)}
                   >
                     <motion.div
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.2 }}
+                      transition={{ duration: 0.6, delay: 0.4 }}
                     >
                       <FormField
-                        control={verifyOtpForm.control}
+                        control={loginOtpForm.control}
                         name="otp"
                         render={({ field }) => (
                           <FormItem className="mt-7">
@@ -364,20 +388,12 @@ export default function LoginClientModal() {
                                 <InputOTP
                                   maxLength={6}
                                   value={field.value}
-                                  disabled={verifyCode.isPending}
                                   onChange={(value) => {
                                     field.onChange(value);
                                     if (value.length === 6) {
-                                      {
-                                        verifyOtpForm.handleSubmit(
-                                          (otpValues) =>
-                                            verifyCode.mutate({
-                                              loginData:
-                                                sendCodeForm.getValues(),
-                                              otpData: otpValues,
-                                            })
-                                        )();
-                                      }
+                                      loginOtpForm.handleSubmit(
+                                        handleOtpVerification
+                                      )();
                                     }
                                   }}
                                 >
@@ -396,50 +412,19 @@ export default function LoginClientModal() {
                         )}
                       />
                     </motion.div>
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.3 }}
-                      className="relative flex justify-center items-center gap-3 mt-7"
-                    >
-                      <div className=" border-b flex-1"></div>
 
-                      <p className="text-sm text-muted-foreground">
-                        Didn't recieve the code?{" "}
-                        <button
-                          type="button"
-                          className="underline text-foreground cursor-pointer"
-                          onClick={() =>
-                            resendCode.mutate(sendCodeForm.getValues())
-                          }
-                          disabled={
-                            timeLeft > 0 ||
-                            sendCode.isPending ||
-                            verifyCode.isPending ||
-                            resendCode.isPending
-                          }
-                        >
-                          {timeLeft > 0
-                            ? `Resend in ${timeLeft}s`
-                            : resendCode.isPending
-                            ? "Resending..."
-                            : "Resend Now"}
-                        </button>
-                      </p>
-                      <div className=" border-b flex-1"></div>
-                    </motion.div>
                     <motion.div
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.4 }}
+                      transition={{ duration: 0.6, delay: 0.5 }}
                     >
                       <Button
                         type="submit"
                         className="w-full mt-7"
-                        disabled={verifyCode.isPending}
-                        variant={verifyCode.isPending ? "outline" : "default"}
+                        disabled={verifyLoading}
+                        variant={verifyLoading ? "outline" : "default"}
                       >
-                        {verifyCode.isPending ? (
+                        {verifyLoading ? (
                           <>
                             Logging In...
                             <Loader
@@ -456,6 +441,51 @@ export default function LoginClientModal() {
                         )}
                       </Button>
                     </motion.div>
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.6 }}
+                      className="relative flex justify-center items-center gap-3 mt-7"
+                    >
+                      <div className=" border-b flex-1"></div>
+                      {/* <Label>
+                        Didn&apos;t get the code?
+                        <span className="underline" onClick={requestNewCode}>
+                          Resend Now
+                        </span>
+                      </Label> */}
+                      {/* <Button
+                        variant="link"
+                        size="sm"
+                        type="button"
+                        onClick={requestNewCode}
+                        disabled={resendTimer > 0 || authLoading}
+                      >
+                        {resendTimer > 0
+                          ? `Resend in ${resendTimer}s`
+                          : "Resend Code"}
+                      </Button> */}
+                      <p className="text-sm text-muted-foreground">
+                        Didn't recieve the code?{" "}
+                        <button
+                          className="underline text-foreground cursor-pointer"
+                          onClick={requestNewCode}
+                          disabled={
+                            resendTimer > 0 || authLoading || verifyLoading
+                          }
+                        >
+                          {resendTimer > 0
+                            ? `Resend in ${resendTimer}s`
+                            : "Resend Now"}
+                        </button>
+                      </p>
+                      <div className=" border-b flex-1"></div>
+                    </motion.div>
+                    {/* {expiresAt && Date.now() > expiresAt && (
+                      <p className="text-red-500 text-sm text-center">
+                        OTP expired. Please request a new code.
+                      </p>
+                    )} */}
                   </form>
                 </Form>
               </div>
