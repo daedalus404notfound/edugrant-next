@@ -103,6 +103,7 @@ export default function LoginClientModal() {
       onOpenChange={(value) => {
         HandleCloseDrawer(value);
       }}
+      repositionInputs={false}
     >
       <DrawerContent
         onInteractOutside={(e) => {

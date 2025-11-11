@@ -82,6 +82,7 @@ export default function InterceptManageApplicationClient() {
       onOpenChange={(value) => {
         HandleCloseDrawer(value);
       }}
+      repositionInputs={false}
     >
       <DrawerContent
         className={`lg:w-[56%] bg-card w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 lg:p-1 `}

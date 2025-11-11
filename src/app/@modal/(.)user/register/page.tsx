@@ -6,40 +6,19 @@ import {
   ArrowLeft,
   ArrowRight,
   BookMarked,
-  Calendar1,
-  CheckIcon,
-  ChevronDownIcon,
   CircleUserRound,
-  EyeIcon,
-  EyeOffIcon,
   Feather,
   GraduationCap,
   IdCard,
-  Landmark,
   LayoutPanelTop,
-  LoaderCircleIcon,
+  Loader,
   MailIcon,
-  MapPinHouse,
+  Map,
   School,
   UserRound,
   UserRoundCheck,
   VenusAndMars,
-  XIcon,
 } from "lucide-react";
-
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
 import {
   Stepper,
   StepperIndicator,
@@ -62,10 +41,6 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { Calendar } from "@/components/ui/calendar";
-
-import { useRegisterHandler } from "@/hooks/user/postRegisterHandler";
-import { Checkbox } from "@/components/ui/checkbox";
 const steps = [
   {
     step: 1,
@@ -81,7 +56,7 @@ const steps = [
     title: "Verification",
   },
 ];
-import { AnimatePresence, motion } from "motion/react";
+import { motion } from "motion/react";
 import {
   Drawer,
   DrawerContent,
@@ -89,22 +64,23 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-
-import { Input } from "@/components/ui/input";
-
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-
-import { format } from "date-fns";
+import { useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import ModalHeader from "@/components/ui/modal-header";
+import { RegisterUserHandler } from "@/hooks/student-register/postRegisterHandler";
+import { useRegisterUser } from "@/hooks/student-register/userRegisterZod";
+import { useCountdown } from "@/hooks/useCountdown";
+import { FormInputField } from "@/components/input-components/reusable-input";
+import { FormPhoneField } from "@/components/input-components/reusable-contact-input";
+import { FormSelectField } from "@/components/input-components/reusable-select";
+import { FormDateField } from "@/components/input-components/reusable-birthdate";
+import { FormCheckboxInputField } from "@/components/input-components/reusable-checkbox-input";
+import { FormPasswordField } from "@/components/input-components/reusable-password";
+import { FormConfirmPasswordField } from "@/components/input-components/reusable-confimpassword";
 
 export default function RegisterStudent() {
   const router = useRouter();
   const [open, setOpen] = useState(true);
-  const [openCalendar, setOpenCalendar] = useState(false);
-  const [isIndigenousChecked, setIsIndigenousChecked] = useState(false);
-  const [isPWDChecked, setIsPWDChecked] = useState(false);
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
     if (!value) {
@@ -113,36 +89,11 @@ export default function RegisterStudent() {
       }, 250);
     }
   };
-
-  const {
-    // Stepper state
-    stepper,
-    setStepper,
-
-    // Main functions
-    HandleRegister,
-    HandleOtpVerification,
-
-    // Forms
-    personalForm,
-    accountForm,
-    otpForm,
-    personalData,
-    accountData,
-
-    // Loading states
-    sendAuthCode,
-    verifyRegister,
-
-    // Utility functions
-    // resetAuthState,
-    // resetVerifyState,
-    // resetAllStates,
-    requestNewCode,
-
-    resendTimer,
-    expiresAt,
-  } = useRegisterHandler();
+  const { timeLeft, start } = useCountdown();
+  const { sendCode, verifyCode, resendCode } = RegisterUserHandler();
+  const { personalForm, accountForm, otpForm, personalData, accountData } =
+    useRegisterUser();
+  const [stepper, setStepper] = useState(1);
 
   const handlePrevStepper = () => {
     setStepper((prev) => prev - 1);
@@ -152,6 +103,26 @@ export default function RegisterStudent() {
     setStepper(2);
   };
 
+  useEffect(() => {
+    if (sendCode.isSuccess) {
+      setStepper(3);
+    }
+    if (sendCode.isSuccess && sendCode.data?.resendAvailableIn) {
+      start(sendCode.data.resendAvailableIn);
+    }
+  }, [sendCode.isSuccess]);
+
+  useEffect(() => {
+    if (resendCode.isSuccess && resendCode.data?.resendAvailableIn) {
+      start(resendCode.data.resendAvailableIn);
+    }
+  }, [resendCode.isSuccess]);
+
+  useEffect(() => {
+    if (verifyCode.isSuccess && open) {
+      router.push("/login");
+    }
+  }, [verifyCode.isSuccess, open]);
   return (
     <Drawer
       direction="bottom"
@@ -159,8 +130,9 @@ export default function RegisterStudent() {
       onOpenChange={(value) => {
         HandleCloseDrawer(value);
       }}
+      repositionInputs={false}
     >
-      <DrawerContent className=" lg:w-1/2 w-[98%]  mx-auto  !border-0 bg-card  outline-0 lg:min-w-4xl">
+      <DrawerContent className=" max-w-5xl bg-card px-1 mx-auto w-[98%]">
         <DrawerHeader className="sr-only">
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>
@@ -168,12 +140,13 @@ export default function RegisterStudent() {
             account and remove your data from our servers.
           </DrawerDescription>
         </DrawerHeader>
-        <ModalHeader
-          text="Registration"
-          HandleCloseDrawer={HandleCloseDrawer}
-        />
+
         <div className="bg-background rounded-md">
-          <Stepper defaultValue={1} value={stepper} className="flex p-4 gap-3">
+          <Stepper
+            defaultValue={1}
+            value={stepper}
+            className="flex lg:p-6 py-6 px-4 lg:gap-3 gap-1"
+          >
             {steps.map(({ step, title }) => (
               <StepperItem key={step} step={step} className="flex-1">
                 <StepperTrigger className="w-full flex-col items-start gap-2 rounded ">
@@ -189,1057 +162,434 @@ export default function RegisterStudent() {
           </Stepper>
           <div>
             {stepper === 1 && (
-              <Form {...personalForm}>
-                <ScrollArea className="max-h-[60dvh]">
-                  {" "}
+              <form onSubmit={personalForm.handleSubmit(handlePersonalSubmit)}>
+                <Form {...personalForm}>
+                  <ScrollArea className="max-h-[70dvh]">
+                    {" "}
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="lg:px-6 px-4"
+                    >
+                      <h1 className="lg:text-lg text-base font-semibold">
+                        Personal Information
+                      </h1>
+                      <p className="text-muted-foreground text-sm mt-1">
+                        Tell us about yourself.
+                      </p>
+                    </motion.div>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:px-6 px-4 py-6 lg:py-8">
+                      <FormInputField
+                        control={personalForm.control}
+                        name="firstName"
+                        label="First Name"
+                        type="text"
+                        icon={UserRound}
+                        disabled={sendCode.isPending}
+                        placeholder="Enter your first name"
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.1 },
+                        }}
+                      />
+                      <FormInputField
+                        control={personalForm.control}
+                        name="middleName"
+                        label="Middle Name"
+                        type="text"
+                        icon={CircleUserRound}
+                        disabled={sendCode.isPending}
+                        placeholder="Enter your middle name (optional)"
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.1 },
+                        }}
+                      />
+                      <FormInputField
+                        control={personalForm.control}
+                        name="lastName"
+                        label="Last Name"
+                        type="text"
+                        icon={UserRoundCheck}
+                        disabled={sendCode.isPending}
+                        placeholder="Enter your last name"
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.2 },
+                        }}
+                      />
+                      <FormPhoneField
+                        control={personalForm.control}
+                        name="contactNumber"
+                        label="Contact number"
+                        disabled={sendCode.isPending}
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.2 },
+                        }}
+                      />
+                      <FormSelectField
+                        control={personalForm.control}
+                        name="gender"
+                        label="Gender"
+                        placeholder="Select gender"
+                        options={[
+                          { label: "Male", value: "Male" },
+                          { label: "Female", value: "Female" },
+                        ]}
+                        icon={VenusAndMars}
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.3 },
+                        }}
+                      />
+                      <FormDateField
+                        control={personalForm.control}
+                        name="dateOfBirth"
+                        label="Date of Birth"
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.3 },
+                        }}
+                      />
+                      <FormInputField
+                        control={personalForm.control}
+                        name="address"
+                        label="Address (Street, Barangay, City/Municipality,
+                              Province)"
+                        type="text"
+                        icon={Map}
+                        disabled={sendCode.isPending}
+                        placeholder="Enter your address"
+                        className="lg:col-span-2"
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.4 },
+                        }}
+                      />
+                      <FormCheckboxInputField
+                        control={personalForm.control}
+                        name="indigenous"
+                        label="Indigenous Group"
+                        checkboxLabel="Are you part of an Indigenous Group?"
+                        placeholder="Specify your Indigenous group (if applicable)"
+                        icon={Feather}
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.4 },
+                        }}
+                      />{" "}
+                      <FormCheckboxInputField
+                        control={personalForm.control}
+                        name="pwd"
+                        label="Person with Disability (PWD)"
+                        checkboxLabel="Person with Disability (PWD)"
+                        placeholder="Specify your Indigenous group (if applicable)"
+                        icon={Accessibility}
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.5 },
+                        }}
+                      />
+                    </div>
+                  </ScrollArea>
+
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="p-4"
+                    transition={{ duration: 0.3, delay: 0.5 }}
+                    className="p-4 bg-card"
                   >
-                    <h1 className="lg:text-lg text-base font-semibold">
-                      Personal Information
-                    </h1>
-                    <p className="text-muted-foreground text-sm mt-1">
-                      Tell us about yourself.
-                    </p>
+                    <Button
+                      onClick={personalForm.handleSubmit(handlePersonalSubmit)}
+                      className="w-full"
+                    >
+                      Next <ArrowRight />
+                    </Button>
                   </motion.div>
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-4">
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.1 }}
-                    >
-                      <FormField
-                        control={personalForm.control}
-                        name="firstName"
-                        render={({ field }) => (
-                          <FormItem className="">
-                            <FormLabel className="flex items-center justify-between">
-                              First Name <FormMessage />
-                            </FormLabel>
-
-                            <FormControl>
-                              <div className="flex items-center">
-                                <Input
-                                  placeholder="Enter you first name"
-                                  className="rounded-r-none lg:text-base text-sm"
-                                  {...field}
-                                  disabled={sendAuthCode.isLoading}
-                                />
-                                <span className="flex items-center  border rounded-r-md text-sm">
-                                  <Button variant="ghost">
-                                    <UserRound />
-                                  </Button>
-                                </span>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </motion.div>
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.1 }}
-                    >
-                      <FormField
-                        control={personalForm.control}
-                        name="middleName"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center justify-between">
-                              Middle Name <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <div className="flex items-center">
-                                <Input
-                                  placeholder="(Optional)"
-                                  {...field}
-                                  className="rounded-r-none lg:text-base text-sm"
-                                  disabled={sendAuthCode.isLoading}
-                                />
-                                <span className="flex items-center  border rounded-r-md text-sm">
-                                  <Button variant="ghost">
-                                    <CircleUserRound />
-                                  </Button>
-                                </span>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </motion.div>
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.2 }}
-                    >
-                      <FormField
-                        control={personalForm.control}
-                        name="lastName"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center justify-between">
-                              Last Name <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <div className="flex items-center">
-                                <Input
-                                  placeholder="Enter you last name"
-                                  className="rounded-r-none lg:text-base text-sm"
-                                  {...field}
-                                  disabled={sendAuthCode.isLoading}
-                                />
-                                <span className="flex items-center  border rounded-r-md text-sm">
-                                  <Button variant="ghost">
-                                    <UserRoundCheck />
-                                  </Button>
-                                </span>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.2 }}
-                    >
-                      <FormField
-                        control={personalForm.control}
-                        name="contactNumber"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center justify-between">
-                              Contact number <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <div className="flex">
-                                {/* Fixed +63 prefix */}
-                                <span className="flex items-center px-4 border rounded-l-md text-sm">
-                                  +63
-                                </span>
-                                <Input
-                                  type="text"
-                                  placeholder="xxx"
-                                  maxLength={10}
-                                  value={field.value?.replace("+63", "") || ""}
-                                  onChange={(e) => {
-                                    const val = e.target.value
-                                      .replace(/\D/g, "")
-                                      .slice(0, 10);
-                                    field.onChange(`+63${val}`);
-                                  }}
-                                  disabled={sendAuthCode.isLoading}
-                                  className="rounded-l-none"
-                                />
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.3 }}
-                    >
-                      <FormField
-                        control={personalForm.control}
-                        name="gender"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center justify-between">
-                              Gender <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <div className="flex items-center">
-                                <Select
-                                  onValueChange={field.onChange}
-                                  value={field.value}
-                                >
-                                  <SelectTrigger className="rounded-r-none w-full">
-                                    <SelectValue placeholder="Select gender" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="Male">Male</SelectItem>
-                                    <SelectItem value="Female">
-                                      Female
-                                    </SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                <span className="flex items-center  border rounded-r-md text-sm">
-                                  <Button variant="ghost">
-                                    <VenusAndMars />
-                                  </Button>
-                                </span>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.3 }}
-                    >
-                      <FormField
-                        control={personalForm.control}
-                        name="dateOfBirth"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center justify-between">
-                              Date of Birth <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <div className="flex items-center">
-                                <span className="flex items-center border rounded-l-md text-sm">
-                                  <Popover
-                                    open={openCalendar}
-                                    onOpenChange={setOpenCalendar}
-                                  >
-                                    <PopoverTrigger asChild>
-                                      <Button variant="ghost" id="date">
-                                        <Calendar1 />
-                                      </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent
-                                      className="w-auto overflow-hidden p-0 pointer-events-auto"
-                                      align="start"
-                                    >
-                                      <Calendar
-                                        mode="single"
-                                        selected={
-                                          field.value
-                                            ? new Date(field.value)
-                                            : undefined
-                                        }
-                                        captionLayout="dropdown"
-                                        onSelect={(date) => {
-                                          field.onChange(
-                                            date
-                                              ? format(date, "yyyy-MM-dd")
-                                              : ""
-                                          );
-                                          setOpenCalendar(false);
-                                        }}
-                                      />
-                                    </PopoverContent>
-                                  </Popover>
-                                </span>
-                                <Input
-                                  value={field.value ?? ""}
-                                  onChange={(e) => {
-                                    let value = e.target.value.replace(
-                                      /\D/g,
-                                      ""
-                                    ); // remove non-digits
-
-                                    // auto-insert hyphens
-                                    if (value.length > 4 && value.length <= 6) {
-                                      value = `${value.slice(
-                                        0,
-                                        4
-                                      )}-${value.slice(4)}`;
-                                    } else if (value.length > 6) {
-                                      value = `${value.slice(
-                                        0,
-                                        4
-                                      )}-${value.slice(4, 6)}-${value.slice(
-                                        6,
-                                        8
-                                      )}`;
-                                    }
-
-                                    field.onChange(value);
-                                  }}
-                                  maxLength={10}
-                                  className="rounded-l-none"
-                                  placeholder="YYYY-MM-DD"
-                                />
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.4 }}
-                      className="lg:col-span-2"
-                    >
-                      <FormField
-                        control={personalForm.control}
-                        name="address"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center justify-between line-clamp-1">
-                              Address (Street, Barangay, City/Municipality,
-                              Province) <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <div className="flex items-center">
-                                <Input
-                                  placeholder=""
-                                  className="rounded-r-none lg:text-base text-sm"
-                                  {...field}
-                                  disabled={sendAuthCode.isLoading}
-                                />
-                                <span className="flex items-center  border rounded-r-md text-sm">
-                                  <Button variant="ghost">
-                                    <MapPinHouse />
-                                  </Button>
-                                </span>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </motion.div>
-
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.5 }}
-                    >
-                      <FormField
-                        control={personalForm.control}
-                        name="indigenous"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel
-                              htmlFor="ind"
-                              className="flex items-center justify-between line-clamp-1"
-                            >
-                              <div className="flex items-center gap-2">
-                                <input
-                                  type="checkbox"
-                                  checked={isIndigenousChecked}
-                                  id="ind"
-                                  onChange={(e) =>
-                                    setIsIndigenousChecked(e.target.checked)
-                                  }
-                                />
-                                Indigenous Group (IG)
-                              </div>
-                              <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <div className="flex items-center">
-                                <Input
-                                  className="rounded-r-none lg:text-base text-sm"
-                                  placeholder="Please specify your Indigenous group (if applicable)"
-                                  {...field}
-                                  disabled={
-                                    !isIndigenousChecked ||
-                                    sendAuthCode.isLoading
-                                  }
-                                />
-                                <span className="flex items-center border rounded-r-md text-sm">
-                                  <Button variant="ghost">
-                                    <Feather />
-                                  </Button>
-                                </span>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </motion.div>
-
-                    {/* PWD Field */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3, delay: 0.5 }}
-                    >
-                      <FormField
-                        control={personalForm.control}
-                        name="pwd"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel
-                              htmlFor="pwdd"
-                              className="flex items-center justify-between line-clamp-1"
-                            >
-                              <div className="flex items-center gap-2">
-                                <input
-                                  type="checkbox"
-                                  checked={isPWDChecked}
-                                  id="pwdd"
-                                  onChange={(e) =>
-                                    setIsPWDChecked(e.target.checked)
-                                  }
-                                />
-                                Person with Disability (PWD)
-                              </div>
-                              <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <div className="flex items-center">
-                                <Input
-                                  placeholder="Please specify your disability (if applicable)"
-                                  {...field}
-                                  className="rounded-r-none lg:text-base text-sm"
-                                  disabled={
-                                    !isPWDChecked || sendAuthCode.isLoading
-                                  }
-                                />
-                                <span className="flex items-center border rounded-r-md text-sm">
-                                  <Button variant="ghost">
-                                    <Accessibility />
-                                  </Button>
-                                </span>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </motion.div>
-                    {/* <FormField
-                    control={personalForm.control}
-                    name="indigenous"
-                    render={({ field }) => (
-                      <FormItem className="border-input has-data-[state=checked]:border-primary/50 relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value || false}
-                            onCheckedChange={(checked) =>
-                              field.onChange(checked === true)
-                            }
-                            className="order-1 after:absolute after:inset-0"
-                            aria-describedby="for-interview-description"
-                          />
-                        </FormControl>
-
-                        <div className="flex grow items-center gap-3">
-                         
-                          <UserRound />
-
-
-                          <FormLabel>
-                            Indigenous
-                            <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
-                              (Optional)
-                            </span>
-                          </FormLabel>
-                        </div>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  /> */}
-                    {/* <FormField
-                    control={personalForm.control}
-                    name="pwd"
-                    render={({ field }) => (
-                      <FormItem className="border-input has-data-[state=checked]:border-primary/50 relative flex w-full items-start gap-2 rounded-md border p-4 shadow-xs outline-none">
-                        <FormControl>
-                          <Checkbox
-                            checked={field.value || false}
-                            onCheckedChange={(checked) =>
-                              field.onChange(checked === true)
-                            }
-                            className="order-1 after:absolute after:inset-0"
-                            aria-describedby="for-interview-description"
-                          />
-                        </FormControl>
-
-                        <div className="flex grow items-center gap-3">
-                         
-                          <Accessibility />
-
-                        
-
-                          <FormLabel>
-                            Person with disability
-                            <span className="text-muted-foreground text-xs leading-[inherit] font-normal">
-                              (Optional)
-                            </span>
-                          </FormLabel>
-                        </div>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  /> */}
-                  </div>
-                </ScrollArea>
-
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: 0.3 }}
-                  className="p-4 bg-card"
-                >
-                  <Button
-                    onClick={personalForm.handleSubmit(handlePersonalSubmit)}
-                    className="w-full dark:bg-green-800 bg-green-700"
-                  >
-                    Next <ArrowRight />
-                  </Button>
-                </motion.div>
-              </Form>
+                </Form>
+              </form>
             )}
             {stepper === 2 && (
               <form
-                onSubmit={accountForm.handleSubmit((accountFormData) =>
-                  HandleRegister({
-                    personalData,
-                    accountData: accountFormData,
+                onSubmit={accountForm.handleSubmit((values) =>
+                  sendCode.mutate({
+                    personalData: personalForm.getValues(),
+                    accountData: values,
                   })
                 )}
               >
                 <Form {...accountForm}>
-                  <ScrollArea className="max-h-[60dvh]">
-                    <div className="p-4">
+                  <ScrollArea className="max-h-[70dvh]">
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="lg:px-6 px-4"
+                    >
                       <h1 className="lg:text-lg text-base font-semibold">
                         Account Information
                       </h1>
                       <p className="text-muted-foreground text-sm mt-1">
                         Fill out all required fields to start scholarship
                       </p>
-                    </div>
+                    </motion.div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-4">
-                      <FormField
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:px-6 px-4 py-6 lg:py-8">
+                      <FormInputField
                         control={accountForm.control}
                         name="studentId"
-                        render={({ field }) => (
-                          <FormItem className=" lg:col-span-2">
-                            <FormLabel className="flex items-center justify-between">
-                              Student ID <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <div className="flex items-center">
-                                {" "}
-                                <Input
-                                  placeholder=""
-                                  className="rounded-r-none lg:text-base text-sm"
-                                  type="number"
-                                  {...field}
-                                  disabled={sendAuthCode.isLoading}
-                                />
-                                <span className="flex items-center  border rounded-r-md text-sm">
-                                  <Button variant="ghost">
-                                    <IdCard />
-                                  </Button>
-                                </span>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={accountForm.control}
-                        name="email"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center justify-between">
-                              Email <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <div className="flex items-center">
-                                <Input
-                                  type="email"
-                                  placeholder=""
-                                  className="rounded-r-none lg:text-base text-sm"
-                                  {...field}
-                                  disabled={sendAuthCode.isLoading}
-                                />
-                                <span className="flex items-center  border rounded-r-md text-sm">
-                                  <Button variant="ghost">
-                                    <MailIcon />
-                                  </Button>
-                                </span>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={accountForm.control}
-                        name="institute"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="flex items-center justify-between">
-                              Institute <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <div className="flex items-center">
-                                <Select
-                                  onValueChange={field.onChange}
-                                  value={field.value}
-                                >
-                                  <SelectTrigger
-                                    className="rounded-r-none w-full"
-                                    disabled={sendAuthCode.isLoading}
-                                  >
-                                    <SelectValue placeholder="Select Institute" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="ICS">
-                                      ICS - Institute Computer Studies
-                                    </SelectItem>
-                                    <SelectItem value="IAS">
-                                      IAS - Institute of Arts and Sciences
-                                    </SelectItem>
-                                    <SelectItem value="IED">
-                                      IED - Institute of Education
-                                    </SelectItem>
-                                    <SelectItem value="IEAT">
-                                      IEAT - Institute of Engineering and
-                                      Applied Technology
-                                    </SelectItem>
-                                    <SelectItem value="IM">
-                                      IM - Institute of Management
-                                    </SelectItem>
-                                    <SelectItem value="CAVM">
-                                      CAVM - College of Agriculture and
-                                      Veterinary Medicine
-                                    </SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                <span className="flex items-center  border rounded-r-md text-sm">
-                                  <Button variant="ghost">
-                                    <School />
-                                  </Button>
-                                </span>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={accountForm.control}
-                        name="course"
-                        render={({ field }) => (
-                          <FormItem className="lg:col-span-2">
-                            <FormLabel className="flex items-center justify-between">
-                              Course <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <div className="flex items-center">
-                                <Select
-                                  onValueChange={field.onChange}
-                                  value={field.value}
-                                >
-                                  <SelectTrigger
-                                    className="rounded-r-none w-full"
-                                    disabled={sendAuthCode.isLoading}
-                                  >
-                                    <SelectValue placeholder="Select Course" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="BSAGRI-ANSCI">
-                                      BS in Agriculture (Animal Science)
-                                    </SelectItem>
-                                    <SelectItem value="BSAGRI-HORTI">
-                                      BS in Agriculture (CRSC-Horti)
-                                    </SelectItem>
-                                    <SelectItem value="BSAGRI-AGRONOMY">
-                                      BS in Agriculture (CRSC-Agronomy)
-                                    </SelectItem>
-                                    <SelectItem value="BSAGRI-AGEX">
-                                      BS in Agriculture (AgEx)
-                                    </SelectItem>
-                                    <SelectItem value="BSAGRI-CROP">
-                                      BS in Agriculture (Crop Science)
-                                    </SelectItem>
-                                    <SelectItem value="CAS">
-                                      Certificate of Agricultural Sciences
-                                    </SelectItem>
-                                    <SelectItem value="BSAGRO">
-                                      BS in Agroforestry
-                                    </SelectItem>
-                                    <SelectItem value="DVM">
-                                      Doctor of Veterinary Medicine
-                                    </SelectItem>
-                                    <SelectItem value="BSABE">
-                                      BS in Agricultural and Biosystems
-                                      Engineering
-                                    </SelectItem>
-                                    <SelectItem value="BSGE">
-                                      BS in Geodetic Engineering
-                                    </SelectItem>
-                                    <SelectItem value="BSIT">
-                                      BS in Information Technology
-                                    </SelectItem>
-                                    <SelectItem value="BSFT">
-                                      BS in Food Technology
-                                    </SelectItem>
-                                    <SelectItem value="BEED">
-                                      Bachelor of Elementary Education
-                                    </SelectItem>
-                                    <SelectItem value="BSED-ENGLISH">
-                                      Bachelor of Secondary Education (English)
-                                    </SelectItem>
-                                    <SelectItem value="BSED-SCIENCE">
-                                      Bachelor of Secondary Education (Science)
-                                    </SelectItem>
-                                    <SelectItem value="BSAB">
-                                      BS in Agribusiness
-                                    </SelectItem>
-                                    <SelectItem value="BSBA">
-                                      BS in Business Administration
-                                    </SelectItem>
-                                    <SelectItem value="BSABM">
-                                      BS in Agribusiness Management
-                                    </SelectItem>
-                                    <SelectItem value="BSHM">
-                                      BS in Hospitality Management
-                                    </SelectItem>
-                                    <SelectItem value="BSDC">
-                                      BS in Development Communication
-                                    </SelectItem>
-                                    <SelectItem value="MSAGRI">
-                                      Master of Science in Agriculture
-                                    </SelectItem>
-                                    <SelectItem value="MAED">
-                                      Master of Arts in Education
-                                    </SelectItem>
-                                    <SelectItem value="PHD-AGRI">
-                                      Doctor of Philosophy in Agricultural
-                                      Sciences
-                                    </SelectItem>
-                                    <SelectItem value="PHD-EDMAN">
-                                      Doctor of Philosophy in Educational
-                                      Management
-                                    </SelectItem>
-                                    <SelectItem value="TECC">
-                                      Teacher Education Certificate Course
-                                    </SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                <span className="flex items-center  border rounded-r-md text-sm">
-                                  <Button variant="ghost">
-                                    <GraduationCap />
-                                  </Button>
-                                </span>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={accountForm.control}
-                        name="yearLevel"
-                        render={({ field }) => (
-                          <FormItem className="flex-1">
-                            <FormLabel className="flex items-center justify-between">
-                              Year Level <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <div className="flex items-center">
-                                <Select
-                                  disabled={sendAuthCode.isLoading}
-                                  onValueChange={field.onChange}
-                                  value={field.value}
-                                >
-                                  <SelectTrigger className="rounded-r-none w-full">
-                                    <SelectValue placeholder="Select Year Level" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="1st Year">
-                                      1st Year
-                                    </SelectItem>
-                                    <SelectItem value="2nd Year">
-                                      2nd Year
-                                    </SelectItem>
-                                    <SelectItem value="3rd Year">
-                                      3rd Year
-                                    </SelectItem>
-                                    <SelectItem value="4th Year">
-                                      4th Year
-                                    </SelectItem>
-                                    <SelectItem value="5th Year">
-                                      5th Year
-                                    </SelectItem>
-                                    <SelectItem value="6th Year">
-                                      6th Year
-                                    </SelectItem>
-                                    <SelectItem value="7th Year">
-                                      7th Year
-                                    </SelectItem>
-                                    <SelectItem value="8th Year">
-                                      8th Year
-                                    </SelectItem>
-                                  </SelectContent>
-                                </Select>
-
-                                <span className="flex items-center  border rounded-r-md text-sm">
-                                  <Button variant="ghost">
-                                    <BookMarked />
-                                  </Button>
-                                </span>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={accountForm.control}
-                        name="section"
-                        render={({ field }) => (
-                          <FormItem className="flex-1">
-                            <FormLabel className="flex items-center justify-between">
-                              Section <FormMessage />
-                            </FormLabel>
-                            <FormControl>
-                              <div className="flex items-center">
-                                <Select
-                                  onValueChange={field.onChange}
-                                  value={field.value}
-                                >
-                                  <SelectTrigger
-                                    className="rounded-r-none w-full"
-                                    disabled={sendAuthCode.isLoading}
-                                  >
-                                    <SelectValue placeholder="Select Section" />
-                                  </SelectTrigger>
-                                  <SelectContent>
-                                    <SelectItem value="A">Section A</SelectItem>
-                                    <SelectItem value="B">Section B</SelectItem>
-                                    <SelectItem value="C">Section C</SelectItem>
-                                    <SelectItem value="D">Section D</SelectItem>
-                                    <SelectItem value="E">Section E</SelectItem>
-                                    <SelectItem value="F">Section F</SelectItem>
-                                    <SelectItem value="G">Section G</SelectItem>
-                                    <SelectItem value="H">Section H</SelectItem>
-                                    <SelectItem value="I">Section I</SelectItem>
-                                    <SelectItem value="J">Section J</SelectItem>
-                                  </SelectContent>
-                                </Select>
-                                <span className="flex items-center  border rounded-r-md text-sm">
-                                  <Button variant="ghost">
-                                    <LayoutPanelTop />
-                                  </Button>
-                                </span>
-                              </div>
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={accountForm.control}
-                        name="password"
-                        render={({ field }) => {
-                          const [isVisible, setIsVisible] = useState(false);
-                          const toggleVisibility = () =>
-                            setIsVisible((prev) => !prev);
-
-                          const checkStrength = (pass: string) => {
-                            const requirements = [
-                              { regex: /.{8,}/, text: "At least 8 characters" },
-                              { regex: /[0-9]/, text: "At least 1 number" },
-                              {
-                                regex: /[a-z]/,
-                                text: "At least 1 lowercase letter",
-                              },
-                              {
-                                regex: /[A-Z]/,
-                                text: "At least 1 uppercase letter",
-                              },
-                            ];
-                            return requirements.map((req) => ({
-                              met: req.regex.test(pass),
-                              text: req.text,
-                            }));
-                          };
-
-                          const strength = checkStrength(field.value || "");
-                          const strengthScore = strength.filter(
-                            (req) => req.met
-                          ).length;
-
-                          const getStrengthColor = (score: number) => {
-                            if (score === 0) return "bg-border";
-                            if (score <= 1) return "bg-red-500";
-                            if (score <= 2) return "bg-orange-500";
-                            if (score === 3) return "bg-amber-500";
-                            return "bg-emerald-500";
-                          };
-
-                          const getStrengthText = (score: number) => {
-                            if (score === 0) return "Enter a password";
-                            if (score <= 2) return "Weak password";
-                            if (score === 3) return "Medium password";
-                            return "Strong password";
-                          };
-
-                          return (
-                            <FormItem className="lg:col-span-2">
-                              <FormLabel className="flex items-center justify-between">
-                                Password <FormMessage />
-                              </FormLabel>
-
-                              {/* Password Input + Toggle */}
-                              <FormControl>
-                                <div className="relative">
-                                  <Input
-                                    type={isVisible ? "text" : "password"}
-                                    placeholder=""
-                                    {...field}
-                                    disabled={sendAuthCode.isLoading}
-                                    className="pe-9"
-                                  />
-                                  <button
-                                    type="button"
-                                    onClick={toggleVisibility}
-                                    className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground/80 hover:text-foreground focus:outline-none"
-                                  >
-                                    {isVisible ? (
-                                      <EyeOffIcon size={16} />
-                                    ) : (
-                                      <EyeIcon size={16} />
-                                    )}
-                                  </button>
-                                </div>
-                              </FormControl>
-
-                              {/* Strength Bar */}
-                              <div
-                                className="bg-border mt-3 mb-2 h-1 w-full overflow-hidden rounded-full"
-                                role="progressbar"
-                                aria-valuenow={strengthScore}
-                                aria-valuemin={0}
-                                aria-valuemax={4}
-                              >
-                                <div
-                                  className={`h-full ${getStrengthColor(
-                                    strengthScore
-                                  )} transition-all duration-500`}
-                                  style={{
-                                    width: `${(strengthScore / 4) * 100}%`,
-                                  }}
-                                />
-                              </div>
-
-                              {/* Strength Text */}
-                              <p className="text-sm font-medium mb-2">
-                                {getStrengthText(strengthScore)}. Must contain:
-                              </p>
-
-                              {/* Requirements */}
-                              <ul className="space-y-1.5">
-                                {strength.map((req, idx) => (
-                                  <li
-                                    key={idx}
-                                    className="flex items-center gap-2"
-                                  >
-                                    {req.met ? (
-                                      <CheckIcon
-                                        size={16}
-                                        className="text-emerald-500"
-                                      />
-                                    ) : (
-                                      <XIcon
-                                        size={16}
-                                        className="text-muted-foreground/80"
-                                      />
-                                    )}
-                                    <span
-                                      className={`text-xs ${
-                                        req.met
-                                          ? "text-emerald-600"
-                                          : "text-muted-foreground"
-                                      }`}
-                                    >
-                                      {req.text}
-                                    </span>
-                                  </li>
-                                ))}
-                              </ul>
-                            </FormItem>
-                          );
+                        label="Student ID"
+                        type="number"
+                        icon={IdCard}
+                        disabled={sendCode.isPending}
+                        placeholder="Enter your student ID"
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.1 },
                         }}
                       />
-                      <FormField
+
+                      <FormInputField
+                        control={accountForm.control}
+                        name="email"
+                        label="Email"
+                        type="email"
+                        icon={MailIcon}
+                        disabled={sendCode.isPending}
+                        placeholder="Enter your email"
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.1 },
+                        }}
+                      />
+
+                      <FormSelectField
+                        control={accountForm.control}
+                        name="institute"
+                        label="Institute"
+                        placeholder="Select Institute"
+                        options={[
+                          {
+                            label: "ICS - Institute of Computer Studies",
+                            value: "ICS",
+                          },
+                          {
+                            label: "IAS - Institute of Arts and Sciences",
+                            value: "IAS",
+                          },
+                          {
+                            label: "IED - Institute of Education",
+                            value: "IED",
+                          },
+                          {
+                            label:
+                              "IEAT - Institute of Engineering and Applied Technology",
+                            value: "IEAT",
+                          },
+                          {
+                            label: "IM - Institute of Management",
+                            value: "IM",
+                          },
+                          {
+                            label:
+                              "CAVM - College of Agriculture and Veterinary Medicine",
+                            value: "CAVM",
+                          },
+                        ]}
+                        icon={School}
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.2 },
+                        }}
+                      />
+
+                      <FormSelectField
+                        control={accountForm.control}
+                        name="course"
+                        label="Course"
+                        placeholder="Select Course"
+                        options={[
+                          {
+                            label: "BS in Agriculture (Animal Science)",
+                            value: "BSAGRI-ANSCI",
+                          },
+                          {
+                            label: "BS in Agriculture (CRSC-Horti)",
+                            value: "BSAGRI-HORTI",
+                          },
+                          {
+                            label: "BS in Agriculture (CRSC-Agronomy)",
+                            value: "BSAGRI-AGRONOMY",
+                          },
+                          {
+                            label: "BS in Agriculture (AgEx)",
+                            value: "BSAGRI-AGEX",
+                          },
+                          {
+                            label: "BS in Agriculture (Crop Science)",
+                            value: "BSAGRI-CROP",
+                          },
+                          {
+                            label: "Certificate of Agricultural Sciences",
+                            value: "CAS",
+                          },
+                          { label: "BS in Agroforestry", value: "BSAGRO" },
+                          {
+                            label: "Doctor of Veterinary Medicine",
+                            value: "DVM",
+                          },
+                          {
+                            label:
+                              "BS in Agricultural and Biosystems Engineering",
+                            value: "BSABE",
+                          },
+                          {
+                            label: "BS in Geodetic Engineering",
+                            value: "BSGE",
+                          },
+                          {
+                            label: "BS in Information Technology",
+                            value: "BSIT",
+                          },
+                          { label: "BS in Food Technology", value: "BSFT" },
+                          {
+                            label: "Bachelor of Elementary Education",
+                            value: "BEED",
+                          },
+                          {
+                            label: "Bachelor of Secondary Education (English)",
+                            value: "BSED-ENGLISH",
+                          },
+                          {
+                            label: "Bachelor of Secondary Education (Science)",
+                            value: "BSED-SCIENCE",
+                          },
+                          { label: "BS in Agribusiness", value: "BSAB" },
+                          {
+                            label: "BS in Business Administration",
+                            value: "BSBA",
+                          },
+                          {
+                            label: "BS in Agribusiness Management",
+                            value: "BSABM",
+                          },
+                          {
+                            label: "BS in Hospitality Management",
+                            value: "BSHM",
+                          },
+                          {
+                            label: "BS in Development Communication",
+                            value: "BSDC",
+                          },
+                          {
+                            label: "Master of Science in Agriculture",
+                            value: "MSAGRI",
+                          },
+                          {
+                            label: "Master of Arts in Education",
+                            value: "MAED",
+                          },
+                          {
+                            label:
+                              "Doctor of Philosophy in Agricultural Sciences",
+                            value: "PHD-AGRI",
+                          },
+                          {
+                            label:
+                              "Doctor of Philosophy in Educational Management",
+                            value: "PHD-EDMAN",
+                          },
+                          {
+                            label: "Teacher Education Certificate Course",
+                            value: "TECC",
+                          },
+                        ]}
+                        icon={GraduationCap}
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.2 },
+                        }}
+                      />
+
+                      <FormSelectField
+                        control={accountForm.control}
+                        name="yearLevel"
+                        label="Year Level"
+                        placeholder="Select Year Level"
+                        options={[
+                          { label: "1st Year", value: "1st Year" },
+                          { label: "2nd Year", value: "2nd Year" },
+                          { label: "3rd Year", value: "3rd Year" },
+                          { label: "4th Year", value: "4th Year" },
+                          { label: "5th Year", value: "5th Year" },
+                          { label: "6th Year", value: "6th Year" },
+                          { label: "7th Year", value: "7th Year" },
+                          { label: "8th Year", value: "8th Year" },
+                        ]}
+                        icon={BookMarked}
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.3 },
+                        }}
+                      />
+
+                      <FormSelectField
+                        control={accountForm.control}
+                        name="section"
+                        label="Section"
+                        placeholder="Select Section"
+                        options={[
+                          { label: "Section A", value: "A" },
+                          { label: "Section B", value: "B" },
+                          { label: "Section C", value: "C" },
+                          { label: "Section D", value: "D" },
+                          { label: "Section E", value: "E" },
+                          { label: "Section F", value: "F" },
+                          { label: "Section G", value: "G" },
+                          { label: "Section H", value: "H" },
+                          { label: "Section I", value: "I" },
+                          { label: "Section J", value: "J" },
+                        ]}
+                        icon={LayoutPanelTop}
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.3 },
+                        }}
+                      />
+
+                      <FormPasswordField
+                        control={accountForm.control}
+                        name="password"
+                        label="Password"
+                        disabled={sendCode.isPending}
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.4 },
+                        }}
+                      />
+
+                      <FormConfirmPasswordField
                         control={accountForm.control}
                         name="confirmPassword"
-                        render={({ field }) => {
-                          const [isVisible, setIsVisible] = useState(false);
-                          const toggleVisibility = () =>
-                            setIsVisible((prev) => !prev);
-
-                          return (
-                            <FormItem className="lg:col-span-2">
-                              <FormLabel className="flex items-center justify-between">
-                                Confirm Password <FormMessage />
-                              </FormLabel>
-
-                              <FormControl>
-                                <div className="relative">
-                                  <Input
-                                    type={isVisible ? "text" : "password"}
-                                    placeholder=""
-                                    {...field}
-                                    disabled={sendAuthCode.isLoading}
-                                    className="pe-9"
-                                  />
-                                  <button
-                                    type="button"
-                                    onClick={toggleVisibility}
-                                    className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-md text-muted-foreground/80 hover:text-foreground focus:outline-none"
-                                  >
-                                    {isVisible ? (
-                                      <EyeOffIcon size={16} />
-                                    ) : (
-                                      <EyeIcon size={16} />
-                                    )}
-                                  </button>
-                                </div>
-                              </FormControl>
-
-                              {/* Optional Live Mismatch Warning */}
-                              {/* {accountForm.watch("confirmPassword") &&
-                            accountForm.watch("password") !==
-                              accountForm.watch("confirmPassword") && (
-                              <p className="text-xs text-red-500 mt-2">
-                                Passwords do not match.
-                              </p>
-                            )} */}
-                            </FormItem>
-                          );
+                        passwordField="password"
+                        watch={accountForm.watch}
+                        disabled={sendCode.isPending}
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.4 },
                         }}
                       />
                     </div>
                   </ScrollArea>
-
-                  <div className="p-4 grid grid-cols-2 gap-3">
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: 0.5 }}
+                    className="p-4 bg-card grid grid-cols-2 gap-3"
+                  >
                     <Button
                       type="button"
                       onClick={handlePrevStepper}
                       variant="outline"
                       className="flex-1"
-                      disabled={sendAuthCode.isLoading}
+                      disabled={sendCode.isPending}
                     >
                       <ArrowLeft /> Previous
                     </Button>
                     <Button
-                      disabled={sendAuthCode.isLoading}
-                      className="flex-1 !dark:bg-green-800 bg-green-700 "
+                      disabled={sendCode.isPending}
+                      className="flex-1 "
                       type="submit"
                     >
-                      {sendAuthCode.isLoading ? (
+                      {sendCode.isPending ? (
                         <>
                           Registering...
-                          <LoaderCircleIcon
+                          <Loader
                             className="-ms-1 animate-spin"
                             size={16}
                             aria-hidden="true"
@@ -1252,45 +602,48 @@ export default function RegisterStudent() {
                         </>
                       )}
                     </Button>
-                  </div>
+                  </motion.div>
                 </Form>
               </form>
             )}
 
             {stepper === 3 && (
               <form
-                onSubmit={otpForm.handleSubmit(HandleOtpVerification)}
+                onSubmit={otpForm.handleSubmit((values) =>
+                  verifyCode.mutate({
+                    personalData: personalForm.getValues(),
+                    accountData: accountForm.getValues(),
+                    otp: values,
+                  })
+                )}
                 className="space-y-6 flex justify-center items-center flex-col "
               >
                 <Form {...otpForm}>
-                  <div className="w-full  space-y-5">
-                    <div className="lg:pt-8 lg:px-8 pt-6 px-2">
-                      <h1 className="text-lg font-semibold">
-                        Code Verifcation
-                      </h1>
-                      <p className="text-sm mt-1 text-muted-foreground">
-                        Enter the code we sent to your gmail.
-                      </p>
-                    </div>
-
+                  <div className="w-full  space-y-5 p-6">
                     <FormField
                       control={otpForm.control}
                       name="otp"
                       render={({ field }) => (
                         <FormItem className="lg: max-w-lg w-full mx-auto lg:p-10 p-2 py-6">
                           <FormLabel className="flex justify-between items-center">
-                            Enter 6-character code
+                            Enter 6-digit code
                             <FormMessage />
                           </FormLabel>
                           <FormControl>
                             <InputOTP
                               maxLength={6}
                               value={field.value}
-                              disabled={verifyRegister.isLoading}
+                              disabled={verifyCode.isPending}
                               onChange={(value) => {
                                 field.onChange(value);
                                 if (value.length === 6) {
-                                  otpForm.handleSubmit(HandleOtpVerification)();
+                                  accountForm.handleSubmit((values) =>
+                                    verifyCode.mutate({
+                                      personalData: personalForm.getValues(),
+                                      accountData: values,
+                                      otp: otpForm.getValues(),
+                                    })
+                                  )();
                                 }
                               }}
                             >
@@ -1307,44 +660,64 @@ export default function RegisterStudent() {
                         </FormItem>
                       )}
                     />
+                    <motion.div
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 0.6 }}
+                      className="relative flex justify-center items-center gap-3 px-6"
+                    >
+                      <div className=" border-b flex-1"></div>
 
-                    <div className="w-full sticky bottom-0 lg:px-8 lg:py-6 py-4 px-2 flex-col-reverse lg:flex-row border-t bg-background flex gap-3">
-                      <Button
-                        variant="outline"
-                        className="flex-1"
-                        onClick={requestNewCode}
-                        disabled={
-                          resendTimer > 0 ||
-                          verifyRegister.isLoading ||
-                          sendAuthCode.isLoading
-                        }
-                      >
-                        {resendTimer > 0
-                          ? `Resend in ${resendTimer}s`
-                          : "Resend Code"}
-                      </Button>
-                      <Button
-                        type="submit"
-                        className="flex-1"
-                        disabled={verifyRegister.isLoading}
-                      >
-                        {verifyRegister.isLoading ? (
-                          <>
-                            Verifying code...
-                            <LoaderCircleIcon
-                              className="-ms-1 animate-spin"
-                              size={16}
-                              aria-hidden="true"
-                            />
-                          </>
-                        ) : (
-                          <>
-                            Verify
-                            <ArrowRight />
-                          </>
-                        )}
-                      </Button>
-                    </div>
+                      <p className="text-sm text-muted-foreground">
+                        Didn't recieve the code?{" "}
+                        <button
+                          type="button"
+                          className="underline text-foreground cursor-pointer"
+                          onClick={accountForm.handleSubmit((values) =>
+                            resendCode.mutate({
+                              personalData: personalForm.getValues(),
+                              accountData: values,
+                            })
+                          )}
+                          disabled={
+                            timeLeft > 0 ||
+                            sendCode.isPending ||
+                            verifyCode.isPending ||
+                            resendCode.isPending
+                          }
+                        >
+                          {timeLeft > 0
+                            ? `Resend in ${timeLeft}s`
+                            : resendCode.isPending
+                            ? "Resending..."
+                            : "Resend Now"}
+                        </button>
+                      </p>
+                      <div className=" border-b flex-1"></div>
+                    </motion.div>
+                  </div>{" "}
+                  <div className="p-4 bg-card w-full">
+                    <Button
+                      type="submit"
+                      className="w-full"
+                      disabled={verifyCode.isPending}
+                    >
+                      {verifyCode.isPending ? (
+                        <>
+                          Verifying code...
+                          <Loader
+                            className="-ms-1 animate-spin"
+                            size={16}
+                            aria-hidden="true"
+                          />
+                        </>
+                      ) : (
+                        <>
+                          Verify
+                          <ArrowRight />
+                        </>
+                      )}
+                    </Button>
                   </div>
                 </Form>
               </form>
