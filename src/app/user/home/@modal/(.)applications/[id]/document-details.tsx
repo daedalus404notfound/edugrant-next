@@ -34,7 +34,7 @@ import {
   TriangleAlertIcon,
   X,
 } from "lucide-react";
-import {  useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import StyledToast from "@/components/ui/toast-styled";
@@ -140,9 +140,9 @@ export default function DocumentDetails({
             <GlassFolder />
             <Badge
               variant="secondary"
-              className="absolute z-10 bottom-0 right-0"
+              className="absolute z-10 bottom-0 right-0 uppercase"
             >
-              PENDING
+              {status || "UNKNOWN"}
             </Badge>
           </div>
           <p className=" text-left text-sm">{title}</p>
