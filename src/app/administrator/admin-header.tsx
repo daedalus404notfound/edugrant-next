@@ -163,7 +163,7 @@ export default function DynamicHeaderAdmin({
                   </div>
                 </Link>
 
-                <Link href="/administrator/head/home/generate-report">
+                {/* <Link href="/administrator/head/home/generate-report">
                   <div
                     onClick={() => setOpenGenerate(true)}
                     className="relative bg-card/60 overflow-hidden px-4 py-6 flex items-center gap-4 text-sm rounded-sm  justify-between hover:underline"
@@ -171,7 +171,7 @@ export default function DynamicHeaderAdmin({
                     Generate Report
                     <Activity className="absolute -right-1 -bottom-1 size-10 opacity-20 text-primary" />
                   </div>
-                </Link>
+                </Link> */}
 
                 <Link href="/administrator/head/home/add">
                   <div
