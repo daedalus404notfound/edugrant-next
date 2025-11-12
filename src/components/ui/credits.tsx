@@ -39,7 +39,9 @@ const TeamMember = ({
             <h3 className="lg:text-xl text-sm font-semibold line-clamp-1">
               {name}
             </h3>
-            <p className="text-muted-foreground lg:text-sm text-xs">{role}</p>
+            <p className="text-muted-foreground lg:text-sm text-xs line-clamp-1">
+              {role}
+            </p>
           </div>
           <p className=" leading-relaxed text-sm hidden lg:block">
             {description}

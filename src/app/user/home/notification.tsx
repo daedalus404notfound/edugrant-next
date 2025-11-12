@@ -92,9 +92,9 @@ export default function Notification() {
         className="lg:w-md w-xs lg:mr-13 mr-3  lg:mt-3 p-0 bg-background/90 backdrop-blur-2xl"
         align="center"
       >
-        <h2 className="text-base font-semibold p-4">Notifications</h2>
+        <h2 className="text-base font-semibold lg:p-4 p-2">Notifications</h2>
         {/* Notifications List */}
-        <ScrollArea className="px-4 max-h-122">
+        <ScrollArea className="lg:px-4 px-2 lg:max-h-122 max-h-106">
           <div className="grid gap-2">
             {query.isLoading ? (
               <div className="space-y-2">
@@ -121,7 +121,7 @@ export default function Notification() {
                     }
                   >
                     <Link href={`/user/home/applications`}>
-                      <div className="p-2 flex items-start gap-4">
+                      <div className="py-2 lg:p-2 flex items-start lg:gap-4 gap-2">
                         <span
                           className={`rounded-md ${
                             approved
@@ -148,8 +148,8 @@ export default function Notification() {
                           )}
                         </span>
                         <div>
-                          <div className="flex justify-between items-center">
-                            <h1 className="font-medium leading-4">
+                          <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-1 lg:gap-0">
+                            <h1 className="font-medium leading-4 line-clamp-1">
                               {notification.title}
                             </h1>
                             <span className="flex items-center gap-1">
@@ -164,7 +164,7 @@ export default function Notification() {
                               </p>
                             </span>
                           </div>
-                          <p className="text-muted-foreground mt-2 line-clamp-3 leading-5">
+                          <p className="text-muted-foreground mt-2 lg:line-clamp-3 line-clamp-2 leading-5 text-sm">
                             {notification.description}
                           </p>
                         </div>

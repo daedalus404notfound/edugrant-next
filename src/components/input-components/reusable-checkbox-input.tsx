@@ -63,7 +63,7 @@ export function FormCheckboxInputField<T extends FieldValues>({
         <FormItem className={cn(className)}>
           <FormLabel
             htmlFor={name}
-            className="flex items-center justify-between line-clamp-1"
+            className="flex items-center justify-between"
           >
             <div className="flex items-center gap-2">
               <input
@@ -86,7 +86,7 @@ export function FormCheckboxInputField<T extends FieldValues>({
               )}
 
               <Input
-                className="pl-10"
+                className="pl-10 text-sm"
                 placeholder={placeholder}
                 {...field}
                 disabled={!checked || disabled}

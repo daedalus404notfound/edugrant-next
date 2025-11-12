@@ -16,7 +16,6 @@ import UploadDocs from "./docs-upload";
 
 import { Separator } from "@/components/ui/separator";
 
-
 import ScholarshipModalLoading from "@/components/ui/scholarship-modal-loading";
 import ModalHeader from "@/components/ui/modal-header";
 import ScholarshipModal from "@/components/ui/scholarship-modal";
@@ -68,16 +67,16 @@ export default function InterceptManageScholarshipClient() {
       }}
     >
       <DrawerContent
-        className={`lg:w-[56%] w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 lg:p-1`}
+        className={`lg:w-[56%] w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 px-1`}
       >
         <DrawerHeader className="sr-only">
           <DrawerTitle className="text-2xl">Edit Mode</DrawerTitle>
           <DrawerDescription>This action cannot be undone.</DrawerDescription>
         </DrawerHeader>
-        <ModalHeader
+        {/* <ModalHeader
           text="Scholarship Details"
           HandleCloseDrawer={HandleCloseDrawer}
-        />
+        /> */}
         <div className="relative">
           {applying === true ? (
             data && (

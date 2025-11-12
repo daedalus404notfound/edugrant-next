@@ -25,11 +25,18 @@ const personalDetailsSchema = z.object({
 });
 const accountDetailsSchema = z
   .object({
-    studentId: z.string().min(4, "Required"),
+    studentId: z
+      .string()
+      .min(4, "Required")
+      .max(20, "Must not exceed 20 digits")
+      .regex(/^\d+$/, "Numbers only"),
     email: z.string().min(1, "Required").email("Invalid email address"),
 
-    password: z.string().min(8, "At least 8 characters"),
-    confirmPassword: z.string().min(1, "Please confirm your password"),
+    password: z
+      .string()
+      .min(8, "At least 8 characters")
+      .max(20, "Must not exceed 20 chars"),
+    confirmPassword: z.string().min(1, "Required"),
 
     course: z.string().min(1, "Required"),
     yearLevel: z.string().min(1, "Required"),

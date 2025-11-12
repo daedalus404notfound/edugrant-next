@@ -85,7 +85,7 @@ export default function InterceptManageApplicationClient() {
       repositionInputs={false}
     >
       <DrawerContent
-        className={`lg:w-[56%] bg-card w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 lg:p-1 `}
+        className={`lg:w-[56%] bg-card w-[98%] lg:min-w-5xl mx-auto outline-0 border-0 lg:p-1 px-1 `}
       >
         <DrawerHeader className="p-0">
           <div className="sr-only">
@@ -93,10 +93,10 @@ export default function InterceptManageApplicationClient() {
             <DrawerDescription>This action cannot be undone.</DrawerDescription>
           </div>
         </DrawerHeader>
-        <ModalHeader
+        {/* <ModalHeader
           HandleCloseDrawer={HandleCloseDrawer}
           text="Application Details"
-        />
+        /> */}
 
         {loading ? (
           <ScholarshipModalLoading />
@@ -108,17 +108,50 @@ export default function InterceptManageApplicationClient() {
           />
         ) : (
           <div>
-            <ScrollArea className="max-h-[80dvh] bg-background rounded-t-lg">
+            <ScrollArea className="max-h-[calc(100dvh-200px)]  bg-background rounded-t-lg">
+              {data?.status === "PENDING" ? (
+                <StatusAlertIndicator
+                  status="PENDING"
+                  title="Application Submitted"
+                  description="Your application has been submitted and is currently under review."
+                />
+              ) : data?.status === "APPROVED" ? (
+                <StatusAlertIndicator
+                  status="APPROVED"
+                  title="Application Approved"
+                  description="Congratulations! Your application has been approved for this scholarship."
+                />
+              ) : data?.status === "DECLINED" ? (
+                <StatusAlertIndicator
+                  status="DECLINED"
+                  title="Application Declined"
+                  description="Unfortunately, your application was not approved for this scholarship."
+                />
+              ) : data?.status === "INTERVIEW" ? (
+                <StatusAlertIndicator
+                  status="INTERVIEW"
+                  title="Interview Required"
+                  description="You've passed the initial review and are now invited for an interview."
+                />
+              ) : data?.status === "BLOCKED" ? (
+                <StatusAlertIndicator
+                  status="BLOCKED"
+                  title="Application Blocked"
+                  description="Your application is blocked due to an existing approved government scholarship."
+                />
+              ) : (
+                ""
+              )}
               <div className="bg-gradient-to-br dark:to-card/90 to-card/70 dark:from-card/50 from-card/30  rounded-md overflow-hidden ">
                 {/* Header Section */}
-                <div className="relative flex flex-col lg:flex-row  lg:items-end items-center  lg:py-8 py-4 lg:px-4 px-2">
-                  <img
+                <div className="relative flex  items-end  p-4">
+                  {/* <img
                     className="lg:w-70 w-43 absolute lg:right-0 -right-18 -translate-y-[40%] top-[60%] z-0 mask-gradient opacity-20 "
                     src={logo.src}
                     alt=""
-                  />
+                  /> */}
                   <div className=" flex items-end justify-center">
-                    <Avatar className="lg:size-25 size-20">
+                    <Avatar className="lg:size-25 size-20 bg-background border-2">
                       <AvatarImage
                         src={data?.Scholarship.logo}
                         className="rounded-full object-cover"
@@ -243,40 +276,6 @@ export default function InterceptManageApplicationClient() {
                 </div>
               </div>
               <div className="lg:p-4 p-2   space-y-6">
-                {data?.status === "PENDING" ? (
-                  <StatusAlertIndicator
-                    status="PENDING"
-                    title="Application Submitted"
-                    description="Your application has been submitted and is currently under review."
-                  />
-                ) : data?.status === "APPROVED" ? (
-                  <StatusAlertIndicator
-                    status="APPROVED"
-                    title="Application Approved"
-                    description="Congratulations! Your application has been approved for this scholarship."
-                  />
-                ) : data?.status === "DECLINED" ? (
-                  <StatusAlertIndicator
-                    status="DECLINED"
-                    title="Application Declined"
-                    description="Unfortunately, your application was not approved for this scholarship."
-                  />
-                ) : data?.status === "INTERVIEW" ? (
-                  <StatusAlertIndicator
-                    status="INTERVIEW"
-                    title="Interview Required"
-                    description="You've passed the initial review and are now invited for an interview."
-                  />
-                ) : data?.status === "BLOCKED" ? (
-                  <StatusAlertIndicator
-                    status="BLOCKED"
-                    title="Application Blocked"
-                    description="Your application is blocked due to an existing approved government scholarship."
-                  />
-                ) : (
-                  ""
-                )}
-
                 {/* {data?.status === "PENDING" &&
                 Date.now() <= new Date(data.Scholarship.deadline).getTime() && (
                   <div className="flex justify-between items-center">
@@ -296,7 +295,7 @@ export default function InterceptManageApplicationClient() {
                 <DocsStudent data={data} loading={loading} />
               </div>
             </ScrollArea>
-            <div className="">
+            {/* <div className="">
               <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
               <div className="flex gap-3  lg:p-4 p-2 pb-4">
                 <Button
@@ -307,7 +306,7 @@ export default function InterceptManageApplicationClient() {
                   <PenLine /> Edit Documents
                 </Button>
               </div>
-            </div>
+            </div> */}
           </div>
         )}
       </DrawerContent>

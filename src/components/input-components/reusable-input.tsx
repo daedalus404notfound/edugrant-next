@@ -162,7 +162,7 @@ export function FormInputField<T extends FieldValues>({
                 type={type === "password" && !isVisible ? "password" : "text"}
                 placeholder={placeholder}
                 maxLength={maxLength}
-                className={`${Icon ? "pl-10" : "pl-3"} ${
+                className={` text-sm ${Icon ? "pl-10" : "pl-3"} ${
                   type === "password" ? "pr-10" : ""
                 }`}
                 disabled={disabled}

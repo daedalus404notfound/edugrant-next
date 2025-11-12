@@ -32,7 +32,7 @@ export default function Termss() {
     >
       <DialogContent
         showCloseButton={false}
-        className="max-w-4xl w-[98%] mx-auto p-1 border-0 outline-0"
+        className="max-w-4xl w-[98%] mx-auto p-1 border-0 outline-0 gap-0"
       >
         <DialogHeader className="sr-only">
           <DialogTitle className="text-2xl font-semibold">
@@ -61,7 +61,7 @@ export default function Termss() {
         </div> */}
 
         <ScrollArea className="h-[80dvh] bg-background lg:p-4 p-2 rounded-md">
-          <div className="space-y-4 mt-8">
+          <div className="space-y-4">
             <h2 className="lg:text-xl text-base font-semibold tracking-tight">
               1. Introduction
             </h2>

@@ -141,7 +141,7 @@ export default function PublicAnnouncement({
           <DrawerTitle>Announcements</DrawerTitle>
           <DrawerDescription>View all public announcements</DrawerDescription>
         </DrawerHeader>
-        <ModalHeader text="Announcements" HandleCloseDrawer={setOpen} />
+        {/* <ModalHeader text="Announcements" HandleCloseDrawer={setOpen} /> */}
         {full ? (
           <ScrollArea className=" max-h-[70dvh] h-full">
             <div className="bg-card/30 p-4 rounded-md">

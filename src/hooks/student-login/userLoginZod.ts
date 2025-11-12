@@ -5,7 +5,11 @@ import { useEffect } from "react";
 import z from "zod";
 
 const loginSchema = z.object({
-  studentId: z.string().min(1, "Required"),
+  studentId: z
+    .string()
+    .min(4, "Required")
+    .max(20, "Must not exceed 20 digits")
+    .regex(/^\d+$/, "Numbers only"),
   password: z.string().min(1, "Required").max(20, "Too long"),
 });
 

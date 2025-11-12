@@ -5,8 +5,10 @@ import {
   CheckIcon,
   EyeIcon,
   EyeOffIcon,
+  IdCard,
   Loader,
   Mail,
+  MailIcon,
   XIcon,
 } from "lucide-react";
 import {
@@ -38,6 +40,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLandingChangePassword } from "@/hooks/user/landingChangePassword";
+import { FormInputField } from "@/components/input-components/reusable-input";
 
 export default function LoginClientModal() {
   const router = useRouter();
@@ -85,42 +88,29 @@ export default function LoginClientModal() {
               onSubmit={changePasswordForm.handleSubmit(handleSendCode)}
               className="space-y-6"
             >
-              <FormField
+              <FormInputField
                 control={changePasswordForm.control}
                 name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Email <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={authLoading}
-                        {...field}
-                        type="email"
-                        placeholder="Enter your email"
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
+                label="Email"
+                type="email"
+                icon={MailIcon}
+                disabled={authLoading}
+                placeholder="Enter your email"
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.1 },
+                }}
+              />{" "}
+              <FormInputField
                 control={changePasswordForm.control}
                 name="schoolId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="flex justify-between items-center">
-                      Student ID <FormMessage />
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={authLoading}
-                        {...field}
-                        placeholder="Enter your student Id"
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
+                label="Student ID"
+                type="number"
+                icon={IdCard}
+                disabled={authLoading}
+                placeholder="Enter your student ID"
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.1 },
+                }}
               />
               <AlertDialogFooter>
                 <Button

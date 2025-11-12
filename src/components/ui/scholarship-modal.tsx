@@ -87,7 +87,7 @@ export default function ScholarshipModal({
     },
   ];
   return (
-    <ScrollArea className="max-h-[calc(100dvh-150px)]  bg-background rounded-t-lg">
+    <ScrollArea className="max-h-[calc(100dvh-200px)]  bg-background rounded-t-lg">
       {data.dateEnded && (
         <div className=" p-3  sticky bg-muted top-0 z-30 flex items-center justify-center">
           <p className="text-sm">

@@ -41,10 +41,10 @@ export const StatusAlertIndicator = ({
   }[status];
 
   return (
-    <div className="bg-card text-foreground lg:px-4 px-2 py-3 rounded-md">
+    <div className="lg:p-4 p-2 bg-background rounded-t-md">
       <div className="flex grow gap-3 md:items-center">
         <div
-          className={`${statusConfig.bgColorIcon} flex size-9 shrink-0 items-center justify-center rounded-full max-md:mt-0.5`}
+          className={`${statusConfig.bgColorIcon} flex size-9 shrink-0 items-center justify-center rounded-md max-md:mt-0.5`}
           aria-hidden="true"
         >
           {statusConfig.icon}

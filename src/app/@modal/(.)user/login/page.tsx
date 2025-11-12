@@ -103,7 +103,7 @@ export default function LoginClientModal() {
         onEscapeKeyDown={(e) => {
           if (verifyCode.isPending || sendCode.isPending) e.preventDefault();
         }}
-        className={`  lg:p-2 border-0! outline-0! ${
+        className={`  lg:p-2 px-1 border-0! outline-0! ${
           isMobile ? "bg-card! mx-auto w-[98%]" : "bg-transparent! w-full"
         }`}
       >

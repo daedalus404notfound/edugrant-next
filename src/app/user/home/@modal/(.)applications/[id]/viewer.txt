@@ -20,19 +20,20 @@ interface UserDocument {
   document: string;
   fileFormat: string;
   requirementType: string;
-  resourceType?: string;
+  resourceType: string;
   supabasePath: string;
   status?: string;
-  applicationId?: number;
+  applicationId: number;
 }
 
 export default function ApplicationViewer({
   fileFormat,
+
   document,
   status,
   supabasePath,
   requirementType,
-  applicationId = 0,
+  applicationId,
 }: UserDocument) {
   const [rotation, setRotation] = useState(0);
 

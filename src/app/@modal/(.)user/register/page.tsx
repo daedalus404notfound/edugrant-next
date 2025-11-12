@@ -132,7 +132,7 @@ export default function RegisterStudent() {
       }}
       repositionInputs={false}
     >
-      <DrawerContent className=" max-w-5xl bg-card px-1 mx-auto w-[98%]">
+      <DrawerContent className=" max-w-5xl bg-card px-1 mx-auto w-[98%] outline-0">
         <DrawerHeader className="sr-only">
           <DrawerTitle>Are you absolutely sure?</DrawerTitle>
           <DrawerDescription>
@@ -164,7 +164,7 @@ export default function RegisterStudent() {
             {stepper === 1 && (
               <form onSubmit={personalForm.handleSubmit(handlePersonalSubmit)}>
                 <Form {...personalForm}>
-                  <ScrollArea className="max-h-[70dvh]">
+                  <ScrollArea className="lg:max-h-[70dvh] max-h-[55dvh]">
                     {" "}
                     <motion.div
                       initial={{ opacity: 0, y: 30 }}
@@ -179,7 +179,7 @@ export default function RegisterStudent() {
                         Tell us about yourself.
                       </p>
                     </motion.div>
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:px-6 px-4 py-6 lg:py-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-8 gap-6 lg:px-6 px-4 py-6 lg:py-8">
                       <FormInputField
                         control={personalForm.control}
                         name="firstName"
@@ -250,12 +250,12 @@ export default function RegisterStudent() {
                       <FormInputField
                         control={personalForm.control}
                         name="address"
-                        label="Address (Street, Barangay, City/Municipality,
-                              Province)"
+                        label="Address "
                         type="text"
                         icon={Map}
                         disabled={sendCode.isPending}
-                        placeholder="Enter your address"
+                        placeholder="(Street, Barangay, City/Municipality,
+                              Province)"
                         className="lg:col-span-2"
                         motionProps={{
                           transition: { duration: 0.3, delay: 0.4 },
@@ -265,7 +265,7 @@ export default function RegisterStudent() {
                         control={personalForm.control}
                         name="indigenous"
                         label="Indigenous Group"
-                        checkboxLabel="Are you part of an Indigenous Group?"
+                        checkboxLabel="Indigenous Group"
                         placeholder="Specify your Indigenous group (if applicable)"
                         icon={Feather}
                         motionProps={{
@@ -312,7 +312,7 @@ export default function RegisterStudent() {
                 )}
               >
                 <Form {...accountForm}>
-                  <ScrollArea className="max-h-[70dvh]">
+                  <ScrollArea className="lg:max-h-[70dvh] max-h-[55dvh]">
                     <motion.div
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -327,7 +327,7 @@ export default function RegisterStudent() {
                       </p>
                     </motion.div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:px-6 px-4 py-6 lg:py-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 lg:gap-8 gap-6 lg:px-6 px-4 py-6 lg:py-8">
                       <FormInputField
                         control={accountForm.control}
                         name="studentId"
@@ -619,12 +619,12 @@ export default function RegisterStudent() {
                 className="space-y-6 flex justify-center items-center flex-col "
               >
                 <Form {...otpForm}>
-                  <div className="w-full  space-y-5 p-6">
+                  <div className="w-full  space-y-5 lg:p-6 p-2">
                     <FormField
                       control={otpForm.control}
                       name="otp"
                       render={({ field }) => (
-                        <FormItem className="lg: max-w-lg w-full mx-auto lg:p-10 p-2 py-6">
+                        <FormItem className="lg: max-w-lg w-full mx-auto lg:p-10 p-2 lg:py-6">
                           <FormLabel className="flex justify-between items-center">
                             Enter 6-digit code
                             <FormMessage />
@@ -664,7 +664,7 @@ export default function RegisterStudent() {
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.6, delay: 0.6 }}
-                      className="relative flex justify-center items-center gap-3 px-6"
+                      className="relative flex justify-center items-center gap-3 lg:px-6 px-2"
                     >
                       <div className=" border-b flex-1"></div>
 

@@ -10,6 +10,17 @@ import {
   TriangleAlert,
   TriangleAlertIcon,
 } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { GetApplicationFormData } from "@/hooks/zod/getApplicationZod";
@@ -30,6 +41,15 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import GlassFolder from "@/components/ui/folder";
+import DocumentDetails from "./document-details";
 
 type DocsStudentProps = {
   data: GetApplicationFormData | null;
@@ -75,58 +95,26 @@ export default function DocsStudent({ data, loading }: DocsStudentProps) {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center relative">
-        <TitleReusable
-          title={phaseSelector ? `Required Documents` : "Phase Documents"}
-          description=""
-          titleSize="text-base"
-        />
-        <Popover open={open} onOpenChange={setOpen}>
-          <PopoverTrigger className="absolute right-0" asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-expanded={open}
-              className="lg:w-[200px] justify-between"
-            >
-              {phaseSelector || "Select phase..."}
-              <ChevronsUpDown className="opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="lg:w-[200px] p-0">
-            <Command>
-              <CommandInput placeholder="Search Phase..." className="h-9" />
-              <CommandList>
-                <CommandEmpty>No phase found.</CommandEmpty>
-                <CommandGroup>
-                  {submittedDocuments.map((submitted) => (
-                    <CommandItem
-                      key={submitted}
-                      value={submitted}
-                      className="capitalize"
-                      onSelect={() => {
-                        setPhaseSelector(submitted);
-                        setOpen(false);
-                      }}
-                    >
-                      {submitted}
-                      <Check
-                        className={cn(
-                          "ml-auto",
-                          phaseSelector === submitted
-                            ? "opacity-100"
-                            : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
+      <div className="flex flex-col lg:flex-row lg:justify-between relative">
+        <h1>Submitted Documents</h1>
+        <Select value={phaseSelector} onValueChange={setPhaseSelector}>
+          <SelectTrigger className="lg:w-[200px] w-full hidden">
+            <SelectValue placeholder="Select phase..." />
+          </SelectTrigger>
+          <SelectContent>
+            {submittedDocuments.map((submitted) => (
+              <SelectItem
+                key={submitted}
+                value={submitted}
+                className="capitalize"
+              >
+                {submitted}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
-      <div className=" grid lg:grid-cols-2 gap-6">
+      <div className="flex flex-wrap gap-8">
         {loading
           ? Array.from({ length: 2 }).map((_, i) => (
               <div
@@ -149,143 +137,37 @@ export default function DocsStudent({ data, loading }: DocsStudentProps) {
             ))
           : phaseData &&
             phaseData.map((meow) => {
-              // const decisionMessage =
-              //   data?.Interview_Decision[0]?.message?.[meow.document] ||
-              //   data?.Application_Decision[0]?.message?.[meow.document] ||
-              //   null;
-
               const decisionMessage = phaseDecision?.message?.[meow.document];
               const currentStatus =
                 meow.rejectMessage?.status || decisionMessage?.status || "";
               const currentComment =
                 meow.rejectMessage?.comment || decisionMessage?.comment || "";
-              console.log("meow", decisionMessage);
+              const requiredFormats =
+                data?.Scholarship?.documents?.[
+                  phaseSelector || "phase-1"
+                ]?.find((doc) => doc.label === meow.document)?.formats || [];
               return (
-                <div
+                <DocumentDetails
                   key={meow.document}
-                  className="bg-gradient-to-br to-card from-card/80 lg:p-4 p-2 rounded-md"
-                >
-                  <div>
-                    {decisionMessage?.status === "REJECTED" ? (
-                      <div className="rounded-md px-4 py-3 bg-red-500/10">
-                        <p className="text-sm line-clamp-1 ">
-                          <TriangleAlert
-                            className="me-3 -mt-0.5 inline-flex text-red-500"
-                            size={16}
-                          />
-                          Document has been rejected
-                        </p>
-                      </div>
-                    ) : decisionMessage?.status === "APPROVED" ? (
-                      <div className="rounded-md px-4 py-3 bg-green-500/10">
-                        <p className="text-sm line-clamp-1 ">
-                          <CircleCheckIcon
-                            className="me-3 -mt-0.5 inline-flex text-emerald-500"
-                            size={16}
-                          />
-                          Document has been approved
-                        </p>
-                      </div>
-                    ) : !meow.supabasePath ? (
-                      <div className="rounded-md px-4 py-3 bg-red-500/10">
-                        <p className="text-sm line-clamp-1 ">
-                          <TriangleAlertIcon
-                            className="me-3 -mt-0.5 inline-flex text-red-500"
-                            size={16}
-                          />
-                          Failed to submit
-                        </p>
-                      </div>
-                    ) : data?.status === "PENDING" && meow.supabasePath ? (
-                      <div className="rounded-md px-4 py-3 bg-amber-500/10">
-                        <p className="text-sm line-clamp-1 ">
-                          <Clock
-                            className="me-3 -mt-0.5 inline-flex text-amber-500"
-                            size={16}
-                          />
-                          Your document is awaiting verification.
-                        </p>
-                      </div>
-                    ) : null}
-                  </div>
-                  <div className="pb-6 pt-8 ">
-                    <ApplicationViewer
-                      fileFormat={mimeToLabelMap[meow.fileFormat]}
-                      resourceType={meow.resourceType}
-                      document={meow.document}
-                      supabasePath={meow.supabasePath}
-                      requirementType={meow.requirementType}
-                      status={
-                        decisionMessage?.status
-                          ? decisionMessage?.status
-                          : "PENDING"
-                      }
-                      applicationId={data?.applicationId || 0}
-                    />
-                    {/* <div className="flex-1 flex items-center justify-center">
-                  <p className="text-sm">Download</p>
-                </div> */}
-                  </div>{" "}
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center">
-                      <p className="font-medium lg:text-base text-sm">
-                        {meow.document}
-                      </p>
-                      <div className="flex items-center gap-6 lg:text-sm text-xs">
-                        <p className="border-l pl-3  text-muted-foreground">
-                          {meow.fileFormat}
-                        </p>{" "}
-                        <p className="border-l pl-3  text-muted-foreground">
-                          {meow.requirementType}
-                        </p>
-                      </div>
-                    </div>
-
-                    <Textarea
-                      placeholder="Remarks"
-                      value={decisionMessage?.comment}
-                      readOnly
-                      disabled={!decisionMessage?.comment}
-                      className="border-0 bg-background"
-                    />
-                  </div>
-                </div>
+                  title={meow.document}
+                  format={meow.fileFormat}
+                  requirementType={meow.requirementType}
+                  status={currentStatus}
+                  supabasePath={meow.supabasePath}
+                  comment={currentComment}
+                  formats={requiredFormats}
+                  applicationId={data?.applicationId}
+                  scholashipId={data?.Scholarship.scholarshipId}
+                  disabled={
+                    data?.Scholarship.deadline
+                      ? Date.now() <=
+                        new Date(data.Scholarship.deadline).getTime()
+                      : false
+                  }
+                />
               );
             })}
       </div>
     </div>
   );
 }
-
-//  <div key={meow.document} className="">
-//    <div className="flex-1 flex flex-col lg:justify-end justify-between gap-5 relative">
-//      <div className="flex gap-3">
-//        <ApplicationViewer
-//          fileFormat={mimeToLabelMap[meow.fileFormat]}
-//          resourceType={meow.resourceType}
-//          fileUrl={meow.fileUrl}
-//          document={meow.document}
-//          supabasePath={meow.supabasePath}
-//          requirementType={meow.requirementType}
-//          status={decisionMessage?.status ? decisionMessage?.status : "PENDING"}
-//        />
-//        <div className="flex-1">
-//          <div className="flex gap-3 items-center  capitalize">
-//            <p className="font-medium lg:text-base text-sm">{meow.document}</p>
-
-//            <div className="flex gap-1.5 items-center">
-//              {decisionMessage && (
-//                <Badge className="hidden lg:block tracking-wide uppercase bg-green-800/20 text-green-600">
-//                  {decisionMessage.status}
-//                </Badge>
-//              )}
-//            </div>
-//          </div>
-//          <p className="uppercase lg:text-sm text-xs text-muted-foreground lg:mt-1">
-//            {meow.fileFormat ? meow.fileFormat : "N/A"}
-//          </p>
-//        </div>
-//      </div>
-
-//    </div>
-//  </div>;

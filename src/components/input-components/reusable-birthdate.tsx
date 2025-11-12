@@ -85,7 +85,7 @@ export function FormDateField<T extends FieldValues>({
                   field.onChange(value);
                 }}
                 maxLength={10}
-                className="pl-10"
+                className="pl-10 text-sm"
                 placeholder={placeholder}
                 disabled={disabled}
               />
