@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
-
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import useGetCSVDisplay from "@/hooks/admin/getCSVdisplay";
 import {
   Timeline,
@@ -16,17 +23,29 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import TitleReusable from "@/components/ui/title";
-import { Activity, Loader, RefreshCcw } from "lucide-react";
+import { Activity, AlertCircle, Loader, RefreshCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import useFetchApplicationCSV from "@/hooks/admin/getApplicationCSV";
+import logo from "@/assets/edugrant-logo.png";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { AnimatePresence, motion } from "motion/react";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 export default function GenerateReport() {
   const [selectedFilters, setSelectedFilters] = useState<
     Record<string, string[]>
   >({});
   const query = useGetCSVDisplay(selectedFilters);
   const [filename, setFilename] = useState("");
+  const [rangeFilter, setRangeFilter] = useState({ start: "", end: "" });
+  const [gender, setGender] = useState("");
+  const [error, setError] = useState("");
   const selectedExport = [
     { id: "scholarship", value: selectedFilters["scholarship"] },
     { id: "applicationStatus", value: selectedFilters["applicationStatus"] },
@@ -38,12 +57,31 @@ export default function GenerateReport() {
 
   console.log("selectedExport", selectedExport);
   const exportMutation = useFetchApplicationCSV();
+  const handleSelectChange = (key: "start" | "end", value: string) => {
+    setRangeFilter((prev) => {
+      const updated = { ...prev, [key]: value };
 
+      // Validate A–Z range order
+      if (
+        updated.start &&
+        updated.end &&
+        updated.start.charCodeAt(0) > updated.end.charCodeAt(0)
+      ) {
+        setError("Invalid range: cannot go from Z to A.");
+      } else {
+        setError("");
+      }
+
+      return updated;
+    });
+  };
   const handleExport = () => {
     exportMutation.mutate({
       dataSelections: JSON.stringify(selectedFilters["studentInfo"]),
       filters: JSON.stringify(selectedExport),
       filename: filename,
+      rangeFilter: rangeFilter,
+      gender: gender,
     });
   };
 
@@ -418,23 +456,120 @@ export default function GenerateReport() {
                     transition={{ duration: 0.3 }}
                     className="flex items-center gap-3"
                   >
-                    <Input
-                      placeholder="Enter filename or skip"
-                      className="w-sm backdrop-blur-2xl"
-                      onChange={(e) => setFilename(e.target.value)}
-                    />
-                    <Button
-                      type="submit"
-                      className="cursor-pointer backdrop-blur-2xl"
-                      onClick={handleExport}
-                      disabled={exportMutation.isPending}
-                    >
-                      <Activity />
-                      {exportMutation.isPending ? "Generating..." : "Generate"}
-                      {exportMutation.isPending && (
-                        <Loader className="animate-spin" />
-                      )}
-                    </Button>{" "}
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          type="button"
+                          className="cursor-pointer backdrop-blur-2xl"
+                        >
+                          <Activity />
+                          {exportMutation.isPending
+                            ? "Generating..."
+                            : "Generate"}
+                          {exportMutation.isPending && (
+                            <Loader className="animate-spin" />
+                          )}
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-md p-4">
+                        <DialogHeader>
+                          <DialogTitle>Generate Report</DialogTitle>
+                          <DialogDescription>
+                            Select you prefered filter before generating report.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <div className="flex flex-col gap-3">
+                          <h1 className="text-sm">Filename</h1>
+
+                          <Input
+                            placeholder="Enter filename (Optional)"
+                            className="w-full backdrop-blur-2xl"
+                            onChange={(e) => setFilename(e.target.value)}
+                          />
+                        </div>
+                        <Separator />
+                        <div className="flex flex-col gap-3">
+                          <h1 className="text-sm">Range Filter (Surname)</h1>
+
+                          <div className="grid grid-cols-2 gap-3">
+                            {/* From (A–Z) */}
+                            <Select
+                              onValueChange={(value) =>
+                                handleSelectChange("start", value)
+                              }
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="From (A) Optional" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {Array.from({ length: 26 }, (_, i) => {
+                                  const letter = String.fromCharCode(65 + i);
+                                  return (
+                                    <SelectItem key={letter} value={letter}>
+                                      {letter}
+                                    </SelectItem>
+                                  );
+                                })}
+                              </SelectContent>
+                            </Select>
+
+                            {/* To (A–Z) */}
+                            <Select
+                              onValueChange={(value) =>
+                                handleSelectChange("end", value)
+                              }
+                            >
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="To (Z) Optional" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {Array.from({ length: 26 }, (_, i) => {
+                                  const letter = String.fromCharCode(65 + i);
+                                  return (
+                                    <SelectItem key={letter} value={letter}>
+                                      {letter}
+                                    </SelectItem>
+                                  );
+                                })}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                        <Separator />
+                        <div className="flex flex-col gap-3">
+                          <h1 className="text-sm">Filter Gender</h1>
+                          <Select onValueChange={(value) => setGender(value)}>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Both (Default)" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Male">Male</SelectItem>
+                              <SelectItem value="Female">Female</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <Button
+                          onClick={handleExport}
+                          disabled={exportMutation.isPending || !!error}
+                          className="mt-3"
+                        >
+                          <Activity />
+                          {exportMutation.isPending
+                            ? "Generating..."
+                            : "Generate"}
+                          {exportMutation.isPending && (
+                            <Loader className="animate-spin" />
+                          )}
+                        </Button>{" "}
+                        {error && (
+                          <div className="flex justify-center items-center gap-2 text-red-500 text-sm mt-1">
+                            <AlertCircle className="h-4 w-4" />
+                            {error}
+                          </div>
+                        )}
+                      </DialogContent>
+                    </Dialog>
+
                     <Button
                       className="backdrop-blur-2xl"
                       onClick={handleClearFilters}
@@ -482,7 +617,7 @@ function ReusableCheckbox({
         aria-describedby={`${id}-description`}
       />
       <div className="flex grow items-center gap-3">
-        <svg
+        {/* <svg
           className="shrink-0"
           xmlns="http://www.w3.org/2000/svg"
           width={32}
@@ -532,10 +667,14 @@ function ReusableCheckbox({
               <path fill="#fff" d="M6.354 6h19.292v20H6.354z" />
             </clipPath>
           </defs>
-        </svg>
+        </svg> */}
+        <img src={logo.src} className="size-7" alt="" />
         <div className="grid gap-2">
-          <Label htmlFor={id} className="capitalize break-words">
-            {title}
+          <Label
+            htmlFor={id}
+            className="capitalize break-words flex items-start"
+          >
+            <h1 className="line-clamp-1">{title}</h1>
             <span className="text-xs leading-[inherit] font-normal text-muted-foreground">
               (Include)
             </span>
@@ -545,7 +684,7 @@ function ReusableCheckbox({
               id={`${id}-description`}
               className="text-xs text-muted-foreground"
             >
-              Export length: {count} student{count < 1 && <span>'s</span>}
+              Application count: {count}
             </p>
           )}
         </div>

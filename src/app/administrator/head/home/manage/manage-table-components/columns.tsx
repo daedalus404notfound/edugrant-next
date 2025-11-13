@@ -22,37 +22,26 @@ import { TourStep } from "@/components/tour-2/tour-step";
 import Link from "next/link";
 import { useTourContext } from "@/components/tour-2/tour-provider";
 export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
-  // {
-  //   accessorKey: "title",
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader className="pl-4" column={column} title="Title" />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const { title, logo } = row.original;
-  //     return (
-  //       <div className="flex gap-2  items-center pl-4">
-  //         <Avatar>
-  //           <AvatarImage className="object-cover" src={logo} />
-  //           <AvatarFallback>
-  //             {row.original.Scholarship_Provider.name.slice(0, 1)}
-  //           </AvatarFallback>
-  //         </Avatar>
-  //         <div>
-  //           <div className="font-medium truncate">{title}</div>
-  //         </div>
-  //       </div>
-  //     );
-  //   },
-  // },
+  {
+    id: "index",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="pl-4" column={column} title="#" />
+    ),
+    cell: ({ row, table }) => {
+      const pageIndex = table.getState().pagination.pageIndex;
+      const pageSize = table.getState().pagination.pageSize;
+      return (
+        <div className="pl-4">{pageIndex * pageSize + row.index + 1}.</div>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorFn: (row) => row.title,
     id: "title",
     header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Scholarship"
-        className="pl-4"
-      />
+      <DataTableColumnHeader column={column} title="Scholarship" />
     ),
     cell: ({ row }) => {
       const scholarship = row.original;
@@ -61,7 +50,7 @@ export const columns = (status: string): ColumnDef<scholarshipFormData>[] => [
       const content = (
         <Link
           href={`/administrator/head/home/manage/${scholarship.scholarshipId}`}
-          className="pl-4 flex gap-2 items-center"
+          className="flex gap-2 items-center"
         >
           <Avatar>
             <AvatarImage className="object-cover" src={scholarship.logo} />

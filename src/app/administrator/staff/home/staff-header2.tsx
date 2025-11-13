@@ -126,28 +126,6 @@ export default function DynamicHeaderAdmin({
               </PopoverContent>
             </Popover>
           </TourStep>
-          <ModeToggle />
-          <DeleteDialog
-            open={openLogout}
-            onOpenChange={setOpenLogout}
-            onConfirm={handleLogout}
-            confirmText="Log out"
-            confirmTextLoading="Please wait..."
-            loading={loadingLogout}
-            title="Logout?"
-            red={false}
-            description="Are you sure you want to log out of your account?"
-            cancelText="Stay Logged In"
-            trigger={
-              <Button
-                onClick={() => setOpenLogout(true)}
-                variant="secondary"
-                className="rounded-full"
-              >
-                <LogOut />
-              </Button>
-            }
-          />
         </div>
         <ModeToggle />{" "}
         <DeleteDialog

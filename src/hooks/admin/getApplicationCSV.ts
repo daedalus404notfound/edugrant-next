@@ -200,6 +200,8 @@ type FetchApplicationCSVParams = {
   filters?: string;
   status?: string;
   filename?: string;
+  rangeFilter: { start: string; end: string };
+  gender: string;
 };
 
 // 🧠 The mutation function
@@ -208,12 +210,15 @@ async function fetchApplicationCSV({
   filters,
   status,
   filename,
+  rangeFilter,
+  gender,
 }: FetchApplicationCSVParams) {
   const params = new URLSearchParams();
   if (dataSelections) params.append("dataSelections", dataSelections);
   if (filters) params.append("filters", filters);
   if (status) params.append("status", status);
-
+  if (gender) params.append("gender", gender);
+  if (rangeFilter) params.append("AtoZ", JSON.stringify(rangeFilter));
   const endpoint = `${
     process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
   }/downloadApplicationCSV?${params.toString()}`;

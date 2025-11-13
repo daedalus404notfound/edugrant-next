@@ -13,6 +13,21 @@ import { TourStep } from "@/components/tour-2/tour-step";
 import { AdminProfileFormData } from "@/hooks/head-profile-edit";
 
 export const columns: ColumnDef<AdminProfileFormData>[] = [
+  {
+    id: "index",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="pl-4" column={column} title="#" />
+    ),
+    cell: ({ row, table }) => {
+      const pageIndex = table.getState().pagination.pageIndex;
+      const pageSize = table.getState().pagination.pageSize;
+      return (
+        <div className="pl-4">{pageIndex * pageSize + row.index + 1}.</div>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
   // {
   //   id: "select",
   //   header: ({ table }) => (

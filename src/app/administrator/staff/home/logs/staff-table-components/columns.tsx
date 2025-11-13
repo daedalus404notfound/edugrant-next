@@ -12,6 +12,21 @@ import { Calendar } from "@/components/ui/calendar";
 import { Ban, Check, MessagesSquare, X } from "lucide-react";
 
 export const columns: ColumnDef<AllStaffLogsType>[] = [
+  {
+    id: "index",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="pl-4" column={column} title="#" />
+    ),
+    cell: ({ row, table }) => {
+      const pageIndex = table.getState().pagination.pageIndex;
+      const pageSize = table.getState().pagination.pageSize;
+      return (
+        <div className="pl-4">{pageIndex * pageSize + row.index + 1}.</div>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
   // {
   //   id: "select",
   //   header: ({ table }) => (
@@ -45,16 +60,12 @@ export const columns: ColumnDef<AllStaffLogsType>[] = [
     accessorFn: (row) => row.application,
     id: "student",
     header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title="Processed Student"
-        className="pl-4"
-      />
+      <DataTableColumnHeader column={column} title="Processed Student" />
     ),
     cell: ({ row }) => {
       const student = row.original.application.Student;
       return (
-        <div className="flex gap-2 items-center pl-4">
+        <div className="flex gap-2 items-center ">
           <Avatar>
             <AvatarImage
               className="object-cover"

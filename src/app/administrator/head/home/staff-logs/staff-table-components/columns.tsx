@@ -40,7 +40,21 @@ export const columns: ColumnDef<AllStaffLogsType>[] = [
   //   enableSorting: true,
   //   enableHiding: false,
   // },
-
+  {
+    id: "index",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="pl-4" column={column} title="#" />
+    ),
+    cell: ({ row, table }) => {
+      const pageIndex = table.getState().pagination.pageIndex;
+      const pageSize = table.getState().pagination.pageSize;
+      return (
+        <div className="pl-4">{pageIndex * pageSize + row.index + 1}.</div>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorFn: (row) => row.ISPSU_Staff,
     id: "fName",

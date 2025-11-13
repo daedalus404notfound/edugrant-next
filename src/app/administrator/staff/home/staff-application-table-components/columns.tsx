@@ -15,10 +15,25 @@ import { TourStep } from "@/components/tour-2/tour-step";
 
 export const columns: ColumnDef<ApplicationFormData>[] = [
   {
+    id: "index",
+    header: ({ column }) => (
+      <DataTableColumnHeader className="pl-4" column={column} title="#" />
+    ),
+    cell: ({ row, table }) => {
+      const pageIndex = table.getState().pagination.pageIndex;
+      const pageSize = table.getState().pagination.pageSize;
+      return (
+        <div className="pl-4">{pageIndex * pageSize + row.index + 1}.</div>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+  },
+  {
     accessorFn: (row) => row.Student.fName,
     id: "fName",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Student" className="pl-4" />
+      <DataTableColumnHeader column={column} title="Student" />
     ),
     cell: ({ row }) => {
       const student = row.original.Student;
@@ -26,7 +41,7 @@ export const columns: ColumnDef<ApplicationFormData>[] = [
       const content = (
         <Link
           href={`/administrator/staff/home/application/${row.original.applicationId}`}
-          className="flex gap-2 items-center pl-4   "
+          className="flex gap-2 items-center  "
         >
           <Avatar>
             <AvatarImage
