@@ -422,15 +422,19 @@ export default function DocumentSection({
                   .map((doc, index) => {
                     const decisionMessage =
                       phaseDecision?.message?.[doc.document];
+                    const interviewDecisionMessage =
+                      phaseDecisionInterview?.message?.[doc.document];
                     const currentStatus =
                       reviewData[doc.document]?.status ||
                       doc.rejectMessage?.status ||
                       decisionMessage?.status ||
+                      interviewDecisionMessage?.status ||
                       "";
                     const currentComment =
                       reviewData[doc.document]?.comment ||
                       doc.rejectMessage?.comment ||
                       decisionMessage?.comment ||
+                      interviewDecisionMessage?.comment ||
                       "";
 
                     return (
@@ -520,6 +524,7 @@ export default function DocumentSection({
                               !!doc.rejectMessage?.status ||
                               !doc.fileFormat ||
                               !!decisionMessage ||
+                              data?.status === "INTERVIEW" ||
                               data?.status === "BLOCKED"
                             }
                           >
@@ -557,6 +562,7 @@ export default function DocumentSection({
                               !!doc.rejectMessage?.status ||
                               !doc.fileFormat ||
                               !!decisionMessage ||
+                              data?.status === "INTERVIEW" ||
                               data?.status === "BLOCKED"
                             }
                           >
@@ -579,6 +585,7 @@ export default function DocumentSection({
                               !!doc.rejectMessage?.status ||
                               !doc.fileFormat ||
                               !!decisionMessage ||
+                              data?.status === "INTERVIEW" ||
                               data?.status === "BLOCKED"
                             }
                             onChange={(e) =>
