@@ -76,7 +76,7 @@ export default function UploadDocs({
   setApplying: (applying: boolean) => void;
   HandleCloseDrawer: (close: boolean) => void;
 }) {
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const scholarId = data.scholarshipId;
   const [completedCount, setCompletedCount] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -129,7 +129,6 @@ export default function UploadDocs({
   };
 
   const onSubmit = async (data: FormData) => {
-  
     try {
       setLoading(true);
       setDisable(true);
@@ -170,6 +169,9 @@ export default function UploadDocs({
         setApplying(false);
         setLoading(false);
         HandleCloseDrawer(false);
+        queryClient.invalidateQueries({
+          queryKey: ["scholarship"],
+        });
         queryClient.invalidateQueries({
           queryKey: ["scholarshipData"],
         });
@@ -227,6 +229,12 @@ export default function UploadDocs({
         setApplying(false);
         setLoading(false);
         HandleCloseDrawer(false);
+        queryClient.invalidateQueries({
+          queryKey: ["scholarship"],
+        });
+        queryClient.invalidateQueries({
+          queryKey: ["scholarshipData"],
+        });
       }
     } catch (error) {
       if (axios.isAxiosError<ApiErrorResponse>(error)) {
