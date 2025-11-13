@@ -85,6 +85,10 @@ export default function DocumentSection({
     ? data?.submittedDocuments?.[phaseSelector]?.Application_Decision
     : null;
 
+  const phaseDecisionInterview = phaseSelector
+    ? data?.submittedDocuments?.[phaseSelector]?.Interview_Decision
+    : null;
+
   const [open, setOpen] = useState(false);
 
   // PARA MAGREFLECT PHASE SA COMBOBOX
@@ -187,15 +191,19 @@ export default function DocumentSection({
                 .map((doc, index) => {
                   const decisionMessage =
                     phaseDecision?.message?.[doc.document];
+                  const interviewDecisionMessage =
+                    phaseDecisionInterview?.message?.[doc.document];
                   const currentStatus =
                     reviewData[doc.document]?.status ||
                     doc.rejectMessage?.status ||
                     decisionMessage?.status ||
+                    interviewDecisionMessage?.status ||
                     "";
                   const currentComment =
                     reviewData[doc.document]?.comment ||
                     doc.rejectMessage?.comment ||
                     decisionMessage?.comment ||
+                    interviewDecisionMessage?.comment ||
                     "";
 
                   return (

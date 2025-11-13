@@ -142,7 +142,7 @@ export default function DocumentDetails({
               variant="secondary"
               className="absolute z-10 bottom-0 right-0 uppercase"
             >
-              {status || "PENDING"}
+              {!supabasePath ? "N/A" : status || "PENDING"}
             </Badge>
           </div>
           <p className=" text-left text-sm">{title}</p>

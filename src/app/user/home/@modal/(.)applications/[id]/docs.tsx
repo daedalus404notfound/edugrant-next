@@ -86,6 +86,10 @@ export default function DocsStudent({ data, loading }: DocsStudentProps) {
     ? data?.submittedDocuments?.[phaseSelector]?.Application_Decision
     : null;
 
+  const phaseDecisionInterview = phaseSelector
+    ? data?.submittedDocuments?.[phaseSelector]?.Interview_Decision
+    : null;
+
   const [open, setOpen] = useState(false);
 
   // PARA MAGREFLECT PHASE SA COMBOBOX
@@ -137,15 +141,21 @@ export default function DocsStudent({ data, loading }: DocsStudentProps) {
             ))
           : phaseData &&
             phaseData.map((meow) => {
+              const interviewDecision =
+                phaseDecisionInterview?.message?.[meow.document];
               const decisionMessage = phaseDecision?.message?.[meow.document];
               const currentStatus =
-                meow.rejectMessage?.status || decisionMessage?.status || "";
+                interviewDecision?.status ??
+                (decisionMessage?.status || "PENDING");
               const currentComment =
-                meow.rejectMessage?.comment || decisionMessage?.comment || "";
+                interviewDecision?.comment ?? decisionMessage?.comment;
+
               const requiredFormats =
                 data?.Scholarship?.documents?.[
                   phaseSelector || "phase-1"
                 ]?.find((doc) => doc.label === meow.document)?.formats || [];
+
+              console.log("currentComment", currentComment);
               return (
                 <DocumentDetails
                   key={meow.document}

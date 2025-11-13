@@ -41,6 +41,7 @@ const ApplicationDecisionSchema = z.object({
 const SubmittedDocumentPhaseSchema = z.object({
   documents: z.array(documentSchema),
   Application_Decision: ApplicationDecisionSchema,
+  Interview_Decision: ApplicationDecisionSchema,
 });
 
 const ApplicationSchema = z.object({

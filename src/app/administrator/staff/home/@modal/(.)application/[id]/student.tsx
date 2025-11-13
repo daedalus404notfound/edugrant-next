@@ -11,6 +11,8 @@ import { Separator } from "@/components/ui/separator";
 export default function StudentStaff(data: ApplicationFormData | null) {
   const personalInformation = getPersonalInformation(data);
   const academicInformation = getAcademicInformation(data);
+
+  console.log("personalInformation", personalInformation);
   return (
     <div className="space-y-10">
       <div className="space-y-6">
