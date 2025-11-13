@@ -160,7 +160,7 @@ export default function DocsStudent({ data, loading }: DocsStudentProps) {
                   scholashipId={data?.Scholarship.scholarshipId}
                   disabled={
                     data?.Scholarship.deadline
-                      ? Date.now() <=
+                      ? Date.now() >
                         new Date(data.Scholarship.deadline).getTime()
                       : false
                   }

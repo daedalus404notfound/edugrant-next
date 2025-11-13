@@ -163,6 +163,16 @@ export const getPersonalInformation = (data: ApplicationFormData | null) => [
     icon: Mail,
     value: data?.Student.Account.email ?? "",
   },
+  {
+    label: "PWD",
+    icon: Mail,
+    value: data?.Student.PWD ?? "N/A",
+  },
+  {
+    label: "Indigenous",
+    icon: Mail,
+    value: data?.Student.indigenous ?? "N/A",
+  },
 ];
 
 export const getAcademicInformation = (data: ApplicationFormData | null) => [
