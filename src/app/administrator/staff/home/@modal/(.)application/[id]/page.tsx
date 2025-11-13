@@ -72,13 +72,20 @@ export default function InterceptReviewApplicants() {
   console.log("requiredLastPhaseDocuments", requiredLastPhaseDocuments);
 
   // KUKUNIN APPLICATION DECISION SA NAPILING PHASE
-  const phaseDecision = getLastPhase
+  const applicationPhaseDecision = getLastPhase
     ? data?.submittedDocuments?.[getLastPhase]?.Application_Decision
     : null;
-
+  const interviewPhaseDecision = getLastPhase
+    ? data?.submittedDocuments?.[getLastPhase]?.Interview_Decision
+    : null;
   const allPhaseDecision = submittedDocuments.map(
     (phaseKey) => data?.submittedDocuments?.[phaseKey]?.Application_Decision
   );
+
+  // Check if already reviewed (e.g. Interview_Decision.message exists)
+  const alreadyReviewed =
+    !!interviewPhaseDecision?.message &&
+    Object.keys(interviewPhaseDecision.message).length > 0;
 
   const reviewedDocs = lastPhaseDocuments.filter((doc) => {
     const hasExistingStatus = doc.rejectMessage?.status;
@@ -96,10 +103,6 @@ export default function InterceptReviewApplicants() {
   });
 
   const reviewCheckpoint = requiredLength !== reviewedDocs;
-
-  console.log("phaseDecision", phaseDecision);
-  console.log("reviewData", reviewData);
-  console.log("allPhaseDecision", allPhaseDecision);
 
   const HandleCloseDrawer = (value: boolean) => {
     setOpen(value);
@@ -261,7 +264,10 @@ export default function InterceptReviewApplicants() {
                         cancelText="Cancel"
                         trigger={
                           <Button
-                            disabled={reviewCheckpoint || isThereRejected}
+                            disabled={
+                              !alreadyReviewed &&
+                              (reviewCheckpoint || isThereRejected)
+                            }
                             onClick={() => setOpenApprove(true)}
                           >
                             <UserRoundCheck /> Approve Application
@@ -288,9 +294,10 @@ export default function InterceptReviewApplicants() {
                       trigger={
                         <Button
                           disabled={
-                            data?.status === "APPROVED" ||
-                            data?.status === "DECLINED" ||
-                            reviewCheckpoint
+                            !alreadyReviewed &&
+                            (data?.status === "APPROVED" ||
+                              data?.status === "DECLINED" ||
+                              reviewCheckpoint)
                           }
                           onClick={() => setOpenReject(true)}
                           variant="destructive"
