@@ -294,6 +294,8 @@ export default function DocumentSection({
                             !doc.fileFormat ||
                             !!decisionMessage ||
                             data?.status === "INTERVIEW" ||
+                            data?.status === "APPROVED" ||
+                            data?.status === "DECLINED" ||
                             data?.status === "BLOCKED"
                           }
                         >
@@ -332,6 +334,8 @@ export default function DocumentSection({
                             !doc.fileFormat ||
                             !!decisionMessage ||
                             data?.status === "INTERVIEW" ||
+                            data?.status === "APPROVED" ||
+                            data?.status === "DECLINED" ||
                             data?.status === "BLOCKED"
                           }
                         >
@@ -355,6 +359,8 @@ export default function DocumentSection({
                             !doc.fileFormat ||
                             !!decisionMessage ||
                             data?.status === "INTERVIEW" ||
+                            data?.status === "APPROVED" ||
+                            data?.status === "DECLINED" ||
                             data?.status === "BLOCKED"
                           }
                           onChange={(e) =>

@@ -62,10 +62,15 @@ export default function ReviewBody({
   // SETTER NG PHASE KEY
 
   // KUKUNIN APPLICATION DECISION SA NAPILING PHASE
-  const phaseDecision = getLastPhase
+  const applicationPhaseDecision = getLastPhase
     ? data?.submittedDocuments?.[getLastPhase]?.Application_Decision
     : null;
 
+  const interviewPhaseDecision = getLastPhase
+    ? data?.submittedDocuments?.[getLastPhase]?.Interview_Decision
+    : null;
+
+  const phaseDecision = interviewPhaseDecision ?? applicationPhaseDecision;
   const allPhaseDecision = submittedDocuments.map(
     (phaseKey) => data?.submittedDocuments?.[phaseKey]?.Application_Decision
   );
