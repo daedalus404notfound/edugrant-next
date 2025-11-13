@@ -37,6 +37,27 @@ import {
 import { AnimatePresence, motion } from "motion/react";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+const fieldLabels: Record<string, string> = {
+  status: "Application Status",
+  title: "Scholarship Title",
+  name: "Sponsor Name",
+  fName: "First Name",
+  lName: "Last Name",
+  mName: "Middle Name",
+  contactNumber: "Contact Number",
+  gender: "Gender",
+  address: "Address",
+  indigenous: "Indigenous",
+  PWD: "PWD",
+  institute: "Institute",
+  course: "Course",
+  year: "Year",
+  section: "Section",
+  dateOfBirth: "Date of Birth",
+  schoolId: "School ID",
+  email: "Email",
+};
+
 export default function GenerateReport() {
   const [selectedFilters, setSelectedFilters] = useState<
     Record<string, string[]>
@@ -210,9 +231,10 @@ export default function GenerateReport() {
                     <TimelineIndicator />
                   </TimelineHeader>
                   <TimelineContent className="flex justify-between items-center">
-                    cription: "Filter applicants by their current application
-                    status, such as Pending, Approved, or Rejected.
+                    Filter applicants by their current application status, such
+                    as Pending, Approved, or Rejected.
                   </TimelineContent>
+
                   <div className="grid grid-cols-3 gap-3 mt-5 ">
                     {status?.map((meow) => (
                       <ReusableCheckbox
@@ -674,7 +696,7 @@ function ReusableCheckbox({
             htmlFor={id}
             className="capitalize break-words flex items-start"
           >
-            <h1 className="line-clamp-1">{title}</h1>
+            <h1 className="line-clamp-1"> {fieldLabels[title] || title}</h1>
             <span className="text-xs leading-[inherit] font-normal text-muted-foreground">
               (Include)
             </span>
@@ -684,7 +706,7 @@ function ReusableCheckbox({
               id={`${id}-description`}
               className="text-xs text-muted-foreground"
             >
-              Application count: {count}
+              Student count: {count}
             </p>
           )}
         </div>
