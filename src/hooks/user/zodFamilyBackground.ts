@@ -27,7 +27,7 @@ export const familyBackgroundSchema = z
     guardianContactNumber: z.string().optional(),
     guardianOccupation: z.string().optional(),
     guardianHighestEducation: z.string().optional(),
-
+    guardianTotalParentsTaxableIncome: z.string().optional(),
     siblings: z
       .array(
         z.object({
@@ -92,7 +92,8 @@ export function useFamilyBackgroundForm(
       guardianContactNumber: data?.guardianContactNumber ?? "",
       guardianOccupation: data?.guardianOccupation ?? "",
       guardianHighestEducation: data?.guardianHighestEducation ?? "",
-
+      guardianTotalParentsTaxableIncome:
+        data?.guardianTotalParentsTaxableIncome ?? "",
       siblings: data?.siblings || [],
     }),
     [data]

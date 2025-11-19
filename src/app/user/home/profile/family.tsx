@@ -144,6 +144,7 @@ export default function FamilyForm() {
       fbForm.setValue("guardianContactNumber", "N/A");
       fbForm.setValue("guardianOccupation", "N/A");
       fbForm.setValue("guardianHighestEducation", "N/A");
+      fbForm.setValue("guardianTotalParentsTaxableIncome", "N/A");
     } else {
       // Reset to empty or previous data if available
       fbForm.setValue(
@@ -165,6 +166,11 @@ export default function FamilyForm() {
       fbForm.setValue(
         "guardianHighestEducation",
         data?.userData.Student.familyBackground.guardianHighestEducation ?? ""
+      );
+      fbForm.setValue(
+        "guardianTotalParentsTaxableIncome",
+        data?.userData.Student.familyBackground
+          .guardianTotalParentsTaxableIncome ?? ""
       );
     }
   }, [checked, fbForm, data]);
@@ -649,6 +655,21 @@ export default function FamilyForm() {
                           <SelectItem value="N/A">N/A</SelectItem>
                         </SelectContent>
                       </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={fbForm.control}
+                name="guardianTotalParentsTaxableIncome"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-muted-foreground">
+                      Taxable Income
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={checked} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

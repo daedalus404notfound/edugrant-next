@@ -69,6 +69,9 @@ export const addScholarshipApi = async (data: FamilyBackgroundFormData) => {
     ...(data.guardianHighestEducation && {
       guardianHighestEducation: data.guardianHighestEducation,
     }),
+    ...(data.guardianTotalParentsTaxableIncome && {
+      guardianTotalParentsTaxableIncome: data.guardianTotalParentsTaxableIncome,
+    }),
 
     ...(data.siblings &&
       data.siblings.length > 0 && {

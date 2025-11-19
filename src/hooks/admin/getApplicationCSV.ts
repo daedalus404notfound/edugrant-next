@@ -218,7 +218,9 @@ async function fetchApplicationCSV({
   if (filters) params.append("filters", filters);
   if (status) params.append("status", status);
   if (gender) params.append("gender", gender);
-  if (rangeFilter) params.append("AtoZ", JSON.stringify(rangeFilter));
+  if (rangeFilter.start !== "" || rangeFilter.end !== "") {
+    params.append("AtoZ", JSON.stringify(rangeFilter));
+  }
   const endpoint = `${
     process.env.NEXT_PUBLIC_ADMINISTRATOR_URL
   }/downloadApplicationCSV?${params.toString()}`;

@@ -277,7 +277,7 @@ export default function RegisterStudent() {
                         name="pwd"
                         label="Person with Disability (PWD)"
                         checkboxLabel="Person with Disability (PWD)"
-                        placeholder="Specify your Indigenous group (if applicable)"
+                        placeholder="Specify your disabilty (if applicable)"
                         icon={Accessibility}
                         motionProps={{
                           transition: { duration: 0.3, delay: 0.5 },

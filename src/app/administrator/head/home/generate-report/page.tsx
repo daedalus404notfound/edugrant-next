@@ -64,7 +64,7 @@ export default function GenerateReport() {
   >({});
   const query = useGetCSVDisplay(selectedFilters);
   const [filename, setFilename] = useState("");
-  const [rangeFilter, setRangeFilter] = useState({ start: "", end: "" });
+  const [rangeFilter, setRangeFilter] = useState({ start: "A", end: "Z" });
   const [gender, setGender] = useState("");
   const [error, setError] = useState("");
   const selectedExport = [
@@ -519,6 +519,7 @@ export default function GenerateReport() {
                               onValueChange={(value) =>
                                 handleSelectChange("start", value)
                               }
+                              value={rangeFilter.start}
                             >
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder="From (A) Optional" />
@@ -540,6 +541,7 @@ export default function GenerateReport() {
                               onValueChange={(value) =>
                                 handleSelectChange("end", value)
                               }
+                              value={rangeFilter.end}
                             >
                               <SelectTrigger className="w-full">
                                 <SelectValue placeholder="To (Z) Optional" />

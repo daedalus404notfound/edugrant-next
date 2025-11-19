@@ -93,7 +93,7 @@ export const StudentSchema = z.object({
     guardianContactNumber: z.string(),
     guardianOccupation: z.string().optional(),
     guardianHighestEducation: z.string().optional(),
-
+    guardianTotalParentsTaxableIncome: z.string().optional(),
     siblings: z
       .array(
         z.object({
@@ -196,6 +196,10 @@ export function useProfileForm(data?: UserFormData | null) {
             data?.Student?.familyBackground?.guardianOccupation || "",
           guardianHighestEducation:
             data?.Student?.familyBackground?.guardianHighestEducation || "",
+          guardianTotalParentsTaxableIncome:
+            data?.Student?.familyBackground
+              ?.guardianTotalParentsTaxableIncome || "",
+
           siblings: data?.Student?.familyBackground?.siblings || [],
         },
         Account: {
@@ -237,7 +241,6 @@ export function useProfileForm(data?: UserFormData | null) {
     });
     return () => subscription.unsubscribe();
   }, [form, defaultValues]);
-
 
   return {
     form,
