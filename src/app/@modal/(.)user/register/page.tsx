@@ -91,11 +91,14 @@ export default function RegisterStudent() {
       }, 250);
     }
   };
+
+  const [indigenous, setIndigenous] = useState(false);
+  const [pwd, setPwd] = useState(false);
   const { timeLeft, start } = useCountdown();
   const { sendCode, verifyCode, resendCode } = RegisterUserHandler();
   const { personalForm, accountForm, otpForm, personalData, accountData } =
     useRegisterUser();
-  const [stepper, setStepper] = useState(2);
+  const [stepper, setStepper] = useState(1);
 
   const handlePrevStepper = () => {
     setStepper((prev) => prev - 1);
@@ -321,6 +324,8 @@ export default function RegisterStudent() {
                         motionProps={{
                           transition: { duration: 0.3, delay: 0.4 },
                         }}
+                        checked={indigenous}
+                        onCheckedChange={setIndigenous}
                       />
                       <FormCheckboxInputField
                         control={personalForm.control}
@@ -329,6 +334,8 @@ export default function RegisterStudent() {
                         checkboxLabel="Person with Disability (PWD)"
                         placeholder="Specify your disabilty (if applicable)"
                         icon={Accessibility}
+                        checked={pwd}
+                        onCheckedChange={setPwd}
                         motionProps={{
                           transition: { duration: 0.3, delay: 0.5 },
                         }}

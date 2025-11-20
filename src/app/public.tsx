@@ -27,6 +27,7 @@ import {
   ChevronRight,
   Clock,
   Megaphone,
+  Settings,
   X,
 } from "lucide-react";
 import { format } from "date-fns";
@@ -69,19 +70,13 @@ const AnnouncementSkeleton = () => (
   </div>
 );
 
-export default function PublicAnnouncement({
-  open = false,
-  setOpen,
-}: {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-}) {
+export default function PublicAnnouncement() {
   const router = useRouter();
   const [full, setFull] = useState(false);
   const [selectedAnnouncement, setSelectedAnnouncement] =
     useState<AnnouncementFormDataGet>(INITIAL_ANNOUNCEMENT);
   const [search, setSearch] = useState("");
-
+  const [open, setOpen] = useState(false);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 3,
@@ -120,11 +115,13 @@ export default function PublicAnnouncement({
 
   const handleBackToList = () => {
     setFull(false);
+    setOpen(false);
     setSelectedAnnouncement(INITIAL_ANNOUNCEMENT);
   };
 
   const handleViewDetails = (announcement: AnnouncementFormDataGet) => {
     setFull(true);
+    setOpen(true);
     setSelectedAnnouncement(announcement);
   };
   useEffect(() => {
@@ -135,114 +132,110 @@ export default function PublicAnnouncement({
   }, [open]);
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerContent className="w-[98%] max-w-4xl mx-auto border-0 p-1 lg:p-2 bg-background outline-0">
-        <DrawerHeader className="sr-only">
-          <DrawerTitle>Announcements</DrawerTitle>
-          <DrawerDescription>View all public announcements</DrawerDescription>
-        </DrawerHeader>
-        {/* <ModalHeader text="Announcements" HandleCloseDrawer={setOpen} /> */}
-        {full ? (
-          <ScrollArea className=" max-h-[70dvh] h-full">
-            <div className="bg-card/30 p-4 rounded-md">
-              <TipTapViewer content={selectedAnnouncement?.description} />
-            </div>
-          </ScrollArea>
-        ) : (
-          <div className="lg:space-y-4 space-y-2">
-            {isLoading ? (
-              <>
-                {[...Array(3)].map((_, i) => (
-                  <AnnouncementSkeleton key={i} />
-                ))}
-              </>
-            ) : data.length === 0 ? (
-              <NoDataFound />
-            ) : (
-              data.map((announcement, index) => (
-                <div
-                  key={announcement.announcementId}
-                  onClick={() => handleViewDetails(announcement)}
-                  className="bg-gradient-to-br dark:to-card/70 to-card/50 dark:from-card/50 from-card/30 overflow-hidden relative shadow rounded-md cursor-pointer group hover:bg-card transition-all duration-200"
-                >
-                  <div className="p-4">
-                    <div className="flex justify-between items-start gap-3">
-                      <h3 className="line-clamp-2 group-hover:text-green-700  transition-all duration-200 font-medium">
-                        {announcement.title || "Untitled Announcement"}
-                      </h3>
-                      <div className="flex items-center gap-1.5">
-                        {announcement.tags.data
-                          .slice(0, 1)
-                          .map((tag, tagIndex) => (
-                            <Badge
-                              key={`${tag}-${tagIndex}`}
-                              className="bg-green-700/20 text-green-600"
-                            >
-                              {tag}
-                            </Badge>
-                          ))}
-
-                        {/* On mobile: show +count */}
-                        {announcement.tags.data.length > 1 && (
-                          <Badge className="bg-muted text-muted-foreground sm:hidden">
-                            +{announcement.tags.data.length - 1}
+    <>
+      <div className="w-full py-25 lg:px-6 space-y-12">
+        <motion.div className="flex flex-col">
+          <h2 className="lg:text-3xl text-xl font-semibold flex gap-3 items-center">
+            Annoucements <Megaphone className="h-4 w-4 lg:h-6 lg:w-6" />
+          </h2>
+          {/* <p className="mt-2 lg:text-base text-sm text-muted-foreground max-w-3xl">
+          Simple, secure, and convenient scholarship management for students.
+        </p> */}
+        </motion.div>
+        <div className="lg:space-y-4 space-y-2">
+          {isLoading ? (
+            <>
+              {[...Array(3)].map((_, i) => (
+                <AnnouncementSkeleton key={i} />
+              ))}
+            </>
+          ) : data.length === 0 ? (
+            <NoDataFound />
+          ) : (
+            data.map((announcement, index) => (
+              <div
+                key={announcement.announcementId}
+                onClick={() => handleViewDetails(announcement)}
+                className="bg-gradient-to-br dark:to-card/70 to-card/50 dark:from-card/50 from-card/30 overflow-hidden relative shadow rounded-md cursor-pointer group hover:bg-card transition-all duration-200"
+              >
+                <div className="p-4 lg:p-6">
+                  <div className="flex justify-between items-start gap-3">
+                    <h3 className="line-clamp-2 group-hover:text-green-700  transition-all duration-200 font-medium">
+                      {announcement.title || "Untitled Announcement"}
+                    </h3>
+                    <div className="flex items-center gap-1.5">
+                      {announcement.tags.data
+                        .slice(0, 1)
+                        .map((tag, tagIndex) => (
+                          <Badge
+                            key={`${tag}-${tagIndex}`}
+                            className="bg-green-700/20 text-green-600"
+                          >
+                            {tag}
                           </Badge>
-                        )}
+                        ))}
 
-                        {/* On desktop: show all tags */}
-                        <div className="hidden sm:flex items-center gap-1.5 flex-wrap">
-                          {announcement.tags.data.map((tag, tagIndex) => (
-                            <Badge
-                              key={`desktop-${tag}-${tagIndex}`}
-                              className="bg-green-700/20 text-green-600"
-                            >
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
+                      {/* On mobile: show +count */}
+                      {announcement.tags.data.length > 1 && (
+                        <Badge className="bg-muted text-muted-foreground sm:hidden">
+                          +{announcement.tags.data.length - 1}
+                        </Badge>
+                      )}
+
+                      {/* On desktop: show all tags */}
+                      <div className="hidden sm:flex items-center gap-1.5 flex-wrap">
+                        {announcement.tags.data.map((tag, tagIndex) => (
+                          <Badge
+                            key={`desktop-${tag}-${tagIndex}`}
+                            className="bg-green-700/20 text-green-600"
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
                       </div>
                     </div>
-                    <div
-                      className="line-clamp-2 text-sm text-muted-foreground mt-3"
-                      // sanitize before inserting to avoid XSS:
-                      dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(
-                          announcement.description || ""
-                        ),
-                      }}
-                    />
+                  </div>
+                  <div
+                    className="line-clamp-2 text-sm text-muted-foreground mt-3"
+                    // sanitize before inserting to avoid XSS:
+                    dangerouslySetInnerHTML={{
+                      __html: DOMPurify.sanitize(
+                        announcement.description || ""
+                      ),
+                    }}
+                  />
+                </div>
+
+                <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
+
+                <div className="lg:grid grid-cols-2 lg:grid-cols-3 bg-card/50 relative z-10 p-2 lg:p-4 hidden">
+                  <div className="space-y-1.5 pl-4">
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                      <h4 className="text-xs text-muted-foreground">
+                        Published Date
+                      </h4>
+                    </div>
+                    <p className="font-medium text-sm text-foreground">
+                      {announcement?.dateCreated &&
+                        format(announcement.dateCreated, "yyyy/MM/dd")}
+                    </p>
                   </div>
 
-                  <Separator className="bg-gradient-to-r from-transparent via-border to-transparent hidden lg:block" />
-
-                  <div className="lg:grid grid-cols-2 lg:grid-cols-3 bg-card/50 relative z-10 p-2 hidden">
-                    <div className="space-y-1.5 pl-4">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
-                        <h4 className="text-xs text-muted-foreground">
-                          Published Date
-                        </h4>
-                      </div>
-                      <p className="font-medium text-sm text-foreground">
-                        {announcement?.dateCreated &&
-                          format(announcement.dateCreated, "yyyy/MM/dd")}
-                      </p>
+                  <div className="space-y-1.5 pl-4 border-l ">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                      <h4 className="text-xs text-muted-foreground">
+                        Published Time
+                      </h4>
                     </div>
+                    <p className="font-medium text-sm text-foreground">
+                      {announcement?.dateCreated &&
+                        format(announcement.dateCreated, "p")}
+                    </p>
+                  </div>
 
-                    <div className="space-y-1.5 pl-4 border-l ">
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
-                        <h4 className="text-xs text-muted-foreground">
-                          Published Time
-                        </h4>
-                      </div>
-                      <p className="font-medium text-sm text-foreground">
-                        {announcement?.dateCreated &&
-                          format(announcement.dateCreated, "p")}
-                      </p>
-                    </div>
-
-                    {/* <div className="flex justify-end items-end col-span-2 lg:col-span-1">
+                  {/* <div className="flex justify-end items-end col-span-2 lg:col-span-1">
                       <Button
                         className="w-full lg:w-auto"
                         size="sm"
@@ -251,62 +244,37 @@ export default function PublicAnnouncement({
                         View Details <ArrowRight className="w-4 h-4" />
                       </Button>
                     </div> */}
-                  </div>
                 </div>
-              ))
-            )}
-          </div>
-        )}
+              </div>
+            ))
+          )}
+        </div>
+      </div>
 
-        <DrawerFooter className="px-0">
-          {meta.totalRows > 3 && !full && (
-            <div className="flex items-center justify-between gap-3">
-              <p
-                className="grow text-sm text-muted-foreground"
-                aria-live="polite"
-              >
-                Page <span className="text-foreground">{meta.page}</span> of{" "}
-                <span className="text-foreground">{meta.totalPage}</span>
-              </p>
+      <Drawer open={open} onOpenChange={setOpen}>
+        <DrawerContent className="w-[98%] max-w-4xl mx-auto border-0 p-1 lg:p-2 bg-background outline-0">
+          <DrawerHeader className="sr-only">
+            <DrawerTitle>Announcements</DrawerTitle>
+            <DrawerDescription>View all public announcements</DrawerDescription>
+          </DrawerHeader>
+          {/* <ModalHeader text="Announcements" HandleCloseDrawer={setOpen} /> */}
 
-              <Pagination className="w-auto">
-                <PaginationContent className="gap-3">
-                  <PaginationItem>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      disabled={meta.page === 1 || isLoading}
-                      onClick={handlePrev}
-                    >
-                      <ChevronLeft /> Previous
-                    </Button>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <Button
-                      size="sm"
-                      disabled={
-                        meta.page === meta.totalPage ||
-                        meta.totalPage === 0 ||
-                        isLoading
-                      }
-                      onClick={handleNext}
-                    >
-                      Next
-                      <ChevronRight />
-                    </Button>
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
+          <ScrollArea className=" max-h-[70dvh] h-full">
+            <div className="bg-card/30 p-4 rounded-md">
+              <TipTapViewer content={selectedAnnouncement?.description} />
             </div>
-          )}
-          {full && (
-            <Button size="sm" onClick={handleBackToList}>
-              <ArrowLeft />
-              Back
-            </Button>
-          )}
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+          </ScrollArea>
+
+          <DrawerFooter className="px-0">
+            {full && (
+              <Button size="sm" onClick={handleBackToList}>
+                <ArrowLeft />
+                Back
+              </Button>
+            )}
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 }

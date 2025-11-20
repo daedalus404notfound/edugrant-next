@@ -602,6 +602,11 @@ export default function DesktopLandingPage() {
           </div>
         </div>
         <div className="mx-auto xl:w-3/4 p-4">
+          <div id="announcements" className="">
+            <PublicAnnouncement />
+          </div>
+          <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
+
           <div id="features" className="">
             <AppSection />
           </div>
@@ -622,10 +627,6 @@ export default function DesktopLandingPage() {
           <AboutTheTeam />
           <Footer />
 
-          <PublicAnnouncement
-            open={openAnnouncement}
-            setOpen={setOpenAnnouncement}
-          />
           <ScrollToTop />
         </div>
       </div>
