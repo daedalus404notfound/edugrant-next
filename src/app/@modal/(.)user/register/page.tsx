@@ -17,6 +17,7 @@ import {
   School,
   UserRound,
   UserRoundCheck,
+  UsersRound,
   VenusAndMars,
 } from "lucide-react";
 import {
@@ -77,6 +78,7 @@ import { FormDateField } from "@/components/input-components/reusable-birthdate"
 import { FormCheckboxInputField } from "@/components/input-components/reusable-checkbox-input";
 import { FormPasswordField } from "@/components/input-components/reusable-password";
 import { FormConfirmPasswordField } from "@/components/input-components/reusable-confimpassword";
+import { FormCheckboxField } from "@/components/input-components/reusable-checkbox-only";
 
 export default function RegisterStudent() {
   const router = useRouter();
@@ -93,7 +95,7 @@ export default function RegisterStudent() {
   const { sendCode, verifyCode, resendCode } = RegisterUserHandler();
   const { personalForm, accountForm, otpForm, personalData, accountData } =
     useRegisterUser();
-  const [stepper, setStepper] = useState(1);
+  const [stepper, setStepper] = useState(2);
 
   const handlePrevStepper = () => {
     setStepper((prev) => prev - 1);
@@ -206,6 +208,18 @@ export default function RegisterStudent() {
                       />
                       <FormInputField
                         control={personalForm.control}
+                        name="prefixName"
+                        label="Prefix Name"
+                        type="text"
+                        icon={CircleUserRound}
+                        disabled={sendCode.isPending}
+                        placeholder="Enter your prefix name (optional)"
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.1 },
+                        }}
+                      />
+                      <FormInputField
+                        control={personalForm.control}
                         name="lastName"
                         label="Last Name"
                         type="text"
@@ -215,6 +229,24 @@ export default function RegisterStudent() {
                         motionProps={{
                           transition: { duration: 0.3, delay: 0.2 },
                         }}
+                      />
+                      <FormSelectField
+                        control={personalForm.control}
+                        name="civilStatus"
+                        label="Civil Status"
+                        placeholder="Select status"
+                        options={[
+                          { label: "Single", value: "single" },
+                          { label: "Married", value: "married" },
+                          { label: "Separated", value: "separated" },
+                          { label: "Widowed", value: "widowed" },
+                          { label: "Live-in", value: "live-in" },
+                        ]}
+                        icon={UsersRound}
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.3 },
+                        }}
+                        enableOthers
                       />
                       <FormPhoneField
                         control={personalForm.control}
@@ -261,6 +293,24 @@ export default function RegisterStudent() {
                           transition: { duration: 0.3, delay: 0.4 },
                         }}
                       />
+                      <FormCheckboxField
+                        control={personalForm.control}
+                        name="dswd"
+                        label="DSWD"
+                        description="Part of DSWD?"
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.4 },
+                        }}
+                      />
+                      <FormCheckboxField
+                        control={personalForm.control}
+                        name="fourPs"
+                        label="4p's"
+                        description="Part of 4ps?"
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.4 },
+                        }}
+                      />
                       <FormCheckboxInputField
                         control={personalForm.control}
                         name="indigenous"
@@ -271,7 +321,7 @@ export default function RegisterStudent() {
                         motionProps={{
                           transition: { duration: 0.3, delay: 0.4 },
                         }}
-                      />{" "}
+                      />
                       <FormCheckboxInputField
                         control={personalForm.control}
                         name="pwd"
@@ -340,6 +390,30 @@ export default function RegisterStudent() {
                           transition: { duration: 0.3, delay: 0.1 },
                         }}
                       />
+                      <FormSelectField
+                        control={accountForm.control}
+                        name="studentType"
+                        label="Student Type"
+                        placeholder="Select Student Type"
+                        options={[
+                          {
+                            label: "Freshmen",
+                            value: "freshmen",
+                          },
+                          {
+                            label: "Transferee",
+                            value: "transferee",
+                          },
+                          {
+                            label: "Second Couse",
+                            value: "secondCourse",
+                          },
+                        ]}
+                        icon={UserRound}
+                        motionProps={{
+                          transition: { duration: 0.3, delay: 0.2 },
+                        }}
+                      />
 
                       <FormInputField
                         control={accountForm.control}
@@ -349,6 +423,7 @@ export default function RegisterStudent() {
                         icon={MailIcon}
                         disabled={sendCode.isPending}
                         placeholder="Enter your email"
+                        className="lg:col-span-2"
                         motionProps={{
                           transition: { duration: 0.3, delay: 0.1 },
                         }}
@@ -358,6 +433,7 @@ export default function RegisterStudent() {
                         control={accountForm.control}
                         name="institute"
                         label="Institute"
+                        enableOthers
                         placeholder="Select Institute"
                         options={[
                           {
@@ -398,6 +474,7 @@ export default function RegisterStudent() {
                         name="course"
                         label="Course"
                         placeholder="Select Course"
+                        enableOthers
                         options={[
                           {
                             label: "BS in Agriculture (Animal Science)",
@@ -505,6 +582,7 @@ export default function RegisterStudent() {
                         name="yearLevel"
                         label="Year Level"
                         placeholder="Select Year Level"
+                        enableOthers
                         options={[
                           { label: "1st Year", value: "1st Year" },
                           { label: "2nd Year", value: "2nd Year" },
@@ -526,6 +604,7 @@ export default function RegisterStudent() {
                         name="section"
                         label="Section"
                         placeholder="Select Section"
+                        enableOthers
                         options={[
                           { label: "Section A", value: "A" },
                           { label: "Section B", value: "B" },

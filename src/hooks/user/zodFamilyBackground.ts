@@ -12,7 +12,12 @@ export const familyBackgroundSchema = z
     fatherOccupation: z.string().min(1, "Required"),
     fatherHighestEducation: z.string().min(1, "Required"),
     fatherStatus: z.string().min(1, "Required"),
-    fatherTotalParentsTaxableIncome: z.string().min(1, "Required"),
+    fatherTotalParentsTaxableIncome: z
+      .string()
+      .min(1, "Required")
+      .refine((val) => val === "N/A" || /^\d+$/.test(val), {
+        message: 'Only numbers or "N/A" are allowed',
+      }),
 
     motherFullName: z.string().min(1, "Required"),
     motherAddress: z.string().min(1, "Required"),
@@ -20,7 +25,12 @@ export const familyBackgroundSchema = z
     motherOccupation: z.string().min(1, "Required"),
     motherHighestEducation: z.string().min(1, "Required"),
     motherStatus: z.string().min(1, "Required"),
-    motherTotalParentsTaxableIncome: z.string().min(1, "Required"),
+    motherTotalParentsTaxableIncome: z
+      .string()
+      .min(1, "Required")
+      .refine((val) => val === "N/A" || /^\d+$/.test(val), {
+        message: 'Only numbers or "N/A" are allowed',
+      }),
 
     guardianFullName: z.string().optional(),
     guardianAddress: z.string().optional(),

@@ -32,6 +32,13 @@ export const sendCodeApi = async ({
       ...(personalData.middleName && {
         studentMiddleName: personalData.middleName,
       }),
+      ...(personalData.prefixName && {
+        prefixName: personalData.prefixName,
+      }),
+      civilStatus: personalData.civilStatus,
+      dswd: personalData.dswd,
+      fourPs: personalData.fourPs,
+      studentType: accountData.studentType,
       studentLastName: personalData.lastName,
       indigenous: personalData.indigenous,
       pwd: personalData.pwd,
@@ -72,6 +79,13 @@ export const verifyCodeApi = async ({
       ...(personalData.middleName && {
         studentMiddleName: personalData.middleName,
       }),
+      ...(personalData.prefixName && {
+        prefixName: personalData.prefixName,
+      }),
+      civilStatus: personalData.civilStatus,
+      dswd: personalData.dswd,
+      fourPs: personalData.fourPs,
+      studentType: accountData.studentType,
       indigenous: personalData.indigenous,
       pwd: personalData.pwd,
       institute: accountData.institute,

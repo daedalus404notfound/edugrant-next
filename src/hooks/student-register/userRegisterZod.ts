@@ -5,6 +5,11 @@ import z from "zod";
 const personalDetailsSchema = z.object({
   firstName: z.string().min(1, "Required"),
   middleName: z.string().optional(),
+  prefixName: z.string().optional(),
+  civilStatus: z.string().optional(),
+  dswd: z.boolean().optional(),
+  fourPs: z.boolean().optional(),
+
   lastName: z.string().min(1, "Required"),
   contactNumber: z
     .string()
@@ -39,6 +44,7 @@ const accountDetailsSchema = z
     confirmPassword: z.string().min(1, "Required"),
 
     course: z.string().min(1, "Required"),
+    studentType: z.string().min(1, "Required"),
     yearLevel: z.string().min(1, "Required"),
     institute: z.string().min(1, "Required"),
     section: z.string().min(1, "Required"),
@@ -63,6 +69,8 @@ export function useRegisterUser() {
     defaultValues: {
       firstName: "",
       middleName: "",
+      civilStatus: "",
+      prefixName: "",
       lastName: "",
       contactNumber: "",
       gender: "",

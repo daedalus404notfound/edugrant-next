@@ -48,6 +48,9 @@ import { useEditUserProfileFamilyBackground } from "@/hooks/user/postProfileFami
 import useAuthenticatedUser from "@/hooks/user/getTokenAuthentication";
 import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { FormInputField } from "@/components/input-components/reusable-input";
+import { FormPhoneField } from "@/components/input-components/reusable-contact-input";
+import { FormSelectField } from "@/components/input-components/reusable-select";
 
 export default function FamilyForm() {
   const mutation = useEditUserProfileFamilyBackground();
@@ -215,6 +218,7 @@ export default function FamilyForm() {
                 Father Information
               </h3>
               <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+
               <FormField
                 control={fbForm.control}
                 name="fatherStatus"
@@ -244,138 +248,83 @@ export default function FamilyForm() {
             </div>
             <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-card/40 dark:bg-gradient-to-br to-card from-card/50 lg:p-6 p-4 rounded-lg">
               {/* Father Full Name */}
-              <FormField
+              <FormInputField
                 control={fbForm.control}
                 name="fatherFullName"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex justify-between items-center">
-                      <FormLabel className="text-muted-foreground">
-                        Full Name
-                      </FormLabel>
-                      <FormMessage />
-                    </div>
-                    <FormControl>
-                      <Input {...field} disabled={fatherFormDisable} />
-                    </FormControl>
-                  </FormItem>
-                )}
+                label="Full Name"
+                type="text"
+                icon={UserRound}
+                disabled={mutation.isPending || fatherFormDisable}
+                placeholder="Enter your father's full name"
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.1 },
+                }}
               />
-
-              {/* Father Address */}
-              <FormField
+              <FormInputField
                 control={fbForm.control}
                 name="fatherAddress"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-muted-foreground">
-                      Address
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={fatherFormDisable} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Address"
+                type="text"
+                icon={Map}
+                disabled={mutation.isPending || fatherFormDisable}
+                placeholder="Ener your father's address"
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.1 },
+                }}
               />
 
-              {/* Father Contact Number */}
-              <FormField
+              <FormPhoneField
                 control={fbForm.control}
                 name="fatherContactNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex justify-between items-center">
-                      <FormLabel className="text-muted-foreground">
-                        Contact Number
-                      </FormLabel>
-                      <FormMessage />
-                    </div>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        // maxLength={10}
-                        {...field}
-                        disabled={fatherFormDisable}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
+                label="Contact number"
+                disabled={mutation.isPending || fatherFormDisable}
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.2 },
+                }}
               />
-
-              {/* Father Occupation */}
-              <FormField
+              <FormInputField
                 control={fbForm.control}
                 name="fatherOccupation"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-muted-foreground">
-                      Occupation
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={fatherFormDisable} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Occupation"
+                type="text"
+                icon={Briefcase}
+                disabled={mutation.isPending || fatherFormDisable}
+                placeholder="Ener your father occupation"
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.1 },
+                }}
               />
-
               {/* Father Highest Education */}
-
-              <FormField
+              <FormSelectField
                 control={fbForm.control}
                 name="fatherHighestEducation"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel className="text-muted-foreground">
-                      Highest Education Attainment
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        disabled={fatherFormDisable}
-                      >
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Elementary">Elementary</SelectItem>
-                          <SelectItem value="High School">
-                            High School
-                          </SelectItem>
-                          <SelectItem value="College">College</SelectItem>
-                          <SelectItem value="ALS">
-                            Alternative Learning System (ALS)
-                          </SelectItem>
-                          <SelectItem value="TESDA">
-                            TESDA / Technical-Vocational
-                          </SelectItem>
-                          <SelectItem value="N/A">N/A</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Highest Education Attainment"
+                disabled={mutation.isPending || fatherFormDisable}
+                placeholder="Select father highest education"
+                options={[
+                  { label: "Elementary", value: "Elementary" },
+                  { label: "High School", value: "High School" },
+                  { label: "College", value: "College" },
+                  { label: "Alternative Learning System (ALS)", value: "ALS" },
+                  { label: "TESDA / Technical-Vocational", value: "TESDA" },
+                  { label: "N/A", value: "N/A" },
+                ]}
+                icon={UserRound}
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.2 },
+                }}
               />
-
-              {/* Father Taxable Income */}
-
-              <FormField
+              <FormInputField
                 control={fbForm.control}
                 name="fatherTotalParentsTaxableIncome"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-muted-foreground">
-                      Taxable Income
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={fatherFormDisable} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Taxable Income"
+                type="text"
+                icon={PhilippinePeso}
+                disabled={mutation.isPending || fatherFormDisable}
+                placeholder="Enter your father taxable income"
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.1 },
+                }}
               />
             </div>
           </div>
@@ -414,131 +363,83 @@ export default function FamilyForm() {
             </div>
 
             <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-gradient-to-br to-card from-card/50 lg:p-6 p-4  rounded-lg">
-              <FormField
+              <FormInputField
                 control={fbForm.control}
                 name="motherFullName"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex justify-between items-center">
-                      <FormLabel className="text-muted-foreground">
-                        Full Name
-                      </FormLabel>
-                      <FormMessage />
-                    </div>
-                    <FormControl>
-                      <Input {...field} disabled={motherFormDisable} />
-                    </FormControl>
-                  </FormItem>
-                )}
+                label="Full Name"
+                type="text"
+                icon={UserRound}
+                disabled={mutation.isPending || motherFormDisable}
+                placeholder="Enter your mother's full name"
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.1 },
+                }}
               />
-
-              <FormField
+              <FormInputField
                 control={fbForm.control}
                 name="motherAddress"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-muted-foreground">
-                      Address
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={motherFormDisable} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Address"
+                type="text"
+                icon={Map}
+                disabled={mutation.isPending || motherFormDisable}
+                placeholder="Ener your mother's address"
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.1 },
+                }}
               />
 
-              <FormField
+              <FormPhoneField
                 control={fbForm.control}
                 name="motherContactNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex justify-between items-center">
-                      <FormLabel className="text-muted-foreground">
-                        Contact Number
-                      </FormLabel>
-                      <FormMessage />
-                    </div>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder=""
-                        {...field}
-                        disabled={motherFormDisable}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
+                label="Contact number"
+                disabled={mutation.isPending || motherFormDisable}
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.2 },
+                }}
               />
-
-              <FormField
+              <FormInputField
                 control={fbForm.control}
                 name="motherOccupation"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-muted-foreground">
-                      Occupation
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={motherFormDisable} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Occupation"
+                type="text"
+                icon={Briefcase}
+                disabled={mutation.isPending || motherFormDisable}
+                placeholder="Ener your mother occupation"
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.1 },
+                }}
               />
-
-              <FormField
+              {/* mother Highest Education */}
+              <FormSelectField
                 control={fbForm.control}
                 name="motherHighestEducation"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel className="text-muted-foreground">
-                      Highest Education Attainment
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        disabled={motherFormDisable}
-                      >
-                        <SelectTrigger className="rounded-r-none w-full">
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Elementary">Elementary</SelectItem>
-                          <SelectItem value="High School">
-                            High School
-                          </SelectItem>
-                          <SelectItem value="College">College</SelectItem>
-                          <SelectItem value="ALS">
-                            Alternative Learning System (ALS)
-                          </SelectItem>
-                          <SelectItem value="TESDA">
-                            TESDA / Technical-Vocational
-                          </SelectItem>
-                          <SelectItem value="N/A">N/A</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Highest Education Attainment"
+                disabled={mutation.isPending || motherFormDisable}
+                placeholder="Select mother highest education"
+                options={[
+                  { label: "Elementary", value: "Elementary" },
+                  { label: "High School", value: "High School" },
+                  { label: "College", value: "College" },
+                  { label: "Alternative Learning System (ALS)", value: "ALS" },
+                  { label: "TESDA / Technical-Vocational", value: "TESDA" },
+                  { label: "N/A", value: "N/A" },
+                ]}
+                icon={UserRound}
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.2 },
+                }}
               />
-
-              <FormField
+              <FormInputField
                 control={fbForm.control}
                 name="motherTotalParentsTaxableIncome"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-muted-foreground">
-                      Taxable Income
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={motherFormDisable} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Taxable Income"
+                type="text"
+                icon={PhilippinePeso}
+                disabled={mutation.isPending || motherFormDisable}
+                placeholder="Enter your mother taxable income"
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.1 },
+                }}
               />
             </div>
           </div>
@@ -550,130 +451,83 @@ export default function FamilyForm() {
               <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
             </div>
             <div className="grid lg:grid-cols-2 grid-cols-1 gap-8 bg-gradient-to-br to-card from-card/50 lg:p-6 p-4  rounded-lg">
-              <FormField
+              <FormInputField
                 control={fbForm.control}
                 name="guardianFullName"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex justify-between items-center">
-                      <FormLabel className="text-muted-foreground">
-                        Full Name
-                      </FormLabel>
-                      <FormMessage />
-                    </div>
-                    <FormControl>
-                      <Input {...field} disabled={checked} />
-                    </FormControl>
-                  </FormItem>
-                )}
+                label="Full Name"
+                type="text"
+                icon={UserRound}
+                disabled={mutation.isPending || checked}
+                placeholder="Enter your guardian's full name"
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.1 },
+                }}
               />
-
-              <FormField
+              <FormInputField
                 control={fbForm.control}
                 name="guardianAddress"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-muted-foreground">
-                      Address
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={checked} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Address"
+                type="text"
+                icon={Map}
+                disabled={mutation.isPending || checked}
+                placeholder="Ener your guardian's address"
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.1 },
+                }}
               />
 
-              <FormField
+              <FormPhoneField
                 control={fbForm.control}
                 name="guardianContactNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <div className="flex justify-between items-center">
-                      <FormLabel className="text-muted-foreground">
-                        Contact Number
-                      </FormLabel>
-                      <FormMessage />
-                    </div>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder=""
-                        {...field}
-                        disabled={checked}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
+                label="Contact number"
+                disabled={mutation.isPending || checked}
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.2 },
+                }}
               />
-
-              <FormField
+              <FormInputField
                 control={fbForm.control}
                 name="guardianOccupation"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-muted-foreground">
-                      Occupation
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={checked} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Occupation"
+                type="text"
+                icon={Briefcase}
+                disabled={mutation.isPending || checked}
+                placeholder="Ener your guardian occupation"
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.1 },
+                }}
               />
-
-              <FormField
+              {/* guardian Highest Education */}
+              <FormSelectField
                 control={fbForm.control}
                 name="guardianHighestEducation"
-                render={({ field }) => (
-                  <FormItem className="">
-                    <FormLabel className="text-muted-foreground">
-                      Highest Education Attainment
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        disabled={checked}
-                      >
-                        <SelectTrigger className=" w-full">
-                          <SelectValue placeholder="Select" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="Elementary">Elementary</SelectItem>
-                          <SelectItem value="High School">
-                            High School
-                          </SelectItem>
-                          <SelectItem value="College">College</SelectItem>
-                          <SelectItem value="ALS">
-                            Alternative Learning System (ALS)
-                          </SelectItem>
-                          <SelectItem value="TESDA">
-                            TESDA / Technical-Vocational
-                          </SelectItem>
-                          <SelectItem value="N/A">N/A</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Highest Education Attainment"
+                disabled={mutation.isPending || checked}
+                placeholder="Select guardian highest education"
+                options={[
+                  { label: "Elementary", value: "Elementary" },
+                  { label: "High School", value: "High School" },
+                  { label: "College", value: "College" },
+                  { label: "Alternative Learning System (ALS)", value: "ALS" },
+                  { label: "TESDA / Technical-Vocational", value: "TESDA" },
+                  { label: "N/A", value: "N/A" },
+                ]}
+                icon={UserRound}
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.2 },
+                }}
               />
-              <FormField
+              <FormInputField
                 control={fbForm.control}
                 name="guardianTotalParentsTaxableIncome"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-muted-foreground">
-                      Taxable Income
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} disabled={checked} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Taxable Income"
+                type="text"
+                icon={PhilippinePeso}
+                disabled={mutation.isPending || checked}
+                placeholder="Enter your guardian taxable income"
+                motionProps={{
+                  transition: { duration: 0.3, delay: 0.1 },
+                }}
               />
             </div>
           </div>

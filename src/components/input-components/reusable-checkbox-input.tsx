@@ -26,6 +26,8 @@ interface FormCheckboxInputFieldProps<T extends FieldValues> {
   motionEnabled?: boolean;
   motionProps?: MotionProps;
   className?: string;
+  checked?: boolean;
+  onCheckedChange?: (checked: boolean) => void;
 }
 
 /**
@@ -45,15 +47,16 @@ export function FormCheckboxInputField<T extends FieldValues>({
   motionEnabled = true,
   motionProps,
   className,
+  checked = false,
+  onCheckedChange,
 }: FormCheckboxInputFieldProps<T>) {
-  const [checked, setChecked] = useState(false);
-
   const animation: MotionProps = {
     initial: { opacity: 0, y: 30 },
     animate: { opacity: 1, y: 0 },
     transition: { duration: 0.3, delay: 0.4 },
     ...motionProps,
   };
+  
 
   const FieldContent = (
     <FormField
@@ -70,7 +73,10 @@ export function FormCheckboxInputField<T extends FieldValues>({
                 id={name}
                 type="checkbox"
                 checked={checked}
-                onChange={(e) => setChecked(e.target.checked)}
+                onChange={(e) => {
+                  onCheckedChange?.(e.target.checked);
+                  if (!e.target.checked) field.onChange("");
+                }}
               />
               {checkboxLabel}
             </div>

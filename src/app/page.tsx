@@ -49,6 +49,7 @@ import Image from "next/image";
 import PublicAnnouncement from "./public";
 import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { ScrollToTop } from "@/components/ui/scroll-to-top";
 const navItems = [
   { label: "Announcements", icon: Megaphone, href: "home" },
   { label: "Features", icon: Zap, href: "features" },
@@ -625,6 +626,7 @@ export default function DesktopLandingPage() {
             open={openAnnouncement}
             setOpen={setOpenAnnouncement}
           />
+          <ScrollToTop />
         </div>
       </div>
     </>
