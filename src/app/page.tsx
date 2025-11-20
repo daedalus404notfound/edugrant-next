@@ -51,7 +51,7 @@ import { useEffect, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 const navItems = [
-  { label: "Announcements", icon: Megaphone, href: "home" },
+  { label: "Announcements", icon: Megaphone, href: "announcements" },
   { label: "Features", icon: Zap, href: "features" },
   { label: "How it works", icon: Settings, href: "how-it-works" },
   { label: "Contact", icon: Mail, href: "contact" },
@@ -612,7 +612,7 @@ export default function DesktopLandingPage() {
           </div>
           <Separator className="bg-gradient-to-r from-transparent via-border to-transparent" />
 
-          <div id="howitworks">
+          <div id="how-it-works">
             <HowitworksComponent />
           </div>
 
