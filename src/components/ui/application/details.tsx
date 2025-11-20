@@ -48,7 +48,7 @@ export const getFatherDetails = (data: GetApplicationFormData | null) => [
     value: data?.Student.familyBackground.fatherHighestEducation ?? "",
   },
   {
-    label: "Total Parents Taxable Income",
+    label: "Taxable Income",
     icon: PhilippinePeso,
     value: data?.Student.familyBackground.fatherTotalParentsTaxableIncome ?? "",
   },
@@ -86,7 +86,7 @@ export const getMotherDetails = (data: GetApplicationFormData | null) => [
     value: data?.Student.familyBackground.motherHighestEducation ?? "",
   },
   {
-    label: "Total Parents Taxable Income",
+    label: "Taxable Income",
     icon: PhilippinePeso,
     value: data?.Student.familyBackground.motherTotalParentsTaxableIncome ?? "",
   },
@@ -117,6 +117,12 @@ export const getGuardianDetails = (data: GetApplicationFormData | null) => [
     label: "Highest Education Attainment",
     icon: GraduationCap,
     value: data?.Student.familyBackground.guardianHighestEducation ?? "",
+  },
+  {
+    label: "Taxable Income",
+    icon: PhilippinePeso,
+    value:
+      data?.Student.familyBackground.guardianTotalParentsTaxableIncome ?? "",
   },
 ];
 
@@ -165,6 +171,16 @@ export const getPersonalInformation = (data: GetApplicationFormData | null) => [
     value: data?.Student.Account.email ?? "",
   },
   {
+    label: "DSWD",
+    icon: Mail,
+    value: data?.Student.dswd ?? "No",
+  },
+  {
+    label: "4P's",
+    icon: Mail,
+    value: data?.Student.fourPs ?? "No",
+  },
+  {
     label: "PWD",
     icon: Map,
     value: data?.Student.PWD ?? "N/A",
@@ -182,6 +198,11 @@ export const getAcademicInformation = (data: GetApplicationFormData | null) => [
     label: "Student Id",
     icon: Building2,
     value: data?.Student.Account.schoolId ?? "",
+  },
+  {
+    label: "Student Type",
+    icon: Building2,
+    value: data?.Student.studentType ?? "",
   },
   {
     label: "Institute",
