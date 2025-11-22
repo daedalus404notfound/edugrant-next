@@ -78,6 +78,8 @@ export function useRegisterUser() {
       address: "",
       pwd: "",
       indigenous: "",
+      fourPs: false,
+      dswd: false,
     },
   });
   const accountForm = useForm<accountFormData>({
@@ -85,6 +87,7 @@ export function useRegisterUser() {
     mode: "onChange",
     defaultValues: {
       studentId: "",
+      studentType: "",
       email: "",
       password: "",
       course: "",

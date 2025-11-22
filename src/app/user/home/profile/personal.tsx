@@ -455,6 +455,14 @@ export default function PersonalProfile() {
                 placeholder="Select Student Type"
                 options={[
                   {
+                    label: "Regular",
+                    value: "regular",
+                  },
+                  {
+                    label: "Irregular",
+                    value: "irregular",
+                  },
+                  {
                     label: "Freshmen",
                     value: "freshmen",
                   },
